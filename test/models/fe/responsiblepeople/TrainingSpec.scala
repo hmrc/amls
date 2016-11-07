@@ -1,0 +1,61 @@
+/*
+ * Copyright 2016 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package models.fe.responsiblepeople
+
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.data.validation.ValidationError
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+
+class TrainingSpec extends PlaySpec with MockitoSugar {
+
+  "JSON validation" must {
+    "successfully validate given an enum value" in {
+
+      Json.fromJson[Training](Json.obj("training" -> false)) must
+        be(JsSuccess(TrainingNo, JsPath \ "training"))
+    }
+
+    "successfully validate given an `Yes` value" in {
+
+      val json = Json.obj("training" -> true, "information" -> "0123456789")
+
+      Json.fromJson[Training](json) must
+        be(JsSuccess(TrainingYes("0123456789"), JsPath \ "training" \ "information"))
+    }
+
+    "fail to validate when given an empty `Yes` value" in {
+
+      val json = Json.obj("training" -> true)
+
+      Json.fromJson[Training](json) must
+        be(JsError((JsPath \ "training" \ "information") -> ValidationError("error.path.missing")))
+    }
+
+    "write the correct value" in {
+
+      Json.toJson(TrainingNo) must be(Json.obj("training" -> false))
+
+      Json.toJson(TrainingYes("0123456789")) must
+        be(Json.obj(
+          "training" -> true,
+          "information" -> "0123456789"
+        ))
+    }
+  }
+
+}

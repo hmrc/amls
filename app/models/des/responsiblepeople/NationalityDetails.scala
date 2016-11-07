@@ -1,0 +1,44 @@
+/*
+ * Copyright 2016 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package models.des.responsiblepeople
+
+import models.fe.responsiblepeople.{NonUKResidence, UKResidence, PersonResidenceType}
+import play.api.libs.json.Json
+
+case class NationalityDetails (areYouUkResident: Boolean,
+                               idDetails: Option[IdDetail],
+                               countryOfBirth: Option[String],
+                               nationality: Option[String])
+object NationalityDetails {
+  implicit val format = Json.format[NationalityDetails]
+
+  implicit def conv(residenceType: Option[PersonResidenceType]): Option[NationalityDetails] = {
+    residenceType match {
+      case Some(data) => data
+      case _ => None
+    }
+  }
+
+  implicit def convert(residenceType: PersonResidenceType) : Option[NationalityDetails] = {
+    residenceType.isUKResidence match {
+      case uk:UKResidence => Some(NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth),
+        Some(residenceType.nationality)))
+      case nonUk:NonUKResidence => Some(NationalityDetails(false, NonUkResident.convert(nonUk), Some(residenceType.countryOfBirth),
+        Some(residenceType.nationality)))
+    }
+  }
+}
