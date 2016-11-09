@@ -42,6 +42,7 @@ object EabServices {
       case Some(eab) => {
         eab.services match {
           case Some(services) => services
+          case None => None
         }
       }
       case _ => None
