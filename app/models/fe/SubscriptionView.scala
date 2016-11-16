@@ -20,7 +20,7 @@ import models.fe.aboutthebusiness.AboutTheBusiness
 import models.fe.asp.Asp
 import models.fe.bankdetails.BankDetails
 import models.fe.businessactivities.BusinessActivities
-import models.fe.businessmatching.BusinessMatching
+import models.fe.businessmatching.{BusinessMatching, TrustAndCompanyServices}
 import models.fe.declaration.AddPerson
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
@@ -33,20 +33,20 @@ import models.des.{SubscriptionView => DesSubscriptionView}
 import play.api.libs.json.Json
 
 case class SubscriptionView(
-                             etmpFormBundleNumber:String,
-                            businessMatchingSection: BusinessMatching,
-                            eabSection: Option[EstateAgentBusiness],
-                            tradingPremisesSection: Option[Seq[TradingPremises]],
-                            aboutTheBusinessSection: AboutTheBusiness,
-                            bankDetailsSection: Seq[BankDetails],
-                            aboutYouSection: AddPerson,
-                            businessActivitiesSection: BusinessActivities,
-                            responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
-                            tcspSection: Option[Tcsp],
-                            aspSection: Option[Asp],
-                            msbSection: Option[MoneyServiceBusiness],
-                            hvdSection: Option[Hvd],
-                            supervisionSection: Option[Supervision]
+                             etmpFormBundleNumber: String,
+                             businessMatchingSection: BusinessMatching,
+                             eabSection: Option[EstateAgentBusiness],
+                             tradingPremisesSection: Option[Seq[TradingPremises]],
+                             aboutTheBusinessSection: AboutTheBusiness,
+                             bankDetailsSection: Seq[BankDetails],
+                             aboutYouSection: AddPerson,
+                             businessActivitiesSection: BusinessActivities,
+                             responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
+                             tcspSection: Option[Tcsp],
+                             aspSection: Option[Asp],
+                             msbSection: Option[MoneyServiceBusiness],
+                             hvdSection: Option[Hvd],
+                             supervisionSection: Option[Supervision]
                            )
 
 
@@ -57,20 +57,36 @@ object SubscriptionView {
   final type Outgoing = SubscriptionView
   final type Incoming = models.des.SubscriptionView
 
-  implicit def convert(desView: Incoming): SubscriptionView = SubscriptionView (
-    etmpFormBundleNumber = desView.etmpFormBundleNumber,
-    businessMatchingSection = desView,
-    eabSection = desView,
-    tradingPremisesSection = desView.tradingPremises,
-    aboutTheBusinessSection = desView,
-    bankDetailsSection = desView.bankAccountDetails,
-    aboutYouSection = desView.extraFields.filingIndividual,
-    businessActivitiesSection = desView.businessActivities.all,
-    responsiblePeopleSection = desView.responsiblePersons,
-    tcspSection = desView,
-    aspSection = desView,
-    msbSection = desView,
-    hvdSection = desView,
-    supervisionSection = desView.aspOrTcsp
-  )
+  implicit def convert(desView: Incoming): SubscriptionView = {
+    val view = SubscriptionView(
+      etmpFormBundleNumber = desView.etmpFormBundleNumber,
+      businessMatchingSection = desView,
+      eabSection = desView,
+      tradingPremisesSection = desView.tradingPremises,
+      aboutTheBusinessSection = desView,
+      bankDetailsSection = desView.bankAccountDetails,
+      aboutYouSection = desView.extraFields.filingIndividual,
+      businessActivitiesSection = desView.businessActivities.all,
+      responsiblePeopleSection = desView.responsiblePersons,
+      tcspSection = desView,
+      aspSection = desView,
+      msbSection = desView,
+      hvdSection = desView,
+      supervisionSection = desView.aspOrTcsp
+    )
+    if (view.businessMatchingSection.activities.businessActivities.exists(act => act == MoneyServiceBusiness || act == TrustAndCompanyServices)) {
+      view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
+        case None => None
+        case Some(rpSeq) => {
+          Some(rpSeq.map {
+            rp => rp.hasAlreadyPassedFitAndProper match {
+              case Some(a) => rp
+              case None => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+            }
+          })
+        }
+      })
+    } else view
+  }
+
 }

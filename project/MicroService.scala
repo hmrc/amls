@@ -42,7 +42,7 @@ trait MicroService {
   lazy val scoverageSettings = {
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
-      ScoverageKeys.coverageMinimum := 93.54,
+      ScoverageKeys.coverageMinimum := 93.66,
       ScoverageKeys.coverageFailOnMinimum := false,
       ScoverageKeys.coverageHighlighting := true,
       parallelExecution in Test := false
