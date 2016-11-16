@@ -40,17 +40,32 @@ class SubscriptionViewSpec extends PlaySpec {
 
         SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp) must be(SubscriptionViewModel.convertedViewModel)
       }
+
+      "convert des model correctly to include fit and proper answer" in {
+
+        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+          rp => rp.copy(msbOrTcsp = None)
+        }))) must be(SubscriptionViewModel.convertedViewModel.copy(
+          responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
+            case None => None
+            case Some(rpSeq) => Some(rpSeq.map {
+              rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+            })
+          }
+        ))
+      }
     }
   }
+
   val GetSuccessModel = SubscriptionView(
     etmpFormBundleNumber = "111111",
     businessMatchingSection = BusinessMatchingSection.model,
     eabSection = EabSection.model,
-    aboutTheBusinessSection = AboutTheBusinessSection.model ,
-    tradingPremisesSection = TradingPremisesSection.model ,
-    bankDetailsSection = BankDetailsSection.model ,
+    aboutTheBusinessSection = AboutTheBusinessSection.model,
+    tradingPremisesSection = TradingPremisesSection.model,
+    bankDetailsSection = BankDetailsSection.model,
     aboutYouSection = AboutYouSection.model,
-    businessActivitiesSection = BusinessActivitiesSection.model ,
+    businessActivitiesSection = BusinessActivitiesSection.model,
     responsiblePeopleSection = ResponsiblePeopleSection.model,
     tcspSection = ASPTCSPSection.TcspSection,
     aspSection = ASPTCSPSection.AspSection,
