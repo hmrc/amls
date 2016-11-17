@@ -143,7 +143,7 @@ object ProfessionalBodyMember {
         case Some(member) => member.professionalBodyDetails
         case None => None
       }
-      case None => None
+      case None => Some(ProfessionalBodyMemberNo)
     }
   }
 
