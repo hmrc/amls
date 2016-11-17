@@ -123,5 +123,21 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
       Supervision.conv(None) must be(Some(Supervision(Some(AnotherBodyNo),Some(ProfessionalBodyMemberNo),Some(ProfessionalBodyNo))))
     }
 
+    "convert supervision des to frontend successfully when no professional body details returned" in {
+      val desModel = AspOrTcsp(
+        Some(SupervisionDetails(
+          true,
+          Some(SupervisorDetails(
+            "NameOfLastSupervisor",
+            "2001-01-01",
+            "2001-01-01",
+            "SupervisionEndingReason")
+          )
+        )),
+        None)
+
+      Supervision.conv(Some(desModel)) must be(Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),Some(ProfessionalBodyMemberNo),Some(ProfessionalBodyNo))))
+    }
+
   }
 }
