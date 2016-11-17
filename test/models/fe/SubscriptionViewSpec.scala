@@ -18,6 +18,8 @@ package models.fe
 
 import models._
 import models.des.DesConstants
+import models.des.businessactivities.MlrActivitiesAppliedFor
+import models.fe.businessmatching.{BusinessActivities, MoneyServiceBusiness}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
@@ -53,6 +55,22 @@ class SubscriptionViewSpec extends PlaySpec {
             })
           }
         ))
+      }
+
+      "convert des model correctly to include fit and proper answer when only msb" in {
+
+        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+          rp => rp.copy(msbOrTcsp = None)
+        }), businessActivities = DesConstants.testBusinessActivities.copy(
+          mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false))))) must be(
+          SubscriptionViewModel.convertedViewModel.copy(
+          responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
+            case None => None
+            case Some(rpSeq) => Some(rpSeq.map {
+              rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+            })
+          }
+        ,businessMatchingSection = SubscriptionViewModel.convertedViewModel.businessMatchingSection.copy(activities = BusinessActivities(Set(MoneyServiceBusiness)))))
       }
     }
   }
