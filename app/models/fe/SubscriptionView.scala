@@ -24,12 +24,12 @@ import models.fe.businessmatching.{BusinessMatching, TrustAndCompanyServices}
 import models.fe.declaration.AddPerson
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
-import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.responsiblepeople.ResponsiblePeople
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
 import models.des.{SubscriptionView => DesSubscriptionView}
+import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import play.api.libs.json.Json
 
 case class SubscriptionView(
@@ -74,7 +74,7 @@ object SubscriptionView {
       hvdSection = desView,
       supervisionSection = desView.aspOrTcsp
     )
-    if (view.businessMatchingSection.activities.businessActivities.exists(act => act == MoneyServiceBusiness || act == TrustAndCompanyServices)) {
+    if (view.businessMatchingSection.activities.businessActivities.exists(act => act == models.fe.businessmatching.MoneyServiceBusiness || act == TrustAndCompanyServices)) {
       view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
         case None => None
         case Some(rpSeq) => {

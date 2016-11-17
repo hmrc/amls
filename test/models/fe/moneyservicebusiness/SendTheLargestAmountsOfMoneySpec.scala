@@ -52,5 +52,21 @@ class SendTheLargestAmountsOfMoneySpec extends PlaySpec {
       ))
       SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)))
     }
+
+    "convert des to frontend model when no countries listed" in {
+      val msbMtDetails = Some(MsbMtDetails(
+        true,
+        Some("123456"),
+        IpspServicesDetails(
+          true,
+          Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1"), IpspDetails("IPSPName2", "IPSPMLRRegNo2")))
+        ),
+        true,
+        Some("11111111111"),
+        None,
+        None)
+      )
+      SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(None)
+    }
   }
 }

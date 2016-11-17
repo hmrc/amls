@@ -19,11 +19,11 @@ package models.fe.moneyservicebusiness
 import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, MsbMtDetails}
 import play.api.libs.json.Json
 
-case class SendTheLargestAmountsOfMoney (
-                       country_1: String,
-                       country_2: Option[String] = None,
-                       country_3: Option[String] = None
-                     )
+case class SendTheLargestAmountsOfMoney(
+                                         country_1: String,
+                                         country_2: Option[String] = None,
+                                         country_3: Option[String] = None
+                                       )
 
 object SendTheLargestAmountsOfMoney {
 
@@ -31,9 +31,12 @@ object SendTheLargestAmountsOfMoney {
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[SendTheLargestAmountsOfMoney] = {
     msbMt match {
-      case Some(msbDtls) =>{
+      case Some(msbDtls) => {
         val listOfCountries = msbDtls.countriesLrgstMoneyAmtSentTo.fold[Seq[String]](Seq.empty)(x => x.listOfCountries)
-        Some(SendTheLargestAmountsOfMoney(listOfCountries.head, listOfCountries.lift(1), listOfCountries.lift(2)))
+        if (listOfCountries.nonEmpty) {
+          Some(SendTheLargestAmountsOfMoney(listOfCountries.head, listOfCountries.lift(1), listOfCountries.lift(2)))
+        }
+        else None
       }
       case None => None
     }
