@@ -110,7 +110,7 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
 
   "convert des to frontend model successfully when input is none" in {
 
-    ProfessionalBodyMember.conv(None) must be(None)
+    ProfessionalBodyMember.conv(None) must be(Some(ProfessionalBodyMemberNo))
   }
 
   "convert des to frontend model successfully when ProfessionalBodyDesMember is none" in {
