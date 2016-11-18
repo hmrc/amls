@@ -16,6 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
+import models.des.msb.{CountriesList, IpspServicesDetails, MsbMtDetails}
 import org.scalatestplus.play.PlaySpec
 import play.api.data.mapping._
 import play.api.data.mapping.forms.UrlFormEncoded
@@ -30,6 +31,58 @@ class MostTransactionsSpec extends PlaySpec {
       val model: MostTransactions = MostTransactions(Seq("GB"))
 
       Json.fromJson[MostTransactions](Json.toJson(model)) mustEqual JsSuccess(model)
+    }
+  }
+
+  "MostTransaction conversion" when {
+    "There are countries in the list" must {
+      "return a Correct model" in {
+        MostTransactions.convMsbMt(Some(
+          MsbMtDetails(
+            applyForFcapsrRegNo = false,
+            fcapsrRefNo = None,
+            ipspServicesDetails = IpspServicesDetails(false, None),
+            informalFundsTransferSystem = false,
+            noOfMoneyTrnsfrTransNxt12Mnths = None,
+            countriesLrgstMoneyAmtSentTo = None,
+            countriesLrgstTranscsSentTo = Some(CountriesList(Seq("Country1", "Country2", "Country3"))
+            )
+          )
+        )) must be (Some(MostTransactions(Seq("Country1", "Country2", "Country3"))))
+      }
+    }
+
+    "The countries list is empty" must {
+      "return a None" in {
+        MostTransactions.convMsbMt(Some(
+          MsbMtDetails(
+            applyForFcapsrRegNo = false,
+            fcapsrRefNo = None,
+            ipspServicesDetails = IpspServicesDetails(false, None),
+            informalFundsTransferSystem = false,
+            noOfMoneyTrnsfrTransNxt12Mnths = None,
+            countriesLrgstMoneyAmtSentTo = None,
+            countriesLrgstTranscsSentTo = Some(CountriesList(Seq.empty[String])
+            )
+          )
+        )) must be (None)
+      }
+    }
+
+    "There is no list of countries" must {
+        "return a None" in {
+          MostTransactions.convMsbMt(Some(
+            MsbMtDetails(
+              applyForFcapsrRegNo = false,
+              fcapsrRefNo = None,
+              ipspServicesDetails = IpspServicesDetails(false, None),
+              informalFundsTransferSystem = false,
+              noOfMoneyTrnsfrTransNxt12Mnths = None,
+              countriesLrgstMoneyAmtSentTo = None,
+              countriesLrgstTranscsSentTo = None
+            )
+          )) must be (None)
+        }
     }
   }
 }

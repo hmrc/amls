@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, MsbMtDetails}
+import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, CountriesList, MsbMtDetails}
 import play.api.data.mapping._
 import play.api.libs.json.{Reads, Writes}
 import utils.TraversableValidators
@@ -79,12 +79,10 @@ object MostTransactions {
   implicit val jsonW: Writes[MostTransactions] = Cache.jsonW
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[MostTransactions] = {
-    msbMt match {
-      case Some(msbDtls) =>{
-        val listOfCountries = msbDtls.countriesLrgstTranscsSentTo.fold[Seq[String]](Seq.empty)(x => x.listOfCountries)
-        Some(MostTransactions(listOfCountries))
-      }
-      case None => None
+    msbMt flatMap {m =>
+      m.countriesLrgstTranscsSentTo.fold[Option[MostTransactions]] {None} {
+        case CountriesList(Nil) => None
+        case CountriesList(countries) => Some(MostTransactions(countries))}
     }
   }
 }
