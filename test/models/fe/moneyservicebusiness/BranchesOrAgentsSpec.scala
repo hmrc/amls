@@ -37,15 +37,26 @@ class BranchesOrAgentsSpec extends PlaySpec {
       BranchesOrAgents.convMsbAll(None) must be(None)
     }
 
-    "convMsbAll: return none when is countriesList is empty" in {
+    "convMsbAll: return Branches or agents with no countries when countriesList is empty" in {
 
-      Some(MsbAllDetails(
+      val data = Some(MsbAllDetails(
         Some("999999"),
         true,
         Some(CountriesList(List.empty)),
         true)
       )
-      BranchesOrAgents.convMsbAll(None) must be(None)
+      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(Some(Seq.empty[String]))))
+    }
+
+    "convMsbAll: return Branches or agents with no countries when countriesList is missing" in {
+
+      val data = Some(MsbAllDetails(
+        Some("999999"),
+        true,
+        None,
+        true)
+      )
+      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(None)))
     }
  }
 
@@ -55,8 +66,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
         "set hasCountries to false" in {
           BranchesOrAgents.jsonW.writes(BranchesOrAgents(None)) must be(Json.obj(
             "hasCountries" -> false
-          )
-          )
+          ))
         }
       }
 

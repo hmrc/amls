@@ -104,12 +104,18 @@ object BranchesOrAgents {
   implicit val jsonW: Writes[BranchesOrAgents] = Cache.jsonW
 
   implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[BranchesOrAgents] = {
-    msbAll match {
-      case Some(msbDtls) => msbDtls.countriesList match {
-        case Some(countriesList) => Some(BranchesOrAgents(Some(countriesList.listOfCountries)))
-        case None => None
-      }
-      case None => None
+    msbAll map { allDtls =>
+      BranchesOrAgents(
+        allDtls.countriesList map { countries => countries.listOfCountries }
+      )
     }
+
+
+//    msbAll match {
+//      case Some(msbDtls) => msbDtls.countriesList match {
+//        case Some(countriesList) => Some(BranchesOrAgents(Some(countriesList.listOfCountries)))
+//        case None => None
+//      }
+//      case None => None
   }
 }
