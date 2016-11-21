@@ -109,13 +109,5 @@ object BranchesOrAgents {
         allDtls.countriesList map { countries => countries.listOfCountries }
       )
     }
-
-
-//    msbAll match {
-//      case Some(msbDtls) => msbDtls.countriesList match {
-//        case Some(countriesList) => Some(BranchesOrAgents(Some(countriesList.listOfCountries)))
-//        case None => None
-//      }
-//      case None => None
   }
 }
