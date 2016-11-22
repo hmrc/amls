@@ -70,11 +70,15 @@ sealed trait BranchesOrAgents0 {
   ): Write[BranchesOrAgents, A] =
     To[A] { __ =>
       (
-        (__ \ "hasCountries").write[Boolean].contramap[Option[_]] {
+        (__ \ "hasCountries").write[Boolean].contramap[Option[Seq[_]]] {
+          case Some(Nil) => false
           case Some(_) => true
           case None => false
         } and
-          (__ \ "countries").write[Option[Seq[String]]]
+          (__ \ "countries").write[Option[Seq[String]]].contramap[Option[Seq[String]]] {
+            case Some(Nil) => None
+            case x => x
+          }
         )(a => (a.branches, a.branches))
     }
 
@@ -100,12 +104,10 @@ object BranchesOrAgents {
   implicit val jsonW: Writes[BranchesOrAgents] = Cache.jsonW
 
   implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[BranchesOrAgents] = {
-    msbAll match {
-      case Some(msbDtls) => msbDtls.countriesList match {
-        case Some(countriesList) => Some(BranchesOrAgents(Some(countriesList.listOfCountries)))
-        case None => None
-      }
-      case None => None
+    msbAll map { allDtls =>
+      BranchesOrAgents(
+        allDtls.countriesList map { countries => countries.listOfCountries }
+      )
     }
   }
 }
