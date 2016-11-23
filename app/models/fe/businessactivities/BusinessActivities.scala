@@ -39,19 +39,19 @@ object BusinessActivities {
   import play.api.libs.json._
 
   implicit val reads: Reads[BusinessActivities] = (
-    __.read[Option[InvolvedInOther]] and
-      __.read[Option[ExpectedBusinessTurnover]] and
-      __.read[Option[ExpectedAMLSTurnover]] and
-      __.read[Option[BusinessFranchise]] and
-      __.read[Option[TransactionRecord]] and
-      __.read[Option[CustomersOutsideUK]] and
-      __.read[Option[NCARegistered]] and
-      __.read[Option[AccountantForAMLSRegulations]] and
-      __.read[Option[IdentifySuspiciousActivity]] and
-      __.read[Option[RiskAssessmentPolicy]] and
-      __.read[Option[HowManyEmployees]] and
-      __.read[Option[WhoIsYourAccountant]] and
-      __.read[Option[TaxMatters]]
+    __.readNullable[InvolvedInOther] and
+      __.readNullable[ExpectedBusinessTurnover] and
+      __.readNullable[ExpectedAMLSTurnover] and
+      __.readNullable[BusinessFranchise] and
+      __.readNullable[TransactionRecord] and
+      __.readNullable[CustomersOutsideUK] and
+      __.readNullable[NCARegistered] and
+      __.readNullable[AccountantForAMLSRegulations] and
+      __.readNullable[IdentifySuspiciousActivity] and
+      __.readNullable[RiskAssessmentPolicy] and
+      __.readNullable[HowManyEmployees] and
+      __.readNullable[WhoIsYourAccountant] and
+      __.readNullable[TaxMatters]
     ) (BusinessActivities.apply _)
 
   implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {
