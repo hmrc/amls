@@ -9,7 +9,7 @@ object MicroServiceBuild extends Build with MicroService {
 }
 
 private object AppDependencies {
-  import play.PlayImport.{ws => playWsClient}
+  import play.sbt.PlayImport.{ws => playWsClient}
   import play.core.PlayVersion
 
   private val playHealthVersion = "1.1.0"
