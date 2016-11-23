@@ -28,10 +28,10 @@ object EstateAgentBusiness {
   import play.api.libs.json._
 
   implicit val reads: Reads[EstateAgentBusiness] = (
-    __.read[Option[Services]] and
-    __.read[Option[RedressScheme]] and
-      __.read[Option[ProfessionalBody]] and
-      __.read[Option[PenalisedUnderEstateAgentsAct]]
+    __.readNullable[Services] and
+    __.readNullable[RedressScheme] and
+      __.readNullable[ProfessionalBody] and
+      __.readNullable[PenalisedUnderEstateAgentsAct]
     ) (EstateAgentBusiness.apply _)
 
   implicit val writes: Writes[EstateAgentBusiness] =
