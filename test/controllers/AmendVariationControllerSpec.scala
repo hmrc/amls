@@ -16,7 +16,6 @@
 
 package controllers
 
-import connectors.ViewDESConnector
 import exceptions.HttpStatusException
 import models.des.{AmendVariationRequest, DesConstants}
 import models.fe.aboutthebusiness._
@@ -33,14 +32,13 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsNull, Json}
+import play.api.libs.json.{JsValue, JsNull, Json}
 import play.api.mvc.{Result, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
 import utils.IterateeHelpers
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience
@@ -82,6 +80,9 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
     hvdSection = None,
     supervisionSection = None
   )
+  val postRequest = FakeRequest("POST", "/")
+    .withHeaders(CONTENT_TYPE -> "application/json")
+    .withBody[JsValue](Json.toJson(body))
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")
@@ -90,7 +91,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
     "amend is called" must {
       "return a `BadRequest` response when the AmlsRegistrationNumber is invalid" in new Fixture {
 
-        val result = Controller.amend("test", "test", "test")(request)(body)
+        val result = Controller.amend("test", "test", "test")(postRequest)
         val failure = Json.obj("errors" -> Seq("Invalid AmlsRegistrationNumber"))
 
         status(result) must be(BAD_REQUEST)
@@ -119,7 +120,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
           Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
         } thenReturn Future.successful(response)
 
-        val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(request)(body)
+        val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(postRequest)
 
         status(result) must be(OK)
         contentAsJson(result) must be(Json.toJson(response))
@@ -136,7 +137,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
           Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
         } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-        whenReady(Controller.amend("test", "OrgRef", amlsRegistrationNumber)(request)(body).failed) {
+        whenReady(Controller.amend("test", "OrgRef", amlsRegistrationNumber)(postRequest).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual INTERNAL_SERVER_ERROR
             body mustEqual Some("message")
@@ -144,6 +145,9 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
       }
 
       "return a `BadRequest` response when the json fails to parse" in new Fixture {
+        val request = FakeRequest()
+          .withHeaders(CONTENT_TYPE -> "application/json")
+          .withBody[JsValue](JsNull)
 
         val response = Json.obj(
           "errors" -> Seq(
@@ -170,7 +174,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
           )
         )
 
-        val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(request).json(JsNull)
+        val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(request)
 
         status(result) mustEqual BAD_REQUEST
         contentAsJson(result) mustEqual response
@@ -194,7 +198,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
         when(Controller.service.compareAndUpdate(requestArgument.capture(), any()))
           .thenReturn(Future.successful(mockRequest))
 
-        private val resultF = Controller.amend("AccountType", "Ref", "XTML00000565656")(request)(body)
+        private val resultF = Controller.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result:Result =>
           verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())

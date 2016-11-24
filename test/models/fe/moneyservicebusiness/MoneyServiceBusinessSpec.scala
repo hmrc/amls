@@ -99,7 +99,7 @@ trait MoneyServiceBusinessTestData {
     identifyLinkedTransactions = Some(IdentifyLinkedTransactions(true)),
     sendMoneyToOtherCountry = Some(SendMoneyToOtherCountry(true)),
     fundsTransfer = Some(FundsTransfer(true)),
-    branchesOrAgents = Some(BranchesOrAgents(Some(Seq("GB")))),
+    branchesOrAgents = Some(BranchesOrAgents(true, Some(Seq("GB")))),
     sendTheLargestAmountsOfMoney = Some(sendTheLargestAmountsOfMoney),
     mostTransactions = Some(MostTransactions(Seq("GB"))),
     transactionsInNext12Months = Some(TransactionsInNext12Months("12345678963")),

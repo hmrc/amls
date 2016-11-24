@@ -17,7 +17,6 @@
 package models.fe.hvd
 
 import models.des.businessactivities.BusinessActivities
-import play.api.data.mapping.forms.Rules.{minLength => _, _}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
 import play.api.libs.json._

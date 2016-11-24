@@ -16,8 +16,18 @@
 
 package models.fe.moneyservicebusiness
 
+import play.api.libs.json.Json
+
 case class BankMoneySource(bankNames : String)
 
+case object BankMoneySource {
+  implicit val format = Json.format[BankMoneySource]
+}
+
 case class WholesalerMoneySource(wholesalerNames : String)
+
+object WholesalerMoneySource {
+  implicit val format = Json.format[WholesalerMoneySource]
+}
 
 case object CustomerMoneySource

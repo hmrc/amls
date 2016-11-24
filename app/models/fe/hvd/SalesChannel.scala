@@ -16,6 +16,9 @@
 
 package models.fe.hvd
 
+import play.api.data.validation.ValidationError
+import play.api.libs.json._
+
 sealed trait SalesChannel
 
 case object Retail extends SalesChannel
@@ -23,3 +26,20 @@ case object Retail extends SalesChannel
 case object Wholesale extends SalesChannel
 
 case object Auction extends SalesChannel
+
+object SalesChannel {
+  implicit val jsonServiceReads: Reads[SalesChannel] =
+    Reads {
+      case JsString("Retail") => JsSuccess(Retail)
+      case JsString("Wholesale") => JsSuccess(Wholesale)
+      case JsString("Auction") => JsSuccess(Auction)
+      case _ => JsError((JsPath \ "salesChannels") -> ValidationError("error.invalid"))
+    }
+
+  implicit val jsonServiceWrites =
+    Writes[SalesChannel] {
+      case Retail => JsString("Retail")
+      case Wholesale => JsString("Wholesale")
+      case Auction => JsString("Auction")
+    }
+}

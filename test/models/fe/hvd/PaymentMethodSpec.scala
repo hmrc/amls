@@ -18,13 +18,14 @@ package models.fe.hvd
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.mapping.{Success}
+import play.api.libs.json.JsSuccess
 
 class PaymentMethodSpec extends PlaySpec {
 
   "PaymentMethod" must {
     "roundtrip through json" in {
       val data = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      PaymentMethods.jsonR.validate(PaymentMethods.jsonW.writes(data)) mustEqual Success(data)
+      PaymentMethods.format.reads(PaymentMethods.format.writes(data)) mustEqual JsSuccess(data)
     }
     "convert to None given no payment receipt value" in {
       PaymentMethods.conv(None) must be(None)
