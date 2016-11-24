@@ -18,8 +18,6 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsPath, JsSuccess}
 
 class ExciseGoodsSpec extends PlaySpec {

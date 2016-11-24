@@ -17,7 +17,6 @@
 package models.fe.hvd
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Success}
 import play.api.libs.json.JsSuccess
 
 class PaymentMethodSpec extends PlaySpec {

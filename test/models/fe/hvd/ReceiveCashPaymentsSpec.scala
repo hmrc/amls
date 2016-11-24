@@ -29,12 +29,12 @@ class ReceiveCashPaymentsSpec extends PlaySpec {
 
     "roundtrip through json" in {
       val data = ReceiveCashPayments(Some(paymentMethods))
-      ReceiveCashPayments.jsonR.reads(ReceiveCashPayments.jsonW.writes(data)) mustEqual JsSuccess(data)
+      ReceiveCashPayments.format.reads(ReceiveCashPayments.format.writes(data)) mustEqual JsSuccess(data)
     }
 
     "roundtrip through json when ReceiveCashPayments is none" in {
       val data = ReceiveCashPayments(None)
-      ReceiveCashPayments.jsonR.reads(ReceiveCashPayments.jsonW.writes(data)) mustEqual JsSuccess(data)
+      ReceiveCashPayments.format.reads(ReceiveCashPayments.format.writes(data)) mustEqual JsSuccess(data)
     }
 
     "converting the des model must yield a frontend model" in {

@@ -63,7 +63,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
         Some(Third),Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
         Some(IdentifyLinkedTransactions(true)),
         Some(SendMoneyToOtherCountry(true)),Some(FundsTransfer(true)),
-        Some(BranchesOrAgents(Some(List("AD", "GB")))),
+        Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
         Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),

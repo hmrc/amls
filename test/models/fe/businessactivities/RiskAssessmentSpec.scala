@@ -19,8 +19,6 @@ package models.fe.businessactivities
 import models.des.businessactivities.{FormalRiskAssessmentDetails, RiskAssessmentFormat}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class RiskAssessmentSpec extends PlaySpec with MockitoSugar {

@@ -28,7 +28,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val model: BranchesOrAgents = BranchesOrAgents(Some(Seq("GB")))
+      val model: BranchesOrAgents = BranchesOrAgents(true, Some(Seq("GB")))
 
       Json.fromJson[BranchesOrAgents](Json.toJson(model)) mustBe JsSuccess(model)
     }
@@ -45,7 +45,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
         Some(CountriesList(List.empty)),
         true)
       )
-      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(Some(Seq.empty[String]))))
+      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(true, Some(Seq.empty[String]))))
     }
 
     "convMsbAll: return Branches or agents with no countries when countriesList is missing" in {
@@ -56,7 +56,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
         None,
         true)
       )
-      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(None)))
+      BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(false, None)))
     }
  }
 
@@ -64,7 +64,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
     "BranchesOrAgents form writes" when {
       "there is no list of countries" must {
         "set hasCountries to false" in {
-          BranchesOrAgents.jsonW.writes(BranchesOrAgents(None)) must be(Json.obj(
+          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(Json.obj(
             "hasCountries" -> false
           ))
         }
@@ -72,7 +72,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
 
       "the list of countries is empty" must {
         "set hasCountries to false" in {
-          BranchesOrAgents.jsonW.writes(BranchesOrAgents(Some(Seq.empty[String]))) must be(Json.obj(
+          BranchesOrAgents.format.writes(BranchesOrAgents(true, Some(Seq.empty[String]))) must be(Json.obj(
             "hasCountries" -> false
           ))
         }
@@ -80,7 +80,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
 
       "the list of countries has entries" must {
         "set hasCountries to true and populate the countries list" in {
-          BranchesOrAgents.jsonW.writes(BranchesOrAgents(Some(Seq("TC1", "TC2")))) must be(Json.obj(
+          BranchesOrAgents.format.writes(BranchesOrAgents(true, Some(Seq("TC1", "TC2")))) must be(Json.obj(
             "hasCountries" -> true,
             "countries" -> Seq("TC1", "TC2")
           ))

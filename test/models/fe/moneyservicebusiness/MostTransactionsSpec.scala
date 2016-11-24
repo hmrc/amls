@@ -18,8 +18,6 @@ package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, IpspServicesDetails, MsbMtDetails}
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping._
-import play.api.data.mapping.forms.UrlFormEncoded
 import play.api.libs.json.{JsSuccess, Json}
 
 class MostTransactionsSpec extends PlaySpec {
