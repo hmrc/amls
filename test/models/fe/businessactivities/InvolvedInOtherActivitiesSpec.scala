@@ -30,7 +30,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
     "successfully validate given an enum value" in {
 
       Json.fromJson[InvolvedInOther](Json.obj("involvedInOther" -> false)) must
-        be(JsSuccess(InvolvedInOtherNo, JsPath \ "involvedInOther"))
+        be(JsSuccess(InvolvedInOtherNo))
     }
 
     "successfully validate given an `Yes` value" in {
@@ -38,7 +38,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("involvedInOther" -> true, "details" ->"test")
 
       Json.fromJson[InvolvedInOther](json) must
-        be(JsSuccess(InvolvedInOtherYes("test"), JsPath \ "involvedInOther" \ "details"))
+        be(JsSuccess(InvolvedInOtherYes("test"), JsPath \ "details"))
     }
 
     "fail to validate when given an empty `Yes` value" in {
@@ -46,7 +46,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("involvedInOther" -> true)
 
       Json.fromJson[InvolvedInOther](json) must
-        be(JsError((JsPath \ "involvedInOther" \ "details") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "details") -> ValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

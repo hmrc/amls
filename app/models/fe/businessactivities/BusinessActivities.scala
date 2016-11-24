@@ -35,45 +35,9 @@ case class BusinessActivities(
 
 object BusinessActivities {
 
-  import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
-  implicit val reads: Reads[BusinessActivities] = (
-    __.readNullable[InvolvedInOther] and
-      __.readNullable[ExpectedBusinessTurnover] and
-      __.readNullable[ExpectedAMLSTurnover] and
-      __.readNullable[BusinessFranchise] and
-      __.readNullable[TransactionRecord] and
-      __.readNullable[CustomersOutsideUK] and
-      __.readNullable[NCARegistered] and
-      __.readNullable[AccountantForAMLSRegulations] and
-      __.readNullable[IdentifySuspiciousActivity] and
-      __.readNullable[RiskAssessmentPolicy] and
-      __.readNullable[HowManyEmployees] and
-      __.readNullable[WhoIsYourAccountant] and
-      __.readNullable[TaxMatters]
-    ) (BusinessActivities.apply _)
-
-  implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {
-    model =>
-      Seq(
-        Json.toJson(model.involvedInOther).asOpt[JsObject],
-        Json.toJson(model.expectedBusinessTurnover).asOpt[JsObject],
-        Json.toJson(model.expectedAMLSTurnover).asOpt[JsObject],
-        Json.toJson(model.businessFranchise).asOpt[JsObject],
-        Json.toJson(model.transactionRecord).asOpt[JsObject],
-        Json.toJson(model.customersOutsideUK).asOpt[JsObject],
-        Json.toJson(model.ncaRegistered).asOpt[JsObject],
-        Json.toJson(model.accountantForAMLSRegulations).asOpt[JsObject],
-        Json.toJson(model.identifySuspiciousActivity).asOpt[JsObject],
-        Json.toJson(model.riskAssessmentPolicy).asOpt[JsObject],
-        Json.toJson(model.howManyEmployees).asOpt[JsObject],
-        Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
-        Json.toJson(model.taxMatters).asOpt[JsObject]
-      ).flatten.fold(Json.obj()) {
-        _ ++ _
-      }
-  }
+ implicit val format = Json.format[BusinessActivities]
 
   implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
     BusinessActivities(involvedInOther = desBA.fold[Option[InvolvedInOther]](None)(x => x.businessActivityDetails),

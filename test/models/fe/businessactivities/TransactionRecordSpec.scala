@@ -34,14 +34,14 @@ class TransactionRecordSpec extends PlaySpec with MockitoSugar {
           "transactions" -> Seq("01","02"))
 
         Json.fromJson[TransactionRecord](json) must
-          be(JsSuccess(TransactionRecordYes(Set(Paper, DigitalSpreadsheet)), JsPath \ "isRecorded" \ "transactions"))
+          be(JsSuccess(TransactionRecordYes(Set(Paper, DigitalSpreadsheet))))
       }
 
       "successfully validate given values with option No" in {
         val json =  Json.obj("isRecorded" -> false)
 
         Json.fromJson[TransactionRecord](json) must
-          be(JsSuccess(TransactionRecordNo, JsPath \ "isRecorded"))
+          be(JsSuccess(TransactionRecordNo))
       }
 
       "successfully validate given values with option Digital software" in {
@@ -50,18 +50,18 @@ class TransactionRecordSpec extends PlaySpec with MockitoSugar {
         "digitalSoftwareName" -> "test")
 
         Json.fromJson[TransactionRecord](json) must
-          be(JsSuccess(TransactionRecordYes(Set(DigitalSoftware("test"), DigitalSpreadsheet)), JsPath \ "isRecorded" \ "transactions" \ "digitalSoftwareName"))
+          be(JsSuccess(TransactionRecordYes(Set(DigitalSoftware("test"), DigitalSpreadsheet))))
       }
 
       "fail when on path is missing" in {
         Json.fromJson[TransactionRecord](Json.obj("isRecorded" -> true,
           "transaction" -> Seq("01"))) must
-          be(JsError((JsPath \ "isRecorded" \ "transactions") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "transactions") -> ValidationError("error.path.missing")))
       }
 
       "fail when on invalid data" in {
         Json.fromJson[TransactionRecord](Json.obj("isRecorded" -> true,"transactions" -> Seq("40"))) must
-          be(JsError(((JsPath \ "isRecorded" \ "transactions") \ "transactions") -> ValidationError("error.invalid")))
+          be(JsError((JsPath \ "transactions") -> ValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {

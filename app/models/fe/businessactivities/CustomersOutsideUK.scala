@@ -19,7 +19,7 @@ package models.fe.businessactivities
 import models.des.businessactivities.BusinessActivitiesAll
 import play.api.libs.json.Json
 
-case class CustomersOutsideUK(countries: Option[Seq[String]])
+case class CustomersOutsideUK(isOutside:Boolean ,countries: Option[Seq[String]])
 
 object CustomersOutsideUK {
 
@@ -27,8 +27,8 @@ object CustomersOutsideUK {
 
   implicit def conv(des: BusinessActivitiesAll) : Option[CustomersOutsideUK] = {
     des.nonUkResidentCustDetails.whichCountries match {
-      case Some(countries) => Some(CustomersOutsideUK(Some(countries)))
-      case _ => Some(CustomersOutsideUK(None))
+      case Some(countries) => Some(CustomersOutsideUK(true, Some(countries)))
+      case _ => Some(CustomersOutsideUK(false, None))
     }
   }
 }

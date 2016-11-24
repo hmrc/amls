@@ -27,13 +27,13 @@ class BusinessUseAnIPSPSpec extends PlaySpec {
 
       "Successfully read the Json value" in {
         val data = BusinessUseAnIPSPYes("TEST", "123456789123456")
-        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data, JsPath \ "useAnIPSP"))
+        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data))
 
       }
 
       "Successfully read the Json value for option no" in {
         val data = BusinessUseAnIPSPNo
-        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data, JsPath \ "useAnIPSP"))
+        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data))
 
       }
     }

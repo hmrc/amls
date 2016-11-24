@@ -32,14 +32,14 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
           "businessType" -> Seq("01","02"))
 
         Json.fromJson[ProfessionalBodyMember](json) must
-          be(JsSuccess(ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants)), JsPath \ "isAMember" \ "businessType"))
+          be(JsSuccess(ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants))))
       }
 
       "successfully validate given values with option No" in {
         val json =  Json.obj("isAMember" -> false)
 
         Json.fromJson[ProfessionalBodyMember](json) must
-          be(JsSuccess(ProfessionalBodyMemberNo, JsPath \ "isAMember"))
+          be(JsSuccess(ProfessionalBodyMemberNo))
       }
 
       "successfully validate given values with option Digital software" in {
@@ -48,18 +48,18 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
         "specifyOtherBusiness" -> "test")
 
         Json.fromJson[ProfessionalBodyMember](json) must
-          be(JsSuccess(ProfessionalBodyMemberYes(Set(Other("test"), AssociationOfBookkeepers)), JsPath \ "isAMember" \ "businessType" \ "specifyOtherBusiness"))
+          be(JsSuccess(ProfessionalBodyMemberYes(Set(Other("test"), AssociationOfBookkeepers))))
       }
 
       "fail when on path is missing" in {
         Json.fromJson[ProfessionalBodyMember](Json.obj("isAMember" -> true,
           "transaction" -> Seq("01"))) must
-          be(JsError((JsPath \ "isAMember" \ "businessType") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "businessType") -> ValidationError("error.path.missing")))
       }
 
       "fail when on invalid data" in {
         Json.fromJson[ProfessionalBodyMember](Json.obj("isAMember" -> true,"businessType" -> Seq("40"))) must
-          be(JsError(((JsPath \ "isAMember" \ "businessType") \ "businessType") -> ValidationError("error.invalid")))
+          be(JsError((JsPath \ "businessType") -> ValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {

@@ -30,19 +30,19 @@ class PercentageOfCashPaymentOver15000Spec extends PlaySpec {
       "successfully validate given an enum value" in {
 
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "01")) must
-          be(JsSuccess(PercentageOfCashPaymentOver15000.First, JsPath \ "percentage"))
+          be(JsSuccess(PercentageOfCashPaymentOver15000.First))
 
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "02")) must
-          be(JsSuccess(PercentageOfCashPaymentOver15000.Second, JsPath \ "percentage"))
+          be(JsSuccess(PercentageOfCashPaymentOver15000.Second))
 
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "03")) must
-          be(JsSuccess(PercentageOfCashPaymentOver15000.Third, JsPath \ "percentage"))
+          be(JsSuccess(PercentageOfCashPaymentOver15000.Third))
 
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "04")) must
-          be(JsSuccess(PercentageOfCashPaymentOver15000.Fourth, JsPath \ "percentage"))
+          be(JsSuccess(PercentageOfCashPaymentOver15000.Fourth))
 
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "05")) must
-          be(JsSuccess(PercentageOfCashPaymentOver15000.Fifth, JsPath \ "percentage"))
+          be(JsSuccess(PercentageOfCashPaymentOver15000.Fifth))
 
       }
 

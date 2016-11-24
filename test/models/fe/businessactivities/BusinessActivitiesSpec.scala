@@ -32,7 +32,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   val DefaultInvolvedInOther = InvolvedInOtherYes(DefaultInvolvedInOtherDetails)
   val DefaultBusinessFranchise = BusinessFranchiseYes(DefaultFranchiseName)
   val DefaultTransactionRecord = TransactionRecordYes(Set(Paper, DigitalSoftware(DefaultSoftwareName)))
-  val DefaultCustomersOutsideUK = CustomersOutsideUK(Some(Seq("GB")))
+  val DefaultCustomersOutsideUK = CustomersOutsideUK(true, Some(Seq("GB")))
   val DefaultNCARegistered = NCARegistered(true)
   val DefaultAccountantForAMLSRegulations = AccountantForAMLSRegulations(true)
   val DefaultRiskAssessments = RiskAssessmentPolicyYes(Set(PaperBased))
@@ -49,7 +49,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   val NewBusinessTurnover = ExpectedBusinessTurnover.Second
   val NewAMLSTurnover = ExpectedAMLSTurnover.Second
   val NewTransactionRecord = TransactionRecordNo
-  val NewCustomersOutsideUK = CustomersOutsideUK(None)
+  val NewCustomersOutsideUK = CustomersOutsideUK(false, None)
   val NewNCARegistered = NCARegistered(false)
   val NewAccountantForAMLSRegulations = AccountantForAMLSRegulations(false)
   val NewRiskAssessment = RiskAssessmentPolicyNo
@@ -62,32 +62,32 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   "BusinessActivities" must {
 
     val completeJson = Json.obj(
-      "involvedInOther" -> true,
-      "details" -> DefaultInvolvedInOtherDetails,
-      "expectedBusinessTurnover" -> "01",
-      "expectedAMLSTurnover" -> "01",
-      "businessFranchise" -> true,
-      "franchiseName" -> DefaultFranchiseName,
-      "isRecorded" -> true,
+      "involvedInOther" -> Json.obj("involvedInOther" -> true,
+      "details" -> DefaultInvolvedInOtherDetails),
+      "expectedBusinessTurnover" -> Json.obj("expectedBusinessTurnover" -> "01"),
+      "expectedAMLSTurnover"->Json.obj("expectedAMLSTurnover" -> "01"),
+      "businessFranchise" ->Json.obj("businessFranchise" -> true,
+      "franchiseName" -> DefaultFranchiseName),
+      "transactionRecord" ->Json.obj("isRecorded" -> true,
       "transactions" -> Seq("01", "03"),
-      "digitalSoftwareName" -> DefaultSoftwareName,
-      "isOutside" -> true,
-      "countries" -> Json.arr("GB"),
-      "ncaRegistered" -> true,
-      "accountantForAMLSRegulations" -> true,
-      "hasPolicy" -> true,
-      "riskassessments" -> Seq("01"),
-      "accountantsName" -> "Accountant's name",
+      "digitalSoftwareName" -> DefaultSoftwareName),
+      "customersOutsideUK" -> Json.obj("isOutside" -> true,
+      "countries" -> Json.arr("GB")),
+      "ncaRegistered" ->Json.obj("ncaRegistered" -> true),
+      "accountantForAMLSRegulations" ->Json.obj("accountantForAMLSRegulations" -> true),
+      "riskAssessmentPolicy" -> Json.obj("hasPolicy" -> true,
+      "riskassessments" -> Seq("01")),
+      "whoIsYourAccountant" -> Json.obj("accountantsName" -> "Accountant's name",
       "accountantsTradingName" -> "Accountant's trading name",
       "accountantsAddressLine1" -> "address1",
       "accountantsAddressLine2" -> "address2",
       "accountantsAddressLine3" -> "address3",
       "accountantsAddressLine4" -> "address4",
-      "accountantsAddressPostCode" -> "POSTCODE",
-      "manageYourTaxAffairs" -> true
+      "accountantsAddressPostCode" -> "POSTCODE"),
+      "taxMatters" -> Json.obj("manageYourTaxAffairs" -> true)
     )
 
-    val completeModel = BusinessActivities(
+     val completeModel = BusinessActivities(
       involvedInOther = Some(DefaultInvolvedInOther),
       expectedBusinessTurnover = Some(DefaultBusinessTurnover),
       expectedAMLSTurnover = Some(DefaultAMLSTurnover),
@@ -143,7 +143,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
       val feModel = BusinessActivities(Some(InvolvedInOtherNo),None,None,Some(BusinessFranchiseYes("FranchiserName1")),
         Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))),
-        Some(CustomersOutsideUK(Some(List("AD", "GB")))),
+        Some(CustomersOutsideUK(true, Some(List("AD", "GB")))),
         Some(NCARegistered(true)),Some(AccountantForAMLSRegulations(true)),Some(IdentifySuspiciousActivity(true)),
         Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))),Some(HowManyEmployees("14","11")),
         Some(WhoIsYourAccountant("Name",Some("TradingName"),
