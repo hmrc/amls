@@ -19,7 +19,7 @@ package models.fe.hvd
 import models.des.businessactivities.BusinessActivities
 import play.api.libs.json.Json
 
-case class HowWillYouSellGoods(channels : Seq[SalesChannel])
+case class HowWillYouSellGoods(salesChannels : Seq[SalesChannel])
 
 object HowWillYouSellGoods {
 

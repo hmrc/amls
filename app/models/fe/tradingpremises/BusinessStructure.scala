@@ -30,17 +30,16 @@ object BusinessStructure {
   case object IncorporatedBody extends BusinessStructure
   case object UnincorporatedBody extends BusinessStructure
 
-  import utils.MappingUtils.Implicits._
 
   implicit val jsonReadsBusinessStructure = {
     (__ \ "agentsBusinessStructure").read[String].flatMap[BusinessStructure] {
-      case "01" => SoleProprietor
-      case "02" => LimitedLiabilityPartnership
-      case "03" => Partnership
-      case "04" => IncorporatedBody
-      case "05" => UnincorporatedBody
+      case "01" => Reads(_ => JsSuccess(SoleProprietor))
+      case "02" => Reads(_ => JsSuccess(LimitedLiabilityPartnership))
+      case "03" => Reads(_ => JsSuccess(Partnership))
+      case "04" => Reads(_ => JsSuccess(IncorporatedBody))
+      case "05" => Reads(_ => JsSuccess(UnincorporatedBody))
       case _ =>
-        ValidationError("error.invalid")
+        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", ValidationError("error.invalid")))
     }
   }
 

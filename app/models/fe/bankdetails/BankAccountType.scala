@@ -27,16 +27,14 @@ case object BelongsToOtherBusiness extends BankAccountType
 
 object BankAccountType {
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads : Reads[BankAccountType] = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "bankAccountType").read[String] flatMap {
-      case "01" => PersonalAccount
-      case "02" => BelongsToBusiness
-      case "03" => BelongsToOtherBusiness
+      case "01" => Reads(_ => JsSuccess(PersonalAccount))
+      case "02" => Reads(_ => JsSuccess(BelongsToBusiness))
+      case "03" => Reads(_ => JsSuccess(BelongsToOtherBusiness))
       case _ =>
-        ValidationError("error.invalid")
+        Reads(_ =>JsError(JsPath \ "bankAccountType", ValidationError("error.invalid")))
     }
   }
 

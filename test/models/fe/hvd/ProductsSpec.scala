@@ -34,7 +34,7 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
           "products" -> Seq("06","07", "08", "02", "01", "11"))
 
         Json.fromJson[Products](json) must
-          be(JsSuccess(Products(Set(Clothing, Jewellery, Alcohol, Caravans, Gold, Tobacco)), JsPath \ "products"))
+          be(JsSuccess(Products(Set(Clothing, Jewellery, Alcohol, Caravans, Gold, Tobacco))))
       }
 
       "successfully validate given values with option other details" in {
@@ -43,7 +43,7 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
         "otherDetails" -> "test")
 
         Json.fromJson[Products](json) must
-          be(JsSuccess(Products(Set(Other("test"), ScrapMetals)), JsPath \ "products" \ "otherDetails"))
+          be(JsSuccess(Products(Set(Other("test"), ScrapMetals))))
       }
 
       "fail when on path is missing" in {
@@ -54,7 +54,7 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[Products](Json.obj("products" -> Seq("40"))) must
-          be(JsError(((JsPath \ "products") \ "products") -> ValidationError("error.invalid")))
+          be(JsError(JsPath \ "products"  -> ValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {

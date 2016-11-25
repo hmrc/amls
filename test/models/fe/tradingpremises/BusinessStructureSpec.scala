@@ -25,20 +25,15 @@ class BusinessStructureSpec extends PlaySpec {
   "BusinessStructure" should {
 
     "Read JSON data successfully" in {
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "01")) must be(JsSuccess(BusinessStructure.SoleProprietor,
-        JsPath \ "agentsBusinessStructure"))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "01")) must be(JsSuccess(BusinessStructure.SoleProprietor))
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "02")) must be(JsSuccess(BusinessStructure.LimitedLiabilityPartnership,
-        JsPath \ "agentsBusinessStructure"))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "02")) must be(JsSuccess(BusinessStructure.LimitedLiabilityPartnership))
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "03")) must be(JsSuccess(BusinessStructure.Partnership,
-        JsPath \ "agentsBusinessStructure"))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "03")) must be(JsSuccess(BusinessStructure.Partnership))
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "04")) must be(JsSuccess(BusinessStructure.IncorporatedBody,
-        JsPath \ "agentsBusinessStructure"))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "04")) must be(JsSuccess(BusinessStructure.IncorporatedBody))
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "05")) must be(JsSuccess(BusinessStructure.UnincorporatedBody,
-        JsPath \ "agentsBusinessStructure"))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "05")) must be(JsSuccess(BusinessStructure.UnincorporatedBody))
     }
 
     "Write JSON data successfully" in {

@@ -26,7 +26,7 @@ object MsbServicesCarriedOut {
   implicit val format =  Json.format[MsbServicesCarriedOut]
 
   implicit def conv(feModel: BusinessMatching): Option[MsbServicesCarriedOut] = {
-    feModel.msbServices.fold[Set[MsbService]](Set.empty)(x => x.services)
+    feModel.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
   }
 
   implicit def convert(services: Set[MsbService]): Option[MsbServicesCarriedOut] = {

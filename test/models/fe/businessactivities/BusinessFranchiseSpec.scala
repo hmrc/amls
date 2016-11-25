@@ -28,12 +28,12 @@ class BusinessFranchiseSpec extends PlaySpec {
 
       "Successfully read and write data:option yes" in {
         BusinessFranchise.jsonReads.reads(BusinessFranchise.jsonWrites.writes(BusinessFranchiseYes("afdafaaa"))) must
-          be(JsSuccess(BusinessFranchiseYes("afdafaaa"), JsPath \ "businessFranchise" \ "franchiseName"))
+          be(JsSuccess(BusinessFranchiseYes("afdafaaa"), JsPath \ "franchiseName"))
       }
 
       "Successfully read and write data:option No" in {
         BusinessFranchise.jsonReads.reads(BusinessFranchise.jsonWrites.writes(BusinessFranchiseNo)) must
-          be(JsSuccess(BusinessFranchiseNo, JsPath \ "businessFranchise"))
+          be(JsSuccess(BusinessFranchiseNo))
       }
     }
 

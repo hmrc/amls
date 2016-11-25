@@ -411,8 +411,8 @@ object HvdSection {
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = Second
-  private val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-  private val receiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+  private val paymentMethods = PaymentMethods(courier = true, direct = true, other= true,details = Some("foo"))
+  private val receiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val completeModel = Some(Hvd(cashPayment = Some(DefaultCashPayment),
     products = Some(DefaultProducts),
@@ -427,7 +427,7 @@ object HvdSection {
     Some(Products(Set(MobilePhones, Clothing, Jewellery,
       ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
     Some(ExciseGoods(true)),Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
-    None,Some(ReceiveCashPayments(Some(PaymentMethods(true,true,Some("aaaaaaaaaaaaa"))))),Some(LinkedCashPayments(true))))
+    None,Some(ReceiveCashPayments(true, Some(PaymentMethods(true,true,true,Some("aaaaaaaaaaaaa"))))),Some(LinkedCashPayments(true))))
 }
 
 object SubscriptionViewModel {

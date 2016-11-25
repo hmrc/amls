@@ -34,7 +34,7 @@ object HowGoodsAreSold {
   }
 
   implicit def conv1(model: HowWillYouSellGoods): Option[HowGoodsAreSold] = {
-    val howWillYouSellGoods = model.channels.foldLeft(HowGoodsAreSold(false, false, false)) {
+    val howWillYouSellGoods = model.salesChannels.foldLeft(HowGoodsAreSold(false, false, false)) {
       (result, channel) =>
         channel match {
           case Retail => result.copy(retail = true)

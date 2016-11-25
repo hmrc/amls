@@ -46,8 +46,6 @@ case class DigitalSoftware(name: String) extends TransactionType
 
 object TransactionRecord {
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads: Reads[TransactionRecord] =
     (__ \ "isRecorded").read[Boolean] flatMap {
       case true => (__ \ "transactions").read[Set[String]].flatMap {x:Set[String] =>

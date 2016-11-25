@@ -34,7 +34,7 @@ object MoneyServiceBusiness {
 
     msbOpt match {
       case Some(msb) => {
-        val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.services)
+        val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
         val msbMtDetails: Option[MsbMtDetails] = services.contains(TransmittingMoney) match {
           case true =>(msb, bm)
           case false => None

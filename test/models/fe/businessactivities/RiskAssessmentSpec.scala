@@ -35,14 +35,14 @@ class RiskAssessmentSpec extends PlaySpec with MockitoSugar {
           "riskassessments" -> Seq("01", "02"))
 
         Json.fromJson[RiskAssessmentPolicy](json) must
-          be(JsSuccess(RiskAssessmentPolicyYes(formalRiskAssessments), JsPath \ "hasPolicy" \ "riskassessments"))
+          be(JsSuccess(RiskAssessmentPolicyYes(formalRiskAssessments)))
       }
 
       "successfully validate given values with option No" in {
         val json = Json.obj("hasPolicy" -> false)
 
         Json.fromJson[RiskAssessmentPolicy](json) must
-          be(JsSuccess(RiskAssessmentPolicyNo, JsPath \ "hasPolicy"))
+          be(JsSuccess(RiskAssessmentPolicyNo))
       }
 
       "fail when on invalid data" in {

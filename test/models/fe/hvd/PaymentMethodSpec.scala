@@ -23,7 +23,7 @@ class PaymentMethodSpec extends PlaySpec {
 
   "PaymentMethod" must {
     "roundtrip through json" in {
-      val data = PaymentMethods(courier = true, direct = true, other = Some("foo"))
+      val data = PaymentMethods(courier = true, direct = true, other = true, Some("foo"))
       PaymentMethods.format.reads(PaymentMethods.format.writes(data)) mustEqual JsSuccess(data)
     }
     "convert to None given no payment receipt value" in {

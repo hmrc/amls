@@ -28,7 +28,7 @@ case object CurrencyExchange extends MsbService
 case object ChequeCashingNotScrapMetal extends MsbService
 case object ChequeCashingScrapMetal extends MsbService
 
-case class MsbServices(services : Set[MsbService])
+case class MsbServices(msbServices : Set[MsbService])
 
 object MsbService {
 

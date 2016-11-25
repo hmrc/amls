@@ -29,17 +29,15 @@ object TimeAtAddress {
   case object OneToThreeYears extends TimeAtAddress
   case object ThreeYearsPlus extends TimeAtAddress
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads: Reads[TimeAtAddress] = {
       import play.api.libs.json.Reads.StringReads
       (__ \ "timeAtAddress").read[String].flatMap[TimeAtAddress] {
-        case "01" => ZeroToFiveMonths
-        case "02" => SixToElevenMonths
-        case "03" => OneToThreeYears
-        case "04" => ThreeYearsPlus
+        case "01" => Reads(_ => JsSuccess(ZeroToFiveMonths))
+        case "02" => Reads(_ => JsSuccess(SixToElevenMonths))
+        case "03" => Reads(_ => JsSuccess(OneToThreeYears))
+        case "04" => Reads(_ => JsSuccess(ThreeYearsPlus))
         case _ =>
-          ValidationError("error.invalid")
+          Reads(_ =>JsError(JsPath \ "timeAtAddress", ValidationError("error.invalid")))
       }
     }
 

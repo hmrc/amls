@@ -22,7 +22,8 @@ import play.api.libs.json.Json
 case class PaymentMethods(
                            courier: Boolean,
                            direct: Boolean,
-                           other: Option[String]
+                           other: Boolean,
+                           details: Option[String]
                          )
 
 object PaymentMethods {
@@ -31,7 +32,8 @@ object PaymentMethods {
   implicit def conv(method: Option[ReceiptMethods]): Option[PaymentMethods] = {
 
     method match{
-      case Some(payment) => Some(PaymentMethods(payment.receiptMethodViaCourier, payment.receiptMethodDirectBankAct, payment.specifyOther))
+      case Some(payment) => Some(PaymentMethods(payment.receiptMethodViaCourier, payment.receiptMethodDirectBankAct,
+        payment.specifyOther.nonEmpty, payment.specifyOther))
       case None => None
     }
   }

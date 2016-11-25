@@ -37,15 +37,15 @@ object RedressScheme {
       case true =>
       {
         (__ \ "propertyRedressScheme").read[String].flatMap[RedressScheme] {
-          case "01" => ThePropertyOmbudsman
-          case "02" => OmbudsmanServices
-          case "03" => PropertyRedressScheme
+          case "01" => Reads(_ => JsSuccess(ThePropertyOmbudsman))
+          case "02" => Reads(_ => JsSuccess(OmbudsmanServices))
+          case "03" => Reads(_ => JsSuccess(PropertyRedressScheme))
           case "04" =>
             (JsPath \ "propertyRedressSchemeOther").read[String] map {
               Other(_)
             }
           case _ =>
-            ValidationError("error.invalid")
+            Reads(_ => JsError((JsPath \ "propertyRedressScheme") -> ValidationError("error.invalid")))
         }
       }
       case false => Reads(_ => JsSuccess(RedressSchemedNo))

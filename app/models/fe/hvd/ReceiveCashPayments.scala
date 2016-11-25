@@ -20,7 +20,7 @@ import play.api.libs.json.{Writes, _}
 import models.des.hvd.{Hvd=> DesHvd}
 
 
-case class ReceiveCashPayments(paymentMethods: Option[PaymentMethods])
+case class ReceiveCashPayments(receivePayments:Boolean, paymentMethods: Option[PaymentMethods])
 
 
 object ReceiveCashPayments {
@@ -30,7 +30,7 @@ object ReceiveCashPayments {
   implicit def conv(hvd: DesHvd): Option[ReceiveCashPayments] = {
 
     hvd.hvdFromUnseenCustDetails match{
-      case Some(unseen) => Some(ReceiveCashPayments(unseen.receiptMethods))
+      case Some(unseen) => Some(ReceiveCashPayments(unseen.receiptMethods.isDefined, unseen.receiptMethods))
       case None => None
     }
 

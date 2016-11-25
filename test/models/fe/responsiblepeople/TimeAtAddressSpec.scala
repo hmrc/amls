@@ -34,10 +34,10 @@ class TimeAtAddressSpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an enum value" in {
 
-      Json.fromJson[TimeAtAddress](ZeroToFiveJson) must be(JsSuccess(TimeAtAddress.ZeroToFiveMonths, JsPath \ FieldName))
-      Json.fromJson[TimeAtAddress](SixToElevenJson) must be(JsSuccess(TimeAtAddress.SixToElevenMonths, JsPath \ FieldName))
-      Json.fromJson[TimeAtAddress](OneToThreeJson) must be(JsSuccess(TimeAtAddress.OneToThreeYears, JsPath \ FieldName))
-      Json.fromJson[TimeAtAddress](MoreThanThreeJson) must be(JsSuccess(TimeAtAddress.ThreeYearsPlus, JsPath \ FieldName))
+      Json.fromJson[TimeAtAddress](ZeroToFiveJson) must be(JsSuccess(TimeAtAddress.ZeroToFiveMonths))
+      Json.fromJson[TimeAtAddress](SixToElevenJson) must be(JsSuccess(TimeAtAddress.SixToElevenMonths))
+      Json.fromJson[TimeAtAddress](OneToThreeJson) must be(JsSuccess(TimeAtAddress.OneToThreeYears))
+      Json.fromJson[TimeAtAddress](MoreThanThreeJson) must be(JsSuccess(TimeAtAddress.ThreeYearsPlus))
     }
 
     "write the correct value" in {

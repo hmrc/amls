@@ -34,7 +34,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
       "successfully validate given an enum value" in {
 
         Json.fromJson[CashPayment](Json.obj("acceptedAnyPayment" -> false)) must
-          be(JsSuccess(CashPaymentNo, JsPath \ "acceptedAnyPayment"))
+          be(JsSuccess(CashPaymentNo))
       }
 
       "successfully validate given an `Yes` value" in {
@@ -42,7 +42,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("acceptedAnyPayment" -> true, "paymentDate" ->"1990-02-24")
 
         Json.fromJson[CashPayment](json) must
-          be(JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "acceptedAnyPayment" \ "paymentDate"))
+          be(JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "paymentDate"))
       }
 
       "fail to validate when given an empty `Yes` value" in {
@@ -50,13 +50,13 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("acceptedAnyPayment" -> true)
 
         Json.fromJson[CashPayment](json) must
-          be(JsError((JsPath \ "acceptedAnyPayment" \ "paymentDate") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "paymentDate") -> ValidationError("error.path.missing")))
       }
 
       "Successfully read and write Json data" in {
 
         CashPayment.jsonReads.reads(CashPayment.jsonWrites.writes(DefaultCashPaymentYes)) must be(
-          JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "acceptedAnyPayment" \ "paymentDate"))
+          JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "paymentDate"))
       }
 
       "write the correct value" in {
