@@ -44,7 +44,9 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
     val BusinessAppliedForPSRNumberModel = BusinessAppliedForPSRNumberYes("123456")
 
     val jsonBusinessMatching = Json.obj(
-      "reviewDetails" ->Json.obj("businessName" -> "BusinessName",
+      "businessActivities" -> Seq("05", "06", "07"),
+      "msbServices"-> Seq("01","02","03","04"),
+      "businessName" -> "BusinessName",
       "businessType" -> "Unincorporated Body",
       "businessAddress" -> Json.obj(
         "line_1" -> "line1",
@@ -54,13 +56,11 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
         "postcode" -> "AA1 1AA",
         "country" -> "GB"
       ),
-      "safeId" -> "AA0001234567890"),
-      "activities" -> Json.obj("businessActivities" -> Seq("05", "06", "07")),
-      "msbServices" -> Json.obj("msbServices"-> Seq("01","02","03","04")),
-      "typeOfBusiness" -> Json.obj("typeOfBusiness" -> "test"),
-      "companyRegistrationNumber" -> Json.obj("companyRegistrationNumber" -> "12345678"),
-      "businessAppliedForPSRNumber" -> Json.obj("appliedFor" -> true,
-      "regNumber" -> "123456")
+      "safeId" -> "AA0001234567890",
+      "typeOfBusiness" -> "test",
+      "companyRegistrationNumber" -> "12345678",
+      "appliedFor" -> true,
+      "regNumber" -> "123456"
     )
 
     val businessMatching = BusinessMatching(

@@ -54,7 +54,7 @@ object OwnBusinessPremisesDetails {
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
         (__ \ "startDate").read[String] and
         (__ \ "endDate").readNullable[String] and
-        __.readNullable[StringOrInt] and
+        __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "status").readNullable[String]
       ) (OwnBusinessPremisesDetails.apply _)
   }

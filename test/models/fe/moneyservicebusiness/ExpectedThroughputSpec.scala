@@ -31,25 +31,25 @@ class ExpectedThroughputSpec extends PlaySpec {
       "successfully validate given an enum value" in {
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "01")) must
-          be(JsSuccess(ExpectedThroughput.First, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.First))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "02")) must
-          be(JsSuccess(ExpectedThroughput.Second, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Second))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "03")) must
-          be(JsSuccess(ExpectedThroughput.Third, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Third))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "04")) must
-          be(JsSuccess(ExpectedThroughput.Fourth, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Fourth))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "05")) must
-          be(JsSuccess(ExpectedThroughput.Fifth, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Fifth))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "06")) must
-          be(JsSuccess(ExpectedThroughput.Sixth, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Sixth))
 
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "07")) must
-          be(JsSuccess(ExpectedThroughput.Seventh, JsPath \ "throughput"))
+          be(JsSuccess(ExpectedThroughput.Seventh))
       }
 
       "write the correct value" in {

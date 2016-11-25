@@ -40,23 +40,21 @@ case class Other(value: String) extends RoleWithinBusiness
 
 object RoleWithinBusiness {
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads: Reads[RoleWithinBusiness] = {
     import play.api.libs.json._
 
     (__ \ "roleWithinBusiness").read[String].flatMap[RoleWithinBusiness] {
-      case "01" => BeneficialShareholder
-      case "02" => Director
-      case "03" => ExternalAccountant
-      case "04" => InternalAccountant
-      case "05" => NominatedOfficer
-      case "06" => Partner
-      case "07" => SoleProprietor
+      case "01" => Reads(_ =>JsSuccess(BeneficialShareholder))
+      case "02" => Reads(_ =>JsSuccess(Director))
+      case "03" => Reads(_ =>JsSuccess(ExternalAccountant))
+      case "04" => Reads(_ =>JsSuccess(InternalAccountant))
+      case "05" => Reads(_ =>JsSuccess(NominatedOfficer))
+      case "06" => Reads(_ =>JsSuccess(Partner))
+      case "07" => Reads(_ =>JsSuccess(SoleProprietor))
       case "08" => (JsPath \ "roleWithinBusinessOther").read[String] map {
         Other(_)
       }
-      case _ => ValidationError("error.invalid")
+      case _ => Reads(_ =>JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid")))
     }
   }
 

@@ -35,9 +35,45 @@ case class BusinessActivities(
 
 object BusinessActivities {
 
+  import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
- implicit val format = Json.format[BusinessActivities]
+  implicit val reads: Reads[BusinessActivities] = (
+    __.read(Reads.optionNoError[InvolvedInOther]) and
+      __.read(Reads.optionNoError[ExpectedBusinessTurnover]) and
+      __.read(Reads.optionNoError[ExpectedAMLSTurnover]) and
+      __.read(Reads.optionNoError[BusinessFranchise]) and
+      __.read(Reads.optionNoError[TransactionRecord]) and
+      __.read(Reads.optionNoError[CustomersOutsideUK]) and
+      __.read(Reads.optionNoError[NCARegistered]) and
+      __.read(Reads.optionNoError[AccountantForAMLSRegulations]) and
+      __.read(Reads.optionNoError[IdentifySuspiciousActivity]) and
+      __.read(Reads.optionNoError[RiskAssessmentPolicy]) and
+      __.read(Reads.optionNoError[HowManyEmployees]) and
+      __.read(Reads.optionNoError[WhoIsYourAccountant]) and
+      __.read(Reads.optionNoError[TaxMatters])
+    ) (BusinessActivities.apply _)
+
+  implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {
+    model =>
+      Seq(
+        Json.toJson(model.involvedInOther).asOpt[JsObject],
+        Json.toJson(model.expectedBusinessTurnover).asOpt[JsObject],
+        Json.toJson(model.expectedAMLSTurnover).asOpt[JsObject],
+        Json.toJson(model.businessFranchise).asOpt[JsObject],
+        Json.toJson(model.transactionRecord).asOpt[JsObject],
+        Json.toJson(model.customersOutsideUK).asOpt[JsObject],
+        Json.toJson(model.ncaRegistered).asOpt[JsObject],
+        Json.toJson(model.accountantForAMLSRegulations).asOpt[JsObject],
+        Json.toJson(model.identifySuspiciousActivity).asOpt[JsObject],
+        Json.toJson(model.riskAssessmentPolicy).asOpt[JsObject],
+        Json.toJson(model.howManyEmployees).asOpt[JsObject],
+        Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
+        Json.toJson(model.taxMatters).asOpt[JsObject]
+      ).flatten.fold(Json.obj()) {
+        _ ++ _
+      }
+  }
 
   implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
     BusinessActivities(involvedInOther = desBA.fold[Option[InvolvedInOther]](None)(x => x.businessActivityDetails),

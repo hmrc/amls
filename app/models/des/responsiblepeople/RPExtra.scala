@@ -34,7 +34,7 @@ case class RPExtra(
 object RPExtra {
 
   implicit val reads: Reads[RPExtra] = (
-    __.readNullable[StringOrInt] and
+    __.read(Reads.optionNoError[StringOrInt]) and
       (__ \ "endDate").readNullable[String] and
       (__ \ "status").readNullable[String] and
       (__ \ "retestFlag").readNullable[Boolean] and

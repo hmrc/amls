@@ -33,14 +33,13 @@ object BusinessMatching {
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
-  implicit val format = Json.format[BusinessMatching]
   implicit val reads: Reads[BusinessMatching] = (
-      (__ \ "reviewDetails").read[ReviewDetails] and
-      (__ \ "activities").read[BusinessActivities] and
-      (__ \ "msbServices").readNullable[MsbServices] and
-      (__ \ "typeOfBusiness").readNullable[TypeOfBusiness] and
-      (__ \ "companyRegistrationNumber").readNullable[CompanyRegistrationNumber] and
-      (__ \ "businessAppliedForPSRNumber").readNullable[BusinessAppliedForPSRNumber]
+    __.read[ReviewDetails] and
+      __.read[BusinessActivities] and
+      __.read(Reads.optionNoError[MsbServices]) and
+      __.read(Reads.optionNoError[TypeOfBusiness]) and
+      __.read(Reads.optionNoError[CompanyRegistrationNumber]) and
+      __.read(Reads.optionNoError[BusinessAppliedForPSRNumber])
     ) (BusinessMatching.apply _)
 
   implicit val writes: Writes[BusinessMatching] =

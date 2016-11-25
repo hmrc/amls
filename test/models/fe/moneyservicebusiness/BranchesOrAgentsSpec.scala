@@ -72,7 +72,7 @@ class BranchesOrAgentsSpec extends PlaySpec {
 
       "the list of countries is empty" must {
         "set hasCountries to false" in {
-          BranchesOrAgents.format.writes(BranchesOrAgents(true, Some(Seq.empty[String]))) must be(Json.obj(
+          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(Json.obj(
             "hasCountries" -> false
           ))
         }

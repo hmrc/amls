@@ -19,7 +19,7 @@ package models.fe.moneyservicebusiness
 import models.des.msb.{CountriesList, MsbMtDetails}
 import play.api.libs.json.Json
 
-case class MostTransactions(countries: Seq[String])
+case class MostTransactions(mostTransactionsCountries: Seq[String])
 
 object MostTransactions {
 

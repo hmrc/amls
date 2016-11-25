@@ -28,7 +28,7 @@ class MostTransactionsSpec extends PlaySpec {
 
       val model: MostTransactions = MostTransactions(Seq("GB"))
 
-      Json.fromJson[MostTransactions](Json.toJson(model)) mustEqual JsSuccess(model, JsPath \ "countries" )
+      Json.fromJson[MostTransactions](Json.toJson(model)) mustEqual JsSuccess(model, JsPath \ "mostTransactionsCountries" )
     }
   }
 

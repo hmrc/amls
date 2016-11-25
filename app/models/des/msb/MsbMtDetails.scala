@@ -39,7 +39,7 @@ object MsbMtDetails {
     val (largetAmount, largestTransaction) = msb.sendMoneyToOtherCountry.foldLeft[(Option[CountriesList], Option[CountriesList])](None, None)(
       (x, y)=> y.money match {
       case true =>  (msb.sendTheLargestAmountsOfMoney.fold[Seq[String]](Seq.empty)(x => Seq(Some(x.country_1), x.country_2, x.country_3).flatten),
-        msb.mostTransactions.fold[Seq[String]](Seq.empty)(x => x.countries))
+        msb.mostTransactions.fold[Seq[String]](Seq.empty)(x => x.mostTransactionsCountries))
       case false =>(None, None)
     })
     val (applyForPsr, psrNumber) = convPsr(bm.businessAppliedForPSRNumber)

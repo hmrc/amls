@@ -48,7 +48,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
-        __.readNullable[StringOrInt]
+        __.read(Reads.optionNoError[StringOrInt])
       ) (AgentDetails.apply _)
   }
 

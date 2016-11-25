@@ -17,6 +17,7 @@
 package utils
 
 import play.api.data.validation.ValidationError
+import play.api.libs.json.{JsPath, Reads}
 
 import scala.collection.TraversableLike
 
@@ -27,7 +28,6 @@ trait MappingUtils {
     /*
    * Json reads implicits
    */
-
     import play.api.libs.json.{Reads, JsSuccess, JsError}
 
     implicit def toReadsSuccess[A, B <: A](b: B): Reads[A] =

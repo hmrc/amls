@@ -62,29 +62,29 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   "BusinessActivities" must {
 
     val completeJson = Json.obj(
-      "involvedInOther" -> Json.obj("involvedInOther" -> true,
-      "details" -> DefaultInvolvedInOtherDetails),
-      "expectedBusinessTurnover" -> Json.obj("expectedBusinessTurnover" -> "01"),
-      "expectedAMLSTurnover"->Json.obj("expectedAMLSTurnover" -> "01"),
-      "businessFranchise" ->Json.obj("businessFranchise" -> true,
-      "franchiseName" -> DefaultFranchiseName),
-      "transactionRecord" ->Json.obj("isRecorded" -> true,
+      "involvedInOther" -> true,
+      "details" -> DefaultInvolvedInOtherDetails,
+      "expectedBusinessTurnover" -> "01",
+      "expectedAMLSTurnover" -> "01",
+      "businessFranchise" -> true,
+      "franchiseName" -> DefaultFranchiseName,
+      "isRecorded" -> true,
       "transactions" -> Seq("01", "03"),
-      "digitalSoftwareName" -> DefaultSoftwareName),
-      "customersOutsideUK" -> Json.obj("isOutside" -> true,
-      "countries" -> Json.arr("GB")),
-      "ncaRegistered" ->Json.obj("ncaRegistered" -> true),
-      "accountantForAMLSRegulations" ->Json.obj("accountantForAMLSRegulations" -> true),
-      "riskAssessmentPolicy" -> Json.obj("hasPolicy" -> true,
-      "riskassessments" -> Seq("01")),
-      "whoIsYourAccountant" -> Json.obj("accountantsName" -> "Accountant's name",
+      "digitalSoftwareName" -> DefaultSoftwareName,
+      "isOutside" -> true,
+      "countries" -> Json.arr("GB"),
+      "ncaRegistered" -> true,
+      "accountantForAMLSRegulations" -> true,
+      "hasPolicy" -> true,
+      "riskassessments" -> Seq("01"),
+      "accountantsName" -> "Accountant's name",
       "accountantsTradingName" -> "Accountant's trading name",
       "accountantsAddressLine1" -> "address1",
       "accountantsAddressLine2" -> "address2",
       "accountantsAddressLine3" -> "address3",
       "accountantsAddressLine4" -> "address4",
-      "accountantsAddressPostCode" -> "POSTCODE"),
-      "taxMatters" -> Json.obj("manageYourTaxAffairs" -> true)
+      "accountantsAddressPostCode" -> "POSTCODE",
+      "manageYourTaxAffairs" -> true
     )
 
      val completeModel = BusinessActivities(
