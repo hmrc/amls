@@ -3,15 +3,13 @@ import _root_.wartremover._
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
-import scoverage.ScoverageSbtPlugin._
+import scoverage.ScoverageKeys
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import uk.gov.hmrc.versioning.SbtGitVersioning
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
-  import TestPhases._
   import uk.gov.hmrc.SbtAutoBuildPlugin
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
