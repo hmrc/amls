@@ -86,7 +86,7 @@ object OwnBusinessPremisesDetails {
         val z = x.whatDoesYourBusinessDoAtThisAddress.activities
         OwnBusinessPremisesDetails(y.tradingName, y.tradingPremisesAddress,
           y.isResidential,
-          x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.services),
+          x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
           z,
           z,
           z,

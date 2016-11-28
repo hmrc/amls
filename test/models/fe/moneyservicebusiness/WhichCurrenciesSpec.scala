@@ -27,8 +27,15 @@ class WhichCurrenciesSpec extends PlaySpec {
     "round trip through Json correctly" in {
 
       val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
-
       Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
+    }
+
+    "round trip through Json correctly" when {
+      "customerMoneySource is false" in {
+
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
+        Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
+      }
     }
 
     "convert des model to frontend model" in {

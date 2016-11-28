@@ -1,4 +1,4 @@
-import _root_.sbt._
+import sbt._
 
 object MicroServiceBuild extends Build with MicroService {
 
@@ -16,25 +16,22 @@ private object AppDependencies {
   private val playAuthorisationVersion = "4.2.0"
   private val playUrlBindersVersion = "1.0.0"
   private val playConfigVersion = "3.0.0"
-  private val playJsonLoggerVersion = "3.0.0"
+  private val logbackJsonLoggerVersion = "3.1.0"
   private val domainVersion = "4.0.0"
   private val metricsGraphiteVersion = "3.0.2"
-  private val validationVersion = "1.1"
   private val playReactivemongoVersion = "5.1.0"
-  private val playJars = ExclusionRule(organization = "com.typesafe.play")
 
   val compile = Seq(
+    "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
     ws,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
     "uk.gov.hmrc" %% "play-authorisation" % playAuthorisationVersion,
     "uk.gov.hmrc" %% "play-url-binders" % playUrlBindersVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "com.codahale.metrics" % "metrics-graphite" % metricsGraphiteVersion,
-    "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion
-
+    "com.codahale.metrics" % "metrics-graphite" % metricsGraphiteVersion
   )
 
   trait TestDependencies {

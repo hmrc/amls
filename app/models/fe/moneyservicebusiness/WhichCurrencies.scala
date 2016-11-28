@@ -17,7 +17,7 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetails}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json, Writes, Reads}
 
 
 case class WhichCurrencies(currencies : Seq[String]
@@ -27,7 +27,31 @@ case class WhichCurrencies(currencies : Seq[String]
 
 object WhichCurrencies {
 
-  implicit val format = Json.format[WhichCurrencies]
+  implicit val jsonReads: Reads[WhichCurrencies] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json.Reads._
+    import play.api.libs.json._
+    (
+      (__ \ "currencies").read[Seq[String]] and
+        __.read[Option[BankMoneySource]] and
+        __.read[Option[WholesalerMoneySource]] and
+        (__ \ "customerMoneySource").readNullable[String].flatMap {
+          case Some("Yes") => Reads(_ => JsSuccess(true))
+          case _ => Reads(_ => JsSuccess(false))
+        }
+      ) (WhichCurrencies.apply _)
+  }
+
+  implicit val jsonWrites1: Writes[WhichCurrencies] = Writes[WhichCurrencies]{w =>
+   val customerMoneySource =  w.customerMoneySource match {
+      case true => Some("Yes")
+      case false => None
+    }
+     Json.obj("currencies" -> w.currencies) ++
+     BankMoneySource.jsonWrites.writes(w.bankMoneySource).as[JsObject] ++
+     WholesalerMoneySource.jsonWrites.writes(w.wholesalerMoneySource).as[JsObject] ++
+     Json.obj("customerMoneySource" -> customerMoneySource)
+  }
 
   implicit def convMsbCe(msbCe: Option[MsbCeDetails]): Option[WhichCurrencies] = {
     msbCe match {

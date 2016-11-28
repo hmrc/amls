@@ -61,7 +61,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
     "agentCompanyName" -> Json.obj("agentCompanyName" ->"test"),
     "agentPartnership" -> Json.obj("agentPartnership" ->"test"),
     "whatDoesYourBusinessDoAtThisAddress" ->Json.obj("activities" -> Json.arr("02","03","05")),
-    "msbServices" -> Json.obj("services"-> Json.arr("01","02")),
+    "msbServices" -> Json.obj("msbServices"-> Json.arr("01","02")),
      "lineId" ->123456,
     "status" ->"Added",
     "endDate"-> Json.obj("endDate" ->"1999-01-01")
