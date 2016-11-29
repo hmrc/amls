@@ -16,8 +16,42 @@
 
 package models.fe.moneyservicebusiness
 
+import play.api.libs.json._
+
 case class BankMoneySource(bankNames : String)
+
+case object BankMoneySource {
+
+  implicit val jsonReads: Reads[Option[BankMoneySource]] = {
+    (__ \ "bankMoneySource").readNullable[String] flatMap {
+      case Some("Yes") => (__ \ "bankNames").read[String].map(names => Some(BankMoneySource(names)))
+      case _ => Reads(_ => JsSuccess(None))
+    }
+  }
+
+  implicit val jsonWrites = Writes[Option[BankMoneySource]] {
+      case Some(bankNames) =>  Json.obj("bankMoneySource" -> "Yes", "bankNames" -> bankNames.bankNames)
+      case _ =>  Json.obj()
+  }
+
+}
 
 case class WholesalerMoneySource(wholesalerNames : String)
 
+object WholesalerMoneySource {
+
+  implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
+    (__ \ "wholesalerMoneySource").readNullable[String] flatMap {
+      case Some("Yes") => (__ \ "wholesalerNames").read[String].map(names => Some(WholesalerMoneySource(names)))
+      case _ => Reads(_ => JsSuccess(None))
+    }
+  }
+
+  implicit val jsonWrites = Writes[Option[WholesalerMoneySource]] {
+    case Some(source) =>  Json.obj("wholesalerMoneySource" -> "Yes", "wholesalerNames" -> source.wholesalerNames)
+    case _ =>  Json.obj()
+  }
+}
+
 case object CustomerMoneySource
+

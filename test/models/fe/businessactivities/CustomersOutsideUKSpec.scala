@@ -26,7 +26,7 @@ class CustomersOutsideUKSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val model: CustomersOutsideUK = CustomersOutsideUK(Some(Seq("GB")))
+      val model: CustomersOutsideUK = CustomersOutsideUK(true, Some(Seq("GB")))
 
       Json.fromJson[CustomersOutsideUK](Json.toJson(model)) mustBe JsSuccess(model)
     }
@@ -45,7 +45,7 @@ class CustomersOutsideUKSpec extends PlaySpec {
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
         MlrAdvisor(false, None))
 
-      CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(Some(List("AD", "GB")))))
+      CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(true, Some(List("AD", "GB")))))
     }
 
     "convert des model to frontend model successfully when countries option is none" in {
@@ -62,7 +62,7 @@ class CustomersOutsideUKSpec extends PlaySpec {
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
         MlrAdvisor(false, None))
 
-      CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(None)))
+      CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(false, None)))
     }
   }
 }

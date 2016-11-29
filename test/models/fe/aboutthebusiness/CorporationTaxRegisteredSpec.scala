@@ -28,7 +28,7 @@ class CorporationTaxRegisteredSpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an false value" in {
       Json.fromJson[CorporationTaxRegistered](Json.obj("registeredForCorporationTax" -> false)) must
-        be(JsSuccess(CorporationTaxRegisteredNo, JsPath \ "registeredForCorporationTax"))
+        be(JsSuccess(CorporationTaxRegisteredNo))
     }
 
     "successfully validate given an `Yes` value" in {
@@ -36,7 +36,7 @@ class CorporationTaxRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("registeredForCorporationTax" -> true, "corporationTaxReference" ->"1234567890")
 
       Json.fromJson[CorporationTaxRegistered](json) must
-        be(JsSuccess(CorporationTaxRegisteredYes("1234567890"), JsPath \ "registeredForCorporationTax" \ "corporationTaxReference"))
+        be(JsSuccess(CorporationTaxRegisteredYes("1234567890"), JsPath \ "corporationTaxReference"))
     }
 
     "fail to validate when given an empty `Yes` value" in {
@@ -44,7 +44,7 @@ class CorporationTaxRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("registeredForCorporationTax" -> true)
 
       Json.fromJson[CorporationTaxRegistered](json) must
-        be(JsError((JsPath \ "registeredForCorporationTax" \ "corporationTaxReference") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "corporationTaxReference") -> ValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

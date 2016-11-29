@@ -25,16 +25,16 @@ class ReceiveCashPaymentsSpec extends PlaySpec {
 
   "ReceiveCashPayments" must {
 
-    val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
+    val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
 
     "roundtrip through json" in {
-      val data = ReceiveCashPayments(Some(paymentMethods))
-      ReceiveCashPayments.jsonR.reads(ReceiveCashPayments.jsonW.writes(data)) mustEqual JsSuccess(data)
+      val data = ReceiveCashPayments(true, Some(paymentMethods))
+      ReceiveCashPayments.format.reads(ReceiveCashPayments.format.writes(data)) mustEqual JsSuccess(data)
     }
 
     "roundtrip through json when ReceiveCashPayments is none" in {
-      val data = ReceiveCashPayments(None)
-      ReceiveCashPayments.jsonR.reads(ReceiveCashPayments.jsonW.writes(data)) mustEqual JsSuccess(data)
+      val data = ReceiveCashPayments(false, None)
+      ReceiveCashPayments.format.reads(ReceiveCashPayments.format.writes(data)) mustEqual JsSuccess(data)
     }
 
     "converting the des model must yield a frontend model" in {
@@ -47,7 +47,7 @@ class ReceiveCashPaymentsSpec extends PlaySpec {
           Some(ReceiptMethods(true, true, true, Some("aaaaaaaaaaaaa")))
         ))
       )
-      ReceiveCashPayments.conv(desModel) must be(Some(ReceiveCashPayments(Some(PaymentMethods(true,true,Some("aaaaaaaaaaaaa"))))))
+      ReceiveCashPayments.conv(desModel) must be(Some(ReceiveCashPayments(true, Some(PaymentMethods(true,true, true, Some("aaaaaaaaaaaaa"))))))
     }
     "converting the des model must yield None if hvdFromUnseenCustDetails is None" in {
       ReceiveCashPayments.conv(DesConstants.testHvd.copy(hvdFromUnseenCustDetails = None)) must be(None)

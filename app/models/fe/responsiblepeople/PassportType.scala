@@ -28,7 +28,6 @@ case object NoPassport extends PassportType
 
 object PassportType {
 
-  import utils.MappingUtils.Implicits._
 
   implicit val jsonReads : Reads[PassportType] = {
     import play.api.libs.json.Reads.StringReads
@@ -41,9 +40,9 @@ object PassportType {
           (__ \ "nonUKPassportNumber").read[String] map {
             NonUKPassport(_)
           }
-        case "03" => NoPassport
+        case "03" => Reads(_ => JsSuccess(NoPassport))
         case _ =>
-          ValidationError("error.invalid")
+          Reads(_ => JsError((JsPath \ "passportType") -> ValidationError("error.invalid")))
       }
   }
 

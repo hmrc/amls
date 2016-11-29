@@ -52,7 +52,7 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
 
       "Deserialise AnotherBodyNo as expected" in {
         val json = Json.obj("anotherBody" -> false)
-        val expected = JsSuccess(AnotherBodyNo, JsPath \ "anotherBody")
+        val expected = JsSuccess(AnotherBodyNo)
         Json.fromJson[AnotherBody](json) must be(expected)
       }
 
@@ -70,7 +70,7 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         val end = new LocalDate(1998, 2, 24) //scalastyle:off magic.number
         val expected = AnotherBodyYes("Name", start, end, "Reason")
 
-        Json.fromJson[AnotherBody](input) must be(JsSuccess(expected, JsPath \ "anotherBody"))
+        Json.fromJson[AnotherBody](input) must be(JsSuccess(expected))
       }
 
       "fail when on missing all data" in {

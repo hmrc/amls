@@ -18,9 +18,7 @@ package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, IpspServicesDetails, MsbMtDetails}
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping._
-import play.api.data.mapping.forms.UrlFormEncoded
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.{JsPath, JsSuccess, Json}
 
 class MostTransactionsSpec extends PlaySpec {
 
@@ -30,7 +28,7 @@ class MostTransactionsSpec extends PlaySpec {
 
       val model: MostTransactions = MostTransactions(Seq("GB"))
 
-      Json.fromJson[MostTransactions](Json.toJson(model)) mustEqual JsSuccess(model)
+      Json.fromJson[MostTransactions](Json.toJson(model)) mustEqual JsSuccess(model, JsPath \ "mostTransactionsCountries" )
     }
   }
 

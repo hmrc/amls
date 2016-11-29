@@ -17,8 +17,6 @@
 package models.fe.moneyservicebusiness
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping._
-import play.api.data.mapping.forms.UrlFormEncoded
 
 class FundsTransferSpec extends PlaySpec {
   "FundsTransfer" must {

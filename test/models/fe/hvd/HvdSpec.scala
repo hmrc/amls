@@ -31,8 +31,8 @@ class HvdSpec extends PlaySpec {
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Wholesale, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = First
-  private val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-  private val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+  private val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+  private val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val NewCashPayment = CashPaymentNo
   val NewProducts = Products(Set(Other("Details")))
@@ -65,6 +65,7 @@ class HvdSpec extends PlaySpec {
 
     "Serialise as expected" in {
       Json.toJson(completeModel) must be(completeJson)
+
     }
 
     "Deserialise as expected" in {

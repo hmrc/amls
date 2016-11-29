@@ -74,7 +74,7 @@ object AgentPremises {
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities
     AgentPremises(ytp.tradingName, ytp.tradingPremisesAddress,
       ytp.isResidential,
-      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.services),
+      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
       z,
       z,
       z,

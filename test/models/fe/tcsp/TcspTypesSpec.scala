@@ -36,7 +36,7 @@ class TcspTypesSpec extends PlaySpec {
         )
 
         Json.fromJson[TcspTypes](json) must
-          be(JsSuccess(Services, JsPath \ "serviceProviders"))
+          be(JsSuccess(Services))
       }
 
       "Read and Write Json valid data successfully" in {
@@ -47,7 +47,7 @@ class TcspTypesSpec extends PlaySpec {
       "throw error message on reading invalid data" in {
 
         Json.fromJson[TcspTypes](Json.obj("serviceProviders" -> Seq("40"))) must
-          be(JsError((JsPath \ "serviceProviders") \ "serviceProviders" -> ValidationError("error.invalid")))
+          be(JsError(JsPath \ "serviceProviders" -> ValidationError("error.invalid")))
 
       }
     }

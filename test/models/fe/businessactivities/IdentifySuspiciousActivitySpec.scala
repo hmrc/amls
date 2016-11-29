@@ -17,8 +17,6 @@
 package models.fe.businessactivities
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 
 class IdentifySuspiciousActivitySpec extends PlaySpec {
 

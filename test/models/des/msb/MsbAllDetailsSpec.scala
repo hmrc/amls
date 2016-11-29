@@ -48,7 +48,7 @@ class MsbAllDetailsSpec extends PlaySpec {
         Some(IdentifyLinkedTransactions(true)),
         None,
         None,
-        Some(BranchesOrAgents(None))
+        Some(BranchesOrAgents(false, None))
       )
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
@@ -62,7 +62,7 @@ class MsbAllDetailsSpec extends PlaySpec {
         Some(IdentifyLinkedTransactions(true)),
         None,
         None,
-        Some(BranchesOrAgents(Some(Seq("GB"))))
+        Some(BranchesOrAgents(true, Some(Seq("GB"))))
       )
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }

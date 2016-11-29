@@ -28,6 +28,6 @@ object ReceiptMethods {
   implicit val format = Json.format[ReceiptMethods]
 
   implicit def conv(model:  PaymentMethods): Option[ReceiptMethods] = {
-    Some(ReceiptMethods(model.courier, model.direct, model.other.isDefined, model.other ))
+    Some(ReceiptMethods(model.courier, model.direct, model.other, model.details ))
   }
 }

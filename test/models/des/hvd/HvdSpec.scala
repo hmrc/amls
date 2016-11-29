@@ -31,8 +31,8 @@ class HvdSpec extends PlaySpec {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Third
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(Some(DefaultCashPayment),
         exciseGoods = Some(DefaultExciseGoods),
@@ -49,8 +49,8 @@ class HvdSpec extends PlaySpec {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = First
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(Some(DefaultCashPayment),
         exciseGoods = Some(DefaultExciseGoods),
@@ -66,8 +66,8 @@ class HvdSpec extends PlaySpec {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Fourth
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
@@ -83,8 +83,8 @@ class HvdSpec extends PlaySpec {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Fifth
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
@@ -99,8 +99,8 @@ class HvdSpec extends PlaySpec {
     "successfully convert frontend model to valid des model with percentageCashPayment option is none" in {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
@@ -114,8 +114,8 @@ class HvdSpec extends PlaySpec {
 
     "successfully convert frontend model to valid des model with LinkedCashPayment option is none" in {
       val DefaultExciseGoods = ExciseGoods(true)
-      val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),

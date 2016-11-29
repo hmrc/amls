@@ -36,10 +36,10 @@ object BusinessMatching {
   implicit val reads: Reads[BusinessMatching] = (
     __.read[ReviewDetails] and
       __.read[BusinessActivities] and
-      __.read[Option[MsbServices]] and
-      __.read[Option[TypeOfBusiness]] and
-      __.read[Option[CompanyRegistrationNumber]] and
-      __.read[Option[BusinessAppliedForPSRNumber]]
+      __.read(Reads.optionNoError[MsbServices]) and
+      __.read(Reads.optionNoError[TypeOfBusiness]) and
+      __.read(Reads.optionNoError[CompanyRegistrationNumber]) and
+      __.read(Reads.optionNoError[BusinessAppliedForPSRNumber])
     ) (BusinessMatching.apply _)
 
   implicit val writes: Writes[BusinessMatching] =

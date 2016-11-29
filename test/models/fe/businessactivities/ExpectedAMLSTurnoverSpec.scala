@@ -32,25 +32,25 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with MockitoSugar {
       "successfully validate given an enum value" in {
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "01")) must
-          be(JsSuccess(ExpectedAMLSTurnover.First, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.First))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "02")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Second, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Second))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "03")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Third, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Third))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "04")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Fourth, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Fourth))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "05")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Fifth, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Fifth))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "06")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Sixth, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Sixth))
 
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "07")) must
-          be(JsSuccess(ExpectedAMLSTurnover.Seventh, JsPath \ "expectedAMLSTurnover"))
+          be(JsSuccess(ExpectedAMLSTurnover.Seventh))
       }
 
       "write the correct value" in {

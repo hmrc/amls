@@ -16,7 +16,6 @@
 
 package models.fe.estateagentbusiness
 
-import models.des.DesConstants
 import models.des.estateagentbusiness.EabResdEstAgncy
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -30,30 +29,26 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
       "successfully validate selecting redress option no" in {
 
         Json.fromJson[RedressScheme](Json.obj("isRedress"-> false)) must
-          be(JsSuccess(RedressSchemedNo, JsPath \ "isRedress"))
+          be(JsSuccess(RedressSchemedNo))
 
       }
 
       "successfully validate json Reads" in {
         Json.fromJson[RedressScheme](Json.obj("isRedress"-> true,"propertyRedressScheme" -> "01")) must
-          be(JsSuccess(ThePropertyOmbudsman, JsPath \ "isRedress" \ "propertyRedressScheme"))
+          be(JsSuccess(ThePropertyOmbudsman))
 
         Json.fromJson[RedressScheme](Json.obj("isRedress"-> true,"propertyRedressScheme" -> "02")) must
-          be(JsSuccess(OmbudsmanServices, JsPath \ "isRedress" \ "propertyRedressScheme"))
+          be(JsSuccess(OmbudsmanServices))
 
         Json.fromJson[RedressScheme](Json.obj("isRedress"-> true,"propertyRedressScheme" -> "03")) must
-          be(JsSuccess(PropertyRedressScheme, JsPath \ "isRedress" \ "propertyRedressScheme"))
+          be(JsSuccess(PropertyRedressScheme))
 
         val json = Json.obj("isRedress"-> true,
                             "propertyRedressScheme" -> "04",
                             "propertyRedressSchemeOther" -> "test")
 
         Json.fromJson[RedressScheme](json) must
-          be(JsSuccess(Other("test"), JsPath \ "isRedress" \ "propertyRedressScheme" \ "propertyRedressSchemeOther"))
-
-        Json.fromJson[RedressScheme](Json.obj("isRedress"-> false)) must
-          be(JsSuccess(RedressSchemedNo, JsPath \ "isRedress"))
-
+          be(JsSuccess(Other("test"), JsPath \ "propertyRedressSchemeOther"))
       }
 
       "fail to validate when given an empty `other` value" in {
@@ -63,7 +58,7 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
                             )
 
         Json.fromJson[RedressScheme](json) must
-          be(JsError((JsPath \ "isRedress" \ "propertyRedressScheme" \ "propertyRedressSchemeOther") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "propertyRedressSchemeOther") -> ValidationError("error.path.missing")))
       }
 
       "fail to validate when invalid option is passed" in {
@@ -73,7 +68,7 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
         )
 
         Json.fromJson[RedressScheme](json) must
-          be(JsError((JsPath \ "isRedress" \ "propertyRedressScheme") -> ValidationError("error.invalid")))
+          be(JsError((JsPath \ "propertyRedressScheme") -> ValidationError("error.invalid")))
       }
 
 

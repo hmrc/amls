@@ -29,13 +29,13 @@ class OtherBusinessTaxMattersSpec extends PlaySpec with MockitoSugar {
     "successfully validate given an enum value" in {
 
       Json.fromJson[OtherBusinessTaxMatters](Json.obj("otherBusinessTaxMatters" -> false)) must
-        be(JsSuccess(OtherBusinessTaxMattersNo, JsPath \ "otherBusinessTaxMatters"))
+        be(JsSuccess(OtherBusinessTaxMattersNo))
     }
 
     "successfully validate given an `Yes` value" in {
 
       Json.fromJson[OtherBusinessTaxMatters](Json.obj("otherBusinessTaxMatters" -> true)) must
-        be(JsSuccess(OtherBusinessTaxMattersYes, JsPath \ "otherBusinessTaxMatters"))
+        be(JsSuccess(OtherBusinessTaxMattersYes))
     }
 
 

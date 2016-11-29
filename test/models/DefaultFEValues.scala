@@ -97,7 +97,7 @@ object BusinessActivitiesSection {
   val model = BusinessActivities(Some(InvolvedInOtherNo), None, Some(ExpectedAMLSTurnover.First),
     Some(BusinessFranchiseYes("Name")),
     Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("value")))),
-    Some(CustomersOutsideUK(Some(Seq("GB", "AB")))),
+    Some(CustomersOutsideUK(true, Some(Seq("GB", "AB")))),
     Some(NCARegistered(true)),
     Some(AccountantForAMLSRegulations(true)),
     Some(IdentifySuspiciousActivity(true)),
@@ -112,7 +112,7 @@ object BusinessActivitiesSection {
   val modelForView = BusinessActivities(Some(InvolvedInOtherNo), None, Some(Third),
     Some(BusinessFranchiseYes("FranchiserName1")),
     Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))),
-    Some(CustomersOutsideUK(Some(List("AD", "GB")))), Some(NCARegistered(true)),
+    Some(CustomersOutsideUK(true, Some(List("AD", "GB")))), Some(NCARegistered(true)),
     Some(AccountantForAMLSRegulations(true)), Some(IdentifySuspiciousActivity(true)),
     Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))), Some(HowManyEmployees("12345678901", "11223344556")),
     Some(WhoIsYourAccountant("Name", Some("TradingName"),
@@ -154,7 +154,7 @@ object MsbSection {
     Some(IdentifyLinkedTransactions(true)),
     Some(SendMoneyToOtherCountry(true)),
     Some(FundsTransfer(true)),
-    Some(BranchesOrAgents(Some(Seq("GB")))),
+    Some(BranchesOrAgents(true, Some(Seq("GB")))),
     Some(TransactionsInNext12Months("12345678963")),
     Some(CETransactionsInNext12Months("12345678963")),
     Some(sendTheLargestAmountsOfMoney),
@@ -168,7 +168,7 @@ object MsbSection {
     Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
     Some(IdentifyLinkedTransactions(true)),
     Some(SendMoneyToOtherCountry(true)),
-    Some(FundsTransfer(true)),Some(BranchesOrAgents(Some(List("AD", "GB")))),
+    Some(FundsTransfer(true)),Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
     Some(TransactionsInNext12Months("11111111111")),Some(CETransactionsInNext12Months("11234567890")),
     Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
     Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),Some(BankMoneySource("BankNames1")),
@@ -411,8 +411,8 @@ object HvdSection {
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = Second
-  private val paymentMethods = PaymentMethods(courier = true, direct = true, other = Some("foo"))
-  private val receiveCashPayments = ReceiveCashPayments(Some(paymentMethods))
+  private val paymentMethods = PaymentMethods(courier = true, direct = true, other= true,details = Some("foo"))
+  private val receiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val completeModel = Some(Hvd(cashPayment = Some(DefaultCashPayment),
     products = Some(DefaultProducts),
@@ -427,7 +427,7 @@ object HvdSection {
     Some(Products(Set(MobilePhones, Clothing, Jewellery,
       ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
     Some(ExciseGoods(true)),Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
-    None,Some(ReceiveCashPayments(Some(PaymentMethods(true,true,Some("aaaaaaaaaaaaa"))))),Some(LinkedCashPayments(true))))
+    None,Some(ReceiveCashPayments(true, Some(PaymentMethods(true,true,true,Some("aaaaaaaaaaaaa"))))),Some(LinkedCashPayments(true))))
 }
 
 object SubscriptionViewModel {

@@ -27,7 +27,7 @@ object NonUkResidentCustDetails{
 
   implicit def convert(nonUKCust:Option[models.fe.businessactivities.CustomersOutsideUK]):NonUkResidentCustDetails ={
     nonUKCust match {
-      case Some(x @ CustomersOutsideUK(Some(countries))) => NonUkResidentCustDetails(true, Some(countries))
+      case Some(x @ CustomersOutsideUK(boolean, Some(countries))) => NonUkResidentCustDetails(boolean, Some(countries))
       case _ => NonUkResidentCustDetails(false)
     }
   }

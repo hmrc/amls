@@ -32,20 +32,18 @@ object ExpectedThroughput {
   case object Sixth extends ExpectedThroughput
   case object Seventh extends ExpectedThroughput
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "throughput").read[String].flatMap[ExpectedThroughput] {
-      case "01" => First
-      case "02" => Second
-      case "03" => Third
-      case "04" => Fourth
-      case "05" => Fifth
-      case "06" => Sixth
-      case "07" => Seventh
+      case "01" => Reads(_ => JsSuccess(First))
+      case "02" => Reads(_ => JsSuccess(Second))
+      case "03" => Reads(_ => JsSuccess(Third))
+      case "04" => Reads(_ => JsSuccess(Fourth))
+      case "05" => Reads(_ => JsSuccess(Fifth))
+      case "06" => Reads(_ => JsSuccess(Sixth))
+      case "07" => Reads(_ => JsSuccess(Seventh))
       case _ =>
-        ValidationError("error.invalid")
+        Reads(_ => JsError(JsPath \ "throughput", ValidationError("error.invalid")))
     }
   }
 

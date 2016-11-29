@@ -30,7 +30,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsNull, Json}
+import play.api.libs.json.{JsValue, JsNull, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
@@ -50,10 +50,7 @@ class SubscriptionControllerSpec
     override val service = mock[SubscriptionService]
   }
 
-  val request = FakeRequest()
-    .withHeaders(CONTENT_TYPE -> "application/json")
-
-  "SubscriptionController" must {
+   "SubscriptionController" must {
 
     val safeId = "XA0001234567890"
     // scalastyle:off
@@ -87,9 +84,17 @@ class SubscriptionControllerSpec
       supervisionSection = None
     )
 
-    "return a `BadRequest` response when the safeId is invalid" in {
+    val postRequest = FakeRequest("POST", "/")
+      .withHeaders(CONTENT_TYPE -> "application/json")
+      .withBody[JsValue](Json.toJson(body))
 
-      val result = SubscriptionController.subscribe("test", "test", "test")(request)(body)
+     val requestWithEmptyBody = FakeRequest()
+       .withHeaders(CONTENT_TYPE -> "application/json")
+       .withBody[JsValue](JsNull)
+
+     "return a `BadRequest` response when the safeId is invalid" in {
+
+      val result = SubscriptionController.subscribe("test", "test", "test")(postRequest)
       val failure = Json.obj("errors" -> Seq("Invalid SafeId"))
 
       status(result) must be(BAD_REQUEST)
@@ -112,7 +117,7 @@ class SubscriptionControllerSpec
         SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.successful(response)
 
-      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(request)(body)
+      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(response))
@@ -124,7 +129,7 @@ class SubscriptionControllerSpec
         SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady (SubscriptionController.subscribe("test", "OrgRef", safeId)(request)(body).failed) {
+      whenReady (SubscriptionController.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -158,7 +163,7 @@ class SubscriptionControllerSpec
           )
       )
 
-      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(request).json(JsNull)
+      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(requestWithEmptyBody)
 
       status(result) mustEqual BAD_REQUEST
       contentAsJson(result) mustEqual response

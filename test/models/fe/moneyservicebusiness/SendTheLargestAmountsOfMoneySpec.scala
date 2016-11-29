@@ -16,11 +16,8 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.DesConstants
 import models.des.msb.{CountriesList, IpspDetails, IpspServicesDetails, MsbMtDetails}
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 import play.api.libs.json.JsSuccess
 
 class SendTheLargestAmountsOfMoneySpec extends PlaySpec {

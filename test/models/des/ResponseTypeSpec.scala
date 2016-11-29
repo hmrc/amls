@@ -17,7 +17,6 @@
 package models.des
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.ValidationError
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 class ResponseTypeSpec extends PlaySpec {

@@ -1,23 +1,26 @@
-
+import play.routes.compiler.StaticRoutesGenerator
 import _root_.wartremover._
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
-import scoverage.ScoverageSbtPlugin._
+import scoverage.ScoverageKeys
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import uk.gov.hmrc.versioning.SbtGitVersioning
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
+  import uk.gov.hmrc.SbtAutoBuildPlugin
+  import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
+  import uk.gov.hmrc.versioning.SbtGitVersioning
+  import play.sbt.routes.RoutesKeys.routesGenerator
 
   import TestPhases._
 
   val appName: String
 
   lazy val appDependencies : Seq[ModuleID] = ???
-  lazy val plugins : Seq[Plugins] = Seq(play.PlayScala)
+  lazy val plugins : Seq[Plugins] = Seq.empty
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
   def makeExcludedFiles(rootDir:File):Seq[String] = {
@@ -43,7 +46,7 @@ trait MicroService {
     import scoverage.ScoverageKeys
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
-      ScoverageKeys.coverageMinimum := 93.66,
+      ScoverageKeys.coverageMinimum := 94.55,
       ScoverageKeys.coverageFailOnMinimum := false,
       ScoverageKeys.coverageHighlighting := true,
       parallelExecution in Test := false
@@ -51,39 +54,29 @@ trait MicroService {
   }
 
   lazy val microservice = Project(appName, file("."))
-    .enablePlugins(plugins : _*)
-    .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
+    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins : _*)
     .settings(playSettings ++ scoverageSettings: _*)
-    .settings(playSettings : _*)
+    .settings(scalaSettings: _*)
     .settings(publishingSettings: _*)
+    .settings(defaultSettings(): _*)
     .settings(
-      targetJvm := "jvm-1.8",
       libraryDependencies ++= appDependencies,
-      parallelExecution in Test := false,
-      fork in Test := false,
       retrieveManaged := true,
-      wartremoverErrors ++= Seq(),
-      wartremoverWarnings ++= Warts.allBut(
-        Wart.NoNeedForMonad,
-        Wart.Nothing,
-        Wart.Any,
-        Wart.NonUnitStatements,
-        Wart.DefaultArguments,
-        Wart.Product
-      ),
-      wartremoverExcluded ++= makeExcludedFiles(baseDirectory.value) :+ "controllers.ref"
+      evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+      routesGenerator := StaticRoutesGenerator
     )
-    .settings(Repositories.playPublishingSettings : _*)
-    .settings(inConfig(TemplateTest)(Defaults.testSettings): _*)
     .configs(IntegrationTest)
-    .settings(inConfig(TemplateItTest)(Defaults.itSettings): _*)
+    .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
     .settings(
       Keys.fork in IntegrationTest := false,
       unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
       testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
-    .settings(resolvers += Resolver.bintrayRepo("hmrc", "releases"))
+    .settings(
+      resolvers += Resolver.bintrayRepo("hmrc", "releases"),
+      resolvers += Resolver.jcenterRepo
+    )
 }
 
 private object TestPhases {

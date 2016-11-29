@@ -32,25 +32,25 @@ class ExpectedBusinessTurnoverSpec extends PlaySpec with MockitoSugar {
       "successfully validate given an enum value" in {
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "01")) must
-          be(JsSuccess(ExpectedBusinessTurnover.First, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.First))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "02")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Second, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Second))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "03")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Third, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Third))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "04")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Fourth, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Fourth))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "05")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Fifth, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Fifth))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "06")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Sixth, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Sixth))
 
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "07")) must
-          be(JsSuccess(ExpectedBusinessTurnover.Seventh, JsPath \ "expectedBusinessTurnover"))
+          be(JsSuccess(ExpectedBusinessTurnover.Seventh))
       }
 
 

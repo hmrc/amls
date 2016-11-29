@@ -32,7 +32,6 @@ class EstateAgentBusinessSpec extends PlaySpec with MockitoSugar {
 
     "validate complete json" must {
       val completeJson = Json.obj(
-        "services" -> Seq("01", "02","03"),
         "isRedress" -> true,
         "propertyRedressScheme" -> "04",
         "propertyRedressSchemeOther" -> "test",
@@ -42,7 +41,7 @@ class EstateAgentBusinessSpec extends PlaySpec with MockitoSugar {
         "penalisedUnderEstateAgentsActDetails" -> "test"
       )
 
-      val completeModel = EstateAgentBusiness(Some(services), Some(redressSchemeOther), Some(professionalBody), Some(penalisedUnderEAAct))
+      val completeModel = EstateAgentBusiness(None,Some(redressSchemeOther), Some(professionalBody), Some(penalisedUnderEAAct))
 
       "Serialise as expected" in {
         Json.toJson(completeModel) must

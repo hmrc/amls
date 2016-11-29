@@ -29,7 +29,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
     "successfully validate given an enum value" in {
 
       Json.fromJson[PreviouslyRegistered](Json.obj("previouslyRegistered" -> false)) must
-        be(JsSuccess(PreviouslyRegisteredNo, JsPath \ "previouslyRegistered"))
+        be(JsSuccess(PreviouslyRegisteredNo))
     }
 
     "successfully validate given an `Yes` value" in {
@@ -37,7 +37,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("previouslyRegistered" -> true, "prevMLRRegNo" ->"12345678")
 
       Json.fromJson[PreviouslyRegistered](json) must
-        be(JsSuccess(PreviouslyRegisteredYes("12345678"), JsPath \ "previouslyRegistered" \ "prevMLRRegNo"))
+        be(JsSuccess(PreviouslyRegisteredYes("12345678"), JsPath \ "prevMLRRegNo"))
     }
 
     "fail to validate when given an empty `Yes` value" in {
@@ -45,7 +45,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("previouslyRegistered" -> true)
 
       Json.fromJson[PreviouslyRegistered](json) must
-        be(JsError((JsPath \ "previouslyRegistered" \ "prevMLRRegNo") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "prevMLRRegNo") -> ValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

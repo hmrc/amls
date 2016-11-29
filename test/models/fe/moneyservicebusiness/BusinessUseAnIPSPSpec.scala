@@ -17,11 +17,7 @@
 package models.fe.moneyservicebusiness
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsPath, JsSuccess}
-
-import scala.collection.Seq
 
 class BusinessUseAnIPSPSpec extends PlaySpec {
 
@@ -31,13 +27,13 @@ class BusinessUseAnIPSPSpec extends PlaySpec {
 
       "Successfully read the Json value" in {
         val data = BusinessUseAnIPSPYes("TEST", "123456789123456")
-        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data, JsPath \ "useAnIPSP"))
+        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data))
 
       }
 
       "Successfully read the Json value for option no" in {
         val data = BusinessUseAnIPSPNo
-        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data, JsPath \ "useAnIPSP"))
+        BusinessUseAnIPSP.jsonReads.reads(BusinessUseAnIPSP.jsonWrites.writes(data)) must be (JsSuccess(data))
 
       }
     }

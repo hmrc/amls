@@ -41,26 +41,26 @@ class TaxMattersSpec extends WordSpec with Matchers {
       val json = Json.obj(
         "manageYourTaxAffairs" -> true
       )
-      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(true), JsPath \"manageYourTaxAffairs"))
+      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(true)))
     }
 
     "Deserialise no from json Correctly" in {
       val json = Json.obj(
         "manageYourTaxAffairs" -> false
       )
-      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(false), JsPath \"manageYourTaxAffairs"))
+      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(false)))
     }
 
     "Round trip yes" in {
       TaxMatters.jsonReads.reads (
         TaxMatters.jsonWrites.writes(TaxMatters(true))
-      ) should be (JsSuccess(TaxMatters(true), JsPath \ "manageYourTaxAffairs"))
+      ) should be (JsSuccess(TaxMatters(true)))
     }
 
     "Round trip no" in {
       TaxMatters.jsonReads.reads (
         TaxMatters.jsonWrites.writes(TaxMatters(false))
-      ) should be (JsSuccess(TaxMatters(false), JsPath \ "manageYourTaxAffairs"))
+      ) should be (JsSuccess(TaxMatters(false)))
     }
   }
 

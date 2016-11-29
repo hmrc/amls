@@ -29,19 +29,19 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with MockitoSugar {
 
       "successfully validate given an enum value" in {
         Json.fromJson[ServicesOfAnotherTCSP](Json.obj("servicesOfAnotherTCSP" -> false)) must
-          be(JsSuccess(ServicesOfAnotherTCSPNo, JsPath \ "servicesOfAnotherTCSP"))
+          be(JsSuccess(ServicesOfAnotherTCSPNo))
       }
 
       "successfully validate given an `Yes` value" in {
         Json.fromJson[ServicesOfAnotherTCSP](Json.obj("servicesOfAnotherTCSP" -> true, "mlrRefNumber" -> "12345678")) must
-          be(JsSuccess(ServicesOfAnotherTCSPYes("12345678"), JsPath \ "servicesOfAnotherTCSP" \ "mlrRefNumber"))
+          be(JsSuccess(ServicesOfAnotherTCSPYes("12345678"), JsPath \ "mlrRefNumber"))
       }
 
       "fail to validate when given an empty `Yes` value" in {
         val json = Json.obj("servicesOfAnotherTCSP" -> true)
 
         Json.fromJson[ServicesOfAnotherTCSP](json) must
-          be(JsError((JsPath \ "servicesOfAnotherTCSP" \ "mlrRefNumber") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "mlrRefNumber") -> ValidationError("error.path.missing")))
       }
 
       "write the correct value" in {

@@ -39,19 +39,19 @@ object BusinessActivities {
   import play.api.libs.json._
 
   implicit val reads: Reads[BusinessActivities] = (
-    __.read[Option[InvolvedInOther]] and
-      __.read[Option[ExpectedBusinessTurnover]] and
-      __.read[Option[ExpectedAMLSTurnover]] and
-      __.read[Option[BusinessFranchise]] and
-      __.read[Option[TransactionRecord]] and
-      __.read[Option[CustomersOutsideUK]] and
-      __.read[Option[NCARegistered]] and
-      __.read[Option[AccountantForAMLSRegulations]] and
-      __.read[Option[IdentifySuspiciousActivity]] and
-      __.read[Option[RiskAssessmentPolicy]] and
-      __.read[Option[HowManyEmployees]] and
-      __.read[Option[WhoIsYourAccountant]] and
-      __.read[Option[TaxMatters]]
+    __.read(Reads.optionNoError[InvolvedInOther]) and
+      __.read(Reads.optionNoError[ExpectedBusinessTurnover]) and
+      __.read(Reads.optionNoError[ExpectedAMLSTurnover]) and
+      __.read(Reads.optionNoError[BusinessFranchise]) and
+      __.read(Reads.optionNoError[TransactionRecord]) and
+      __.read(Reads.optionNoError[CustomersOutsideUK]) and
+      __.read(Reads.optionNoError[NCARegistered]) and
+      __.read(Reads.optionNoError[AccountantForAMLSRegulations]) and
+      __.read(Reads.optionNoError[IdentifySuspiciousActivity]) and
+      __.read(Reads.optionNoError[RiskAssessmentPolicy]) and
+      __.read(Reads.optionNoError[HowManyEmployees]) and
+      __.read(Reads.optionNoError[WhoIsYourAccountant]) and
+      __.read(Reads.optionNoError[TaxMatters])
     ) (BusinessActivities.apply _)
 
   implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {

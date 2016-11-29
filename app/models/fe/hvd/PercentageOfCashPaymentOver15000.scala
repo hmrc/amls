@@ -35,18 +35,16 @@ object PercentageOfCashPaymentOver15000 {
   case object Fourth extends PercentageOfCashPaymentOver15000
   case object Fifth extends PercentageOfCashPaymentOver15000
 
-  import utils.MappingUtils.Implicits._
-
   implicit val jsonReads = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "percentage").read[String].flatMap[PercentageOfCashPaymentOver15000] {
-      case "01" => First
-      case "02" => Second
-      case "03" => Third
-      case "04" => Fourth
-      case "05" => Fifth
+      case "01" => Reads(_ => JsSuccess(First))
+      case "02" => Reads(_ => JsSuccess(Second))
+      case "03" => Reads(_ => JsSuccess(Third))
+      case "04" => Reads(_ => JsSuccess(Fourth))
+      case "05" => Reads(_ => JsSuccess(Fifth))
       case _ =>
-        ValidationError("error.invalid")
+        Reads(_ => JsError((JsPath \ "percentage") -> ValidationError("error.invalid")))
     }
   }
 

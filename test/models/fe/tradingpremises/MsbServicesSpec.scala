@@ -35,7 +35,7 @@ class MsbServicesSpec extends PlaySpec {
 
     "fail when on invalid data" in {
       Json.fromJson[MsbServices](Json.obj("msbServices" -> Seq("40"))) must
-        be(JsError((JsPath \ "msbServices")(0) -> ValidationError("error.invalid")))
+        be(JsError((JsPath \ "msbServices") (0)  -> ValidationError("error.invalid")))
     }
 
     "convert msb des model to frontend model" in {

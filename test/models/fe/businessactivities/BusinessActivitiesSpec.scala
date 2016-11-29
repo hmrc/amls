@@ -32,7 +32,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   val DefaultInvolvedInOther = InvolvedInOtherYes(DefaultInvolvedInOtherDetails)
   val DefaultBusinessFranchise = BusinessFranchiseYes(DefaultFranchiseName)
   val DefaultTransactionRecord = TransactionRecordYes(Set(Paper, DigitalSoftware(DefaultSoftwareName)))
-  val DefaultCustomersOutsideUK = CustomersOutsideUK(Some(Seq("GB")))
+  val DefaultCustomersOutsideUK = CustomersOutsideUK(true, Some(Seq("GB")))
   val DefaultNCARegistered = NCARegistered(true)
   val DefaultAccountantForAMLSRegulations = AccountantForAMLSRegulations(true)
   val DefaultRiskAssessments = RiskAssessmentPolicyYes(Set(PaperBased))
@@ -49,7 +49,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
   val NewBusinessTurnover = ExpectedBusinessTurnover.Second
   val NewAMLSTurnover = ExpectedAMLSTurnover.Second
   val NewTransactionRecord = TransactionRecordNo
-  val NewCustomersOutsideUK = CustomersOutsideUK(None)
+  val NewCustomersOutsideUK = CustomersOutsideUK(false, None)
   val NewNCARegistered = NCARegistered(false)
   val NewAccountantForAMLSRegulations = AccountantForAMLSRegulations(false)
   val NewRiskAssessment = RiskAssessmentPolicyNo
@@ -87,7 +87,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
       "manageYourTaxAffairs" -> true
     )
 
-    val completeModel = BusinessActivities(
+     val completeModel = BusinessActivities(
       involvedInOther = Some(DefaultInvolvedInOther),
       expectedBusinessTurnover = Some(DefaultBusinessTurnover),
       expectedAMLSTurnover = Some(DefaultAMLSTurnover),
@@ -143,7 +143,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
       val feModel = BusinessActivities(Some(InvolvedInOtherNo),None,None,Some(BusinessFranchiseYes("FranchiserName1")),
         Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))),
-        Some(CustomersOutsideUK(Some(List("AD", "GB")))),
+        Some(CustomersOutsideUK(true, Some(List("AD", "GB")))),
         Some(NCARegistered(true)),Some(AccountantForAMLSRegulations(true)),Some(IdentifySuspiciousActivity(true)),
         Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))),Some(HowManyEmployees("14","11")),
         Some(WhoIsYourAccountant("Name",Some("TradingName"),

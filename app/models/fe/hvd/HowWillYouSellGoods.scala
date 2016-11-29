@@ -17,63 +17,13 @@
 package models.fe.hvd
 
 import models.des.businessactivities.BusinessActivities
-import play.api.data.mapping._
-import play.api.libs.json.{Reads, Writes}
-import utils.TraversableValidators
-import utils.MappingUtils.Implicits._
+import play.api.libs.json.Json
 
-
-case class HowWillYouSellGoods(channels : Seq[SalesChannel])
-
-trait HowWillYouSellGoods0 {
-  private implicit def rule[A]
-  (implicit
-   a: Path => RuleLike[A, Seq[String]]
-  ) = From[A] { __ =>
-    (__ \ "salesChannels")
-      .read(TraversableValidators.minLengthR[Seq[String]](1))
-      .withMessage("error.required.hvd.how-will-you-sell-goods").fmap { s =>
-      HowWillYouSellGoods(s.map {
-        case "Retail" => Retail
-        case "Wholesale" => Wholesale
-        case "Auction" => Auction
-      })
-    }
-  }
-
-  private implicit def write[A]
-  (implicit
-   a: Path => WriteLike[Seq[String], A]) = To[A] { __ =>
-    (__ \ "salesChannels").write[Seq[String]].contramap { hwysg: HowWillYouSellGoods =>
-      hwysg.channels.map {
-        case Retail => "Retail"
-        case Wholesale => "Wholesale"
-        case Auction => "Auction"
-      }
-    }
-  }
-
-  val jsonR: Reads[HowWillYouSellGoods] = {
-    import play.api.data.mapping.json.Rules.{JsValue => _, pickInJson => _, _}
-    import utils.JsonMapping._
-    implicitly[Reads[HowWillYouSellGoods]]
-  }
-
-
-  val jsonW: Writes[HowWillYouSellGoods] = {
-    import play.api.data.mapping.json.Writes._
-    import utils.JsonMapping._
-    implicitly[Writes[HowWillYouSellGoods]]
-
-  }
-}
+case class HowWillYouSellGoods(salesChannels : Seq[SalesChannel])
 
 object HowWillYouSellGoods {
 
-  private object Cache extends HowWillYouSellGoods0
-
-  implicit val jsonR: Reads[HowWillYouSellGoods] = Cache.jsonR
-  implicit val jsonW: Writes[HowWillYouSellGoods] = Cache.jsonW
+  implicit val formats = Json.format[HowWillYouSellGoods]
 
   def convRetail(retail: Boolean): Option[SalesChannel] =
     retail match {

@@ -27,11 +27,11 @@ class BankAccountTypeSpec extends PlaySpec with MockitoSugar {
 
     "validate Json read" in {
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "01")) must
-        be (JsSuccess(PersonalAccount, JsPath \ "bankAccountType"))
+        be (JsSuccess(PersonalAccount))
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "02")) must
-        be (JsSuccess(BelongsToBusiness, JsPath \ "bankAccountType"))
+        be (JsSuccess(BelongsToBusiness))
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "03")) must
-        be (JsSuccess(BelongsToOtherBusiness, JsPath \ "bankAccountType"))
+        be (JsSuccess(BelongsToOtherBusiness))
 
     }
 

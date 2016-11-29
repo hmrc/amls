@@ -19,8 +19,6 @@ package models.fe.businessactivities
 import models.des.businessactivities.{FormalRiskAssessmentDetails, RiskAssessmentFormat}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.mapping.{Failure, Path, Success}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class RiskAssessmentSpec extends PlaySpec with MockitoSugar {
@@ -37,14 +35,14 @@ class RiskAssessmentSpec extends PlaySpec with MockitoSugar {
           "riskassessments" -> Seq("01", "02"))
 
         Json.fromJson[RiskAssessmentPolicy](json) must
-          be(JsSuccess(RiskAssessmentPolicyYes(formalRiskAssessments), JsPath \ "hasPolicy" \ "riskassessments"))
+          be(JsSuccess(RiskAssessmentPolicyYes(formalRiskAssessments)))
       }
 
       "successfully validate given values with option No" in {
         val json = Json.obj("hasPolicy" -> false)
 
         Json.fromJson[RiskAssessmentPolicy](json) must
-          be(JsSuccess(RiskAssessmentPolicyNo, JsPath \ "hasPolicy"))
+          be(JsSuccess(RiskAssessmentPolicyNo))
       }
 
       "fail when on invalid data" in {

@@ -19,9 +19,8 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{PreviousNameDetails, PersonName => DesPersonName}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
-import org.specs2.mock.mockito.MockitoMatchers
 
-class PreviousNameSpec extends PlaySpec with MockitoMatchers {
+class PreviousNameSpec extends PlaySpec {
 
   "PreviousName" must {
     "Json Read/write with PreviousName details" in {
