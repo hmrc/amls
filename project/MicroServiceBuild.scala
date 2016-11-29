@@ -18,7 +18,6 @@ private object AppDependencies {
   private val playConfigVersion = "3.0.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val domainVersion = "4.0.0"
-  private val metricsGraphiteVersion = "3.0.2"
   private val playReactivemongoVersion = "5.1.0"
 
   val compile = Seq(
@@ -30,8 +29,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-url-binders" % playUrlBindersVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
-    "uk.gov.hmrc" %% "domain" % domainVersion,
-    "com.codahale.metrics" % "metrics-graphite" % metricsGraphiteVersion
+    "uk.gov.hmrc" %% "domain" % domainVersion
   )
 
   trait TestDependencies {
