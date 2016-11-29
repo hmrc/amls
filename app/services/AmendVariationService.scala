@@ -88,7 +88,7 @@ trait AmendVariationService {
     }
 
     val responsiblePeopleSplit: Option[(Seq[ResponsiblePersons], Seq[ResponsiblePersons])] =
-      request.responsiblePersons.map(_.partition(_.msbOrTcsp.fold(false)(x => x.passedFitAndProperTest)))
+      request.responsiblePersons.map(_.partition(_.msbOrTcsp.fold(true)(x => x.passedFitAndProperTest)))
 
     val addedResponsiblePeopleCount = detailsMatch(request.responsiblePersons)
 
