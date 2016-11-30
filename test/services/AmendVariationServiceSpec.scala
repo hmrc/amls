@@ -18,7 +18,7 @@ package services
 
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import models.des
-import models.des.{DesConstants, ReadStatusResponse}
+import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
 import models.des.responsiblepeople.{MsbOrTcsp, RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import org.joda.time.{LocalDate, LocalDateTime}
@@ -133,7 +133,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
       whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
         result =>
-          result mustEqual response.copy(addedResponsiblePeople = Some(1))
+          result mustEqual response.copy(addedResponsiblePeopleFitAndProper = Some(1))
       }
 
     }
@@ -159,6 +159,30 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
       whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
         result =>
           result mustEqual response.copy(addedResponsiblePeopleFitAndProper = Some(1))
+      }
+    }
+
+    "return a successful response with 1 responsible person with Msb or Tscp" in {
+
+      val request = mock[des.AmendVariationRequest]
+      val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
+      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
+
+      println(">>")
+
+      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp=Some(MsbOrTcsp(false)), extra = addedExtra))))
+
+      when(request.tradingPremises).thenReturn(tradingPremises)
+
+      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+
+      when {
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
+      } thenReturn Future.successful(response)
+
+      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
+        result =>
+          result mustEqual response.copy(addedResponsiblePeople = Some(1))
       }
     }
 
