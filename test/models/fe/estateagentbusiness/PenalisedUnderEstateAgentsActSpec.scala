@@ -16,6 +16,8 @@
 
 package models.fe.estateagentbusiness
 
+import models.des.businessactivities.BusinessActivities
+import models.des.{DesConstants, SubscriptionView}
 import models.des.estateagentbusiness.EabAll
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -60,7 +62,9 @@ class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar {
         false,
         None
       )
-      PenalisedUnderEstateAgentsAct.conv(Some(des)) must be(Some(PenalisedUnderEstateAgentsActYes("test")))
+
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = Some(des))
+      PenalisedUnderEstateAgentsAct.conv(view) must be(Some(PenalisedUnderEstateAgentsActYes("test")))
     }
     "convert PenalisedUnderEstateAgentsAct des model to frontend model no selected" in {
       val des = EabAll(
@@ -69,10 +73,17 @@ class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar {
         prevWarnedWRegToEstateAgencyActivities = true,
         prevWarnWRegProvideDetails = Some("test")
       )
-      PenalisedUnderEstateAgentsAct.conv(Some(des)) must be(Some(PenalisedUnderEstateAgentsActNo))
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = Some(des))
+      PenalisedUnderEstateAgentsAct.conv(view) must be(Some(PenalisedUnderEstateAgentsActNo))
     }
     "return none given no model" in {
-      PenalisedUnderEstateAgentsAct.conv(None) must be(None)
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = None,businessActivities = BusinessActivities())
+      PenalisedUnderEstateAgentsAct.conv(view) must be(None)
+    }
+
+    "return PenalisedUnderEstateAgentsActNo given no model but Eab" in {
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = None)
+      PenalisedUnderEstateAgentsAct.conv(view) must be(Some(PenalisedUnderEstateAgentsActNo))
     }
 
   }

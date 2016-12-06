@@ -40,12 +40,13 @@ object ProfessionalBody {
     case ProfessionalBodyNo => Json.obj("penalised" -> false)
   }
 
-  implicit def conv(des: Option[EabAll]): Option[ProfessionalBody] = {
-    des match {
+  implicit def conv(desView: models.des.SubscriptionView): Option[ProfessionalBody] = {
+    desView.eabAll match {
       case Some(data) => data.prevWarnedWRegToEstateAgencyActivities match {
         case true => Some(ProfessionalBodyYes(data.prevWarnWRegProvideDetails.getOrElse("")))
         case false => Some(ProfessionalBodyNo)
       }
+      case None if(desView.businessActivities.eabServicesCarriedOut.isDefined) => Some(ProfessionalBodyNo)
       case None => None
     }
   }

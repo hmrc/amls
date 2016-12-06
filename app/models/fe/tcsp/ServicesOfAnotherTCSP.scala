@@ -43,13 +43,15 @@ object ServicesOfAnotherTCSP {
 
   }
 
-  implicit def conv(tcspAll: Option[TcspAll]): Option[ServicesOfAnotherTCSP] = {
-    tcspAll match{
+  implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
+    desView.tcspAll match{
       case Some(tcsp) => tcsp.anotherTcspServiceProvider match {
         case true => Some(ServicesOfAnotherTCSPYes(tcsp.tcspMlrRef.getOrElse("")))
         case false => Some(ServicesOfAnotherTCSPNo)
       }
-      case None => None
+      case None if(desView.businessActivities.tcspServicesOffered.isDefined
+        || desView.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff.isDefined) =>  Some(ServicesOfAnotherTCSPNo)
+      case _ => None
     }
 
   }

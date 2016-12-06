@@ -50,7 +50,7 @@ object EstateAgentBusiness {
   implicit def conv(view: models.des.SubscriptionView): Option[EstateAgentBusiness] = {
 
       Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut,
-        view.eabResdEstAgncy, view.eabAll, view.eabAll))
+        view.eabResdEstAgncy, view, view))
 
   }
 }
