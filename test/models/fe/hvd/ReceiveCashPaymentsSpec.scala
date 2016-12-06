@@ -18,8 +18,10 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
+import models.fe.hvd
+import models.fe.hvd.ReceiveCashPayments
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.JsSuccess
+import play.api.libs.json.{Json, JsSuccess}
 
 class ReceiveCashPaymentsSpec extends PlaySpec {
 
@@ -49,8 +51,26 @@ class ReceiveCashPaymentsSpec extends PlaySpec {
       )
       ReceiveCashPayments.conv(desModel) must be(Some(ReceiveCashPayments(true, Some(PaymentMethods(true,true, true, Some("aaaaaaaaaaaaa"))))))
     }
+
     "converting the des model must yield None if hvdFromUnseenCustDetails is None" in {
       ReceiveCashPayments.conv(DesConstants.testHvd.copy(hvdFromUnseenCustDetails = None)) must be(None)
+    }
+  }
+
+  "ReceiveCashPayments deserialisation" when {
+    "payment methods is an empty object" must {
+      "indicate that payments are not Received" in {
+        val json = Json.parse(
+          """
+            |{
+            |    "receivePayments": false,
+            |    "paymentMethods": {}
+            |}
+          """.stripMargin
+        )
+
+        ReceiveCashPayments.format.reads(json) must be (JsSuccess(ReceiveCashPayments(false, None)))
+      }
     }
   }
 }

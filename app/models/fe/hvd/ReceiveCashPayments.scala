@@ -16,8 +16,10 @@
 
 package models.fe.hvd
 
-import play.api.libs.json.{Writes, _}
+import play.api.libs.json
+import play.api.libs.json.{Reads, __, Json, Format, JsObject, JsSuccess, JsValue, JsResult}
 import models.des.hvd.{Hvd=> DesHvd}
+import play.api.libs.functional.syntax._
 
 
 case class ReceiveCashPayments(receivePayments:Boolean, paymentMethods: Option[PaymentMethods])
@@ -25,7 +27,24 @@ case class ReceiveCashPayments(receivePayments:Boolean, paymentMethods: Option[P
 
 object ReceiveCashPayments {
 
-  implicit val format = Json.format[ReceiveCashPayments]
+  private def emptyObjectReads[A] (implicit r : Reads[A]) : Reads[Option[A]] = Reads { x =>
+    if (x == Json.obj()) {
+      JsSuccess(None).asInstanceOf[JsResult[Option[A]]]
+    } else {
+      JsSuccess(Some(x.as[A])).asInstanceOf[JsResult[Option[A]]]
+    }
+  }
+
+  private val jsReads : Reads[ReceiveCashPayments] =(
+      (__ \ "receivePayments").read[Boolean] ~
+      (__ \ "paymentMethods")
+        .readNullable[Option[PaymentMethods]](emptyObjectReads[PaymentMethods])
+        .map(a => a.flatten)
+    )(ReceiveCashPayments.apply _)
+
+  private val jsWrites = Json.writes[ReceiveCashPayments]
+
+  implicit val format = Format(jsReads, jsWrites)
 
   implicit def conv(hvd: DesHvd): Option[ReceiveCashPayments] = {
 
@@ -33,7 +52,5 @@ object ReceiveCashPayments {
       case Some(unseen) => Some(ReceiveCashPayments(unseen.receiptMethods.isDefined, unseen.receiptMethods))
       case None => None
     }
-
   }
-
 }
