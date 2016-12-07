@@ -19,12 +19,12 @@ package models.fe.hvd
 import models.des.{DesConstants, SubscriptionView}
 import models.fe.hvd.PercentageOfCashPaymentOver15000.First
 import org.joda.time.LocalDate
+import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class HvdSpec extends PlaySpec {
+class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
 
-  // scalastyle:off
   private val DefaultCashPayment = CashPaymentYes(new LocalDate(1956, 2, 15))
   private val DefaultProducts = Products(Set(Other("Details")))
   private val DefaultExciseGoods = ExciseGoods(true)
