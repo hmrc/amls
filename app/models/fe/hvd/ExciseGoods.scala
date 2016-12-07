@@ -28,7 +28,8 @@ object ExciseGoods {
   implicit def conv(ba: BusinessActivities): Option[ExciseGoods] = {
     ba.hvdAlcoholTobacco match {
       case Some(goods) => Some(ExciseGoods(goods.dutySuspExAtGoods))
-      case None => None
+      case None if(ba.hvdGoodsSold.isDefined) => Some(ExciseGoods(false))
+      case _ => None
     }
   }
 }

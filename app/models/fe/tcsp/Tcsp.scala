@@ -43,6 +43,6 @@ object Tcsp {
     tcsp.getOrElse(Tcsp())
 
   implicit def conv(view: SubscriptionView): Option[Tcsp] = {
-      Some(Tcsp(view, view.businessActivities, view.tcspAll))
+      Some(Tcsp(view, view.businessActivities, view))
     }
 }

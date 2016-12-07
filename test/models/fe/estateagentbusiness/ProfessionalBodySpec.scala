@@ -16,6 +16,8 @@
 
 package models.fe.estateagentbusiness
 
+import models.des.DesConstants
+import models.des.businessactivities.BusinessActivities
 import models.des.estateagentbusiness.EabAll
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -66,8 +68,8 @@ class ProfessionalBodySpec extends PlaySpec with MockitoSugar {
         prevWarnedWRegToEstateAgencyActivities = true,
         prevWarnWRegProvideDetails = Some("test")
       )
-
-      ProfessionalBody.conv(Some(des)) must be(Some(ProfessionalBodyYes("test")))
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = Some(des))
+      ProfessionalBody.conv(view) must be(Some(ProfessionalBodyYes("test")))
     }
     "convert ProfessionalBody des model to frontend model no selected" in {
       val des = EabAll(
@@ -76,10 +78,16 @@ class ProfessionalBodySpec extends PlaySpec with MockitoSugar {
         false,
         None
       )
-      ProfessionalBody.conv(Some(des)) must be(Some(ProfessionalBodyNo))
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = Some(des))
+      ProfessionalBody.conv(view) must be(Some(ProfessionalBodyNo))
+    }
+    "return none given no model and carry out Eab" in {
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = None)
+      ProfessionalBody.conv(view) must be(Some(ProfessionalBodyNo))
     }
     "return none given no model" in {
-      ProfessionalBody.conv(None) must be(None)
+      val view = DesConstants.SubscriptionViewModel.copy(eabAll = None,businessActivities = BusinessActivities())
+      ProfessionalBody.conv(view) must be(None)
     }
 
   }

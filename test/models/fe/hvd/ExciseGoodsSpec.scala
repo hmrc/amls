@@ -29,8 +29,12 @@ class ExciseGoodsSpec extends PlaySpec {
           JsPath \ "exciseGoods"))
       }
     }
+    "convert to None if hvdAlcoholTobacco is None but hvd" in {
+      ExciseGoods.conv(DesConstants.testBusinessActivities.copy(hvdAlcoholTobacco = None)) must be(Some(ExciseGoods(false)))
+    }
+
     "convert to None if hvdAlcoholTobacco is None" in {
-      ExciseGoods.conv(DesConstants.testBusinessActivities.copy(hvdAlcoholTobacco = None)) must be(None)
+      ExciseGoods.conv(DesConstants.testBusinessActivities.copy(hvdAlcoholTobacco = None,hvdGoodsSold = None)) must be(None)
     }
   }
 }

@@ -42,12 +42,13 @@ object PenalisedUnderEstateAgentsAct {
     case PenalisedUnderEstateAgentsActNo => Json.obj("penalisedUnderEstateAgentsAct" -> false)
   }
 
-  implicit def conv(des: Option[EabAll]): Option[PenalisedUnderEstateAgentsAct] = {
-    des match {
+  implicit def conv(desView: models.des.SubscriptionView): Option[PenalisedUnderEstateAgentsAct] = {
+    desView.eabAll match {
       case Some(data) => data.estateAgencyActProhibition match {
         case true => Some(PenalisedUnderEstateAgentsActYes(data.estAgncActProhibProvideDetails.getOrElse("")))
         case false => Some(PenalisedUnderEstateAgentsActNo)
       }
+      case None if(desView.businessActivities.eabServicesCarriedOut.isDefined) => Some(PenalisedUnderEstateAgentsActNo)
       case None => None
     }
   }
