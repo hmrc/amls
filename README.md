@@ -14,3 +14,4 @@ API
 |```/subscription/:accountType/:ref/:amlsRegistrationNumber/status``` | GET |
 |```/subscription/:accountType/:ref/:amlsRegistrationNumber``` | GET |
 |```/payment/:accountType/:ref/:amlsRegistrationNumber``` | GET |
+
