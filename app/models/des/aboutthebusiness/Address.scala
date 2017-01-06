@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ case class Address (addressLine1: String,
                     addressLine3 : Option[String],
                     addressLine4 : Option[String],
                     country : String,
-                    postcode : Option[String]
+                    postcode : Option[String],
+                    addressChangeDate: Option[String] = None
                    )
 
 object Address {
@@ -32,8 +33,8 @@ object Address {
 
   implicit def convert(registeredOffice : RegisteredOffice):Address = {
     registeredOffice match {
-      case x:RegisteredOfficeUK => Address(x.addressLine1, x.addressLine2, x.addressLine3, x.addressLine4, "GB", Some(x.postCode))
-      case y:RegisteredOfficeNonUK =>Address(y.addressLine1, y.addressLine2, y.addressLine3, y.addressLine4, y.country, None)
+      case x:RegisteredOfficeUK => Address(x.addressLine1, x.addressLine2, x.addressLine3, x.addressLine4, "GB", Some(x.postCode), x.dateOfChange)
+      case y:RegisteredOfficeNonUK =>Address(y.addressLine1, y.addressLine2, y.addressLine3, y.addressLine4, y.country, None, y.dateOfChange)
     }
   }
 

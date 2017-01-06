@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ case class RegisteredOfficeUK(
                                addressLine2: String,
                                addressLine3: Option[String] = None,
                                addressLine4: Option[String] = None,
-                               postCode: String
+                               postCode: String,
+                               dateOfChange: Option[String] = None
                              ) extends RegisteredOffice
 
 case class RegisteredOfficeNonUK(
@@ -34,7 +35,8 @@ case class RegisteredOfficeNonUK(
                                   addressLine2: String,
                                   addressLine3: Option[String] = None,
                                   addressLine4: Option[String] = None,
-                                  country: String
+                                  country: String,
+                                  dateOfChange: Option[String] = None
                                 ) extends RegisteredOffice
 
 object RegisteredOffice {
@@ -50,7 +52,8 @@ object RegisteredOffice {
             (__ \ "addressLine2").read[String] and
             (__ \ "addressLine3").readNullable[String] and
             (__ \ "addressLine4").readNullable[String] and
-            (__ \ "postCode").read[String]
+            (__ \ "postCode").read[String] and
+            (__ \ "dateOfChange").readNullable[String]
           ) (RegisteredOfficeUK.apply _) map identity[RegisteredOffice]
       ) orElse
       (
@@ -58,7 +61,8 @@ object RegisteredOffice {
           (__ \ "addressLineNonUK2").read[String] and
           (__ \ "addressLineNonUK3").readNullable[String] and
           (__ \ "addressLineNonUK4").readNullable[String] and
-          (__ \ "country").read[String]
+          (__ \ "country").read[String] and
+          (__ \ "dateOfChange").readNullable[String]
         ) (RegisteredOfficeNonUK.apply _)
   }
 
