@@ -71,7 +71,7 @@ object FeeResponse {
   }
 
   implicit def convert2(amendVariationResponse: AmendVariationResponse,  amlsReferenceNumber: String): FeeResponse = {
-    val data = FeeResponse(AmendOrVariationResponseType,
+    FeeResponse(AmendOrVariationResponseType,
       amlsReferenceNumber,
       amendVariationResponse.registrationFee.getOrElse(0),
       amendVariationResponse.fPFee,
@@ -80,8 +80,6 @@ object FeeResponse {
       amendVariationResponse.paymentReference,
       amendVariationResponse.difference,
       DateTime.now(DateTimeZone.UTC))
-
-    data
   }
 
   val dateTimeFormat = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
