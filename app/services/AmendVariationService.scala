@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,7 +167,15 @@ trait AmendVariationService {
                                 addedAgentHalfYearlyTradingPremisesCount: Int,
                                 addedOwnBusinessZeroRatedTradingPremisesCount: Int,
                                 addedAgentZeroRatedTradingPremisesCount: Int): AmendVariationResponse = {
+
+    val (registrationFees, premisesFees, totalFees) = (response.registrationFee, response.premiseFee, response.totalFees) match {
+      case (Some(regFee), Some(premFee), Some(totalFee)) => (regFee, premFee, totalFee)
+      case _ => (BigDecimal(0), BigDecimal(0), BigDecimal(0))
+    }
     response.copy(
+      registrationFee = Some(registrationFees),
+      premiseFee = Some(premisesFees),
+      totalFees = Some(totalFees),
       addedResponsiblePeople = Some(addedResponsiblePeopleCount),
       addedResponsiblePeopleFitAndProper = Some(addedResponsiblePeopleFitAndProperCount),
       addedFullYearTradingPremises = Some(

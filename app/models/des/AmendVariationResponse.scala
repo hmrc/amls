@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import play.api.libs.json.Json
 case class AmendVariationResponse(
                                   processingDate: String,
                                   etmpFormBundleNumber: String,
-                                  registrationFee: BigDecimal,
-                                  fPFee: Option[BigDecimal],
-                                  premiseFee: BigDecimal,
-                                  totalFees: BigDecimal,
-                                  paymentReference: Option[String],
-                                  difference: Option[BigDecimal],
+                                  registrationFee: Option[BigDecimal] = Some(0),
+                                  fPFee: Option[BigDecimal] = None,
+                                  premiseFee: Option[BigDecimal] = Some(0),
+                                  totalFees: Option[BigDecimal] = Some(0),
+                                  paymentReference: Option[String] = None,
+                                  difference: Option[BigDecimal] = None,
                                   addedResponsiblePeople: Option[Int] = Some(0),
                                   addedResponsiblePeopleFitAndProper: Option[Int] = Some(0),
                                   addedFullYearTradingPremises: Option[Int] = Some(0),
