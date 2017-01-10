@@ -55,10 +55,10 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
     val successModel = des.AmendVariationResponse(
       processingDate = "2016-09-17T09:30:47Z",
       etmpFormBundleNumber = "111111",
-      1301737.96d,
+      Some(1301737.96d),
       Some(231.42d),
-      870458d,
-      2172427.38,
+      Some(870458d),
+      Some(2172427.38),
       Some("string"),
       Some(3456.12)
     )

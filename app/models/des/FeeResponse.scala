@@ -16,7 +16,7 @@
 
 package models.des
 
-import org.joda.time.{DateTime, DateTimeZone, LocalDateTime}
+import org.joda.time.{DateTime, DateTimeZone}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -49,10 +49,10 @@ object ResponseType {
 
 case class FeeResponse(responseType: ResponseType,
                        amlsReferenceNumber: String,
-                       registrationFee: BigDecimal,
+                       registrationFee: BigDecimal = 0,
                        fpFee: Option[BigDecimal],
-                       premiseFee: BigDecimal,
-                       totalFees: BigDecimal,
+                       premiseFee: BigDecimal = 0,
+                       totalFees: BigDecimal = 0,
                        paymentReference: Option[String],
                        difference: Option[BigDecimal],
                        createdAt: DateTime)
@@ -73,10 +73,10 @@ object FeeResponse {
   implicit def convert2(amendVariationResponse: AmendVariationResponse,  amlsReferenceNumber: String): FeeResponse = {
     FeeResponse(AmendOrVariationResponseType,
       amlsReferenceNumber,
-      amendVariationResponse.registrationFee,
+      amendVariationResponse.registrationFee.getOrElse(0),
       amendVariationResponse.fPFee,
-      amendVariationResponse.premiseFee,
-      amendVariationResponse.totalFees,
+      amendVariationResponse.premiseFee.getOrElse(0),
+      amendVariationResponse.totalFees.getOrElse(0),
       amendVariationResponse.paymentReference,
       amendVariationResponse.difference,
       DateTime.now(DateTimeZone.UTC))
