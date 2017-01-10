@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,4 +27,22 @@ object ResponsiblePersonAddress {
   import play.api.libs.json._
 
   implicit val format = Json.format[ResponsiblePersonAddress]
+
+  implicit def convertToCurrent(address:ResponsiblePersonAddress) : ResponsiblePersonCurrentAddress= {
+    ResponsiblePersonCurrentAddress(address.personAddress, address.timeAtAddress, dateOfChange = None)
+  }
+
+
 }
+
+case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress,
+                                           timeAtAddress: TimeAtAddress,
+                                           dateOfChange: Option[String])
+
+object ResponsiblePersonCurrentAddress {
+
+  import play.api.libs.json._
+
+  implicit val format = Json.format[ResponsiblePersonCurrentAddress]
+}
+
