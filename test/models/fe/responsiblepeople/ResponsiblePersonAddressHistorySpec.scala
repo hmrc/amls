@@ -27,6 +27,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
 
 
 
+
   "ResponsiblePersonAddressHistory" must {
 
     "update the model with current address" in {
@@ -91,21 +92,16 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
 
   "Merge with existing model" when {
 
-    val initial = ResponsiblePersonAddressHistory(
+    lazy val initial = ResponsiblePersonAddressHistory(
       Some(DefaultCurrentAddress),
       Some(DefaultAdditionalAddress),
       Some(DefaultAdditionalExtraAddress))
 
     "Merged with add person" must {
       "return ResponsiblePeople with correct add person" in {
-        println("****************" + DefaultAdditionalAddress)
 
-        println("****************" + DefaultAdditionalExtraAddress)
         val result = initial.currentAddress(NewCurrentAddress)
 
-
-        println("****************" + result.additionalAddress)
-        println("****************" + result.additionalExtraAddress)
         result must be(ResponsiblePersonAddressHistory(Some(NewCurrentAddress), Some(DefaultAdditionalAddress), Some(DefaultAdditionalExtraAddress)))
       }
     }
@@ -154,7 +150,6 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
 
     ResponsiblePersonAddressHistory.conv(responsiblePersonsNone) must be(None)
   }
-
 
   val DefaultCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressUK("Line 1", "Line 2", None, None, "AA1 1AA"), ZeroToFiveMonths)
   val DefaultAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "ES"), SixToElevenMonths)
@@ -308,4 +303,5 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     additionalAddress = Some(NewAdditionalAddress),
     additionalExtraAddress = Some(NewAdditionalExtraAddress)
   )
+
 }
