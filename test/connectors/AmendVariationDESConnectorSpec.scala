@@ -297,6 +297,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
             },
             "all":{
                "activitiesCommenceDate":"2001-01-01",
+               "DateChangeFlag":false,
                "businessActivityDetails":{
                   "actvtsBusRegForOnlyActvtsCarOut":true,
                   "respActvtsBusRegForOnlyActvtsCarOut":{

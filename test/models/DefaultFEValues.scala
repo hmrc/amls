@@ -17,7 +17,7 @@
 package models
 
 
-import models.fe.SubscriptionView
+import models.fe.{DateOfChange, SubscriptionView}
 import models.fe.businessmatching._
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate

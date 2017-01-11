@@ -25,7 +25,7 @@ import play.api.libs.json.Json
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
-                                  DateChangeFlag: Option[Boolean],
+                                  DateChangeFlag: Boolean,
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
@@ -48,12 +48,12 @@ object BusinessActivitiesAll{
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
                        activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[DateOfChange]): Option[BusinessActivitiesAll] = {
-    //TODO need to write code for compairing and getting the relavent date of change
+    //TODO need to write code to get relavent date of change
     val dateOfChange = aspDateOfChange.fold[Option[String]](None)(x => Some(x.dateOfChange.toString))
 
     Some(BusinessActivitiesAll(dateOfChange,
       atb.activityStartDate,
-      Some(aspDateOfChange.isDefined),
+      aspDateOfChange.isDefined,
       activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),
