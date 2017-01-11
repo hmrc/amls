@@ -1026,8 +1026,8 @@ object DesConstants {
       Some("GB")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+    Some(CurrentAddress(
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
     )),
     Some("0-6 months"),
     Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1073,8 +1073,8 @@ object DesConstants {
       Some("GB")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+    Some(CurrentAddress(
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
     )),
     Some("0-6 months"),
     Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1120,8 +1120,8 @@ object DesConstants {
       Some("GB")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+    Some(CurrentAddress(
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
     )),
     Some("0-6 months"),
     Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1167,8 +1167,8 @@ object DesConstants {
       Some("GB")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+    Some(CurrentAddress(
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
     )),
     Some("0-6 months"),
     Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1222,8 +1222,8 @@ object DesConstants {
         Some("AA")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address(
+      Some(CurrentAddress(
+        AddressWithChangeDate(
           "CurrentAddressLine1",
           "CurrentAddressLine2",
           Some("CurrentAddressLine3"),
@@ -1290,8 +1290,8 @@ object DesConstants {
         Some("AA")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address(
+      Some(CurrentAddress(
+        AddressWithChangeDate(
           "CurrentAddressLine1",
           "CurrentAddressLine2",
           Some("CurrentAddressLine3"),
@@ -1357,8 +1357,8 @@ object DesConstants {
       Some("AA")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address(
+    Some(CurrentAddress(
+      AddressWithChangeDate(
         "CurrentAddressLine1",
         "CurrentAddressLine2",
         Some("CurrentAddressLine3"),
@@ -1438,8 +1438,8 @@ object DesConstants {
         Some("AA")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address(
+      Some(CurrentAddress(
+        AddressWithChangeDate(
           "CurrentAddressLine1",
           "CurrentAddressLine2",
           Some("CurrentAddressLine3"),
@@ -1495,8 +1495,8 @@ object DesConstants {
         Some("GB")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      Some(CurrentAddress(
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
       )),
       Some("0-6 months"),
       Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1550,8 +1550,8 @@ object DesConstants {
         Some("AA")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address(
+      Some(CurrentAddress(
+        AddressWithChangeDate(
           "CurrentAddressLine1",
           "CurrentAddressLine2",
           Some("CurrentAddressLine3"),
@@ -1607,8 +1607,8 @@ object DesConstants {
         Some("GB")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      Some(CurrentAddress(
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
       )),
       Some("0-6 months"),
       Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
@@ -1803,8 +1803,8 @@ object DesConstants {
       Some("AA")
     )),
     None,
-    Some(AddressUnderThreeYears(
-      Address(
+    Some(CurrentAddress(
+      AddressWithChangeDate(
         "CurrentAddressLine1",
         "CurrentAddressLine2",
         Some("CurrentAddressLine3"),
@@ -2051,8 +2051,8 @@ object DesConstants {
         Some("AA")
       )),
       None,
-      Some(AddressUnderThreeYears(
-        Address(
+      Some(CurrentAddress(
+        AddressWithChangeDate(
           "CurrentAddressLine1",
           "CurrentAddressLine2",
           Some("CurrentAddressLine3"),

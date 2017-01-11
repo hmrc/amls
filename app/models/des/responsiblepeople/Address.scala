@@ -37,7 +37,7 @@ case class AddressWithChangeDate(addressLine1: String,
                                  addressLine4 : Option[String],
                                  country : String,
                                  postcode : Option[String],
-                                 dateOfChange : Option[String]
+                                 dateOfChange : Option[String] = None
                                 )
 
 object AddressWithChangeDate {

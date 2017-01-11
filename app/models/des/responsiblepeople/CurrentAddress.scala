@@ -16,8 +16,6 @@
 
 package models.des.responsiblepeople
 
-
-import models.des.responsiblepeople.{CurrentAddress, AddressWithChangeDate}
 import models.fe.responsiblepeople._
 import play.api.libs.json.Json
 

@@ -33,8 +33,8 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
   val NewAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "FR"), ZeroToFiveMonths)
   val NewAdditionalExtraAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "UK"), SixToElevenMonths)
 
-  val currentAddressDetails = AddressUnderThreeYears(
-    Address(
+  val currentAddressDetails = CurrentAddress(
+    AddressWithChangeDate(
       "CurrentAddressLine1",
       "CurrentAddressLine2",
       Some("CurrentAddressLine3"),
