@@ -121,13 +121,21 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     }
   }
 
-  "current address:convert des model to frontend model" in {
+  "current address:convert des model to frontend model for a UK address" in {
 
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
       PersonAddressUK("CurrentAddressLine1", "CurrentAddressLine2",
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
         "Postcode"), ThreeYearsPlus)), None, None)
     ResponsiblePersonAddressHistory.conv(responsiblePersonsCurrent) must be(Some(convertedModel))
+  }
+  "current address:convert des model to frontend model for a non-UK address" in {
+
+    val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
+      PersonAddressNonUK("CurrentAddressLine1", "CurrentAddressLine2",
+        Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
+        "AD"), ThreeYearsPlus)), None, None)
+    ResponsiblePersonAddressHistory.conv(responsiblePersonsCurrentNonUK) must be(Some(convertedModel))
   }
 
   "additional address:convert des model to frontend model" in {
@@ -169,6 +177,16 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
       Some("Postcode")
     )
   )
+  val currentAddressDetailsNonUK = CurrentAddress(
+    AddressWithChangeDate(
+      "CurrentAddressLine1",
+      "CurrentAddressLine2",
+      Some("CurrentAddressLine3"),
+      Some("CurrentAddressLine4"),
+      "AD",
+      None
+    )
+  )
 
   val AdditionalAddressDetails = AddressUnderThreeYears(
     Address(
@@ -190,6 +208,31 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
       "AD",
       None
     )
+  )
+
+  val responsiblePersonsCurrentNonUK = ResponsiblePersons(
+    Some(DesConstants.nameDetails),
+    Some(DesConstants.nationalityDetails),
+    None,
+    Some(currentAddressDetailsNonUK),
+    Some("3+ years"),
+    None,
+    None,
+    None,
+    None,
+    Some(PositionInBusiness(
+      Some(DesSoleProprietor(true, true)),
+      Some(Partnership(true, true)),
+      Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true))
+    )),
+    Some(DesConstants.regDetails),
+    true,
+    Some("DescOfPrevExperience"),
+    true,
+    Some("TrainingDetails"),
+    None,
+    Some(MsbOrTcsp(true)),
+    RPExtra()
   )
 
   val responsiblePersonsCurrent = ResponsiblePersons(

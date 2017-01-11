@@ -46,7 +46,7 @@ trait MicroService {
     import scoverage.ScoverageKeys
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
-      ScoverageKeys.coverageMinimum := 94.55,
+      ScoverageKeys.coverageMinimum := 95.00,
       ScoverageKeys.coverageFailOnMinimum := false,
       ScoverageKeys.coverageHighlighting := true,
       parallelExecution in Test := false

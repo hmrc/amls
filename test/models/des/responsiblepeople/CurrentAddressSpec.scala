@@ -21,12 +21,15 @@ import models.fe.responsiblepeople.{PersonAddressNonUK, PersonAddressUK, Respons
 import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 
-/**
-  * Created by NicoleAvison on 11/01/2017.
-  */
+
 class CurrentAddressSpec extends PlaySpec {
 
   "CurrentAddress" when {
+
+    "given a None convert to a None" in {
+      CurrentAddress.convPersonAddressOption(None) must be(None)
+    }
+
     "given a UK address" must {
       "convert a ResponsiblePersonCurrentAddress to a CurrentAddress" in {
 
