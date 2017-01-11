@@ -30,3 +30,17 @@ case class Address (addressLine1: String,
 object Address {
   implicit val format = Json.format[Address]
 }
+
+case class AddressWithChangeDate(addressLine1: String,
+                                 addressLine2 : String,
+                                 addressLine3 : Option[String],
+                                 addressLine4 : Option[String],
+                                 country : String,
+                                 postcode : Option[String],
+                                 dateOfChange : Option[String] = None
+                                )
+
+object AddressWithChangeDate {
+  implicit val format = Json.format[AddressWithChangeDate]
+
+}

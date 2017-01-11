@@ -139,7 +139,7 @@ object DefaultDesValues {
     Some(PreviousNameDetails(true, Some(PersonName("fname", Some("mname"), "lname")), Some("1990-02-24")))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
-  private val currentDesAddress = Some(AddressUnderThreeYears(RPAddress("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
+  private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
   private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
   private val extraAdditional = Some(AddressUnderThreeYears(RPAddress("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))

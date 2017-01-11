@@ -19,24 +19,24 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople._
 import play.api.libs.json.Json
 
-case class AddressUnderThreeYears (address: Address)
+case class CurrentAddress (address: AddressWithChangeDate)
 
-object AddressUnderThreeYears {
-  implicit val format = Json.format[AddressUnderThreeYears]
+object CurrentAddress {
+  implicit val format = Json.format[CurrentAddress]
 
-  implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonAddress]): Option[AddressUnderThreeYears] = {
+  implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonCurrentAddress]): Option[CurrentAddress] = {
     addrHistory match {
       case Some(data) => data
       case _ => None
     }
   }
 
-  implicit def convPersonAddress(addrHistory: ResponsiblePersonAddress): Option[AddressUnderThreeYears] = {
+  implicit def convPersonAddress(addrHistory: ResponsiblePersonCurrentAddress): Option[CurrentAddress] = {
     addrHistory.personAddress match {
-      case uk:PersonAddressUK => Some(AddressUnderThreeYears(Address(uk.addressLine1, uk.addressLine2, uk.addressLine3,
-        uk.addressLine4, "GB" ,Some(uk.postCode))))
-      case nonUk:PersonAddressNonUK => Some(AddressUnderThreeYears(Address(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
-        nonUk.addressLineNonUK4, nonUk.country, None)))
+      case uk:PersonAddressUK => Some(CurrentAddress(AddressWithChangeDate(uk.addressLine1, uk.addressLine2, uk.addressLine3,
+        uk.addressLine4, "GB" ,Some(uk.postCode), addrHistory.dateOfChange)))
+      case nonUk:PersonAddressNonUK => Some(CurrentAddress(AddressWithChangeDate(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
+        nonUk.addressLineNonUK4, nonUk.country, None, addrHistory.dateOfChange)))
     }
   }
 }

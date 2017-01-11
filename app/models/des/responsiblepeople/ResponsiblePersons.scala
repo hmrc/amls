@@ -25,7 +25,7 @@ import play.api.libs.json.{Reads, Writes}
 case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               nationalityDetails: Option[NationalityDetails],
                               contactCommDetails: Option[ContactCommDetails],
-                              currentAddressDetails: Option[AddressUnderThreeYears],
+                              currentAddressDetails: Option[CurrentAddress],
                               timeAtCurrentAddress: Option[String],
                               addressUnderThreeYears: Option[AddressUnderThreeYears],
                               timeAtAddressUnderThreeYears: Option[String],
@@ -52,7 +52,7 @@ object ResponsiblePersons {
       (__ \ "nameDetails").readNullable[NameDetails] and
         (__ \ "nationalityDetails").readNullable[NationalityDetails] and
         (__ \ "contactCommDetails").readNullable[ContactCommDetails] and
-        (__ \ "currentAddressDetails").readNullable[AddressUnderThreeYears] and
+        (__ \ "currentAddressDetails").readNullable[CurrentAddress] and
         (__ \ "timeAtCurrentAddress").readNullable[String] and
         (__ \ "addressUnderThreeYears").readNullable[AddressUnderThreeYears] and
         (__ \ "timeAtAddressUnderThreeYears").readNullable[String] and
@@ -78,7 +78,7 @@ object ResponsiblePersons {
       (__ \ "nameDetails").writeNullable[NameDetails] and
         (__ \ "nationalityDetails").writeNullable[NationalityDetails] and
         (__ \ "contactCommDetails").writeNullable[ContactCommDetails] and
-        (__ \ "currentAddressDetails").writeNullable[AddressUnderThreeYears] and
+        (__ \ "currentAddressDetails").writeNullable[CurrentAddress] and
         (__ \ "timeAtCurrentAddress").writeNullable[String] and
         (__ \ "addressUnderThreeYears").writeNullable[AddressUnderThreeYears] and
         (__ \ "timeAtAddressUnderThreeYears").writeNullable[String] and
@@ -124,8 +124,8 @@ object ResponsiblePersons {
     ResponsiblePersons(rp.personName,
       rp.personResidenceType,
       rp.contactDetails,
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.currentAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.currentAddress },
+      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
+      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
       rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
       rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
       rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
@@ -169,9 +169,21 @@ object ResponsiblePersons {
     }
   }
 
+  implicit def convDurationOptionCurrent(addrHistory: Option[ResponsiblePersonCurrentAddress]): Option[String] = {
+    addrHistory match {
+      case Some(data) => data
+      case _ => None
+    }
+  }
+
   implicit def convDuration(addrHistory: ResponsiblePersonAddress): Option[String] = {
     Some(addrHistory.timeAtAddress)
   }
+
+  implicit def convDuration(addrHistory: ResponsiblePersonCurrentAddress): Option[String] = {
+    Some(addrHistory.timeAtAddress)
+  }
+
 
   implicit def covnTimeAtAddrToString(time: TimeAtAddress): String = {
     time match {

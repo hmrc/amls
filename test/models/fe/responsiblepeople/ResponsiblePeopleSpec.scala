@@ -33,6 +33,7 @@ class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with ResponsibleP
       "Serialise as expected" in {
         Json.toJson(CompleteResponsiblePeople) must be(CompleteJson)
       }
+
       "Deserialise as expected" in {
         CompleteJson.as[ResponsiblePeople] must be(CompleteResponsiblePeople)
       }
@@ -87,7 +88,7 @@ trait ResponsiblePeopleValues {
       Some(PreviousName(Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),
         new LocalDate(1967,8,13))),Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"),"GB","GB")),None,
-      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"bbbbbb"),ZeroToFiveMonths)),
+      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"bbbbbb"),ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"bbbbb"),ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("a","a",Some("a"),Some("a"),"bbbbb1"),SixToElevenMonths)))),
       Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),Some(SaRegisteredYes("1111111111")),

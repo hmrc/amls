@@ -17,13 +17,20 @@
 package models.des
 
 import org.joda.time.{DateTimeZone, DateTime, DateTimeUtils}
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 
-class FeeResponseSpec extends PlaySpec with MockitoSugar {
+class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
 
-  DateTimeUtils.setCurrentMillisFixed(1000000)
+  override def beforeAll {
+    DateTimeUtils.setCurrentMillisFixed(1000000)
+  }
+
+  override def afterAll: Unit = {
+    DateTimeUtils.setCurrentMillisSystem()
+  }
 
   "FeeResponse" when {
 
