@@ -24,8 +24,11 @@ case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePer
                                            additionalAddress: Option[ResponsiblePersonAddress] = None,
                                            additionalExtraAddress: Option[ResponsiblePersonAddress] = None) {
 
-  def currentAddress(add: ResponsiblePersonCurrentAddress): ResponsiblePersonAddressHistory =
+  def currentAddress(add: ResponsiblePersonCurrentAddress): ResponsiblePersonAddressHistory = {
+   println("@@@@@@@@@@@@@" + this.additionalAddress)
     this.copy(currentAddress = Some(add))
+
+  }
 
   def additionalAddress(add: ResponsiblePersonAddress): ResponsiblePersonAddressHistory =
     this.copy(additionalAddress = Some(add))

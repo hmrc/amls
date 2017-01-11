@@ -37,7 +37,7 @@ object ResponsiblePersonAddress {
 
 case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress,
                                            timeAtAddress: TimeAtAddress,
-                                           dateOfChange: Option[String])
+                                           dateOfChange: Option[String] = None)
 
 object ResponsiblePersonCurrentAddress {
 
