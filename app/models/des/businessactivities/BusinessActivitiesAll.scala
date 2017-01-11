@@ -17,11 +17,15 @@
 package models.des.businessactivities
 
 import models.fe
-import models.fe.aboutthebusiness.ActivityStartDate
+import models.fe.aboutthebusiness.{AboutTheBusiness, ActivityStartDate}
+import models.fe.asp.Asp
+import models.fe.{DateOfChange, businessactivities}
 import play.api.libs.json.Json
 
 case class BusinessActivitiesAll(
+                                  busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
+                                  DateChangeFlag: Option[Boolean],
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
@@ -38,13 +42,19 @@ object BusinessActivitiesAll{
   implicit val format = Json.format[BusinessActivitiesAll]
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
-    convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection)
+    convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
+      feModel.aspSection.fold[Option[DateOfChange]](None)(_.services.fold[Option[DateOfChange]](None)(_.dateOfChange)))
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
-                       activities: models.fe.businessactivities.BusinessActivities): Option[BusinessActivitiesAll] = {
+                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[DateOfChange]): Option[BusinessActivitiesAll] = {
+    //TODO need to write code for compairing and getting the relavent date of change
+    val dateOfChange = aspDateOfChange.fold[Option[String]](None)(x => Some(x.dateOfChange.toString))
 
-    Some(BusinessActivitiesAll(atb.activityStartDate, activities,
+    Some(BusinessActivitiesAll(dateOfChange,
+      atb.activityStartDate,
+      Some(aspDateOfChange.isDefined),
+      activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),
       mlremployeeCount(activities.howManyEmployees),

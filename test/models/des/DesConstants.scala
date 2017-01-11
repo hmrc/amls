@@ -100,7 +100,9 @@ object DesConstants {
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
     Some(BusinessActivitiesAll(
+      Some("2011-11-11"),
       Some("2001-01-01"),
+      Some(true),
       BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
       Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
       Some("12345678901"),

@@ -38,11 +38,12 @@ class BusinessActivitiesAllSpec extends PlaySpec {
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
       val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
 
-      val model = BusinessActivitiesAll(None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+      val model = BusinessActivitiesAll(Some("2016-05-25"), None, Some(true), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
         nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
         formalRiskAssessmentDetails, mlrAdvisor)
 
       BusinessActivitiesAll.format.writes(model) must be(Json.obj(
+        "busActivitiesChangeDate" ->"2016-05-25","DateChangeFlag" ->true,
         "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
         "franchiseDetails"->
