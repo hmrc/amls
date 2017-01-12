@@ -86,6 +86,7 @@ class SubscriptionViewSpec extends PlaySpec {
       "socialHousingProvider": false
     },
     "all": {
+      "DateChangeFlag" : false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {

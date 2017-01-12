@@ -16,6 +16,7 @@
 
 package models.des.businessActivities
 
+import models.{BusinessActivitiesSection, AboutTheBusinessSection}
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
 import org.scalatestplus.play.PlaySpec
@@ -38,11 +39,12 @@ class BusinessActivitiesAllSpec extends PlaySpec {
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
       val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
 
-      val model = BusinessActivitiesAll(None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+      val model = BusinessActivitiesAll(Some("2016-05-25"), None, Some(true), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
         nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
         formalRiskAssessmentDetails, mlrAdvisor)
 
       BusinessActivitiesAll.format.writes(model) must be(Json.obj(
+        "busActivitiesChangeDate" ->"2016-05-25","DateChangeFlag" ->true,
         "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
         "franchiseDetails"->
@@ -64,6 +66,24 @@ class BusinessActivitiesAllSpec extends PlaySpec {
                    "address"->Json.obj("addressLine1"->"Line1","addressLine2"->"Line2",
                         "addressLine3"->"Line3","addressLine4"->"Line4","country"->"GB")),
                 "agentDealsWithHmrc"->true))))
+    }
+
+    "convert frontend model to des model successfully" in {
+
+      val model = Some(BusinessActivitiesAll(Some("2000-11-11"),Some("1990-02-24"),Some(true),
+        BusinessActivityDetails(true,Some(ExpectedAMLSTurnover(Some("99999"),None))),
+        Some(FranchiseDetails(true,Some(List("FranchiserName1")))),Some("12345678901"),Some("11223344556"),
+        NonUkResidentCustDetails(true,Some(List("AD", "GB"))),
+        AuditableRecordsDetails("Yes",Some(TransactionRecordingMethod(true,true,true,
+          Some("CommercialPackageName")))),true,true,
+        Some(FormalRiskAssessmentDetails(true,Some(RiskAssessmentFormat(true,true)))),
+        MlrAdvisor(true,Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name",Some("TradingName"),
+          Address("AdvisorAddressLine1","AdvisorAddressLine2",Some("AdvisorAddressLine3"),
+            Some("AdvisorAddressLine4"),"GB",Some("Postcode"),None))),true,None)))))
+
+      BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
+        BusinessActivitiesSection.modelForView, Some("2000-11-11")) must be(model)
+
     }
   }
 }

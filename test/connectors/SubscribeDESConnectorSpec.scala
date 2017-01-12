@@ -225,6 +225,7 @@ class SubscribeDESConnectorSpec
       "socialHousingProvider": false
     },
     "all": {
+      "DateChangeFlag" : false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {

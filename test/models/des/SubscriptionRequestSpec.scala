@@ -137,6 +137,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar {
       }
 
       des.SubscriptionRequest.convert(feSubscriptionReq) must be(desSubscriptionReq)
+
     }
   }
 }
