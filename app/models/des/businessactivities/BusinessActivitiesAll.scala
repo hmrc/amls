@@ -25,7 +25,7 @@ import play.api.libs.json.Json
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
-                                  DateChangeFlag: Boolean,
+                                  DateChangeFlag: Option[Boolean],
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
@@ -53,7 +53,7 @@ object BusinessActivitiesAll{
 
     Some(BusinessActivitiesAll(dateOfChange,
       atb.activityStartDate,
-      aspDateOfChange.isDefined,
+      Some(aspDateOfChange.isDefined),
       activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),

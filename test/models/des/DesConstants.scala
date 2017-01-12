@@ -102,7 +102,7 @@ object DesConstants {
     Some(BusinessActivitiesAll(
       None,
       Some("2001-01-01"),
-      false,
+      Some(false),
       BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
       Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
       Some("12345678901"),

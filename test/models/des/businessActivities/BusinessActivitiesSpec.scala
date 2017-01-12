@@ -82,7 +82,7 @@ class BusinessActivitiesSpec extends PlaySpec {
     val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
     val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
     val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
-    val activitiesModel = BusinessActivitiesAll(None, None, false, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+    val activitiesModel = BusinessActivitiesAll(None, None, Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
       nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
       formalRiskAssessmentDetails, mlrAdvisor)
 
