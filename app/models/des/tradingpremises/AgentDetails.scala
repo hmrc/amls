@@ -26,16 +26,18 @@ case class AgentDetails(
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
-                         lineId: Option[StringOrInt] = None
+                         lineId: Option[StringOrInt] = None,
+                         agentDetailsChangeDate: Option[String] = None
                        ) {
-  override def hashCode =  41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
+  override def hashCode = 41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
     agentPremises.hashCode + status.hashCode)
 
-  override def equals(other:Any):Boolean = other match {
-    case (that:AgentDetails) =>
-    this.agentLegalEntity.equals(that.agentLegalEntity) &&
-    this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
-    this.agentPremises.equals(that.agentPremises) && this.status.equals(this.status)
+  override def equals(other: Any): Boolean = other match {
+    case (that: AgentDetails) =>
+      this.agentLegalEntity.equals(that.agentLegalEntity) &&
+      this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
+      this.agentPremises.equals(that.agentPremises) &&
+      this.status.equals(this.status)
     case _ => false
   }
 }
@@ -48,7 +50,8 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
-        __.read(Reads.optionNoError[StringOrInt])
+        __.read(Reads.optionNoError[StringOrInt]) and
+        (__ \ "agentDetailsChgDate").readNullable[String]
       ) (AgentDetails.apply _)
   }
 
@@ -58,7 +61,8 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
-        __.writeNullable[StringOrInt]
+        __.writeNullable[StringOrInt] and
+        (__ \ "agentDetailsChgDate").writeNullable[String]
       ) (unlift(AgentDetails.unapply _))
   }
 
@@ -74,7 +78,8 @@ object AgentDetails {
       })),
       agentPremises = tradingPremises,
       tradingPremises.status,
-      tradingPremises.lineId
+      tradingPremises.lineId,
+      agentDetailsChangeDate = Some(tradingPremises.agentName.fold("")(_.dateOfChange.getOrElse("")))
     )
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): Seq[AgentDetails] =
@@ -90,7 +95,8 @@ object AgentDetails {
     }
   }
 
-  implicit object AgentDetailsHasStatus extends StatusProvider[AgentDetails]{
-    override def getStatus(ad:AgentDetails): Option[String] = ad.status
+  implicit object AgentDetailsHasStatus extends StatusProvider[AgentDetails] {
+    override def getStatus(ad: AgentDetails): Option[String] = ad.status
   }
+
 }

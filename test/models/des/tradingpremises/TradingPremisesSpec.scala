@@ -85,10 +85,10 @@ class TradingPremisesSpec extends PlaySpec {
 
     "serialise Trading premises model" in {
 
-      val agentDetail1 = AgentDetails("Limited Liability Partnership", Some("string"), agentPremises, Some("Deleted"),
-        Some(StringOrInt("11223344")))
+      val agentDetail = AgentDetails("Limited Liability Partnership", Some("string"), agentPremises, Some("Deleted"),
+        Some(StringOrInt("11223344")), Some("2010-01-23"))
 
-      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail1))))
+      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
 
       val desTradingPremises = {
         TradingPremises(ownBusinessPremises, agentBusinessPremises)
@@ -113,8 +113,10 @@ class TradingPremisesSpec extends PlaySpec {
           "startDate" -> "2010-01-01"
           ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
-          "agentDetails" -> Json.arr(Json.obj("agentLegalEntity" -> "Limited Liability Partnership",
+          "agentDetails" -> Json.arr(Json.obj(
+            "agentLegalEntity" -> "Limited Liability Partnership",
             "agentLegalEntityName" -> "string",
+            "agentDetailsChgDate" -> "2010-01-23",
             "agentPremises" -> Json.obj("tradingName" -> "string",
               "businessAddress" -> Json.obj("addressLine1" -> "string",
                 "addressLine2" -> "string",
@@ -143,25 +145,30 @@ class TradingPremisesSpec extends PlaySpec {
 
     "convert TradingPremises" in {
 
-      val agentDetail1 = AgentDetails("Limited Liability Partnership", Some("LLP Partnership"), agentPremises,Some("Deleted"),
-        Some(StringOrInt("11223344")))
-      val agentDetail2 = AgentDetails("Partnership", Some("Partnership"), agentPremises1)
-      val agentDetail4 = AgentDetails("Unincorporated Body", Some(""), agentPremises2)
+      val agentBusinessPremises = Some(AgentBusinessPremises(agentBusinessPremises = true, Some(Seq(
+        AgentDetails(
+          "Limited Liability Partnership",
+          Some("LLP Partnership"),
+          agentPremises,Some("Deleted"),
+          Some(StringOrInt("11223344")),
+          Some("2009-05-03")
+        ),
 
-      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail1, agentDetail2, agentDetail4))))
+        AgentDetails("Partnership", Some("Partnership"), agentPremises1),
+        AgentDetails("Unincorporated Body", Some(""), agentPremises2)))))
 
       val desTradingPremises = {
         TradingPremises(ownBusinessPremises, agentBusinessPremises)
       }
 
-      val tradiongPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
+      val tradingPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
         FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2010, 1, 1), false),
         None, None, None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices)),
         Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
         FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
         FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
-          Some(BusinessStructure.LimitedLiabilityPartnership), None, Some(AgentCompanyName("LLP Partnership")), None,
+          Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"))), Some(AgentCompanyName("LLP Partnership")), None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices)),None,Some(11223344),Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
@@ -174,7 +181,16 @@ class TradingPremisesSpec extends PlaySpec {
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
 
-      TradingPremises.convert(tradiongPremises) must be (desTradingPremises)
+      val converted = TradingPremises.convert(tradingPremises)
+      converted must be (desTradingPremises)
+
+      converted.agentBusinessPremises match {
+        case Some(x: AgentBusinessPremises) => x.agentDetails match {
+          case Some(details: Seq[AgentDetails]) =>
+            details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
+        }
+      }
+
     }
 
     "successfully evaluate api5 trading premises data with api6 when data is different" in {
