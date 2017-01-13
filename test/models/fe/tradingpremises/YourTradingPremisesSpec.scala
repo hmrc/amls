@@ -77,7 +77,9 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
           Some("AddressLine3"),
           Some("AddressLine4"),
           "AD",
-          Some("AA1 1AA")),
+          Some("AA1 1AA"),
+          Some("2001-01-01")
+        ),
         true,
         Msb(true, false, true, true, true),
         Hvd(true),
@@ -89,8 +91,9 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
         "2001-01-01"
       )
 
-      val feModel = YourTradingPremises("TradingName", Address("AddressLine1", "AddressLine2", Some("AddressLine3"),
-        Some("AddressLine4"), "AA1 1AA"), new LocalDate(2001, 1, 1), true)
+      val feModel = YourTradingPremises("TradingName",
+        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", Some("2001-01-01")),
+        new LocalDate(2001, 1, 1), true)
 
       YourTradingPremises.conv(agentPremises) must be(feModel)
 

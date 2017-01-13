@@ -23,14 +23,14 @@ case class Address (addressLine1: String,
                     addressLine3 : Option[String],
                     addressLine4 : Option[String],
                     country : String,
-                    postcode : Option[String]
+                    postcode : Option[String],
+                    addressChangeDate: Option[String] = None
                    )
 
 object Address {
   implicit val format = Json.format[Address]
 
   implicit def convert(address: models.fe.tradingpremises.Address): Address = {
-    Address(address.addressLine1, address.addressLine2,
-      address.addressLine3, address.addressLine4, "GB", Some(address.postcode))
+    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB", Some(address.postcode))
   }
 }
