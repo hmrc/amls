@@ -31,6 +31,6 @@ object Address {
   implicit val format = Json.format[Address]
 
   implicit def convert(address: models.fe.tradingpremises.Address): Address = {
-    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB", Some(address.postcode))
+    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB", Some(address.postcode), address.dateOfChange)
   }
 }

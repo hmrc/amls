@@ -24,7 +24,7 @@ case class Address(
                   addressLine3: Option[String],
                   addressLine4: Option[String],
                   postcode: String,
-                  dateOfChange: Option[String] = null
+                  dateOfChange: Option[String] = None
                   )
 object Address {
 
