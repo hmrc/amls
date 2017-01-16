@@ -16,6 +16,7 @@
 
 package models.des
 
+import config.AmlsConfig
 import models.des.aboutthebusiness._
 import models.des.aboutyou.Aboutyou
 import models.des.asp.Asp
@@ -161,7 +162,7 @@ object AmendVariationRequest {
       businessReferencesAll = data.aboutTheBusinessSection,
       businessReferencesAllButSp = data.aboutTheBusinessSection,
       businessReferencesCbUbLlp = data.aboutTheBusinessSection,
-      businessActivities = conv(data, true),
+      businessActivities = conv(data, AmlsConfig.release7),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection),
