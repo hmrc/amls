@@ -18,12 +18,12 @@ package models.des
 
 import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import models.des.aboutyou.{IndividualDetails, Aboutyou}
-import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsUndefined, JsSuccess, Json}
+import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.{JsSuccess, JsUndefined, Json}
 import utils.AckRefGenerator
 
-class AmendVariationRequestSpec extends PlaySpec {
+class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"

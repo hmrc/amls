@@ -27,13 +27,13 @@ import models.fe.declaration.{AddPerson, Director}
 import models.{des, fe}
 import org.joda.time.LocalDate
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => eqTo,_}
+import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsValue, JsNull, Json}
-import play.api.mvc.{Result, Request}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
@@ -42,7 +42,7 @@ import utils.IterateeHelpers
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience
-  with IterateeHelpers {
+  with IterateeHelpers with OneAppPerSuite {
 
   trait Fixture {
     object Controller extends AmendVariationController {
