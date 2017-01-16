@@ -66,7 +66,7 @@ object SubscriptionRequest {
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
      gen: AckRefGenerator,
-     conv: Incoming => BusinessActivities,
+     conv: (Incoming, Boolean) => BusinessActivities,
      conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
      conv3 : fe.estateagentbusiness.EstateAgentBusiness => EabResdEstAgncy,
      prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
@@ -90,7 +90,7 @@ object SubscriptionRequest {
       businessReferencesAll = data.aboutTheBusinessSection,
       businessReferencesAllButSp = data.aboutTheBusinessSection,
       businessReferencesCbUbLlp = data.aboutTheBusinessSection,
-      businessActivities = conv(data),
+      businessActivities = conv(data, false),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection),

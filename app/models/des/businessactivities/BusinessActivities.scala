@@ -17,12 +17,6 @@
 package models.des.businessactivities
 
 import models.fe
-import models.fe.estateagentbusiness.EstateAgentBusiness
-import models.fe.businessmatching.BusinessMatching
-import models.fe.asp.Asp
-import models.fe.businessmatching.BusinessMatching
-import models.fe.estateagentbusiness.EstateAgentBusiness
-import models.fe.tcsp.Tcsp
 import play.api.libs.json.Json
 
 case class BusinessActivities(
@@ -39,7 +33,7 @@ case class BusinessActivities(
 object BusinessActivities {
   implicit val format = Json.format[BusinessActivities]
 
-  implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
+  implicit def conv(feModel: fe.SubscriptionRequest, reference: Boolean = false): BusinessActivities = {
 
     BusinessActivities(
       feModel.businessMatchingSection,
@@ -50,7 +44,7 @@ object BusinessActivities {
       feModel.tcspSection,
       feModel.tcspSection,
       feModel.eabSection,
-      feModel
+      BusinessActivitiesAll.convtoActivitiesALL(feModel, reference)
     )
   }
 }

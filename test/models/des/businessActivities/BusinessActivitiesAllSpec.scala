@@ -82,7 +82,7 @@ class BusinessActivitiesAllSpec extends PlaySpec {
             Some("AdvisorAddressLine4"),"GB",Some("Postcode"),None))),true,None)))))
 
       BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
-        BusinessActivitiesSection.modelForView, Some("2000-11-11")) must be(model)
+        BusinessActivitiesSection.modelForView, Some("2000-11-11"), true) must be(model)
 
     }
   }

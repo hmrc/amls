@@ -39,18 +39,21 @@ object BusinessActivitiesAll{
 
   implicit val format = Json.format[BusinessActivitiesAll]
 
-  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
+  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, ref: Boolean): Option[BusinessActivitiesAll] = {
     convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
-      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)))
+      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)), ref)
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
-                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
-    //TODO need to write code to get relavent date of change
-
+                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String], ref:Boolean): Option[BusinessActivitiesAll] = {
+    //TODO need to write code to get relevant date of change
+    val changeOfDateFlag = ref match {
+      case true => Some(aspDateOfChange.isDefined)
+      case _ => None
+    }
     Some(BusinessActivitiesAll(aspDateOfChange,
       atb.activityStartDate,
-      Some(aspDateOfChange.isDefined),
+      changeOfDateFlag,
       activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),

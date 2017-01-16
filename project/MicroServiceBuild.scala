@@ -32,8 +32,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "domain" % domainVersion
   )
 
-  trait TestDependencies {
-    lazy val scope: String = "test"
+  trait TestDependencies {    lazy val scope: String = "test"
     lazy val test : Seq[ModuleID] = ???
   }
 
