@@ -16,6 +16,7 @@
 
 package models.des
 
+import config.AmlsConfig
 import models.des.aboutthebusiness._
 import models.des.aboutyou.Aboutyou
 import models.des.asp.Asp
@@ -134,7 +135,7 @@ object AmendVariationRequest {
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
      gen: AckRefGenerator,
-     conv: Incoming => BusinessActivities,
+     conv: (Incoming, Boolean) => BusinessActivities,
      conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
      conv3 : fe.estateagentbusiness.EstateAgentBusiness => EabResdEstAgncy,
      prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
@@ -161,7 +162,7 @@ object AmendVariationRequest {
       businessReferencesAll = data.aboutTheBusinessSection,
       businessReferencesAllButSp = data.aboutTheBusinessSection,
       businessReferencesCbUbLlp = data.aboutTheBusinessSection,
-      businessActivities = conv(data),
+      businessActivities = conv(data, AmlsConfig.release7),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection),
