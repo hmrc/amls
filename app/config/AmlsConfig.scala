@@ -26,4 +26,6 @@ object AmlsConfig extends ServicesConfig {
   lazy val desUrl = baseUrl("des")
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
+
+  lazy val release7 = getConfBool("feature-toggle.release7", throw new Exception("Config missing key: feature-toggle.release7"))
 }
