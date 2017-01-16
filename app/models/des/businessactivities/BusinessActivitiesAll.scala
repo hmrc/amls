@@ -39,15 +39,15 @@ object BusinessActivitiesAll{
 
   implicit val format = Json.format[BusinessActivitiesAll]
 
-  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, ref: Boolean): Option[BusinessActivitiesAll] = {
+  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, amendVariation: Boolean): Option[BusinessActivitiesAll] = {
     convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
-      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)), ref)
+      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)), amendVariation)
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
-                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String], ref:Boolean): Option[BusinessActivitiesAll] = {
+              activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
     //TODO need to write code to get relevant date of change
-    val changeOfDateFlag = ref match {
+    val changeOfDateFlag = amendVariation match {
       case true => Some(aspDateOfChange.isDefined)
       case _ => None
     }
