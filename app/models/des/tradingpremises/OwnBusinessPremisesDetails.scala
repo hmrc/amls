@@ -34,7 +34,9 @@ case class OwnBusinessPremisesDetails(tradingName:String,
                                       startDate : String,
                                       endDate: Option[String] = None,
                                       lineId: Option[StringOrInt] = None,
-                                      status: Option[String] = None
+                                      status: Option[String] = None,
+                                      sectorDateChange: Option[String] = None,
+                                      dateChangeFlag: Option[Boolean] = None
                                      )
 
 
@@ -55,7 +57,9 @@ object OwnBusinessPremisesDetails {
         (__ \ "startDate").read[String] and
         (__ \ "endDate").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
-        (__ \ "status").readNullable[String]
+        (__ \ "status").readNullable[String] and
+        (__ \ "sectorDateChange").readNullable[String] and
+          (__ \ "dateChangeFlag").readNullable[Boolean]
       ) (OwnBusinessPremisesDetails.apply _)
   }
 
@@ -74,8 +78,10 @@ object OwnBusinessPremisesDetails {
         (__ \ "startDate").write[String] and
         (__ \ "endDate").writeNullable[String] and
         __.writeNullable[StringOrInt] and
-        (__ \ "status").writeNullable[String]
-      ) (unlift(OwnBusinessPremisesDetails.unapply _))
+        (__ \ "status").writeNullable[String] and
+        (__ \ "sectorDateChange").writeNullable[String] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean]
+      ) (unlift(OwnBusinessPremisesDetails.unapply))
   }
 
   implicit def convert(tradingPremises: Seq[models.fe.tradingpremises.TradingPremises]): Seq[OwnBusinessPremisesDetails] = {
@@ -96,7 +102,9 @@ object OwnBusinessPremisesDetails {
           y.startDate.toString,
           x.endDate.fold[Option[String]](None)(x=>Some(x.endDate.toString)),
           x.lineId,
-          x.status
+          x.status,
+          x.msbServices.fold[Option[String]](None)(m => m.dateOfChange),
+          x.msbServices.fold[Option[Boolean]](None)(m => if(m.dateOfChange.isDefined) Some(true) else None)
         )
       }
     }

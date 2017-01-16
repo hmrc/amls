@@ -47,13 +47,15 @@ class TradingPremisesSpec extends PlaySpec {
       Tditpsp(false),
       "2010-01-01",
       None,
-      None
+      None,
+      sectorDateChange = Some("2009-01-01"),
+      dateChangeFlag = Some(true)
     )
 
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
 
     val agentPremises = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string"), Some("2002-03-11")), true,
-      Msb(false, false, false, false, false),
+      Msb(true, false, false, false, false),
       Hvd(false),
       Asp(false),
       Tcsp(false),
@@ -61,7 +63,9 @@ class TradingPremisesSpec extends PlaySpec {
       Bpsp(true),
       Tditpsp(false),
       "2008-01-01",
-      Some("1999-01-01")
+      Some("1999-01-01"),
+      Some("2003-04-05"),
+      Some(true)
     )
 
     val agentPremises1 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
@@ -112,7 +116,9 @@ class TradingPremisesSpec extends PlaySpec {
           "eab" -> Json.obj("eab" -> false),
           "bpsp" -> Json.obj("bpsp" -> false),
           "tditpsp" -> Json.obj("tditpsp" -> false),
-          "startDate" -> "2010-01-01"
+          "startDate" -> "2010-01-01",
+          "sectorDateChange" -> "2009-01-01",
+          "dateChangeFlag" -> true
           ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
           "agentDetails" -> Json.arr(Json.obj(
@@ -128,7 +134,7 @@ class TradingPremisesSpec extends PlaySpec {
                 "postcode" -> "string",
                 "addressChangeDate" -> "2002-03-11"),
               "residential" -> true,
-              "msb" -> Json.obj("mt" -> false, "ce" -> false, "smdcc" -> false, "nonSmdcc" -> false, "fx" -> false),
+              "msb" -> Json.obj("mt" -> true, "ce" -> false, "smdcc" -> false, "nonSmdcc" -> false, "fx" -> false),
               "hvd" -> Json.obj("hvd" -> false),
               "asp" -> Json.obj("asp" -> false),
               "tcsp" -> Json.obj("tcsp" -> false),
@@ -136,7 +142,9 @@ class TradingPremisesSpec extends PlaySpec {
               "bpsp" -> Json.obj("bpsp" -> true),
               "tditpsp" -> Json.obj("tditpsp" -> false),
               "startDate" -> "2008-01-01",
-              "endDate" -> "1999-01-01"
+              "endDate" -> "1999-01-01",
+              "agentSectorChgDate" -> "2003-04-05",
+              "dateChangeFlag" -> true
             ),
             "status" ->"Deleted",
             "lineId" -> "11223344"
@@ -171,11 +179,12 @@ class TradingPremisesSpec extends PlaySpec {
         , new LocalDate(2010, 1, 1), false),
         None, None, None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices)),
-        Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
+        Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal), Some("2009-01-01")))),
         FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
         FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
           Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"))), Some(AgentCompanyName("LLP Partnership")), None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices)),None,Some(11223344),Some("Deleted"),
+        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices)),
+          Some(MsbServices(Set(TransmittingMoney), Some("2003-04-05"))), Some(11223344),Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
@@ -194,6 +203,8 @@ class TradingPremisesSpec extends PlaySpec {
         case Some(x: AgentBusinessPremises) => x.agentDetails match {
           case Some(details: Seq[AgentDetails]) =>
             details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
+            details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
+            details.head.agentPremises.dateChangeFlag must be(Some(true))
         }
       }
 
