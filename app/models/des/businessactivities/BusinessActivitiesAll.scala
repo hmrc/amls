@@ -17,9 +17,7 @@
 package models.des.businessactivities
 
 import models.fe
-import models.fe.aboutthebusiness.{AboutTheBusiness, ActivityStartDate}
-import models.fe.asp.Asp
-import models.fe.{DateOfChange, businessactivities}
+import models.fe.aboutthebusiness.ActivityStartDate
 import play.api.libs.json.Json
 
 case class BusinessActivitiesAll(
@@ -43,15 +41,14 @@ object BusinessActivitiesAll{
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
     convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
-      feModel.aspSection.fold[Option[DateOfChange]](None)(_.services.fold[Option[DateOfChange]](None)(_.dateOfChange)))
+      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)))
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
-                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[DateOfChange]): Option[BusinessActivitiesAll] = {
+                       activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
     //TODO need to write code to get relavent date of change
-    val dateOfChange = aspDateOfChange.fold[Option[String]](None)(x => Some(x.dateOfChange.toString))
 
-    Some(BusinessActivitiesAll(dateOfChange,
+    Some(BusinessActivitiesAll(aspDateOfChange,
       atb.activityStartDate,
       Some(aspDateOfChange.isDefined),
       activities,

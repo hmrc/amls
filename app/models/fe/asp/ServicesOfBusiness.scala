@@ -17,12 +17,11 @@
 package models.fe.asp
 
 import models.des.businessactivities.BusinessActivities
-import models.fe.DateOfChange
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 
-case class ServicesOfBusiness(services: Set[Service], dateOfChange: Option[DateOfChange] = None)
+case class ServicesOfBusiness(services: Set[Service], dateOfChange: Option[String] = None)
 
 sealed trait Service
 

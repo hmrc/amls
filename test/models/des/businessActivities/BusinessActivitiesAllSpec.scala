@@ -16,12 +16,9 @@
 
 package models.des.businessActivities
 
-import models.fe.DateOfChange
-import models.fe.asp._
 import models.{BusinessActivitiesSection, AboutTheBusinessSection}
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -73,7 +70,7 @@ class BusinessActivitiesAllSpec extends PlaySpec {
 
     "convert frontend model to des model successfully" in {
 
-      val model = Some(BusinessActivitiesAll(Some("0200-11-11"),Some("1990-02-24"),Some(true),
+      val model = Some(BusinessActivitiesAll(Some("2000-11-11"),Some("1990-02-24"),Some(true),
         BusinessActivityDetails(true,Some(ExpectedAMLSTurnover(Some("99999"),None))),
         Some(FranchiseDetails(true,Some(List("FranchiserName1")))),Some("12345678901"),Some("11223344556"),
         NonUkResidentCustDetails(true,Some(List("AD", "GB"))),
@@ -85,7 +82,7 @@ class BusinessActivitiesAllSpec extends PlaySpec {
             Some("AdvisorAddressLine4"),"GB",Some("Postcode"),None))),true,None)))))
 
       BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
-        BusinessActivitiesSection.modelForView, Some(DateOfChange(new LocalDate(200,11,11)))) must be(model)
+        BusinessActivitiesSection.modelForView, Some("2000-11-11")) must be(model)
 
     }
   }

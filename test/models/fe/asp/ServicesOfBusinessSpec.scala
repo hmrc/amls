@@ -16,8 +16,6 @@
 
 package models.fe.asp
 
-import models.fe.DateOfChange
-import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
@@ -33,7 +31,7 @@ class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
           "dateOfChange" -> "2016-02-24")
 
         Json.fromJson[ServicesOfBusiness](json) must
-          be(JsSuccess(ServicesOfBusiness(businessServices, Some(DateOfChange(new LocalDate("2016-02-24")))), JsPath))
+          be(JsSuccess(ServicesOfBusiness(businessServices, Some("2016-02-24")), JsPath))
       }
 
       "successfully validate selected services value" in {
