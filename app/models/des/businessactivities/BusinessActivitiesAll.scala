@@ -60,9 +60,9 @@ object BusinessActivitiesAll{
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
               activities: models.fe.businessactivities.BusinessActivities,
-              aspDateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
+              dateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
 
-    Some(BusinessActivitiesAll(aspDateOfChange,
+    Some(BusinessActivitiesAll(dateOfChange,
       atb.activityStartDate,
       activities,
       activities.businessFranchise,
