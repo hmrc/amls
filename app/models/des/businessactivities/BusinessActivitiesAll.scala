@@ -23,7 +23,6 @@ import play.api.libs.json.Json
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
-                                  DateChangeFlag: Option[Boolean],
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
@@ -47,13 +46,9 @@ object BusinessActivitiesAll{
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
               activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
     //TODO need to write code to get relevant date of change
-    val changeOfDateFlag = amendVariation match {
-      case true => Some(aspDateOfChange.isDefined)
-      case _ => None
-    }
+
     Some(BusinessActivitiesAll(aspDateOfChange,
       atb.activityStartDate,
-      changeOfDateFlag,
       activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),
