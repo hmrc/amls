@@ -16,7 +16,7 @@
 
 package models.fe.hvd
 
-import models.des.{DesConstants, SubscriptionView}
+import models.des.DesConstants
 import models.fe.hvd.PercentageOfCashPaymentOver15000.First
 import org.joda.time.LocalDate
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -51,7 +51,8 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
       "linkedCashPayment" -> Json.obj("linkedCashPayments" -> true),
       "howWillYouSellGoods" -> Json.obj("salesChannels" -> Json.arr("Retail", "Wholesale", "Auction")),
       "receiveCashPayments" -> Json.obj("receivePayments" -> true, "paymentMethods" -> Json.obj("courier" -> true, "direct" -> true, "other" -> true, "details" -> "foo")),
-      "percentageOfCashPaymentOver15000" -> Json.obj("percentage" -> "01")
+      "percentageOfCashPaymentOver15000" -> Json.obj("percentage" -> "01"),
+      "dateOfChange" -> "2016-02-24"
     )
 
     val completeModel = Hvd(cashPayment = Some(DefaultCashPayment),
@@ -60,7 +61,8 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
       linkedCashPayment = Some(DefaultLinkedCashPayment),
       howWillYouSellGoods = Some(DefaultHowWillYouSellGoods),
       receiveCashPayments = Some(DefaultReceiveCashPayments),
-      percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
+      percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
+      dateOfChange = Some("2016-02-24")
     )
 
     "Serialise as expected" in {

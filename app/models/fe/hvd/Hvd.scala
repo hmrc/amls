@@ -26,7 +26,9 @@ case class Hvd (cashPayment: Option[CashPayment] = None,
                 howWillYouSellGoods: Option[HowWillYouSellGoods] = None,
                 percentageOfCashPaymentOver15000: Option[PercentageOfCashPaymentOver15000] = None,
                 receiveCashPayments: Option[ReceiveCashPayments] = None,
-                linkedCashPayment: Option[LinkedCashPayments] = None) {
+                linkedCashPayment: Option[LinkedCashPayments] = None,
+                dateOfChange: Option[String] = None
+               ) {
 }
 
 object Hvd {

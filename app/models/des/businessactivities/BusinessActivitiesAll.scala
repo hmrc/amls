@@ -17,7 +17,10 @@
 package models.des.businessactivities
 
 import models.fe
+import models.fe.SubscriptionRequest
 import models.fe.aboutthebusiness.ActivityStartDate
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
 import play.api.libs.json.Json
 
 case class BusinessActivitiesAll(
@@ -38,16 +41,28 @@ object BusinessActivitiesAll{
 
   implicit val format = Json.format[BusinessActivitiesAll]
 
+  def getEarliestDate(feModel: SubscriptionRequest):Option[String] = {
+    implicit def ord: Ordering[DateTime] = Ordering.by(_.getMillis)
+
+    val aspDate = feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
+    val eabDate = feModel.eabSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
+    val hvdDate = feModel.hvdSection.fold[Option[String]](None)(_.dateOfChange)
+    val dateLst = Seq(aspDate, eabDate, hvdDate).flatten
+
+    dateLst.map(x => DateTime.parse(x)).sorted(ord).headOption.map(_.toString("yyyy-MM-dd"))
+  }
+
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, amendVariation: Boolean): Option[BusinessActivitiesAll] = {
-    convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
-      feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange)), amendVariation)
+    val earliestDate = getEarliestDate(feModel)
+      convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
+        earliestDate, amendVariation)
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
-              activities: models.fe.businessactivities.BusinessActivities, aspDateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
-    //TODO need to write code to get relevant date of change
+              activities: models.fe.businessactivities.BusinessActivities,
+              dateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
 
-    Some(BusinessActivitiesAll(aspDateOfChange,
+    Some(BusinessActivitiesAll(dateOfChange,
       atb.activityStartDate,
       activities,
       activities.businessFranchise,

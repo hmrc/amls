@@ -943,6 +943,7 @@ object DesConstants {
 
   val testHvd = HvdModel(true,
     Some("2001-01-01"),
+    None,
     true,
     None,
     Some(HvdFromUnseenCustDetails(
@@ -1845,6 +1846,7 @@ object DesConstants {
 
   val testAmendHvd = HvdModel(true,
     Some("2001-01-01"),
+    Some(false),
     true,
     None,
     Some(HvdFromUnseenCustDetails(
