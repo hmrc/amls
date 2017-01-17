@@ -39,12 +39,12 @@ class BusinessActivitiesAllSpec extends PlaySpec {
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
       val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
 
-      val model = BusinessActivitiesAll(Some("2016-05-25"), None, Some(true), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+      val model = BusinessActivitiesAll(Some("2016-05-25"), None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
         nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
         formalRiskAssessmentDetails, mlrAdvisor)
 
       BusinessActivitiesAll.format.writes(model) must be(Json.obj(
-        "busActivitiesChangeDate" ->"2016-05-25","DateChangeFlag" ->true,
+        "busActivitiesChangeDate" ->"2016-05-25",
         "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
         "franchiseDetails"->
@@ -70,7 +70,7 @@ class BusinessActivitiesAllSpec extends PlaySpec {
 
     "convert frontend model to des model successfully" in {
 
-      val model = Some(BusinessActivitiesAll(Some("2000-11-11"),Some("1990-02-24"),Some(true),
+      val model = Some(BusinessActivitiesAll(Some("2000-11-11"),Some("1990-02-24"),
         BusinessActivityDetails(true,Some(ExpectedAMLSTurnover(Some("99999"),None))),
         Some(FranchiseDetails(true,Some(List("FranchiserName1")))),Some("12345678901"),Some("11223344556"),
         NonUkResidentCustDetails(true,Some(List("AD", "GB"))),

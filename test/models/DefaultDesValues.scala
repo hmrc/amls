@@ -54,7 +54,7 @@ object DefaultDesValues {
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
   private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))
   private val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
-  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"),None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
     formalRiskAssessmentDetails, mlrAdvisor))
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
