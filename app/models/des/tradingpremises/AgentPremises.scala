@@ -89,8 +89,7 @@ object AgentPremises {
       z,
       ytp.startDate.toString,
       tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)),
-      tradingPremises.msbServices.fold[Option[String]](None)(m => m.dateOfChange),
-      tradingPremises.msbServices.fold[Option[Boolean]](None)(m => if (m.dateOfChange.isDefined) Some(true) else None)
+      tradingPremises.msbServices.fold[Option[String]](None)(m => m.dateOfChange)
     )
   }
 }

@@ -49,7 +49,7 @@ class TradingPremisesSpec extends PlaySpec {
       None,
       None,
       sectorDateChange = Some("2009-01-01"),
-      dateChangeFlag = Some(true),
+      dateChangeFlag = None,
       tradingNameChangeDate = Some("1999-04-01")
     )
 
@@ -66,7 +66,7 @@ class TradingPremisesSpec extends PlaySpec {
       "2008-01-01",
       Some("1999-01-01"),
       Some("2003-04-05"),
-      Some(true)
+      None
     )
 
     val agentPremises1 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
@@ -119,7 +119,6 @@ class TradingPremisesSpec extends PlaySpec {
           "tditpsp" -> Json.obj("tditpsp" -> false),
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
-          "dateChangeFlag" -> true,
           "tradingNameChangeDate" -> "1999-04-01"
           ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
@@ -145,8 +144,7 @@ class TradingPremisesSpec extends PlaySpec {
               "tditpsp" -> Json.obj("tditpsp" -> false),
               "startDate" -> "2008-01-01",
               "endDate" -> "1999-01-01",
-              "agentSectorChgDate" -> "2003-04-05",
-              "dateChangeFlag" -> true
+              "agentSectorChgDate" -> "2003-04-05"
             ),
             "status" ->"Deleted",
             "lineId" -> "11223344"
@@ -206,7 +204,6 @@ class TradingPremisesSpec extends PlaySpec {
           case Some(details: Seq[AgentDetails]) =>
             details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
             details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
-            details.head.agentPremises.dateChangeFlag must be(Some(true))
         }
       }
 

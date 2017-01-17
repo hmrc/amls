@@ -107,7 +107,7 @@ object OwnBusinessPremisesDetails {
           x.lineId,
           x.status,
           x.msbServices.fold[Option[String]](None)(m => m.dateOfChange),
-          x.msbServices.fold[Option[Boolean]](None)(m => if(m.dateOfChange.isDefined) Some(true) else None),
+          None,
           x.yourTradingPremises.tradingNameChangeDate
         )
       }
