@@ -194,6 +194,6 @@ object DefaultDesValues {
     Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))))), None)
   )
   // scalastyle:off magic.number
-  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
+  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
 
 }

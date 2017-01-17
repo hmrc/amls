@@ -81,7 +81,7 @@ object SubscriptionRequest {
      tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
      responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
      msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching) => Option[MoneyServiceBusiness],
-     hvdConv : fe.hvd.Hvd => Hvd
+     hvdConv : (fe.hvd.Hvd, Boolean) => Hvd
   ): Outgoing =
     SubscriptionRequest(
       acknowledgementReference = gen.ackRef,
@@ -94,7 +94,7 @@ object SubscriptionRequest {
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection),
-      hvd= data.hvdSection.map(hvdConv),
+      hvd= hvdConv(data.hvdSection, false),
       asp = data.aspSection.map(aspConv),
       aspOrTcsp = data.supervisionSection.map(aspOrTcspConv),
       tcspAll = data.tcspSection.map(tcspAllConv),

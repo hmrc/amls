@@ -42,6 +42,7 @@ class ReceiveCashPaymentsSpec extends PlaySpec {
     "converting the des model must yield a frontend model" in {
       val desModel= DesHvd(true,
         Some("2001-01-01"),
+        None,
         true,
         Some(0),
         Some(HvdFromUnseenCustDetails(

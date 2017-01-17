@@ -23,6 +23,7 @@ import play.api.libs.json.Json
 case class Hvd (
                  cashPaymentsAccptOvrThrshld: Boolean,
                  dateOfTheFirst: Option[String],
+                 dateChangeFlag: Option[Boolean],
                  sysAutoIdOfLinkedCashPymts: Boolean,
                  hvPercentageTurnover: Option[Int],
                  hvdFromUnseenCustDetails: Option[HvdFromUnseenCustDetails]
@@ -52,7 +53,7 @@ object Hvd {
       val (cashPayment, paymentDate) = getCashPayment(hvd.cashPayment)
       val sysLinkedCashPayment = hvd.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
 
-      Hvd(cashPayment, paymentDate, sysLinkedCashPayment, hvd.percentageOfCashPaymentOver15000, hvd.receiveCashPayments)
+      Hvd(cashPayment, paymentDate, Some(hvd.dateOfChange.isDefined) ,sysLinkedCashPayment, hvd.percentageOfCashPaymentOver15000, hvd.receiveCashPayments)
   }
 
   implicit def percentageCashPayment(model: Option[PercentageOfCashPaymentOver15000]): Option[Int] = {

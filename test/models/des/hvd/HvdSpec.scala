@@ -40,7 +40,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(true, Some("1956-02-15"), true, Some(60),
+      Hvd.conv(Some(completeModel)) must be(Hvd(true, Some("1956-02-15"),None, true, Some(60),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 
@@ -56,9 +56,10 @@ class HvdSpec extends PlaySpec {
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
         receiveCashPayments = Some(DefaultReceiveCashPayments),
-        percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
-      )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, true, Some(20),
+        percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
+          dateOfChange = Some("1999-1-1"))
+
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, Some(true), true, Some(20),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 
@@ -75,7 +76,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, true, Some(80),
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(80),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 
@@ -92,7 +93,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, true, Some(100),
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(100),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 
@@ -108,7 +109,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, true, None,
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, None,
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 
@@ -123,7 +124,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, false, None,
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None,None, false, None,
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 

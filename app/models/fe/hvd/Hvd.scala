@@ -26,7 +26,9 @@ case class Hvd (cashPayment: Option[CashPayment] = None,
                 howWillYouSellGoods: Option[HowWillYouSellGoods] = None,
                 percentageOfCashPaymentOver15000: Option[PercentageOfCashPaymentOver15000] = None,
                 receiveCashPayments: Option[ReceiveCashPayments] = None,
-                linkedCashPayment: Option[LinkedCashPayments] = None) {
+                linkedCashPayment: Option[LinkedCashPayments] = None,
+                dateOfChange: Option[String] = None
+               ) {
 }
 
 object Hvd {
@@ -36,7 +38,7 @@ object Hvd {
   implicit def default(hvd: Option[Hvd]): Hvd =
     hvd.getOrElse(Hvd())
 
-  implicit def conv(view: SubscriptionView): Option[Hvd] = {
+  implicit def conv(view: SubscriptionView, amendVariation: Boolean): Option[Hvd] = {
     view.hvd match {
       case Some(hvd) => Some(Hvd(hvd, view.businessActivities, view.businessActivities, view.businessActivities, hvd, hvd, hvd))
       case None => None

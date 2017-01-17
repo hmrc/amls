@@ -37,8 +37,9 @@ class LinkedCashPaymentsSpec extends PlaySpec {
   }
 
   "converting the des model must yield a frontend model" in {
-    val desModel= DesHvd(true,
+    DesHvd(true,
       Some("2001-01-01"),
+      None,
       true,
       Some(0),
       Some(HvdFromUnseenCustDetails(
