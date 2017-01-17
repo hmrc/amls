@@ -206,7 +206,13 @@ trait AmendVariationService {
         )
         val updatedDesRequestWithTp = tradingPremisesWithStatus(response.tradingPremises, desRequest.tradingPremises)
 
-        val statusUpdatedTP = updatedDesRequestWithRp.copy(tradingPremises = updatedDesRequestWithTp)
+        val hvdWithDateOfChangeFlag = desRequest.hvd.fold(false)(!_.dateOfTheFirst.equals(response.hvd.fold[Option[String]](None)(_.dateOfTheFirst)))
+        val hvdWithDateOfChange = desRequest.hvd match {
+          case Some(hvd) => Some(hvd.copy(dateChangeFlag = Some(hvdWithDateOfChangeFlag)))
+          case _ => None
+        }
+
+        val statusUpdatedTP = updatedDesRequestWithRp.copy(tradingPremises = updatedDesRequestWithTp, hvd = hvdWithDateOfChange)
 
         statusUpdatedTP.setChangeIndicator(ChangeIndicators(
           !response.businessDetails.equals(desRequest.businessDetails),

@@ -1846,7 +1846,7 @@ object DesConstants {
 
   val testAmendHvd = HvdModel(true,
     Some("2001-01-01"),
-    None,
+    Some(false),
     true,
     None,
     Some(HvdFromUnseenCustDetails(
