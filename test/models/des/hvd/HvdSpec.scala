@@ -42,6 +42,7 @@ class HvdSpec extends PlaySpec {
       )
       Hvd.conv(Some(completeModel)) must be(Hvd(true, Some("1956-02-15"),None, true, Some(60),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+
     }
 
     "successfully convert frontend model to valid des model with cashpayment no" in {
@@ -59,7 +60,7 @@ class HvdSpec extends PlaySpec {
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
           dateOfChange = Some("1999-1-1"))
 
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, Some(true), true, Some(20),
+      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(20),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
     }
 

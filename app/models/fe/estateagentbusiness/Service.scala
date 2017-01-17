@@ -21,7 +21,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 
-case class Services(services: Set[Service])
+case class Services(services: Set[Service], dateOfChange: Option[String] = None)
 
 sealed trait Service
 

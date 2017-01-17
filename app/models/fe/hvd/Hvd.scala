@@ -38,7 +38,7 @@ object Hvd {
   implicit def default(hvd: Option[Hvd]): Hvd =
     hvd.getOrElse(Hvd())
 
-  implicit def conv(view: SubscriptionView, amendVariation: Boolean): Option[Hvd] = {
+  implicit def conv(view: SubscriptionView): Option[Hvd] = {
     view.hvd match {
       case Some(hvd) => Some(Hvd(hvd, view.businessActivities, view.businessActivities, view.businessActivities, hvd, hvd, hvd))
       case None => None

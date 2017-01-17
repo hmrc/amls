@@ -16,9 +16,13 @@
 
 package models.des.businessActivities
 
-import models.{BusinessActivitiesSection, AboutTheBusinessSection}
+import models.fe.SubscriptionRequest
+import models._
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
+import models.fe.asp._
+import models.fe.businessmatching.BusinessMatching
+import models.fe.estateagentbusiness.{BusinessTransfer, Auction, Services, EstateAgentBusiness}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -83,6 +87,43 @@ class BusinessActivitiesAllSpec extends PlaySpec {
 
       BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
         BusinessActivitiesSection.modelForView, Some("2000-11-11"), true) must be(model)
+
+    }
+
+    "successfully return earliest date comparing with asp, eab and hvd dates" in {
+
+      val aspServices = ServicesOfBusiness(Set(Accountancy, Auditing, FinancialOrTaxAdvice), Some("2000-11-11"))
+
+      val aspSection = Some(Asp(Some(aspServices), None))
+
+      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1999-11-11")))))
+
+      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
+        BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None)
+
+      BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1999-11-11"))
+
+    }
+
+    "successfully return earliest date comparing with hvd and eab change of dates" in {
+
+      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1900-11-11")))))
+
+      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
+        BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None)
+
+      BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1900-11-11"))
+
+    }
+
+    "successfully return None when there is no change of dates" in {
+
+      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), None))))
+
+      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
+        BusinessActivitiesSection.model, None, None, None, None, None, None)
+
+      BusinessActivitiesAll.getEarliestDate(feModel) must be(None)
 
     }
   }
