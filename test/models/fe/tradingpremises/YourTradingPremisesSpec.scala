@@ -25,24 +25,15 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
 
   "YourTradingPremises" must {
 
-    val data = Map(
-      "tradingName" -> Seq("foo"),
-      "addressLine1" -> Seq("1"),
-      "addressLine2" -> Seq("2"),
-      "postcode" -> Seq("asdfasdf"),
-      "isResidential" -> Seq("true"),
-      "startDate.day" -> Seq("24"),
-      "startDate.month" -> Seq("2"),
-      "startDate.year" -> Seq("1990")
-    )
-
     val json = Json.obj(
       "tradingName" -> "foo",
       "addressLine1" -> "1",
       "addressLine2" -> "2",
       "postcode" -> "asdfasdf",
       "isResidential" -> true,
-      "startDate" -> new LocalDate(1990, 2, 24)
+      "startDate" -> new LocalDate(1990, 2, 24),
+      "addressDateOfChange" -> new LocalDate("2010-02-01"),
+      "tradingNameChangeDate" -> new LocalDate("2012-03-01")
     )
 
     val model = YourTradingPremises(
@@ -52,10 +43,12 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
         "2",
         None,
         None,
-        "asdfasdf"
+        "asdfasdf",
+        dateOfChange = Some("2010-02-01")
       ),
       new LocalDate(1990, 2, 24),
-      true
+      true,
+      Some("2012-03-01")
     )
 
     "Correctly serialise from json" in {
@@ -77,8 +70,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
           Some("AddressLine3"),
           Some("AddressLine4"),
           "AD",
-          Some("AA1 1AA"),
-          Some("2001-01-01")
+          Some("AA1 1AA")
         ),
         true,
         Msb(true, false, true, true, true),
@@ -92,7 +84,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
       )
 
       val feModel = YourTradingPremises("TradingName",
-        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", Some("2001-01-01")),
+        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
         new LocalDate(2001, 1, 1), true)
 
       YourTradingPremises.conv(agentPremises) must be(feModel)

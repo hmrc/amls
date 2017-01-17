@@ -49,7 +49,8 @@ class TradingPremisesSpec extends PlaySpec {
       None,
       None,
       sectorDateChange = Some("2009-01-01"),
-      dateChangeFlag = Some(true)
+      dateChangeFlag = Some(true),
+      tradingNameChangeDate = Some("1999-04-01")
     )
 
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
@@ -118,7 +119,8 @@ class TradingPremisesSpec extends PlaySpec {
           "tditpsp" -> Json.obj("tditpsp" -> false),
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
-          "dateChangeFlag" -> true
+          "dateChangeFlag" -> true,
+          "tradingNameChangeDate" -> "1999-04-01"
           ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
           "agentDetails" -> Json.arr(Json.obj(
@@ -176,7 +178,7 @@ class TradingPremisesSpec extends PlaySpec {
 
       val tradingPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
         FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("1999-05-01"))
-        , new LocalDate(2010, 1, 1), false),
+        , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
         None, None, None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices)),
         Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal), Some("2009-01-01")))),

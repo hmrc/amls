@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class Address(
                   addressLine1: String,
@@ -28,14 +28,37 @@ case class Address(
                   )
 object Address {
 
-  implicit val format = Json.format[Address]
+  implicit val reads: Reads[Address] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._
+    (
+      (__ \ "addressLine1").read[String] and
+        (__ \ "addressLine2").read[String] and
+        (__ \ "addressLine3").readNullable[String] and
+        (__ \ "addressLine4").readNullable[String] and
+        (__ \ "postcode").read[String] and
+        (__ \ "addressDateOfChange").readNullable[String]
+      )(Address.apply _)
+  }
+
+  implicit val writes: Writes[Address] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._
+    (
+    (__ \ "addressLine1").write[String] and
+      (__ \ "addressLine2").write[String] and
+      (__ \ "addressLine3").writeNullable[String] and
+      (__ \ "addressLine4").writeNullable[String] and
+      (__ \ "postcode").write[String] and
+      (__ \ "addressDateOfChange").writeNullable[String]
+    ) (unlift(Address.unapply))
+  }
 
   implicit def convert(address: models.des.tradingpremises.Address): Address = {
     Address(address.addressLine1,
       address.addressLine2,
       address.addressLine3,
       address.addressLine4,
-      address.postcode.getOrElse(""),
-      address.addressChangeDate)
+      address.postcode.getOrElse(""))
   }
 }

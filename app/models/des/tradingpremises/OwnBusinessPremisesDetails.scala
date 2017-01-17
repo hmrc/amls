@@ -36,7 +36,8 @@ case class OwnBusinessPremisesDetails(tradingName:String,
                                       lineId: Option[StringOrInt] = None,
                                       status: Option[String] = None,
                                       sectorDateChange: Option[String] = None,
-                                      dateChangeFlag: Option[Boolean] = None
+                                      dateChangeFlag: Option[Boolean] = None,
+                                      tradingNameChangeDate: Option[String] = None
                                      )
 
 
@@ -59,7 +60,8 @@ object OwnBusinessPremisesDetails {
         __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "status").readNullable[String] and
         (__ \ "sectorDateChange").readNullable[String] and
-          (__ \ "dateChangeFlag").readNullable[Boolean]
+        (__ \ "dateChangeFlag").readNullable[Boolean] and
+        (__ \ "tradingNameChangeDate").readNullable[String]
       ) (OwnBusinessPremisesDetails.apply _)
   }
 
@@ -80,7 +82,8 @@ object OwnBusinessPremisesDetails {
         __.writeNullable[StringOrInt] and
         (__ \ "status").writeNullable[String] and
         (__ \ "sectorDateChange").writeNullable[String] and
-        (__ \ "dateChangeFlag").writeNullable[Boolean]
+        (__ \ "dateChangeFlag").writeNullable[Boolean] and
+        (__ \ "tradingNameChangeDate").writeNullable[String]
       ) (unlift(OwnBusinessPremisesDetails.unapply))
   }
 
@@ -104,7 +107,8 @@ object OwnBusinessPremisesDetails {
           x.lineId,
           x.status,
           x.msbServices.fold[Option[String]](None)(m => m.dateOfChange),
-          x.msbServices.fold[Option[Boolean]](None)(m => if(m.dateOfChange.isDefined) Some(true) else None)
+          x.msbServices.fold[Option[Boolean]](None)(m => if(m.dateOfChange.isDefined) Some(true) else None),
+          x.yourTradingPremises.tradingNameChangeDate
         )
       }
     }
