@@ -79,7 +79,7 @@ object AgentDetails {
       agentPremises = tradingPremises,
       tradingPremises.status,
       tradingPremises.lineId,
-      agentDetailsChangeDate = Some(tradingPremises.agentName.fold("")(_.dateOfChange.getOrElse("")))
+      agentDetailsChangeDate = tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange)
     )
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): Seq[AgentDetails] =
