@@ -18,7 +18,7 @@ package models.fe.tradingpremises
 
 import play.api.libs.json._
 
-case class AgentName(agentName: String)
+case class AgentName(agentName: String, dateOfChange: Option[String] = None)
 
 object AgentName {
 

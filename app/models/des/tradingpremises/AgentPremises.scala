@@ -31,7 +31,9 @@ case class AgentPremises(tradingName:String,
                          bpsp: Bpsp,
                          tditpsp: Tditpsp,
                          startDate : String,
-                         endDate: Option[String] = None
+                         endDate: Option[String] = None,
+                         sectorChangeDate: Option[String] = None,
+                         dateChangeFlag: Option[Boolean] = None
                         )
 
 object AgentPremises {
@@ -48,7 +50,9 @@ object AgentPremises {
         (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
         (__ \ "startDate").read[String] and
-        (__ \ "endDate").readNullable[String]
+        (__ \ "endDate").readNullable[String] and
+        (__ \ "agentSectorChgDate").readNullable[String] and
+        (__ \ "dateChangeFlag").readNullable[Boolean]
       ) (AgentPremises.apply _)
   }
 
@@ -65,7 +69,9 @@ object AgentPremises {
         (__ \ "bpsp").write[Bpsp] and
         (__ \ "tditpsp").write[Tditpsp] and
         (__ \ "startDate").write[String] and
-        (__ \ "endDate").writeNullable[String]
+        (__ \ "endDate").writeNullable[String] and
+        (__ \ "agentSectorChgDate").writeNullable[String] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean]
       ) (unlift(AgentPremises.unapply _))
   }
 
@@ -82,7 +88,8 @@ object AgentPremises {
       z,
       z,
       ytp.startDate.toString,
-      tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString))
+      tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)),
+      tradingPremises.msbServices.fold[Option[String]](None)(m => m.dateOfChange)
     )
   }
 }

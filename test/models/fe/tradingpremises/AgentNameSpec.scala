@@ -23,7 +23,9 @@ class AgentNameSpec extends PlaySpec {
 
   "AgentName" must {
     "Success read and write json" in {
-      AgentName.formats.reads(AgentName.formats.writes(AgentName("somename"))) must be(JsSuccess(AgentName("somename"), JsPath \ "agentName"))
+      val expected = AgentName("somename", Some("2010-01-24"))
+
+      AgentName.formats.reads(AgentName.formats.writes(expected)) must be(JsSuccess(expected))
     }
 
     "convert when agentLegalEntityName is empty" in {
