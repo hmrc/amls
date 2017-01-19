@@ -26,6 +26,7 @@ import play.api.libs.json.Json
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
+                                  DateChangeFlag: Option[Boolean],
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
@@ -62,8 +63,10 @@ object BusinessActivitiesAll{
               activities: models.fe.businessactivities.BusinessActivities,
               dateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
 
-    Some(BusinessActivitiesAll(dateOfChange,
+    Some(BusinessActivitiesAll(
+      dateOfChange,
       atb.activityStartDate,
+      None,
       activities,
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),
