@@ -49,7 +49,7 @@ class ActivityStartDateSpec extends PlaySpec {
     "des to frontend conversion when activitiesCommenceDate is none" in {
 
       val desModel = Some(BusinessActivitiesAll(
-        None,None,
+        None,None,None,
         BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("11122233344")))),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),

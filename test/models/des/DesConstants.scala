@@ -90,6 +90,31 @@ object DesConstants {
   val testHvdGoodsSold = HvdGoodsSold(true, true, true, true, true, true, true, true, true, true, true, true,
     Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
 
+  val testBusinessActivitiesAll = BusinessActivitiesAll(
+    None,
+    Some("2001-01-01"),
+    None,
+    BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
+    Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
+    Some("12345678901"),
+    Some("11223344556"),
+    NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
+    AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+    true,
+    true,
+    Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
+    MlrAdvisor(true, Some(MlrAdvisorDetails(
+      Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
+        "AdvisorAddressLine1",
+        "AdvisorAddressLine2",
+        Some("AdvisorAddressLine3"),
+        Some("AdvisorAddressLine4"),
+        "GB",
+        Some("Postcode")))),
+      true,
+      None
+    )))
+  )
   val testBusinessActivities = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
@@ -99,30 +124,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
-    Some(BusinessActivitiesAll(
-      None,
-      Some("2001-01-01"),
-      BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
-      Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
-      Some("12345678901"),
-      Some("11223344556"),
-      NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
-      AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
-      true,
-      true,
-      Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-      MlrAdvisor(true, Some(MlrAdvisorDetails(
-        Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
-          "AdvisorAddressLine1",
-          "AdvisorAddressLine2",
-          Some("AdvisorAddressLine3"),
-          Some("AdvisorAddressLine4"),
-          "GB",
-          Some("Postcode")))),
-        true,
-        None
-      )))
-    ))
+    Some(testBusinessActivitiesAll)
   )
 
   val testAmendBusinessActivities = BusinessActivities(

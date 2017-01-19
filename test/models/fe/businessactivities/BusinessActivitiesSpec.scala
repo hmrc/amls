@@ -115,6 +115,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
       val desModel = Some(BusinessActivitiesAll(
         None,
         Some("2001-01-01"),
+        None,
         BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("11122233344")))),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("14"),
