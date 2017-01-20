@@ -19,11 +19,13 @@ package services
 import connectors._
 import models.des._
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
+import models.des.supervision.{AspOrTcsp, SupervisorDetails}
 import models.des.tradingpremises._
 import org.joda.time.{LocalDate, Months}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.StatusConstants
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -217,6 +219,19 @@ trait AmendVariationService {
         }
         val businessActivitiesWithFlag = desRequest.businessActivities.all match {
           case Some(all) => Some(all.copy(DateChangeFlag = Some(businessActivitiesCommenceDateChangeFlag)))
+          case _ => None
+        }
+
+        def getSupervisorDetails(aspOrTcspOpt: Option[AspOrTcsp]) = for {
+          aspOrTcsp <- aspOrTcspOpt
+          supervisionDetails <- aspOrTcsp.supervisionDetails
+          supervisorDetails <- supervisionDetails.supervisorDetails
+        } yield supervisorDetails
+        def getSupervisorStartDate(supervisor: Option[SupervisorDetails]) = supervisor.map(_.supervisionStartDate)
+
+        val supervisorDateChangeFlag = getSupervisorStartDate(getSupervisorDetails(desRequest.aspOrTcsp)).equals(getSupervisorStartDate(getSupervisorDetails(response.aspOrTcsp)))
+        val supervisorWithDateChangeFlag = getSupervisorDetails(desRequest.aspOrTcsp) match {
+          case Some(supervision) => Some(supervision.copy(dateChangeFlag = Some(supervisorDateChangeFlag)))
           case _ => None
         }
 
