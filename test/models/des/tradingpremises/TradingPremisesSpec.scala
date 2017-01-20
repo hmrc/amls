@@ -34,7 +34,8 @@ class TradingPremisesSpec extends PlaySpec {
         Some("string"),
         Some("string"),
         "GB",
-        Some("string")
+        Some("string"),
+        Some("1999-05-01")
       ),
       false,
       Msb(false, false, true, true, false),
@@ -46,13 +47,16 @@ class TradingPremisesSpec extends PlaySpec {
       Tditpsp(false),
       "2010-01-01",
       None,
-      None
+      None,
+      sectorDateChange = Some("2009-01-01"),
+      dateChangeFlag = None,
+      tradingNameChangeDate = Some("1999-04-01")
     )
 
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
 
-    val agentPremises = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
-      Msb(false, false, false, false, false),
+    val agentPremises = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string"), Some("2002-03-11")), true,
+      Msb(true, false, false, false, false),
       Hvd(false),
       Asp(false),
       Tcsp(false),
@@ -60,7 +64,9 @@ class TradingPremisesSpec extends PlaySpec {
       Bpsp(true),
       Tditpsp(false),
       "2008-01-01",
-      Some("1999-01-01")
+      Some("1999-01-01"),
+      Some("2003-04-05"),
+      None
     )
 
     val agentPremises1 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
@@ -85,10 +91,10 @@ class TradingPremisesSpec extends PlaySpec {
 
     "serialise Trading premises model" in {
 
-      val agentDetail1 = AgentDetails("Limited Liability Partnership", Some("string"), agentPremises, Some("Deleted"),
-        Some(StringOrInt("11223344")))
+      val agentDetail = AgentDetails("Limited Liability Partnership", Some("string"), agentPremises, Some("Deleted"),
+        Some(StringOrInt("11223344")), Some("2010-01-23"))
 
-      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail1))))
+      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
 
       val desTradingPremises = {
         TradingPremises(ownBusinessPremises, agentBusinessPremises)
@@ -101,7 +107,8 @@ class TradingPremisesSpec extends PlaySpec {
             "addressLine3" -> "string",
             "addressLine4" -> "string",
             "country" -> "GB",
-            "postcode" -> "string"),
+            "postcode" -> "string",
+            "addressChangeDate" -> "1999-05-01"),
           "residential" -> false,
           "msb" -> Json.obj("mt" -> false, "ce" -> false, "smdcc" -> true, "nonSmdcc" -> true, "fx" -> false),
           "hvd" -> Json.obj("hvd" -> true),
@@ -110,19 +117,25 @@ class TradingPremisesSpec extends PlaySpec {
           "eab" -> Json.obj("eab" -> false),
           "bpsp" -> Json.obj("bpsp" -> false),
           "tditpsp" -> Json.obj("tditpsp" -> false),
-          "startDate" -> "2010-01-01"
+          "startDate" -> "2010-01-01",
+          "sectorDateChange" -> "2009-01-01",
+          "tradingNameChangeDate" -> "1999-04-01"
           ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
-          "agentDetails" -> Json.arr(Json.obj("agentLegalEntity" -> "Limited Liability Partnership",
+          "agentDetails" -> Json.arr(Json.obj(
+            "agentLegalEntity" -> "Limited Liability Partnership",
             "agentLegalEntityName" -> "string",
+            "agentDetailsChgDate" -> "2010-01-23",
             "agentPremises" -> Json.obj("tradingName" -> "string",
               "businessAddress" -> Json.obj("addressLine1" -> "string",
                 "addressLine2" -> "string",
                 "addressLine3" -> "string",
                 "addressLine4" -> "string",
-                "country" -> "GB", "postcode" -> "string"),
+                "country" -> "GB",
+                "postcode" -> "string",
+                "addressChangeDate" -> "2002-03-11"),
               "residential" -> true,
-              "msb" -> Json.obj("mt" -> false, "ce" -> false, "smdcc" -> false, "nonSmdcc" -> false, "fx" -> false),
+              "msb" -> Json.obj("mt" -> true, "ce" -> false, "smdcc" -> false, "nonSmdcc" -> false, "fx" -> false),
               "hvd" -> Json.obj("hvd" -> false),
               "asp" -> Json.obj("asp" -> false),
               "tcsp" -> Json.obj("tcsp" -> false),
@@ -130,7 +143,8 @@ class TradingPremisesSpec extends PlaySpec {
               "bpsp" -> Json.obj("bpsp" -> true),
               "tditpsp" -> Json.obj("tditpsp" -> false),
               "startDate" -> "2008-01-01",
-              "endDate" -> "1999-01-01"
+              "endDate" -> "1999-01-01",
+              "agentSectorChgDate" -> "2003-04-05"
             ),
             "status" ->"Deleted",
             "lineId" -> "11223344"
@@ -143,26 +157,34 @@ class TradingPremisesSpec extends PlaySpec {
 
     "convert TradingPremises" in {
 
-      val agentDetail1 = AgentDetails("Limited Liability Partnership", Some("LLP Partnership"), agentPremises,Some("Deleted"),
-        Some(StringOrInt("11223344")))
-      val agentDetail2 = AgentDetails("Partnership", Some("Partnership"), agentPremises1)
-      val agentDetail4 = AgentDetails("Unincorporated Body", Some(""), agentPremises2)
+      val agentBusinessPremises = Some(AgentBusinessPremises(agentBusinessPremises = true, Some(Seq(
+        AgentDetails(
+          "Limited Liability Partnership",
+          Some("LLP Partnership"),
+          agentPremises,
+          Some("Deleted"),
+          Some(StringOrInt("11223344")),
+          Some("2009-05-03")
+        ),
 
-      val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail1, agentDetail2, agentDetail4))))
+        AgentDetails("Partnership", Some("Partnership"), agentPremises1),
+        AgentDetails("Unincorporated Body", Some(""), agentPremises2)))))
 
       val desTradingPremises = {
         TradingPremises(ownBusinessPremises, agentBusinessPremises)
       }
 
-      val tradiongPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
-        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2010, 1, 1), false),
+      val tradingPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
+        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("1999-05-01"))
+        , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
         None, None, None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices)),
-        Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
+        Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal), Some("2009-01-01")))),
         FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
-        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
-          Some(BusinessStructure.LimitedLiabilityPartnership), None, Some(AgentCompanyName("LLP Partnership")), None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices)),None,Some(11223344),Some("Deleted"),
+        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
+          Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"))), Some(AgentCompanyName("LLP Partnership")), None,
+        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices)),
+          Some(MsbServices(Set(TransmittingMoney), Some("2003-04-05"))), Some(11223344),Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
@@ -174,7 +196,17 @@ class TradingPremisesSpec extends PlaySpec {
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
 
-      TradingPremises.convert(tradiongPremises) must be (desTradingPremises)
+      val converted = TradingPremises.convert(tradingPremises)
+      converted must be (desTradingPremises)
+
+      converted.agentBusinessPremises match {
+        case Some(x: AgentBusinessPremises) => x.agentDetails match {
+          case Some(details: Seq[AgentDetails]) =>
+            details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
+            details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
+        }
+      }
+
     }
 
     "successfully evaluate api5 trading premises data with api6 when data is different" in {

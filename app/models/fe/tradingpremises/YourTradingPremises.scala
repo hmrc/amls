@@ -24,7 +24,8 @@ case class YourTradingPremises(
                                 tradingName: String,
                                 tradingPremisesAddress: Address,
                                 startDate: LocalDate,
-                                isResidential: Boolean
+                                isResidential: Boolean,
+                                tradingNameChangeDate: Option[String] = None
                               )
 
 object YourTradingPremises {
@@ -36,7 +37,8 @@ object YourTradingPremises {
       (__ \ "tradingName").read[String] and
         __.read[Address] and
         (__ \ "startDate").read[LocalDate] and
-        (__ \ "isResidential").read[Boolean]
+        (__ \ "isResidential").read[Boolean] and
+        (__ \ "tradingNameChangeDate").readNullable[String]
       ) (YourTradingPremises.apply _)
   }
 
@@ -47,7 +49,8 @@ object YourTradingPremises {
       (__ \ "tradingName").write[String] and
         __.write[Address] and
         (__ \ "startDate").write[LocalDate] and
-        (__ \ "isResidential").write[Boolean]
+        (__ \ "isResidential").write[Boolean] and
+        (__ \ "tradingNameChangeDate").writeNullable[String]
       ) (unlift(YourTradingPremises.unapply))
   }
 

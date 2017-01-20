@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import models.des.DesConstants
+import models.des.{DesConstants, StringOrInt}
 import models.des.tradingpremises.{Address => DesAddress, TradingPremises => DesTradingPremises, _}
 import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
@@ -41,7 +41,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.EstateAgentBusinessService,
       BusinessActivity.MoneyServiceBusiness))
-  val msbServices = MsbServices(Set(TransmittingMoney, CurrencyExchange))
+  val msbServices = MsbServices(Set(TransmittingMoney, CurrencyExchange), Some("2010-03-01"))
 
   val completeModel = TradingPremises(Some(RegisteringAgentPremises(true)),
     ytp, Some(businessStructure), Some(agentName),Some(agentCompanyName),Some(agentPartnership),wdbd, Some(msbServices),
@@ -61,7 +61,9 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
     "agentCompanyName" -> Json.obj("agentCompanyName" ->"test"),
     "agentPartnership" -> Json.obj("agentPartnership" ->"test"),
     "whatDoesYourBusinessDoAtThisAddress" ->Json.obj("activities" -> Json.arr("02","03","05")),
-    "msbServices" -> Json.obj("msbServices"-> Json.arr("01","02")),
+    "msbServices" -> Json.obj(
+      "msbServices"-> Json.arr("01","02"),
+      "dateOfChange" -> "2010-03-01"),
      "lineId" ->123456,
     "status" ->"Added",
     "endDate"-> Json.obj("endDate" ->"1999-01-01")
@@ -90,7 +92,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
           EstateAgentBusinessService, BillPaymentServices,
           TelephonePaymentService, MoneyServiceBusiness,
           TrustAndCompanyServices)),
-        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))),Some(111111),Some("Added"))
+        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange), Some("2013-01-01"))),Some(111111),Some("Added"))
 
       val agentTradingPremises2 = TradingPremises(Some(RegisteringAgentPremises(true)),
         YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"),
@@ -115,9 +117,9 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       val ownPremises1 = TradingPremises(Some(RegisteringAgentPremises(false)),
         YourTradingPremises("OwnBusinessTradingName",Address("OwnBusinessAddressLine1","OwnBusinessAddressLine2",Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),"YY1 1YY"), new LocalDate(2001,5,5),false),None,None,None,None,
-        WhatDoesYourBusinessDo(Set(EstateAgentBusinessService, BillPaymentServices,
-          TrustAndCompanyServices)),
-        None,Some(444444),Some(StatusConstants.Unchanged))
+        WhatDoesYourBusinessDo(Set(EstateAgentBusinessService, BillPaymentServices, MoneyServiceBusiness, TrustAndCompanyServices)),
+        Some(MsbServices(Set(TransmittingMoney), Some("2009-08-07"))),
+        Some(444444),Some(StatusConstants.Unchanged))
 
       val ownPremises2 = TradingPremises(Some(RegisteringAgentPremises(false)),
         YourTradingPremises("OwnBusinessTradingName1",Address("OB11AddressLine1","OB1AddressLine2",Some("OB1AddressLine3"),Some("OB1AddressLine4"),"XX1 1XX"),
@@ -129,7 +131,20 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
       val convertedModel = Some(List(agentTradingPremises1, agentTradingPremises2, agentTradingPremises3, ownPremises1, ownPremises2))
 
-      TradingPremises.conv(DesConstants.testTradingPremisesAPI5) must be(convertedModel)
+      val details = DesConstants.agentDetailsAPI51
+
+      TradingPremises.conv(DesConstants.testTradingPremisesAPI5.copy(
+        ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
+          DesConstants.ownBusinessPremisesTP.x.ownBusinessPremisesDetails.get.lift(0).get.copy(sectorDateChange = Some("2009-08-07"), msb = Msb(true, false, false, false, false)),
+          DesConstants.ownBusinessPremisesTP.x.ownBusinessPremisesDetails.get.lift(1).get
+        )))),
+        agentBusinessPremises = Some(AgentBusinessPremises(true,
+          Some(Seq(
+            details.copy(agentPremises = details.agentPremises.copy(sectorChangeDate = Some("2013-01-01"))),
+            DesConstants.agentDetailsAPI52,
+            DesConstants.agentDetailsAPI53
+          ))
+      )))) must be(convertedModel)
 
     }
 
@@ -161,7 +176,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
           None
         ),
         false,
-        Msb(false, false, false, false, false ),
+        Msb(true, false, false, false, false ),
         Hvd(false),
         Asp(false),
         Tcsp(false),
@@ -169,11 +184,19 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
         Bpsp(false),
         Tditpsp(false),
         "1975",
-        None
+        None,
+        Some("2002-03-01")
       ),
       None,
       None
     )
+
+    "the Des model coverter" must {
+      "extract the sector change date" in {
+        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor"))
+        feModel.msbServices must be(Some(MsbServices(Set(TransmittingMoney), Some("2002-03-01"))))
+      }
+    }
 
     "Business structure is Sole Proprietor" must {
       "populate the agent Name field from the Legal entity name in DES" in  {

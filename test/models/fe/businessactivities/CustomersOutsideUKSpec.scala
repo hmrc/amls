@@ -33,7 +33,8 @@ class CustomersOutsideUKSpec extends PlaySpec {
 
     "convert des model to frontend model successfully" in {
       val businessActivitiesAll = BusinessActivitiesAll(None,
-        Some("2001-01-01"),None,
+        Some("2001-01-01"),
+        None,
         BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("11122233344")))),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),
@@ -50,7 +51,8 @@ class CustomersOutsideUKSpec extends PlaySpec {
 
     "convert des model to frontend model successfully when countries option is none" in {
       val businessActivitiesAll = BusinessActivitiesAll(None,
-        Some("2001-01-01"),None,
+        Some("2001-01-01"),
+        None,
         BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("11122233344")))),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),

@@ -16,7 +16,6 @@
 
 package models.fe.estateagentbusiness
 
-import models.des.DesConstants
 import models.des.businessactivities.EabServices
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -34,10 +33,10 @@ class ServicesSpec extends PlaySpec with MockitoSugar {
     "JSON validation" must {
 
       "successfully validate given values" in {
-        val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05", "06", "07", "08", "09"))
+        val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05", "06", "07", "08", "09"), "dateOfChange" -> "2016-02-24")
 
         Json.fromJson[Services](json) must
-          be(JsSuccess(Services(businessServices), JsPath \ "services"))
+          be(JsSuccess(Services(businessServices,  Some("2016-02-24")), JsPath))
       }
 
       "fail when on path is missing" in {

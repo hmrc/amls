@@ -60,7 +60,7 @@ class HowManyEmployeesSpec extends PlaySpec {
     "convert des ro frontend model successfully" in {
 
       val all = BusinessActivitiesAll(
-        None,None, None,
+        None,None,None,
         BusinessActivityDetails(false, None),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),
