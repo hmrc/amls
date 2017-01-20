@@ -173,7 +173,7 @@ object DefaultDesValues {
 
   val AspSection =  Some(Asp(true, None))
 
-  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25","Ending reason")))
+  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",None,"Ending reason")))
   private val professionalBodyDetails = ProfessionalBodyDetails(true,Some("details"),
     Some(ProfessionalBodyDesMember(true,
       Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))
