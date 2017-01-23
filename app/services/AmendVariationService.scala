@@ -96,10 +96,10 @@ trait AmendVariationService {
 
     val responsiblePeopleSplitCount = responsiblePeopleSplit match {
       case Some(partition) => partition match {
-        case (fp,rp) => (detailsMatch(Some(fp)),detailsMatch(Some(rp)))
-        case _ => (0,0)
+        case (fp, rp) => (detailsMatch(Some(fp)), detailsMatch(Some(rp)))
+        case _ => (0, 0)
       }
-      case _ => (0,0)
+      case _ => (0, 0)
     }
 
     val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
@@ -204,7 +204,7 @@ trait AmendVariationService {
         val etmpFields = desRequest.extraFields.setEtmpFields(response.extraFields.etmpFields)
         val requestWithExtraField = desRequest.setExtraFields(etmpFields)
         val updatedDesRequestWithRp = requestWithExtraField.setResponsiblePersons(
-          updatedRPExtraFields(response.responsiblePersons, requestWithExtraField.responsiblePersons)
+          compareAndUpdateRps(response.responsiblePersons, requestWithExtraField.responsiblePersons)
         )
         val updatedDesRequestWithTp = tradingPremisesWithStatus(response.tradingPremises, desRequest.tradingPremises)
 
@@ -214,7 +214,7 @@ trait AmendVariationService {
           case _ => None
         }
 
-        val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false){
+        val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false) {
           !_.activitiesCommenceDate.equals(response.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
         }
         val businessActivitiesWithFlag = desRequest.businessActivities.all match {
@@ -268,20 +268,24 @@ trait AmendVariationService {
     }
   }
 
-  private def updatedRPExtraFields(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
-                                   desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
+  private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
+                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
     (viewResponsiblePerson, desResponsiblePerson) match {
       case (Some(rp), Some(desRp)) => {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
-        val rpWithLineIds = withLineIds.map(updateRpExtraField(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+        val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
+        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)), nameDetails = rp.nameDetails map {
+          nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
+            pnd => pnd.copy(dateChangeFlag = Some(false))
+          })
+        }, dateChangeFlag = Some(false)))
         rpWithLineIds ++ rpWithoutLineId
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }
   }
 
-  private def updateRpExtraField(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
+  private def updateExistingRp(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
     val rpOption = viewResponsiblePersons.find(x => x.extra.lineId.equals(desRp.extra.lineId))
     val viewRp: ResponsiblePersons = rpOption.getOrElse(None)
 
@@ -301,7 +305,21 @@ trait AmendVariationService {
     }
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
-    desResponsiblePeople.copy(extra = statusExtraField)
+
+    desResponsiblePeople.copy(extra = statusExtraField, nameDetails = desResponsiblePeople.nameDetails map {
+      nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
+        pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+          for {
+            nameDetails <- viewRp.nameDetails
+            previousNameDetails <- nameDetails.previousNameDetails
+            prevDateOfChange <- previousNameDetails.dateOfChange
+          } yield prevDateOfChange
+        }))
+      })
+    },
+      dateChangeFlag = Some(desResponsiblePeople.startDate !=
+        viewRp.startDate
+      ))
   }
 
   def tradingPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): TradingPremises = {
@@ -327,7 +345,7 @@ trait AmendVariationService {
               }
 
               val startDateChangeFlag = agentDtls.agentPremises.startDate match {
-                case date if agentDtls.status !=Some(StatusConstants.Deleted) =>
+                case date if agentDtls.status != Some(StatusConstants.Deleted) =>
                   !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
                     case false => None
                     case _ => Some(true)
@@ -360,7 +378,7 @@ trait AmendVariationService {
                 }
               }
               val startDateChangeFlag = ownDtls.startDate match {
-                case date if ownDtls.status !=Some(StatusConstants.Deleted) =>
+                case date if ownDtls.status != Some(StatusConstants.Deleted) =>
                   !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
                     case false => None
                     case _ => Some(true)

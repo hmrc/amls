@@ -38,6 +38,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
 
   object TestAmendVariationService extends AmendVariationService {
+
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
@@ -74,6 +75,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     Some("Some training"),
     true,
     Some("test"),
+    None,
     None,
     None,
     unchangedExtra
@@ -144,7 +146,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
       val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp=Some(MsbOrTcsp(true)), extra = addedExtra))))
+      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(true)), extra = addedExtra))))
 
       when(request.tradingPremises).thenReturn(tradingPremises)
 
@@ -168,7 +170,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
       println(">>")
 
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp=Some(MsbOrTcsp(false)), extra = addedExtra))))
+      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(false)), extra = addedExtra))))
 
       when(request.tradingPremises).thenReturn(tradingPremises)
 
@@ -504,12 +506,51 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     }
 
     "successfully compare and update api6 request with api5 data" when {
+
+      "responsible people start date changes" in {
+
+        val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+          responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+            rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+          }
+        )
+        val request = DesConstants.updateAmendVariationRequestRP.copy(
+          responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+            rps => Seq(rps.tail.head)
+          }
+        )
+        val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+          responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+            rps => Seq(rps.tail.head.copy(dateChangeFlag = Some(true), extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+          }
+          ,
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          )))
+        when {
+          TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
+        } thenReturn Future.successful(viewModel)
+
+        whenReady(TestAmendVariationService.compareAndUpdate(request, amlsRegistrationNumber)) {
+          updatedRequest => {
+            updatedRequest.responsiblePersons must be(convertedRequest.responsiblePersons)
+            updatedRequest must be(convertedRequest)
+          }
+        }
+      }
+
+
+
       "user has deleted a record, added one new record and has not changed one record of responsible people" in {
         val viewModel = DesConstants.SubscriptionViewStatusRP
 
         val testRequest = DesConstants.amendStatusAmendVariationRP.copy(
-          businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+          businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+            all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
               DateChangeFlag = Some(false)
             ))
           ),
@@ -525,9 +566,9 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
         } thenReturn Future.successful(viewModel)
 
-
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.updateAmendVariationRequestRP, amlsRegistrationNumber)) {
           updatedRequest =>
+
             updatedRequest must be(testRequest)
         }
       }
@@ -538,8 +579,8 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         val viewModel = DesConstants.SubscriptionViewStatusTP
 
         val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
-          businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+          businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+            all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
               DateChangeFlag = Some(false)
             ))
           ),
@@ -559,6 +600,51 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendStatusDesVariationRequestTP, amlsRegistrationNumber)) {
           updatedRequest =>
             updatedRequest must be(testRequest)
+        }
+      }
+
+      "user has modified the previous name date of change of an RP" in {
+        val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+          responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+            rps => Seq(rps.head.copy(nameDetails = rps.head.nameDetails map {
+              nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
+                pnd => pnd.copy(dateOfChange = Some("1970-01-01"))
+              })
+            }))
+          }
+        )
+        val request = DesConstants.updateAmendVariationRequestRP.copy(
+          responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+            rps => Seq(rps.tail.head)
+          }
+        )
+        val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+          responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+            rps => Seq(rps.tail.head.copy(
+              nameDetails = rps.tail.head.nameDetails map {
+                nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
+                  pnd => pnd.copy(dateChangeFlag = Some(true))
+                })
+              }
+              , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
+          },
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          ))
+        )
+        when {
+          TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
+        } thenReturn Future.successful(viewModel)
+
+        whenReady(TestAmendVariationService.compareAndUpdate(request, amlsRegistrationNumber)) {
+          updatedRequest => {
+            updatedRequest.responsiblePersons must be(convertedRequest.responsiblePersons)
+            updatedRequest must be(convertedRequest)
+          }
         }
       }
     }
@@ -654,7 +740,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         updatedRequest =>
           updatedRequest.tradingPremises.agentBusinessPremises must be(Some(AgentBusinessPremises(true, Some(Seq(agentDetailsExpectedData)))))
       }
-
 
 
     }

@@ -115,6 +115,33 @@ object DesConstants {
       None
     )))
   )
+
+  val testBusinessActivitiesAllWithDateChangeFlag = BusinessActivitiesAll(
+    None,
+    Some("2001-01-01"),
+    Some(false),
+    BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
+    Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
+    Some("12345678901"),
+    Some("11223344556"),
+    NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
+    AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+    true,
+    true,
+    Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
+    MlrAdvisor(true, Some(MlrAdvisorDetails(
+      Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
+        "AdvisorAddressLine1",
+        "AdvisorAddressLine2",
+        Some("AdvisorAddressLine3"),
+        Some("AdvisorAddressLine4"),
+        "GB",
+        Some("Postcode")))),
+      true,
+      None
+    )))
+  )
+
   val testBusinessActivities = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
@@ -125,6 +152,18 @@ object DesConstants {
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
     Some(testBusinessActivitiesAll)
+  )
+
+  val testBusinessActivitiesWithDateChangeFlag = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, false)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, true)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAllWithDateChangeFlag)
   )
 
   val testAmendBusinessActivities = BusinessActivities(
@@ -1016,7 +1055,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        Some(false)
       ))
     )),
     Some(NationalityDetails(
@@ -1049,6 +1089,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(None, None, Some(StatusConstants.Added))
   )
@@ -1063,7 +1104,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        Some(false)
       ))
     )),
     Some(NationalityDetails(
@@ -1096,6 +1138,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
@@ -1143,6 +1186,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    None,
     Some(MsbOrTcsp(true)),
     RPExtra(None, None, None)
   )
@@ -1189,6 +1233,7 @@ object DesConstants {
     Some("bbbbbbbbbb"),
     true,
     Some("bbbbbbbbbbb"),
+    None,
     None,
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
@@ -1256,6 +1301,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
     ),
@@ -1273,7 +1319,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -1324,6 +1371,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
+      Some(false),
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Updated), Some(false), Some("some test result"), Some("2012-12-12"))
     ),
@@ -1391,6 +1439,7 @@ object DesConstants {
     true,
     Some("TrainingDetails"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("333333")), None, None, Some(false), Some("some test result"), Some("2012-12-12"))
   )
@@ -1472,6 +1521,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
+      None,
       Some(MsbOrTcsp(false)),
       RPExtra(Some(StringOrInt(333333)), None, Some("added"), None, None, None)
     ),
@@ -1518,6 +1568,7 @@ object DesConstants {
       false,
       None,
       Some(today),
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt(222222)), None, Some("added"), None, None, None)
     )
@@ -1584,6 +1635,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
+      None,
       Some(MsbOrTcsp(false)),
       RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
     ),
@@ -1630,6 +1682,7 @@ object DesConstants {
       false,
       None,
       Some(today),
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
     )
@@ -1837,6 +1890,7 @@ object DesConstants {
     true,
     Some("TrainingDetails"),
     None,
+    None,
     Some(MsbOrTcsp(false)),
     RPExtra(Some(StringOrInt("333333")), Some("2016-09-17T09:30:47Z"), Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
   ))
@@ -2035,7 +2089,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2086,6 +2141,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
+      Some(false),
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), Some(false), Some("some test result"), Some("2012-12-12"))
     ),
@@ -2102,7 +2158,7 @@ object DesConstants {
     DesConstants.testBusinessReferencesAll,
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
+    DesConstants.testBusinessActivitiesWithDateChangeFlag,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),
@@ -2127,7 +2183,7 @@ object DesConstants {
     DesConstants.testBusinessReferencesAll,
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
+    DesConstants.testBusinessActivitiesWithDateChangeFlag,
     DesConstants.amendStatusTradingPremisesAPI6,
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),
