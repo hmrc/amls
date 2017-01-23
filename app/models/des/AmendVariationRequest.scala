@@ -69,6 +69,10 @@ case class AmendVariationRequest(
     this.copy(responsiblePersons = Some(responsiblePersons))
   }
 
+  def setTradingPremises(tradingPremises: TradingPremises): AmendVariationRequest = {
+    this.copy(tradingPremises = tradingPremises)
+  }
+
 }
 
 object AmendVariationRequest {
