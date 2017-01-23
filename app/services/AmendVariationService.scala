@@ -317,7 +317,17 @@ trait AmendVariationService {
                   case false => StatusConstants.Updated
                 }
               }
-              agentDtls.copy(status = Some(updatedStatus))
+
+              val startDateChangeFlag = agentDtls.agentPremises.startDate match {
+                case date if agentDtls.status !=Some(StatusConstants.Deleted) =>
+                  !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
+                    case false => None
+                    case _ => Some(true)
+                  }
+                case _ => None
+              }
+
+              agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
             case _ => agentDtls
           }
         }
@@ -341,7 +351,15 @@ trait AmendVariationService {
                   case false => StatusConstants.Updated
                 }
               }
-              ownDtls.copy(status = Some(updatedStatus))
+              val startDateChangeFlag = ownDtls.startDate match {
+                case date if ownDtls.status !=Some(StatusConstants.Deleted) =>
+                  !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
+                    case false => None
+                    case _ => Some(true)
+                  }
+                case _ => None
+              }
+              ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
             case _ => ownDtls
           }
         }
@@ -349,7 +367,6 @@ trait AmendVariationService {
       }
       case None => ownDtls
     }
-
   }
 
 
