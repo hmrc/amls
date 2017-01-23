@@ -54,7 +54,7 @@ object DefaultDesValues {
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
   private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))
   private val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
-  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"),None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
     formalRiskAssessmentDetails, mlrAdvisor))
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
@@ -166,6 +166,7 @@ object DefaultDesValues {
     true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
+    None,
     Some(MsbOrTcsp(true)),
     RPExtra()
   )
@@ -173,7 +174,7 @@ object DefaultDesValues {
 
   val AspSection =  Some(Asp(true, None))
 
-  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25","Ending reason")))
+  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",None,"Ending reason")))
   private val professionalBodyDetails = ProfessionalBodyDetails(true,Some("details"),
     Some(ProfessionalBodyDesMember(true,
       Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))

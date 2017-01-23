@@ -38,6 +38,7 @@ case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               amlAndCounterTerrFinTraining: Boolean,
                               trainingDetails: Option[String],
                               startDate: Option[String],
+                              dateChangeFlag: Option[Boolean] = None,
                               msbOrTcsp: Option[MsbOrTcsp],
                               extra: RPExtra
                              )
@@ -65,6 +66,7 @@ object ResponsiblePersons {
         (__ \ "amlAndCounterTerrFinTraining").read[Boolean] and
         (__ \ "trainingDetails").readNullable[String] and
         (__ \ "startDate").readNullable[String] and
+        (__ \ "dateChangeFlag").readNullable[Boolean] and
         (__ \ "msbOrTcsp").readNullable[MsbOrTcsp]and
         __.read[RPExtra]
       ) (ResponsiblePersons.apply _)
@@ -91,13 +93,14 @@ object ResponsiblePersons {
         (__ \ "amlAndCounterTerrFinTraining").write[Boolean] and
         (__ \ "trainingDetails").writeNullable[String] and
         (__ \ "startDate").writeNullable[String] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "msbOrTcsp").writeNullable[MsbOrTcsp] and
         __.write[RPExtra]
       ) (unlift(ResponsiblePersons.unapply _))
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
-    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None,
+    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
       RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
@@ -137,6 +140,7 @@ object ResponsiblePersons {
       training,
       trainingDesc,
       rp.positions,
+      None,
       rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) },
       rp
     )

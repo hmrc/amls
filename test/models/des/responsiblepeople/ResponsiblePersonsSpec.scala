@@ -50,6 +50,7 @@ class ResponsiblePersonsSpec extends PlaySpec {
       true,
       Some("test"),
       None,
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(None)
     )
