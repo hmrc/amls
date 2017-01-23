@@ -1090,6 +1090,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(None, None, Some(StatusConstants.Added))
   )
@@ -1138,6 +1139,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
@@ -1185,6 +1187,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
+    None,
     Some(MsbOrTcsp(true)),
     RPExtra(None, None, None)
   )
@@ -1231,6 +1234,7 @@ object DesConstants {
     Some("bbbbbbbbbb"),
     true,
     Some("bbbbbbbbbbb"),
+    None,
     None,
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
@@ -1297,6 +1301,7 @@ object DesConstants {
       Some("DescOfPrevExperience"),
       true,
       Some("TrainingDetails"),
+      None,
       None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
@@ -1367,6 +1372,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
+      Some(false),
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Updated), Some(false), Some("some test result"), Some("2012-12-12"))
     ),
@@ -1434,6 +1440,7 @@ object DesConstants {
     true,
     Some("TrainingDetails"),
     None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     RPExtra(Some(StringOrInt("333333")), None, None, Some(false), Some("some test result"), Some("2012-12-12"))
   )
@@ -1515,6 +1522,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
+      None,
       Some(MsbOrTcsp(false)),
       RPExtra(Some(StringOrInt(333333)), None, Some("added"), None, None, None)
     ),
@@ -1561,6 +1569,7 @@ object DesConstants {
       false,
       None,
       Some(today),
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt(222222)), None, Some("added"), None, None, None)
     )
@@ -1627,6 +1636,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
+      None,
       Some(MsbOrTcsp(false)),
       RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
     ),
@@ -1673,6 +1683,7 @@ object DesConstants {
       false,
       None,
       Some(today),
+      None,
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
     )
@@ -1879,6 +1890,7 @@ object DesConstants {
     None,
     true,
     Some("TrainingDetails"),
+    None,
     None,
     Some(MsbOrTcsp(false)),
     RPExtra(Some(StringOrInt("333333")), Some("2016-09-17T09:30:47Z"), Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
@@ -2130,6 +2142,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
+      Some(false),
       Some(MsbOrTcsp(true)),
       RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), Some(false), Some("some test result"), Some("2012-12-12"))
     ),

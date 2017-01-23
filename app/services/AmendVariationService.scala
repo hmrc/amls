@@ -212,7 +212,7 @@ trait AmendVariationService {
           case _ => None
         }
 
-        val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false){
+        val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false) {
           !_.activitiesCommenceDate.equals(response.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
         }
         val businessActivitiesWithFlag = desRequest.businessActivities.all match {
@@ -251,11 +251,11 @@ trait AmendVariationService {
       case (Some(rp), Some(desRp)) => {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
         val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)),nameDetails = rp.nameDetails map {
+        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)), nameDetails = rp.nameDetails map {
           nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
             pnd => pnd.copy(dateChangeFlag = Some(false))
           })
-        }))
+        }, dateChangeFlag = Some(false)))
         rpWithLineIds ++ rpWithoutLineId
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
@@ -293,7 +293,10 @@ trait AmendVariationService {
           } yield prevDateOfChange
         }))
       })
-    })
+    },
+      dateChangeFlag = Some(desResponsiblePeople.startDate !=
+        viewRp.startDate
+      ))
   }
 
   def tradingPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): TradingPremises = {
@@ -319,7 +322,7 @@ trait AmendVariationService {
               }
 
               val startDateChangeFlag = agentDtls.agentPremises.startDate match {
-                case date if agentDtls.status !=Some(StatusConstants.Deleted) =>
+                case date if agentDtls.status != Some(StatusConstants.Deleted) =>
                   !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
                     case false => None
                     case _ => Some(true)
@@ -352,7 +355,7 @@ trait AmendVariationService {
                 }
               }
               val startDateChangeFlag = ownDtls.startDate match {
-                case date if ownDtls.status !=Some(StatusConstants.Deleted) =>
+                case date if ownDtls.status != Some(StatusConstants.Deleted) =>
                   !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
                     case false => None
                     case _ => Some(true)

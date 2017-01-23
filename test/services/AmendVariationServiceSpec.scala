@@ -77,6 +77,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     Some("test"),
     None,
     None,
+    None,
     unchangedExtra
   )
 
@@ -505,6 +506,38 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     }
 
     "successfully compare and update api6 request with api5 data" when {
+
+      "responsible people start date changes" in {
+
+        val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+          responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+            rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+          }
+        )
+        val request = DesConstants.updateAmendVariationRequestRP.copy(
+          responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+            rps => Seq(rps.tail.head)
+          }
+        )
+        val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+          responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+            rps => Seq(rps.tail.head.copy(dateChangeFlag = Some(true),extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+          }
+        )
+        when {
+          TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
+        } thenReturn Future.successful(viewModel)
+
+        whenReady(TestAmendVariationService.compareAndUpdate(request, amlsRegistrationNumber)) {
+          updatedRequest => {
+            updatedRequest.responsiblePersons must be(convertedRequest.responsiblePersons)
+            updatedRequest must be(convertedRequest)
+          }
+        }
+      }
+
+
+
       "user has deleted a record, added one new record and has not changed one record of responsible people" in {
         val viewModel = DesConstants.SubscriptionViewStatusRP
         when {
@@ -567,7 +600,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
                   pnd => pnd.copy(dateChangeFlag = Some(true))
                 })
               }
-            ,extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+            ,extra = rps.tail.head.extra.copy(status = Some("Updated")),dateChangeFlag = Some(false)))
           }
         )
         when {
