@@ -18,13 +18,11 @@ package services
 
 import connectors._
 import models.des._
-import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
-import models.des.supervision.{AspOrTcsp, SupervisionDetails, SupervisorDetails}
-import models.des.tradingpremises._
+import models.des.responsiblepeople.ResponsiblePersons
 import org.joda.time.{LocalDate, Months}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.{AmendVariationRequestUpdateHelper, StatusConstants}
+import utils.UpdateVariationRequestHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +37,7 @@ trait AmendVariationService {
 
   private[services] def viewDesConnector: ViewDESConnector
 
-  private[services] def amendVariationRequestUpdateHelper: AmendVariationRequestUpdateHelper
+  private[services] def updateVariationRequestHelper: UpdateVariationRequestHelper
 
   def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -201,190 +199,9 @@ trait AmendVariationService {
   }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
-    viewDesConnector.view(amlsRegistrationNumber) map {
-      response =>
-        amendVariationRequestUpdateHelper.getUpdatedRequest(desRequest, response, amlsRegistrationNumber)
-    }
+    updateVariationRequestHelper.getUpdatedRequest(desRequest, amlsRegistrationNumber)
   }
 
-  private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
-                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
-    (viewResponsiblePerson, desResponsiblePerson) match {
-      case (Some(rp), Some(desRp)) => {
-        val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
-        val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)), nameDetails = rp.nameDetails map {
-          nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
-            pnd => pnd.copy(dateChangeFlag = Some(false))
-          })
-        }, dateChangeFlag = Some(false)))
-        rpWithLineIds ++ rpWithoutLineId
-      }
-      case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
-    }
-  }
-
-  private def updateExistingRp(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
-    val rpOption = viewResponsiblePersons.find(x => x.extra.lineId.equals(desRp.extra.lineId))
-    val viewRp: ResponsiblePersons = rpOption.getOrElse(None)
-
-    val desRPExtra = desRp.extra.copy(
-      retestFlag = viewRp.extra.retestFlag,
-      testResult = viewRp.extra.testResult,
-      testDate = viewRp.extra.testDate
-    )
-    val desResponsiblePeople = desRp.copy(extra = desRPExtra)
-
-    val updatedStatus = desResponsiblePeople.extra.status match {
-      case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-      case _ => desResponsiblePeople.equals(viewRp) match {
-        case true => StatusConstants.Unchanged
-        case false => StatusConstants.Updated
-      }
-    }
-
-    val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
-
-    desResponsiblePeople.copy(extra = statusExtraField, nameDetails = desResponsiblePeople.nameDetails map {
-      nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
-        pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
-          for {
-            nameDetails <- viewRp.nameDetails
-            previousNameDetails <- nameDetails.previousNameDetails
-            prevDateOfChange <- previousNameDetails.dateOfChange
-          } yield prevDateOfChange
-        }))
-      })
-    },
-      dateChangeFlag = Some(desResponsiblePeople.startDate !=
-        viewRp.startDate
-      ))
-  }
-
-  def tradingPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): TradingPremises = {
-
-    val updatedAgentBusinessPremises = getAgentDetailsWithStatus(viewTradingPremises, desTradingPremises)
-    val updatedOwnBusinessPremises = getOwnPremisesWithStatus(viewTradingPremises, desTradingPremises)
-
-    desTradingPremises.copy(agentBusinessPremises = updatedAgentBusinessPremises, ownBusinessPremises = updatedOwnBusinessPremises)
-  }
-
-  def updateAgentStatus(agentDtls: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
-    viewTradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => agentBusinessPremises.agentDetails match {
-        case Some(agentPremises) => {
-          agentPremises.find(x => x.lineId.equals(agentDtls.lineId)) match {
-            case Some(viewAgent) =>
-              val updatedStatus = agentDtls.status match {
-                case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-                case _ => agentDtls.equals(viewAgent) match {
-                  case true => StatusConstants.Unchanged
-                  case false => StatusConstants.Updated
-                }
-              }
-
-              val startDateChangeFlag = agentDtls.agentPremises.startDate match {
-                case date if agentDtls.status != Some(StatusConstants.Deleted) =>
-                  !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
-                    case false => None
-                    case _ => Some(true)
-                  }
-                case _ => None
-              }
-
-              agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
-            case _ => agentDtls
-          }
-        }
-        case None => agentDtls
-      }
-      case None => agentDtls
-    }
-
-  }
-
-  def updateOwnPremisesStatus(ownDtls: OwnBusinessPremisesDetails, viewTradingPremises: TradingPremises): OwnBusinessPremisesDetails = {
-    viewTradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => ownBusinessPremises.ownBusinessPremisesDetails match {
-        case Some(agentPremises) => {
-          agentPremises.find(x => x.lineId.equals(ownDtls.lineId)) match {
-            case Some(viewOwnDtls) =>
-              val updatedStatus = ownDtls.status match {
-                case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-                case _ => ownDtls.equals(viewOwnDtls) match {
-                  case true => StatusConstants.Unchanged
-                  case false => StatusConstants.Updated
-                }
-              }
-              val startDateChangeFlag = ownDtls.startDate match {
-                case date if ownDtls.status != Some(StatusConstants.Deleted) =>
-                  !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
-                    case false => None
-                    case _ => Some(true)
-                  }
-                case _ => None
-              }
-              ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-            case _ => ownDtls
-          }
-        }
-        case None => ownDtls
-      }
-      case None => ownDtls
-    }
-
-  }
-
-
-  def getAgentDetailsWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): Option[AgentBusinessPremises] = {
-    val (agentWithLineIds, agentWithoutLineIds) = desTradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => desTradingPremises.agentBusinessPremises.get.
-        agentDetails.fold[(Seq[AgentDetails], Seq[AgentDetails])]((Seq.empty, Seq.empty))(agent => agent.partition(_.lineId.isDefined))
-      case None => (Nil, Nil)
-    }
-
-    val updatedAgentStatus = agentWithLineIds.map(agentDtls => updateAgentStatus(agentDtls, viewTradingPremises))
-    val updatedAgentStatusWithoutLineId = agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
-    val addAgentList = updatedAgentStatus ++ updatedAgentStatusWithoutLineId
-
-    desTradingPremises.agentBusinessPremises.map {
-      agentBusinessPremises => agentBusinessPremises.copy(agentDetails = Some(addAgentList))
-    }
-  }
-
-
-  def getOwnPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): Option[OwnBusinessPremises] = {
-
-    val (ownWithLineIds, ownWithoutLineIds) = desTradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => ownBusinessPremises.ownBusinessPremisesDetails.
-        fold[(Seq[OwnBusinessPremisesDetails], Seq[OwnBusinessPremisesDetails])]((Seq.empty, Seq.empty))(own => own.partition(_.lineId.isDefined))
-      case None => (Nil, Nil)
-    }
-
-    val updatedOwnStatus = ownWithLineIds.map(own => updateOwnPremisesStatus(own, viewTradingPremises))
-    val updatedOwnStatusWithoutLineId = ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
-    val addOwnList = updatedOwnStatus ++ updatedOwnStatusWithoutLineId
-
-    desTradingPremises.ownBusinessPremises.map {
-      ownBusinessPremises => ownBusinessPremises.copy(ownBusinessPremisesDetails = Some(addOwnList))
-    }
-  }
-
-  def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
-    !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
-      response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
-      response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
-  }
-
-  private def isTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
-    !(response.tcspAll.equals(desRequest.tcspAll) &&
-      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
-  }
-
-  private def isEABChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
-    !(response.eabAll.equals(desRequest.eabAll) &&
-      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
-  }
 }
 
 object AmendVariationService extends AmendVariationService {
@@ -393,5 +210,5 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
-  override private[services] val amendVariationRequestUpdateHelper = AmendVariationRequestUpdateHelper
+  override private[services] val updateVariationRequestHelper = UpdateVariationRequestHelper
 }

@@ -29,8 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.AmendVariationRequestUpdateHelper
-import utils.StatusConstants
+import utils.{StatusConstants, UpdateVariationRequestHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,7 +42,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
-    override private[services] val amendVariationRequestUpdateHelper: AmendVariationRequestUpdateHelper = AmendVariationRequestUpdateHelper
+    override private[services] val updateVariationRequestHelper: UpdateVariationRequestHelper = mock[UpdateVariationRequestHelper]
   }
 
   val response = des.AmendVariationResponse(
@@ -497,11 +496,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
     }
 
-    "successfully evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
-      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.SubscriptionViewModelForRp, DesConstants.AmendVariationRequestModel) must be(false)
-
-    }
-
     "successfully compare and update api6 request with api5 data" when {
 
       "responsible people start date changes" in {
@@ -656,91 +650,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
       }
     }
 
-    "successfully update own business start date changed flag when start date is amended" in {
-      val viewModel = DesConstants.SubscriptionViewModelAPI5
 
-      val data = OwnBusinessPremisesDetails(
-        "OwnBusinessTradingName",
-        Address("OwnBusinessAddressLine1",
-          "OwnBusinessAddressLine2",
-          Some("OwnBusinessAddressLine3"),
-          Some("OwnBusinessAddressLine4"),
-          "GB",
-          Some("YY1 1YY")),
-        false,
-        Msb(false, false, false, false, false),
-        Hvd(false),
-        Asp(false),
-        Tcsp(true),
-        Eab(true),
-        Bpsp(true),
-        Tditpsp(false),
-        "2001-05-01",
-        None,
-        Some(StringOrInt(444444)),
-        Some(StatusConstants.Unchanged),
-        None,
-        None,
-        None
-      )
-
-      val expectedData = data.copy(dateChangeFlag = Some(true), status = Some(StatusConstants.Updated))
-
-      when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
-      } thenReturn Future.successful(viewModel)
-
-      val modelWithchangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
-        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))))
-
-      whenReady(TestAmendVariationService.compareAndUpdate(modelWithchangedStartDate, amlsRegistrationNumber)) {
-        updatedRequest =>
-          {
-            println(">>>>>>>>>>>>>>>>>>>>>>>>>> " + updatedRequest.tradingPremises.ownBusinessPremises)
-            println(">>>>>>>>>>>>>>>>>>>>>>>>>> " + Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
-            updatedRequest.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
-          }
-      }
-
-    }
-
-    "successfully update agent premises start date changed flag when start date is amended" in {
-      val viewModel = DesConstants.SubscriptionViewModelAPI5
-
-      val agentPremisesData = AgentPremises("string",
-        des.tradingpremises.Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
-        Msb(false, false, false, false, false),
-        models.des.tradingpremises.Hvd(false),
-        Asp(false),
-        Tcsp(false),
-        Eab(true),
-        Bpsp(true),
-        Tditpsp(false),
-        "2008-01-01",
-        None,
-        None,
-        None)
-
-      val agentDetailsData = AgentDetails("Sole Proprietor", Some("entity name"), agentPremisesData, Some(StatusConstants.Unchanged), Some(StringOrInt(111111)), None)
-
-      val agentPremisesExpectedData = agentPremisesData.copy(dateChangeFlag = Some(true))
-      val agentDetailsExpectedData = agentDetailsData.copy(status = Some(StatusConstants.Updated), agentPremises = agentPremisesExpectedData)
-
-      when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
-      } thenReturn Future.successful(viewModel)
-
-      val modelWithChangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
-        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-          agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetailsData))))))
-
-      whenReady(TestAmendVariationService.compareAndUpdate(modelWithChangedStartDate, amlsRegistrationNumber)) {
-        updatedRequest =>
-          updatedRequest.tradingPremises.agentBusinessPremises must be(Some(AgentBusinessPremises(true, Some(Seq(agentDetailsExpectedData)))))
-      }
-
-
-    }
   }
 }

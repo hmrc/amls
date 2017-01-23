@@ -18,18 +18,16 @@ package utils
 
 import connectors.{DESConnector, ViewDESConnector}
 import models.des.{AmendVariationRequest, ChangeIndicators, SubscriptionView}
+import utils.UpdateVariationRequestHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait AmendVariationRequestUpdateHelper {
-  def getUpdatedRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView, amlsRegNo: String): AmendVariationRequest
-}
+trait UpdateVariationRequestHelper {
 
-object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelper
-    with ResponsiblePeopleUpdateHelper
-    with TradingPremisesUpdateHelper
-    with DateOfChangeUpdateHelper{
+  val viewDesConnector: ViewDESConnector
+
+  private def view(amlsRegNo: String) = viewDesConnector.view(amlsRegNo)
 
   def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
     val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
@@ -61,7 +59,7 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
     update(desRequest, updates)
   }
 
-  private def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+  protected def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
     !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
       response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
       response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
@@ -78,9 +76,8 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-  def getUpdatedRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView, amlsRegNo: String): AmendVariationRequest = {
-//    view(amlsRegNo).map { viewResponse =>
-
+  def getUpdatedRequest(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest] = {
+    view(amlsRegNo).map { viewResponse =>
       val updatedRequest = updateRequest(desRequest, viewResponse)
 
       updatedRequest.setChangeIndicator(ChangeIndicators(
@@ -99,7 +96,16 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
         !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
-//    }
+    }
   }
+
+}
+
+object UpdateVariationRequestHelper extends UpdateVariationRequestHelper
+    with ResponsiblePeopleUpdateHelper
+    with TradingPremisesUpdateHelper
+    with DateOfChangeUpdateHelper{
+
+  override val viewDesConnector: ViewDESConnector = DESConnector
 
 }
