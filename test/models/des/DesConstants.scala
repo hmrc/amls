@@ -957,16 +957,15 @@ object DesConstants {
   val testAsp = AspModel(true, None)
   val testAmendAsp = AspModel(false, None)
 
+  val testSupervisorDetails = SupervisorDetails(
+    "NameOfLastSupervisor",
+    "2001-01-01",
+    "2001-01-01",
+    None,
+    "SupervisionEndingReason")
+  val testSupervisionDetails = SupervisionDetails(true, Some(testSupervisorDetails))
   val testAspOrTcsp = AspOrTcsp(
-    Some(SupervisionDetails(
-      true,
-      Some(SupervisorDetails(
-        "NameOfLastSupervisor",
-        "2001-01-01",
-        "2001-01-01",
-        "SupervisionEndingReason")
-      )
-    )),
+    Some(testSupervisionDetails),
     Some(ProfessionalBodyDetails(
       true,
       Some("DetailsIfFinedWarned"),

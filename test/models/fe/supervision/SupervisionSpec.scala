@@ -96,6 +96,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
             "NameOfLastSupervisor",
             "2001-01-01",
             "2001-01-01",
+            None,
             "SupervisionEndingReason")
           )
         )),
@@ -131,6 +132,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
             "NameOfLastSupervisor",
             "2001-01-01",
             "2001-01-01",
+            None,
             "SupervisionEndingReason")
           )
         )),

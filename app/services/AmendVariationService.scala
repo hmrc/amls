@@ -19,11 +19,13 @@ package services
 import connectors._
 import models.des._
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
+import models.des.supervision.{AspOrTcsp, SupervisionDetails, SupervisorDetails}
 import models.des.tradingpremises._
 import org.joda.time.{LocalDate, Months}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.StatusConstants
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -220,10 +222,31 @@ trait AmendVariationService {
           case _ => None
         }
 
+        def getSupervisorDetails(aspOrTcspOpt: Option[AspOrTcsp]) = for {
+          aspOrTcsp <- aspOrTcspOpt
+          supervisionDetails <- aspOrTcsp.supervisionDetails
+          supervisorDetails <- supervisionDetails.supervisorDetails
+        } yield supervisorDetails
+        def getSupervisorStartDate(supervisor: Option[SupervisorDetails]) = supervisor.map(_.supervisionStartDate)
+
+        val supervisorDateChangeFlag = (getSupervisorStartDate(getSupervisorDetails(desRequest.aspOrTcsp)), getSupervisorStartDate(getSupervisorDetails(response.aspOrTcsp))) match{
+          case (Some(cached), Some(request)) => !cached.equals(request)
+          case _ => false
+        }
+        val supervisorWithDateChangeFlag = getSupervisorDetails(desRequest.aspOrTcsp) match {
+          case Some(supervision) => Some(supervision.copy(dateChangeFlag = Some(supervisorDateChangeFlag)))
+          case _ => None
+        }
+
         val statusUpdatedTP = updatedDesRequestWithRp.copy(
           tradingPremises = updatedDesRequestWithTp,
           hvd = hvdWithDateOfChange,
-          businessActivities = updatedDesRequestWithRp.businessActivities.copy(all = businessActivitiesWithFlag)
+          businessActivities = updatedDesRequestWithRp.businessActivities.copy(all = businessActivitiesWithFlag),
+          aspOrTcsp = updatedDesRequestWithRp.aspOrTcsp.fold[Option[AspOrTcsp]](None) { at =>
+            Some(at.copy(supervisionDetails = at.supervisionDetails.fold[Option[SupervisionDetails]](None){ sd =>
+              Some(sd.copy(supervisorDetails = supervisorWithDateChangeFlag))
+            }))
+          }
         )
 
         statusUpdatedTP.setChangeIndicator(ChangeIndicators(
