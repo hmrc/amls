@@ -31,7 +31,7 @@ object SupervisionDetails {
 
     anotherBody match {
       case Some(AnotherBodyYes(supervisorName, startDate, endDate, endingReason)) =>
-        Some(SupervisionDetails(true,Some(SupervisorDetails(supervisorName, startDate.toString, endDate.toString, endingReason))))
+        Some(SupervisionDetails(true,Some(SupervisorDetails(supervisorName, startDate.toString, endDate.toString, None, endingReason))))
       case Some(AnotherBodyNo) => Some(SupervisionDetails(false, None))
       case _ => None
     }

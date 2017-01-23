@@ -87,6 +87,7 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
           "NameOfLastSupervisor",
           "2001-01-01",
           "2001-01-01",
+          None,
           "SupervisionEndingReason")
         )
       ))

@@ -540,6 +540,21 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
       "user has deleted a record, added one new record and has not changed one record of responsible people" in {
         val viewModel = DesConstants.SubscriptionViewStatusRP
+
+        val testRequest = DesConstants.amendStatusAmendVariationRP.copy(
+          businessActivities = DesConstants.testBusinessActivities.copy(
+            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+              DateChangeFlag = Some(false)
+            ))
+          ),
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          )))
+
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
         } thenReturn Future.successful(viewModel)
@@ -554,6 +569,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
                 ))
               ))
             )
+            updatedRequest must be(testRequest)
         }
       }
     }
@@ -561,6 +577,22 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     "successfully compare and update api6 request with api5 data" when {
       "user has deleted a record, added a new record, modified one record and not changed one record of trading premises" in {
         val viewModel = DesConstants.SubscriptionViewStatusTP
+
+        val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
+          businessActivities = DesConstants.testBusinessActivities.copy(
+            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+              DateChangeFlag = Some(false)
+            ))
+          ),
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          ))
+        )
+
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
         } thenReturn Future.successful(viewModel)
@@ -574,6 +606,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
                 ))
               ))
             )
+            updatedRequest must be(testRequest)
         }
       }
 

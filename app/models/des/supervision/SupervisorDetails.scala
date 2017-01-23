@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 case class SupervisorDetails (nameOfLastSupervisor: String,
                               supervisionStartDate: String,
                               supervisionEndDate: String,
+                              dateChangeFlag: Option[Boolean],
                               supervisionEndingReason: String
                              )
 
