@@ -24,7 +24,7 @@ import models.des.tradingpremises._
 import org.joda.time.{LocalDate, Months}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.StatusConstants
+import utils.{AmendVariationRequestUpdateHelper, StatusConstants}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,6 +38,8 @@ trait AmendVariationService {
   private[services] def feeResponseRepository: FeeResponseRepository
 
   private[services] def viewDesConnector: ViewDESConnector
+
+  private[services] def amendVariationRequestUpdateHelper: AmendVariationRequestUpdateHelper
 
   def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -198,75 +200,8 @@ trait AmendVariationService {
       ))
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
-    viewDesConnector.view(amlsRegistrationNumber) map {
-      response =>
-        val etmpFields = desRequest.extraFields.setEtmpFields(response.extraFields.etmpFields)
-        val requestWithExtraField = desRequest.setExtraFields(etmpFields)
-        val updatedDesRequestWithRp = requestWithExtraField.setResponsiblePersons(
-          updatedRPExtraFields(response.responsiblePersons, requestWithExtraField.responsiblePersons)
-        )
-        val updatedDesRequestWithTp = tradingPremisesWithStatus(response.tradingPremises, desRequest.tradingPremises)
-
-        val hvdWithDateOfChangeFlag = desRequest.hvd.fold(false)(!_.dateOfTheFirst.equals(response.hvd.fold[Option[String]](None)(_.dateOfTheFirst)))
-        val hvdWithDateOfChange = desRequest.hvd match {
-          case Some(hvd) => Some(hvd.copy(dateChangeFlag = Some(hvdWithDateOfChangeFlag)))
-          case _ => None
-        }
-
-        val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false){
-          !_.activitiesCommenceDate.equals(response.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
-        }
-        val businessActivitiesWithFlag = desRequest.businessActivities.all match {
-          case Some(all) => Some(all.copy(DateChangeFlag = Some(businessActivitiesCommenceDateChangeFlag)))
-          case _ => None
-        }
-
-        def getSupervisorDetails(aspOrTcspOpt: Option[AspOrTcsp]) = for {
-          aspOrTcsp <- aspOrTcspOpt
-          supervisionDetails <- aspOrTcsp.supervisionDetails
-          supervisorDetails <- supervisionDetails.supervisorDetails
-        } yield supervisorDetails
-        def getSupervisorStartDate(supervisor: Option[SupervisorDetails]) = supervisor.map(_.supervisionStartDate)
-
-        val supervisorDateChangeFlag = (getSupervisorStartDate(getSupervisorDetails(desRequest.aspOrTcsp)), getSupervisorStartDate(getSupervisorDetails(response.aspOrTcsp))) match{
-          case (Some(cached), Some(request)) => !cached.equals(request)
-          case _ => false
-        }
-        val supervisorWithDateChangeFlag = getSupervisorDetails(desRequest.aspOrTcsp) match {
-          case Some(supervision) => Some(supervision.copy(dateChangeFlag = Some(supervisorDateChangeFlag)))
-          case _ => None
-        }
-
-        val statusUpdatedTP = updatedDesRequestWithRp.copy(
-          tradingPremises = updatedDesRequestWithTp,
-          hvd = hvdWithDateOfChange,
-          businessActivities = updatedDesRequestWithRp.businessActivities.copy(all = businessActivitiesWithFlag),
-          aspOrTcsp = updatedDesRequestWithRp.aspOrTcsp.fold[Option[AspOrTcsp]](None) { at =>
-            Some(at.copy(supervisionDetails = at.supervisionDetails.fold[Option[SupervisionDetails]](None){ sd =>
-              Some(sd.copy(supervisorDetails = supervisorWithDateChangeFlag))
-            }))
-          }
-        )
-
-        statusUpdatedTP.setChangeIndicator(ChangeIndicators(
-          !response.businessDetails.equals(desRequest.businessDetails),
-          !response.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
-          isBusinessReferenceChanged(response, desRequest),
-          !response.tradingPremises.equals(desRequest.tradingPremises),
-          !response.businessActivities.equals(desRequest.businessActivities),
-          !response.bankAccountDetails.equals(desRequest.bankAccountDetails),
-          !response.msb.equals(desRequest.msb),
-          !response.hvd.equals(desRequest.hvd),
-          !response.asp.equals(desRequest.asp),
-          !response.aspOrTcsp.equals(desRequest.aspOrTcsp),
-          isTcspChanged(response, desRequest),
-          isEABChanged(response, desRequest),
-          !response.responsiblePersons.equals(updatedDesRequestWithRp.responsiblePersons),
-          !response.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
-        ))
-    }
-  }
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] =
+    amendVariationRequestUpdateHelper.getUpdatedRequest(desRequest, amlsRegistrationNumber)
 
   private def updatedRPExtraFields(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
                                    desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
@@ -418,4 +353,5 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
+  override private[services] val amendVariationRequestUpdateHelper = AmendVariationRequestUpdateHelper
 }

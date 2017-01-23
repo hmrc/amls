@@ -24,10 +24,10 @@ import scala.concurrent.Future
 
 trait AmendVariationRequestUpdateHelper {
   val viewDesConnector: ViewDESConnector
+  def getUpdatedRequest(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest]
 }
 
-object AmendVariationRequestUpdateHelper
-  extends AmendVariationRequestUpdateHelper
+object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelper
     with ResponsiblePeopleUpdateHelper
     with TradingPremisesUpdateHelper
     with DateOfChangeUpdateHelper{
@@ -66,7 +66,24 @@ object AmendVariationRequestUpdateHelper
     update(desRequest, updates)
   }
 
-  def apply(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest] = {
+  private def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
+      response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
+      response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
+  }
+
+
+  private def isTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.tcspAll.equals(desRequest.tcspAll) &&
+      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
+  }
+
+  private def isEABChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.eabAll.equals(desRequest.eabAll) &&
+      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+  }
+
+  def getUpdatedRequest(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest] = {
     view(amlsRegNo).map { viewResponse =>
 
       val updatedRequest = updateRequest(desRequest, viewResponse)
@@ -84,7 +101,7 @@ object AmendVariationRequestUpdateHelper
         !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
         isTcspChanged(viewResponse, desRequest),
         isEABChanged(viewResponse, desRequest),
-        !viewResponse.responsiblePersons.equals(updatedDesRequestWithRp.responsiblePersons),
+        !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
     }

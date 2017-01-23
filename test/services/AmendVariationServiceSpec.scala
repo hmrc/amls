@@ -29,6 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
+import utils.AmendVariationRequestUpdateHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,6 +42,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
+    override private[services] val amendVariationRequestUpdateHelper: AmendVariationRequestUpdateHelper = mock[AmendVariationRequestUpdateHelper]
   }
 
   val response = des.AmendVariationResponse(
@@ -520,10 +522,12 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
             ))
           )))
 
+        when(TestAmendVariationService.amendVariationRequestUpdateHelper.getUpdatedRequest(any(),any()))
+          .thenReturn(Future.successful(testRequest))
+
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
         } thenReturn Future.successful(viewModel)
-
 
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.updateAmendVariationRequestRP, amlsRegistrationNumber)) {
           updatedRequest =>
@@ -550,6 +554,9 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
             ))
           ))
         )
+
+        when(TestAmendVariationService.amendVariationRequestUpdateHelper.getUpdatedRequest(any(),any()))
+          .thenReturn(Future.successful(testRequest))
 
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
