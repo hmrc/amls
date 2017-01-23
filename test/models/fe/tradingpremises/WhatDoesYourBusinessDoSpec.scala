@@ -26,7 +26,9 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
     Set(
       BusinessActivity.BillPaymentServices,
       BusinessActivity.EstateAgentBusinessService,
-      BusinessActivity.MoneyServiceBusiness))
+      BusinessActivity.MoneyServiceBusiness
+    )
+  )
 
   "WhatDoesYourBusinessDo" when {
     val businessServices: Set[BusinessActivity] = Set(BusinessActivity.AccountancyServices,
@@ -36,10 +38,10 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
     "JSON validation" must {
 
       "successfully validate given values" in {
-        val json = Json.obj("activities" -> Seq("01", "04", "06", "07"))
+        val json = Json.obj("activities" -> Seq("01", "04", "06", "07"), "dateOfChange" -> "2010-03-01")
 
         Json.fromJson[WhatDoesYourBusinessDo](json) must
-          be(JsSuccess(WhatDoesYourBusinessDo(businessServices), JsPath \ "activities"))
+          be(JsSuccess(WhatDoesYourBusinessDo(businessServices, Some("2010-03-01"))))
       }
 
       "fail when on invalid data" in {
