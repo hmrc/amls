@@ -23,18 +23,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait AmendVariationRequestUpdateHelper {
-  val viewDesConnector: ViewDESConnector
-  def getUpdatedRequest(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest]
+  def getUpdatedRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView, amlsRegNo: String): AmendVariationRequest
 }
 
 object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelper
     with ResponsiblePeopleUpdateHelper
     with TradingPremisesUpdateHelper
     with DateOfChangeUpdateHelper{
-
-  override val viewDesConnector: ViewDESConnector = DESConnector
-
-  private def view(amlsRegNo: String) = viewDesConnector.view(amlsRegNo)
 
   def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
     val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
@@ -56,9 +51,9 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
         request
       } else {
         if(updateF.size == 1){
-          updateF.head(desRequest, viewResponse)
+          updateF.head(request, viewResponse)
         } else {
-          val updated = updateF.head(desRequest, viewResponse)
+          val updated = updateF.head(request, viewResponse)
           update(updated, updateF.tail)
         }
       }
@@ -83,8 +78,8 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-  def getUpdatedRequest(desRequest: AmendVariationRequest, amlsRegNo: String): Future[AmendVariationRequest] = {
-    view(amlsRegNo).map { viewResponse =>
+  def getUpdatedRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView, amlsRegNo: String): AmendVariationRequest = {
+//    view(amlsRegNo).map { viewResponse =>
 
       val updatedRequest = updateRequest(desRequest, viewResponse)
 
@@ -104,7 +99,7 @@ object AmendVariationRequestUpdateHelper extends AmendVariationRequestUpdateHelp
         !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
-    }
+//    }
   }
 
 }

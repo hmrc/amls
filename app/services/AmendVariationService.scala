@@ -98,10 +98,10 @@ trait AmendVariationService {
 
     val responsiblePeopleSplitCount = responsiblePeopleSplit match {
       case Some(partition) => partition match {
-        case (fp,rp) => (detailsMatch(Some(fp)),detailsMatch(Some(rp)))
-        case _ => (0,0)
+        case (fp, rp) => (detailsMatch(Some(fp)), detailsMatch(Some(rp)))
+        case _ => (0, 0)
       }
-      case _ => (0,0)
+      case _ => (0, 0)
     }
 
     val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
@@ -200,23 +200,31 @@ trait AmendVariationService {
       ))
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] =
-    amendVariationRequestUpdateHelper.getUpdatedRequest(desRequest, amlsRegistrationNumber)
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
+    viewDesConnector.view(amlsRegistrationNumber) map {
+      response =>
+        amendVariationRequestUpdateHelper.getUpdatedRequest(desRequest, response, amlsRegistrationNumber)
+    }
+  }
 
-  private def updatedRPExtraFields(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
-                                   desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
+  private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
+                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
     (viewResponsiblePerson, desResponsiblePerson) match {
       case (Some(rp), Some(desRp)) => {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
-        val rpWithLineIds = withLineIds.map(updateRpExtraField(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+        val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
+        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)), nameDetails = rp.nameDetails map {
+          nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
+            pnd => pnd.copy(dateChangeFlag = Some(false))
+          })
+        }, dateChangeFlag = Some(false)))
         rpWithLineIds ++ rpWithoutLineId
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }
   }
 
-  private def updateRpExtraField(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
+  private def updateExistingRp(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
     val rpOption = viewResponsiblePersons.find(x => x.extra.lineId.equals(desRp.extra.lineId))
     val viewRp: ResponsiblePersons = rpOption.getOrElse(None)
 
@@ -236,7 +244,21 @@ trait AmendVariationService {
     }
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
-    desResponsiblePeople.copy(extra = statusExtraField)
+
+    desResponsiblePeople.copy(extra = statusExtraField, nameDetails = desResponsiblePeople.nameDetails map {
+      nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
+        pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+          for {
+            nameDetails <- viewRp.nameDetails
+            previousNameDetails <- nameDetails.previousNameDetails
+            prevDateOfChange <- previousNameDetails.dateOfChange
+          } yield prevDateOfChange
+        }))
+      })
+    },
+      dateChangeFlag = Some(desResponsiblePeople.startDate !=
+        viewRp.startDate
+      ))
   }
 
   def tradingPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): TradingPremises = {
@@ -260,7 +282,17 @@ trait AmendVariationService {
                   case false => StatusConstants.Updated
                 }
               }
-              agentDtls.copy(status = Some(updatedStatus))
+
+              val startDateChangeFlag = agentDtls.agentPremises.startDate match {
+                case date if agentDtls.status != Some(StatusConstants.Deleted) =>
+                  !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
+                    case false => None
+                    case _ => Some(true)
+                  }
+                case _ => None
+              }
+
+              agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
             case _ => agentDtls
           }
         }
@@ -284,7 +316,15 @@ trait AmendVariationService {
                   case false => StatusConstants.Updated
                 }
               }
-              ownDtls.copy(status = Some(updatedStatus))
+              val startDateChangeFlag = ownDtls.startDate match {
+                case date if ownDtls.status != Some(StatusConstants.Deleted) =>
+                  !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
+                    case false => None
+                    case _ => Some(true)
+                  }
+                case _ => None
+              }
+              ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
             case _ => ownDtls
           }
         }
