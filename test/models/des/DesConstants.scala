@@ -115,6 +115,33 @@ object DesConstants {
       None
     )))
   )
+
+  val testBusinessActivitiesAllWithDateChangeFlag = BusinessActivitiesAll(
+    None,
+    Some("2001-01-01"),
+    Some(false),
+    BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
+    Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
+    Some("12345678901"),
+    Some("11223344556"),
+    NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
+    AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+    true,
+    true,
+    Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
+    MlrAdvisor(true, Some(MlrAdvisorDetails(
+      Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
+        "AdvisorAddressLine1",
+        "AdvisorAddressLine2",
+        Some("AdvisorAddressLine3"),
+        Some("AdvisorAddressLine4"),
+        "GB",
+        Some("Postcode")))),
+      true,
+      None
+    )))
+  )
+
   val testBusinessActivities = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
@@ -125,6 +152,18 @@ object DesConstants {
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
     Some(testBusinessActivitiesAll)
+  )
+
+  val testBusinessActivitiesWithDateChangeFlag = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, false)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, true)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAllWithDateChangeFlag)
   )
 
   val testAmendBusinessActivities = BusinessActivities(
@@ -1017,7 +1056,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        Some(false)
       ))
     )),
     Some(NationalityDetails(
@@ -1064,7 +1104,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        Some(false)
       ))
     )),
     Some(NationalityDetails(
@@ -1274,7 +1315,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2036,7 +2078,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2103,7 +2146,7 @@ object DesConstants {
     DesConstants.testBusinessReferencesAll,
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
+    DesConstants.testBusinessActivitiesWithDateChangeFlag,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),
@@ -2128,7 +2171,7 @@ object DesConstants {
     DesConstants.testBusinessReferencesAll,
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
+    DesConstants.testBusinessActivitiesWithDateChangeFlag,
     DesConstants.amendStatusTradingPremisesAPI6,
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),

@@ -251,7 +251,11 @@ trait AmendVariationService {
       case (Some(rp), Some(desRp)) => {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
         val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)),nameDetails = rp.nameDetails map {
+          nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
+            pnd => pnd.copy(dateChangeFlag = Some(false))
+          })
+        }))
         rpWithLineIds ++ rpWithoutLineId
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)

@@ -512,9 +512,10 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.updateAmendVariationRequestRP, amlsRegistrationNumber)) {
           updatedRequest =>
+            println(updatedRequest.responsiblePersons)
             updatedRequest must be(DesConstants.amendStatusAmendVariationRP.copy(
-              businessActivities = DesConstants.testBusinessActivities.copy(
-                all = Some(DesConstants.testBusinessActivitiesAll.copy(
+              businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+                all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
                   DateChangeFlag = Some(false)
                 ))
               ))
@@ -533,8 +534,8 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendStatusDesVariationRequestTP, amlsRegistrationNumber)) {
           updatedRequest =>
             updatedRequest must be(DesConstants.amendStatusAmendVariationTP.copy(
-              businessActivities = DesConstants.testBusinessActivities.copy(
-                all = Some(DesConstants.testBusinessActivitiesAll.copy(
+              businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+                all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
                   DateChangeFlag = Some(false)
                 ))
               ))
