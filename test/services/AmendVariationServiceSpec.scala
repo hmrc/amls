@@ -146,7 +146,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
       val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp=Some(MsbOrTcsp(true)), extra = addedExtra))))
+      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(true)), extra = addedExtra))))
 
       when(request.tradingPremises).thenReturn(tradingPremises)
 
@@ -521,9 +521,16 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         )
         val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
           responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-            rps => Seq(rps.tail.head.copy(dateChangeFlag = Some(true),extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+            rps => Seq(rps.tail.head.copy(dateChangeFlag = Some(true), extra = rps.tail.head.extra.copy(status = Some("Updated"))))
           }
-        )
+          ,
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          )))
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
         } thenReturn Future.successful(viewModel)
@@ -542,8 +549,8 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         val viewModel = DesConstants.SubscriptionViewStatusRP
 
         val testRequest = DesConstants.amendStatusAmendVariationRP.copy(
-          businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+          businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+            all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
               DateChangeFlag = Some(false)
             ))
           ),
@@ -561,14 +568,7 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.updateAmendVariationRequestRP, amlsRegistrationNumber)) {
           updatedRequest =>
-            println(updatedRequest.responsiblePersons)
-            updatedRequest must be(DesConstants.amendStatusAmendVariationRP.copy(
-              businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
-                all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-                  DateChangeFlag = Some(false)
-                ))
-              ))
-            )
+
             updatedRequest must be(testRequest)
         }
       }
@@ -579,8 +579,8 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         val viewModel = DesConstants.SubscriptionViewStatusTP
 
         val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
-          businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+          businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+            all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
               DateChangeFlag = Some(false)
             ))
           ),
@@ -599,13 +599,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
         whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendStatusDesVariationRequestTP, amlsRegistrationNumber)) {
           updatedRequest =>
-            updatedRequest must be(DesConstants.amendStatusAmendVariationTP.copy(
-              businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
-                all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-                  DateChangeFlag = Some(false)
-                ))
-              ))
-            )
             updatedRequest must be(testRequest)
         }
       }
@@ -633,8 +626,15 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
                   pnd => pnd.copy(dateChangeFlag = Some(true))
                 })
               }
-            ,extra = rps.tail.head.extra.copy(status = Some("Updated")),dateChangeFlag = Some(false)))
-          }
+              , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
+          },
+          aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          ))
         )
         when {
           TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
@@ -740,7 +740,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
         updatedRequest =>
           updatedRequest.tradingPremises.agentBusinessPremises must be(Some(AgentBusinessPremises(true, Some(Seq(agentDetailsExpectedData)))))
       }
-
 
 
     }
