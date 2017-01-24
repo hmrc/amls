@@ -66,7 +66,6 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
       result.tradingPremises.agentBusinessPremises must be(Some(AgentBusinessPremises(true, Some(Seq(agentDetailsExpectedData)))))
 
-
     }
 
     "successfully update own business start date changed flag when start date is amended" in {
@@ -110,7 +109,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
     }
 
-    "user has deleted a record, added a new record, modified one record and not changed one record of trading premises" in {
+    "update when a user has deleted a record, added a new record, modified one record and not changed one record of trading premises" in {
       val viewModel = DesConstants.SubscriptionViewStatusTP
 
       val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
@@ -134,5 +133,46 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
     }
 
+    "return request with an own premises added" in {
+
+      val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+      val data = OwnBusinessPremisesDetails(
+        "OwnBusinessTradingName",
+        Address("OwnBusinessAddressLine1",
+          "OwnBusinessAddressLine2",
+          Some("OwnBusinessAddressLine3"),
+          Some("OwnBusinessAddressLine4"),
+          "GB",
+          Some("YY1 1YY")),
+        false,
+        Msb(false, false, false, false, false),
+        Hvd(false),
+        Asp(false),
+        Tcsp(true),
+        Eab(true),
+        Bpsp(true),
+        Tditpsp(false),
+        "2001-05-01",
+        None,
+        None,
+        Some(StatusConstants.Unchanged),
+        None,
+        None,
+        None
+      )
+
+      val expectedData = data.copy(status = Some(StatusConstants.Added))
+
+      val modelWithchangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
+        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
+          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))))
+
+      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(modelWithchangedStartDate, viewModel)
+
+
+      result.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
+
+    }
   }
 }

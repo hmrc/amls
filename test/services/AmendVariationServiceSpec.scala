@@ -165,8 +165,6 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
       val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
-      println(">>")
-
       when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(false)), extra = addedExtra))))
 
       when(request.tradingPremises).thenReturn(tradingPremises)
@@ -495,6 +493,18 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
     "successfully evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
       TestAmendVariationService.isBusinessReferenceChanged(DesConstants.SubscriptionViewModelForRp, DesConstants.AmendVariationRequestModel) must be(false)
+    }
+
+    "successfully compare and update api6 request with api5 1" in {
+      val viewModel = DesConstants.SubscriptionViewModelAPI5
+      when {
+        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
+      } thenReturn Future.successful(viewModel)
+
+      whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)) {
+        updatedRequest =>
+          updatedRequest must be(DesConstants.updateAmendVariationCompleteRequest1)
+      }
     }
 
   }
