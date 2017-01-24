@@ -500,18 +500,5 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
     }
 
-    "successfully compare and update api6 request with api5 1" in {
-      val viewModel = DesConstants.SubscriptionViewModelAPI5
-      when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
-      } thenReturn Future.successful(viewModel)
-
-      whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)) {
-        updatedRequest =>
-          updatedRequest must be(DesConstants.updateAmendVariationCompleteRequest1)
-      }
-    }
-
-
   }
 }

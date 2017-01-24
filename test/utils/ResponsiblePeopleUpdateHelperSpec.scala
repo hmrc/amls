@@ -18,12 +18,9 @@ package utils
 
 import models.des.DesConstants
 import org.mockito.Matchers.{eq => eqTo}
-import org.mockito.Mockito.when
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-
-import scala.concurrent.Future
 
 class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
 
@@ -88,8 +85,6 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
         val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
         result.responsiblePersons must be(convertedRequest.responsiblePersons)
-
-
       }
 
       "user has deleted a record, added one new record and has not changed one record of responsible people" in {
@@ -100,7 +95,6 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
         val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(DesConstants.updateAmendVariationRequestRP, viewModel)
 
         result.responsiblePersons must be(testRequest.responsiblePersons)
-
       }
     }
   }
