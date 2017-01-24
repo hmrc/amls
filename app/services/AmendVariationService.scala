@@ -22,12 +22,12 @@ import models.des.responsiblepeople.ResponsiblePersons
 import org.joda.time.{LocalDate, Months}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.UpdateVariationRequestHelper
+import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationService {
+trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper{
 
   private[services] def amendVariationDesConnector: AmendVariationDESConnector
 
@@ -37,10 +37,41 @@ trait AmendVariationService {
 
   private[services] def viewDesConnector: ViewDESConnector
 
-  private[services] def updateVariationRequestHelper: UpdateVariationRequestHelper
-
   def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
+
+  private[services] val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(
+    updateWithEtmpFields,
+    updateWithTradingPremises,
+    updateWithResponsiblePeople,
+    updateWithHvdDateOfChangeFlag,
+    updateWithSupervisorDateOfChangeFlag,
+    updateWithBusinessActivitiesDateOfChangeFlag
+  )
+
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
+    viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
+
+      val updatedRequest = updateRequest(desRequest, viewResponse)
+
+      updatedRequest.setChangeIndicator(ChangeIndicators(
+        !viewResponse.businessDetails.equals(desRequest.businessDetails),
+        !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
+        isBusinessReferenceChanged(viewResponse, desRequest),
+        !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
+        !viewResponse.businessActivities.equals(desRequest.businessActivities),
+        !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
+        !viewResponse.msb.equals(desRequest.msb),
+        !viewResponse.hvd.equals(desRequest.hvd),
+        !viewResponse.asp.equals(desRequest.asp),
+        !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
+        isTcspChanged(viewResponse, desRequest),
+        isEABChanged(viewResponse, desRequest),
+        !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
+        !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
+      ))
+    }
+  }
 
   def update
   (amlsRegistrationNumber: String, request: AmendVariationRequest)
@@ -113,36 +144,40 @@ trait AmendVariationService {
 
     val addedOwnBusinessHalfYearlyTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
       case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails map {
-        obpd => obpd.filter {
-          x => startDateMatcher(x.startDate, x => (7 to 11) contains x)
-        }
+        obpd =>
+          obpd.filter {
+            x => startDateMatcher(x.startDate, x => (7 to 11) contains x)
+          }
       })
       case None => 0
     }
 
     val addedAgentHalfYearlyTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
       case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
-        ad => ad.filter {
-          x => startDateMatcher(x.agentPremises.startDate, x => (7 to 11) contains x)
-        }
+        ad =>
+          ad.filter {
+            x => startDateMatcher(x.agentPremises.startDate, x => (7 to 11) contains x)
+          }
       })
       case None => 0
     }
 
     val addedOwnBusinessZeroRatedTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
       case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails map {
-        obpd => obpd.filter {
-          x => startDateMatcher(x.startDate, x => x == 12)
-        }
+        obpd =>
+          obpd.filter {
+            x => startDateMatcher(x.startDate, x => x == 12)
+          }
       })
       case None => 0
     }
 
     val addedAgentZeroRatedTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
       case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
-        ad => ad.filter {
-          x => startDateMatcher(x.agentPremises.startDate, x => x == 12)
-        }
+        ad =>
+          ad.filter {
+            x => startDateMatcher(x.agentPremises.startDate, x => x == 12)
+          }
       })
       case None => 0
     }
@@ -198,17 +233,50 @@ trait AmendVariationService {
       ))
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
-    updateVariationRequestHelper.getUpdatedRequest(desRequest, amlsRegistrationNumber)
+  private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+    val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
+    desRequest.setExtraFields(etmpFields)
+  }
+
+  private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+    def update(request: AmendVariationRequest, updateF: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest]): AmendVariationRequest = {
+      if (updateF.size < 1) {
+        request
+      } else {
+        if (updateF.size == 1) {
+          updateF.head(request, viewResponse)
+        } else {
+          val updated = updateF.head(request, viewResponse)
+          update(updated, updateF.tail)
+        }
+      }
+    }
+    update(desRequest, updates)
+  }
+
+  private[services] def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
+      response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
+      response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
+  }
+
+  private[services] def isTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.tcspAll.equals(desRequest.tcspAll) &&
+      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
+  }
+
+  private[services] def isEABChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+    !(response.eabAll.equals(desRequest.eabAll) &&
+      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
 }
 
-object AmendVariationService extends AmendVariationService {
+object AmendVariationService extends AmendVariationService
+   {
   // $COVERAGE-OFF$
   override private[services] val feeResponseRepository = FeeResponseRepository()
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
-  override private[services] val updateVariationRequestHelper = UpdateVariationRequestHelper
 }

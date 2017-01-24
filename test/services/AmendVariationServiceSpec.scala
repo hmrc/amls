@@ -29,20 +29,17 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.UpdateVariationRequestHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
 
-
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
-    override private[services] val updateVariationRequestHelper: UpdateVariationRequestHelper = mock[UpdateVariationRequestHelper]
   }
 
   val response = des.AmendVariationResponse(
@@ -496,8 +493,8 @@ class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFut
 
     }
 
-    "successfully compare and update api6 request with api5 data" when {
-
+    "successfully evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
+      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.SubscriptionViewModelForRp, DesConstants.AmendVariationRequestModel) must be(false)
     }
 
   }

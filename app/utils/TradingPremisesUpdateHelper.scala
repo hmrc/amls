@@ -66,21 +66,8 @@ trait TradingPremisesUpdateHelper {
         case Some(agentPremises) => {
           agentPremises.find(x => x.lineId.equals(ownDtls.lineId)) match {
             case Some(viewOwnDtls) =>
-              val updatedStatus = ownDtls.status match {
-                case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-                case _ => ownDtls.equals(viewOwnDtls) match {
-                  case true => StatusConstants.Unchanged
-                  case false => StatusConstants.Updated
-                }
-              }
-              val startDateChangeFlag = ownDtls.startDate match {
-                case date if ownDtls.status != Some(StatusConstants.Deleted) =>
-                  !ownDtls.startDate.equals((viewOwnDtls.startDate)) match {
-                    case false => None
-                    case _ => Some(true)
-                  }
-                case _ => None
-              }
+              val updatedStatus = updateOwnPremisesStatus(ownDtls, viewOwnDtls)
+              val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDtls, viewOwnDtls)
               ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
             case _ => ownDtls
           }
@@ -89,7 +76,27 @@ trait TradingPremisesUpdateHelper {
       }
       case None => ownDtls
     }
+  }
 
+  private def updateOwnPremisesStatus(ownDtls: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
+    ownDtls.status match {
+      case Some(StatusConstants.Deleted) => StatusConstants.Deleted
+      case _ => ownDtls.equals(viewOwnDtls) match {
+        case true => StatusConstants.Unchanged
+        case false => StatusConstants.Updated
+      }
+    }
+  }
+
+  private def updateOwnPremisesStartDateFlag(ownDtls: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
+    ownDtls.startDate match {
+      case _ if !ownDtls.status.contains(StatusConstants.Deleted) =>
+        !ownDtls.startDate.equals(viewOwnDtls.startDate) match {
+          case false => None
+          case _ => Some(true)
+        }
+      case _ => None
+    }
   }
 
   private def updateAgentStatus(agentDtls: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
@@ -98,23 +105,8 @@ trait TradingPremisesUpdateHelper {
         case Some(agentPremises) => {
           agentPremises.find(x => x.lineId.equals(agentDtls.lineId)) match {
             case Some(viewAgent) =>
-              val updatedStatus = agentDtls.status match {
-                case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-                case _ => agentDtls.equals(viewAgent) match {
-                  case true => StatusConstants.Unchanged
-                  case false => StatusConstants.Updated
-                }
-              }
-
-              val startDateChangeFlag = agentDtls.agentPremises.startDate match {
-                case date if agentDtls.status != Some(StatusConstants.Deleted) =>
-                  !agentDtls.agentPremises.startDate.equals((viewAgent.agentPremises.startDate)) match {
-                    case false => None
-                    case _ => Some(true)
-                  }
-                case _ => None
-              }
-
+              val updatedStatus = updateAgentDetailsStatus(agentDtls, viewAgent)
+              val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDtls, viewAgent)
               agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
             case _ => agentDtls
           }
@@ -124,6 +116,27 @@ trait TradingPremisesUpdateHelper {
       case None => agentDtls
     }
 
+  }
+
+  private def updateAgentDetailsStatus(agentDtls: AgentDetails, viewAgent: AgentDetails) = {
+    agentDtls.status match {
+      case Some(StatusConstants.Deleted) => StatusConstants.Deleted
+      case _ => agentDtls.equals(viewAgent) match {
+        case true => StatusConstants.Unchanged
+        case false => StatusConstants.Updated
+      }
+    }
+  }
+
+  private def updateAgentDetailsDateOfChangeFlag(agentDtls: AgentDetails, viewAgent: AgentDetails) = {
+    agentDtls.agentPremises.startDate match {
+      case _ if !agentDtls.status.contains(StatusConstants.Deleted) =>
+        !agentDtls.agentPremises.startDate.equals(viewAgent.agentPremises.startDate) match {
+          case false => None
+          case _ => Some(true)
+        }
+      case _ => None
+    }
   }
 
   private def tradingPremisesWithStatus(desTradingPremises: TradingPremises, viewTradingPremises: TradingPremises): TradingPremises = {
