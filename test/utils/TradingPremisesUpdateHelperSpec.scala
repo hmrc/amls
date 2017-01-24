@@ -110,5 +110,29 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
     }
 
+    "user has deleted a record, added a new record, modified one record and not changed one record of trading premises" in {
+      val viewModel = DesConstants.SubscriptionViewStatusTP
+
+      val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
+        businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+          all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
+            DateChangeFlag = Some(false)
+          ))
+        ),
+        aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+          supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+            supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+              dateChangeFlag = Some(false)
+            ))
+          ))
+        ))
+      )
+
+      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(DesConstants.amendStatusDesVariationRequestTP, viewModel)
+
+      result.tradingPremises must be(testRequest.tradingPremises)
+
+    }
+
   }
 }
