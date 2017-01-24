@@ -33,44 +33,49 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
 
       "hvd dateOfTheFirst has been changed" in {
 
-        val request = DesConstants.AmendVariationRequestModel
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
 
-        val updatedViewModel = DesConstants.SubscriptionViewModelAPI5.copy(
-          hvd = Some(DesConstants.testHvd.copy(
-            dateOfTheFirst = Some(new LocalDate(1900,1,1).toString("yyyy-MM-dd"))
-          ))
+        val changeToHvd = DesConstants.testHvd.copy(
+          dateOfTheFirst = Some(new LocalDate(1900,1,1).toString("yyyy-MM-dd"))
         )
-        val updatedRequest = request.copy(
-          hvd = Some(DesConstants.testHvd.copy(
+
+        val request = DesConstants.AmendVariationRequestModel.copy(
+          hvd = Some(changeToHvd)
+        )
+
+        val expectedRequest = request.copy(
+          hvd = Some(changeToHvd.copy(
             dateChangeFlag = Some(true)
           ))
         )
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithHvdDateOfChangeFlag(
           request,
-          updatedViewModel
+          viewModel
         )
 
-        result.hvd must be(updatedRequest.hvd)
+        result.hvd must be(expectedRequest.hvd)
       }
 
       "supervisor startDate has been changed" in {
 
-        val request = DesConstants.AmendVariationRequestModel
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
 
-        val updatedViewModel = DesConstants.SubscriptionViewModelAPI5.copy(
+        val changeToSupervisor = DesConstants.testSupervisorDetails.copy(
+          supervisionStartDate = new LocalDate(1900,1,1).toString("yyyy-MM-dd")
+        )
+
+        val request = DesConstants.AmendVariationRequestModel.copy(
           aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
             supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
-                supervisionStartDate = new LocalDate(1900,1,1).toString("yyyy-MM-dd")
-              ))
+              supervisorDetails = Some(changeToSupervisor)
             ))
           ))
         )
-        val updatedRequest = request.copy(
+        val expectedRequest = request.copy(
           aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
             supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+              supervisorDetails = Some(changeToSupervisor.copy(
                 dateChangeFlag = Some(true)
               ))
             ))
@@ -79,13 +84,39 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithSupervisorDateOfChangeFlag(
           request,
-          updatedViewModel
+          viewModel
         )
 
-        result.aspOrTcsp must be(updatedRequest.aspOrTcsp)
+        result.aspOrTcsp must be(expectedRequest.aspOrTcsp)
       }
+
       "business activities commenceDate has been changed" in {
 
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        val changeToBusinessActivitiesAll = DesConstants.testBusinessActivitiesAll.copy(
+          activitiesCommenceDate = Some(new LocalDate(1900,1,1).toString("yyyy-MM-dd"))
+        )
+
+        val request = DesConstants.AmendVariationRequestModel.copy(
+          businessActivities = DesConstants.testBusinessActivities.copy(
+            all = Some(changeToBusinessActivitiesAll)
+          )
+        )
+        val expectedRequest = request.copy(
+          businessActivities = DesConstants.testBusinessActivities.copy(
+            all = Some(changeToBusinessActivitiesAll.copy(
+              DateChangeFlag = Some(true)
+            ))
+          )
+        )
+
+        val result = testDateOfChangeFlagUpdatedHelper.updateWithBusinessActivitiesDateOfChangeFlag(
+          request,
+          viewModel
+        )
+
+        result.businessActivities.all must be(expectedRequest.businessActivities.all)
       }
     }
 
