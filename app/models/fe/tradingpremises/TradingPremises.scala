@@ -46,10 +46,7 @@ object TradingPremises {
         None,
         None,
         agentDetails.agentPremises,
-        MsbServices.convMsb(agentDetails.agentPremises.msb) match {
-          case Some(msb) => Some(msb.copy(dateOfChange = agentDetails.agentPremises.sectorChangeDate))
-          case _ => None
-        },
+        agentDetails.agentPremises.msb,
         agentDetails.lineId,
         agentDetails.status
       )
@@ -71,10 +68,7 @@ object TradingPremises {
       None,
       None,
       ownPremises,
-      MsbServices.convMsb(ownPremises.msb) match {
-        case Some(msb) => Some(msb.copy(dateOfChange = ownPremises.sectorDateChange))
-        case _ => None
-      },
+      ownPremises.msb,
       ownPremises.lineId,
       ownPremises.status
     )

@@ -106,7 +106,7 @@ object OwnBusinessPremisesDetails {
           x.endDate.fold[Option[String]](None)(x=>Some(x.endDate.toString)),
           x.lineId,
           x.status,
-          x.msbServices.fold[Option[String]](None)(m => m.dateOfChange),
+          x.whatDoesYourBusinessDoAtThisAddress.dateOfChange,
           None,
           x.yourTradingPremises.tradingNameChangeDate
         )

@@ -27,7 +27,7 @@ class MsbServicesSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val data = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange), Some("2002-04-01"))
+      val data = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange))
       val js = Json.toJson(data)
 
       js.as[MsbServices] mustEqual data
