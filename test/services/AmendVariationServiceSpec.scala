@@ -18,9 +18,9 @@ package services
 
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import models.des
-import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse, StringOrInt}
 import models.des.responsiblepeople.{MsbOrTcsp, RPExtra, ResponsiblePersons}
-import models.des.tradingpremises.{Asp, _}
+import models.des.tradingpremises._
+import models.des.{DesConstants, ReadStatusResponse}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -29,7 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import utils.{StatusConstants, UpdateVariationRequestHelper}
+import utils.UpdateVariationRequestHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
