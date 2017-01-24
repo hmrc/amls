@@ -57,7 +57,7 @@ object BusinessActivity{
 
 
 
-case class WhatDoesYourBusinessDo(activities : Set[BusinessActivity])
+case class WhatDoesYourBusinessDo(activities : Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 object WhatDoesYourBusinessDo {
   implicit val format = Json.format[WhatDoesYourBusinessDo]
