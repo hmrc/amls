@@ -120,6 +120,75 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
       }
     }
 
+    "return an updated request model with a flag set to false" when {
+
+      "hvd dateOfTheFirst has not been changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        val request = DesConstants.AmendVariationRequestModel
+
+        val expectedRequest = request.copy(
+          hvd = Some(DesConstants.testHvd.copy(
+            dateChangeFlag = Some(false)
+          ))
+        )
+
+        val result = testDateOfChangeFlagUpdatedHelper.updateWithHvdDateOfChangeFlag(
+          request,
+          viewModel
+        )
+
+        result.hvd must be(expectedRequest.hvd)
+      }
+
+      "supervisor startDate has not been changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        val request = DesConstants.AmendVariationRequestModel
+
+        val expectedRequest = request.copy(
+          aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
+            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+                dateChangeFlag = Some(false)
+              ))
+            ))
+          ))
+        )
+
+        val result = testDateOfChangeFlagUpdatedHelper.updateWithSupervisorDateOfChangeFlag(
+          request,
+          viewModel
+        )
+
+        result.aspOrTcsp must be(expectedRequest.aspOrTcsp)
+      }
+
+      "business activities commenceDate has not been changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        val request = DesConstants.AmendVariationRequestModel
+
+        val expectedRequest = request.copy(
+          businessActivities = DesConstants.testBusinessActivities.copy(
+            all = Some(DesConstants.testBusinessActivitiesAll.copy(
+              DateChangeFlag = Some(false)
+            ))
+          )
+        )
+
+        val result = testDateOfChangeFlagUpdatedHelper.updateWithBusinessActivitiesDateOfChangeFlag(
+          request,
+          viewModel
+        )
+
+        result.businessActivities.all must be(expectedRequest.businessActivities.all)
+      }
+    }
+
   }
 
 }
