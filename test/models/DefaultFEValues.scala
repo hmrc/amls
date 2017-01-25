@@ -142,9 +142,12 @@ object MsbSection {
 
   private val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
   private val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
   private val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+    usesForeignCurrencies = true,
     Some(BankMoneySource("Bank names")),
-    Some(WholesalerMoneySource("wholesaler names")), true)
+    Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
   private val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
   private val msb = MoneyServiceBusiness(
@@ -170,7 +173,7 @@ object MsbSection {
     Some(FundsTransfer(true)),Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
     Some(TransactionsInNext12Months("11111111111")),Some(CETransactionsInNext12Months("11234567890")),
     Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-    Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),Some(BankMoneySource("BankNames1")),
+    Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), true, Some(BankMoneySource("BankNames1")),
       Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
 }
 

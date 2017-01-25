@@ -35,7 +35,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
       Some(TransactionsInNext12Months("11111111111")),
       Some(CETransactionsInNext12Months("11234567890")),
       Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),Some(BankMoneySource("BankNames1")),
+      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = true, Some(BankMoneySource("BankNames1")),
         Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
 
     "Convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal" in {
@@ -77,7 +77,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
           Some(CountriesList(List("AD", "GB"))))),
         Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("BankNames1")))),
           Some(CurrencyWholesalerDetails(true,Some(List("CurrencyWholesalerNames")))),true,"11234567890",
-          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))))),None))
+          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = Some(true))),None))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching) must be(convertedModel)
     }

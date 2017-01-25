@@ -31,9 +31,7 @@ class MsbCeDetailsSpec extends PlaySpec {
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        None,
-        None, true)
+      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), false, None, None, true)
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -55,8 +53,7 @@ class MsbCeDetailsSpec extends PlaySpec {
 
     "convert to  frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
-        None,false,"",None)))
+      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "",None), dealInPhysCurrencies = Some(false)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")

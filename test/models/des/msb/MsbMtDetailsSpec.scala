@@ -40,9 +40,12 @@ class MsbMtDetailsSpec extends PlaySpec {
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "EUR"),
+        usesForeignCurrencies = true,
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), true)
+        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -71,9 +74,12 @@ class MsbMtDetailsSpec extends PlaySpec {
       val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
       val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService),None, None, psrNumber)
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = true,
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), true)
+        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -104,9 +110,12 @@ class MsbMtDetailsSpec extends PlaySpec {
         Some(BusinessAppliedForPSRNumberYes("123456")))
       val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = true,
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), true)
+        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -137,9 +146,12 @@ class MsbMtDetailsSpec extends PlaySpec {
         None, Some(BusinessAppliedForPSRNumberNo))
       val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        true,
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), true)
+
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -166,9 +178,12 @@ class MsbMtDetailsSpec extends PlaySpec {
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
       val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = true,
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), true)
+        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService),None,

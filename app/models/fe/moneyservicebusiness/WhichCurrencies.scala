@@ -20,10 +20,11 @@ import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetails}
 import play.api.libs.json.{JsObject, Json, Writes, Reads}
 
 
-case class WhichCurrencies(currencies : Seq[String]
-                           , bankMoneySource : Option[BankMoneySource]
-                           , wholesalerMoneySource : Option[WholesalerMoneySource]
-                           , customerMoneySource : Boolean)
+case class WhichCurrencies(currencies : Seq[String],
+                           usesForeignCurrencies: Boolean,
+                           bankMoneySource : Option[BankMoneySource],
+                           wholesalerMoneySource : Option[WholesalerMoneySource],
+                           customerMoneySource : Boolean)
 
 object WhichCurrencies {
 
@@ -33,6 +34,7 @@ object WhichCurrencies {
     import play.api.libs.json._
     (
       (__ \ "currencies").read[Seq[String]] and
+        (__ \ "usesForeignCurrencies").read[Boolean] and
         __.read[Option[BankMoneySource]] and
         __.read[Option[WholesalerMoneySource]] and
         (__ \ "customerMoneySource").readNullable[String].flatMap {
@@ -48,6 +50,7 @@ object WhichCurrencies {
       case false => None
     }
      Json.obj("currencies" -> w.currencies) ++
+     Json.obj("usesForeignCurrencies" -> w.usesForeignCurrencies) ++
      BankMoneySource.jsonWrites.writes(w.bankMoneySource).as[JsObject] ++
      WholesalerMoneySource.jsonWrites.writes(w.wholesalerMoneySource).as[JsObject] ++
      Json.obj("customerMoneySource" -> customerMoneySource)
@@ -57,6 +60,7 @@ object WhichCurrencies {
     msbCe match {
       case Some(msbDtls) => Some(WhichCurrencies(
         msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
+        msbDtls.dealInPhysCurrencies.getOrElse(false),
         msbDtls.currencySources.bankDetails,
         msbDtls.currencySources.currencyWholesalerDetails,
         msbDtls.currencySources.reSellCurrTakenIn))

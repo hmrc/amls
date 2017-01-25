@@ -18,14 +18,14 @@ package models.des.msb
 
 import play.api.libs.json.Json
 
-case class MsbCeDetails (currencySources: CurrencySources)
+case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[Boolean] = Some(false))
 
 object MsbCeDetails {
 
   implicit val format = Json.format[MsbCeDetails]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetails] = {
-    Some(MsbCeDetails(msb))
+    Some(MsbCeDetails(msb, msb.whichCurrencies.fold[Option[Boolean]](Some(false))(c => Some(c.usesForeignCurrencies))))
   }
 
 }
