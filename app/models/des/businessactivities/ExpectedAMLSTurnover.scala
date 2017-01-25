@@ -17,6 +17,7 @@
 package models.des.businessactivities
 
 
+import config.AmlsConfig
 import models.fe.businessactivities.{InvolvedInOtherYes, InvolvedInOtherNo}
 import play.api.libs.json.Json
 
@@ -31,6 +32,7 @@ object OtherBusinessActivities{
 case class ExpectedAMLSTurnover(mlrActivityTurnover: Option[String] = None,
                                 otherBusActivitiesCarriedOut: Option[OtherBusinessActivities] = None)
 
+//noinspection ScalaStyle
 object ExpectedAMLSTurnover{
   implicit val format = Json.format[ExpectedAMLSTurnover]
 
@@ -50,15 +52,29 @@ object ExpectedAMLSTurnover{
 
   def convertAMLSTurnover(to: models.fe.businessactivities.ExpectedAMLSTurnover): Option[String] = {
     import models.fe.businessactivities.ExpectedAMLSTurnover.{Seventh, Sixth, Fifth, Fourth, Third, Second, First}
-    to match {
-      case First => Some("14999")
-      case Second => Some("49999")
-      case Third => Some("99999")
-      case Fourth => Some("249999")
-      case Fifth => Some("999999")
-      case Sixth => Some("10000000")
-      case Seventh => Some("100000000")
-      case _ => None
+
+    if (AmlsConfig.release7) {
+      to match {
+        case First => Some("14999")
+        case Second => Some("49999")
+        case Third => Some("99999")
+        case Fourth => Some("249999")
+        case Fifth => Some("999999")
+        case Sixth => Some("10000000")
+        case Seventh => Some("100000000")
+        case _ => None
+      }
+    } else {
+      to match {
+        case First => Some("14999")
+        case Second => Some("49999")
+        case Third => Some("99999")
+        case Fourth => Some("249999")
+        case Fifth => Some("999999")
+        case Sixth => Some("10000000")
+        case Seventh => Some("100000000")
+        case _ => None
+      }
     }
   }
 

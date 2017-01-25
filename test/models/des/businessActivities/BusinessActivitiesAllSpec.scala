@@ -23,10 +23,10 @@ import models.des.businessactivities._
 import models.fe.asp._
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.{BusinessTransfer, Auction, Services, EstateAgentBusiness}
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class BusinessActivitiesAllSpec extends PlaySpec {
+class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
   "All Business Activities" should {
     "be serialisable from business activities" in{
