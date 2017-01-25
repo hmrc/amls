@@ -38,8 +38,6 @@ import scala.concurrent.Future
 
 class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
 
-  //override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true) )
-
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
@@ -514,5 +512,3 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
   }
 }
-
-
