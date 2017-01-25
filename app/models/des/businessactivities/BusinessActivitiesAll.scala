@@ -67,7 +67,7 @@ object BusinessActivitiesAll{
       dateOfChange,
       atb.activityStartDate,
       None,
-      activities,
+      BusinessActivityDetails.convert(activities),
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),
       mlremployeeCount(activities.howManyEmployees),

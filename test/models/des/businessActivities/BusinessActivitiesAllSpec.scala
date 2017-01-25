@@ -25,8 +25,11 @@ import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.{BusinessTransfer, Auction, Services, EstateAgentBusiness}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 
 class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   "All Business Activities" should {
     "be serialisable from business activities" in{
