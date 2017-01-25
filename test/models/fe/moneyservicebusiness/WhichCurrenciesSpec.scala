@@ -26,19 +26,19 @@ class WhichCurrenciesSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), true, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
+      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
       Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
     }
 
     "round trip through Json correctly" when {
       "customerMoneySource is false" in {
 
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), true, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
 
       "WholesalerMoneySource and BankMoneySource is none" in {
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), false, None, None, false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, None, None, false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
     }
@@ -58,7 +58,7 @@ class WhichCurrenciesSpec extends PlaySpec {
         dealInPhysCurrencies = Some(true)
       )
 
-      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), true, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), WhichCurrencies.usesForeignCurrencies, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 
@@ -79,14 +79,13 @@ class WhichCurrenciesSpec extends PlaySpec {
         dealInPhysCurrencies = Some(true)
       )
 
-      val convertedModel = Some(WhichCurrencies(List.empty, true, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      val convertedModel = Some(WhichCurrencies(List.empty, WhichCurrencies.usesForeignCurrencies, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 
     }
 
     "convert des model to frontend model when input is none" in {
-
       WhichCurrencies.convMsbCe(None) must be(None)
     }
 

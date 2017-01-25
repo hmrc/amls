@@ -31,7 +31,7 @@ class MsbCeDetailsSpec extends PlaySpec {
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), false, None, None, true)
+      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.doesNotUseForeignCurrencies, None, None, true)
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(

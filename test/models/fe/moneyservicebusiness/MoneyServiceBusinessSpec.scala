@@ -67,7 +67,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
         Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), true, Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
+        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
 
       MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModel) must be(convertedMsb)
 

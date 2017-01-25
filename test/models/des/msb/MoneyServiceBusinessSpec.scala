@@ -35,7 +35,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
       Some(TransactionsInNext12Months("11111111111")),
       Some(CETransactionsInNext12Months("11234567890")),
       Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = true, Some(BankMoneySource("BankNames1")),
+      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("BankNames1")),
         Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
 
     "Convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal" in {
