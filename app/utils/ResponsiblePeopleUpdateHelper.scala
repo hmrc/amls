@@ -16,6 +16,7 @@
 
 package utils
 
+import config.AmlsConfig
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 
@@ -49,20 +50,25 @@ trait ResponsiblePeopleUpdateHelper {
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
 
-    desResponsiblePeople.copy(extra = statusExtraField, nameDetails = desResponsiblePeople.nameDetails map {
-      nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
-        pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
-          for {
-            nameDetails <- viewRp.nameDetails
-            previousNameDetails <- nameDetails.previousNameDetails
-            prevDateOfChange <- previousNameDetails.dateOfChange
-          } yield prevDateOfChange
-        }))
-      })
-    },
-      dateChangeFlag = Some(desResponsiblePeople.startDate !=
-        viewRp.startDate
-      ))
+    val updatedStatusRp = desResponsiblePeople.copy(extra = statusExtraField)
+    if (AmlsConfig.release7) {
+      updatedStatusRp.copy(nameDetails = updatedStatusRp.nameDetails map {
+        nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
+          pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+            for {
+              nameDetails <- viewRp.nameDetails
+              previousNameDetails <- nameDetails.previousNameDetails
+              prevDateOfChange <- previousNameDetails.dateOfChange
+            } yield prevDateOfChange
+          }))
+        })
+      },
+        dateChangeFlag = Some(updatedStatusRp.startDate !=
+          viewRp.startDate
+        ))
+    } else {
+      updatedStatusRp
+    }
   }
 
   private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
@@ -71,12 +77,18 @@ trait ResponsiblePeopleUpdateHelper {
       case (Some(rp), Some(desRp)) => {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
         val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
-        val rpWithoutLineId = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added)), nameDetails = rp.nameDetails map {
-          nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
-            pnd => pnd.copy(dateChangeFlag = Some(false))
-          })
-        }, dateChangeFlag = Some(false)))
-        rpWithLineIds ++ rpWithoutLineId
+        val rpWithAddedStatus = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+        if (AmlsConfig.release7) {
+          val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
+            nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
+              pnd => pnd.copy(dateChangeFlag = Some(false))
+            })
+          }, dateChangeFlag = Some(false)))
+          rpWithLineIds ++ rpWithDateChangeFlags
+        } else {
+          rpWithLineIds ++ rpWithAddedStatus
+        }
+
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }

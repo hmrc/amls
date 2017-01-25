@@ -16,6 +16,7 @@
 
 package services
 
+import config.AmlsConfig
 import connectors._
 import models.des._
 import models.des.responsiblepeople.ResponsiblePersons
@@ -27,7 +28,7 @@ import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPr
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper{
+trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
   private[services] def amendVariationDesConnector: AmendVariationDESConnector
 
@@ -40,14 +41,21 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
 
-  private[services] val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(
-    updateWithEtmpFields,
-    updateWithTradingPremises,
-    updateWithResponsiblePeople,
-    updateWithHvdDateOfChangeFlag,
-    updateWithSupervisorDateOfChangeFlag,
-    updateWithBusinessActivitiesDateOfChangeFlag
-  )
+  private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
+    val transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(
+      updateWithEtmpFields,
+      updateWithTradingPremises,
+      updateWithResponsiblePeople
+    )
+    if (AmlsConfig.release7) {
+      val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
+        updateWithSupervisorDateOfChangeFlag,
+        updateWithBusinessActivitiesDateOfChangeFlag)
+      transforms ++ release7Transforms
+    } else {
+      transforms
+    }
+  }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
@@ -272,8 +280,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
 }
 
-object AmendVariationService extends AmendVariationService
-   {
+object AmendVariationService extends AmendVariationService {
   // $COVERAGE-OFF$
   override private[services] val feeResponseRepository = FeeResponseRepository()
   override private[services] val amendVariationDesConnector = DESConnector

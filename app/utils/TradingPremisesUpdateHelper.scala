@@ -16,6 +16,7 @@
 
 package utils
 
+import config.AmlsConfig
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.tradingpremises._
 
@@ -67,8 +68,13 @@ trait TradingPremisesUpdateHelper {
           agentPremises.find(x => x.lineId.equals(ownDtls.lineId)) match {
             case Some(viewOwnDtls) =>
               val updatedStatus = updateOwnPremisesStatus(ownDtls, viewOwnDtls)
-              val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDtls, viewOwnDtls)
-              ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
+              if (AmlsConfig.release7) {
+                val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDtls, viewOwnDtls)
+                ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
+              }
+              else {
+                ownDtls.copy(status = Some(updatedStatus))
+              }
             case _ => ownDtls
           }
         }
@@ -106,8 +112,12 @@ trait TradingPremisesUpdateHelper {
           agentPremises.find(x => x.lineId.equals(agentDtls.lineId)) match {
             case Some(viewAgent) =>
               val updatedStatus = updateAgentDetailsStatus(agentDtls, viewAgent)
-              val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDtls, viewAgent)
-              agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
+              if (AmlsConfig.release7) {
+                val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDtls, viewAgent)
+                agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
+              } else {
+                agentDtls.copy(status = Some(updatedStatus))
+              }
             case _ => agentDtls
           }
         }
