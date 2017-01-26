@@ -18,9 +18,13 @@ package models.des.msb
 
 import models.fe.businessmatching.{BusinessAppliedForPSRNumberYes, ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness._
+import org.scalatest.MustMatchers
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.test.FakeApplication
 
 class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MsbCeDetails" should {
 
@@ -75,6 +79,47 @@ class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
     }
+  }
+
+}
+
+class MsbCeDetailsSpecRelease7 extends PlaySpec with MustMatchers with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+
+  "MsbCeDetails" should {
+
+    "set always physical currency flag to none" when {
+
+      "the release 7 toggle is low" must {
+
+        val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
+          None, reSellCurrTakenIn = true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), None))
+
+        val businessUseAnIPSP = BusinessUseAnIPSPNo
+        val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+        val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), None, None, true)
+        val mostTransactions = MostTransactions(Seq("LA", "LV"))
+
+        val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+          Some(ExpectedThroughput.Second),
+          Some(businessUseAnIPSP),
+          Some(IdentifyLinkedTransactions(true)),
+          Some(SendMoneyToOtherCountry(false)),
+          Some(FundsTransfer(true)),
+          Some(BranchesOrAgents(true, Some(Seq("GB")))),
+          Some(TransactionsInNext12Months("12345678963")),
+          Some(CETransactionsInNext12Months("12345678963")),
+          Some(sendTheLargestAmountsOfMoney),
+          Some(mostTransactions),
+          Some(whichCurrencies)
+        )
+
+        MsbCeDetails.conv(msbModel) must be(msbCeDetails)
+      }
+
+    }
+
   }
 
 }
