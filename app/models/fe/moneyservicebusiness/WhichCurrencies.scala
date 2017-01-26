@@ -16,8 +16,9 @@
 
 package models.fe.moneyservicebusiness
 
+import config.AmlsConfig
 import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetails}
-import play.api.libs.json.{JsObject, Json, Writes, Reads}
+import play.api.libs.json.{JsObject, Json, Reads, Writes}
 
 case class WhichCurrencies(currencies : Seq[String],
                            usesForeignCurrencies: Option[Boolean],
@@ -62,10 +63,14 @@ object WhichCurrencies {
     msbCe match {
       case Some(msbDtls) =>
 
-        val fcFlagDefault = msbDtls.currencySources.bankDetails.isDefined ||
-          msbDtls.currencySources.currencyWholesalerDetails.isDefined ||
-          msbDtls.currencySources.reSellCurrTakenIn match {
-          case true => Some(true)
+        val foreignCurrencyDefault: Option[Boolean] = AmlsConfig.release7 match {
+          case true =>
+            msbDtls.currencySources.bankDetails.isDefined ||
+              msbDtls.currencySources.currencyWholesalerDetails.isDefined ||
+              msbDtls.currencySources.reSellCurrTakenIn match {
+              case true => Some(true)
+              case _ => Some(false)
+            }
           case _ => None
         }
 
@@ -76,7 +81,7 @@ object WhichCurrencies {
 
         Some(WhichCurrencies(
           msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-          msbDtls.dealInPhysCurrencies.fold(fcFlagDefault)(strToBool),
+          msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(strToBool),
           msbDtls.currencySources.bankDetails,
           msbDtls.currencySources.currencyWholesalerDetails,
           msbDtls.currencySources.reSellCurrTakenIn))

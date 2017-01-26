@@ -17,12 +17,12 @@
 package models.fe.moneyservicebusiness
 
 import models.des.DesConstants
-import models.fe.businessmatching.{ChequeCashingNotScrapMetal, TransmittingMoney, MsbServices}
+import models.fe.businessmatching.{ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData {
+class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
 
   "MoneyServiceBusiness" should {
 
