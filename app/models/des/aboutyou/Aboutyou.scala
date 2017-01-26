@@ -46,7 +46,6 @@ object Aboutyou{
       case ExternalAccountant => "External Accountant"
       case InternalAccountant => "Internal Accountant"
       case NominatedOfficer => "Nominated officer"
-      case Partner => "Partner"
       case SoleProprietor => "Sole proprietor"
       case Other(details) => details
     }

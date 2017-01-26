@@ -16,13 +16,17 @@
 
 package utils
 
+import config.AmlsConfig
 import models.des.DesConstants
 import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
+import play.api.test.FakeApplication
 
-class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
+class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   val testResponsiblePeopleUpdateHelper = new ResponsiblePeopleUpdateHelper {}
 
@@ -100,3 +104,4 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
   }
 
 }
+

@@ -26,14 +26,17 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
+import play.api.{Application, Mode}
+import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import play.api.test.FakeApplication
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
+class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
 
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
