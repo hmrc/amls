@@ -20,15 +20,12 @@ import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetails}
 import play.api.libs.json.{JsObject, Json, Writes, Reads}
 
 case class WhichCurrencies(currencies : Seq[String],
-                           usesForeignCurrencies: Option[String],
+                           usesForeignCurrencies: Option[Boolean],
                            bankMoneySource : Option[BankMoneySource],
                            wholesalerMoneySource : Option[WholesalerMoneySource],
                            customerMoneySource : Boolean)
 
 object WhichCurrencies {
-
-  val usesForeignCurrencies = Some("Yes")
-  val doesNotUseForeignCurrencies = Some("No")
 
   implicit val jsonReads: Reads[WhichCurrencies] = {
     import play.api.libs.functional.syntax._
@@ -36,7 +33,7 @@ object WhichCurrencies {
     import play.api.libs.json._
     (
       (__ \ "currencies").read[Seq[String]] and
-        (__ \ "usesForeignCurrencies").readNullable[String] and
+        (__ \ "usesForeignCurrencies").readNullable[Boolean] and
         __.read[Option[BankMoneySource]] and
         __.read[Option[WholesalerMoneySource]] and
         (__ \ "customerMoneySource").readNullable[String].flatMap {
@@ -65,18 +62,21 @@ object WhichCurrencies {
     msbCe match {
       case Some(msbDtls) =>
 
-        val bToS: (Boolean) => String = {
-          case true => "Yes"
-          case _ => "No"
+        val fcFlagDefault = msbDtls.currencySources.bankDetails.isDefined ||
+          msbDtls.currencySources.currencyWholesalerDetails.isDefined ||
+          msbDtls.currencySources.reSellCurrTakenIn match {
+          case true => Some(true)
+          case _ => None
         }
 
-        val fcFlagDefault = bToS(msbDtls.currencySources.bankDetails.isDefined ||
-          msbDtls.currencySources.currencyWholesalerDetails.isDefined ||
-          msbDtls.currencySources.reSellCurrTakenIn)
+        val strToBool: (String) => Option[Boolean] = {
+          case "true" => Some(true)
+          case _ => Some(false)
+        }
 
         Some(WhichCurrencies(
           msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-          msbDtls.dealInPhysCurrencies.fold(Some(fcFlagDefault))(x => Some(bToS(x))),
+          msbDtls.dealInPhysCurrencies.fold(fcFlagDefault)(strToBool),
           msbDtls.currencySources.bankDetails,
           msbDtls.currencySources.currencyWholesalerDetails,
           msbDtls.currencySources.reSellCurrTakenIn))

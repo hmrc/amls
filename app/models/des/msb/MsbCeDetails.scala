@@ -16,19 +16,26 @@
 
 package models.des.msb
 
+import config.AmlsConfig
 import play.api.libs.json.Json
 
-case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[Boolean] = None)
+case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[String] = None)
 
 object MsbCeDetails {
 
   implicit val format = Json.format[MsbCeDetails]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetails] = {
-    Some(MsbCeDetails(msb, msb.whichCurrencies.fold[Option[Boolean]](Some(false))(c => Some(c.usesForeignCurrencies.fold(false) {
-      case "Yes" => true
-      case _ => false
-    }))))
+
+    AmlsConfig.release7 match {
+      case true =>
+        Some(MsbCeDetails(msb, msb.whichCurrencies.fold(Some("false"))(w => w.usesForeignCurrencies match {
+          case Some(true) => Some("true")
+          case _ => Some("false")
+        })))
+      case _ => Some(MsbCeDetails(msb))
+    }
+
   }
 
 }

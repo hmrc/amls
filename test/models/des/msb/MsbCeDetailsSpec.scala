@@ -16,22 +16,22 @@
 
 package models.des.msb
 
-import models.fe.businessmatching.{BusinessAppliedForPSRNumberYes, ChequeCashingNotScrapMetal, TransmittingMoney, MsbServices}
+import models.fe.businessmatching.{BusinessAppliedForPSRNumberYes, ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-class MsbCeDetailsSpec extends PlaySpec {
+class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 
   "MsbCeDetails" should {
 
-    "convert to  frontend MSB model to correct Msb Des model when Bank details is none" in {
+    "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {
 
       val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
-        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))))
+        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some("true")))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.doesNotUseForeignCurrencies, None, None, true)
+      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), None, None, true)
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -51,9 +51,9 @@ class MsbCeDetailsSpec extends PlaySpec {
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
     }
 
-    "convert to  frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
+    "convert to frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "",None), dealInPhysCurrencies = Some(false)))
+      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "", None), dealInPhysCurrencies = Some("false")))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")

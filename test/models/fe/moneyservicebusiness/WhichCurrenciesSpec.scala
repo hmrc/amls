@@ -26,19 +26,19 @@ class WhichCurrenciesSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
+      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
       Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
     }
 
     "round trip through Json correctly" when {
       "customerMoneySource is false" in {
 
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
 
       "WholesalerMoneySource and BankMoneySource is none" in {
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), WhichCurrencies.usesForeignCurrencies, None, None, false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(false), None, None, false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
     }
@@ -55,10 +55,10 @@ class WhichCurrenciesSpec extends PlaySpec {
           "11234567890",
           Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
         ),
-        dealInPhysCurrencies = Some(true)
+        dealInPhysCurrencies = Some("true")
       )
 
-      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), WhichCurrencies.usesForeignCurrencies, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 
@@ -76,10 +76,10 @@ class WhichCurrenciesSpec extends PlaySpec {
           "11234567890",
           None
         ),
-        dealInPhysCurrencies = Some(true)
+        dealInPhysCurrencies = Some("true")
       )
 
-      val convertedModel = Some(WhichCurrencies(List.empty, WhichCurrencies.usesForeignCurrencies, None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      val convertedModel = Some(WhichCurrencies(List.empty, usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 

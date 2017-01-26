@@ -42,7 +42,7 @@ class MsbMtDetailsSpec extends PlaySpec {
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "EUR"),
-        WhichCurrencies.usesForeignCurrencies,
+        usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
 
@@ -76,7 +76,7 @@ class MsbMtDetailsSpec extends PlaySpec {
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        WhichCurrencies.usesForeignCurrencies,
+        usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
 
@@ -112,7 +112,7 @@ class MsbMtDetailsSpec extends PlaySpec {
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        WhichCurrencies.usesForeignCurrencies,
+        usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
 
@@ -148,7 +148,7 @@ class MsbMtDetailsSpec extends PlaySpec {
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        WhichCurrencies.usesForeignCurrencies,
+        usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), true)
 
@@ -180,7 +180,7 @@ class MsbMtDetailsSpec extends PlaySpec {
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
       val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        WhichCurrencies.usesForeignCurrencies,
+        usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
 
