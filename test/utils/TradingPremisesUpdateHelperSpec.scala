@@ -22,9 +22,10 @@ import models.des.{DesConstants, StringOrInt}
 import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.test.FakeApplication
 
-class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
+class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
   val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
 
@@ -172,6 +173,54 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
 
       result.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
+
+    }
+  }
+}
+
+class TradingPremisesUpdateHelperPreRelease7Spec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+
+  val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
+
+  "TradingPremisesUpdateHelper" must {
+
+    "not set date change flags" in {
+      val viewModel = DesConstants.SubscriptionViewStatusTP
+
+      val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
+        businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
+          all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
+            DateChangeFlag = None
+          ))
+        ),
+        aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
+          supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
+            supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+              dateChangeFlag = None
+            ))
+          ))
+        )
+        ),
+        tradingPremises = DesConstants.amendStatusAmendVariationTP.tradingPremises.copy(ownBusinessPremises =
+          DesConstants.amendStatusDesVariationRequestTP.tradingPremises.ownBusinessPremises map {
+            obp => obp.copy(ownBusinessPremisesDetails = obp.ownBusinessPremisesDetails map {
+              obpds => Seq(obpds.head.copy(dateChangeFlag = None, startDate = "1970-01-01", status = Some("Updated")))
+            })
+          }))
+
+
+      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(DesConstants.amendStatusDesVariationRequestTP.copy(tradingPremises =
+        DesConstants.amendStatusDesVariationRequestTP.tradingPremises.copy(ownBusinessPremises =
+          DesConstants.amendStatusDesVariationRequestTP.tradingPremises.ownBusinessPremises map {
+            obp => obp.copy(ownBusinessPremisesDetails = obp.ownBusinessPremisesDetails map {
+              obpds => Seq(obpds.head.copy(startDate = "1970-01-01"))
+            })
+          }))
+        , viewModel)
+
+      result.tradingPremises must be(testRequest.tradingPremises)
 
     }
   }

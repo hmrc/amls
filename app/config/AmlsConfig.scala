@@ -18,7 +18,11 @@ package config
 
 import uk.gov.hmrc.play.config.ServicesConfig
 
-object AmlsConfig extends ServicesConfig {
+trait AmlsConfig {
+  def release7: Boolean
+}
+
+object AmlsConfig extends AmlsConfig with ServicesConfig {
 
   private def loadConfig(key: String) =
     getConfString(key, throw new Exception(s"Config missing key: $key"))
@@ -27,5 +31,5 @@ object AmlsConfig extends ServicesConfig {
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
 
-  lazy val release7 = getConfBool("feature-toggle.release7", throw new Exception("Config missing key: feature-toggle.release7"))
+  override def release7 = getConfBool("feature-toggle.release7", throw new Exception("Config missing key: feature-toggle.release7"))
 }
