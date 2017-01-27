@@ -81,7 +81,7 @@ object WhichCurrencies {
 
         Some(WhichCurrencies(
           msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-          msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(strToBool),
+          msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
           msbDtls.currencySources.bankDetails,
           msbDtls.currencySources.currencyWholesalerDetails,
           msbDtls.currencySources.reSellCurrTakenIn))

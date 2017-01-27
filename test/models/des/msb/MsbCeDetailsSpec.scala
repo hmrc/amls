@@ -29,7 +29,7 @@ class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
     "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {
 
       val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
-        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some("true")))
+        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some(true)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
@@ -55,7 +55,7 @@ class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 
     "convert to frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "", None), dealInPhysCurrencies = Some("false")))
+      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "", None), dealInPhysCurrencies = Some(false)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")

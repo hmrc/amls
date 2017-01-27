@@ -19,7 +19,7 @@ package models.des.msb
 import config.AmlsConfig
 import play.api.libs.json.Json
 
-case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[String] = None)
+case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[Boolean] = None)
 
 object MsbCeDetails {
 
@@ -29,10 +29,7 @@ object MsbCeDetails {
 
     AmlsConfig.release7 match {
       case true =>
-        Some(MsbCeDetails(msb, msb.whichCurrencies.fold(Some("false"))(w => w.usesForeignCurrencies match {
-          case Some(true) => Some("true")
-          case _ => Some("false")
-        })))
+        Some(MsbCeDetails(msb, msb.whichCurrencies.fold[Option[Boolean]](Some(false))(_.usesForeignCurrencies)))
       case _ => Some(MsbCeDetails(msb))
     }
 

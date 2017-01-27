@@ -63,7 +63,7 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
           "11234567890",
           Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
         ),
-        dealInPhysCurrencies = Some("true")
+        dealInPhysCurrencies = Some(true)
       )
 
       val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
@@ -86,7 +86,7 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
             "11234567890",
             None
           ),
-          dealInPhysCurrencies = Some("true")
+          dealInPhysCurrencies = Some(true)
         )
 
         val convertedModel = Some(WhichCurrencies(List.empty, usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))

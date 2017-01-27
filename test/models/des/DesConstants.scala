@@ -940,7 +940,7 @@ object DesConstants {
         true,
         "11234567890",
         Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-      ), Some("true")
+      ), Some(true)
     )),
     None
   )

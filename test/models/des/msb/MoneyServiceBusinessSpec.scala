@@ -76,7 +76,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
           Some(CountriesList(List("AD", "GB"))))),
         Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("BankNames1")))),
           Some(CurrencyWholesalerDetails(true,Some(List("CurrencyWholesalerNames")))),true,"11234567890",
-          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = Some("true"))),None))
+          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = Some(true))),None))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching) must be(convertedModel)
     }
