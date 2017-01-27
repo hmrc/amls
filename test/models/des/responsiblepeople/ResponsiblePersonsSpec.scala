@@ -21,8 +21,8 @@ import play.api.libs.json.{JsNull, JsSuccess, Json}
 
 class ResponsiblePersonsSpec extends PlaySpec {
 
-  private val nameDtls = Some(NameDetails(PersonName("name", Some("some"), "surname"), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName("fname", Some("mname"), "lname")), Some("1990-02-24")))))
+  private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
   private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))

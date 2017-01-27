@@ -35,9 +35,9 @@ object PersonName {
 
   implicit def conv(desNameDtls: Option[NameDetails]): Option[PersonName] = {
     desNameDtls match {
-      case Some(data) => Some(PersonName(data.personName.firstName,
+      case Some(data) => Some(PersonName(data.personName.firstName.getOrElse(""),
         data.personName.middleName,
-        data.personName.lastName,
+        data.personName.lastName.getOrElse(""),
         data.previousNameDetails,
         data.othrNamesOrAliasesDetails
       ))

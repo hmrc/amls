@@ -55,14 +55,14 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
     "convert des model to frontend personName model" in {
 
       val desModel = Some(NameDetails(
-        DesPersonName("FirstName", Some("MiddleName"), "LastName"),
+        DesPersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1", "Aliases2", "Aliases3", "Aliases4"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(DesPersonName("FirstName1", Some("MiddleName1"), "LastName1")),
+          Some(DesPersonName(Some("FirstName1"), Some("MiddleName1"), Some("LastName1"))),
           Some("2001-01-01")
         ))
       ))
