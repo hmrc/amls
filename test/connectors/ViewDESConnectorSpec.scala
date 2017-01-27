@@ -132,8 +132,7 @@ class ViewDESConnectorSpec
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
-          status mustEqual OK
-          body mustEqual Some("message")
+          status mustEqual INTERNAL_SERVER_ERROR
       }
     }
 
