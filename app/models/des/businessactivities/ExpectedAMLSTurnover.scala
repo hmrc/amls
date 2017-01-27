@@ -54,9 +54,6 @@ object ExpectedAMLSTurnover{
     import models.fe.businessactivities.ExpectedAMLSTurnover.{Seventh, Sixth, Fifth, Fourth, Third, Second, First}
 
     if (!AmlsConfig.release7) {
-      println(Console.CYAN + "Release7 " + AmlsConfig.release7 + Console.WHITE)
-
-      println(Console.BLUE + "NOT RELEASE 7" + Console.WHITE)
       to match {
         case First => Some("14999")
         case Second => Some("49999")
@@ -68,7 +65,6 @@ object ExpectedAMLSTurnover{
         case _ => None
       }
     } else {
-      println(Console.MAGENTA + "RELEASE 7" + Console.WHITE)
       to match {
         case First => Some("£0-£15k")
         case Second => Some("£15k-£50k")

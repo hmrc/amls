@@ -82,7 +82,6 @@ object ExpectedAMLSTurnover {
 
   def convertAMLSTurnover(to: Option[String]): Option[ExpectedAMLSTurnover] = {
     if (!AmlsConfig.release7) {
-      println(Console.CYAN + "NOT RELEASE 7" + Console.WHITE)
       to match {
         case Some("14999") => Some(First)
         case Some("49999") => Some(Second)
@@ -94,7 +93,6 @@ object ExpectedAMLSTurnover {
         case _ => None
       }
     } else {
-      println(Console.YELLOW + "yey release 7" + Console.WHITE)
       to match {
         case Some("£0-£15k") => Some(First)
         case Some("£15k-£50k") => Some(Second)
