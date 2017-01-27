@@ -186,14 +186,14 @@ object TradingPremisesSection {
   ),
     TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
       Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
-      Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name")), None, None,
+      Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
     )
   ))
 
   val modelForView = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("aaaaaaaaaaaa",
     Address("a", "a", Some("a"), Some("a"), "aaaaaaaaaa"), new LocalDate(1967, 8, 13), true), Some(BusinessStructure.SoleProprietor),
-    Some(AgentName("AgentLegalEntityName")),
+    Some(AgentName("AgentLegalEntityName", None, Some("1970-01-01"))),
     None,None,
     WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
       BusinessActivity.AccountancyServices,
@@ -207,7 +207,7 @@ object TradingPremisesSection {
       YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "aaaaaaaaaa"),
         new LocalDate(1967,8,13), true),
       Some(BusinessStructure.SoleProprietor),
-      Some(AgentName("aaaaaaaaaaa")),
+      Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
       None,
       None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
@@ -222,7 +222,7 @@ object TradingPremisesSection {
       YourTradingPremises("TradingName",
         Address("AgentAddressLine1", "AgentAddressLine2", Some("AgentAddressLine3"), Some("AgentAddressLine4"), "XX1 1XX"),
         new LocalDate(2001,1,1), true),
-      Some(BusinessStructure.SoleProprietor), Some(AgentName("AgentLegalEntityName2")),
+      Some(BusinessStructure.SoleProprietor), Some(AgentName("AgentLegalEntityName2", None, Some("1970-01-01"))),
       None,
       None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,

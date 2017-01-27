@@ -52,7 +52,7 @@ object TradingPremises {
       )
 
     tmp.businessStructure.map {
-      case BusinessStructure.SoleProprietor => tmp.copy(agentName = agentDetails.agentLegalEntityName)
+      case BusinessStructure.SoleProprietor => tmp.copy(agentName = agentDetails)
       case BusinessStructure.IncorporatedBody => tmp.copy(agentCompanyName = agentDetails.agentLegalEntityName)
       case BusinessStructure.LimitedLiabilityPartnership => tmp.copy(agentCompanyName = agentDetails.agentLegalEntityName)
       case BusinessStructure.Partnership => tmp.copy(agentPartnership = agentDetails.agentLegalEntityName)
