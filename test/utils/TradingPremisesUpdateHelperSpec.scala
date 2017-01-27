@@ -74,7 +74,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       val data = OwnBusinessPremisesDetails(
-        "OwnBusinessTradingName",
+        Some("OwnBusinessTradingName"),
         Address("OwnBusinessAddressLine1",
           "OwnBusinessAddressLine2",
           Some("OwnBusinessAddressLine3"),
@@ -140,7 +140,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       val data = OwnBusinessPremisesDetails(
-        "OwnBusinessTradingName",
+        Some("OwnBusinessTradingName"),
         Address("OwnBusinessAddressLine1",
           "OwnBusinessAddressLine2",
           Some("OwnBusinessAddressLine3"),

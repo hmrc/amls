@@ -28,7 +28,7 @@ class TradingPremisesSpec extends PlaySpec {
   "TradingPremises" must {
 
     val premises = OwnBusinessPremisesDetails(
-      "string",
+      Some("string"),
       Address("string",
         "string",
         Some("string"),
