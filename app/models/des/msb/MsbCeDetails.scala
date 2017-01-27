@@ -17,13 +17,37 @@
 package models.des.msb
 
 import config.AmlsConfig
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
-case class MsbCeDetails (currencySources: CurrencySources, dealInPhysCurrencies: Option[Boolean] = None)
+case class MsbCeDetails(currencySources: CurrencySources, dealInPhysCurrencies: Option[Boolean] = None)
 
 object MsbCeDetails {
 
-  implicit val format = Json.format[MsbCeDetails]
+  val currencyReader = new Reads[Boolean] {
+    override def reads(json: JsValue): JsResult[Boolean] =
+      json match {
+        case x: JsString => x.value match {
+          case "true" => JsSuccess(true)
+          case _ => JsSuccess(false)
+        }
+        case x: JsBoolean => JsSuccess(x.value)
+      }
+  }
+
+  implicit val reads: Reads[MsbCeDetails] = {
+    (
+      (__ \ "currencySources").read[CurrencySources] and
+        (__ \ "dealInPhysCurrencies").readNullable(currencyReader)
+      ) (MsbCeDetails.apply _)
+  }
+
+  implicit val writes: Writes[MsbCeDetails] = {
+    (
+      (__ \ "currencySources").write[CurrencySources] and
+        (__ \ "dealInPhysCurrencies").writeNullable[Boolean]
+      ) (unlift(MsbCeDetails.unapply))
+  }
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetails] = {
 

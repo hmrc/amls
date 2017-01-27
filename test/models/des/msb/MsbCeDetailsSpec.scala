@@ -18,6 +18,7 @@ package models.des.msb
 
 import models.fe.moneyservicebusiness._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
 class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
@@ -77,6 +78,63 @@ class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
     }
+
+    "deserialise the DES response correctly" when {
+
+      val model = MsbCeDetails(CurrencySources(
+        Some(MSBBankDetails(banks = true, Some(Seq("BankNames1", "BankNames2")))),
+        reSellCurrTakenIn = true,
+        antNoOfTransNxt12Mnths = "11234567890",
+        currSupplyToCust = Some(CurrSupplyToCust(Seq("GBP", "USD", "INR")))
+      ), dealInPhysCurrencies = Some(true))
+
+      "given usesForeignCurrencies as a string" in {
+
+        val json =
+          """ {
+            |   "dealInPhysCurrencies": "true",
+            |   "currencySources": {
+            |     "bankDetails": {
+            |       "banks":true,
+            |       "bankNames":["BankNames1","BankNames2"]
+            |     },
+            |     "reSellCurrTakenIn":true,
+            |     "antNoOfTransNxt12Mnths":"11234567890",
+            |     "currSupplyToCust":{
+            |       "currency":["GBP","USD","INR"]
+            |     }
+            |   }
+            | }
+          """.stripMargin
+
+        Json.parse(json).as[MsbCeDetails] must be(model)
+
+      }
+
+      "given dealInPhysCurrencies as a boolean" in {
+
+        val json =
+          """ {
+            |   "dealInPhysCurrencies": true,
+            |   "currencySources": {
+            |     "bankDetails": {
+            |       "banks":true,
+            |       "bankNames":["BankNames1","BankNames2"]
+            |     },
+            |     "reSellCurrTakenIn":true,
+            |     "antNoOfTransNxt12Mnths":"11234567890",
+            |     "currSupplyToCust":{
+            |       "currency":["GBP","USD","INR"]
+            |     }
+            |   }
+            | }
+          """.stripMargin
+
+        Json.parse(json).as[MsbCeDetails] must be(model)
+      }
+
+    }
+
   }
 
 }
