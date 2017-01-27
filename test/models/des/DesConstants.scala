@@ -404,7 +404,7 @@ object DesConstants {
 
   val viewStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName",
+      Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
         "OwnBusinessAddressLine2",
         Some("OwnBusinessAddressLine3"),
@@ -425,7 +425,7 @@ object DesConstants {
       None
     ),
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName1",
+      Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
         "OB1AddressLine2",
         Some("OB1AddressLine3"),
@@ -450,7 +450,7 @@ object DesConstants {
 
   val amendStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName",
+      Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
         "OwnBusinessAddressLine2",
         Some("OwnBusinessAddressLine3"),
@@ -471,7 +471,7 @@ object DesConstants {
       Some(StatusConstants.Unchanged)
     ),
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName1",
+      Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
         "OB1AddressLine2",
         Some("OB1AddressLine3"),
@@ -495,7 +495,7 @@ object DesConstants {
 
   val ownBusinessPremisesTP = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName",
+      Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
         "OwnBusinessAddressLine2",
         Some("OwnBusinessAddressLine3"),
@@ -516,7 +516,7 @@ object DesConstants {
       Some(StatusConstants.Unchanged)
     ),
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName1",
+      Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
         "OB1AddressLine2",
         Some("OB1AddressLine3"),
@@ -540,7 +540,7 @@ object DesConstants {
 
   val ownBusinessPremisesTPAPI6 = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName",
+      Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
         "OwnBusinessAddressLine2",
         Some("OwnBusinessAddressLine3"),
@@ -561,7 +561,7 @@ object DesConstants {
       Some(StatusConstants.Unchanged)
     ),
     OwnBusinessPremisesDetails(
-      "OwnBusinessTradingName1",
+      Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
         "OB1AddressLine2",
         Some("OB1AddressLine3"),
@@ -1047,14 +1047,14 @@ object DesConstants {
   val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)
   val responsiblePersons2 = ResponsiblePersons(
     Some(NameDetails(
-      PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+      PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("bbbbbbbbbbb"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+        Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13"),
         Some(false)
       ))
@@ -1096,14 +1096,14 @@ object DesConstants {
 
   val responsiblePersons3 = ResponsiblePersons(
     Some(NameDetails(
-      PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+      PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("bbbbbbbbbbb"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+        Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13"),
         Some(false)
       ))
@@ -1145,14 +1145,14 @@ object DesConstants {
 
   val viewResponsiblePersons2 = ResponsiblePersons(
     Some(NameDetails(
-      PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+      PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("bbbbbbbbbbb"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+        Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13")
       ))
     )),
@@ -1193,14 +1193,14 @@ object DesConstants {
 
   val viewResponsiblePersons3 = ResponsiblePersons(
     Some(NameDetails(
-      PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+      PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("bbbbbbbbbbb"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+        Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13")
       ))
     )),
@@ -1242,14 +1242,14 @@ object DesConstants {
   val testResponsiblePersons = Seq(
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("FirstName", Some("MiddleName"), "LastName"),
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01")
         ))
       )),
@@ -1311,14 +1311,14 @@ object DesConstants {
   val testAmendResponsiblePersons = Seq(
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("FirstName", Some("MiddleName"), "LastName"),
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01"),
           Some(false)
         ))
@@ -1380,14 +1380,14 @@ object DesConstants {
 
   val updatedRPForAmendment = ResponsiblePersons(
     Some(NameDetails(
-      PersonName("FirstName", Some("MiddleName"), "LastName"),
+      PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("Aliases1"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+        Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
         Some("2001-01-01")
       ))
     )),
@@ -1462,14 +1462,14 @@ object DesConstants {
   val testResponsiblePersonsForRp = Seq(
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("FirstName", Some("MiddleName"), "LastName"),
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01")
         ))
       )),
@@ -1527,14 +1527,14 @@ object DesConstants {
     ),
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+        PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("bbbbbbbbbbb"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+          Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
           Some("1967-08-13")
         ))
       )),
@@ -1576,14 +1576,14 @@ object DesConstants {
   val testResponsiblePersonsForRpAPI6 = Seq(
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("FirstName", Some("MiddleName"), "LastName"),
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01")
         ))
       )),
@@ -1641,14 +1641,14 @@ object DesConstants {
     ),
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb"),
+        PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("bbbbbbbbbbb"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbbb"), "bbbbbbbbbbbb")),
+          Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
           Some("1967-08-13")
         ))
       )),
@@ -1716,14 +1716,14 @@ object DesConstants {
   val extraFields = ExtraFields(testDeclaration, testFilingIndividual, None)
   val extraAmendFields = ExtraFields(testDeclaration, testAmendFilingIndividual, None)
   val nameDetails = NameDetails(
-    PersonName("FirstName", Some("MiddleName"), "LastName"),
+    PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
     Some(OthrNamesOrAliasesDetails(
       true,
       Some(List("Aliases1"))
     )),
     Some(PreviousNameDetails(
       true,
-      Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+      Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
       Some("2001-01-01")
     ))
   )
@@ -1831,14 +1831,14 @@ object DesConstants {
 
   val newResponsiblePersons = Seq(ResponsiblePersons(
     Some(NameDetails(
-      PersonName("FirstName", Some("MiddleName"), "LastName"),
+      PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
       Some(OthrNamesOrAliasesDetails(
         true,
         Some(List("Aliases1"))
       )),
       Some(PreviousNameDetails(
         true,
-        Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+        Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
         Some("2001-01-01")
       ))
     )),
@@ -2081,14 +2081,14 @@ object DesConstants {
       extra = RPExtra(lineId = Some(StringOrInt(Right("77777"))), status = Some(StatusConstants.Updated))),
     ResponsiblePersons(
       Some(NameDetails(
-        PersonName("FirstName", Some("MiddleName"), "LastName"),
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
         Some(OthrNamesOrAliasesDetails(
           true,
           Some(List("Aliases1"))
         )),
         Some(PreviousNameDetails(
           true,
-          Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01"),
           Some(false)
         ))

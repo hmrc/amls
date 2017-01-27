@@ -21,7 +21,7 @@ import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class OwnBusinessPremisesDetails(tradingName:String,
+case class OwnBusinessPremisesDetails(tradingName: Option[String],
                                       businessAddress: Address,
                                       residential:Boolean,
                                       msb: Msb,
@@ -45,7 +45,7 @@ object OwnBusinessPremisesDetails {
 
   implicit val jsonReads: Reads[OwnBusinessPremisesDetails] = {
     (
-        (__ \ "tradingName").read[String] and
+        (__ \ "tradingName").readNullable[String] and
         (__ \ "businessAddress").read[Address] and
         (__ \ "residential").read[Boolean] and
         (__ \ "msb").readNullable[Msb].map{_.getOrElse(Msb(false,false,false,false,false))} and
@@ -67,7 +67,7 @@ object OwnBusinessPremisesDetails {
 
   implicit val jsonWrites: Writes[OwnBusinessPremisesDetails] = {
     (
-      (__ \ "tradingName").write[String] and
+      (__ \ "tradingName").writeNullable[String] and
         (__ \ "businessAddress").write[Address] and
         (__ \ "residential").write[Boolean] and
         (__ \ "msb").write[Msb] and
@@ -93,7 +93,7 @@ object OwnBusinessPremisesDetails {
       x => {
         val y = x.yourTradingPremises
         val z = x.whatDoesYourBusinessDoAtThisAddress.activities
-        OwnBusinessPremisesDetails(y.tradingName, y.tradingPremisesAddress,
+        OwnBusinessPremisesDetails(Some(y.tradingName), y.tradingPremisesAddress,
           y.isResidential,
           x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
           z,

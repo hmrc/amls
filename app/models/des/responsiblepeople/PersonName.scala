@@ -19,18 +19,18 @@ package models.des.responsiblepeople
 import play.api.libs.json.Json
 import models.fe.responsiblepeople.{PersonName => FEPersonName, PreviousName}
 
-case class PersonName (firstName: String,
+case class PersonName (firstName: Option[String],
                        middleName: Option[String],
-                       lastName: String)
+                       lastName: Option[String])
 
 case object PersonName {
   implicit val format = Json.format[PersonName]
 
   implicit def convert(person: FEPersonName) : PersonName = {
-    PersonName(person.firstName, person.middleName, person.lastName)
+    PersonName(Some(person.firstName), person.middleName, Some(person.lastName))
   }
 
   implicit def convertPreviousName(person: PreviousName) : Option[PersonName] = {
-    Some(PersonName(person.firstName.getOrElse(""), person.middleName, person.lastName.getOrElse("")))
+    Some(PersonName(person.firstName, person.middleName, person.lastName))
   }
 }

@@ -35,7 +35,7 @@ class PreviousNameSpec extends PlaySpec {
 
       val previousNameDetails = Some(PreviousNameDetails(
         true,
-        Some(DesPersonName("first name", Some("middle name"), "last name")),
+        Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
         Some("2001-01-01")
       ))
       val previousName = PreviousName(Some("first name"), Some("middle name"), Some("last name"), // scalastyle:off magic.number
