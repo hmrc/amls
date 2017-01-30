@@ -252,8 +252,8 @@ object DesConstants {
 
   val agentDetailsAPI51 = AgentDetails(
     "Sole Proprietor",
+    Some("1970-01-01"),
     Some("AgentLegalEntityName"),
-    None,
     agentPremisesapi51,
     Some("Added"),
     Some(StringOrInt(111111))

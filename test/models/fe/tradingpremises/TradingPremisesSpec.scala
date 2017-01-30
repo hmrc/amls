@@ -194,7 +194,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
     "Business structure is Sole Proprietor" must {
       "populate the agent Name field from the Legal entity name in DES" in  {
-        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor"))
+        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor",dateOfBirth = Some("19750-01-01")))
         feModel.agentName must be (Some(AgentName("agentLegalEntityName", None, Some("1975-01-01"))))
         feModel.agentCompanyName must be (None)
         feModel.agentPartnership must be (None)
