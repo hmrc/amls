@@ -18,11 +18,11 @@ package models.des
 
 import models._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{Json, JsUndefined}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.{JsUndefined, Json}
 import utils.AckRefGenerator
 
-class SubscriptionRequestSpec extends PlaySpec with MockitoSugar {
+class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
