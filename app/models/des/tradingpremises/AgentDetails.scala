@@ -23,7 +23,7 @@ import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetails(
                          agentLegalEntity: String,
-                         crn: String,
+                         crn: Option[String] = None,
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
@@ -48,7 +48,7 @@ object AgentDetails {
   implicit val jsonReads: Reads[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").read[String] and
-        (__ \ "crn").read[String] and
+        (__ \ "crn").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
@@ -60,7 +60,7 @@ object AgentDetails {
   implicit val jsonWrites: Writes[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").write[String] and
-        (__ \ "crn").write[String] and
+        (__ \ "crn").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
@@ -72,7 +72,7 @@ object AgentDetails {
   implicit def convert(tradingPremises: FETradingPremises): AgentDetails =
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
-      crn = tradingPremises.agentCompanyDetails.fold("")(x => x.companyRegistrationNumber),
+      crn = tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber),
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
         case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>

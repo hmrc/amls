@@ -19,7 +19,7 @@ package models.fe.tradingpremises
 import models.des.tradingpremises.AgentDetails
 import play.api.libs.json._
 
-case class AgentCompanyDetails(agentCompanyName: String, companyRegistrationNumber: String)
+case class AgentCompanyDetails(agentCompanyName: String, companyRegistrationNumber: Option[String])
 
 object AgentCompanyDetails {
 
