@@ -75,7 +75,7 @@ object AgentDetails {
       dateOfBirth = for {
         bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
         agentName <- tradingPremises.agentName
-        dob <- agentName.agentDateofBirth
+        dob <- agentName.agentDateOfBirth
       } yield dob,
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
