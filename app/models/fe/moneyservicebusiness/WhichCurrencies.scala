@@ -16,14 +16,15 @@
 
 package models.fe.moneyservicebusiness
 
+import config.AmlsConfig
 import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetails}
-import play.api.libs.json.{JsObject, Json, Writes, Reads}
+import play.api.libs.json.{JsObject, Json, Reads, Writes}
 
-
-case class WhichCurrencies(currencies : Seq[String]
-                           , bankMoneySource : Option[BankMoneySource]
-                           , wholesalerMoneySource : Option[WholesalerMoneySource]
-                           , customerMoneySource : Boolean)
+case class WhichCurrencies(currencies : Seq[String],
+                           usesForeignCurrencies: Option[Boolean],
+                           bankMoneySource : Option[BankMoneySource],
+                           wholesalerMoneySource : Option[WholesalerMoneySource],
+                           customerMoneySource : Boolean)
 
 object WhichCurrencies {
 
@@ -33,6 +34,7 @@ object WhichCurrencies {
     import play.api.libs.json._
     (
       (__ \ "currencies").read[Seq[String]] and
+        (__ \ "usesForeignCurrencies").readNullable[Boolean] and
         __.read[Option[BankMoneySource]] and
         __.read[Option[WholesalerMoneySource]] and
         (__ \ "customerMoneySource").readNullable[String].flatMap {
@@ -43,23 +45,46 @@ object WhichCurrencies {
   }
 
   implicit val jsonWrites1: Writes[WhichCurrencies] = Writes[WhichCurrencies]{w =>
+
    val customerMoneySource =  w.customerMoneySource match {
       case true => Some("Yes")
       case false => None
     }
+
      Json.obj("currencies" -> w.currencies) ++
+     Json.obj("usesForeignCurrencies" -> w.usesForeignCurrencies) ++
      BankMoneySource.jsonWrites.writes(w.bankMoneySource).as[JsObject] ++
      WholesalerMoneySource.jsonWrites.writes(w.wholesalerMoneySource).as[JsObject] ++
      Json.obj("customerMoneySource" -> customerMoneySource)
+
   }
 
   implicit def convMsbCe(msbCe: Option[MsbCeDetails]): Option[WhichCurrencies] = {
     msbCe match {
-      case Some(msbDtls) => Some(WhichCurrencies(
-        msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-        msbDtls.currencySources.bankDetails,
-        msbDtls.currencySources.currencyWholesalerDetails,
-        msbDtls.currencySources.reSellCurrTakenIn))
+      case Some(msbDtls) =>
+
+        val foreignCurrencyDefault: Option[Boolean] = AmlsConfig.release7 match {
+          case true =>
+            msbDtls.currencySources.bankDetails.isDefined ||
+              msbDtls.currencySources.currencyWholesalerDetails.isDefined ||
+              msbDtls.currencySources.reSellCurrTakenIn match {
+              case true => Some(true)
+              case _ => Some(false)
+            }
+          case _ => None
+        }
+
+        val strToBool: (String) => Option[Boolean] = {
+          case "true" => Some(true)
+          case _ => Some(false)
+        }
+
+        Some(WhichCurrencies(
+          msbDtls.currencySources.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
+          msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
+          msbDtls.currencySources.bankDetails,
+          msbDtls.currencySources.currencyWholesalerDetails,
+          msbDtls.currencySources.reSellCurrTakenIn))
       case None => None
     }
   }

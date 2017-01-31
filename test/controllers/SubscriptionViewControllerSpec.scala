@@ -24,7 +24,7 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -37,7 +37,8 @@ class SubscriptionViewControllerSpec
     with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
-    with IterateeHelpers {
+    with IterateeHelpers
+    with OneAppPerSuite {
 
   object SubscriptionViewController extends SubscriptionViewController {
     override val connector = mock[ViewDESConnector]

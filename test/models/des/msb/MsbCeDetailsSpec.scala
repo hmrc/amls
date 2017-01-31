@@ -16,24 +16,25 @@
 
 package models.des.msb
 
-import models.fe.businessmatching.{BusinessAppliedForPSRNumberYes, ChequeCashingNotScrapMetal, TransmittingMoney, MsbServices}
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.Json
+import play.api.test.FakeApplication
 
-class MsbCeDetailsSpec extends PlaySpec {
+class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MsbCeDetails" should {
 
-    "convert to  frontend MSB model to correct Msb Des model when Bank details is none" in {
+    "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {
 
       val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
-        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))))
+        None,true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some(true)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
-        None,
-        None, true)
+      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), None, None, true)
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
@@ -53,10 +54,9 @@ class MsbCeDetailsSpec extends PlaySpec {
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
     }
 
-    "convert to  frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
+    "convert to frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
-        None,false,"",None)))
+      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "", None), dealInPhysCurrencies = Some(false)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
@@ -78,6 +78,63 @@ class MsbCeDetailsSpec extends PlaySpec {
 
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
     }
+
+    "deserialise the DES response correctly" when {
+
+      val model = MsbCeDetails(CurrencySources(
+        Some(MSBBankDetails(banks = true, Some(Seq("BankNames1", "BankNames2")))),
+        reSellCurrTakenIn = true,
+        antNoOfTransNxt12Mnths = "11234567890",
+        currSupplyToCust = Some(CurrSupplyToCust(Seq("GBP", "USD", "INR")))
+      ), dealInPhysCurrencies = Some(true))
+
+      "given usesForeignCurrencies as a string" in {
+
+        val json =
+          """ {
+            |   "dealInPhysCurrencies": "true",
+            |   "currencySources": {
+            |     "bankDetails": {
+            |       "banks":true,
+            |       "bankNames":["BankNames1","BankNames2"]
+            |     },
+            |     "reSellCurrTakenIn":true,
+            |     "antNoOfTransNxt12Mnths":"11234567890",
+            |     "currSupplyToCust":{
+            |       "currency":["GBP","USD","INR"]
+            |     }
+            |   }
+            | }
+          """.stripMargin
+
+        Json.parse(json).as[MsbCeDetails] must be(model)
+
+      }
+
+      "given dealInPhysCurrencies as a boolean" in {
+
+        val json =
+          """ {
+            |   "dealInPhysCurrencies": true,
+            |   "currencySources": {
+            |     "bankDetails": {
+            |       "banks":true,
+            |       "bankNames":["BankNames1","BankNames2"]
+            |     },
+            |     "reSellCurrTakenIn":true,
+            |     "antNoOfTransNxt12Mnths":"11234567890",
+            |     "currSupplyToCust":{
+            |       "currency":["GBP","USD","INR"]
+            |     }
+            |   }
+            | }
+          """.stripMargin
+
+        Json.parse(json).as[MsbCeDetails] must be(model)
+      }
+
+    }
+
   }
 
 }

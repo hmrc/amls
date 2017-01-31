@@ -20,10 +20,10 @@ import models._
 import models.des.DesConstants
 import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.fe.businessmatching.{BusinessActivities, MoneyServiceBusiness}
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 
-class SubscriptionViewSpec extends PlaySpec {
+class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {

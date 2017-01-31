@@ -17,12 +17,12 @@
 package models.fe.moneyservicebusiness
 
 import models.des.DesConstants
-import models.fe.businessmatching.{ChequeCashingNotScrapMetal, TransmittingMoney, MsbServices}
+import models.fe.businessmatching.{ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData {
+class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
 
   "MoneyServiceBusiness" should {
 
@@ -67,7 +67,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
         Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),Some(BankMoneySource("BankNames1")),Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
+        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
 
       MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModel) must be(convertedMsb)
 
