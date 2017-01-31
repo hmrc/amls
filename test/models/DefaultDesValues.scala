@@ -86,7 +86,7 @@ object DefaultDesValues {
   val VatALlBuySp = Some(VATRegistration(true, Some("123456789")))
 
   private val premises = OwnBusinessPremisesDetails(
-    "string",
+    Some("string"),
     des.tradingpremises.Address("string",
       "string",
       Some("string"),
@@ -135,8 +135,8 @@ object DefaultDesValues {
 
   val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
 
-  private val nameDtls = Some(NameDetails(PersonName("name", Some("some"), "surname"), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName("fname", Some("mname"), "lname")), Some("1990-02-24")))))
+  private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
   private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
@@ -192,7 +192,7 @@ object DefaultDesValues {
     true,
     Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
     Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
-    Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))))), None)
+    Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
   )
   // scalastyle:off magic.number
   val hvdSection = Some(DesHvd(true,Some("1978-02-15"),None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))

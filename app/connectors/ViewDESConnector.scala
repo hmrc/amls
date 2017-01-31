@@ -58,7 +58,7 @@ trait ViewDESConnector extends DESConnector {
       case r@status(OK) & bodyParser(JsError(errs)) =>
         metrics.failed(API5)
         Logger.warn(s"$prefix - Deserialisation Errors: $errs")
-        Future.failed(HttpStatusException(OK, Option(r.body)))
+        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("Failed to parse the json response from DES (API5)")))
       case r@status(s) =>
         metrics.failed(API5)
         Logger.warn(s"$prefix - Failure response: $s")

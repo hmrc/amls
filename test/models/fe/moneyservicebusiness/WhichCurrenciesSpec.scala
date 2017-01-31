@@ -17,28 +17,36 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json._
+import play.api.test.FakeApplication
 
-class WhichCurrenciesSpec extends PlaySpec {
+class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "WhichCurrencies" must {
 
     "round trip through Json correctly" in {
 
-      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
+      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
       Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
     }
 
     "round trip through Json correctly" when {
       "customerMoneySource is false" in {
 
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
 
       "WholesalerMoneySource and BankMoneySource is none" in {
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), None, None, false)
+        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(false), None, None, false)
+        Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
+      }
+
+      "usesForeignCurrency is missing" in {
+        val model = WhichCurrencies(Seq("GBP"), None, None, None, false)
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
     }
@@ -54,37 +62,80 @@ class WhichCurrenciesSpec extends PlaySpec {
           true,
           "11234567890",
           Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-        )
+        ),
+        dealInPhysCurrencies = Some(true)
       )
 
-      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),None,Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))
+      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 
     }
 
-    "convert des model to frontend model when CurrSupplyToCust empty" in {
-      val msbCe = MsbCeDetails(
-        CurrencySources(
-          None,
-          Some(CurrencyWholesalerDetails(
+    "convert des model to frontend model" when {
+
+      "CurrSupplyToCust empty" in {
+        val msbCe = MsbCeDetails(
+          CurrencySources(
+            None,
+            Some(CurrencyWholesalerDetails(
+              true,
+              Some(List("CurrencyWholesalerNames"))
+            )),
             true,
-            Some(List("CurrencyWholesalerNames"))
-          )),
-          true,
-          "11234567890",
-          None
+            "11234567890",
+            None
+          ),
+          dealInPhysCurrencies = Some(true)
         )
-      )
 
-      val convertedModel = Some(WhichCurrencies(List.empty,None,Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))
+        val convertedModel = Some(WhichCurrencies(List.empty, usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
 
-      WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
+        WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
+      }
+
+      "dealInPhysCurrencies is missing, but contains data" in {
+
+        val msbCe = MsbCeDetails(
+          CurrencySources(
+            None,
+            Some(CurrencyWholesalerDetails(
+              true,
+              Some(List("CurrencyWholesalerNames"))
+            )),
+            true,
+            "11234567890",
+            None
+          ),
+          dealInPhysCurrencies = None
+        )
+
+        val convertedModel = Some(WhichCurrencies(List.empty, Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+
+        WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
+      }
+
+      "dealInPhysCurrencies is missing and contains no data" in {
+
+        val msbCe = MsbCeDetails(
+          CurrencySources(
+            None,
+            None,
+            false,
+            "11234567890",
+            None
+          ),
+          dealInPhysCurrencies = None
+        )
+
+        val convertedModel = Some(WhichCurrencies(List.empty, Some(false), None, None, false))
+
+        WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
+      }
 
     }
 
     "convert des model to frontend model when input is none" in {
-
       WhichCurrencies.convMsbCe(None) must be(None)
     }
 

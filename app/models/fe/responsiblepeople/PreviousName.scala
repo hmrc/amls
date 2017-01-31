@@ -35,9 +35,9 @@ object PreviousName {
       case Some(pName) => pName.nameEverChanged match {
         case true => {
           pName.previousName match {
-            case Some(name) => Some(PreviousName(Some(name.firstName),
+            case Some(name) => Some(PreviousName(name.firstName,
               name.middleName,
-              Some(name.lastName),
+              name.lastName,
               pName.dateOfChange.fold(LocalDate.now)(x => LocalDate.parse(x))
             ))
             case None => None

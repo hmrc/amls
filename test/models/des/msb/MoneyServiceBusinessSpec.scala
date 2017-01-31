@@ -20,10 +20,9 @@ import models.BusinessMatchingSection
 import models.fe.businessmatching._
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
 import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FEMoneyServiceBusiness, _}
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-class MoneyServiceBusinessSpec extends  PlaySpec {
-
+class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
 
   "MoneyServiceBusiness" should {
 
@@ -35,10 +34,10 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
       Some(TransactionsInNext12Months("11111111111")),
       Some(CETransactionsInNext12Months("11234567890")),
       Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"),Some(BankMoneySource("BankNames1")),
+      Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")),
         Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
 
-    "Convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal" in {
+    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
@@ -51,7 +50,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
 
     }
 
-    "Convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Trasmitting Money" in {
+    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Trasmitting Money" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
@@ -66,7 +65,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
 
     }
 
-    "Convert MSB data based on selection of all the option of msb services" in {
+    "convert MSB data based on selection of all the option of msb services" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
@@ -77,7 +76,7 @@ class MoneyServiceBusinessSpec extends  PlaySpec {
           Some(CountriesList(List("AD", "GB"))))),
         Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("BankNames1")))),
           Some(CurrencyWholesalerDetails(true,Some(List("CurrencyWholesalerNames")))),true,"11234567890",
-          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))))),None))
+          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = Some(true))),None))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching) must be(convertedModel)
     }
