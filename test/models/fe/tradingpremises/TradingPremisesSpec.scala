@@ -33,7 +33,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
   val agentName = AgentName("test")
 
-  val agentCompanyName = AgentCompanyDetails("test")
+  val agentCompanyName = AgentCompanyDetails("test", None)
 
   val agentPartnership = AgentPartnership("test")
 
@@ -164,6 +164,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
   "Conversion of agent's Premises from the Des model" when {
     val desModel = AgentDetails (
       "agentLegalEntity",
+      None,
       Some("agentLegalEntityName"),
       AgentPremises(
         "tradingName",
@@ -204,7 +205,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       "populate the agent company Name field from the Legal entity name in DES" in  {
         val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Limited Liability Partnership"))
         feModel.agentName must be (None)
-        feModel.agentCompanyDetails must be (Some(AgentCompanyDetails("agentLegalEntityName")))
+        feModel.agentCompanyDetails must be (Some(AgentCompanyDetails("agentLegalEntityName", None)))
         feModel.agentPartnership must be (None)
       }
     }
@@ -222,7 +223,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       "populate the agent partnership field from the Legal entity name in DES" in  {
         val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Corporate Body"))
         feModel.agentName must be (None)
-        feModel.agentCompanyDetails must be (Some(AgentCompanyDetails("agentLegalEntityName")))
+        feModel.agentCompanyDetails must be (Some(AgentCompanyDetails("agentLegalEntityName", None)))
         feModel.agentPartnership must be (None)
       }
     }
