@@ -25,7 +25,7 @@ class AgentNameSpec extends PlaySpec with MockitoSugar{
 
   "AgentName" must {
     "Success read and write json" in {
-      val expected = AgentName("somename", Some("2010-01-24"), Some("1975-01-01"))
+      val expected = AgentName("somename", Some("2010-01-24"), Some("1970-01-01"))
 
       AgentName.formats.reads(AgentName.formats.writes(expected)) must be(JsSuccess(expected))
     }
