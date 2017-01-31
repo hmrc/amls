@@ -51,7 +51,8 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
     Some("Added"),
     Some(ActivityEndDate(new LocalDate(1999,1,1))))
 
-  val completeJson = Json.obj("registeringAgentPremises"-> Json.obj("agentPremises"->true),
+  val completeJson = Json.obj(
+    "registeringAgentPremises"-> Json.obj("agentPremises"->true),
     "yourTradingPremises"-> Json.obj("tradingName" -> "foo",
       "addressLine1" ->"1",
       "addressLine2" ->"2",
@@ -60,7 +61,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       "isResidential" ->true),
     "businessStructure" -> Json.obj("agentsBusinessStructure" ->"01"),
     "agentName" -> Json.obj("agentName" ->"test"),
-    "agentCompanyName" -> Json.obj("agentCompanyName" ->"test"),
+    "agentCompanyDetails" -> Json.obj("agentCompanyName" ->"test"),
     "agentPartnership" -> Json.obj("agentPartnership" ->"test"),
     "whatDoesYourBusinessDoAtThisAddress" ->Json.obj("activities" -> Json.arr("02","03","05"), "dateOfChange" -> "2010-03-01"),
     "msbServices" -> Json.obj("msbServices"-> Json.arr("01","02")),
