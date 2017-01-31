@@ -27,7 +27,7 @@ object BusinessActivityDetails{
 
   implicit def convert(bact : models.fe.businessactivities.BusinessActivities) : BusinessActivityDetails = {
     bact.involvedInOther match {
-      case Some(InvolvedInOtherNo) => BusinessActivityDetails(true, bact)
+      case Some(InvolvedInOtherNo) => BusinessActivityDetails(true, ExpectedAMLSTurnover.convert(bact))
       case Some(InvolvedInOtherYes(x)) => BusinessActivityDetails(false, bact)
       case _ => BusinessActivityDetails(false, None)
     }
