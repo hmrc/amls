@@ -16,17 +16,18 @@
 
 package models.fe.tradingpremises
 
+import models.des.tradingpremises.AgentDetails
 import play.api.libs.json._
 
-case class AgentCompanyName(agentCompanyName: String)
+case class AgentCompanyDetails(agentCompanyName: String, companyRegistrationNumber: String)
 
-object AgentCompanyName {
+object AgentCompanyDetails {
 
-  implicit val formats = Json.format[AgentCompanyName]
+  implicit val formats = Json.format[AgentCompanyDetails]
 
-  implicit def conv(agentLegalEntityName: Option[String]): Option[AgentCompanyName] = {
-    agentLegalEntityName map {
-      x => AgentCompanyName(x)
+  implicit def conv(agentDetails: AgentDetails): Option[AgentCompanyDetails] = {
+    agentDetails.agentLegalEntityName map {
+      x => AgentCompanyDetails(x, agentDetails.crn)
     }
   }
 }
