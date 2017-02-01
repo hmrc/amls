@@ -42,7 +42,8 @@ trait DESConnector extends HttpResponseHelper {
   protected implicit val hc = HeaderCarrier(
     extraHeaders = Seq(
       "Environment" -> env,
-      HeaderNames.ACCEPT -> "application/json"
+      HeaderNames.ACCEPT -> "application/json",
+      HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
     ),
     authorization = Some(Authorization(token))
   )
