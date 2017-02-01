@@ -16,6 +16,7 @@
 
 package models.fe.businessactivities
 
+import config.AmlsConfig
 import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -70,15 +71,28 @@ object ExpectedBusinessTurnover {
   }
 
   implicit def convertTurnover(to: String): Option[ExpectedBusinessTurnover] = {
-    to match {
-      case "14999" => Some(First)
-      case "49999" => Some(Second)
-      case "99999" => Some(Third)
-      case "249999" => Some(Fourth)
-      case "999999" => Some(Fifth)
-      case "10000000" => Some(Sixth)
-      case "100000000" => Some(Seventh)
-      case  _ => None
+    if (!AmlsConfig.release7) {
+      to match {
+        case "14999" => Some(First)
+        case "49999" => Some(Second)
+        case "99999" => Some(Third)
+        case "249999" => Some(Fourth)
+        case "999999" => Some(Fifth)
+        case "10000000" => Some(Sixth)
+        case "100000000" => Some(Seventh)
+        case  _ => None
+      }
+    } else {
+      to match {
+        case "£0-£15k" => Some(First)
+        case "£15k-£50k" => Some(Second)
+        case "£50k-£100k" => Some(Third)
+        case "£100k-£250k" => Some(Fourth)
+        case "£250k-£1m" => Some(Fifth)
+        case "£1m-£10m" => Some(Sixth)
+        case "£10m+" => Some(Seventh)
+        case  _ => None
+      }
     }
   }
 }
