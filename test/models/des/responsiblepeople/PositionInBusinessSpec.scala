@@ -22,9 +22,9 @@ import models.fe.businessmatching._
 import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-class PositionInBusinessSpec extends PlaySpec with MockitoSugar {
+class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   val today = new LocalDate()
 
@@ -60,10 +60,10 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar {
       val desModel = Some(PositionInBusiness(
         None,
         None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true)))
       ))
 
-      val positions = Some(Positions(Set(Director, NominatedOfficer, BeneficialOwner), Some(today)))
+      val positions = Some(Positions(Set(Director, NominatedOfficer, DesignatedMember, BeneficialOwner), Some(today)))
 
       PositionInBusiness.conv(positions, bm) must be(desModel)
     }
