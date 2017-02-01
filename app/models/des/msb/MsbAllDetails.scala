@@ -16,6 +16,7 @@
 
 package models.des.msb
 
+import config.AmlsConfig
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
 import play.api.libs.json.Json
@@ -46,15 +47,28 @@ object MsbAllDetails {
   }
 
   implicit def convThroughputValues(throughput: ExpectedThroughput): Option[String] = {
-    val value = throughput match {
-      case First => "99999"
-      case Second => "499999"
-      case Third => "999999"
-      case Fourth => "20000000"
-      case Fifth => "100000000"
-      case Sixth => "1000000000"
-      case Seventh=> "10000000000"
-    }
+    val value =
+      if (!AmlsConfig.release7) {
+        throughput match {
+          case First => "99999"
+          case Second => "499999"
+          case Third => "999999"
+          case Fourth => "20000000"
+          case Fifth => "100000000"
+          case Sixth => "1000000000"
+          case Seventh=> "10000000000"
+        }
+      }else {
+        throughput match {
+          case First => "£0-£15k"
+          case Second => "£15k-£50k"
+          case Third => "£50k-£100k"
+          case Fourth => "£100k-£250k"
+          case Fifth => "£250k-£1m"
+          case Sixth => "£1m-£10m"
+          case Seventh => "£10m+"
+        }
+      }
     Some(value)
   }
 

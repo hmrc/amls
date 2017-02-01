@@ -21,6 +21,8 @@ import exceptions.HttpStatusException
 import models.{SubscriptionViewModel, des}
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
+import models.des.msb.{CountriesList, MsbAllDetails}
+import models.fe.tradingpremises.BusinessActivity.MoneyServiceBusiness
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -134,7 +136,14 @@ class SubscriptionViewControllerSpecRelease7
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
-  ))
+  ), msb = Some(DesConstants.testMsb.copy(
+    msbAllDetails = Some(MsbAllDetails(
+      Some("£50k-£100k"),
+      true,
+      Some(CountriesList(List("AD", "GB"))),
+      true)
+    )))
+  )
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")

@@ -19,6 +19,7 @@ package models.des
 import models._
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
+import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.aboutthebusiness.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
@@ -232,6 +233,17 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
           Some("Street"), Some("city"), "EE1 1EE"))
       )
 
+      val msbSectionRelease7 = Some(
+        MoneyServiceBusiness(
+          Some(MsbAllDetails(Some("£15k-£50k"),true,Some(CountriesList(List("GB"))),true)),
+          Some(MsbMtDetails(true,Some("123456"),
+            IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
+            true,
+            Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
+          Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
+            Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
+      )
+
       val desallActivitiesModel = BusinessActivitiesAll(None,Some("2001-01-01"),None, BusinessActivityDetails(true,
         Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))),  Some("10"), Some("5"),
         NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
@@ -251,7 +263,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
           businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
           tradingPremises = DefaultDesValues.TradingPremisesSection,
           bankAccountDetails = DefaultDesValues.bankDetailsSection,
-          msb = DefaultDesValues.msbSection,
+          msb = msbSectionRelease7,
           hvd = DefaultDesValues.hvdSection,
           filingIndividual = DefaultDesValues.filingIndividual,
           tcspAll = DefaultDesValues.tcspAllSection,
