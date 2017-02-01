@@ -113,7 +113,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
           tradingPremises = DefaultDesValues.TradingPremisesSection,
           bankAccountDetails = DefaultDesValues.bankDetailsSection,
-          msb = DefaultDesValues.msbSection,
+          msb = DefaultDesValues.msbSectionR6,
           hvd = DefaultDesValues.hvdSection,
           filingIndividual = DefaultDesValues.filingIndividual,
           tcspAll = DefaultDesValues.tcspAllSection,

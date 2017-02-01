@@ -16,10 +16,11 @@
 
 package models.des
 
+import config.AmlsConfig
 import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
-import models.des.businessactivities.{ExpectedAMLSTurnover, BusinessActivityDetails}
+import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, JsUndefined, Json}
 import play.api.test.FakeApplication
@@ -49,7 +50,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             DesConstants.testBusinessActivities,
             DesConstants.testTradingPremisesAPI6,
             DesConstants.testBankDetails,
-            Some(DesConstants.testMsb),
+            Some(DesConstants.testMsbR6),
             Some(DesConstants.testHvd),
             Some(DesConstants.testAsp),
             Some(DesConstants.testAspOrTcsp),
@@ -60,7 +61,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesAllButSp") must be (a[JsUndefined])
+        ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
       }
     }
 
@@ -90,7 +91,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesCbUbLlp") must be (a[JsUndefined])
+        ) \ "businessReferencesCbUbLlp") must be(a[JsUndefined])
       }
     }
   }
@@ -184,7 +185,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
@@ -214,7 +215,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
@@ -269,7 +270,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesAllButSp") must be (a[JsUndefined])
+        ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
       }
     }
 
@@ -299,7 +300,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesCbUbLlp") must be (a[JsUndefined])
+        ) \ "businessReferencesCbUbLlp") must be(a[JsUndefined])
       }
     }
   }
@@ -376,7 +377,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     )
   }
 
-  val convertedDesModel = AmendVariationRequest(
+  def convertedDesModel = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     DesConstants.testChangeIndicators,
     "Amendment",
@@ -391,7 +392,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(if (AmlsConfig.release7) DesConstants.testMsb else DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
@@ -402,6 +403,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
     DesConstants.extraFields
   )
+
   val convertedDesModelRelease7 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     DesConstants.testChangeIndicators,
@@ -432,7 +434,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
   val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
   val newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
 
-  val updateAmendVariationRequest = AmendVariationRequest(
+  def updateAmendVariationRequest = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     newChangeIndicator,
     "Amendment",
@@ -447,7 +449,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(if (AmlsConfig.release7) DesConstants.testMsb else DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
