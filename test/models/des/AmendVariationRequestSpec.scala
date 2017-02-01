@@ -116,8 +116,6 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
     "convert frontend model to des model for amendment" in {
       implicit val mt = Amendment
-
-      println(Console.BLUE + AmendVariationRequest.convert(feSubscriptionReq) + Console.WHITE)
       AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModel.copy(amlsMessageType = "Amendment"))
     }
 
