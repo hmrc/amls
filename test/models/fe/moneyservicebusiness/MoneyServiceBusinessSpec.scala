@@ -17,12 +17,16 @@
 package models.fe.moneyservicebusiness
 
 import models.des.DesConstants
+import models.des.msb.{CountriesList, MsbAllDetails}
 import models.fe.businessmatching.{ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 
 class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   "MoneyServiceBusiness" should {
 
@@ -87,6 +91,83 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
 
   }
 }
+class MoneyServiceBusinessRelease7Spec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+
+  "MoneyServiceBusiness" should {
+
+    "have an implicit conversion from Option which" when {
+
+      "called with None" should {
+
+        "return a default version of MoneyServiceBusiness" in {
+
+          val res: MoneyServiceBusiness = None
+          res must be(emptyModel)
+        }
+      }
+
+      "called with a concrete value" should {
+        "return the value passed in extracted from the option" in {
+          val res: MoneyServiceBusiness = Some(completeModel)
+          res must be(completeModel)
+        }
+      }
+    }
+
+    "Serialise to expected Json" when {
+      "model is complete" in {
+        Json.toJson(completeModel) must be(completeJson)
+      }
+    }
+
+    "Deserialise from Json as expected" when {
+      "model is complete" in {
+        completeJson.as[MoneyServiceBusiness] must be(completeModel)
+      }
+    }
+
+    "convert des msb to frontend msb model" in {
+
+      val convertedMsb = Some(MoneyServiceBusiness(
+        Some(Third),Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
+        Some(IdentifyLinkedTransactions(true)),
+        Some(SendMoneyToOtherCountry(true)),Some(FundsTransfer(true)),
+        Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
+        Some(TransactionsInNext12Months("11111111111")),
+        Some(CETransactionsInNext12Months("11234567890")),
+        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
+        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      ))
+
+      val release7SubscriptionViewModel = DesConstants.SubscriptionViewModel.copy(msb = Some(DesConstants.testMsb.copy(
+        msbAllDetails = Some(MsbAllDetails(
+          Some("£50k-£100k"),
+          true,
+          Some(CountriesList(List("AD", "GB"))),
+          true)
+        ))))
+
+      MoneyServiceBusiness.conv(release7SubscriptionViewModel) must be(convertedMsb)
+
+    }
+
+    "evaluate getMsbAll whn input is none" in {
+      MoneyServiceBusiness.getMsbAll(None) must be(None)
+    }
+
+    "evaluate getMsbMtDetails whn input is none" in {
+      MoneyServiceBusiness.getMsbMtDetails(None) must be(None)
+    }
+
+    "evaluate getMsbCeDetails whn input is none" in {
+      MoneyServiceBusiness.getMsbCeDetails(None) must be(None)
+    }
+
+  }
+}
+
 
 trait MoneyServiceBusinessTestData {
   private val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))

@@ -17,9 +17,12 @@
 package models.des.msb
 
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.test.FakeApplication
 
-class MsbAllDetailsSpec extends PlaySpec {
+class MsbAllDetailsSpec extends PlaySpec with OneAppPerSuite{
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   "MsbAllDetails" should {
 
@@ -86,6 +89,84 @@ class MsbAllDetailsSpec extends PlaySpec {
 
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Seventh" in {
       val msbAllDetails = Some(MsbAllDetails(Some("10000000000"), false, None, false))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Seventh))
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+  }
+
+}
+
+class MsbAllDetailsRelease7Spec extends PlaySpec with OneAppPerSuite{
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+
+  "MsbAllDetails" should {
+
+    "convert to  frontend MSB model to correct Msb Des model when ExpectedThroughput is None" in {
+      val msbAllDetails = Some(MsbAllDetails(None, false, None, false))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(None,
+        None)
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+    "convert to  frontend MSB model to correct Msb Des model when ExpectedThroughput is First" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£0-£15k"), false, None, false))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.First))
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+    "convert to  frontend MSB model to correct Msb Des model when ExpectedThroughput is Third" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£50k-£100k"), false, None, true))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Third),
+        None,
+        Some(IdentifyLinkedTransactions(true)),
+        None,
+        None,
+        Some(BranchesOrAgents(false, None))
+      )
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+    "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Fourth" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£100k-£250k"), true, Some(CountriesList(List("GB"))), true))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Fourth),
+        None,
+        Some(IdentifyLinkedTransactions(true)),
+        None,
+        None,
+        Some(BranchesOrAgents(true, Some(Seq("GB"))))
+      )
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+    "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Fifth" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£250k-£1m"), false, None, false))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Fifth))
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+    "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Sixth" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£1m-£10m"), false, None, false))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Sixth))
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
+
+    "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Seventh" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£10m+"), false, None, false))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
         Some(ExpectedThroughput.Seventh))
