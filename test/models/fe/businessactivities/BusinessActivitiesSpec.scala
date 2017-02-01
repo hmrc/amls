@@ -19,10 +19,14 @@ package models.fe.businessactivities
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities.{ExpectedAMLSTurnover => DesExpectedAMLSTurnover, _}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 
-class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
+class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+
 
   val DefaultFranchiseName = "DEFAULT FRANCHISE NAME"
   val DefaultSoftwareName = "DEFAULT SOFTWARE"
