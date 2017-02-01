@@ -19,6 +19,7 @@ package models.fe
 import models._
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover, MlrActivitiesAppliedFor}
+import models.des.msb.{CountriesList, MsbAllDetails}
 import models.fe.businessmatching.{BusinessActivities, MoneyServiceBusiness}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
@@ -104,7 +105,13 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
-  ))
+  ), msb = Some(DesConstants.testMsb.copy(
+    msbAllDetails = Some(MsbAllDetails(
+      Some("£50k-£100k"),
+      true,
+      Some(CountriesList(List("AD", "GB"))),
+      true)
+    ))))
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {

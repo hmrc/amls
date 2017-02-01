@@ -21,6 +21,7 @@ import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
+import models.des.msb.{CountriesList, MsbAllDetails}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, JsUndefined, Json}
 import play.api.test.FakeApplication
@@ -241,6 +242,15 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     ))
   )
 
+  val release7Msb = DesConstants.testMsb.copy(
+    msbAllDetails = Some(MsbAllDetails(
+      Some("£50k-£100k"),
+      true,
+      Some(CountriesList(List("AD", "GB"))),
+      true)
+    )
+  )
+
   "SubscriptionRequest serialisation" when {
     "businessReferencesAllButSp is None" must {
       "exclude the field from Json" in {
@@ -257,7 +267,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
             release7BusinessActivities,
             DesConstants.testTradingPremisesAPI6,
             DesConstants.testBankDetails,
-            Some(DesConstants.testMsb),
+            Some(release7Msb),
             Some(DesConstants.testHvd),
             Some(DesConstants.testAsp),
             Some(DesConstants.testAspOrTcsp),
@@ -402,6 +412,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     DesConstants.extraFields
   )
 
+
   val convertedDesModelRelease7 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     DesConstants.testChangeIndicators,
@@ -417,7 +428,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     release7BusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(release7Msb),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
