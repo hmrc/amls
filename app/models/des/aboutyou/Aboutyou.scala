@@ -28,7 +28,7 @@ case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
 
 }
 
-object Aboutyou{
+object Aboutyou {
   implicit val format = Json.format[Aboutyou]
 
   implicit def convert(person: models.fe.declaration.AddPerson): Aboutyou = {
@@ -50,4 +50,17 @@ object Aboutyou{
       case Other(details) => details
     }
   }
+}
+
+
+case class AboutYouRelease7(individualDetails: Option[IndividualDetails] = None,
+                            employedWithinBusiness: Boolean,
+                            roleWithinBusiness: Option[RolesWithinBusiness] = None,
+                            roleForTheBusiness: Option[RoleForTheBusiness] = None)
+
+object AboutYouRelease7 {
+  implicit val format = Json.format[AboutYouRelease7]
+
+
+
 }
