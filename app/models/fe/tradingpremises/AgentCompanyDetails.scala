@@ -27,7 +27,7 @@ object AgentCompanyDetails {
 
   implicit def conv(agentDetails: AgentDetails): Option[AgentCompanyDetails] = {
     agentDetails.agentLegalEntityName map {
-      x => AgentCompanyDetails(x, agentDetails.crn)
+      x => AgentCompanyDetails(x, agentDetails.companyRegNo)
     }
   }
 }
