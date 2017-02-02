@@ -61,4 +61,6 @@ case class AboutYouRelease7(individualDetails: Option[IndividualDetails] = None,
 object AboutYouRelease7 {
   implicit val format = Json.format[AboutYouRelease7]
 
+
+
 }
