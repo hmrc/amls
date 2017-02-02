@@ -80,7 +80,7 @@ object SubscriptionRequest {
      tcspAllConv: fe.tcsp.Tcsp => TcspAll,
      tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
      responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
-     msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching) => Option[MoneyServiceBusiness],
+     msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
      hvdConv : fe.hvd.Hvd => Hvd
   ): Outgoing =
     SubscriptionRequest(
@@ -93,7 +93,7 @@ object SubscriptionRequest {
       businessActivities = conv(data, false),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
-      msb = msbConv(data.msbSection, data.businessMatchingSection),
+      msb = msbConv(data.msbSection, data.businessMatchingSection, false),
       hvd= data.hvdSection.map(hvdConv),
       asp = data.aspSection.map(aspConv),
       aspOrTcsp = data.supervisionSection.map(aspOrTcspConv),

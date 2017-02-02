@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import models.fe.businessmatching.{BusinessAppliedForPSRNumberYes, BusinessAppliedForPSRNumberNo, BusinessAppliedForPSRNumber}
+import models.fe.businessmatching.{BusinessAppliedForPSRNumber, BusinessAppliedForPSRNumberNo, BusinessAppliedForPSRNumberYes}
 import play.api.libs.json.Json
 
 case class MsbMtDetails (
@@ -34,15 +34,17 @@ object MsbMtDetails {
 
   implicit val format = Json.format[MsbMtDetails]
 
-  implicit def conv(msbNbmTuple:(models.fe.moneyservicebusiness.MoneyServiceBusiness, models.fe.businessmatching.BusinessMatching)) : Option[MsbMtDetails] = {
-    val msb= msbNbmTuple._1
-    val bm = msbNbmTuple._2
+  implicit def conv(msbNbmTuple:(models.fe.moneyservicebusiness.MoneyServiceBusiness, models.fe.businessmatching.BusinessMatching, Boolean)) : Option[MsbMtDetails] = {
+
+    val (msb, bm, amendVariation) = msbNbmTuple
+
     val (largetAmount, largestTransaction) = msb.sendMoneyToOtherCountry.foldLeft[(Option[CountriesList], Option[CountriesList])](None, None)(
       (x, y)=> y.money match {
       case true =>  (msb.sendTheLargestAmountsOfMoney.fold[Seq[String]](Seq.empty)(x => Seq(Some(x.country_1), x.country_2, x.country_3).flatten),
         msb.mostTransactions.fold[Seq[String]](Seq.empty)(x => x.mostTransactionsCountries))
       case false =>(None, None)
     })
+
     val (applyForPsr, psrNumber) = convPsr(bm.businessAppliedForPSRNumber)
 
     Some(MsbMtDetails(applyForPsr,
@@ -52,7 +54,7 @@ object MsbMtDetails {
       msb.transactionsInNext12Months.fold[Option[String]](None)(x => Some(x.txnAmount)),
       largetAmount,
       largestTransaction,
-      config.AmlsConfig.release7 match {
+      config.AmlsConfig.release7 & amendVariation match {
         case true => Some(false)
         case _ => None
       }

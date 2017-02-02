@@ -64,7 +64,7 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
     }
 
     "convert to frontend MSB model to correct Msb Des model when Send money to other country is true" in {
@@ -101,7 +101,44 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+    }
+
+    "convert to frontend MSB model to correct Msb Des model when submission is not an amendment or variation" in {
+      val msbMtDetails = MsbMtDetails(true,
+        Some("123456"),
+        None,
+        false,
+        None, Some(CountriesList(List("GB"))),
+        Some(CountriesList(List("LA","LV"))),
+        psrRefChangeFlag = None)
+
+      val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+      val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
+      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService),None, None, psrNumber)
+      val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
+      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = Some(true),
+        Some(BankMoneySource("Bank names")),
+        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
+      val mostTransactions = MostTransactions(Seq("LA", "LV"))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Second),
+        None,
+        Some(IdentifyLinkedTransactions(true)),
+        Some(SendMoneyToOtherCountry(true)),
+        None,
+        Some(BranchesOrAgents(true, Some(Seq("GB")))),
+        None,
+        Some(CETransactionsInNext12Months("12345678963")),
+        Some(sendTheLargestAmountsOfMoney),
+        Some(mostTransactions),
+        Some(whichCurrencies)
+      )
+      MsbMtDetails.conv(msbModel, bm, false) must be(Some(msbMtDetails))
     }
 
 
@@ -143,7 +180,7 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
     }
 
 
@@ -185,7 +222,7 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
     }
 
     "convert to frontend MSB model to correct Msb Des model when psrNumberModel is None" in {
@@ -226,7 +263,7 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
     }
   }
 }
@@ -271,6 +308,6 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
        Some(mostTransactions),
        Some(whichCurrencies)
      )
-     MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+     MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
    }
  }
