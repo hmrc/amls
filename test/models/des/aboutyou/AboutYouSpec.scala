@@ -16,9 +16,9 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.{Other, ExternalAccountant, BeneficialShareholder}
+import models.fe.declaration.{BeneficialShareholder, ExternalAccountant, Other}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, Json}
 
 class AboutYouSpec extends PlaySpec {
   "AboutYouDetails" must {
@@ -53,5 +53,57 @@ class AboutYouSpec extends PlaySpec {
       val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
       Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
     }
+  }
+}
+
+class AboutYouRelease7Spec extends PlaySpec {
+
+  "AboutYouRelease7" must {
+    "be serialisable for roleWithinBusiness" in {
+
+      val json = Json.obj(
+        "individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
+        "employedWithinBusiness" -> true,
+        "roleWithinBusiness" -> Json.obj(
+          "beneficialShareholder" -> true,
+          "director" -> true,
+          "partner" -> true,
+          "internalAccountant" -> true,
+          "soleProprietor" -> true,
+          "nominatedOfficer" -> true,
+          "designatedMember" -> true,
+          "other" -> false
+        )
+      )
+
+      val aboutyouModel = AboutYouRelease7(
+        Some(IndividualDetails("fName", None, "lName")),
+        true,
+        Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None))
+      )
+
+      AboutYouRelease7.format.writes(aboutyouModel) must be(json)
+      AboutYouRelease7.format.reads(json) must be(JsSuccess(aboutyouModel))
+
+    }
+
+    "be serialisable for roleForTheBusiness" in {
+
+      val json = Json.obj(
+        "individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
+        "employedWithinBusiness" -> false,
+        "roleForTheBusiness" -> Json.obj(
+          "externalAccountant" -> true,
+          "other" -> false
+        )
+      )
+
+      val aboutyouModel = AboutYouRelease7(Some(IndividualDetails("fName", None, "lName")), false, None, Some(RoleForTheBusiness(true, false, None)))
+
+      AboutYouRelease7.format.writes(aboutyouModel) must be(json)
+      AboutYouRelease7.format.reads(json) must be(JsSuccess(aboutyouModel))
+
+    }
+
   }
 }
