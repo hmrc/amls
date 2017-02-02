@@ -16,9 +16,10 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.{BeneficialShareholder, ExternalAccountant, Other}
+import models.fe.declaration.{AddPersonRelease7, BeneficialShareholder, ExternalAccountant, Other}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+
 
 class AboutYouSpec extends PlaySpec {
   "AboutYouDetails" must {
@@ -105,5 +106,58 @@ class AboutYouRelease7Spec extends PlaySpec {
 
     }
 
+    "convert to the des model correctly" when {
+      "given frontend model without external accountant or Other" in {
+
+        val desModel = AboutYouRelease7(
+          Some(IndividualDetails("fName", None, "lName")),
+          true,
+          Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        val frontendModel = AddPersonRelease7("fName", None, "lName",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember
+          ))
+        )
+
+        AboutYouRelease7.convert(frontendModel) must be(desModel)
+
+      }
+
+      "given frontend model with external accountant and Other" in {
+
+        val desModel = AboutYouRelease7(
+          Some(IndividualDetails("fName", None, "lName")),
+          false,
+          Some(RolesWithinBusiness(true, true, true, true, true, true, true, true, Some("some other text"))),
+          Some(RoleForTheBusiness(true, true, Some("some other text")))
+        )
+
+        val frontendModel = AddPersonRelease7("fName", None, "lName",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.ExternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember,
+            models.fe.declaration.release7.Other("some other text")
+          ))
+        )
+
+        AboutYouRelease7.convert(frontendModel) must be(desModel)
+
+      }
+    }
   }
 }
