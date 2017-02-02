@@ -92,20 +92,20 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
       val position = Some(PositionInBusiness(
         Some(DesSoleProprietor(true, true)),
         Some(Partnership(true, true)),
-        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true)))
       ))
 
       val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,Some(today.toString()),None,None,RPExtra())
 
 
-      Positions.conv(desModel) must be(Some(Positions(Set(Partner, SoleProprietor, NominatedOfficer, Director, BeneficialOwner), Some(today))))
+      Positions.conv(desModel) must be(Some(Positions(Set(Partner, SoleProprietor, NominatedOfficer, Director, BeneficialOwner, DesignatedMember), Some(today))))
     }
 
     "convert des model to frontend model successfully1" in {
       val position = Some(PositionInBusiness(
         Some(DesSoleProprietor(true, false)),
         Some(Partnership(true, false)),
-        Some(CorpBodyOrUnInCorpBodyOrLlp(false, true, false))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(false, true, false, None))
       ))
 
       val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,Some(today.toString()),None,None,RPExtra())
