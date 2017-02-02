@@ -105,35 +105,5 @@ class AboutYouRelease7Spec extends PlaySpec {
 
     }
 
-
-
-
-    //    "be convertible from FE request to DES for roleWithinBusiness" in {
-    //      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", Some("middlename"), "lName", BeneficialShareholder)
-    //
-    //
-    //
-    //      val aboutyouModel = AboutYouRelease7(
-    //        Some(IndividualDetails("fName", None, "lName")),
-    //        true,
-    //        Some(RolesWithinBusiness(true,true,false,false,false,false,false, false, None))
-    //      )
-    //
-    //
-    //
-    //      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    //    }
-    //
-    //    "be convertible from FE request to DES for roleForTheBusiness" in {
-    //      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", ExternalAccountant)
-    //      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("External Accountant"), None)
-    //      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    //    }
-    //
-    //    "be convertible from FE request to DES for OtherroleWithinBusiness" in {
-    //      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", Other("Agent"))
-    //      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
-    //      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    //    }
   }
 }

@@ -145,7 +145,7 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
 
       }
 
-      "given Other and ExternalAccountant role" in {
+      "given Other and ExternalAccountant role for the reads" in {
 
         val json = Json.obj(
           "firstName" -> "name",
@@ -182,61 +182,49 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
         )
 
         AddPersonRelease7.jsonReads.reads(json) must be(JsSuccess(model))
-//        AddPersonRelease7.jsonWrites.writes(model) must be(json)
+
+      }
+
+      "given Other and ExternalAccountant role for the writes" in {
+
+        val json = Json.obj(
+          "firstName" -> "name",
+          "middleName" -> "some",
+          "lastName" -> "surname",
+          "roleWithinBusiness" -> Json.arr(
+            "Other",
+            "Partner",
+            "SoleProprietor",
+            "DesignatedMember",
+            "NominatedOfficer",
+            "Director",
+            "BeneficialShareholder",
+            "ExternalAccountant",
+            "InternalAccountant"
+          ),
+          "otherDetails" -> "Other details here"
+        )
+
+
+        val model = AddPersonRelease7(
+          "name", Some("some"), "surname",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.ExternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember,
+            models.fe.declaration.release7.Other("Other details here")
+          ))
+        )
+
+        AddPersonRelease7.jsonWrites.writes(model) must be(json)
 
       }
     }
 
-
-//    "convert des model to frontend model:roleWithinBusiness" in {
-//
-//      val desAboutYou = Aboutyou(
-//        Some(IndividualDetails(
-//          "FirstName",
-//          Some("MiddleName"),
-//          "LastName")),
-//        true,
-//        Some("Beneficial Shareholder"),
-//        None,
-//        Some("Other"),
-//        Some("SpecifyOtherRoleForBusiness")
-//      )
-//
-//      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", BeneficialShareholder))
-//    }
-//
-//    "convert des model to frontend model:roleForTheBusiness" in {
-//
-//      val desAboutYou = Aboutyou(
-//        Some(IndividualDetails(
-//          "FirstName",
-//          Some("MiddleName"),
-//          "LastName")),
-//        false,
-//        Some("Beneficial Shareholder"),
-//        None,
-//        Some("External Accountant"),
-//        None
-//      )
-//
-//      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", ExternalAccountant))
-//    }
-//
-//    "convert des model to frontend model:Other" in {
-//
-//      val desAboutYou = Aboutyou(
-//        Some(IndividualDetails(
-//          "FirstName",
-//          Some("MiddleName"),
-//          "LastName")),
-//        false,
-//        Some("Beneficial Shareholder"),
-//        None,
-//        None,
-//        Some("Other")
-//      )
-//
-//      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", Other("Other")))
-//    }
   }
 }
