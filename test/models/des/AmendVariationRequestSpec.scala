@@ -16,14 +16,20 @@
 
 package models.des
 
+import config.AmlsConfig
 import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
+import models.des.msb.{CountriesList, MsbAllDetails}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, JsUndefined, Json}
+import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
 class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
@@ -45,7 +51,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             DesConstants.testBusinessActivities,
             DesConstants.testTradingPremisesAPI6,
             DesConstants.testBankDetails,
-            Some(DesConstants.testMsb),
+            Some(DesConstants.testMsbR6),
             Some(DesConstants.testHvd),
             Some(DesConstants.testAsp),
             Some(DesConstants.testAspOrTcsp),
@@ -56,7 +62,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesAllButSp") must be (a[JsUndefined])
+        ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
       }
     }
 
@@ -86,7 +92,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
             Some(DesConstants.testResponsiblePersonsForRpAPI6),
             DesConstants.extraFields
           )
-        ) \ "businessReferencesCbUbLlp") must be (a[JsUndefined])
+        ) \ "businessReferencesCbUbLlp") must be(a[JsUndefined])
       }
     }
   }
@@ -178,7 +184,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
@@ -208,7 +214,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     DesConstants.testBusinessActivities,
     DesConstants.testTradingPremisesAPI6,
     DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
+    Some(DesConstants.testMsbR6),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),
@@ -221,3 +227,249 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
   )
 
 }
+
+class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+
+  implicit val ackref = new AckRefGenerator {
+    override def ackRef: String = "1234"
+  }
+
+  val release7BusinessActivities = DesConstants.testBusinessActivities.copy(
+    all = Some(DesConstants.testBusinessActivitiesAll.copy(
+      businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
+    ))
+  )
+
+  val release7Msb = DesConstants.testMsb.copy(
+    msbAllDetails = Some(MsbAllDetails(
+      Some("£50k-£100k"),
+      true,
+      Some(CountriesList(List("AD", "GB"))),
+      true)
+    )
+  )
+
+  "SubscriptionRequest serialisation" when {
+    "businessReferencesAllButSp is None" must {
+      "exclude the field from Json" in {
+        (Json.toJson(
+          AmendVariationRequest(
+            acknowledgementReference = ackref.ackRef,
+            DesConstants.testChangeIndicators,
+            "Amendment",
+            DesConstants.testBusinessDetails,
+            DesConstants.testViewBusinessContactDetails,
+            DesConstants.testBusinessReferencesAll,
+            None,
+            Some(DesConstants.testBusinessReferencesCbUbLlp),
+            release7BusinessActivities,
+            DesConstants.testTradingPremisesAPI6,
+            DesConstants.testBankDetails,
+            Some(release7Msb),
+            Some(DesConstants.testHvd),
+            Some(DesConstants.testAsp),
+            Some(DesConstants.testAspOrTcsp),
+            Some(DesConstants.testTcspAll),
+            Some(DesConstants.testTcspTrustCompFormationAgt),
+            Some(DesConstants.testEabAll),
+            Some(DesConstants.testEabResdEstAgncy),
+            Some(DesConstants.testResponsiblePersonsForRpAPI6),
+            DesConstants.extraFields
+          )
+        ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
+      }
+    }
+
+    "businessReferencesCbUbLlp is None" must {
+      "exclude the field from Json" in {
+        (Json.toJson(
+          AmendVariationRequest(
+            acknowledgementReference = ackref.ackRef,
+            DesConstants.testChangeIndicators,
+            "Amendment",
+            DesConstants.testBusinessDetails,
+            DesConstants.testViewBusinessContactDetails,
+            DesConstants.testBusinessReferencesAll,
+            Some(DesConstants.testbusinessReferencesAllButSp),
+            None,
+            release7BusinessActivities,
+            DesConstants.testTradingPremisesAPI6,
+            DesConstants.testBankDetails,
+            Some(DesConstants.testMsb),
+            Some(DesConstants.testHvd),
+            Some(DesConstants.testAsp),
+            Some(DesConstants.testAspOrTcsp),
+            Some(DesConstants.testTcspAll),
+            Some(DesConstants.testTcspTrustCompFormationAgt),
+            Some(DesConstants.testEabAll),
+            Some(DesConstants.testEabResdEstAgncy),
+            Some(DesConstants.testResponsiblePersonsForRpAPI6),
+            DesConstants.extraFields
+          )
+        ) \ "businessReferencesCbUbLlp") must be(a[JsUndefined])
+      }
+    }
+  }
+
+
+  "AmendVariationRequest" should {
+    "de serialise the subscription json" when {
+      "given valid json" in {
+        val json = Json.toJson(convertedDesModelRelease7)
+        val amendVariationRequestModel = convertedDesModelRelease7
+
+        json.as[AmendVariationRequest] must be(amendVariationRequestModel)
+
+        AmendVariationRequest.jsonReads.reads(
+          AmendVariationRequest.jsonWrites.writes(convertedDesModelRelease7)) must
+          be(JsSuccess(convertedDesModelRelease7))
+
+        Json.toJson(convertedDesModelRelease7) must be(json)
+      }
+    }
+
+
+    "convert frontend model to des model for amendment" in {
+      implicit val mt = Amendment
+      AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Amendment"))
+    }
+
+    "convert frontend model to des model for variation" in {
+      implicit val mt = Variation
+      AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Variation"))
+    }
+
+    "update extra field with data from view model[API 5]" in {
+
+      val aboutYou = Aboutyou(Some(IndividualDetails("FirstName", Some("MiddleName"), "LastName")),
+        true, Some("Beneficial Shareholder"), None, Some("Other"), None)
+
+      val extraField = ExtraFields(Declaration(true), aboutYou, None)
+      val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
+
+      val updatedModel = ExtraFields(Declaration(true), aboutYou, newEtmpField)
+
+      convertedDesModelRelease7.extraFields must be(extraField)
+
+      convertedDesModelRelease7.extraFields.setEtmpFields(newEtmpField) must be(updatedModel)
+
+    }
+
+    "update ChangeIndicator  and extra Fields with data from view model[API 5]" in {
+
+      val des = convertedDesModel.setChangeIndicator(newChangeIndicator)
+      val updatedExtraFields = des.extraFields.setEtmpFields(newEtmpField)
+      des.setExtraFields(updatedExtraFields) must be(updateAmendVariationRequest)
+
+    }
+  }
+
+  val feSubscriptionReq = {
+    import models.fe.SubscriptionRequest
+    SubscriptionRequest(
+      BusinessMatchingSection.modelForView,
+      EabSection.modelForView,
+      TradingPremisesSection.modelForView,
+      AboutTheBusinessSection.modelForView,
+      BankDetailsSection.modelForView,
+      AboutYouSection.modelforView,
+      BusinessActivitiesSection.modelForView,
+      ResponsiblePeopleSection.modelForView,
+      ASPTCSPSection.TcspModelForView,
+      ASPTCSPSection.AspModelForView,
+      MsbSection.modelForView,
+      HvdSection.modelForView,
+      SupervisionSection.modelForView
+    )
+  }
+
+  def convertedDesModel = AmendVariationRequest(
+    acknowledgementReference = ackref.ackRef,
+    DesConstants.testChangeIndicators,
+    "Amendment",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    Some(PreviouslyRegisteredMLRView(false,
+      None,
+      false,
+      None)),
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivities,
+    DesConstants.testTradingPremisesAPI6,
+    DesConstants.testBankDetails,
+    Some(if (AmlsConfig.release7) DesConstants.testMsb else DesConstants.testMsbR6),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    DesConstants.extraFields
+  )
+
+
+  val convertedDesModelRelease7 = AmendVariationRequest(
+    acknowledgementReference = ackref.ackRef,
+    DesConstants.testChangeIndicators,
+    "Amendment",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    Some(PreviouslyRegisteredMLRView(false,
+      None,
+      false,
+      None)),
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    release7BusinessActivities,
+    DesConstants.testTradingPremisesAPI6,
+    DesConstants.testBankDetails,
+    Some(release7Msb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    DesConstants.extraFields
+  )
+  val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
+  val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
+  val newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
+
+  def updateAmendVariationRequest = AmendVariationRequest(
+    acknowledgementReference = ackref.ackRef,
+    newChangeIndicator,
+    "Amendment",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    Some(PreviouslyRegisteredMLRView(false,
+      None,
+      false,
+      None)),
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivities,
+    DesConstants.testTradingPremisesAPI6,
+    DesConstants.testBankDetails,
+    Some(if (AmlsConfig.release7) DesConstants.testMsb else DesConstants.testMsbR6),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    newExtraFields
+  )
+
+}
+
+

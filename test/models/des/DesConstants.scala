@@ -960,6 +960,43 @@ object DesConstants {
     None
   )
 
+  val testMsbR6 = MoneyServiceBusiness(
+    Some(MsbAllDetails(
+      Some("999999"),
+      true,
+      Some(CountriesList(List("AD", "GB"))),
+      true)
+    ),
+    Some(MsbMtDetails(
+      true,
+      Some("123456"),
+      IpspServicesDetails(
+        true,
+        Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1")))
+      ),
+      true,
+      Some("11111111111"),
+      Some(CountriesList(List("GB", "AD"))),
+      Some(CountriesList(List("AD", "GB")))
+    )),
+    Some(MsbCeDetails(
+      CurrencySources(
+        Some(MSBBankDetails(
+          true,
+          Some(List("BankNames1"))
+        )),
+        Some(CurrencyWholesalerDetails(
+          true,
+          Some(List("CurrencyWholesalerNames"))
+        )),
+        true,
+        "11234567890",
+        Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
+      )
+    )),
+    None
+  )
+
   val testAmendMsb = MoneyServiceBusiness(
     Some(MsbAllDetails(
       Some("999999"),

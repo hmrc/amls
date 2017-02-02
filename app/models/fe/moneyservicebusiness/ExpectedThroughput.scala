@@ -16,6 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
+import config.AmlsConfig
 import play.api.data.validation.ValidationError
 import models.des.msb.{MsbAllDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
 import play.api.libs.json._
@@ -65,14 +66,26 @@ object ExpectedThroughput {
   }
 
   def convThroughput(msbAll: String): ExpectedThroughput = {
-    msbAll match {
-      case "99999" => First
-      case "499999" => Second
-      case "999999" => Third
-      case "20000000" => Fourth
-      case "100000000" => Fifth
-      case "1000000000" => Sixth
-      case "10000000000" => Seventh
+    if (!AmlsConfig.release7) {
+      msbAll match {
+        case "99999" => First
+        case "499999" => Second
+        case "999999" => Third
+        case "20000000" => Fourth
+        case "100000000" => Fifth
+        case "1000000000" => Sixth
+        case "10000000000" => Seventh
+      }
+    }else {
+      msbAll match {
+        case "£0-£15k" => First
+        case "£15k-£50k" => Second
+        case "£50k-£100k" => Third
+        case "£100k-£250k" => Fourth
+        case "£250k-£1m" => Fifth
+        case "£1m-£10m" => Sixth
+        case "£10m+" => Seventh
+      }
     }
   }
 }

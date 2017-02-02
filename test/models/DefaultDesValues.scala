@@ -194,6 +194,17 @@ object DefaultDesValues {
     Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
     Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
   )
+
+  val msbSectionR6 = Some(
+    MoneyServiceBusiness(
+      Some(MsbAllDetails(Some("499999"),true,Some(CountriesList(List("GB"))),true)),
+      Some(MsbMtDetails(true,Some("123456"),
+        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
+        true,
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
+      Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
+        Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))))), None)
+  )
   // scalastyle:off magic.number
   val hvdSection = Some(DesHvd(true,Some("1978-02-15"),None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
 
