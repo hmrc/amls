@@ -53,7 +53,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
 
     }
 
-    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Trasmitting Money" in {
+    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Transmitting Money" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
@@ -61,7 +61,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         true,Some(CountriesList(List("AD", "GB"))), true)),
         Some(MsbMtDetails(true,Some("123456"),IpspServicesDetails(true,Some(List(IpspDetails("IPSPName1","IPSPMLRRegNo1")))),
           true,Some("11111111111"),Some(CountriesList(List("GB", "AD"))),
-          Some(CountriesList(List("AD", "GB"))))),
+          Some(CountriesList(List("AD", "GB"))), None)),
         None,None))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching) must be(convertedModel)
@@ -76,7 +76,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         true,Some(CountriesList(List("AD", "GB"))), true)),
         Some(MsbMtDetails(true,Some("123456"),IpspServicesDetails(true,Some(List(IpspDetails("IPSPName1","IPSPMLRRegNo1")))),
           true,Some("11111111111"),Some(CountriesList(List("GB", "AD"))),
-          Some(CountriesList(List("AD", "GB"))))),
+          Some(CountriesList(List("AD", "GB"))), None)),
         Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("BankNames1")))),
           Some(CurrencyWholesalerDetails(true,Some(List("CurrencyWholesalerNames")))),true,"11234567890",
           Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = None)),None))
@@ -117,7 +117,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
 
     }
 
-    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Trasmitting Money" in {
+    "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Transmitting Money" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
@@ -125,7 +125,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         true,Some(CountriesList(List("AD", "GB"))), true)),
         Some(MsbMtDetails(true,Some("123456"),IpspServicesDetails(true,Some(List(IpspDetails("IPSPName1","IPSPMLRRegNo1")))),
           true,Some("11111111111"),Some(CountriesList(List("GB", "AD"))),
-          Some(CountriesList(List("AD", "GB"))))),
+          Some(CountriesList(List("AD", "GB"))), Some(false))),
         None,None))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching) must be(convertedModel)
@@ -140,7 +140,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         true,Some(CountriesList(List("AD", "GB"))), true)),
         Some(MsbMtDetails(true,Some("123456"),IpspServicesDetails(true,Some(List(IpspDetails("IPSPName1","IPSPMLRRegNo1")))),
           true,Some("11111111111"),Some(CountriesList(List("GB", "AD"))),
-          Some(CountriesList(List("AD", "GB"))))),
+          Some(CountriesList(List("AD", "GB"))), Some(false))),
         Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("BankNames1")))),
           Some(CurrencyWholesalerDetails(true,Some(List("CurrencyWholesalerNames")))),true,"11234567890",
           Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))), dealInPhysCurrencies = Some(true))),None))

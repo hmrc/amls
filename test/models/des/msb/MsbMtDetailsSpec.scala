@@ -19,9 +19,12 @@ package models.des.msb
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.{MoneyServiceBusiness => BMMoneyServiceBusiness_, _}
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.test.FakeApplication
 
-class MsbMtDetailsSpec extends PlaySpec {
+class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MsbMtDetails" should {
 
@@ -30,11 +33,11 @@ class MsbMtDetailsSpec extends PlaySpec {
     val BusinessActivitiesModel = BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
     val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
 
-    "convert to  frontend MSB model to correct Msb Des model when Send money to other country is false" in {
+    "convert to frontend MSB model to correct Msb Des model when Send money to other country is false" in {
       val msbMtDetails = MsbMtDetails(true,Some("123456"),
         IpspServicesDetails(false, None),
         true,
-        Some("12345678963"), None, None)
+        Some("12345678963"), None, None, Some(false))
       val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
       val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
 
@@ -64,11 +67,14 @@ class MsbMtDetailsSpec extends PlaySpec {
       MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
     }
 
-    "convert to  frontend MSB model to correct Msb Des model when Send money to other country is true" in {
-      val msbMtDetails = MsbMtDetails(true,Some("123456"),
+    "convert to frontend MSB model to correct Msb Des model when Send money to other country is true" in {
+      val msbMtDetails = MsbMtDetails(true,
+        Some("123456"),
         None,
         false,
-        None, Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))
+        None, Some(CountriesList(List("GB"))),
+        Some(CountriesList(List("LA","LV"))),
+        psrRefChangeFlag = Some(false))
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
       val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
@@ -99,10 +105,16 @@ class MsbMtDetailsSpec extends PlaySpec {
     }
 
 
-    "convert to  frontend MSB model to correct Msb Des model when fundTransfer is false" in {
-      val msbMtDetails = MsbMtDetails(true,Some("123456"),
-        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),false,
-        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA", "LV"))))
+    "convert to frontend MSB model to correct Msb Des model when fundTransfer is false" in {
+      val msbMtDetails = MsbMtDetails(true,
+        Some("123456"),
+        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),
+        false,
+        Some("12345678963"),
+        Some(CountriesList(List("GB"))),
+        Some(CountriesList(List("LA", "LV"))),
+        psrRefChangeFlag = Some(false)
+      )
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
 
@@ -135,10 +147,16 @@ class MsbMtDetailsSpec extends PlaySpec {
     }
 
 
-    "convert to  frontend MSB model to correct Msb Des model when psrNumber option is false" in {
-      val msbMtDetails = MsbMtDetails(false,None,
-        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),false,
-        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA", "LV"))))
+    "convert to frontend MSB model to correct Msb Des model when psrNumber option is false" in {
+      val msbMtDetails = MsbMtDetails(false,
+        None,
+        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),
+        false,
+        Some("12345678963"),
+        Some(CountriesList(List("GB"))),
+        Some(CountriesList(List("LA", "LV"))),
+        psrRefChangeFlag = Some(false)
+      )
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
 
@@ -170,10 +188,16 @@ class MsbMtDetailsSpec extends PlaySpec {
       MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
     }
 
-    "convert to  frontend MSB model to correct Msb Des model when psrNumberModel is None" in {
-      val msbMtDetails = MsbMtDetails(false,None,
-        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),false,
-        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA", "LV"))))
+    "convert to frontend MSB model to correct Msb Des model when psrNumberModel is None" in {
+      val msbMtDetails = MsbMtDetails(false,
+        None,
+        IpspServicesDetails(true,Some(List(IpspDetails("name","123456789123456")))),
+        false,
+        Some("12345678963"),
+        Some(CountriesList(List("GB"))),
+        Some(CountriesList(List("LA", "LV"))),
+        psrRefChangeFlag = Some(false)
+      )
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
       val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
@@ -206,3 +230,47 @@ class MsbMtDetailsSpec extends PlaySpec {
     }
   }
 }
+
+ class MsbMtDetailsPreRelease7Spec extends PlaySpec with OneAppPerSuite {
+   override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+
+   val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+   val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+   val BusinessActivitiesModel = BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
+   val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
+
+   "convert to frontend MSB model to correct Msb Des model" in {
+     val msbMtDetails = MsbMtDetails(true,Some("123456"),
+       IpspServicesDetails(false, None),
+       true,
+       Some("12345678963"), None, None, None)
+
+     val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
+     val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
+
+     val businessUseAnIPSP = BusinessUseAnIPSPNo
+     val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
+
+     val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "EUR"),
+       usesForeignCurrencies = Some(true),
+       Some(BankMoneySource("Bank names")),
+       Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+
+     val mostTransactions = MostTransactions(Seq("LA", "LV"))
+
+     val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+       Some(ExpectedThroughput.Second),
+       Some(businessUseAnIPSP),
+       Some(IdentifyLinkedTransactions(true)),
+       Some(SendMoneyToOtherCountry(false)),
+       Some(FundsTransfer(true)),
+       Some(BranchesOrAgents(true, Some(Seq("GB")))),
+       Some(TransactionsInNext12Months("12345678963")),
+       Some(CETransactionsInNext12Months("12345678963")),
+       Some(sendTheLargestAmountsOfMoney),
+       Some(mostTransactions),
+       Some(whichCurrencies)
+     )
+     MsbMtDetails.conv(msbModel, bm) must be(Some(msbMtDetails))
+   }
+ }

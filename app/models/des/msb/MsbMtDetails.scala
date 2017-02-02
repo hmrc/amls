@@ -26,7 +26,8 @@ case class MsbMtDetails (
                           informalFundsTransferSystem: Boolean,
                           noOfMoneyTrnsfrTransNxt12Mnths: Option[String],
                           countriesLrgstMoneyAmtSentTo: Option[CountriesList],
-                          countriesLrgstTranscsSentTo: Option[CountriesList]
+                          countriesLrgstTranscsSentTo: Option[CountriesList],
+                          psrRefChangeFlag: Option[Boolean] = None
                         )
 
 object MsbMtDetails {
@@ -50,7 +51,11 @@ object MsbMtDetails {
       msb.fundsTransfer.fold(false)(x=>x.transferWithoutFormalSystems),
       msb.transactionsInNext12Months.fold[Option[String]](None)(x => Some(x.txnAmount)),
       largetAmount,
-      largestTransaction
+      largestTransaction,
+      config.AmlsConfig.release7 match {
+        case true => Some(false)
+        case _ => None
+      }
     ))
   }
 
