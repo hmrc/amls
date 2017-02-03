@@ -24,7 +24,7 @@ case class TradingPremises(
                             yourTradingPremises: YourTradingPremises,
                             businessStructure: Option[BusinessStructure] = None,
                             agentName: Option[AgentName] = None,
-                            agentCompanyName: Option[AgentCompanyName] = None,
+                            agentCompanyDetails: Option[AgentCompanyDetails] = None,
                             agentPartnership: Option[AgentPartnership] = None,
                             whatDoesYourBusinessDoAtThisAddress: WhatDoesYourBusinessDo,
                             msbServices: Option[MsbServices] = None,
@@ -39,7 +39,8 @@ object TradingPremises {
 
   implicit def convAgentPremises(agentDetails: AgentDetails): TradingPremises = {
     val tmp =
-      TradingPremises(Some(RegisteringAgentPremises(true)),
+      TradingPremises(
+        Some(RegisteringAgentPremises(true)),
         agentDetails.agentPremises,
         agentDetails.agentLegalEntity,
         None,
@@ -53,8 +54,8 @@ object TradingPremises {
 
     tmp.businessStructure.map {
       case BusinessStructure.SoleProprietor => tmp.copy(agentName = agentDetails)
-      case BusinessStructure.IncorporatedBody => tmp.copy(agentCompanyName = agentDetails.agentLegalEntityName)
-      case BusinessStructure.LimitedLiabilityPartnership => tmp.copy(agentCompanyName = agentDetails.agentLegalEntityName)
+      case BusinessStructure.IncorporatedBody => tmp.copy(agentCompanyDetails = agentDetails)
+      case BusinessStructure.LimitedLiabilityPartnership => tmp.copy(agentCompanyDetails = agentDetails)
       case BusinessStructure.Partnership => tmp.copy(agentPartnership = agentDetails.agentLegalEntityName)
       case BusinessStructure.UnincorporatedBody => tmp
     }.getOrElse(tmp)

@@ -23,6 +23,7 @@ import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetails(
                          agentLegalEntity: String,
+                         companyRegNo: Option[String] = None,
                          dateOfBirth: Option[String],
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
@@ -48,6 +49,7 @@ object AgentDetails {
   implicit val jsonReads: Reads[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").read[String] and
+        (__ \ "companyRegNo").readNullable[String] and
         (__ \ "dateOfBirth").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
@@ -60,6 +62,7 @@ object AgentDetails {
   implicit val jsonWrites: Writes[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").write[String] and
+        (__ \ "companyRegNo").writeNullable[String] and
         (__ \ "dateOfBirth").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
@@ -72,6 +75,7 @@ object AgentDetails {
   implicit def convert(tradingPremises: FETradingPremises): AgentDetails =
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
+      companyRegNo = tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber),
       dateOfBirth = for {
         bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
         agentName <- tradingPremises.agentName
@@ -80,7 +84,7 @@ object AgentDetails {
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
         case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
-          tradingPremises.agentCompanyName.fold("")(x => x.agentCompanyName)
+          tradingPremises.agentCompanyDetails.fold("")(x => x.agentCompanyName)
         case BusinessStructure.Partnership => tradingPremises.agentPartnership.fold("")(x => x.agentPartnership)
         case BusinessStructure.UnincorporatedBody => ""
       })),

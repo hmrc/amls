@@ -16,20 +16,18 @@
 
 package models.fe.tradingpremises
 
-import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import models.des.tradingpremises.AgentDetails
+import play.api.libs.json._
 
-class AgentCompanyNameSpec extends PlaySpec {
+case class AgentCompanyDetails(agentCompanyName: String, companyRegistrationNumber: Option[String])
 
-  "AgentCompanyName" must {
+object AgentCompanyDetails {
 
-    "Success read and write json" in {
-      AgentCompanyName.formats.reads(AgentCompanyName.formats.writes(AgentCompanyName("somename"))) must
-        be(JsSuccess(AgentCompanyName("somename"), JsPath \ "agentCompanyName"))
-    }
+  implicit val formats = Json.format[AgentCompanyDetails]
 
-    "convert when agentLegalEntityName is empty" in {
-      AgentCompanyName.conv(None) must be(None)
+  implicit def conv(agentDetails: AgentDetails): Option[AgentCompanyDetails] = {
+    agentDetails.agentLegalEntityName map {
+      x => AgentCompanyDetails(x, agentDetails.companyRegNo)
     }
   }
 }
