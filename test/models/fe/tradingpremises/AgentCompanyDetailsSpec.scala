@@ -31,7 +31,7 @@ class AgentCompanyDetailsSpec extends PlaySpec {
     }
 
     "convert when agentLegalEntityName is empty" in {
-      AgentCompanyDetails.conv(AgentDetails("Sole Proprietor", None, None, DesConstants.AgentPremisesModel2)) must be(None)
+      AgentCompanyDetails.conv(AgentDetails("Sole Proprietor", None, None, None, DesConstants.AgentPremisesModel2)) must be(None)
     }
   }
 }

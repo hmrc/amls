@@ -16,20 +16,24 @@
 
 package models.fe.tradingpremises
 
+import models.des.tradingpremises.{AgentDetails, AgentPremises}
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess}
 
-class AgentNameSpec extends PlaySpec {
+class AgentNameSpec extends PlaySpec with MockitoSugar{
 
   "AgentName" must {
     "Success read and write json" in {
-      val expected = AgentName("somename", Some("2010-01-24"))
+      val expected = AgentName("somename", Some("2010-01-24"), Some("1970-01-01"))
 
       AgentName.formats.reads(AgentName.formats.writes(expected)) must be(JsSuccess(expected))
     }
 
+    val agentPremises = mock[AgentPremises]
+
     "convert when agentLegalEntityName is empty" in {
-      AgentName.conv(None) must be(None)
+      AgentName.conv(AgentDetails("thing",None,None,None,agentPremises)) must be(None)
     }
   }
 }
