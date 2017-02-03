@@ -29,14 +29,14 @@ object MoneyServiceBusiness {
 
   implicit val format = Json.format[MoneyServiceBusiness]
 
-  implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness], bm: models.fe.businessmatching.BusinessMatching)
+  implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness], bm: models.fe.businessmatching.BusinessMatching, amendVariation: Boolean)
   : Option[MoneyServiceBusiness] = {
 
     msbOpt match {
       case Some(msb) => {
         val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
         val msbMtDetails: Option[MsbMtDetails] = services.contains(TransmittingMoney) match {
-          case true =>(msb, bm)
+          case true => (msb, bm, amendVariation)
           case false => None
         }
         val msbCeDetails: Option[MsbCeDetails] = services.contains(CurrencyExchange) match {

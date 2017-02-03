@@ -940,7 +940,8 @@ object DesConstants {
       true,
       Some("11111111111"),
       Some(CountriesList(List("GB", "AD"))),
-      Some(CountriesList(List("AD", "GB")))
+      Some(CountriesList(List("AD", "GB"))),
+      Some(false)
     )),
     Some(MsbCeDetails(
       CurrencySources(
@@ -977,7 +978,8 @@ object DesConstants {
       true,
       Some("11111111111"),
       Some(CountriesList(List("GB", "AD"))),
-      Some(CountriesList(List("AD", "GB")))
+      Some(CountriesList(List("AD", "GB"))),
+      None
     )),
     Some(MsbCeDetails(
       CurrencySources(
