@@ -18,8 +18,7 @@ package models.fe.declaration.release7
 
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
 
@@ -96,7 +95,7 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
             "ExternalAccountant",
             "InternalAccountant"
           ),
-          "otherDetails" -> "some other text"
+          "otherDetails" -> "Some other text"
         )
 
         val model = RoleWithinBusiness(Set(
@@ -106,7 +105,7 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
           NominatedOfficer,
           Director,
           BeneficialShareholder,
-          Other("some other text"),
+          Other("Some other text"),
           ExternalAccountant,
           InternalAccountant
         ))

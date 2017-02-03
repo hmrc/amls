@@ -39,8 +39,8 @@ object RolesWithinBusiness {
 
     things.foldLeft(
       RolesWithinBusiness(false,false,false,false,false,false,false,false,None)){
-      (result, productType) =>
-        productType match {
+      (result, roleType) =>
+        roleType match {
           case BeneficialShareholder => result.copy(beneficialShareholder = true)
           case Director => result.copy(director = true)
           case Partner => result.copy(partner = true)
@@ -48,7 +48,7 @@ object RolesWithinBusiness {
           case SoleProprietor => result.copy(soleProprietor = true)
           case NominatedOfficer => result.copy(nominatedOfficer = true)
           case DesignatedMember => result.copy(designatedMember = true)
-          case Other(dtls) => result.copy(other = true, specifyOtherRoleInBusiness = Some(dtls))
+          case Other(details) => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
         }
     }
   }

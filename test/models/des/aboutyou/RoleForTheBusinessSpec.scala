@@ -16,37 +16,41 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.release7.{BeneficialShareholder, Other, RoleWithinBusiness}
+import models.fe.declaration.release7.{ExternalAccountant, Other, RoleWithinBusiness}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-
-class RolesWithinTheBusinessSpec extends PlaySpec with MockitoSugar {
+/**
+  * Created by NicoleAvison on 03/02/2017.
+  */
+class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
 
   "Des release 7 model" must {
     "convert from frontend model when other not present" in {
 
-      val frontendModel = RoleWithinBusiness(Set(BeneficialShareholder))
+      val frontendModel = RoleWithinBusiness(Set(ExternalAccountant))
 
-      val desModel = RolesWithinBusiness(
-        true, false, false, false, false, false, false, false, None
+      val desModel = RoleForTheBusiness(
+        true, false, None
       )
 
-      RolesWithinBusiness.convertWithinBusiness(frontendModel) must be(desModel)
+      RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
 
     }
 
     "convert from frontend model when other is present" in {
 
-      val frontendModel = RoleWithinBusiness(Set(BeneficialShareholder, Other("Some other text")))
+      val frontendModel = RoleWithinBusiness(Set(ExternalAccountant, Other("Some other text")))
 
-      val desModel = RolesWithinBusiness(
-        true, false, false, false, false, false, false, true, Some("Some other text")
+      val desModel = RoleForTheBusiness(
+        true, true, Some("Some other text")
       )
 
-      RolesWithinBusiness.convertWithinBusiness(frontendModel) must be(desModel)
+      RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
 
     }
   }
-
 }
+
+
+
