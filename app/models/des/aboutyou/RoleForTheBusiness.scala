@@ -18,22 +18,6 @@ package models.des.aboutyou
 
 import play.api.libs.json.Json
 
-case class RolesWithinBusiness(beneficialShareholder: Boolean,
-                               director: Boolean,
-                               partner: Boolean,
-                               internalAccountant: Boolean,
-                               soleProprietor: Boolean,
-                               nominatedOfficer: Boolean,
-                               designatedMember: Boolean,
-                               other: Boolean,
-                               specifyOtherRoleInBusiness: Option[String]
-                              )
-
-object RolesWithinBusiness {
-  implicit val format = Json.format[RolesWithinBusiness]
-}
-
-
 case class RoleForTheBusiness(externalAccountant: Boolean,
                               other: Boolean,
                               otherSpecify: Option[String])

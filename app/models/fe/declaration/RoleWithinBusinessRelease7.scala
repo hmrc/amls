@@ -16,7 +16,7 @@
 
 package models.fe.declaration.release7
 
-import models.fe.hvd.{Other, Products}
+import models.des.aboutyou.RolesWithinBusiness
 import play.api.libs.json.{Reads, Json}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
@@ -63,7 +63,8 @@ object RoleWithinBusiness {
         case "NominatedOfficer" => Reads(_ => JsSuccess(NominatedOfficer)) map identity[RoleType]
         case "DesignatedMember" => Reads(_ => JsSuccess(DesignatedMember)) map identity[RoleType]
         case "Other" =>
-          (JsPath \ "otherDetails").read[String].map(Other.apply _) map identity[RoleType]
+          val test = (JsPath \ "otherDetails").read[String].map(Other.apply _)
+          test map identity[RoleType]
         case _ =>
           Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid")))
       }.foldLeft[Reads[Set[RoleType]]](
@@ -91,4 +92,6 @@ object RoleWithinBusiness {
           m
       }
   }
+
+
 }

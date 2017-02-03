@@ -81,6 +81,7 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
 
         RoleWithinBusiness.jsonWrite.writes(model) must be(json)
       }
+
       "given a set of all values" in {
 
         val json = Json.obj(
@@ -114,6 +115,5 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
       }
     }
   }
-
 
 }
