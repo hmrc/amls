@@ -117,7 +117,7 @@ object DefaultDesValues {
     Tditpsp(false),
     "2008-01-01")
 
-  private val agentDetails = AgentDetails("Sole Proprietor", Some("entity name"), agentPremises)
+  private val agentDetails = AgentDetails("Sole Proprietor", None, Some("entity name"), agentPremises)
 
   private val agentBusinessPremises = AgentBusinessPremises(true, Some(Seq(agentDetails)))
 

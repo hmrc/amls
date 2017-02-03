@@ -31,7 +31,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
   val businessStructure = BusinessStructure.SoleProprietor
 
-  val agentName = AgentName("test")
+  val agentName = AgentName("test",None,None)
 
   val agentCompanyName = AgentCompanyName("test")
 
@@ -86,7 +86,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
       val agentTradingPremises1 = TradingPremises(Some(RegisteringAgentPremises(true)),
         YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"), new LocalDate(1967,8,13),true),
-        Some(BusinessStructure.SoleProprietor),Some(AgentName("AgentLegalEntityName")),None,
+        Some(BusinessStructure.SoleProprietor),Some(AgentName("AgentLegalEntityName", None, Some("1970-01-01"))),None,
        None,
         WhatDoesYourBusinessDo(Set(HighValueDealing, AccountancyServices,
           EstateAgentBusinessService, BillPaymentServices,
@@ -97,7 +97,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       val agentTradingPremises2 = TradingPremises(Some(RegisteringAgentPremises(true)),
         YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"),
         new LocalDate(1967,8,13),true),
-        Some(BusinessStructure.SoleProprietor),Some(AgentName("aaaaaaaaaaa")),None,
+        Some(BusinessStructure.SoleProprietor),Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),None,
         None,
         WhatDoesYourBusinessDo(Set(HighValueDealing, AccountancyServices,
           EstateAgentBusinessService, BillPaymentServices, TelephonePaymentService,
@@ -107,7 +107,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       val agentTradingPremises3 = TradingPremises(Some(RegisteringAgentPremises(true)),
         YourTradingPremises("TradingName",
           Address("AgentAddressLine1","AgentAddressLine2",Some("AgentAddressLine3"),Some("AgentAddressLine4"),"XX1 1XX"), new LocalDate(2001,1,1),true),
-        Some(BusinessStructure.SoleProprietor),Some(AgentName("AgentLegalEntityName2")),None,
+        Some(BusinessStructure.SoleProprietor),Some(AgentName("AgentLegalEntityName2", None, Some("1970-01-01"))),None,
         None,
         WhatDoesYourBusinessDo(Set(HighValueDealing, AccountancyServices,
           EstateAgentBusinessService, BillPaymentServices, TelephonePaymentService,
@@ -164,6 +164,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
   "Conversion of agent's Premises from the Des model" when {
     val desModel = AgentDetails (
       "agentLegalEntity",
+      None,
       Some("agentLegalEntityName"),
       AgentPremises(
         "tradingName",
@@ -193,8 +194,8 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
 
     "Business structure is Sole Proprietor" must {
       "populate the agent Name field from the Legal entity name in DES" in  {
-        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor"))
-        feModel.agentName must be (Some(AgentName("agentLegalEntityName")))
+        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor",dateOfBirth = Some("1970-01-01")))
+        feModel.agentName must be (Some(AgentName("agentLegalEntityName", None, Some("1970-01-01"))))
         feModel.agentCompanyName must be (None)
         feModel.agentPartnership must be (None)
       }

@@ -51,6 +51,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val agentDetailsData = AgentDetails(
         "Sole Proprietor",
         Some("entity name"),
+        None,
         agentPremisesData,
         Some(StatusConstants.Unchanged),
         Some(StringOrInt(111111)),

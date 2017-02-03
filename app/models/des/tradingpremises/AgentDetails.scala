@@ -23,6 +23,7 @@ import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetails(
                          agentLegalEntity: String,
+                         dateOfBirth: Option[String],
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
@@ -35,9 +36,9 @@ case class AgentDetails(
   override def equals(other: Any): Boolean = other match {
     case (that: AgentDetails) =>
       this.agentLegalEntity.equals(that.agentLegalEntity) &&
-      this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
-      this.agentPremises.equals(that.agentPremises) &&
-      this.status.equals(this.status)
+        this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
+        this.agentPremises.equals(that.agentPremises) &&
+        this.status.equals(this.status)
     case _ => false
   }
 }
@@ -47,6 +48,7 @@ object AgentDetails {
   implicit val jsonReads: Reads[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").read[String] and
+        (__ \ "dateOfBirth").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
@@ -58,6 +60,7 @@ object AgentDetails {
   implicit val jsonWrites: Writes[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").write[String] and
+        (__ \ "dateOfBirth").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
@@ -69,6 +72,11 @@ object AgentDetails {
   implicit def convert(tradingPremises: FETradingPremises): AgentDetails =
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
+      dateOfBirth = for {
+        bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
+        agentName <- tradingPremises.agentName
+        dob <- agentName.agentDateOfBirth
+      } yield dob,
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
         case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
