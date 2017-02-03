@@ -103,3 +103,128 @@ class AddPersonSpec extends PlaySpec with MockitoSugar {
     }
   }
 }
+
+
+class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
+
+  "JSON" must {
+
+    "Read and write the json successfully" when {
+      "given no Other and no ExternalAccountant role" in {
+
+        val json = Json.obj(
+          "firstName" -> "name",
+          "middleName" -> "some",
+          "lastName" -> "surname",
+          "roleWithinBusiness" -> Seq(
+            "Partner",
+            "SoleProprietor",
+            "DesignatedMember",
+            "NominatedOfficer",
+            "Director",
+            "BeneficialShareholder",
+            "InternalAccountant"
+          )
+        )
+
+        val model = AddPersonRelease7(
+          "name", Some("some"), "surname",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember
+          ))
+        )
+
+        AddPersonRelease7.jsonReads.reads(json) must be(JsSuccess(model))
+        AddPersonRelease7.jsonWrites.writes(model) must be(json)
+
+      }
+
+      "given Other and ExternalAccountant role for the reads" in {
+
+        val json = Json.obj(
+          "firstName" -> "name",
+          "middleName" -> "some",
+          "lastName" -> "surname",
+          "roleWithinBusiness" -> Json.arr(
+            "Partner",
+            "Other",
+            "SoleProprietor",
+            "DesignatedMember",
+            "NominatedOfficer",
+            "Director",
+            "BeneficialShareholder",
+            "ExternalAccountant",
+            "InternalAccountant"
+        ),
+          "otherDetails" -> "Other details here"
+        )
+
+
+        val model = AddPersonRelease7(
+          "name", Some("some"), "surname",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.ExternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember,
+            models.fe.declaration.release7.Other("Other details here")
+          ))
+        )
+
+        AddPersonRelease7.jsonReads.reads(json) must be(JsSuccess(model))
+
+      }
+
+      "given Other and ExternalAccountant role for the writes" in {
+
+        val json = Json.obj(
+          "firstName" -> "name",
+          "middleName" -> "some",
+          "lastName" -> "surname",
+          "roleWithinBusiness" -> Json.arr(
+            "Other",
+            "Partner",
+            "SoleProprietor",
+            "DesignatedMember",
+            "NominatedOfficer",
+            "Director",
+            "BeneficialShareholder",
+            "ExternalAccountant",
+            "InternalAccountant"
+          ),
+          "otherDetails" -> "Other details here"
+        )
+
+
+        val model = AddPersonRelease7(
+          "name", Some("some"), "surname",
+          models.fe.declaration.release7.RoleWithinBusiness(Set(
+            models.fe.declaration.release7.BeneficialShareholder,
+            models.fe.declaration.release7.Director,
+            models.fe.declaration.release7.Partner,
+            models.fe.declaration.release7.InternalAccountant,
+            models.fe.declaration.release7.ExternalAccountant,
+            models.fe.declaration.release7.SoleProprietor,
+            models.fe.declaration.release7.NominatedOfficer,
+            models.fe.declaration.release7.DesignatedMember,
+            models.fe.declaration.release7.Other("Other details here")
+          ))
+        )
+
+        AddPersonRelease7.jsonWrites.writes(model) must be(json)
+
+      }
+    }
+
+  }
+}

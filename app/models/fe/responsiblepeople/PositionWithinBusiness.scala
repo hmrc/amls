@@ -20,6 +20,7 @@ import models.des.responsiblepeople.{PositionInBusiness, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
+import utils.CommonMethods
 
 case class Positions(positions: Set[PositionWithinBusiness], startDate: Option[LocalDate])
 
@@ -31,6 +32,7 @@ case object InternalAccountant extends PositionWithinBusiness
 case object NominatedOfficer extends PositionWithinBusiness
 case object Partner extends PositionWithinBusiness
 case object SoleProprietor extends PositionWithinBusiness
+case object DesignatedMember extends PositionWithinBusiness
 
 object PositionWithinBusiness {
 
@@ -42,6 +44,7 @@ object PositionWithinBusiness {
       case JsString("04") => JsSuccess(NominatedOfficer)
       case JsString("05") => JsSuccess(Partner)
       case JsString("06") => JsSuccess(SoleProprietor)
+      case JsString("07") => JsSuccess(DesignatedMember)
       case _ => JsError((JsPath \ "positions") -> ValidationError("error.invalid"))
     }
 
@@ -52,6 +55,7 @@ object PositionWithinBusiness {
     case NominatedOfficer => JsString("04")
     case Partner => JsString("05")
     case SoleProprietor => JsString("06")
+    case DesignatedMember => JsString("07")
   }
 }
 
@@ -68,58 +72,18 @@ object Positions {
     }
   }
 
-  def getBeneficialOwner(beneficialOwner: Boolean): Option[PositionWithinBusiness] = {
-    beneficialOwner match {
-      case true => Some(BeneficialOwner)
-      case false => None
-    }
-  }
-
-  def getNominatedOfficer(nominatedOfficer: Boolean): Option[PositionWithinBusiness] = {
-    nominatedOfficer match {
-      case true => Some(NominatedOfficer)
-      case false => None
-    }
-  }
-
-  def getDirector(director: Boolean): Option[PositionWithinBusiness] = {
-    director match {
-      case true => Some(Director)
-      case false => None
-    }
-  }
-
-  def getInternalAccountant(internalAccountant: Boolean): Option[PositionWithinBusiness] = {
-    internalAccountant match {
-      case true => Some(InternalAccountant)
-      case false => None
-    }
-  }
-
-  def getPartner(partner: Boolean): Option[PositionWithinBusiness] = {
-    partner match {
-      case true => Some(Partner)
-      case false => None
-    }
-  }
-
-  def getSoleProprietor(soleProprietor: Boolean): Option[PositionWithinBusiness] = {
-    soleProprietor match {
-      case true => Some(SoleProprietor)
-      case false => None
-    }
-  }
-
   implicit def convPositions(position: PositionInBusiness): Set[PositionWithinBusiness] = {
-    val `empty` = Set.empty[PositionWithinBusiness]
 
-    val positions = Set(getNominatedOfficer(position.soleProprietor.fold(false)(_.nominatedOfficer)),
-      getSoleProprietor(position.soleProprietor.fold(false)(_.soleProprietor)),
-      getNominatedOfficer(position.partnership.fold(false)(_.nominatedOfficer)),
-      getPartner(position.partnership.fold(false)(_.partner)),
-      getBeneficialOwner(position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.beneficialOwner)),
-      getDirector(position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.director)),
-      getNominatedOfficer(position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.nominatedOfficer))
+    val positions = Set(
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.soleProprietor.fold(false)(_.nominatedOfficer), NominatedOfficer),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.soleProprietor.fold(false)(_.soleProprietor), SoleProprietor),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.partnership.fold(false)(_.nominatedOfficer), NominatedOfficer),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.partnership.fold(false)(_.partner), Partner),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.beneficialOwner), BeneficialOwner),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.director), Director),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.designatedMember.getOrElse(false)),
+        DesignatedMember),
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.nominatedOfficer), NominatedOfficer)
     ).flatten
 
     positions
