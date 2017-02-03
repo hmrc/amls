@@ -16,7 +16,7 @@
 
 package models.fe.declaration
 
-import models.des.aboutyou.Aboutyou
+import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 
 case class AddPerson(firstName: String,
                      middleName: Option[String],
@@ -27,6 +27,7 @@ case class AddPerson(firstName: String,
 object AddPerson {
 
   import play.api.libs.json._
+
   implicit val jsonReads: Reads[AddPerson] = {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
@@ -55,21 +56,22 @@ object AddPerson {
 
   implicit def conv(aboutYou: Aboutyou): AddPerson = {
     aboutYou.individualDetails match {
-      case Some(dtls) => AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, aboutYou)
-      case None => AddPerson("", None, "", aboutYou)
+      case Some(dtls) => AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, RoleWithinBusiness.conv(aboutYou))
+      case None => AddPerson("", None, "", RoleWithinBusiness.conv(aboutYou))
     }
   }
 }
 
 case class AddPersonRelease7(firstName: String,
-                     middleName: Option[String],
-                     lastName: String,
-                     roleWithinBusiness: models.fe.declaration.release7.RoleWithinBusiness
-                    )
+                             middleName: Option[String],
+                             lastName: String,
+                             roleWithinBusiness: models.fe.declaration.release7.RoleWithinBusiness
+                            )
 
 object AddPersonRelease7 {
 
   import play.api.libs.json._
+
   implicit val jsonReads: Reads[AddPersonRelease7] = {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
@@ -94,5 +96,27 @@ object AddPersonRelease7 {
         (__ \ "lastName").write[String] and
         __.write[models.fe.declaration.release7.RoleWithinBusiness]
       ) (unlift(AddPersonRelease7.unapply))
+  }
+
+  def convert(aboutYou: AboutYouRelease7): AddPersonRelease7 = {
+
+//    aboutYou.individualDetails match {
+//      case Some(dtls) => {
+//        AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, RoleWithinBusiness.conv(aboutYou))
+//      }
+//      case None => AddPerson("", None, "", RoleWithinBusiness.conv(aboutYou))
+//    }
+
+    AddPersonRelease7("fName", None, "lName",
+      models.fe.declaration.release7.RoleWithinBusiness(Set(
+        models.fe.declaration.release7.BeneficialShareholder,
+        models.fe.declaration.release7.Director,
+        models.fe.declaration.release7.Partner,
+        models.fe.declaration.release7.InternalAccountant,
+        models.fe.declaration.release7.SoleProprietor,
+        models.fe.declaration.release7.NominatedOfficer,
+        models.fe.declaration.release7.DesignatedMember
+      ))
+    )
   }
 }
