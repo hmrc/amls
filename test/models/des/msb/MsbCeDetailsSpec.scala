@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import models.fe.moneyservicebusiness._
+import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FeMoneyServiceBusiness, _}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
@@ -77,6 +77,28 @@ class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
       )
 
       MsbCeDetails.conv(msbModel) must be(msbCeDetails)
+    }
+
+    "infer the value of dealInPhysCurrencies" when {
+
+      "no value is supplied by the front end and at least one currency source is specified" in {
+        val model = FeMoneyServiceBusiness(whichCurrencies =
+          Some(WhichCurrencies(Seq("GBP"), None, Some(BankMoneySource("Some bank name")), None, customerMoneySource = false)))
+
+        MsbCeDetails.conv(model) match {
+          case Some(x) => x.dealInPhysCurrencies must be(Some(true))
+        }
+      }
+
+      "no value is supplied by the front end and no currency sources are specified" in {
+        val model = FeMoneyServiceBusiness(whichCurrencies =
+          Some(WhichCurrencies(Seq("GBP"), None, None, None, customerMoneySource = false)))
+
+        MsbCeDetails.conv(model) match {
+          case Some(x) => x.dealInPhysCurrencies must be(Some(false))
+        }
+      }
+
     }
 
     "deserialise the DES response correctly" when {
