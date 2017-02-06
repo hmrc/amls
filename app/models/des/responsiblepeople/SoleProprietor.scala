@@ -19,7 +19,8 @@ package models.des.responsiblepeople
 import play.api.libs.json.Json
 
 case class SoleProprietor (soleProprietor: Boolean =  false,
-                           nominatedOfficer: Boolean = false)
+                           nominatedOfficer: Boolean = false,
+                           other: Option[Boolean] = None)
 
 object SoleProprietor {
   implicit val format = Json.format[SoleProprietor]
