@@ -98,25 +98,23 @@ object AddPersonRelease7 {
       ) (unlift(AddPersonRelease7.unapply))
   }
 
-//  def convert(aboutYou: AboutYouRelease7): AddPersonRelease7 = {
-//
-//    aboutYou.individualDetails match {
-//      case Some(dtls) => {
-//        AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, models.fe.declaration.release7.RoleWithinBusiness.convert(aboutYou))
-//      }
-//      case None => AddPerson("", None, "", models.fe.declaration.release7.RoleWithinBusiness.convert(aboutYou))
-//    }
-////
-////    AddPersonRelease7("fName", None, "lName",
-////      models.fe.declaration.release7.RoleWithinBusiness(Set(
-////        models.fe.declaration.release7.BeneficialShareholder,
-////        models.fe.declaration.release7.Director,
-////        models.fe.declaration.release7.Partner,
-////        models.fe.declaration.release7.InternalAccountant,
-////        models.fe.declaration.release7.SoleProprietor,
-////        models.fe.declaration.release7.NominatedOfficer,
-////        models.fe.declaration.release7.DesignatedMember
-////      ))
-////    )
-//  }
+  def convert(aboutYou: AboutYouRelease7): AddPersonRelease7 = {
+
+    aboutYou.individualDetails match {
+      case Some(dtls) => {
+        AddPersonRelease7(
+          dtls.firstName,
+          dtls.middleName,
+          dtls.lastName,
+          models.fe.declaration.release7.RoleWithinBusiness.convert(aboutYou))
+      }
+      case None =>
+        AddPersonRelease7(
+          "",
+          None,
+          "",
+          models.fe.declaration.release7.RoleWithinBusiness.convert(aboutYou)
+        )
+    }
+  }
 }

@@ -19,7 +19,8 @@ package models.fe.declaration.release7
 import models.des.aboutyou.{RoleForTheBusiness, RolesWithinBusiness, IndividualDetails, AboutYouRelease7}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.data.validation.ValidationError
+import play.api.libs.json.{JsPath, JsError, JsSuccess, Json}
 
 class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
 
@@ -68,6 +69,18 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
 
         RoleWithinBusiness.jsonReads.reads(json) must be(JsSuccess(model))
       }
+    }
+
+    "respond with a validation error if invalid Json is provided" in {
+      val json = Json.obj(
+        "roleWithinBusiness" -> Set("invalid")
+      )
+
+      val model = RoleWithinBusiness(Set(BeneficialShareholder))
+
+      RoleWithinBusiness.jsonReads.reads(json) must be(
+        JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid"))
+      )
     }
 
     "Write the json successfully" when {
@@ -138,7 +151,8 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
         InternalAccountant
       ))
 
-      RoleWithinBusiness.convert(desModel) must be(Some(feModel))
+
+      RoleWithinBusiness.convert(desModel) must be(feModel)
 
     }
   }

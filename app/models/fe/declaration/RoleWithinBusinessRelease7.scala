@@ -16,11 +16,10 @@
 
 package models.fe.declaration.release7
 
-import models.des.aboutyou.{AboutYouRelease7, RolesWithinBusiness}
-import play.api.libs.json.{Reads, Json}
+import models.des.aboutyou.AboutYouRelease7
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
-import play.api.libs.json._
+import play.api.libs.json.{Json, Reads, _}
 import utils.CommonMethods
 
 case class RoleWithinBusiness(roles: Set[RoleType])
@@ -41,14 +40,22 @@ sealed trait RoleType {
 }
 
 case object BeneficialShareholder extends RoleType
+
 case object Director extends RoleType
+
 case object Partner extends RoleType
+
 case object InternalAccountant extends RoleType
+
 case object ExternalAccountant extends RoleType
+
 case object SoleProprietor extends RoleType
+
 case object NominatedOfficer extends RoleType
+
 case object DesignatedMember extends RoleType
-case class Other(details:String) extends RoleType
+
+case class Other(details: String) extends RoleType
 
 object RoleWithinBusiness {
 
@@ -95,33 +102,34 @@ object RoleWithinBusiness {
   }
 
   def convOther(other: Boolean, specifyOther: String): Option[RoleType] =
-    other match{
+    other match {
       case true => Some(Other(specifyOther))
       case false => None
     }
 
-  def convert(aboutYou:AboutYouRelease7): Option[RoleWithinBusiness] = {
+  def convert(aboutYou: AboutYouRelease7): RoleWithinBusiness = {
 
-    // needs to convert the within and for into the role.
+    val withinTheBusinessO = aboutYou.roleWithinBusiness match {
+      case Some(roles) => Some(Set(
+        CommonMethods.getSpecificType(roles.beneficialShareholder, BeneficialShareholder),
+        CommonMethods.getSpecificType(roles.director, Director),
+        CommonMethods.getSpecificType(roles.partner, Partner),
+        CommonMethods.getSpecificType(roles.internalAccountant, InternalAccountant),
+        CommonMethods.getSpecificType(roles.soleProprietor, SoleProprietor),
+        CommonMethods.getSpecificType(roles.nominatedOfficer, NominatedOfficer),
+        CommonMethods.getSpecificType(roles.designatedMember, DesignatedMember),
+        convOther(roles.other, roles.specifyOtherRoleInBusiness.getOrElse(""))).flatten)
+      case None => None
+    }
 
-    val roleTypesWithinBusiness: Option[Set[RoleType]] = {
-      val withinTheBusinessO = aboutYou.roleWithinBusiness match {
-        case Some(roles) => Some(Set(
-          CommonMethods.getSpecificType(roles.beneficialShareholder, BeneficialShareholder),
-          CommonMethods.getSpecificType(roles.director, Director),
-          CommonMethods.getSpecificType(roles.partner, Partner),
-          CommonMethods.getSpecificType(roles.internalAccountant, InternalAccountant),
-          CommonMethods.getSpecificType(roles.soleProprietor, SoleProprietor),
-          CommonMethods.getSpecificType(roles.nominatedOfficer, NominatedOfficer),
-          CommonMethods.getSpecificType(roles.designatedMember, DesignatedMember),
-          convOther(roles.other, roles.specifyOtherRoleInBusiness.getOrElse(""))).flatten)
-        case None => None
-      }
-      val forTheBusinessO = aboutYou.roleForTheBusiness match {
-        case Some(roles) => Some(Set(
-          CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
-          convOther(roles.other, roles.otherSpecify.getOrElse(""))).flatten)
-      }
+    val forTheBusinessO = aboutYou.roleForTheBusiness match {
+      case Some(roles) => Some(Set(
+        CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
+        convOther(roles.other, roles.otherSpecify.getOrElse(""))).flatten)
+      case _ => None
+    }
+
+    val roleTypesWithinBusiness: Option[Set[RoleType]] =
       for {
         withinTheBusiness <- withinTheBusinessO
         forTheBusiness <- forTheBusinessO
@@ -129,10 +137,6 @@ object RoleWithinBusiness {
         withinTheBusiness ++ forTheBusiness
       }
 
-    }
-
-    roleTypesWithinBusiness.map(RoleWithinBusiness(_))
-
+    roleTypesWithinBusiness.map(RoleWithinBusiness(_)).getOrElse(RoleWithinBusiness(Set.empty))
   }
-
 }
