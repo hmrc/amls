@@ -1510,7 +1510,7 @@ object DesConstants {
     None,
     Some(false),
     Some(MsbOrTcsp(true)),
-    RPExtra(Some(StringOrInt("333333")), None, None, Some(false), Some("some test result"), Some("2012-12-12"))
+    RPExtra(Some(StringOrInt("333333")), None, None, None, Some("10"), Some("some test result"), Some("2012-12-12"))
   )
 
 
@@ -1522,7 +1522,7 @@ object DesConstants {
 
   val amendStatusResponsiblePersonsAPI5 = Seq(
     updatedRPForAmendment.copy(nameDetails = None,
-      extra = RPExtra(Some(StringOrInt("77777")), None, None, Some(false), Some("some test result"), Some("2012-12-12"))),
+      extra = RPExtra(Some(StringOrInt("77777")), None, None, Some(false), None, Some("some test result"), Some("2012-12-12"))),
     updatedRPForAmendment,
     viewResponsiblePersons2,
     viewResponsiblePersons3
@@ -2147,7 +2147,7 @@ object DesConstants {
 
   val testAmendResponsiblePersonsTest1 = Seq(
     updatedRPForAmendment.copy(nameDetails = None,
-      extra = RPExtra(lineId = Some(StringOrInt(Right("77777"))), status = Some(StatusConstants.Updated))),
+      extra = RPExtra(lineId = Some(StringOrInt(Right("77777"))), status = Some(StatusConstants.Updated), retestFlag = Some(false))),
     ResponsiblePersons(
       Some(NameDetails(
         PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
@@ -2212,7 +2212,7 @@ object DesConstants {
       None,
       Some(false),
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), Some(false), Some("some test result"), Some("2012-12-12"))
+      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, Some("10"), Some("some test result"), Some("2012-12-12"))
     ),
     responsiblePersons3,
     responsiblePersons2

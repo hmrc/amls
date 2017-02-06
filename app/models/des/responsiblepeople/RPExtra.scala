@@ -27,6 +27,7 @@ case class RPExtra(
                     endDate: Option[String] = None,
                     status: Option[String] = None,
                     retestFlag: Option[Boolean] = None,
+                    retest: Option[String] = None,
                     testResult: Option[String] = None,
                     testDate: Option[String] = None
                   )
@@ -38,6 +39,7 @@ object RPExtra {
       (__ \ "endDate").readNullable[String] and
       (__ \ "status").readNullable[String] and
       (__ \ "retestFlag").readNullable[Boolean] and
+      (__ \ "retest").readNullable[String] and
       (__ \ "testResult").readNullable[String] and
       (__ \ "testDate").readNullable[String]
     ) (RPExtra.apply _)
@@ -48,12 +50,13 @@ object RPExtra {
         (__ \ "endDate").writeNullable[String] and
         (__ \ "status").writeNullable[String] and
         (__ \ "retestFlag").writeNullable[Boolean] and
+        (__ \ "retest").writeNullable[String] and
         (__ \ "testResult").writeNullable[String] and
         (__ \ "testDate").writeNullable[String]
       ) (unlift(RPExtra.unapply _))
   }
 
   implicit def conv(rp: ResponsiblePeople): RPExtra = {
-    RPExtra(rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))), None, rp.status, None, None, None)
+    RPExtra(rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))), None, rp.status, None, None, None, None)
   }
 }
