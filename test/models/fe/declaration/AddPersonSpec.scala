@@ -226,31 +226,31 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
       }
     }
 
-    "convert des model to frontend model" when {
-      "given des model without external accountant or Other" in {
-        val desModel = AboutYouRelease7(
-          Some(IndividualDetails("fName", None, "lName")),
-          true,
-          Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None)),
-          Some(RoleForTheBusiness(false, false, None))
-        )
-
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember
-          ))
-        )
-
-        AddPersonRelease7.convert(desModel) must be(frontendModel)
-
-      }
-    }
+//    "convert des model to frontend model" when {
+//      "given des model without external accountant or Other" in {
+//        val desModel = AboutYouRelease7(
+//          Some(IndividualDetails("fName", None, "lName")),
+//          true,
+//          Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None)),
+//          Some(RoleForTheBusiness(false, false, None))
+//        )
+//
+//        val frontendModel = AddPersonRelease7("fName", None, "lName",
+//          models.fe.declaration.release7.RoleWithinBusiness(Set(
+//            models.fe.declaration.release7.BeneficialShareholder,
+//            models.fe.declaration.release7.Director,
+//            models.fe.declaration.release7.Partner,
+//            models.fe.declaration.release7.InternalAccountant,
+//            models.fe.declaration.release7.SoleProprietor,
+//            models.fe.declaration.release7.NominatedOfficer,
+//            models.fe.declaration.release7.DesignatedMember
+//          ))
+//        )
+//
+//        AddPersonRelease7.convert(desModel) must be(frontendModel)
+//
+//      }
+//    }
 
   }
 }

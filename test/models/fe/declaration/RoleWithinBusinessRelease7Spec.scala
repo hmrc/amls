@@ -16,6 +16,7 @@
 
 package models.fe.declaration.release7
 
+import models.des.aboutyou.{RoleForTheBusiness, RolesWithinBusiness, IndividualDetails, AboutYouRelease7}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
@@ -112,6 +113,33 @@ class RoleWithinBusinessRelease7Spec extends PlaySpec with MockitoSugar {
 
         RoleWithinBusiness.jsonWrite.writes(model) must equal(json)
       }
+    }
+  }
+
+  "RoleWithinBusinessRelease7" must {
+    "convert from des model" in {
+
+      val desModel = AboutYouRelease7(
+        Some(IndividualDetails("firstName", None, "lastName")),
+        true,
+        Some(RolesWithinBusiness(true,true,true,true,true,true,true,false,None)),
+        Some(RoleForTheBusiness(true,true,Some("Some other text")))
+      )
+
+      val feModel = RoleWithinBusiness(Set(
+        Partner,
+        SoleProprietor,
+        DesignatedMember,
+        NominatedOfficer,
+        Director,
+        BeneficialShareholder,
+        Other("Some other text"),
+        ExternalAccountant,
+        InternalAccountant
+      ))
+
+      RoleWithinBusiness.convert(desModel) must be(Some(feModel))
+
     }
   }
 

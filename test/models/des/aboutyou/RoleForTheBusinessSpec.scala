@@ -26,6 +26,18 @@ import org.scalatestplus.play.PlaySpec
 class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
 
   "Des release 7 model" must {
+    "convert from frontend model when given an empty set" in {
+
+      val frontendModel = RoleWithinBusiness(Set.empty)
+
+      val desModel = RoleForTheBusiness(
+        false, false, None
+      )
+
+      RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
+
+    }
+
     "convert from frontend model when other not present" in {
 
       val frontendModel = RoleWithinBusiness(Set(ExternalAccountant))

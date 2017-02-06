@@ -16,11 +16,12 @@
 
 package models.fe.declaration.release7
 
-import models.des.aboutyou.RolesWithinBusiness
+import models.des.aboutyou.{AboutYouRelease7, RolesWithinBusiness}
 import play.api.libs.json.{Reads, Json}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
 import play.api.libs.json._
+import utils.CommonMethods
 
 case class RoleWithinBusiness(roles: Set[RoleType])
 
@@ -93,5 +94,45 @@ object RoleWithinBusiness {
       }
   }
 
+  def convOther(other: Boolean, specifyOther: String): Option[RoleType] =
+    other match{
+      case true => Some(Other(specifyOther))
+      case false => None
+    }
+
+  def convert(aboutYou:AboutYouRelease7): Option[RoleWithinBusiness] = {
+
+    // needs to convert the within and for into the role.
+
+    val roleTypesWithinBusiness: Option[Set[RoleType]] = {
+      val withinTheBusinessO = aboutYou.roleWithinBusiness match {
+        case Some(roles) => Some(Set(
+          CommonMethods.getSpecificType(roles.beneficialShareholder, BeneficialShareholder),
+          CommonMethods.getSpecificType(roles.director, Director),
+          CommonMethods.getSpecificType(roles.partner, Partner),
+          CommonMethods.getSpecificType(roles.internalAccountant, InternalAccountant),
+          CommonMethods.getSpecificType(roles.soleProprietor, SoleProprietor),
+          CommonMethods.getSpecificType(roles.nominatedOfficer, NominatedOfficer),
+          CommonMethods.getSpecificType(roles.designatedMember, DesignatedMember),
+          convOther(roles.other, roles.specifyOtherRoleInBusiness.getOrElse(""))).flatten)
+        case None => None
+      }
+      val forTheBusinessO = aboutYou.roleForTheBusiness match {
+        case Some(roles) => Some(Set(
+          CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
+          convOther(roles.other, roles.otherSpecify.getOrElse(""))).flatten)
+      }
+      for {
+        withinTheBusiness <- withinTheBusinessO
+        forTheBusiness <- forTheBusinessO
+      } yield {
+        withinTheBusiness ++ forTheBusiness
+      }
+
+    }
+
+    roleTypesWithinBusiness.map(RoleWithinBusiness(_))
+
+  }
 
 }
