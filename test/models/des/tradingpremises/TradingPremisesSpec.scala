@@ -91,14 +91,8 @@ class TradingPremisesSpec extends PlaySpec {
 
     "serialise Trading premises model" in {
 
-      val agentDetail = AgentDetails(
-        "Limited Liability Partnership",
-        None,
-        Some("string"),
-        agentPremises,
-        Some("Deleted"),
-        Some(StringOrInt("11223344")),
-        Some("2010-01-23"))
+      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, Some("Deleted"),
+        Some(StringOrInt("11223344")), Some("2010-01-23"))
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
 
@@ -130,6 +124,7 @@ class TradingPremisesSpec extends PlaySpec {
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
           "agentDetails" -> Json.arr(Json.obj(
             "agentLegalEntity" -> "Limited Liability Partnership",
+            "dateOfBirth" -> "string",
             "agentLegalEntityName" -> "string",
             "agentDetailsChgDate" -> "2010-01-23",
             "agentPremises" -> Json.obj("tradingName" -> "string",
@@ -167,6 +162,7 @@ class TradingPremisesSpec extends PlaySpec {
         AgentDetails(
           "Limited Liability Partnership",
           None,
+          None,
           Some("LLP Partnership"),
           agentPremises,
           Some("Deleted"),
@@ -174,8 +170,8 @@ class TradingPremisesSpec extends PlaySpec {
           Some("2009-05-03")
         ),
 
-        AgentDetails("Partnership", None, Some("Partnership"), agentPremises1),
-        AgentDetails("Unincorporated Body", None, Some(""), agentPremises2)))))
+        AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
+        AgentDetails("Unincorporated Body", None, None, Some(""), agentPremises2)))))
 
       val desTradingPremises = {
         TradingPremises(ownBusinessPremises, agentBusinessPremises)
@@ -189,7 +185,7 @@ class TradingPremisesSpec extends PlaySpec {
         Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
         FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
         FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
-          Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"))), Some(AgentCompanyDetails("LLP Partnership", None)), None,
+          Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"), None)), Some(AgentCompanyDetails("LLP Partnership", None)), None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
           Some(MsbServices(Set(TransmittingMoney))), Some(11223344),Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),

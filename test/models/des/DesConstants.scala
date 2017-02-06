@@ -253,6 +253,7 @@ object DesConstants {
   val agentDetailsAPI51 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi51,
     Some("Added"),
@@ -281,6 +282,7 @@ object DesConstants {
   val agentDetailsAPI52 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi52,
     Some("Added"),
@@ -309,6 +311,7 @@ object DesConstants {
   val agentDetailsAPI53 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi53,
     Some("Added"),
@@ -338,6 +341,7 @@ object DesConstants {
   val agentDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi61,
     Some(StatusConstants.Unchanged),
@@ -347,6 +351,7 @@ object DesConstants {
   val agentAmendDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("AgentLegalEntityName for amend"),
     agentPremisesapi61,
     Some("Added"),
@@ -375,6 +380,7 @@ object DesConstants {
   val agentDetailsAPI62 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi62,
     Some(StatusConstants.Unchanged),
@@ -403,6 +409,7 @@ object DesConstants {
   val agentDetailsAPI63 = AgentDetails(
     "Sole Proprietor",
     None,
+    Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi63,
     Some(StatusConstants.Unchanged),
@@ -614,6 +621,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     viewStatusAgentPremises1,
     None,
     None
@@ -642,6 +650,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     viewStatusAgentPremises2,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
@@ -670,6 +679,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     viewStatusAgentPremises3,
     Some(StatusConstants.Added),
     Some(StringOrInt("333333"))
@@ -698,6 +708,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     viewStatusAgentPremises4,
     None,
     Some(StringOrInt("444444"))
@@ -726,6 +737,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     amenStatusAgentPremises1,
     Some(StatusConstants.Added),
     None
@@ -754,6 +766,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     amendStatusAgentPremises2,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
@@ -782,6 +795,7 @@ object DesConstants {
     "Limited Liability Partnership",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     amendStatusAgentPremises3,
     Some(StatusConstants.Updated),
     Some(StringOrInt("333333"))
@@ -810,6 +824,7 @@ object DesConstants {
     "Sole Proprietor",
     None,
     Some("AgentLegalEntityName"),
+    Some("1970-01-01"),
     amendStatusAgentPremises4,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("444444"))

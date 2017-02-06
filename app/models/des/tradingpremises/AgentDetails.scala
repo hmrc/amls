@@ -24,6 +24,7 @@ import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 case class AgentDetails(
                          agentLegalEntity: String,
                          companyRegNo: Option[String] = None,
+                         dateOfBirth: Option[String],
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
@@ -49,6 +50,7 @@ object AgentDetails {
     (
       (__ \ "agentLegalEntity").read[String] and
         (__ \ "companyRegNo").readNullable[String] and
+        (__ \ "dateOfBirth").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
@@ -61,6 +63,7 @@ object AgentDetails {
     (
       (__ \ "agentLegalEntity").write[String] and
         (__ \ "companyRegNo").writeNullable[String] and
+        (__ \ "dateOfBirth").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
@@ -73,6 +76,11 @@ object AgentDetails {
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
       companyRegNo = tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber),
+      dateOfBirth = for {
+        bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
+        agentName <- tradingPremises.agentName
+        dob <- agentName.agentDateOfBirth
+      } yield dob,
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
         case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
