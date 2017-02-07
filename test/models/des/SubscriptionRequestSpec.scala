@@ -18,6 +18,7 @@ package models.des
 
 import models._
 import models.des.aboutthebusiness.Address
+import models.des.aboutyou.{RoleForTheBusiness, RolesWithinBusiness, IndividualDetails, AboutYouRelease7}
 import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.aboutthebusiness.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
@@ -37,6 +38,22 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
   }
 
   "SubscriptionRequest serialisation" when {
+
+    "given release 6 structure of filingIndividual" must {
+      "read Json correctly" in {
+
+        val release7FilingIndividualModel = AboutYouRelease7(
+          Some(IndividualDetails("fname", None, "lname")),
+          false,
+          Some(RolesWithinBusiness(false, false, false, false, false, false, false, false, None)),
+          Some(RoleForTheBusiness(true, false, None))
+        )
+
+        SubscriptionRequest.format.reads(release6Json).asOpt.get.filingIndividual must be(release7FilingIndividualModel)
+
+      }
+    }
+
     "businessReferencesAllButSp is None" must {
       "exclude the field from Json" in {
         (Json.toJson(
@@ -146,6 +163,349 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       des.SubscriptionRequest.convert(feSubscriptionReq) must be(desSubscriptionReq)
     }
   }
+
+  val release6Json = Json.parse(
+
+    """{
+  "acknowledgementReference": "$AckRef$",
+  "businessDetails": {
+    "typeOfLegalEntity": "Sole Proprietor"
+  },
+  "businessContactDetails": {
+    "businessAddress": {
+      "addressLine1": "address line1",
+      "addressLine2": "address line2",
+      "addressLine3": "address line3",
+      "addressLine4": "address line4",
+      "country": "AA",
+      "postcode": "AA1 1AA"
+    },
+    "altCorrespondenceAddress": false,
+    "businessTelNo": "1234567891",
+    "businessEmail": "scenario1.2@test.com"
+  },
+  "businessReferencesAll": {
+    "amlsRegistered": true,
+    "mlrRegNumber8Long": "12345678",
+    "prevRegForMlr": false
+  },
+  "businessActivities": {
+    "mlrActivitiesAppliedFor": {
+      "msb": false,
+      "hvd": false,
+      "asp": true,
+      "tcsp": true,
+      "eab": true,
+      "bpsp": false,
+      "tditpsp": false
+    },
+    "aspServicesOffered": {
+      "accountant": true,
+      "payrollServiceProvider": true,
+      "bookKeeper": true,
+      "auditor": false,
+      "financialOrTaxAdvisor": false
+    },
+    "tcspServicesOffered": {
+      "nomineeShareholders": true,
+      "trusteeProvider": true,
+      "regOffBusinessAddrVirtualOff": true,
+      "compDirSecPartnerProvider": false,
+      "trustOrCompFormAgent": true
+    },
+    "tcspServicesforRegOffBusinessAddrVirtualOff": {
+      "callHandling": true,
+      "emailHandling": true,
+      "emailServer": true,
+      "selfCollectMailboxes": true,
+      "mailForwarding": true,
+      "receptionist": false,
+      "conferenceRooms": false,
+      "other": false
+    },
+    "eabServicesCarriedOut": {
+      "residentialEstateAgency": true,
+      "commercialEstateAgency": true,
+      "auctioneer": true,
+      "relocationAgent": true,
+      "businessTransferAgent": false,
+      "assetManagementCompany": false,
+      "landManagementAgent": false,
+      "developmentCompany": false,
+      "socialHousingProvider": false
+    },
+    "all": {
+      "businessActivityDetails": {
+        "actvtsBusRegForOnlyActvtsCarOut": false,
+        "respActvtsBusRegForOnlyActvtsCarOut": {
+          "otherBusActivitiesCarriedOut": {
+            "otherBusinessActivities": "scenario1.2",
+            "anticipatedTotBusinessTurnover": "99999",
+            "mlrActivityTurnover": "999999"
+          }
+        }
+      },
+      "franchiseDetails": {
+        "isBusinessAFranchise": true,
+        "franchiserName": [
+          "scenario1.2"
+        ]
+      },
+      "noOfEmployees": "123",
+      "noOfEmployeesForMlr": "321",
+      "nonUkResidentCustDetails": {
+        "nonUkResidentCustomers": true,
+        "whichCountries": [
+          "AA"
+        ]
+      },
+      "auditableRecordsDetails": {
+        "detailedRecordsKept": "Yes",
+        "transactionRecordingMethod": {
+          "manual": true,
+          "spreadsheet": true,
+          "commercialPackage": true,
+          "commercialPackageName": "scenario1.2"
+        }
+      },
+      "suspiciousActivityGuidance": true,
+      "nationalCrimeAgencyRegistered": true,
+      "formalRiskAssessmentDetails": {
+        "formalRiskAssessment": true,
+        "riskAssessmentFormat": {
+          "electronicFormat": false,
+          "manualFormat": true
+        }
+      },
+      "mlrAdvisor": {
+        "doYouHaveMlrAdvisor": true,
+        "mlrAdvisorDetails": {
+          "advisorNameAddress": {
+            "name": "scenario1.2",
+            "tradingName": "",
+            "address": {
+              "addressLine1": "add",
+              "addressLine2": "add",
+              "country": "AA",
+              "postcode": "bb11bb"
+            }
+          },
+          "agentDealsWithHmrc": true,
+          "hmrcAgentRefNo": "12345678911"
+        }
+      }
+    }
+  },
+  "tradingPremises": {
+    "ownBusinessPremises": {
+      "ownBusinessPremises": true,
+      "ownBusinessPremisesDetails": [
+        {
+          "tradingName": "trading1",
+          "businessAddress": {
+            "addressLine1": "add",
+            "addressLine2": "add",
+            "country": "AA",
+            "postcode": "cc11cc"
+          },
+          "residential": true,
+          "msb": {
+            "mt": false,
+            "ce": false,
+            "smdcc": false,
+            "nonSmdcc": false,
+            "fx": false
+          },
+          "hvd": {
+            "hvd": false
+          },
+          "asp": {
+            "asp": true
+          },
+          "tcsp": {
+            "tcsp": false
+          },
+          "eab": {
+            "eab": true
+          },
+          "bpsp": {
+            "bpsp": false
+          },
+          "tditpsp": {
+            "tditpsp": false
+          },
+          "startDate": "1980-11-11"
+        }
+      ]
+    },
+    "agentBusinessPremises": {
+      "agentBusinessPremises": false
+    }
+  },
+  "bankAccountDetails": {
+    "noOfMlrBankAccounts": "0"
+  },
+  "asp": {
+    "regHmrcAgtRegSchTax": true,
+    "hmrcAgentRegNo": "12345678911"
+  },
+  "aspOrTcsp": {
+    "supervisionDetails": {
+      "prevSupervisedByMlsRegs": true,
+      "supervisorDetails": {
+        "nameOfLastSupervisor": "joe",
+        "supervisionStartDate": "2010-11-11",
+        "supervisionEndDate": "2010-11-11",
+        "supervisionEndingReason": "being over experienced"
+      }
+    },
+    "professionalBodyDetails": {
+      "prevWarnedWRegToAspActivities": true,
+      "detailsIfFinedWarned": "scenario1.2",
+      "professionalBody": {
+        "professionalBodyMember": true,
+        "professionalBodyDetails": {
+          "associationofAccountingTechnicians": true,
+          "associationofCharteredCertifiedAccountants": true,
+          "associationofInternationalAccountants": true,
+          "associationofTaxationTechnicians": true,
+          "charteredInstituteofManagementAccountants": true,
+          "charteredInstituteofTaxation": true,
+          "instituteofCertifiedBookkeepers": true,
+          "instituteofCharteredAccountantsinIreland": true,
+          "instituteofCharteredAccountantsinScotland": true,
+          "instituteofCharteredAccountantsofEnglandandWales": true,
+          "instituteofFinancialAccountants": true,
+          "internationalAssociationofBookKeepers": true,
+          "lawSociety": true,
+          "other": true,
+          "specifyOther": "scenario1.2"
+        }
+      }
+    }
+  },
+  "tcspAll": {
+    "anotherTcspServiceProvider": true,
+    "tcspMlrRef": "12345678"
+  },
+  "tcspTrustCompFormationAgt": {
+    "onlyOffTheShelfCompsSold": true,
+    "complexCorpStructureCreation": true
+  },
+  "eabAll": {
+    "estateAgencyActProhibition": true,
+    "estAgncActProhibProvideDetails": "scenario1.2",
+    "prevWarnedWRegToEstateAgencyActivities": true,
+    "prevWarnWRegProvideDetails": "scenario1.2"
+  },
+  "eabResdEstAgncy": {
+    "regWithRedressScheme": true,
+    "whichRedressScheme": "The Property Ombudsman Limited"
+  },
+  "responsiblePersons": [
+    {
+      "nameDetails": {
+        "personName": {
+          "firstName": "somename",
+          "lastName": "somelastname"
+        },
+        "othrNamesOrAliasesDetails": {
+          "otherNamesOrAliases": true,
+          "aliases": [
+            "somealiase"
+          ]
+        },
+        "previousNameDetails": {
+          "nameEverChanged": true,
+          "previousName": {
+            "firstName": "firstname",
+            "lastName": "lastname"
+          },
+          "dateOfChange": "2011-11-11"
+        }
+      },
+      "nationalityDetails": {
+        "areYouUkResident": true,
+        "idDetails": {
+          "ukResident": {
+            "nino": "AA123456C"
+          }
+        },
+        "countryOfBirth": "AA",
+        "nationality": "BB"
+      },
+      "contactCommDetails": {
+        "contactEmailAddress": "scenario1.2@test.com",
+        "primaryTeleNo": "1234567891"
+      },
+      "currentAddressDetails": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "mm11mm"
+        }
+      },
+      "timeAtCurrentAddress": "1-3 years",
+      "addressUnderThreeYears": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "AA11AA"
+        }
+      },
+      "timeAtAddressUnderThreeYears": "1-3 years",
+      "addressUnderOneYear": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "BB11BB"
+        }
+      },
+      "timeAtAddressUnderOneYear": "1-3 years",
+      "positionInBusiness": {
+        "soleProprietor": {
+          "soleProprietor": false,
+          "nominatedOfficer": true
+        },
+        "partnership": {
+          "partner": false,
+          "nominatedOfficer": false
+        },
+        "corpBodyOrUnInCorpBodyOrLlp": {
+          "director": false,
+          "beneficialOwner": false,
+          "nominatedOfficer": false
+        }
+      },
+      "regDetails": {
+        "vatRegistered": false,
+        "saRegistered": false
+      },
+      "previousExperience": true,
+      "descOfPrevExperience": "scenario1.2",
+      "amlAndCounterTerrFinTraining": true,
+      "trainingDetails": "scenario1.2",
+      "msbOrTcsp": {
+        "passedFitAndProperTest": true
+      }
+    }
+  ],
+  "filingIndividual": {
+    "individualDetails": {
+      "firstName": "fname",
+      "lastName": "lname"
+    },
+    "employedWithinBusiness": false,
+    "roleForTheBusiness": "External Accountant"
+  },
+  "declaration": {
+    "declarationFlag": true
+  }
+}""")
+
 }
 
 class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with OneAppPerSuite{
@@ -157,6 +517,22 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
   }
 
   "SubscriptionRequest serialisation" when {
+
+    "given release 7 structure of filingIndividual" must {
+      "read Json correctly" in {
+
+        val release7FilingIndividualModel = AboutYouRelease7(
+          Some(IndividualDetails("fname", None, "lname")),
+          false,
+          Some(RolesWithinBusiness(false, false, false, false, false, false, false, false, None)),
+          Some(RoleForTheBusiness(true, false, None))
+        )
+
+        SubscriptionRequest.format.reads(release7Json).asOpt.get.filingIndividual must be(release7FilingIndividualModel)
+
+      }
+    }
+
     "businessReferencesAllButSp is None" must {
       "exclude the field from Json" in {
         (Json.toJson(
@@ -221,77 +597,6 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
   "SubscriptionRequestSpec" must {
     "convert correctly" in {
 
-      val aboutTheBusinessModel = AboutTheBusiness(PreviouslyRegisteredYes("12345678"),
-        Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
-        Some(VATRegisteredYes("123456789")),
-        Some(CorporationTaxRegisteredYes("1234567890")),
-        ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
-        RegisteredOfficeUK("line1", "line2",
-          Some("some street"), Some("some city"), "EE1 1EE"),
-        Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
-          Some("Street"), Some("city"), "EE1 1EE"))
-      )
-
-      val msbSectionRelease7 = Some(
-        MoneyServiceBusiness(
-          Some(MsbAllDetails(Some("£15k-£50k"),true,Some(CountriesList(List("GB"))),true)),
-          Some(MsbMtDetails(true,Some("123456"),
-            IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
-            true,
-            Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
-          Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
-            Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
-      )
-
-      val desallActivitiesModel = BusinessActivitiesAll(None,Some("2001-01-01"),None, BusinessActivityDetails(true,
-        Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))),  Some("10"), Some("5"),
-        NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
-        true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), MlrAdvisor(true,
-          Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))), true, None))))
-
-      val desSubscriptionReq =
-        des.SubscriptionRequest(
-          acknowledgementReference = ackref.ackRef,
-          businessDetails = DefaultDesValues.BusinessCustomerDetails,
-          businessActivities = DefaultDesValues.BusinessActivitiesSection,
-          eabAll = DefaultDesValues.EabAllDetails,
-          eabResdEstAgncy = DefaultDesValues.EabResd,
-          businessContactDetails = DefaultDesValues.AboutTheBusinessSection,
-          businessReferencesAll = DefaultDesValues.PrevRegMLR,
-          businessReferencesAllButSp = DefaultDesValues.VatALlBuySp,
-          businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
-          tradingPremises = DefaultDesValues.TradingPremisesSection,
-          bankAccountDetails = DefaultDesValues.bankDetailsSection,
-          msb = msbSectionRelease7,
-          hvd = DefaultDesValues.hvdSection,
-          filingIndividual = DefaultDesValues.filingIndividual,
-          tcspAll = DefaultDesValues.tcspAllSection,
-          tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
-          responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
-          asp = DefaultDesValues.AspSection,
-          aspOrTcsp = DefaultDesValues.AspOrTcspSection,
-          declaration = Declaration(true)
-        )
-
-      val feSubscriptionReq = {
-        import models.fe.SubscriptionRequest
-        SubscriptionRequest(
-          businessMatchingSection = BusinessMatchingSection.model,
-          eabSection = EabSection.model,
-          aboutTheBusinessSection = aboutTheBusinessModel ,
-          tradingPremisesSection = TradingPremisesSection.model ,
-          bankDetailsSection = BankDetailsSection.model ,
-          aboutYouSection = AboutYouSection.model,
-          businessActivitiesSection = BusinessActivitiesSection.model ,
-          responsiblePeopleSection = ResponsiblePeopleSection.model,
-          tcspSection = ASPTCSPSection.TcspSection,
-          aspSection = ASPTCSPSection.AspSection,
-          msbSection = MsbSection.completeModel,
-          hvdSection = HvdSection.completeModel,
-          supervisionSection = SupervisionSection.completeModel
-        )
-      }
-
       val feRelease7SubscriptionViewModel = feSubscriptionReq.copy(businessActivitiesSection = BusinessActivitiesSection.model.copy(
         expectedBusinessTurnover = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k"))))
         )
@@ -306,4 +611,433 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
 
     }
   }
+
+  val aboutTheBusinessModel = AboutTheBusiness(PreviouslyRegisteredYes("12345678"),
+    Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+    Some(VATRegisteredYes("123456789")),
+    Some(CorporationTaxRegisteredYes("1234567890")),
+    ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
+    RegisteredOfficeUK("line1", "line2",
+      Some("some street"), Some("some city"), "EE1 1EE"),
+    Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
+      Some("Street"), Some("city"), "EE1 1EE"))
+  )
+
+  val msbSectionRelease7 = Some(
+    MoneyServiceBusiness(
+      Some(MsbAllDetails(Some("£15k-£50k"),true,Some(CountriesList(List("GB"))),true)),
+      Some(MsbMtDetails(true,Some("123456"),
+        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
+        true,
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
+      Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
+        Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
+  )
+
+  val desallActivitiesModel = BusinessActivitiesAll(None,Some("2001-01-01"),None, BusinessActivityDetails(true,
+    Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))),  Some("10"), Some("5"),
+    NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
+    true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), MlrAdvisor(true,
+      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))), true, None))))
+
+  val desSubscriptionReq =
+    des.SubscriptionRequest(
+      acknowledgementReference = ackref.ackRef,
+      businessDetails = DefaultDesValues.BusinessCustomerDetails,
+      businessActivities = DefaultDesValues.BusinessActivitiesSection,
+      eabAll = DefaultDesValues.EabAllDetails,
+      eabResdEstAgncy = DefaultDesValues.EabResd,
+      businessContactDetails = DefaultDesValues.AboutTheBusinessSection,
+      businessReferencesAll = DefaultDesValues.PrevRegMLR,
+      businessReferencesAllButSp = DefaultDesValues.VatALlBuySp,
+      businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
+      tradingPremises = DefaultDesValues.TradingPremisesSection,
+      bankAccountDetails = DefaultDesValues.bankDetailsSection,
+      msb = msbSectionRelease7,
+      hvd = DefaultDesValues.hvdSection,
+      filingIndividual = DefaultDesValues.filingIndividual,
+      tcspAll = DefaultDesValues.tcspAllSection,
+      tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
+      responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
+      asp = DefaultDesValues.AspSection,
+      aspOrTcsp = DefaultDesValues.AspOrTcspSection,
+      declaration = Declaration(true)
+    )
+
+  val feSubscriptionReq = {
+    import models.fe.SubscriptionRequest
+    SubscriptionRequest(
+      businessMatchingSection = BusinessMatchingSection.model,
+      eabSection = EabSection.model,
+      aboutTheBusinessSection = aboutTheBusinessModel ,
+      tradingPremisesSection = TradingPremisesSection.model ,
+      bankDetailsSection = BankDetailsSection.model ,
+      aboutYouSection = AboutYouSection.model,
+      businessActivitiesSection = BusinessActivitiesSection.model ,
+      responsiblePeopleSection = ResponsiblePeopleSection.model,
+      tcspSection = ASPTCSPSection.TcspSection,
+      aspSection = ASPTCSPSection.AspSection,
+      msbSection = MsbSection.completeModel,
+      hvdSection = HvdSection.completeModel,
+      supervisionSection = SupervisionSection.completeModel
+    )
+  }
+
+  val release7Json = Json.parse(
+
+    """{
+  "acknowledgementReference": "$AckRef$",
+  "businessDetails": {
+    "typeOfLegalEntity": "Sole Proprietor"
+  },
+  "businessContactDetails": {
+    "businessAddress": {
+      "addressLine1": "address line1",
+      "addressLine2": "address line2",
+      "addressLine3": "address line3",
+      "addressLine4": "address line4",
+      "country": "AA",
+      "postcode": "AA1 1AA"
+    },
+    "altCorrespondenceAddress": false,
+    "businessTelNo": "1234567891",
+    "businessEmail": "scenario1.2@test.com"
+  },
+  "businessReferencesAll": {
+    "amlsRegistered": true,
+    "mlrRegNumber8Long": "12345678",
+    "prevRegForMlr": false
+  },
+  "businessActivities": {
+    "mlrActivitiesAppliedFor": {
+      "msb": false,
+      "hvd": false,
+      "asp": true,
+      "tcsp": true,
+      "eab": true,
+      "bpsp": false,
+      "tditpsp": false
+    },
+    "aspServicesOffered": {
+      "accountant": true,
+      "payrollServiceProvider": true,
+      "bookKeeper": true,
+      "auditor": false,
+      "financialOrTaxAdvisor": false
+    },
+    "tcspServicesOffered": {
+      "nomineeShareholders": true,
+      "trusteeProvider": true,
+      "regOffBusinessAddrVirtualOff": true,
+      "compDirSecPartnerProvider": false,
+      "trustOrCompFormAgent": true
+    },
+    "tcspServicesforRegOffBusinessAddrVirtualOff": {
+      "callHandling": true,
+      "emailHandling": true,
+      "emailServer": true,
+      "selfCollectMailboxes": true,
+      "mailForwarding": true,
+      "receptionist": false,
+      "conferenceRooms": false,
+      "other": false
+    },
+    "eabServicesCarriedOut": {
+      "residentialEstateAgency": true,
+      "commercialEstateAgency": true,
+      "auctioneer": true,
+      "relocationAgent": true,
+      "businessTransferAgent": false,
+      "assetManagementCompany": false,
+      "landManagementAgent": false,
+      "developmentCompany": false,
+      "socialHousingProvider": false
+    },
+    "all": {
+      "businessActivityDetails": {
+        "actvtsBusRegForOnlyActvtsCarOut": false,
+        "respActvtsBusRegForOnlyActvtsCarOut": {
+          "otherBusActivitiesCarriedOut": {
+            "otherBusinessActivities": "scenario1.2",
+            "anticipatedTotBusinessTurnover": "99999",
+            "mlrActivityTurnover": "999999"
+          }
+        }
+      },
+      "franchiseDetails": {
+        "isBusinessAFranchise": true,
+        "franchiserName": [
+          "scenario1.2"
+        ]
+      },
+      "noOfEmployees": "123",
+      "noOfEmployeesForMlr": "321",
+      "nonUkResidentCustDetails": {
+        "nonUkResidentCustomers": true,
+        "whichCountries": [
+          "AA"
+        ]
+      },
+      "auditableRecordsDetails": {
+        "detailedRecordsKept": "Yes",
+        "transactionRecordingMethod": {
+          "manual": true,
+          "spreadsheet": true,
+          "commercialPackage": true,
+          "commercialPackageName": "scenario1.2"
+        }
+      },
+      "suspiciousActivityGuidance": true,
+      "nationalCrimeAgencyRegistered": true,
+      "formalRiskAssessmentDetails": {
+        "formalRiskAssessment": true,
+        "riskAssessmentFormat": {
+          "electronicFormat": false,
+          "manualFormat": true
+        }
+      },
+      "mlrAdvisor": {
+        "doYouHaveMlrAdvisor": true,
+        "mlrAdvisorDetails": {
+          "advisorNameAddress": {
+            "name": "scenario1.2",
+            "tradingName": "",
+            "address": {
+              "addressLine1": "add",
+              "addressLine2": "add",
+              "country": "AA",
+              "postcode": "bb11bb"
+            }
+          },
+          "agentDealsWithHmrc": true,
+          "hmrcAgentRefNo": "12345678911"
+        }
+      }
+    }
+  },
+  "tradingPremises": {
+    "ownBusinessPremises": {
+      "ownBusinessPremises": true,
+      "ownBusinessPremisesDetails": [
+        {
+          "tradingName": "trading1",
+          "businessAddress": {
+            "addressLine1": "add",
+            "addressLine2": "add",
+            "country": "AA",
+            "postcode": "cc11cc"
+          },
+          "residential": true,
+          "msb": {
+            "mt": false,
+            "ce": false,
+            "smdcc": false,
+            "nonSmdcc": false,
+            "fx": false
+          },
+          "hvd": {
+            "hvd": false
+          },
+          "asp": {
+            "asp": true
+          },
+          "tcsp": {
+            "tcsp": false
+          },
+          "eab": {
+            "eab": true
+          },
+          "bpsp": {
+            "bpsp": false
+          },
+          "tditpsp": {
+            "tditpsp": false
+          },
+          "startDate": "1980-11-11"
+        }
+      ]
+    },
+    "agentBusinessPremises": {
+      "agentBusinessPremises": false
+    }
+  },
+  "bankAccountDetails": {
+    "noOfMlrBankAccounts": "0"
+
+  },
+  "asp": {
+    "regHmrcAgtRegSchTax": true,
+    "hmrcAgentRegNo": "12345678911"
+  },
+  "aspOrTcsp": {
+    "supervisionDetails": {
+      "prevSupervisedByMlsRegs": true,
+      "supervisorDetails": {
+        "nameOfLastSupervisor": "joe",
+        "supervisionStartDate": "2010-11-11",
+        "supervisionEndDate": "2010-11-11",
+        "supervisionEndingReason": "being over experienced"
+      }
+    },
+    "professionalBodyDetails": {
+      "prevWarnedWRegToAspActivities": true,
+      "detailsIfFinedWarned": "scenario1.2",
+      "professionalBody": {
+        "professionalBodyMember": true,
+        "professionalBodyDetails": {
+          "associationofAccountingTechnicians": true,
+          "associationofCharteredCertifiedAccountants": true,
+          "associationofInternationalAccountants": true,
+          "associationofTaxationTechnicians": true,
+          "charteredInstituteofManagementAccountants": true,
+          "charteredInstituteofTaxation": true,
+          "instituteofCertifiedBookkeepers": true,
+          "instituteofCharteredAccountantsinIreland": true,
+          "instituteofCharteredAccountantsinScotland": true,
+          "instituteofCharteredAccountantsofEnglandandWales": true,
+          "instituteofFinancialAccountants": true,
+          "internationalAssociationofBookKeepers": true,
+          "lawSociety": true,
+          "other": true,
+          "specifyOther": "scenario1.2"
+        }
+      }
+    }
+  },
+  "tcspAll": {
+    "anotherTcspServiceProvider": true,
+    "tcspMlrRef": "12345678"
+  },
+  "tcspTrustCompFormationAgt": {
+    "onlyOffTheShelfCompsSold": true,
+    "complexCorpStructureCreation": true
+  },
+  "eabAll": {
+    "estateAgencyActProhibition": true,
+    "estAgncActProhibProvideDetails": "scenario1.2",
+    "prevWarnedWRegToEstateAgencyActivities": true,
+    "prevWarnWRegProvideDetails": "scenario1.2"
+  },
+  "eabResdEstAgncy": {
+    "regWithRedressScheme": true,
+    "whichRedressScheme": "The Property Ombudsman Limited"
+  },
+  "responsiblePersons": [
+    {
+      "nameDetails": {
+        "personName": {
+          "firstName": "somename",
+          "lastName": "somelastname"
+        },
+        "othrNamesOrAliasesDetails": {
+          "otherNamesOrAliases": true,
+          "aliases": [
+            "somealiase"
+          ]
+        },
+        "previousNameDetails": {
+          "nameEverChanged": true,
+          "previousName": {
+            "firstName": "firstname",
+            "lastName": "lastname"
+          },
+          "dateOfChange": "2011-11-11"
+        }
+      },
+      "nationalityDetails": {
+        "areYouUkResident": true,
+        "idDetails": {
+          "ukResident": {
+            "nino": "AA123456C"
+          }
+        },
+        "countryOfBirth": "AA",
+        "nationality": "BB"
+      },
+      "contactCommDetails": {
+        "contactEmailAddress": "scenario1.2@test.com",
+        "primaryTeleNo": "1234567891"
+      },
+      "currentAddressDetails": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "mm11mm"
+        }
+      },
+      "timeAtCurrentAddress": "1-3 years",
+      "addressUnderThreeYears": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "AA11AA"
+        }
+      },
+      "timeAtAddressUnderThreeYears": "1-3 years",
+      "addressUnderOneYear": {
+        "address": {
+          "addressLine1": "add",
+          "addressLine2": "add",
+          "country": "AA",
+          "postcode": "BB11BB"
+        }
+      },
+      "timeAtAddressUnderOneYear": "1-3 years",
+      "positionInBusiness": {
+        "soleProprietor": {
+          "soleProprietor": false,
+          "nominatedOfficer": true
+        },
+        "partnership": {
+          "partner": false,
+          "nominatedOfficer": false
+        },
+        "corpBodyOrUnInCorpBodyOrLlp": {
+          "director": false,
+          "beneficialOwner": false,
+          "nominatedOfficer": false
+        }
+      },
+      "regDetails": {
+        "vatRegistered": false,
+        "saRegistered": false
+      },
+      "previousExperience": true,
+      "descOfPrevExperience": "scenario1.2",
+      "amlAndCounterTerrFinTraining": true,
+      "trainingDetails": "scenario1.2",
+      "msbOrTcsp": {
+        "passedFitAndProperTest": true
+      }
+    }
+  ],
+  "filingIndividual": {
+    "individualDetails": {
+      "firstName": "fname",
+      "lastName": "lname"
+    },
+    "employedWithinBusiness": false,
+    "roleWithinBusiness":{
+      "beneficialShareholder": false,
+      "director": false,
+      "partner": false,
+      "internalAccountant": false,
+      "soleProprietor": false,
+      "nominatedOfficer": false,
+      "designatedMember": false,
+      "other": false
+    },
+    "roleForTheBusiness":{
+      "externalAccountant": true,
+      "other": false
+    }
+  },
+  "declaration": {
+    "declarationFlag": true
+  }
+}""")
+
+
 }
