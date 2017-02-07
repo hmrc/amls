@@ -21,7 +21,7 @@ import models.des
 import models.{KnownFact, KnownFactsForService, fe}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
 import play.api.libs.json.{Json, Writes}
@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
+class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
   case class Foo(bar: String, quux: Option[String])
 

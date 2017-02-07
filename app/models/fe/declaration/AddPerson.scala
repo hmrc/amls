@@ -101,11 +101,11 @@ object AddPersonRelease7 {
   def convert(aboutYou: AboutYouRelease7): AddPersonRelease7 = {
 
     aboutYou.individualDetails match {
-      case Some(dtls) => {
+      case Some(details) => {
         AddPersonRelease7(
-          dtls.firstName,
-          dtls.middleName,
-          dtls.lastName,
+          details.firstName,
+          details.middleName,
+          details.lastName,
           models.fe.declaration.release7.RoleWithinBusiness.convert(aboutYou))
       }
       case None =>

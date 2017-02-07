@@ -64,7 +64,6 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           )
         ) \ "businessReferencesAllButSp") must be (a[JsUndefined])
 
-
       }
     }
 
