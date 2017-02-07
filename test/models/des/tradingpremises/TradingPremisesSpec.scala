@@ -20,10 +20,10 @@ import models.des.{DesConstants, StringOrInt}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 
-class TradingPremisesSpec extends PlaySpec {
+class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
   "TradingPremises" must {
 
@@ -223,7 +223,6 @@ class TradingPremisesSpec extends PlaySpec {
       viewTradingPremises.equals(desTradingPremises) must be(false)
 
     }
-
 
     "successfully evaluate api5 trading premises data with api6 when data is same" in {
 

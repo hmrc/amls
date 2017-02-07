@@ -16,6 +16,7 @@
 
 package models.des.tradingpremises
 
+import config.AmlsConfig
 import models.des.{StatusProvider, StringOrInt}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -72,10 +73,17 @@ object AgentDetails {
       ) (unlift(AgentDetails.unapply _))
   }
 
-  implicit def convert(tradingPremises: FETradingPremises): AgentDetails =
+  implicit def convert(tradingPremises: FETradingPremises): AgentDetails = {
+
+    def assignCompanyRegNo = if (AmlsConfig.release7) {
+      tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber)
+    } else {
+      None
+    }
+
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
-      companyRegNo = tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber),
+      companyRegNo = assignCompanyRegNo,
       dateOfBirth = for {
         bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
         agentName <- tradingPremises.agentName
@@ -93,6 +101,7 @@ object AgentDetails {
       tradingPremises.lineId,
       agentDetailsChangeDate = tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange)
     )
+  }
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): Seq[AgentDetails] =
     tradingPremises.map(convert)
