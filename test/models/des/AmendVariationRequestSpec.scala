@@ -366,7 +366,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     }
   }
 
-  val feSubscriptionReq = {
+  def feSubscriptionReq = {
     import models.fe.SubscriptionRequest
     SubscriptionRequest(
       BusinessMatchingSection.modelForView,
@@ -413,7 +413,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
   )
 
 
-  val convertedDesModelRelease7 = AmendVariationRequest(
+  def convertedDesModelRelease7 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     DesConstants.testChangeIndicators,
     "Amendment",
@@ -441,7 +441,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
   )
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
   val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
-  val newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
+  def newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
 
   def updateAmendVariationRequest = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,

@@ -114,7 +114,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     }
   }
 
-  "SubscriptionRequestSpec" must {
+
+  "SubscriptionRequest" must {
     "convert correctly" in {
 
       val desSubscriptionReq =

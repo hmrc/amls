@@ -16,10 +16,10 @@
 
 package models.des
 
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 
-class SubscriptionViewSpec extends PlaySpec {
+class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {
@@ -426,14 +426,26 @@ class SubscriptionViewSpec extends PlaySpec {
   "declaration": {
     "declarationFlag": true
   },
-  "filingIndividual": {
+   "filingIndividual": {
     "individualDetails": {
-      "firstName": "thing",
-      "lastName": "thing"
+      "firstName": "fname",
+      "lastName": "lname"
     },
-    "employedWithinBusiness": true,
-    "roleWithinBusiness": "Nominated officer",
-    "roleForTheBusiness": "Other"
+    "employedWithinBusiness": false,
+    "roleWithinBusiness":{
+      "beneficialShareholder": false,
+      "director": false,
+      "partner": false,
+      "internalAccountant": false,
+      "soleProprietor": false,
+      "nominatedOfficer": false,
+      "designatedMember": false,
+      "other": false
+    },
+    "roleForTheBusiness":{
+      "externalAccountant": true,
+      "other": false
+    }
   },
   "etmpFields": {
     "dateOfSubmission": "2016-10-24"

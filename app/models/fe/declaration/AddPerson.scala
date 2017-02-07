@@ -54,7 +54,7 @@ object AddPerson {
       ) (unlift(AddPerson.unapply))
   }
 
-  implicit def conv(aboutYou: Aboutyou): AddPerson = {
+  implicit def conv(aboutYou: AboutYouRelease7): AddPerson = {
     aboutYou.individualDetails match {
       case Some(dtls) => AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, RoleWithinBusiness.conv(aboutYou))
       case None => AddPerson("", None, "", RoleWithinBusiness.conv(aboutYou))
