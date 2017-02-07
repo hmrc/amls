@@ -54,6 +54,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Some("entity name"),
         None,
         agentPremisesData,
+        None,
         Some(StatusConstants.Unchanged),
         Some(StringOrInt(111111)),
         None)

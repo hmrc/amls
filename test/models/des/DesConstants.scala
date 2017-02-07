@@ -256,6 +256,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi51,
+    None,
     Some("Added"),
     Some(StringOrInt(111111))
   )
@@ -344,6 +345,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi61,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("1"))
   )
@@ -354,6 +356,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName for amend"),
     agentPremisesapi61,
+    None,
     Some("Added"),
     Some(StringOrInt("133333"))
   )
@@ -383,6 +386,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi62,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
   )
@@ -412,6 +416,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi63,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("3"))
   )
@@ -652,6 +657,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises2,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -681,6 +687,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises3,
+    None,
     Some(StatusConstants.Added),
     Some(StringOrInt("333333"))
   )
@@ -710,6 +717,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises4,
+    None,
     None,
     Some(StringOrInt("444444"))
   )
@@ -768,6 +776,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises2,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -797,6 +806,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises3,
+    None,
     Some(StatusConstants.Updated),
     Some(StringOrInt("333333"))
   )
@@ -826,6 +836,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises4,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("444444"))
   )

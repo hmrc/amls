@@ -16,7 +16,7 @@
 
 package models.des.tradingpremises
 
-import models.des.{DesConstants, StringOrInt}
+import models.des.{DesConstants, RequestType, StringOrInt}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
@@ -91,7 +91,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
     "serialise Trading premises model" in {
 
-      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, Some("Deleted"),
+      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, None, Some("Deleted"),
         Some(StringOrInt("11223344")), Some("2010-01-23"))
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
@@ -165,6 +165,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           None,
           Some("LLP Partnership"),
           agentPremises,
+          None,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
           Some("2009-05-03")
@@ -198,7 +199,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           Some(BusinessStructure.UnincorporatedBody),None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
-
+      implicit val requestType = RequestType.Amendment
       val converted = TradingPremises.convert(tradingPremises)
       converted must be (desTradingPremises)
 

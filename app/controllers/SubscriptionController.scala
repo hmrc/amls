@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import models.des.RequestType
 import models.fe
 import play.api.Logger
 import play.api.data.validation.ValidationError
@@ -57,6 +58,7 @@ trait SubscriptionController extends BaseController {
         Logger.debug(s"$prefix - SafeId: $safeId")
         safeIdRegex.findFirstIn(safeId) match {
           case Some(_) =>
+            implicit val requestType = RequestType.Subscription
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
                 service.subscribe(safeId, body) map {

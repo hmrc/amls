@@ -81,7 +81,8 @@ object SubscriptionRequest {
      tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
      responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
      msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
-     hvdConv : fe.hvd.Hvd => Hvd
+     hvdConv : fe.hvd.Hvd => Hvd,
+     requestType: RequestType
   ): Outgoing =
     SubscriptionRequest(
       acknowledgementReference = gen.ackRef,
