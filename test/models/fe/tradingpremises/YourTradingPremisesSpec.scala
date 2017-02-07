@@ -80,7 +80,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
         Eab(false),
         Bpsp(true),
         Tditpsp(false),
-        "2001-01-01"
+        Some("2001-01-01")
       )
 
       val feModel = YourTradingPremises("TradingName",

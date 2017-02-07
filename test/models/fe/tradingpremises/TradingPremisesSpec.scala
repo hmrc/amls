@@ -186,7 +186,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
         Eab(false),
         Bpsp(false),
         Tditpsp(false),
-        "1975",
+        Some("1975"),
         None,
         Some("2002-03-01")
       ),

@@ -42,7 +42,6 @@ case class AgentDetails(
       this.agentLegalEntity.equals(that.agentLegalEntity) &&
         this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
         this.agentPremises.equals(that.agentPremises) &&
-        this.startDate.equals(that.startDate) &&
         this.status.equals(this.status)
     case _ => false
   }

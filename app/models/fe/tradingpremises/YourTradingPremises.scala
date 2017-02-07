@@ -57,7 +57,7 @@ object YourTradingPremises {
   implicit def conv(agentPremises: AgentPremises): YourTradingPremises = {
     YourTradingPremises(agentPremises.tradingName,
       agentPremises.businessAddress,
-      LocalDate.parse(agentPremises.startDate),
+      LocalDate.parse(agentPremises.startDate.getOrElse("")),
       agentPremises.residential)
   }
 

@@ -248,7 +248,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
       val agentPremises = mock[AgentPremises]
-      when(agentPremises.startDate).thenReturn("2016-02-02")
+      when(agentPremises.startDate).thenReturn(Some("2016-02-02"))
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None, agentPremises, Some("Added"), None))))))
       val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
 
@@ -376,7 +376,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val agentPremises = mock[AgentPremises]
 
-      when(agentPremises.startDate).thenReturn("2016-08-10")
+      when(agentPremises.startDate).thenReturn(Some("2016-08-10"))
 
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, Some(""), agentPremises, Some("Added"), None))))))
 
@@ -471,7 +471,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val agentPremises = mock[AgentPremises]
 
-      when(agentPremises.startDate).thenReturn("2016-11-01")
+      when(agentPremises.startDate).thenReturn(Some("2016-11-01"))
 
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None, agentPremises, Some("Added"), None))))))
 

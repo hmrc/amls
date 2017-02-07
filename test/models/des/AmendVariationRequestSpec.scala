@@ -372,7 +372,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     SubscriptionRequest(
       BusinessMatchingSection.modelForView,
       EabSection.modelForView,
-      TradingPremisesSection.modelForView,
+      TradingPremisesSection.tradingPremisesOnlyAgentModel,
       AboutTheBusinessSection.modelForView,
       BankDetailsSection.modelForView,
       AboutYouSection.modelforView,
@@ -427,7 +427,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
     release7BusinessActivities,
-    DesConstants.testTradingPremisesAPI6,
+    DesConstants.tradingPremisesAPI6Release7,
     DesConstants.testBankDetails,
     Some(release7Msb),
     Some(DesConstants.testHvd),

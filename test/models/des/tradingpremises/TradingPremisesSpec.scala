@@ -63,7 +63,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
-      "2008-01-01",
+      Some("2008-01-01"),
       Some("1999-01-01"),
       Some("2003-04-05"),
       None
@@ -77,7 +77,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Eab(false),
       Bpsp(false),
       Tditpsp(false),
-      "2008-01-01")
+      Some("2008-01-01"))
 
     val agentPremises2 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
       Msb(false, false, false, false, false),
@@ -87,7 +87,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Eab(false),
       Bpsp(false),
       Tditpsp(true),
-      "2008-01-01")
+      Some("2008-01-01"))
 
     "serialise Trading premises model" in {
 
@@ -199,7 +199,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           Some(BusinessStructure.UnincorporatedBody),None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
-      implicit val requestType = RequestType.Amendment
+      implicit val requestType = RequestType.Subscription
       val converted = TradingPremises.convert(tradingPremises)
       converted must be (desTradingPremises)
 

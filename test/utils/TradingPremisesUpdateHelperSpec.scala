@@ -43,7 +43,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Eab(true),
         Bpsp(true),
         Tditpsp(false),
-        "2008-01-01",
+        Some("2008-01-01"),
         None,
         None,
         None)
@@ -134,7 +134,6 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(DesConstants.amendStatusDesVariationRequestTP, viewModel)
 
       result.tradingPremises must be(testRequest.tradingPremises)
-
     }
 
     "return request with an own premises added" in {
