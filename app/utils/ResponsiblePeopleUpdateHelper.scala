@@ -34,7 +34,7 @@ trait ResponsiblePeopleUpdateHelper {
     val viewRp: ResponsiblePersons = rpOption.getOrElse(None)
 
     val desRPExtra = desRp.extra.copy(
-      retestFlag = viewRp.extra.retestFlag,
+      retest = viewRp.extra.retest,
       testResult = viewRp.extra.testResult,
       testDate = viewRp.extra.testDate
     )
