@@ -16,6 +16,7 @@
 
 package models.des.tradingpremises
 
+import config.AmlsConfig
 import models.des.{StatusProvider, StringOrInt}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -23,6 +24,8 @@ import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetails(
                          agentLegalEntity: String,
+                         companyRegNo: Option[String] = None,
+                         dateOfBirth: Option[String],
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
@@ -35,9 +38,9 @@ case class AgentDetails(
   override def equals(other: Any): Boolean = other match {
     case (that: AgentDetails) =>
       this.agentLegalEntity.equals(that.agentLegalEntity) &&
-      this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
-      this.agentPremises.equals(that.agentPremises) &&
-      this.status.equals(this.status)
+        this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
+        this.agentPremises.equals(that.agentPremises) &&
+        this.status.equals(this.status)
     case _ => false
   }
 }
@@ -47,6 +50,8 @@ object AgentDetails {
   implicit val jsonReads: Reads[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").read[String] and
+        (__ \ "companyRegNo").readNullable[String] and
+        (__ \ "dateOfBirth").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
@@ -58,6 +63,8 @@ object AgentDetails {
   implicit val jsonWrites: Writes[AgentDetails] = {
     (
       (__ \ "agentLegalEntity").write[String] and
+        (__ \ "companyRegNo").writeNullable[String] and
+        (__ \ "dateOfBirth").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
@@ -66,13 +73,26 @@ object AgentDetails {
       ) (unlift(AgentDetails.unapply _))
   }
 
-  implicit def convert(tradingPremises: FETradingPremises): AgentDetails =
+  implicit def convert(tradingPremises: FETradingPremises): AgentDetails = {
+
+    def assignCompanyRegNo = if (AmlsConfig.release7) {
+      tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber)
+    } else {
+      None
+    }
+
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
+      companyRegNo = assignCompanyRegNo,
+      dateOfBirth = for {
+        bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
+        agentName <- tradingPremises.agentName
+        dob <- agentName.agentDateOfBirth
+      } yield dob,
       agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
         case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
         case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
-          tradingPremises.agentCompanyName.fold("")(x => x.agentCompanyName)
+          tradingPremises.agentCompanyDetails.fold("")(x => x.agentCompanyName)
         case BusinessStructure.Partnership => tradingPremises.agentPartnership.fold("")(x => x.agentPartnership)
         case BusinessStructure.UnincorporatedBody => ""
       })),
@@ -81,6 +101,7 @@ object AgentDetails {
       tradingPremises.lineId,
       agentDetailsChangeDate = tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange)
     )
+  }
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): Seq[AgentDetails] =
     tradingPremises.map(convert)

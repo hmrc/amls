@@ -117,7 +117,7 @@ object DefaultDesValues {
     Tditpsp(false),
     "2008-01-01")
 
-  private val agentDetails = AgentDetails("Sole Proprietor", Some("entity name"), agentPremises)
+  private val agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
 
   private val agentBusinessPremises = AgentBusinessPremises(true, Some(Seq(agentDetails)))
 
@@ -201,7 +201,7 @@ object DefaultDesValues {
       Some(MsbMtDetails(true,Some("123456"),
         IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
         true,
-        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))), None)),
       Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
         Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))))), None)
   )

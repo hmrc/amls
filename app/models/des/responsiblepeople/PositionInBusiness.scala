@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import config.AmlsConfig
 import models.fe
 import models.fe.businessmatching.BusinessType
 import models.fe.responsiblepeople.{SoleProprietor => FeSoleProprietor, _}
@@ -35,9 +36,9 @@ object PositionInBusiness {
     }
   }
 
-  implicit def convPositions(positions: Positions, bm: fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
-    val (beneficialOwner, director, internalAccountant, nominatedOfficer, partner, soleProprietor) = positions.positions.foldLeft(false, false,
-      false, false, false, false){
+  def getPositionAsflags(positions: Positions) = {
+    positions.positions.foldLeft(false, false,
+      false, false, false, false, false){
       (pos, p) => p match {
         case BeneficialOwner => pos.copy(_1 = true)
         case Director => pos.copy(_2 = true)
@@ -45,8 +46,19 @@ object PositionInBusiness {
         case NominatedOfficer => pos.copy(_4 = true)
         case Partner => pos.copy(_5 = true)
         case FeSoleProprietor => pos.copy(_6 = true)
+        case DesignatedMember => pos.copy(_7 = true)
       }
     }
+  }
+
+  implicit def convPositions(positions: Positions, bm: fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
+    val (beneficialOwner, director, internalAccountant, nominatedOfficer,
+    partner, soleProprietor, designatedMember) = getPositionAsflags(positions)
+    val designatedMemberRl7 = AmlsConfig.release7 match {
+                            case true => Some(designatedMember)
+                            case _ => None
+                          }
+
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(Some(SoleProprietor(soleProprietor, nominatedOfficer)), None,
         None))
@@ -54,7 +66,7 @@ object PositionInBusiness {
         None))
       case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody =>
         Some(PositionInBusiness(None, None,
-          Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer))))
+          Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, designatedMemberRl7))))
     }
 
   }
