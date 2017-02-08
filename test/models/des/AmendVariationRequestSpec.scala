@@ -334,7 +334,9 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     "convert frontend model to des model for amendment" in {
       implicit val mt = Amendment
       implicit val requestType = RequestType.Amendment
-      AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Amendment"))
+      AmendVariationRequest.convert(feSubscriptionReq.copy(tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)) must be(
+        convertedDesModelRelease7.copy(amlsMessageType = "Amendment", tradingPremises = DesConstants.tradingPremisesAPI6Release7))
+
     }
 
     "convert frontend model to des model for variation" in {

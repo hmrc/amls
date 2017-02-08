@@ -340,27 +340,6 @@ object DesConstants {
     Some("1967-08-13"),
     None
   )
-
-  val agentPremisesapi61Release7 = AgentPremises("aaaaaaaaaaaa",
-    TradingPremisesAddress("a",
-      "a",
-      Some("a"),
-      Some("a"),
-      "GB",
-      Some("aaaaaaaaaa")),
-    true,
-    Msb(true, true, false, false, false),
-    Hvd(true),
-    Asp(true),
-    Tcsp(true),
-    Eab(true),
-    Bpsp(true),
-    Tditpsp(true),
-    None,
-    None
-  )
-
-
   val agentDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
     None,
@@ -371,15 +350,35 @@ object DesConstants {
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("1"))
   )
+
+  val agentPremisesapi61Release7 = AgentPremises("aaaaaaaaaaaa",
+    TradingPremisesAddress("a",
+      "a",
+      Some("a"),
+      Some("a"),
+      "GB",
+      Some("aaaaaaaaaa")),
+    true,
+    Msb(true, true, true, true, false),
+    Hvd(true),
+    Asp(true),
+    Tcsp(true),
+    Eab(true),
+    Bpsp(true),
+    Tditpsp(true),
+    None,
+    None
+  )
+
   val agentPremisesapi6Release7 = AgentDetails(
     "Sole Proprietor",
     None,
     Some("1970-01-01"),
-    Some("AgentLegalEntityName"),
+    Some("aaaaaaaaaaa"),
     agentPremisesapi61Release7,
-    Some("1967-08-13"),
+    None,
     Some(StatusConstants.Unchanged),
-    Some(StringOrInt("1"))
+    Some(StringOrInt("2"))
   )
   val agentAmendDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
@@ -410,6 +409,8 @@ object DesConstants {
     Some("1967-08-13"),
     None
   )
+
+
 
   val agentDetailsAPI62 = AgentDetails(
     "Sole Proprietor",
