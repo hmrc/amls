@@ -16,6 +16,7 @@
 
 package models.fe.declaration
 
+import config.AmlsConfig
 import models.des.aboutyou.AboutYouRelease7
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
@@ -134,7 +135,12 @@ object RoleWithinBusiness {
         withinTheBusiness <- withinTheBusinessO
         forTheBusiness <- forTheBusinessO
       } yield {
-        withinTheBusiness ++ forTheBusiness
+
+        if (AmlsConfig.release7) {
+          withinTheBusiness ++ forTheBusiness
+        } else {
+          if (aboutYou.employedWithinBusiness) withinTheBusiness else forTheBusiness
+        }
       }
 
     roleTypesWithinBusiness.map(RoleWithinBusiness(_)).getOrElse(RoleWithinBusiness(Set.empty))

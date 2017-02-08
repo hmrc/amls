@@ -18,10 +18,10 @@ package models.fe.declaration
 
 import models.des.aboutyou._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 
-class AddPersonSpec extends PlaySpec with MockitoSugar {
+class AddPersonSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   "JSON" must {
 
