@@ -122,30 +122,185 @@ class AboutYouRelease7Spec extends PlaySpec {
       }
     }
 
-    "Convert from old model to new release 7 model" in {
+    "Convert from old model to new release 7 model" when {
+      "given a Beneficial Shareholder and external accountant" in {
 
-      val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
-      val employedWithinBusiness = false
-      val oldModel = Aboutyou(
-        individualDetails,
-        employedWithinBusiness,
-        Some("Beneficial Shareholder"),
-        None,
-        Some("External Accountant"),
-        None
-      )
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Beneficial Shareholder"),
+          None,
+          Some("External Accountant"),
+          None
+        )
 
-      val release7Model = AboutYouRelease7(individualDetails,
-        employedWithinBusiness,
-        Some(RolesWithinBusiness(beneficialShareholder = true, false,false,false,false,false,false,false,None)),
-        Some(RoleForTheBusiness(externalAccountant = true, false, None))
-      )
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(beneficialShareholder = true, false, false, false, false, false, false, false, None)),
+          Some(RoleForTheBusiness(externalAccountant = true, false, None))
+        )
 
-      AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+
+      "given a Director" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Director"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, director = true, false, false, false, false, false, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given a Partner" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Partner"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, partner = true, false, false, false, false, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given an Internal Accountant" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Internal Accountant"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, false, internalAccountant = true, false, false, false, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given a Sole Proprietor" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Sole Proprietor"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, false, false, soleProprietor = true, false, false, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given a Nominated Officer" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Nominated Officer"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, false, false, false, nominatedOfficer = true, false, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given a Designated Member" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Designated Member"),
+          None,
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, false, false, false, false, designatedMember = true, false, None)),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
+      "given a 'Other' role'" in {
+
+        val individualDetails = Some(IndividualDetails("fName", None, "lName"))
+
+        val employedWithinBusiness = false
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Other"),
+          Some("Some other text"),
+          None,
+          None
+        )
+
+        val release7Model = AboutYouRelease7(individualDetails,
+          employedWithinBusiness,
+          Some(RolesWithinBusiness(false, false, false, false, false, false, false, true, Some("Some other text"))),
+          Some(RoleForTheBusiness(false, false, None))
+        )
+
+        AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
+      }
     }
-
-
 
   }
 }
