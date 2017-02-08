@@ -143,6 +143,7 @@ object DefaultDesValues {
   private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
   private val extraAdditional = Some(AddressUnderThreeYears(RPAddress("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
+  private val positionInBusinessForRelease7 = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false))),None, None))
   private val positionInBusiness= Some(PositionInBusiness(Some(DesSoleProprietor(true, true)),
     None, None))
 
@@ -160,6 +161,28 @@ object DefaultDesValues {
     extraAdditional,
     Some("1-3 years"),
     positionInBusiness,
+    regDtls,
+    true,
+    Some("Some training"),
+    true,
+    Some("test"),
+    Some((new LocalDate()).toString("yyyy-MM-dd")),
+    None,
+    Some(MsbOrTcsp(true)),
+    RPExtra()
+  )
+  ))
+  val ResponsiblePersonsSectionForRelease7 = Some(Seq(ResponsiblePersons(
+    nameDtls,
+    nationalDtls,
+    contactDtls,
+    currentDesAddress,
+    Some("0-6 months"),
+    additionalDesAddress,
+    Some("7-12 months"),
+    extraAdditional,
+    Some("1-3 years"),
+    positionInBusinessForRelease7,
     regDtls,
     true,
     Some("Some training"),

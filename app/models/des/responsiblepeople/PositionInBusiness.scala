@@ -52,21 +52,38 @@ object PositionInBusiness {
   }
 
   implicit def convPositions(positions: Positions, bm: fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
-    val (beneficialOwner, director, internalAccountant, nominatedOfficer,
-    partner, soleProprietor, designatedMember) = getPositionAsflags(positions)
+    val (
+      beneficialOwner,
+      director,
+      internalAccountant,
+      nominatedOfficer,
+      partner,
+      soleProprietor,
+      designatedMember
+      ) = getPositionAsflags(positions)
     val designatedMemberRl7 = AmlsConfig.release7 match {
                             case true => Some(designatedMember)
                             case _ => None
                           }
 
+    def assignOther = if (AmlsConfig.release7) Some(false) else None
+
     bm.reviewDetails.businessType match {
-      case BusinessType.SoleProprietor => Some(PositionInBusiness(Some(SoleProprietor(soleProprietor, nominatedOfficer)), None,
-        None))
-      case BusinessType.Partnership => Some(PositionInBusiness(None, Some(Partnership(partner, nominatedOfficer)),
-        None))
-      case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody =>
-        Some(PositionInBusiness(None, None,
-          Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, designatedMemberRl7))))
+      case BusinessType.SoleProprietor => Some(PositionInBusiness(
+        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther)),
+        None,
+        None
+      ))
+      case BusinessType.Partnership => Some(PositionInBusiness(
+        None,
+        Some(Partnership(partner, nominatedOfficer, assignOther)),
+        None
+      ))
+      case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(
+        None,
+        None,
+        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, designatedMemberRl7, assignOther))
+      ))
     }
 
   }

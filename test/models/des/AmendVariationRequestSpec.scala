@@ -436,7 +436,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     Some(DesConstants.testTcspTrustCompFormationAgt),
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
-    Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6),
     DesConstants.extraFields
   )
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
