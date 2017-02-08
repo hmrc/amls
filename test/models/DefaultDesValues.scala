@@ -117,7 +117,7 @@ object DefaultDesValues {
     Tditpsp(false),
     "2008-01-01")
 
-  private val agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
+  private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
 
   private val agentBusinessPremises = AgentBusinessPremises(true, Some(Seq(agentDetails)))
 
@@ -133,7 +133,7 @@ object DefaultDesValues {
         BankAccount("Another Business account", "Another business's", false, IBANNumber("12345678")))))
   }
 
-  val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
+  val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Other"), Some("Agent"), Some("Other"), Some("Agent"))
 
   private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
     Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
