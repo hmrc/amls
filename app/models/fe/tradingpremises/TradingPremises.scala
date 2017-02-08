@@ -41,7 +41,7 @@ object TradingPremises {
     val tmp =
       TradingPremises(
         Some(RegisteringAgentPremises(true)),
-        agentDetails.agentPremises,
+        agentDetails,
         agentDetails.agentLegalEntity,
         None,
         None,
