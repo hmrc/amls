@@ -50,8 +50,7 @@ object Aboutyou {
     val roleFor: Option[String] = {
       aboutYouRelease7.roleForTheBusiness match {
         case Some(x) if x.externalAccountant => Some("External Accountant")
-        case Some(x) if x.other => Some("Other")
-        case _ => None
+        case _ => Some("Other")
       }
     }
 
