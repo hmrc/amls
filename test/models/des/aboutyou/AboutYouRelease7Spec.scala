@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.AddPersonRelease7
+import models.fe.declaration.AddPerson
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
@@ -79,15 +79,15 @@ class AboutYouRelease7Spec extends PlaySpec {
           Some(RoleForTheBusiness(false, false, None))
         )
 
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember
+        val frontendModel = AddPerson("fName", None, "lName",
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember
           ))
         )
 
@@ -103,17 +103,17 @@ class AboutYouRelease7Spec extends PlaySpec {
           Some(RoleForTheBusiness(true, true, Some("some other text")))
         )
 
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.ExternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember,
-            models.fe.declaration.release7.Other("some other text")
+        val frontendModel = AddPerson("fName", None, "lName",
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.ExternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember,
+            models.fe.declaration.Other("some other text")
           ))
         )
 

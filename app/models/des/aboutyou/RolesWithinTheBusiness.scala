@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.release7._
+import models.fe.declaration._
 import play.api.libs.json.Json
 
 case class RolesWithinBusiness(beneficialShareholder: Boolean,

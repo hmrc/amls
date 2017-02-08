@@ -67,6 +67,6 @@ object ExtraFields {
   }
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {
-    ExtraFields(Declaration(true), AboutYouRelease7.convertToRelease7(person), None)
+    ExtraFields(Declaration(true), AboutYouRelease7.convert(person), None)
   }
 }

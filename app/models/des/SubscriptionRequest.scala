@@ -142,7 +142,7 @@ object SubscriptionRequest {
      contactABConv : fe.aboutthebusiness.AboutTheBusiness => BusinessContactDetails,
      conv4 : Seq[fe.bankdetails.BankDetails] => BankDetails,
      tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
-     aboutyouConv: fe.declaration.AddPerson => Aboutyou,
+     aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
      aspConv : fe.asp.Asp => Asp,
      aspOrTcspConv : fe.supervision.Supervision => AspOrTcsp,
      tcspAllConv: fe.tcsp.Tcsp => TcspAll,
@@ -170,7 +170,7 @@ object SubscriptionRequest {
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection.map(conv3),
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
-      filingIndividual = AboutYouRelease7.convertToRelease7(data.aboutYouSection),
+      filingIndividual = data.aboutYouSection,
       declaration = Declaration(true)
     )
 }

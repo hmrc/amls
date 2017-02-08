@@ -18,7 +18,7 @@ package models.des
 
 import config.AmlsConfig
 import models.des.aboutthebusiness._
-import models.des.aboutyou.Aboutyou
+import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 import models.des.asp.Asp
 import models.des.bankdetails.{BankDetails, BankDetailsView}
 import models.des.businessactivities.BusinessActivities
@@ -147,7 +147,7 @@ object AmendVariationRequest {
      contactABConv : fe.aboutthebusiness.AboutTheBusiness => BusinessContactDetails,
      conv4 : Seq[fe.bankdetails.BankDetails] => Option[BankDetailsView],
      tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
-     aboutyouConv: fe.declaration.AddPerson => Aboutyou,
+     aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
      aspConv : fe.asp.Asp => Asp,
      aspOrTcspConv : fe.supervision.Supervision => AspOrTcsp,
      tcspAllConv: fe.tcsp.Tcsp => TcspAll,

@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.release7._
+import models.fe.declaration._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 

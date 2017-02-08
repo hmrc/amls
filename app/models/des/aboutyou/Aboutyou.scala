@@ -31,27 +31,6 @@ case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
 object Aboutyou {
   implicit val format = Json.format[Aboutyou]
 
-  implicit def convert(person: models.fe.declaration.AddPerson): Aboutyou = {
-    person.roleWithinBusiness match {
-      case Other(y) => Aboutyou(person, false, None, None, Some("Other"), Some(y))
-      case extAcct if (extAcct equals ExternalAccountant) => Aboutyou(person, false, None, None, Some(extAcct))
-      case intType => Aboutyou(person, true, Some(intType), None, Some("Other"), None)
-    }
-  }
-
-  implicit def roleConvert(role: RoleWithinBusiness): String = {
-    role match {
-      case BeneficialShareholder => "Beneficial Shareholder"
-      case Director => "Director"
-      case ExternalAccountant => "External Accountant"
-      case InternalAccountant => "Internal Accountant"
-      case NominatedOfficer => "Nominated officer"
-      case Partner => "Partner"
-      case SoleProprietor => "Sole proprietor"
-      case Other(details) => details
-    }
-  }
-
   implicit def convertFromRelease7(aboutYouRelease7: AboutYouRelease7): Aboutyou = {
 
     val roleWithin: Option[String] = {

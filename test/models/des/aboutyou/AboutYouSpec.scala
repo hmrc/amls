@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.{AddPersonRelease7, BeneficialShareholder, ExternalAccountant, Other}
+import models.fe.declaration._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
@@ -35,24 +35,6 @@ class AboutYouSpec extends PlaySpec {
 
       Aboutyou.format.writes(aboutyouModel) must be(Json.obj("individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
         "employedWithinBusiness" -> false, "roleForTheBusiness" -> "External Accountant"))
-    }
-
-    "be convertible from FE request to DES for roleWithinBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", Some("middlename"), "lName", BeneficialShareholder)
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", Some("middlename"), "lName")), true, Some("Beneficial Shareholder"), None, Some("Other"), None)
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    }
-
-    "be convertible from FE request to DES for roleForTheBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", ExternalAccountant)
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("External Accountant"), None)
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    }
-
-    "be convertible from FE request to DES for OtherroleWithinBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", Other("Agent"))
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
     }
 
     "Convert from new release 7 model to old model" in {

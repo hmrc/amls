@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.release7.{Other, ExternalAccountant, RoleType, RoleWithinBusiness}
+import models.fe.declaration.{Other, ExternalAccountant, RoleType, RoleWithinBusiness}
 import play.api.libs.json.Json
 
 case class RoleForTheBusiness(externalAccountant: Boolean,

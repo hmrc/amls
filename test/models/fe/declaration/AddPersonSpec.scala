@@ -25,90 +25,6 @@ class AddPersonSpec extends PlaySpec with MockitoSugar {
 
   "JSON" must {
 
-    "Read the json and return the AddPerson domain object successfully" in {
-
-      val json = Json.obj(
-        "firstName" -> "name",
-        "middleName" -> "some",
-        "lastName" -> "surname",
-        "roleWithinBusiness" -> "02"
-      )
-
-      AddPerson.jsonReads.reads(json) must be(JsSuccess(AddPerson("name", Some("some"), "surname", Director)))
-    }
-
-    "Write the json successfully from the AddPerson domain object created" in {
-
-      val addPerson = AddPerson("name", Some("some"), "surname", Director)
-
-      val json = Json.obj(
-        "firstName" -> "name",
-        "middleName" -> "some",
-        "lastName" -> "surname",
-        "roleWithinBusiness" -> "02"
-      )
-
-      AddPerson.jsonWrites.writes(addPerson) must be(json)
-    }
-
-    "convert des model to frontend model:roleWithinBusiness" in {
-
-      val desAboutYou = Aboutyou(
-        Some(IndividualDetails(
-          "FirstName",
-          Some("MiddleName"),
-          "LastName")),
-        true,
-        Some("Beneficial Shareholder"),
-        None,
-        Some("Other"),
-        Some("SpecifyOtherRoleForBusiness")
-      )
-
-      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", BeneficialShareholder))
-    }
-
-    "convert des model to frontend model:roleForTheBusiness" in {
-
-      val desAboutYou = Aboutyou(
-        Some(IndividualDetails(
-          "FirstName",
-          Some("MiddleName"),
-          "LastName")),
-        false,
-        Some("Beneficial Shareholder"),
-        None,
-        Some("External Accountant"),
-        None
-      )
-
-      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", ExternalAccountant))
-    }
-
-    "convert des model to frontend model:Other" in {
-
-      val desAboutYou = Aboutyou(
-        Some(IndividualDetails(
-          "FirstName",
-          Some("MiddleName"),
-          "LastName")),
-        false,
-        Some("Beneficial Shareholder"),
-        None,
-        None,
-        Some("Other")
-      )
-
-      AddPerson.conv(desAboutYou) must be(AddPerson("FirstName",Some("MiddleName"),"LastName", Other("Other")))
-    }
-  }
-}
-
-
-class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
-
-  "JSON" must {
-
     "Read and write the json successfully" when {
       "given no Other and no ExternalAccountant role" in {
 
@@ -127,21 +43,21 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
           )
         )
 
-        val model = AddPersonRelease7(
+        val model = AddPerson(
           "name", Some("some"), "surname",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember
           ))
         )
 
-        AddPersonRelease7.jsonReads.reads(json) must be(JsSuccess(model))
-        AddPersonRelease7.jsonWrites.writes(model) must be(json)
+        AddPerson.jsonReads.reads(json) must be(JsSuccess(model))
+        AddPerson.jsonWrites.writes(model) must be(json)
 
       }
 
@@ -166,22 +82,22 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
         )
 
 
-        val model = AddPersonRelease7(
+        val model = AddPerson(
           "name", Some("some"), "surname",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.ExternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember,
-            models.fe.declaration.release7.Other("Other details here")
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.ExternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember,
+            models.fe.declaration.Other("Other details here")
           ))
         )
 
-        AddPersonRelease7.jsonReads.reads(json) must be(JsSuccess(model))
+        AddPerson.jsonReads.reads(json) must be(JsSuccess(model))
 
       }
 
@@ -206,22 +122,22 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
         )
 
 
-        val model = AddPersonRelease7(
+        val model = AddPerson(
           "name", Some("some"), "surname",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.ExternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember,
-            models.fe.declaration.release7.Other("Other details here")
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.ExternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember,
+            models.fe.declaration.Other("Other details here")
           ))
         )
 
-        AddPersonRelease7.jsonWrites.writes(model) must be(json)
+        AddPerson.jsonWrites.writes(model) must be(json)
 
       }
     }
@@ -235,19 +151,19 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
           Some(RoleForTheBusiness(false, false, None))
         )
 
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set(
-            models.fe.declaration.release7.BeneficialShareholder,
-            models.fe.declaration.release7.Director,
-            models.fe.declaration.release7.Partner,
-            models.fe.declaration.release7.InternalAccountant,
-            models.fe.declaration.release7.SoleProprietor,
-            models.fe.declaration.release7.NominatedOfficer,
-            models.fe.declaration.release7.DesignatedMember
+        val frontendModel = AddPerson("fName", None, "lName",
+          models.fe.declaration.RoleWithinBusiness(Set(
+            models.fe.declaration.BeneficialShareholder,
+            models.fe.declaration.Director,
+            models.fe.declaration.Partner,
+            models.fe.declaration.InternalAccountant,
+            models.fe.declaration.SoleProprietor,
+            models.fe.declaration.NominatedOfficer,
+            models.fe.declaration.DesignatedMember
           ))
         )
 
-        AddPersonRelease7.convert(desModel) must be(frontendModel)
+        AddPerson.convert(desModel) must be(frontendModel)
 
       }
 
@@ -259,11 +175,11 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
           Some(RoleForTheBusiness(false, false, None))
         )
 
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set())
+        val frontendModel = AddPerson("fName", None, "lName",
+          models.fe.declaration.RoleWithinBusiness(Set())
         )
 
-        AddPersonRelease7.convert(desModel) must be(frontendModel)
+        AddPerson.convert(desModel) must be(frontendModel)
 
       }
 
@@ -275,11 +191,11 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
           None
         )
 
-        val frontendModel = AddPersonRelease7("fName", None, "lName",
-          models.fe.declaration.release7.RoleWithinBusiness(Set())
+        val frontendModel = AddPerson("fName", None, "lName",
+          models.fe.declaration.RoleWithinBusiness(Set())
         )
 
-        AddPersonRelease7.convert(desModel) must be(frontendModel)
+        AddPerson.convert(desModel) must be(frontendModel)
 
       }
 
@@ -291,11 +207,11 @@ class AddPersonRelease7Spec extends PlaySpec with MockitoSugar {
           None
         )
 
-        val frontendModel = AddPersonRelease7("", None, "",
-          models.fe.declaration.release7.RoleWithinBusiness(Set())
+        val frontendModel = AddPerson("", None, "",
+          models.fe.declaration.RoleWithinBusiness(Set())
         )
 
-        AddPersonRelease7.convert(desModel) must be(frontendModel)
+        AddPerson.convert(desModel) must be(frontendModel)
 
       }
     }

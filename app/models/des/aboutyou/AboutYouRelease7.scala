@@ -27,8 +27,8 @@ object AboutYouRelease7 {
   implicit val format = Json.format[AboutYouRelease7]
 
 
-  private def rolesWithinBusinessConvert(person: models.fe.declaration.AddPersonRelease7): models.des.aboutyou.RolesWithinBusiness = {
-    import models.fe.declaration.release7._
+  private def rolesWithinBusinessConvert(person: models.fe.declaration.AddPerson): models.des.aboutyou.RolesWithinBusiness = {
+    import models.fe.declaration._
 
     person.roleWithinBusiness.roles.foldLeft(
       RolesWithinBusiness(false, false, false, false, false, false, false, false, None)) {
@@ -47,8 +47,8 @@ object AboutYouRelease7 {
     }
   }
 
-  private def roleForTheBusinessConvert(person: models.fe.declaration.AddPersonRelease7): models.des.aboutyou.RoleForTheBusiness = {
-    import models.fe.declaration.release7._
+  private def roleForTheBusinessConvert(person: models.fe.declaration.AddPerson): models.des.aboutyou.RoleForTheBusiness = {
+    import models.fe.declaration._
 
     person.roleWithinBusiness.roles.foldLeft(
       RoleForTheBusiness(false, false, None)) {
@@ -61,9 +61,9 @@ object AboutYouRelease7 {
     }
   }
 
-  def convert(person: models.fe.declaration.AddPersonRelease7): AboutYouRelease7 = {
+  implicit def convert(person: models.fe.declaration.AddPerson): AboutYouRelease7 = {
 
-    import models.fe.declaration.release7._
+    import models.fe.declaration._
 
     val withinBusiness = !person.roleWithinBusiness.roles.contains(ExternalAccountant)
 

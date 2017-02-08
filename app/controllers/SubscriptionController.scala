@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import models.des.SubscriptionRequest
 import models.fe
 import play.api.Logger
 import play.api.data.validation.ValidationError
@@ -59,7 +60,7 @@ trait SubscriptionController extends BaseController {
           case Some(_) =>
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
-                service.subscribe(safeId, body) map {
+                service.subscribe(safeId, SubscriptionRequest.convert(body)) map {
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
