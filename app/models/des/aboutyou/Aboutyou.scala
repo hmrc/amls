@@ -39,8 +39,8 @@ object Aboutyou {
         case Some(x) if x.director => Some("Director")
         case Some(x) if x.partner => Some("Partner")
         case Some(x) if x.internalAccountant => Some("Internal Accountant")
-        case Some(x) if x.soleProprietor => Some("Sole Proprietor")
-        case Some(x) if x.nominatedOfficer => Some("Nominated Officer")
+        case Some(x) if x.soleProprietor => Some("Sole proprietor")
+        case Some(x) if x.nominatedOfficer => Some("Nominated officer")
         case Some(x) if x.designatedMember => Some("Designated Member")
         case Some(x) if x.other => Some("Other")
         case _ => None
