@@ -58,7 +58,7 @@ object ExtraFields {
       (
 
           (__ \ "declaration").write[Declaration] and
-          __.write(aboutYouWrites) and
+            (__ \ "filingIndividual").write(aboutYouWrites) and
           (__ \ "etmpFields").writeNullable[EtmpFields]
         ) (unlift(ExtraFields.unapply _))
     }

@@ -123,7 +123,7 @@ object SubscriptionRequest {
           (__ \ "eabAll").writeNullable[EabAll] and
           (__ \ "eabResdEstAgncy").writeNullable[EabResdEstAgncy] and
           (__ \ "responsiblePersons").writeNullable[Seq[ResponsiblePersons]] and
-          __.write(aboutYouWrites) and
+          (__ \ "filingIndividual").write(aboutYouWrites) and
           (__ \ "declaration").write[Declaration]
         ) (unlift(SubscriptionRequest.unapply _))
     }
