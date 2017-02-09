@@ -20,7 +20,8 @@ import models.fe.responsiblepeople.{NominatedOfficer, Partner, Positions}
 import play.api.libs.json.Json
 
 case class Partnership (partner: Boolean = false,
-                        nominatedOfficer: Boolean = false)
+                        nominatedOfficer: Boolean = false,
+                        other: Option[Boolean] = None)
 
 object Partnership {
   implicit val format = Json.format[Partnership]

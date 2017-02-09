@@ -21,8 +21,9 @@ import play.api.libs.json.Json
 case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
                                         beneficialOwner: Boolean = false,
                                         nominatedOfficer: Boolean = false,
-                                        designatedMember: Option[Boolean] = None
-                                       )
+                                        designatedMember: Option[Boolean] = None,
+                                        other: Option[Boolean] = None)
+
 object CorpBodyOrUnInCorpBodyOrLlp {
 
   implicit val format = Json.format[CorpBodyOrUnInCorpBodyOrLlp]

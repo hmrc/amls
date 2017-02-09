@@ -1693,6 +1693,7 @@ object DesConstants {
       RPExtra(Some(StringOrInt(222222)), None, Some("added"), None, None, None)
     )
   )
+
   val testResponsiblePersonsForRpAPI6 = Seq(
     ResponsiblePersons(
       Some(NameDetails(
@@ -1807,6 +1808,122 @@ object DesConstants {
       RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
     )
   )
+
+  val testResponsiblePersonsForRelease7RpAPI6 = Seq(
+    ResponsiblePersons(
+      Some(NameDetails(
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
+        Some(OthrNamesOrAliasesDetails(
+          true,
+          Some(List("Aliases1"))
+        )),
+        Some(PreviousNameDetails(
+          true,
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+          Some("2001-01-01")
+        ))
+      )),
+      Some(NationalityDetails(
+        false,
+        Some(IdDetail(
+          None,
+          Some(NonUkResident(
+            "2001-01-01",
+            true,
+            Some(PassportDetail(
+              true,
+              PassportNum(Some("AA1111111"), None)
+            ))
+          ))
+        )),
+        Some("AA"),
+        Some("AA")
+      )),
+      None,
+      Some(CurrentAddress(
+        AddressWithChangeDate(
+          "CurrentAddressLine1",
+          "CurrentAddressLine2",
+          Some("CurrentAddressLine3"),
+          Some("CurrentAddressLine4"),
+          "GB",
+          Some("Postcode")
+        )
+      )),
+      Some("3+ years"),
+      None,
+      None,
+      None,
+      None,
+      Some(PositionInBusiness(
+        Some(SoleProprietor(true, true, Some(false))),
+        None,
+        None
+      )),
+      Some(RegDetails(
+        true,
+        Some("123456789"),
+        true,
+        Some("1234567890")
+      )),
+      false,
+      None,
+      true,
+      Some("TrainingDetails"),
+      Some(today),
+      None,
+      Some(MsbOrTcsp(false)),
+      RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
+    ),
+    ResponsiblePersons(
+      Some(NameDetails(
+        PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
+        Some(OthrNamesOrAliasesDetails(
+          true,
+          Some(List("bbbbbbbbbbb"))
+        )),
+        Some(PreviousNameDetails(
+          true,
+          Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+          Some("1967-08-13")
+        ))
+      )),
+      Some(NationalityDetails(
+        true,
+        Some(IdDetail(
+          Some(UkResident("BB000000A")),
+          None
+        )),
+        Some("GB"),
+        Some("GB")
+      )),
+      None,
+      Some(CurrentAddress(
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      )),
+      Some("0-6 months"),
+      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+      Some("0-6 months"),
+      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("bbbbb1")))),
+      Some("7-12 months"),
+      Some(PositionInBusiness(
+        Some(SoleProprietor(true, true, Some(false))),
+        None,
+        None
+      )),
+      Some(RegDetails(true, Some("111111111"), true, Some("1111111111"))
+      ),
+      true,
+      Some("bbbbbbbbbb"),
+      false,
+      None,
+      Some(today),
+      None,
+      Some(MsbOrTcsp(true)),
+      RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
+    )
+  )
+
   val testFilingIndividual = Aboutyou(
     Some(IndividualDetails(
       "FirstName",
