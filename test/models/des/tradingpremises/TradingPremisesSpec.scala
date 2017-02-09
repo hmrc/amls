@@ -64,7 +64,6 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Bpsp(true),
       Tditpsp(false),
       Some("2008-01-01"),
-      Some("1999-01-01"),
       Some("2003-04-05"),
       None
     )
@@ -91,7 +90,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
     "serialise Trading premises model" in {
 
-      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, None, Some("Deleted"),
+      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, None,  Some("1999-01-01"), Some("Deleted"),
         Some(StringOrInt("11223344")), Some("2010-01-23"))
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
@@ -144,9 +143,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
               "bpsp" -> Json.obj("bpsp" -> true),
               "tditpsp" -> Json.obj("tditpsp" -> false),
               "startDate" -> "2008-01-01",
-              "endDate" -> "1999-01-01",
               "agentSectorChgDate" -> "2003-04-05"
             ),
+            "endDate" -> "1999-01-01",
             "status" ->"Deleted",
             "lineId" -> "11223344"
             ))))
@@ -165,7 +164,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           None,
           Some("LLP Partnership"),
           agentPremises,
-          None,
+          None,None,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
           Some("2009-05-03")

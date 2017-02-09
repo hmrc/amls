@@ -150,7 +150,6 @@ class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite
             DesConstants.agentDetailsAPI53
           ))
       )))) must be(convertedModel)
-
     }
 
     "convert des to frontend trading premises when premises lis it empty" in {
@@ -191,11 +190,10 @@ class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite
         Bpsp(false),
         Tditpsp(false),
         Some("1975"),
-        None,
-        Some("2002-03-01")
+        None
       ),
       None,
-      None
+      Some("2002-03-01")
     )
 
     "Business structure is Sole Proprietor" must {

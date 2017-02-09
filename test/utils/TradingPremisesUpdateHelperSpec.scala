@@ -45,7 +45,6 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Tditpsp(false),
         Some("2008-01-01"),
         None,
-        None,
         None)
 
       val agentDetailsData = AgentDetails(
@@ -54,7 +53,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Some("entity name"),
         None,
         agentPremisesData,
-        None,
+        None,None,
         Some(StatusConstants.Unchanged),
         Some(StringOrInt(111111)),
         None)

@@ -30,6 +30,7 @@ case class AgentDetails(
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          startDate: Option[String] = None,
+                         endDate: Option[String] = None,
                          status: Option[String] = None,
                          lineId: Option[StringOrInt] = None,
                          agentDetailsChangeDate: Option[String] = None
@@ -57,6 +58,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "startDate").readNullable[String] and
+        (__ \ "endDate").readNullable[String] and
         (__ \ "status").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "agentDetailsChgDate").readNullable[String]
@@ -71,6 +73,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "startDate").writeNullable[String] and
+        (__ \ "endDate").writeNullable[String] and
         (__ \ "status").writeNullable[String] and
         __.writeNullable[StringOrInt] and
         (__ \ "agentDetailsChgDate").writeNullable[String]
@@ -84,9 +87,10 @@ object AgentDetails {
     } else {
       None
     }
-    val startDate = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => Some(tradingPremises.yourTradingPremises.startDate.toString)
-      case _ => None
+    val (startDate, endDate) = (AmlsConfig.release7, requestType) match {
+      case (true, RequestType.Amendment) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
+        tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
+      case _ => (None, None)
     }
 
     AgentDetails(
@@ -106,6 +110,7 @@ object AgentDetails {
       })),
       agentPremises = tradingPremises,
       startDate,
+      endDate,
       tradingPremises.status,
       tradingPremises.lineId,
       agentDetailsChangeDate = tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange)
