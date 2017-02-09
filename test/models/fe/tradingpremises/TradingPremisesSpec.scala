@@ -49,7 +49,9 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
     ytp, Some(businessStructure), Some(agentName),Some(agentCompanyName),Some(agentPartnership),wdbd, Some(msbServices),
     Some(123456),
     Some("Added"),
-    Some(ActivityEndDate(new LocalDate(1999,1,1))))
+    Some(ActivityEndDate(new LocalDate(1999,1,1))),
+    Some("Other"), Some("Some other reason")
+  )
 
   val completeJson = Json.obj(
     "registeringAgentPremises"-> Json.obj("agentPremises"->true),
@@ -67,7 +69,9 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
     "msbServices" -> Json.obj("msbServices"-> Json.arr("01","02")),
      "lineId" ->123456,
     "status" ->"Added",
-    "endDate"-> Json.obj("endDate" ->"1999-01-01")
+    "endDate"-> Json.obj("endDate" ->"1999-01-01"),
+    "removalReason" -> "Other",
+    "removalReasonOther" -> "Some other reason"
   )
 
   "TradingPremises" must {
@@ -93,7 +97,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
           EstateAgentBusinessService, BillPaymentServices,
           TelephonePaymentService, MoneyServiceBusiness,
           TrustAndCompanyServices)),
-        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))),Some(111111),Some("Added"))
+        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))),Some(111111),Some("Added"), None)
 
       val agentTradingPremises2 = TradingPremises(Some(RegisteringAgentPremises(true)),
         YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"),
@@ -142,6 +146,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
         agentBusinessPremises = Some(AgentBusinessPremises(true,
           Some(Seq(
             details.copy(agentPremises = details.agentPremises.copy(sectorChangeDate = Some("2013-01-01"))),
+
             DesConstants.agentDetailsAPI52,
             DesConstants.agentDetailsAPI53
           ))
@@ -193,6 +198,16 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
       None,
       None
     )
+
+    "given a removal reason and/or removal reason other" must {
+      "write the properties to the front-end model" in {
+        val feModel = TradingPremises.convAgentPremises(desModel.copy(agentLegalEntity = "Sole Proprietor",
+          removalReason = Some("Other"), removalReasonOther = Some("Some other reason")))
+
+        feModel.removalReason must be(Some("Other"))
+        feModel.removalReasonOther must be(Some("Some other reason"))
+      }
+    }
 
     "Business structure is Sole Proprietor" must {
       "populate the agent Name field from the Legal entity name in DES" in  {

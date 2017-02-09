@@ -22,8 +22,10 @@ import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 
-class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
+class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
   "TradingPremises" must {
 
@@ -128,7 +130,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
           "tradingNameChangeDate" -> "1999-04-01"
-          ))),
+        ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
           "agentDetails" -> Json.arr(Json.obj(
             "agentLegalEntity" -> "Limited Liability Partnership",
@@ -155,11 +157,11 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
               "endDate" -> "1999-01-01",
               "agentSectorChgDate" -> "2003-04-05"
             ),
-            "status" ->"Deleted",
+            "status" -> "Deleted",
             "removalReason" -> "Other",
             "removalReasonOther" -> "Some other reason",
             "lineId" -> "11223344"
-            ))))
+          ))))
 
       TradingPremises.format.writes(desTradingPremises) must be(json)
       TradingPremises.format.reads(json) must be(JsSuccess(desTradingPremises))
@@ -195,11 +197,11 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
         None, None, None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices), Some("2009-01-01")),
         Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
-        FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
-        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
+        FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
+          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
           Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"), None)), Some(AgentCompanyDetails("LLP Partnership", None)), None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
-          Some(MsbServices(Set(TransmittingMoney))), Some(11223344),Some("Deleted"),
+          WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
+          Some(MsbServices(Set(TransmittingMoney))), Some(11223344), Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1))), Some("Other"), Some("Some other reason")),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
@@ -207,12 +209,12 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           WhatDoesYourBusinessDo(Set(BusinessActivity.AccountancyServices, BusinessActivity.HighValueDealing))),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
-          Some(BusinessStructure.UnincorporatedBody),None, None, None,
+          Some(BusinessStructure.UnincorporatedBody), None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
 
       val converted = TradingPremises.convert(tradingPremises)
-      converted must be (desTradingPremises)
+      converted must be(desTradingPremises)
 
       converted.agentBusinessPremises match {
         case Some(x: AgentBusinessPremises) => x.agentDetails match {
@@ -244,6 +246,32 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
       viewTradingPremises.equals(desTradingPremises) must be(true)
 
+    }
+
+    "successfully convert TradingPremises front-end model to DES" when {
+
+      val ytp = mock[YourTradingPremises]
+      val wdybd = mock[WhatDoesYourBusinessDo]
+
+      val tradingPremises = Some(Seq(FETradingPremises(
+        registeringAgentPremises = Some(RegisteringAgentPremises(true)),
+        yourTradingPremises = YourTradingPremises("Test", FETradingPremisesPkg.Address("Addr 1", "Addr 2", None, None, "TEST"), new LocalDate(2002, 1, 2), true),
+        whatDoesYourBusinessDoAtThisAddress = WhatDoesYourBusinessDo(Set.empty[BusinessActivity]),
+        removalReason = Some("Other"),
+        removalReasonOther = Some("Some other reason"))))
+
+      "given a removal reason" in {
+
+        val result = TradingPremises.convert(tradingPremises)
+
+        result.agentBusinessPremises match {
+          case Some(p) => p.agentDetails match {
+            case Some(agentDetails :: tail) =>
+              agentDetails.removalReason must be(Some("Other"))
+              agentDetails.removalReasonOther must be(Some("Some other reason"))
+          }
+        }
+      }
     }
   }
 }

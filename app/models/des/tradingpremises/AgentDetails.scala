@@ -105,7 +105,9 @@ object AgentDetails {
       agentPremises = tradingPremises,
       tradingPremises.status,
       tradingPremises.lineId,
-      agentDetailsChangeDate = tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange)
+      tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange),
+      tradingPremises.removalReason,
+      tradingPremises.removalReasonOther
     )
   }
 
