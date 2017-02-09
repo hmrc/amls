@@ -91,8 +91,16 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
     "serialise Trading premises model" in {
 
-      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, Some("Deleted"),
-        Some(StringOrInt("11223344")), Some("2010-01-23"))
+      val agentDetail = AgentDetails("Limited Liability Partnership",
+        None,
+        Some("string"),
+        Some("string"),
+        agentPremises,
+        Some("Deleted"),
+        Some(StringOrInt("11223344")),
+        Some("2010-01-23"),
+        removalReason = Some("Other"),
+        removalReasonOther = Some("Some other reason"))
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
 
@@ -148,6 +156,8 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
               "agentSectorChgDate" -> "2003-04-05"
             ),
             "status" ->"Deleted",
+            "removalReason" -> "Other",
+            "removalReasonOther" -> "Some other reason",
             "lineId" -> "11223344"
             ))))
 
@@ -167,7 +177,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           agentPremises,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
-          Some("2009-05-03")
+          Some("2009-05-03"),
+          removalReason = Some("Other"),
+          removalReasonOther = Some("Some other reason")
         ),
 
         AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
@@ -188,7 +200,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"), None)), Some(AgentCompanyDetails("LLP Partnership", None)), None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
           Some(MsbServices(Set(TransmittingMoney))), Some(11223344),Some("Deleted"),
-          Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),
+          Some(ActivityEndDate(new LocalDate(1999, 1, 1))), Some("Other"), Some("Some other reason")),
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
           Some(BusinessStructure.Partnership), None, None, Some(AgentPartnership("Partnership")),

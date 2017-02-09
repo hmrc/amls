@@ -30,7 +30,9 @@ case class TradingPremises(
                             msbServices: Option[MsbServices] = None,
                             lineId: Option[Int] = None,
                             status: Option[String] = None,
-                            endDate: Option[ActivityEndDate] = None
+                            endDate: Option[ActivityEndDate] = None,
+                            removalReason: Option[String] = None,
+                            removalReasonOther: Option[String] = None
                           )
 
 object TradingPremises {

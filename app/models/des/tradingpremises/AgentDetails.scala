@@ -30,7 +30,9 @@ case class AgentDetails(
                          agentPremises: AgentPremises,
                          status: Option[String] = None,
                          lineId: Option[StringOrInt] = None,
-                         agentDetailsChangeDate: Option[String] = None
+                         agentDetailsChangeDate: Option[String] = None,
+                         removalReason: Option[String] = None,
+                         removalReasonOther: Option[String] = None
                        ) {
   override def hashCode = 41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
     agentPremises.hashCode + status.hashCode)
@@ -56,7 +58,9 @@ object AgentDetails {
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "status").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
-        (__ \ "agentDetailsChgDate").readNullable[String]
+        (__ \ "agentDetailsChgDate").readNullable[String] and
+        (__ \ "removalReason").readNullable[String] and
+        (__ \ "removalReasonOther").readNullable[String]
       ) (AgentDetails.apply _)
   }
 
@@ -69,8 +73,10 @@ object AgentDetails {
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "status").writeNullable[String] and
         __.writeNullable[StringOrInt] and
-        (__ \ "agentDetailsChgDate").writeNullable[String]
-      ) (unlift(AgentDetails.unapply _))
+        (__ \ "agentDetailsChgDate").writeNullable[String] and
+        (__ \ "removalReason").writeNullable[String] and
+        (__ \ "removalReasonOther").writeNullable[String]
+      ) (unlift(AgentDetails.unapply))
   }
 
   implicit def convert(tradingPremises: FETradingPremises): AgentDetails = {
