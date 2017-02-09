@@ -67,7 +67,7 @@ trait DateOfChangeUpdateHelper {
       !_.activitiesCommenceDate.equals(viewResponse.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
     }
     val businessActivitiesWithFlag = desRequest.businessActivities.all match {
-      case Some(all) => Some(all.copy(DateChangeFlag = Some(businessActivitiesCommenceDateChangeFlag)))
+      case Some(all) => Some(all.copy(dateChangeFlag = Some(businessActivitiesCommenceDateChangeFlag)))
       case _ => None
     }
     desRequest.copy(
