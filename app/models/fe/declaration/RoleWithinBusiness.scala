@@ -72,7 +72,7 @@ object RoleWithinBusiness {
         case "NominatedOfficer" => Reads(_ => JsSuccess(NominatedOfficer)) map identity[RoleType]
         case "DesignatedMember" => Reads(_ => JsSuccess(DesignatedMember)) map identity[RoleType]
         case "Other" =>
-          val test = (JsPath \ "otherDetails").read[String].map(Other.apply _)
+          val test = (JsPath \ "roleWithinBusinessOther").read[String].map(Other.apply _)
           test map identity[RoleType]
         case _ =>
           Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid")))
@@ -96,7 +96,7 @@ object RoleWithinBusiness {
         }).toSeq
       ) ++ roles.foldLeft[JsObject](Json.obj()) {
         case (m, Other(name)) =>
-          m ++ Json.obj("otherDetails" -> name)
+          m ++ Json.obj("roleWithinBusinessOther" -> name)
         case (m, _) =>
           m
       }
@@ -126,7 +126,7 @@ object RoleWithinBusiness {
     val forTheBusinessO = aboutYou.roleForTheBusiness match {
       case Some(roles) => Some(Set(
         CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
-        convOther(roles.other, roles.otherSpecify.getOrElse(""))).flatten)
+        convOther(roles.other, roles.specifyOtherRoleForBusiness.getOrElse(""))).flatten)
       case _ => None
     }
 

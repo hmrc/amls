@@ -61,7 +61,7 @@ object Aboutyou {
       roleWithin,
       aboutYouRelease7.roleWithinBusiness flatMap (x => x.specifyOtherRoleInBusiness),
       roleFor,
-      aboutYouRelease7.roleForTheBusiness flatMap (x => x.otherSpecify)
+      aboutYouRelease7.roleForTheBusiness flatMap (x => x.specifyOtherRoleForBusiness)
     )
 
   }

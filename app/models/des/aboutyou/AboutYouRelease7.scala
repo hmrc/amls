@@ -55,7 +55,7 @@ object AboutYouRelease7 {
       (result, roleType) =>
         roleType match {
           case ExternalAccountant => result.copy(externalAccountant = true)
-          case Other(details) => result.copy(other = true, otherSpecify = Some(details))
+          case Other(details) => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
           case _ => result
         }
     }
@@ -115,7 +115,7 @@ object AboutYouRelease7 {
       }
 
       old.specifyOtherRoleForBusiness match {
-        case Some(x) => roleFor.copy(other = true, otherSpecify = Some(x))
+        case Some(x) => roleFor.copy(other = true, specifyOtherRoleForBusiness = Some(x))
         case _ => roleFor
       }
 

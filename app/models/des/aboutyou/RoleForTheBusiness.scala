@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 
 case class RoleForTheBusiness(externalAccountant: Boolean,
                               other: Boolean,
-                              otherSpecify: Option[String])
+                              specifyOtherRoleForBusiness: Option[String])
 
 object RoleForTheBusiness {
   implicit val format = Json.format[RoleForTheBusiness]
@@ -35,7 +35,7 @@ object RoleForTheBusiness {
       (result, roleType) =>
         roleType match {
           case ExternalAccountant => result.copy(externalAccountant = true)
-          case Other(details) => result.copy(other = true, otherSpecify = Some(details))
+          case Other(details) => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
         }
     }
   }

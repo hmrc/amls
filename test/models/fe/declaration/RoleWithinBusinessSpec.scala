@@ -52,7 +52,7 @@ class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
             "DesignatedMember",
             "Other"
           ),
-          "otherDetails" -> "some other text"
+          "roleWithinBusinessOther" -> "some other text"
         )
 
         val model = RoleWithinBusiness(Set(
@@ -110,7 +110,7 @@ class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
             "ExternalAccountant",
             "InternalAccountant"
           ),
-          "otherDetails" -> "Some other text"
+          "roleWithinBusinessOther" -> "Some other text"
         )
 
         val model = RoleWithinBusiness(Set(

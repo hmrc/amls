@@ -58,7 +58,6 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
         AddPerson.jsonReads.reads(json) must be(JsSuccess(model))
         AddPerson.jsonWrites.writes(model) must be(json)
-
       }
 
       "given Other and ExternalAccountant role for the reads" in {
@@ -78,7 +77,7 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
             "ExternalAccountant",
             "InternalAccountant"
         ),
-          "otherDetails" -> "Other details here"
+          "roleWithinBusinessOther" -> "Other details here"
         )
 
 
@@ -118,7 +117,7 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
             "ExternalAccountant",
             "InternalAccountant"
           ),
-          "otherDetails" -> "Other details here"
+          "roleWithinBusinessOther" -> "Other details here"
         )
 
 
@@ -164,7 +163,6 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
         )
 
         AddPerson.convert(desModel) must be(frontendModel)
-
       }
 
       "given des model where everything is false" in {
