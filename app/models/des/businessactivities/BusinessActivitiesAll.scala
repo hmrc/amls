@@ -26,7 +26,7 @@ import play.api.libs.json.Json
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
                                   activitiesCommenceDate: Option[String],
-                                  DateChangeFlag: Option[Boolean],
+                                  dateChangeFlag: Option[Boolean],
                                   businessActivityDetails: BusinessActivityDetails,
                                   franchiseDetails: Option[FranchiseDetails],
                                   noOfEmployees: Option[String],
