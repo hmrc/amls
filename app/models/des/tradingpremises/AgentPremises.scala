@@ -33,8 +33,7 @@ case class AgentPremises(tradingName:String,
                          bpsp: Bpsp,
                          tditpsp: Tditpsp,
                          startDate : Option[String],
-                         sectorChangeDate: Option[String] = None,
-                         dateChangeFlag: Option[Boolean] = None
+                         sectorChangeDate: Option[String] = None
                         )
 
 object AgentPremises {
@@ -51,8 +50,7 @@ object AgentPremises {
         (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
         (__ \ "startDate").readNullable[String] and
-        (__ \ "agentSectorChgDate").readNullable[String] and
-        (__ \ "dateChangeFlag").readNullable[Boolean]
+        (__ \ "agentSectorChgDate").readNullable[String]
       ) (AgentPremises.apply _)
   }
 
@@ -69,8 +67,7 @@ object AgentPremises {
         (__ \ "bpsp").write[Bpsp] and
         (__ \ "tditpsp").write[Tditpsp] and
         (__ \ "startDate").writeNullable[String] and
-        (__ \ "agentSectorChgDate").writeNullable[String] and
-        (__ \ "dateChangeFlag").writeNullable[Boolean]
+        (__ \ "agentSectorChgDate").writeNullable[String]
       ) (unlift(AgentPremises.unapply _))
   }
 
@@ -91,8 +88,7 @@ object AgentPremises {
       z,
       z,
       z,
-      startDate,
-      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange
+      startDate
     )
   }
 }

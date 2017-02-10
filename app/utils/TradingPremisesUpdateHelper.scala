@@ -28,7 +28,14 @@ trait TradingPremisesUpdateHelper {
     )
   }
 
-  private def getAgentDetailsWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): Option[AgentBusinessPremises] = {
+  private def tradingPremisesWithStatus(desTradingPremises: TradingPremises, viewTradingPremises: TradingPremises): TradingPremises = {
+    val updatedAgentBusinessPremises = getAgentDetailsWithStatus(desTradingPremises, viewTradingPremises)
+    val updatedOwnBusinessPremises = getOwnPremisesWithStatus(desTradingPremises, viewTradingPremises)
+
+    desTradingPremises.copy(agentBusinessPremises = updatedAgentBusinessPremises, ownBusinessPremises = updatedOwnBusinessPremises)
+  }
+
+  private def getAgentDetailsWithStatus(desTradingPremises: TradingPremises, viewTradingPremises: TradingPremises): Option[AgentBusinessPremises] = {
     val (agentWithLineIds, agentWithoutLineIds) = desTradingPremises.agentBusinessPremises match {
       case Some(agentBusinessPremises) => desTradingPremises.agentBusinessPremises.get.
         agentDetails.fold[(Seq[AgentDetails], Seq[AgentDetails])]((Seq.empty, Seq.empty))(agent => agent.partition(_.lineId.isDefined))
@@ -44,7 +51,7 @@ trait TradingPremisesUpdateHelper {
     }
   }
 
-  private def getOwnPremisesWithStatus(viewTradingPremises: TradingPremises, desTradingPremises: TradingPremises): Option[OwnBusinessPremises] = {
+  private def getOwnPremisesWithStatus(desTradingPremises: TradingPremises, viewTradingPremises: TradingPremises): Option[OwnBusinessPremises] = {
 
     val (ownWithLineIds, ownWithoutLineIds) = desTradingPremises.ownBusinessPremises match {
       case Some(ownBusinessPremises) => ownBusinessPremises.ownBusinessPremisesDetails.
@@ -61,99 +68,80 @@ trait TradingPremisesUpdateHelper {
     }
   }
 
-  private def updateOwnPremisesStatus(ownDtls: OwnBusinessPremisesDetails, viewTradingPremises: TradingPremises): OwnBusinessPremisesDetails = {
-    viewTradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => ownBusinessPremises.ownBusinessPremisesDetails match {
-        case Some(agentPremises) => {
-          agentPremises.find(x => x.lineId.equals(ownDtls.lineId)) match {
-            case Some(viewOwnDtls) =>
-              val updatedStatus = updateOwnPremisesStatus(ownDtls, viewOwnDtls)
-              if (AmlsConfig.release7) {
-                val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDtls, viewOwnDtls)
-                ownDtls.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-              }
-              else {
-                ownDtls.copy(status = Some(updatedStatus))
-              }
-            case _ => ownDtls
+  private def updateOwnPremisesStatus(ownDetails: OwnBusinessPremisesDetails, viewTradingPremises: TradingPremises): OwnBusinessPremisesDetails = {
+    viewTradingPremises.ownBusinessPremises.fold(ownDetails) {
+      _.ownBusinessPremisesDetails.fold(ownDetails) {
+        _.find(x => x.lineId.equals(ownDetails.lineId)).fold(ownDetails) { viewOwnDtls =>
+          val updatedStatus = updateOwnPremisesStatus(ownDetails, viewOwnDtls)
+          if (AmlsConfig.release7) {
+            val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, viewOwnDtls)
+            ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
+          }
+          else {
+            ownDetails.copy(status = Some(updatedStatus))
           }
         }
-        case None => ownDtls
       }
-      case None => ownDtls
     }
   }
 
-  private def updateOwnPremisesStatus(ownDtls: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
-    ownDtls.status match {
+  private def updateOwnPremisesStatus(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
+    ownDetails.status match {
       case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-      case _ => ownDtls.equals(viewOwnDtls) match {
+      case _ => ownDetails.equals(viewOwnDtls) match {
         case true => StatusConstants.Unchanged
         case false => StatusConstants.Updated
       }
     }
   }
 
-  private def updateOwnPremisesStartDateFlag(ownDtls: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
-    ownDtls.startDate match {
-      case _ if !ownDtls.status.contains(StatusConstants.Deleted) =>
-        !ownDtls.startDate.equals(viewOwnDtls.startDate) match {
-          case false => None
+  private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
+    ownDetails.startDate match {
+      case _ if !ownDetails.status.contains(StatusConstants.Deleted) =>
+        !ownDetails.startDate.equals(viewOwnDtls.startDate) match {
+          case false => Some(false)
           case _ => Some(true)
         }
       case _ => None
     }
   }
 
-  private def updateAgentStatus(agentDtls: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
-    viewTradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => agentBusinessPremises.agentDetails match {
-        case Some(agentPremises) => {
-          agentPremises.find(x => x.lineId.equals(agentDtls.lineId)) match {
-            case Some(viewAgent) =>
-              val updatedStatus = updateAgentDetailsStatus(agentDtls, viewAgent)
-              if (AmlsConfig.release7) {
-                val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDtls, viewAgent)
-                agentDtls.copy(status = Some(updatedStatus), agentPremises = agentDtls.agentPremises.copy(dateChangeFlag = startDateChangeFlag))
-              } else {
-                agentDtls.copy(status = Some(updatedStatus))
-              }
-            case _ => agentDtls
+  private def updateAgentStatus(agentDetails: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
+    viewTradingPremises.agentBusinessPremises.fold(agentDetails) {
+      _.agentDetails.fold(agentDetails) {
+        _.find(x => x.lineId.equals(agentDetails.lineId)).fold(agentDetails) { viewAgent =>
+          val updatedStatus = updateAgentDetailsStatus(agentDetails, viewAgent)
+          if (AmlsConfig.release7) {
+            println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
+            val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDetails, viewAgent)
+            agentDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
+          } else {
+            agentDetails.copy(status = Some(updatedStatus))
           }
         }
-        case None => agentDtls
       }
-      case None => agentDtls
     }
-
   }
 
-  private def updateAgentDetailsStatus(agentDtls: AgentDetails, viewAgent: AgentDetails) = {
-    agentDtls.status match {
+  private def updateAgentDetailsStatus(agentDetails: AgentDetails, viewAgent: AgentDetails) = {
+    agentDetails.status match {
       case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-      case _ => agentDtls.equals(viewAgent) match {
+      case _ => agentDetails.equals(viewAgent) match {
         case true => StatusConstants.Unchanged
         case false => StatusConstants.Updated
       }
     }
   }
 
-  private def updateAgentDetailsDateOfChangeFlag(agentDtls: AgentDetails, viewAgent: AgentDetails) = {
-    agentDtls.agentPremises.startDate match {
-      case _ if !agentDtls.status.contains(StatusConstants.Deleted) =>
-        !agentDtls.agentPremises.startDate.equals(viewAgent.agentPremises.startDate) match {
-          case false => None
+  private def updateAgentDetailsDateOfChangeFlag(agentDetails: AgentDetails, viewAgent: AgentDetails) = {
+    agentDetails.startDate match {
+      case _ if !agentDetails.status.contains(StatusConstants.Deleted) =>
+        !agentDetails.startDate.equals(viewAgent.startDate) match {
+          case false => Some(false)
           case _ => Some(true)
         }
       case _ => None
     }
-  }
-
-  private def tradingPremisesWithStatus(desTradingPremises: TradingPremises, viewTradingPremises: TradingPremises): TradingPremises = {
-    val updatedAgentBusinessPremises = getAgentDetailsWithStatus(viewTradingPremises, desTradingPremises)
-    val updatedOwnBusinessPremises = getOwnPremisesWithStatus(viewTradingPremises, desTradingPremises)
-
-    desTradingPremises.copy(agentBusinessPremises = updatedAgentBusinessPremises, ownBusinessPremises = updatedOwnBusinessPremises)
   }
 
 }

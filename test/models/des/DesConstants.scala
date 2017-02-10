@@ -258,6 +258,7 @@ object DesConstants {
     agentPremisesapi51,
     None,
     None,
+    None,
     Some("Added"),
     Some(StringOrInt(111111))
   )
@@ -287,6 +288,7 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi52,
+    None,
     None,
     None,
     Some("Added"),
@@ -320,6 +322,7 @@ object DesConstants {
     agentPremisesapi53,
     None,
     None,
+    None,
     Some("Added"),
     None
   )
@@ -351,6 +354,7 @@ object DesConstants {
     agentPremisesapi61,
     None,
     None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("1"))
   )
@@ -380,7 +384,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi61Release7,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
   )
@@ -390,7 +396,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName for amend"),
     agentPremisesapi61,
-    None,None,
+    None,
+    None,
+    None,
     Some("Added"),
     Some(StringOrInt("133333"))
   )
@@ -422,7 +430,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi62,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
   )
@@ -452,7 +462,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi63,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("3"))
   )
@@ -502,7 +514,6 @@ object DesConstants {
     )
   ))))
 
-
   val amendStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
@@ -524,6 +535,52 @@ object DesConstants {
       None,
       Some(StringOrInt(444444)),
       Some(StatusConstants.Unchanged)
+    ),
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName1"),
+      TradingPremisesAddress("OB11AddressLine1",
+        "OB1AddressLine2",
+        Some("OB1AddressLine3"),
+        Some("OB1AddressLine4"),
+        "GB",
+        Some("XX1 1XX")),
+      false,
+      Msb(false, false, true, true, false),
+      Hvd(true),
+      Asp(true),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(true),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(555555)),
+      Some(StatusConstants.Deleted)
+    )
+  ))))
+
+  val amendStatusOwnBusinessPremisesR7 = Some(OwnBusinessPremises(true, Some(Seq(
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName"),
+      TradingPremisesAddress("OwnBusinessAddressLine1",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      false,
+      Msb(false, false, false, false, false),
+      Hvd(false),
+      Asp(false),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(false),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(444444)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
     ),
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
@@ -590,6 +647,53 @@ object DesConstants {
       None,
       Some(StringOrInt(555555)),
       Some(StatusConstants.Unchanged)
+    )
+  ))))
+
+  val ownBusinessPremisesTPR7 = Some(OwnBusinessPremises(true, Some(Seq(
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName"),
+      TradingPremisesAddress("OwnBusinessAddressLine1",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      false,
+      Msb(false, false, false, false, false),
+      Hvd(false),
+      Asp(false),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(false),
+      "2001-05-05",
+      None,
+      Some(StringOrInt(444444)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
+    ),
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName1"),
+      TradingPremisesAddress("OB11AddressLine1",
+        "OB1AddressLine2",
+        Some("OB1AddressLine3"),
+        Some("OB1AddressLine4"),
+        "GB",
+        Some("XX1 1XX")),
+      false,
+      Msb(false, false, true, true, false),
+      Hvd(true),
+      Asp(true),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(true),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(555555)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
     )
   ))))
 
@@ -693,7 +797,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises2,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -723,7 +829,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises3,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Added),
     Some(StringOrInt("333333"))
   )
@@ -753,7 +861,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises4,
-    None,None,
+    None,
+    None,
+    None,
     None,
     Some(StringOrInt("444444"))
   )
@@ -813,7 +923,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises2,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -843,7 +955,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises3,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Updated),
     Some(StringOrInt("333333"))
   )
@@ -873,7 +987,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises4,
-    None,None,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("444444"))
   )

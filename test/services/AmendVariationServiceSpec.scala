@@ -494,19 +494,27 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
     }
 
-    "successfully evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
-      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.SubscriptionViewModelForRp, DesConstants.AmendVariationRequestModel) must be(false)
+    "evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
+      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.AmendVariationRequestModel, DesConstants.SubscriptionViewModelForRp) must be(false)
     }
 
-    "successfully compare and update api6 request with api5 1" in {
+    "compare and update api6 request with api5 1" in {
+
       val viewModel = DesConstants.SubscriptionViewModelAPI5
+
       when {
         TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
       } thenReturn Future.successful(viewModel)
 
+      val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
+        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
+          DesConstants.ownBusinessPremisesTPR7
+        )
+      )
+
       whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)) {
         updatedRequest =>
-          updatedRequest must be(DesConstants.updateAmendVariationCompleteRequest1)
+          updatedRequest must be(testRequest)
       }
     }
 

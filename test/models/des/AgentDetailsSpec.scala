@@ -38,7 +38,7 @@ class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None,None),None,None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }
 
     "convert frontend Trading premises into backend model in Subscription flow" in {
@@ -52,7 +52,7 @@ class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None,None),None,None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }
   }
 
@@ -74,7 +74,7 @@ class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),None,None,None),Some("2008-01-01"),None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),None,None),Some("2008-01-01"),None,None,None))
     }
 
     "convert frontend Trading premises into backend model in Subscription flow" in {
@@ -88,7 +88,7 @@ class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None,None),None,None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }
   }
 

@@ -64,10 +64,8 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Bpsp(true),
       Tditpsp(false),
       Some("2008-01-01"),
-      Some("2003-04-05"),
-      None
+      Some("2003-04-05")
     )
-
     val agentPremises1 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
       Msb(false, false, false, false, false),
       Hvd(true),
@@ -77,7 +75,6 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
       Bpsp(false),
       Tditpsp(false),
       Some("2008-01-01"))
-
     val agentPremises2 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
       Msb(false, false, false, false, false),
       Hvd(false),
@@ -90,8 +87,18 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
     "serialise Trading premises model" in {
 
-      val agentDetail = AgentDetails("Limited Liability Partnership", None, Some("string"), Some("string"), agentPremises, None,  Some("1999-01-01"), Some("Deleted"),
-        Some(StringOrInt("11223344")), Some("2010-01-23"))
+      val agentDetail = AgentDetails(
+        "Limited Liability Partnership",
+        None, Some("string"),
+        Some("string"),
+        agentPremises,
+        None,
+        None,
+        Some("1999-01-01"),
+        Some("Deleted"),
+        Some(StringOrInt("11223344")),
+        Some("2010-01-23")
+      )
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
 
@@ -119,7 +126,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
           "tradingNameChangeDate" -> "1999-04-01"
-          ))),
+        ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
           "agentDetails" -> Json.arr(Json.obj(
             "agentLegalEntity" -> "Limited Liability Partnership",
@@ -146,9 +153,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
               "agentSectorChgDate" -> "2003-04-05"
             ),
             "endDate" -> "1999-01-01",
-            "status" ->"Deleted",
+            "status" -> "Deleted",
             "lineId" -> "11223344"
-            ))))
+          ))))
 
       TradingPremises.format.writes(desTradingPremises) must be(json)
       TradingPremises.format.reads(json) must be(JsSuccess(desTradingPremises))
@@ -164,7 +171,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           None,
           Some("LLP Partnership"),
           agentPremises,
-          None,None,
+          None,
+          None,
+          None,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
           Some("2009-05-03")
@@ -173,34 +182,38 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
         AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
         AgentDetails("Unincorporated Body", None, None, Some(""), agentPremises2)))))
 
-      val desTradingPremises = {
-        TradingPremises(ownBusinessPremises, agentBusinessPremises)
-      }
+      val desTradingPremises = TradingPremises(ownBusinessPremises, agentBusinessPremises)
 
-      val tradingPremises = Some(Seq(FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
-        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("1999-05-01"))
-        , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
-        None, None, None, None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices), Some("2009-01-01")),
-        Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
-        FETradingPremises(Some(RegisteringAgentPremises(true)),YourTradingPremises("string",
-        FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
+      val tradingPremises = Some(Seq(
+        FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
+          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("1999-05-01"))
+          , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
+          None, None, None, None,
+          WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices), Some("2009-01-01")),
+          Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
+
+        FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
+          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string", Some("2002-03-11")), new LocalDate(2008, 1, 1), true),
           Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"), None)), Some(AgentCompanyDetails("LLP Partnership", None)), None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
-          Some(MsbServices(Set(TransmittingMoney))), Some(11223344),Some("Deleted"),
+          WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
+          Some(MsbServices(Set(TransmittingMoney))), Some(11223344), Some("Deleted"),
           Some(ActivityEndDate(new LocalDate(1999, 1, 1)))),
+
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
           Some(BusinessStructure.Partnership), None, None, Some(AgentPartnership("Partnership")),
           WhatDoesYourBusinessDo(Set(BusinessActivity.AccountancyServices, BusinessActivity.HighValueDealing))),
+
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
-          Some(BusinessStructure.UnincorporatedBody),None, None, None,
+          Some(BusinessStructure.UnincorporatedBody), None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
       implicit val requestType = RequestType.Subscription
+
       val converted = TradingPremises.convert(tradingPremises)
-      converted must be (desTradingPremises)
+
+      converted must be(desTradingPremises)
 
       converted.agentBusinessPremises match {
         case Some(x: AgentBusinessPremises) => x.agentDetails match {

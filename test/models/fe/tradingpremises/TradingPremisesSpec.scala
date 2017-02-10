@@ -193,6 +193,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite
         None
       ),
       None,
+      None,
       Some("2002-03-01")
     )
 

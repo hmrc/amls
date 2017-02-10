@@ -65,7 +65,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       updatedRequest.setChangeIndicator(ChangeIndicators(
         !viewResponse.businessDetails.equals(desRequest.businessDetails),
         !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
-        isBusinessReferenceChanged(viewResponse, desRequest),
+        isBusinessReferenceChanged(desRequest, viewResponse),
         !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         !viewResponse.businessActivities.equals(desRequest.businessActivities),
         !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
@@ -73,8 +73,8 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         !viewResponse.hvd.equals(desRequest.hvd),
         !viewResponse.asp.equals(desRequest.asp),
         !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        isTcspChanged(viewResponse, desRequest),
-        isEABChanged(viewResponse, desRequest),
+        isTcspChanged(desRequest, viewResponse),
+        isEABChanged(desRequest, viewResponse),
         !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
@@ -241,12 +241,8 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       ))
   }
 
-  private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
-    val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
-    desRequest.setExtraFields(etmpFields)
-  }
-
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+
     def update(request: AmendVariationRequest, updateF: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest]): AmendVariationRequest = {
       if (updateF.size < 1) {
         request
@@ -260,20 +256,26 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       }
     }
     update(desRequest, updates)
+
   }
 
-  private[services] def isBusinessReferenceChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+  private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+    val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
+    desRequest.setExtraFields(etmpFields)
+  }
+
+  private[services] def isBusinessReferenceChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
     !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
       response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
       response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
   }
 
-  private[services] def isTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+  private[services] def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
     !(response.tcspAll.equals(desRequest.tcspAll) &&
       response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
   }
 
-  private[services] def isEABChanged(response: SubscriptionView, desRequest: AmendVariationRequest): Boolean = {
+  private[services] def isEABChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
     !(response.eabAll.equals(desRequest.eabAll) &&
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
