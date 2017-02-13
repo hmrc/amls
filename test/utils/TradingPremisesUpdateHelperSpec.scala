@@ -126,7 +126,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         None,
         Some(StatusConstants.Unchanged),
         None,
-        None,
+        Some(false),
         None
       )
 

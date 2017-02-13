@@ -43,7 +43,11 @@ trait TradingPremisesUpdateHelper {
     }
 
     val updatedAgentStatus = agentWithLineIds.map(agentDtls => updateAgentStatus(agentDtls, viewTradingPremises))
-    val updatedAgentStatusWithoutLineId = agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
+    val updatedAgentStatusWithoutLineId = if (AmlsConfig.release7) {
+      agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
+    } else {
+      agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
+    }
     val addAgentList = updatedAgentStatus ++ updatedAgentStatusWithoutLineId
 
     desTradingPremises.agentBusinessPremises.map {
@@ -60,7 +64,11 @@ trait TradingPremisesUpdateHelper {
     }
 
     val updatedOwnStatus = ownWithLineIds.map(own => updateOwnPremisesStatus(own, viewTradingPremises))
-    val updatedOwnStatusWithoutLineId = ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
+    val updatedOwnStatusWithoutLineId = if (AmlsConfig.release7) {
+      ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
+    } else {
+      ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
+    }
     val addOwnList = updatedOwnStatus ++ updatedOwnStatusWithoutLineId
 
     desTradingPremises.ownBusinessPremises.map {

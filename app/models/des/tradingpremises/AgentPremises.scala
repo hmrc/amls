@@ -88,7 +88,8 @@ object AgentPremises {
       z,
       z,
       z,
-      startDate
+      startDate,
+      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange
     )
   }
 }
