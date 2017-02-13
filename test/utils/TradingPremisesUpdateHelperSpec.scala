@@ -118,7 +118,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
         businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
           all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-            DateChangeFlag = Some(false)
+            dateChangeFlag = Some(false)
           ))
         ),
         aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
@@ -194,7 +194,7 @@ class TradingPremisesUpdateHelperPreRelease7Spec extends PlaySpec with MockitoSu
       val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
         businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
           all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-            DateChangeFlag = None
+            dateChangeFlag = None
           ))
         ),
         aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
