@@ -112,7 +112,6 @@ trait TradingPremisesUpdateHelper {
         _.find(x => x.lineId.equals(agentDetails.lineId)).fold(agentDetails) { viewAgent =>
           val updatedStatus = updateAgentDetailsStatus(agentDetails, viewAgent)
           if (AmlsConfig.release7) {
-            println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
             val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDetails, viewAgent)
             agentDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
           } else {
