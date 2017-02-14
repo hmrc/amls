@@ -20,9 +20,9 @@ import exceptions.HttpStatusException
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
 import models.fe.businesscustomer.{Address, ReviewDetails}
-import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessMatching, BusinessType => BT}
+import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import models.fe.businessactivities.BusinessActivities
-import models.fe.declaration.{Director, AddPerson}
+import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import models.{des, fe}
 import org.joda.time.LocalDate
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -30,7 +30,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsValue, JsNull, Json}
+import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
@@ -74,7 +74,7 @@ class SubscriptionControllerSpec
       aboutTheBusinessSection = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))),Some(VATRegisteredNo),
         Some(CorporationTaxRegisteredYes("1234567890")),ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "postcode")),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, BankAccount("name", NonUKAccountNumber("1234567896")))),
-      aboutYouSection = AddPerson("name",Some("name"),"name", Director),
+      aboutYouSection = AddPerson("name",Some("name"),"name", RoleWithinBusiness(Set(Director))),
       businessActivitiesSection = BusinessActivities(None),
       responsiblePeopleSection = None,
       tcspSection = None,

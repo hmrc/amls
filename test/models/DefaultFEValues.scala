@@ -18,6 +18,7 @@ package models
 
 
 import models.fe.SubscriptionView
+import models.fe.declaration.{Other => DeclarationOther, RoleWithinBusiness}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate
 import utils.StatusConstants
@@ -83,9 +84,9 @@ object AboutYouSection {
   import models.fe.declaration.AddPerson
   import models.fe.declaration.BeneficialShareholder
 
-  val model = AddPerson("fName", None, "lName", models.fe.declaration.Other("Agent"))
+  val model = AddPerson("fName", None, "lName", RoleWithinBusiness(Set(DeclarationOther("Agent"))))
 
-  val modelforView = AddPerson("FirstName", Some("MiddleName"), "LastName", BeneficialShareholder)
+  val modelforView = AddPerson("FirstName", Some("MiddleName"), "LastName", RoleWithinBusiness(Set(BeneficialShareholder)))
 }
 
 object BusinessActivitiesSection {
@@ -253,6 +254,23 @@ object TradingPremisesSection {
       BusinessActivity.MoneyServiceBusiness,
       BusinessActivity.TrustAndCompanyServices)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), Some(555555), Some(StatusConstants.Unchanged))))
+
+
+  val tradingPremisesOnlyAgentModel = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)),
+    YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "aaaaaaaaaa"),
+      new LocalDate(1967,8,13), true),
+    Some(BusinessStructure.SoleProprietor),
+    Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
+    None,
+    None,
+    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
+      BusinessActivity.AccountancyServices,
+      BusinessActivity.EstateAgentBusinessService,
+      BusinessActivity.BillPaymentServices,
+      BusinessActivity.TelephonePaymentService,
+      BusinessActivity.MoneyServiceBusiness,
+      BusinessActivity.TrustAndCompanyServices)),
+    Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), None, Some("Added"))))
 }
 
 object BankDetailsSection {

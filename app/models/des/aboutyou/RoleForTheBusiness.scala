@@ -16,28 +16,27 @@
 
 package models.des.aboutyou
 
+import models.fe.declaration.{Other, ExternalAccountant, RoleType, RoleWithinBusiness}
 import play.api.libs.json.Json
-
-case class RolesWithinBusiness(beneficialShareholder: Boolean,
-                               director: Boolean,
-                               partner: Boolean,
-                               internalAccountant: Boolean,
-                               soleProprietor: Boolean,
-                               nominatedOfficer: Boolean,
-                               designatedMember: Boolean,
-                               other: Boolean,
-                               specifyOtherRoleInBusiness: Option[String]
-                              )
-
-object RolesWithinBusiness {
-  implicit val format = Json.format[RolesWithinBusiness]
-}
-
 
 case class RoleForTheBusiness(externalAccountant: Boolean,
                               other: Boolean,
-                              otherSpecify: Option[String])
+                              specifyOtherRoleForBusiness: Option[String])
 
 object RoleForTheBusiness {
   implicit val format = Json.format[RoleForTheBusiness]
+
+  def convertForBusiness(frontendModel:RoleWithinBusiness): RoleForTheBusiness = {
+
+    val things = Some(frontendModel).fold[Set[RoleType]](Set.empty)(x => x.roles)
+
+    things.foldLeft(
+      RoleForTheBusiness(false,false,None)){
+      (result, roleType) =>
+        roleType match {
+          case ExternalAccountant => result.copy(externalAccountant = true)
+          case Other(details) => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
+        }
+    }
+  }
 }

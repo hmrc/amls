@@ -151,7 +151,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
     }
   }
 
-  val testRequest = Json.parse(
+  def testRequest = Json.parse(
     """{
          "acknowledgementReference": "$AckRef$",
          "changeIndicators":{
@@ -949,14 +949,26 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
          "declaration":{
             "declarationFlag":true
          },
-         "filingIndividual":{
-            "individualDetails":{
-               "firstName":"FirstName",
-               "middleName":"MiddleName",
-               "lastName":"LastName"
-            },
-            "employedWithinBusiness":true,
-            "roleWithinBusiness":"Beneficial Shareholder"
-         }
+         "filingIndividual": {
+    "individualDetails": {
+      "firstName": "fname",
+      "lastName": "lname"
+    },
+    "employedWithinBusiness": false,
+    "roleWithinBusiness":{
+      "beneficialShareholder": false,
+      "director": false,
+      "partner": false,
+      "internalAccountant": false,
+      "soleProprietor": false,
+      "nominatedOfficer": false,
+      "designatedMember": false,
+      "other": false
+    },
+    "roleForTheBusiness":{
+      "externalAccountant": true,
+      "other": false
+    }
+  }
       }""").as[AmendVariationRequest]
 }

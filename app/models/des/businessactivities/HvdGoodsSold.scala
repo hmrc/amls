@@ -40,7 +40,7 @@ object HvdGoodsSold {
 
   implicit def conv(hvd: Option[models.fe.hvd.Hvd]): Option[HvdGoodsSold] = {
     hvd match {
-      case Some(data) => data
+      case Some(data) => conv1(data)
       case None => None
     }
   }

@@ -16,6 +16,7 @@
 
 package models.des.tradingpremises
 
+import models.des.RequestType
 import play.api.libs.json.Json
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
@@ -28,7 +29,7 @@ object AgentBusinessPremises {
 
   implicit val format = Json.format[AgentBusinessPremises]
 
-  implicit def convert(tradingPremises: Seq[FETradingPremises]): AgentBusinessPremises = {
+  implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): AgentBusinessPremises = {
     val `empty` = Seq.empty[FETradingPremises]
     tradingPremises match {
       case `empty` =>

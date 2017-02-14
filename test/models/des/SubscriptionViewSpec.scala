@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package models.des
 
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 
-class SubscriptionViewSpec extends PlaySpec {
+class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {
@@ -426,14 +442,26 @@ class SubscriptionViewSpec extends PlaySpec {
   "declaration": {
     "declarationFlag": true
   },
-  "filingIndividual": {
+   "filingIndividual": {
     "individualDetails": {
-      "firstName": "thing",
-      "lastName": "thing"
+      "firstName": "fname",
+      "lastName": "lname"
     },
-    "employedWithinBusiness": true,
-    "roleWithinBusiness": "Nominated officer",
-    "roleForTheBusiness": "Other"
+    "employedWithinBusiness": false,
+    "roleWithinBusiness":{
+      "beneficialShareholder": false,
+      "director": false,
+      "partner": false,
+      "internalAccountant": false,
+      "soleProprietor": false,
+      "nominatedOfficer": false,
+      "designatedMember": false,
+      "other": false
+    },
+    "roleForTheBusiness":{
+      "externalAccountant": true,
+      "other": false
+    }
   },
   "etmpFields": {
     "dateOfSubmission": "2016-10-24"

@@ -17,6 +17,7 @@
 package models.des.tradingpremises
 
 import config.AmlsConfig
+import models.des.RequestType
 import models.des.{StatusProvider, StringOrInt}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -28,6 +29,9 @@ case class AgentDetails(
                          dateOfBirth: Option[String],
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
+                         startDate: Option[String] = None,
+                         dateChangeFlag: Option[Boolean] = None,
+                         endDate: Option[String] = None,
                          status: Option[String] = None,
                          lineId: Option[StringOrInt] = None,
                          agentDetailsChangeDate: Option[String] = None,
@@ -56,6 +60,9 @@ object AgentDetails {
         (__ \ "dateOfBirth").readNullable[String] and
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
+        (__ \ "startDate").readNullable[String] and
+        (__ \ "dateChangeFlag").readNullable[Boolean] and
+        (__ \ "endDate").readNullable[String] and
         (__ \ "status").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "agentDetailsChgDate").readNullable[String] and
@@ -71,6 +78,9 @@ object AgentDetails {
         (__ \ "dateOfBirth").writeNullable[String] and
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
+        (__ \ "startDate").writeNullable[String] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean] and
+        (__ \ "endDate").writeNullable[String] and
         (__ \ "status").writeNullable[String] and
         __.writeNullable[StringOrInt] and
         (__ \ "agentDetailsChgDate").writeNullable[String] and
@@ -79,12 +89,17 @@ object AgentDetails {
       ) (unlift(AgentDetails.unapply))
   }
 
-  implicit def convert(tradingPremises: FETradingPremises): AgentDetails = {
+  implicit def convert(tradingPremises: FETradingPremises)(implicit requestType: RequestType): AgentDetails = {
 
     def assignCompanyRegNo = if (AmlsConfig.release7) {
       tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber)
     } else {
       None
+    }
+    val (startDate, endDate) = (AmlsConfig.release7, requestType) match {
+      case (true, RequestType.Amendment) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
+        tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
+      case _ => (None, None)
     }
 
     AgentDetails(
@@ -103,6 +118,9 @@ object AgentDetails {
         case BusinessStructure.UnincorporatedBody => ""
       })),
       agentPremises = tradingPremises,
+      startDate,
+      None,
+      endDate,
       tradingPremises.status,
       tradingPremises.lineId,
       tradingPremises.agentName.fold[Option[String]](None)(_.dateOfChange),
@@ -111,7 +129,7 @@ object AgentDetails {
     )
   }
 
-  implicit def convert(tradingPremises: Seq[FETradingPremises]): Seq[AgentDetails] =
+  implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): Seq[AgentDetails] =
     tradingPremises.map(convert)
 
   implicit def convertBusinessStructure(businessStructure: BusinessStructure): String = {

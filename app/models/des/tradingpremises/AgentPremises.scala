@@ -16,6 +16,8 @@
 
 package models.des.tradingpremises
 
+import config.AmlsConfig
+import models.des.RequestType
 import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
@@ -30,10 +32,8 @@ case class AgentPremises(tradingName:String,
                          eab: Eab,
                          bpsp: Bpsp,
                          tditpsp: Tditpsp,
-                         startDate : String,
-                         endDate: Option[String] = None,
-                         sectorChangeDate: Option[String] = None,
-                         dateChangeFlag: Option[Boolean] = None
+                         startDate : Option[String],
+                         sectorChangeDate: Option[String] = None
                         )
 
 object AgentPremises {
@@ -49,10 +49,8 @@ object AgentPremises {
         (__ \ "eab").readNullable[Eab].map{_.getOrElse(Eab(false))} and
         (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
-        (__ \ "startDate").read[String] and
-        (__ \ "endDate").readNullable[String] and
-        (__ \ "agentSectorChgDate").readNullable[String] and
-        (__ \ "dateChangeFlag").readNullable[Boolean]
+        (__ \ "startDate").readNullable[String] and
+        (__ \ "agentSectorChgDate").readNullable[String]
       ) (AgentPremises.apply _)
   }
 
@@ -68,15 +66,18 @@ object AgentPremises {
         (__ \ "eab").write[Eab] and
         (__ \ "bpsp").write[Bpsp] and
         (__ \ "tditpsp").write[Tditpsp] and
-        (__ \ "startDate").write[String] and
-        (__ \ "endDate").writeNullable[String] and
-        (__ \ "agentSectorChgDate").writeNullable[String] and
-        (__ \ "dateChangeFlag").writeNullable[Boolean]
+        (__ \ "startDate").writeNullable[String] and
+        (__ \ "agentSectorChgDate").writeNullable[String]
       ) (unlift(AgentPremises.unapply _))
   }
 
-  implicit def convert(tradingPremises: models.fe.tradingpremises.TradingPremises): AgentPremises = {
+  implicit def convert(tradingPremises: models.fe.tradingpremises.TradingPremises)(implicit requestType: RequestType): AgentPremises = {
     val ytp = tradingPremises.yourTradingPremises
+
+    val startDate = (AmlsConfig.release7, requestType) match {
+      case (true, RequestType.Amendment) => None
+      case _ => Some(ytp.startDate.toString)
+    }
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities
     AgentPremises(ytp.tradingName, ytp.tradingPremisesAddress,
       ytp.isResidential,
@@ -87,8 +88,7 @@ object AgentPremises {
       z,
       z,
       z,
-      ytp.startDate.toString,
-      tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)),
+      startDate,
       tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange
     )
   }

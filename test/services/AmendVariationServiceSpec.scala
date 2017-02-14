@@ -248,7 +248,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
       val agentPremises = mock[AgentPremises]
-      when(agentPremises.startDate).thenReturn("2016-02-02")
+      when(agentPremises.startDate).thenReturn(Some("2016-02-02"))
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None, agentPremises, Some("Added"), None))))))
       val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
 
@@ -376,7 +376,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val agentPremises = mock[AgentPremises]
 
-      when(agentPremises.startDate).thenReturn("2016-08-10")
+      when(agentPremises.startDate).thenReturn(Some("2016-08-10"))
 
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, Some(""), agentPremises, Some("Added"), None))))))
 
@@ -471,7 +471,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val agentPremises = mock[AgentPremises]
 
-      when(agentPremises.startDate).thenReturn("2016-11-01")
+      when(agentPremises.startDate).thenReturn(Some("2016-11-01"))
 
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None, agentPremises, Some("Added"), None))))))
 
@@ -494,19 +494,27 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
     }
 
-    "successfully evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
-      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.SubscriptionViewModelForRp, DesConstants.AmendVariationRequestModel) must be(false)
+    "evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
+      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.AmendVariationRequestModel, DesConstants.SubscriptionViewModelForRp) must be(false)
     }
 
-    "successfully compare and update api6 request with api5 1" in {
+    "compare and update api6 request with api5 1" in {
+
       val viewModel = DesConstants.SubscriptionViewModelAPI5
+
       when {
         TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
       } thenReturn Future.successful(viewModel)
 
+      val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
+        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
+          DesConstants.ownBusinessPremisesTPR7
+        )
+      )
+
       whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)) {
         updatedRequest =>
-          updatedRequest must be(DesConstants.updateAmendVariationCompleteRequest1)
+          updatedRequest must be(testRequest)
       }
     }
 

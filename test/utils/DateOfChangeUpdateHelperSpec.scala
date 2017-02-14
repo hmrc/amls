@@ -106,7 +106,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
             all = Some(changeToBusinessActivitiesAll.copy(
-              DateChangeFlag = Some(true)
+              dateChangeFlag = Some(true)
             ))
           )
         )
@@ -175,7 +175,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
             all = Some(DesConstants.testBusinessActivitiesAll.copy(
-              DateChangeFlag = Some(false)
+              dateChangeFlag = Some(false)
             ))
           )
         )
