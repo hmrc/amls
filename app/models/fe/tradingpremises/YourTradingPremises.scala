@@ -16,7 +16,8 @@
 
 package models.fe.tradingpremises
 
-import models.des.tradingpremises.{AgentPremises, OwnBusinessPremisesDetails}
+import config.AmlsConfig
+import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
@@ -54,10 +55,17 @@ object YourTradingPremises {
       ) (unlift(YourTradingPremises.unapply))
   }
 
-  implicit def conv(agentPremises: AgentPremises): YourTradingPremises = {
+  implicit def conv(agentDetails: AgentDetails): YourTradingPremises = {
+    val agentPremises = agentDetails.agentPremises
+
+    val startDate = AmlsConfig.release7 match {
+      case true => agentDetails.startDate
+      case false => agentPremises.startDate
+    }
+
     YourTradingPremises(agentPremises.tradingName,
       agentPremises.businessAddress,
-      LocalDate.parse(agentPremises.startDate),
+      LocalDate.parse(startDate.getOrElse("")),
       agentPremises.residential)
   }
 

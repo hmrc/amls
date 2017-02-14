@@ -20,10 +20,14 @@ import models.des.{DesConstants, StringOrInt}
 import models.des.tradingpremises.{Address => DesAddress, TradingPremises => DesTradingPremises, _}
 import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.OneAppPerSuite
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 import utils.StatusConstants
 
-class TradingPremisesSpec extends WordSpec with MustMatchers {
+class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   val ytp = YourTradingPremises("foo", Address("1", "2", None, None, "asdfasdf"),
     new LocalDate(1990, 2, 24), true)
@@ -146,7 +150,6 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
             DesConstants.agentDetailsAPI53
           ))
       )))) must be(convertedModel)
-
     }
 
     "convert des to frontend trading premises when premises lis it empty" in {
@@ -186,12 +189,12 @@ class TradingPremisesSpec extends WordSpec with MustMatchers {
         Eab(false),
         Bpsp(false),
         Tditpsp(false),
-        "1975",
-        None,
-        Some("2002-03-01")
+        Some("1975"),
+        None
       ),
       None,
-      None
+      None,
+      Some("2002-03-01")
     )
 
     "Business structure is Sole Proprietor" must {

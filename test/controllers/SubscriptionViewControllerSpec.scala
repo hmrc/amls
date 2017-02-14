@@ -22,6 +22,7 @@ import models.{SubscriptionViewModel, des}
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
+import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.fe.tradingpremises.BusinessActivity.MoneyServiceBusiness
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -132,11 +133,20 @@ class SubscriptionViewControllerSpecRelease7
     override val connector = mock[ViewDESConnector]
   }
 
+  val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None){
+    x => x.agentDetails match {
+      case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
+        startDate = y.agentPremises.startDate)))
+      case _ => None
+    }
+  }
+
   val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRp.copy(businessActivities = DesConstants.testBusinessActivities.copy(
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
-  ), msb = Some(DesConstants.testMsb.copy(
+  ),tradingPremises = DesConstants.testTradingPremisesAPI5.copy(agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))),
+    msb = Some(DesConstants.testMsb.copy(
     msbAllDetails = Some(MsbAllDetails(
       Some("£50k-£100k"),
       true,

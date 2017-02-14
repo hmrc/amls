@@ -16,20 +16,16 @@
 
 package controllers
 
-import connectors.{DESConnector, ViewDESConnector}
 import exceptions.HttpStatusException
-import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
-import models.des.tradingpremises._
-import models.des._
+import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.{Request, Action}
+import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.StatusConstants
 
 import scala.concurrent.Future
 
@@ -56,13 +52,14 @@ trait AmendVariationController extends BaseController {
     )
 
 
-  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType)(implicit request: Request[JsValue]) = {
+  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, requestType: RequestType)(implicit request: Request[JsValue]) = {
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>
         Json.fromJson[fe.SubscriptionRequest](request.body) match {
           case JsSuccess(body, _) =>
             implicit val mt = messageType
+            implicit val requestType = RequestType.Amendment
             service.compareAndUpdate(body, amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
@@ -90,7 +87,7 @@ trait AmendVariationController extends BaseController {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, Amendment)
+        update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 
   def variation(accountType: String, ref: String, amlsRegistrationNumber: String) =
@@ -98,7 +95,7 @@ trait AmendVariationController extends BaseController {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, Variation)
+        update(amlsRegistrationNumber, Variation, RequestType.Variation)
     }
 }
 

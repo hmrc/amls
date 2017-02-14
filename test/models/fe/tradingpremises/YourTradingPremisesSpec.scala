@@ -19,9 +19,13 @@ package models.fe.tradingpremises
 import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.OneAppPerSuite
 import play.api.libs.json._
+import play.api.test.FakeApplication
 
-class YourTradingPremisesSpec extends WordSpec with MustMatchers {
+class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   "YourTradingPremises" must {
 
@@ -64,6 +68,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
     }
 
     "convert des model to frontend model" in {
+
       val agentPremises = AgentPremises("TradingName",
         TradingPremisesAddress("AddressLine1",
           "AddressLine2",
@@ -80,14 +85,53 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers {
         Eab(false),
         Bpsp(true),
         Tditpsp(false),
-        "2001-01-01"
+        Some("2001-01-01")
       )
+      val agentDetail = AgentDetails("", None,None,None,agentPremises, None)
 
       val feModel = YourTradingPremises("TradingName",
         Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
         new LocalDate(2001, 1, 1), true)
 
-      YourTradingPremises.conv(agentPremises) must be(feModel)
+      YourTradingPremises.conv(agentDetail) must be(feModel)
+
+    }
+  }
+}
+
+class YourTradingPremisesRelease7Spec extends WordSpec with MustMatchers with OneAppPerSuite {
+
+  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+
+  "YourTradingPremises" must {
+
+    "convert des model to frontend model" in {
+
+      val agentPremises = AgentPremises("TradingName",
+        TradingPremisesAddress("AddressLine1",
+          "AddressLine2",
+          Some("AddressLine3"),
+          Some("AddressLine4"),
+          "AD",
+          Some("AA1 1AA")
+        ),
+        true,
+        Msb(true, false, true, true, true),
+        Hvd(true),
+        Asp(false),
+        Tcsp(true),
+        Eab(false),
+        Bpsp(true),
+        Tditpsp(false),
+        None
+      )
+      val agentDetail = AgentDetails("", None,None,None,agentPremises, Some("2001-01-01"))
+
+      val feModel = YourTradingPremises("TradingName",
+        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
+        new LocalDate(2001, 1, 1), true)
+
+      YourTradingPremises.conv(agentDetail) must be(feModel)
 
     }
   }

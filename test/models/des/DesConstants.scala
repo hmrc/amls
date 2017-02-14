@@ -192,7 +192,7 @@ object DesConstants {
     Eab(false),
     Bpsp(true),
     Tditpsp(false),
-    "2001-01-01"
+    Some("2001-01-01")
   )
 
   val AgentPremisesModel2 = AgentPremises("TradingName",
@@ -210,7 +210,7 @@ object DesConstants {
     Eab(false),
     Bpsp(true),
     Tditpsp(false),
-    "2001-01-01"
+    Some("2001-01-01")
   )
 
   val AgentPremisesModel3 = AgentPremises("TradingName",
@@ -228,7 +228,7 @@ object DesConstants {
     Eab(false),
     Bpsp(false),
     Tditpsp(false),
-    "2001-01-01"
+    Some("2001-01-01")
   )
 
   val agentPremisesapi51 = AgentPremises("aaaaaaaaaaaa",
@@ -246,7 +246,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -256,6 +256,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi51,
+    None,
+    None,
+    None,
     Some("Added"),
     Some(StringOrInt(111111))
   )
@@ -275,7 +278,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -285,6 +288,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi52,
+    None,
+    None,
+    None,
     Some("Added"),
     None
   )
@@ -304,7 +310,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "2001-01-01",
+    Some("2001-01-01"),
     None
   )
 
@@ -314,6 +320,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi53,
+    None,
+    None,
+    None,
     Some("Added"),
     None
   )
@@ -334,26 +343,62 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
-
   val agentDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
     None,
     Some("1970-01-01"),
     Some("AgentLegalEntityName"),
     agentPremisesapi61,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("1"))
   )
 
+  val agentPremisesapi61Release7 = AgentPremises("aaaaaaaaaaaa",
+    TradingPremisesAddress("a",
+      "a",
+      Some("a"),
+      Some("a"),
+      "GB",
+      Some("aaaaaaaaaa")),
+    true,
+    Msb(true, true, true, true, false),
+    Hvd(true),
+    Asp(true),
+    Tcsp(true),
+    Eab(true),
+    Bpsp(true),
+    Tditpsp(true),
+    None,
+    None
+  )
+
+  val agentPremisesapi6Release7 = AgentDetails(
+    "Sole Proprietor",
+    None,
+    Some("1970-01-01"),
+    Some("aaaaaaaaaaa"),
+    agentPremisesapi61Release7,
+    None,
+    None,
+    None,
+    Some(StatusConstants.Unchanged),
+    Some(StringOrInt("2"))
+  )
   val agentAmendDetailsAPI61 = AgentDetails(
     "Sole Proprietor",
     None,
     Some("1970-01-01"),
     Some("AgentLegalEntityName for amend"),
     agentPremisesapi61,
+    None,
+    None,
+    None,
     Some("Added"),
     Some(StringOrInt("133333"))
   )
@@ -373,9 +418,11 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
+
+
 
   val agentDetailsAPI62 = AgentDetails(
     "Sole Proprietor",
@@ -383,6 +430,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("aaaaaaaaaaa"),
     agentPremisesapi62,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
   )
@@ -402,7 +452,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "2001-01-01",
+    Some("2001-01-01"),
     None
   )
 
@@ -412,6 +462,9 @@ object DesConstants {
     Some("1970-01-01"),
     Some("AgentLegalEntityName2"),
     agentPremisesapi63,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("3"))
   )
@@ -461,7 +514,6 @@ object DesConstants {
     )
   ))))
 
-
   val amendStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
@@ -483,6 +535,52 @@ object DesConstants {
       None,
       Some(StringOrInt(444444)),
       Some(StatusConstants.Unchanged)
+    ),
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName1"),
+      TradingPremisesAddress("OB11AddressLine1",
+        "OB1AddressLine2",
+        Some("OB1AddressLine3"),
+        Some("OB1AddressLine4"),
+        "GB",
+        Some("XX1 1XX")),
+      false,
+      Msb(false, false, true, true, false),
+      Hvd(true),
+      Asp(true),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(true),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(555555)),
+      Some(StatusConstants.Deleted)
+    )
+  ))))
+
+  val amendStatusOwnBusinessPremisesR7 = Some(OwnBusinessPremises(true, Some(Seq(
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName"),
+      TradingPremisesAddress("OwnBusinessAddressLine1",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      false,
+      Msb(false, false, false, false, false),
+      Hvd(false),
+      Asp(false),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(false),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(444444)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
     ),
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
@@ -552,6 +650,53 @@ object DesConstants {
     )
   ))))
 
+  val ownBusinessPremisesTPR7 = Some(OwnBusinessPremises(true, Some(Seq(
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName"),
+      TradingPremisesAddress("OwnBusinessAddressLine1",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      false,
+      Msb(false, false, false, false, false),
+      Hvd(false),
+      Asp(false),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(false),
+      "2001-05-05",
+      None,
+      Some(StringOrInt(444444)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
+    ),
+    OwnBusinessPremisesDetails(
+      Some("OwnBusinessTradingName1"),
+      TradingPremisesAddress("OB11AddressLine1",
+        "OB1AddressLine2",
+        Some("OB1AddressLine3"),
+        Some("OB1AddressLine4"),
+        "GB",
+        Some("XX1 1XX")),
+      false,
+      Msb(false, false, true, true, false),
+      Hvd(true),
+      Asp(true),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(true),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(555555)),
+      Some(StatusConstants.Unchanged),
+      dateChangeFlag = Some(false)
+    )
+  ))))
+
   val ownBusinessPremisesTPAPI6 = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
@@ -613,7 +758,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -642,7 +787,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -652,6 +797,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises2,
+    None,
+    None,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -671,7 +819,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -681,6 +829,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises3,
+    None,
+    None,
+    None,
     Some(StatusConstants.Added),
     Some(StringOrInt("333333"))
   )
@@ -700,7 +851,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -710,6 +861,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     viewStatusAgentPremises4,
+    None,
+    None,
+    None,
     None,
     Some(StringOrInt("444444"))
   )
@@ -729,7 +883,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -739,6 +893,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amenStatusAgentPremises1,
+    None,None,
     Some(StatusConstants.Added),
     None
   )
@@ -758,7 +913,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -768,6 +923,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises2,
+    None,
+    None,
+    None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
   )
@@ -787,7 +945,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -797,6 +955,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises3,
+    None,
+    None,
+    None,
     Some(StatusConstants.Updated),
     Some(StringOrInt("333333"))
   )
@@ -816,7 +977,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
-    "1967-08-13",
+    Some("1967-08-13"),
     None
   )
 
@@ -826,6 +987,9 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amendStatusAgentPremises4,
+    None,
+    None,
+    None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("444444"))
   )
@@ -874,6 +1038,13 @@ object DesConstants {
     )
   ))
 
+  val tradingPremisesAPI6Release7 = TradingPremises(
+    Some(OwnBusinessPremises(false,None)),
+    Some(AgentBusinessPremises(
+      true,
+      Some(Seq(agentPremisesapi6Release7))
+    )
+    ))
 
   val amendStatusTradingPremisesAPI6 = TradingPremises(
     amendStatusOwnBusinessPremises,

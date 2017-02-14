@@ -16,6 +16,7 @@
 
 package models.des.tradingpremises
 
+import models.des.RequestType
 import play.api.libs.json.Json
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
@@ -28,12 +29,12 @@ object TradingPremises {
 
   implicit val format = Json.format[TradingPremises]
 
-  implicit def convert(tradingPremises: Seq[FETradingPremises]): TradingPremises = {
+  implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): TradingPremises = {
     val (agent, own) = tradingPremises.partition(_.registeringAgentPremises.fold(false)(x => x.agentPremises))
     TradingPremises(Some(own), Some(agent))
   }
 
-  implicit def convert(tradingPremises: Option[Seq[FETradingPremises]]): TradingPremises = {
+  implicit def convert(tradingPremises: Option[Seq[FETradingPremises]])(implicit requestType: RequestType): TradingPremises = {
     convert(tradingPremises.getOrElse(Seq.empty))
   }
 }

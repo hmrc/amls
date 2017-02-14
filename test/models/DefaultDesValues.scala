@@ -115,7 +115,7 @@ object DefaultDesValues {
     Eab(true),
     Bpsp(true),
     Tditpsp(false),
-    "2008-01-01")
+    Some("2008-01-01"))
 
   private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
 

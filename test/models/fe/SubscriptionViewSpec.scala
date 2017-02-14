@@ -20,9 +20,10 @@ import models._
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover, MlrActivitiesAppliedFor}
 import models.des.msb.{CountriesList, MsbAllDetails}
+import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.fe.businessmatching.{BusinessActivities, MoneyServiceBusiness}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
 class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
@@ -101,11 +102,20 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
+  val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None){
+    x => x.agentDetails match {
+      case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
+        startDate = y.agentPremises.startDate)))
+      case _ => None
+    }
+  }
+
   val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRp.copy(businessActivities = DesConstants.testBusinessActivities.copy(
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
-  ), msb = Some(DesConstants.testMsb.copy(
+  ), tradingPremises = DesConstants.testTradingPremisesAPI5.copy(agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))),
+     msb = Some(DesConstants.testMsb.copy(
     msbAllDetails = Some(MsbAllDetails(
       Some("£50k-£100k"),
       true,
