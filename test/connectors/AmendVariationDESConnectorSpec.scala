@@ -29,12 +29,15 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpPut, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneServerPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   trait Fixture {
 
@@ -75,6 +78,8 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
   "DESConnector" must {
 
     "return a succesful future" in new Fixture {
+
+      println("###############"+testRequest)
 
       val response = HttpResponse(
         responseStatus = OK,
