@@ -16,9 +16,10 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.{BeneficialShareholder, ExternalAccountant, Other}
+import models.fe.declaration._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+
 
 class AboutYouSpec extends PlaySpec {
   "AboutYouDetails" must {
@@ -36,74 +37,28 @@ class AboutYouSpec extends PlaySpec {
         "employedWithinBusiness" -> false, "roleForTheBusiness" -> "External Accountant"))
     }
 
-    "be convertible from FE request to DES for roleWithinBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", Some("middlename"), "lName", BeneficialShareholder)
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", Some("middlename"), "lName")), true, Some("Beneficial Shareholder"), None, Some("Other"), None)
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    }
+    "Convert from new release 7 model to old model" in {
 
-    "be convertible from FE request to DES for roleForTheBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", ExternalAccountant)
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("External Accountant"), None)
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
-    }
+      val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
-    "be convertible from FE request to DES for OtherroleWithinBusiness" in {
-      val FEaboutyouModel = models.fe.declaration.AddPerson("fName", None, "lName", Other("Agent"))
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("Other"), Some("Agent"))
-      Aboutyou.convert(FEaboutyouModel) must be(aboutyouModel)
+      val employedWithinBusiness = false
+      val oldModel = Aboutyou(
+        individualDetails,
+        employedWithinBusiness,
+        Some("Beneficial Shareholder"),
+        None,
+        Some("External Accountant"),
+        None
+      )
+
+      val release7Model = AboutYouRelease7(individualDetails,
+        employedWithinBusiness,
+        Some(RolesWithinBusiness(beneficialShareholder = true, false,false,false,false,false,false,false,None)),
+        Some(RoleForTheBusiness(externalAccountant = true, false, None))
+      )
+
+      Aboutyou.convertFromRelease7(release7Model) must be(oldModel)
     }
   }
 }
 
-class AboutYouRelease7Spec extends PlaySpec {
-
-  "AboutYouRelease7" must {
-    "be serialisable for roleWithinBusiness" in {
-
-      val json = Json.obj(
-        "individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
-        "employedWithinBusiness" -> true,
-        "roleWithinBusiness" -> Json.obj(
-          "beneficialShareholder" -> true,
-          "director" -> true,
-          "partner" -> true,
-          "internalAccountant" -> true,
-          "soleProprietor" -> true,
-          "nominatedOfficer" -> true,
-          "designatedMember" -> true,
-          "other" -> false
-        )
-      )
-
-      val aboutyouModel = AboutYouRelease7(
-        Some(IndividualDetails("fName", None, "lName")),
-        true,
-        Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None))
-      )
-
-      AboutYouRelease7.format.writes(aboutyouModel) must be(json)
-      AboutYouRelease7.format.reads(json) must be(JsSuccess(aboutyouModel))
-
-    }
-
-    "be serialisable for roleForTheBusiness" in {
-
-      val json = Json.obj(
-        "individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
-        "employedWithinBusiness" -> false,
-        "roleForTheBusiness" -> Json.obj(
-          "externalAccountant" -> true,
-          "other" -> false
-        )
-      )
-
-      val aboutyouModel = AboutYouRelease7(Some(IndividualDetails("fName", None, "lName")), false, None, Some(RoleForTheBusiness(true, false, None)))
-
-      AboutYouRelease7.format.writes(aboutyouModel) must be(json)
-      AboutYouRelease7.format.reads(json) must be(JsSuccess(aboutyouModel))
-
-    }
-
-  }
-}

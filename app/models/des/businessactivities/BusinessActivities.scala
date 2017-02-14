@@ -38,7 +38,7 @@ object BusinessActivities {
     BusinessActivities(
       feModel.businessMatchingSection,
       feModel.businessMatchingSection,
-      feModel.hvdSection,
+      HvdGoodsSold.conv(feModel.hvdSection),
       feModel.hvdSection,
       feModel.aspSection,
       feModel.tcspSection,

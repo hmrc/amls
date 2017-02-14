@@ -18,6 +18,7 @@ package models
 
 
 import models.fe.SubscriptionView
+import models.fe.declaration.{Other => DeclarationOther, RoleWithinBusiness}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate
 import utils.StatusConstants
@@ -83,9 +84,9 @@ object AboutYouSection {
   import models.fe.declaration.AddPerson
   import models.fe.declaration.BeneficialShareholder
 
-  val model = AddPerson("fName", None, "lName", models.fe.declaration.Other("Agent"))
+  val model = AddPerson("fName", None, "lName", RoleWithinBusiness(Set(DeclarationOther("Agent"))))
 
-  val modelforView = AddPerson("FirstName", Some("MiddleName"), "LastName", BeneficialShareholder)
+  val modelforView = AddPerson("FirstName", Some("MiddleName"), "LastName", RoleWithinBusiness(Set(BeneficialShareholder)))
 }
 
 object BusinessActivitiesSection {

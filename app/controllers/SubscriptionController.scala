@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import models.des.SubscriptionRequest
 import models.des.RequestType
 import models.fe
 import play.api.Logger
@@ -61,7 +62,7 @@ trait SubscriptionController extends BaseController {
             implicit val requestType = RequestType.Subscription
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
-                service.subscribe(safeId, body) map {
+                service.subscribe(safeId, SubscriptionRequest.convert(body)) map {
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {

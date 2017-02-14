@@ -16,17 +16,18 @@
 
 package models.fe.declaration
 
-import models.des.aboutyou.Aboutyou
+import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 
 case class AddPerson(firstName: String,
                      middleName: Option[String],
                      lastName: String,
-                     roleWithinBusiness: RoleWithinBusiness
-                    )
+                     roleWithinBusiness: models.fe.declaration.RoleWithinBusiness
+                            )
 
 object AddPerson {
 
   import play.api.libs.json._
+
   implicit val jsonReads: Reads[AddPerson] = {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
@@ -35,7 +36,7 @@ object AddPerson {
       (__ \ "firstName").read[String] and
         (__ \ "middleName").readNullable[String] and
         (__ \ "lastName").read[String] and
-        __.read[RoleWithinBusiness]
+        __.read[models.fe.declaration.RoleWithinBusiness]
       ) (AddPerson.apply _)
 
   }
@@ -49,50 +50,27 @@ object AddPerson {
       (__ \ "firstName").write[String] and
         (__ \ "middleName").writeNullable[String] and
         (__ \ "lastName").write[String] and
-        __.write[RoleWithinBusiness]
+        __.write[models.fe.declaration.RoleWithinBusiness]
       ) (unlift(AddPerson.unapply))
   }
 
-  implicit def conv(aboutYou: Aboutyou): AddPerson = {
+  implicit def convert(aboutYou: AboutYouRelease7): AddPerson = {
+
     aboutYou.individualDetails match {
-      case Some(dtls) => AddPerson(dtls.firstName, dtls.middleName, dtls.lastName, aboutYou)
-      case None => AddPerson("", None, "", aboutYou)
+      case Some(details) => {
+        AddPerson(
+          details.firstName,
+          details.middleName,
+          details.lastName,
+          models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
+      }
+      case None =>
+        AddPerson(
+          "",
+          None,
+          "",
+          models.fe.declaration.RoleWithinBusiness.convert(aboutYou)
+        )
     }
-  }
-}
-
-case class AddPersonRelease7(firstName: String,
-                     middleName: Option[String],
-                     lastName: String,
-                     roleWithinBusiness: models.fe.declaration.release7.RoleWithinBusiness
-                    )
-
-object AddPersonRelease7 {
-
-  import play.api.libs.json._
-  implicit val jsonReads: Reads[AddPersonRelease7] = {
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json.Reads._
-    import play.api.libs.json._
-    (
-      (__ \ "firstName").read[String] and
-        (__ \ "middleName").readNullable[String] and
-        (__ \ "lastName").read[String] and
-        __.read[models.fe.declaration.release7.RoleWithinBusiness]
-      ) (AddPersonRelease7.apply _)
-
-  }
-
-
-  implicit val jsonWrites: Writes[AddPersonRelease7] = {
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json.Writes._
-    import play.api.libs.json._
-    (
-      (__ \ "firstName").write[String] and
-        (__ \ "middleName").writeNullable[String] and
-        (__ \ "lastName").write[String] and
-        __.write[models.fe.declaration.release7.RoleWithinBusiness]
-      ) (unlift(AddPersonRelease7.unapply))
   }
 }
