@@ -16,6 +16,7 @@
 
 package models.des
 
+import config.AmlsConfig
 import play.api.libs.json.Json
 
 case class ChangeIndicators(businessDetails: Boolean = false,
@@ -36,5 +37,13 @@ case class ChangeIndicators(businessDetails: Boolean = false,
 
 object ChangeIndicators {
 
-  implicit val format = Json.format[ChangeIndicators]
+  implicit def format = {
+
+    if(!AmlsConfig.release7){
+      Json.format[ChangeIndicators]
+    }
+    else {
+      Json.format[ChangeIndicators]
+    }
+  }
 }
