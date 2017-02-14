@@ -30,7 +30,9 @@ case class TradingPremises(
                             msbServices: Option[MsbServices] = None,
                             lineId: Option[Int] = None,
                             status: Option[String] = None,
-                            endDate: Option[ActivityEndDate] = None
+                            endDate: Option[ActivityEndDate] = None,
+                            removalReason: Option[String] = None,
+                            removalReasonOther: Option[String] = None
                           )
 
 object TradingPremises {
@@ -49,7 +51,9 @@ object TradingPremises {
         agentDetails.agentPremises,
         agentDetails.agentPremises.msb,
         agentDetails.lineId,
-        agentDetails.status
+        agentDetails.status,
+        removalReason = agentDetails.removalReason,
+        removalReasonOther = agentDetails.removalReasonOther
       )
 
     tmp.businessStructure.map {

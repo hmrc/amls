@@ -22,8 +22,10 @@ import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 
-class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
+class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
   "TradingPremises" must {
 
@@ -97,7 +99,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
         Some("1999-01-01"),
         Some("Deleted"),
         Some(StringOrInt("11223344")),
-        Some("2010-01-23")
+        Some("2010-01-23"),
+        Some("Other"),
+        Some("Some other reason")
       )
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
@@ -154,6 +158,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
             ),
             "endDate" -> "1999-01-01",
             "status" -> "Deleted",
+            "status" -> "Deleted",
+            "removalReason" -> "Other",
+            "removalReasonOther" -> "Some other reason",
             "lineId" -> "11223344"
           ))))
 
@@ -176,7 +183,9 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
           None,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
-          Some("2009-05-03")
+          Some("2009-05-03"),
+          removalReason = Some("Other"),
+          removalReasonOther = Some("Some other reason")
         ),
 
         AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
@@ -245,6 +254,33 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite {
 
       viewTradingPremises.equals(desTradingPremises) must be(true)
 
+    }
+
+    "successfully convert TradingPremises front-end model to DES" when {
+
+      val ytp = mock[YourTradingPremises]
+      val wdybd = mock[WhatDoesYourBusinessDo]
+
+      val tradingPremises = Some(Seq(FETradingPremises(
+        registeringAgentPremises = Some(RegisteringAgentPremises(true)),
+        yourTradingPremises = YourTradingPremises("Test", FETradingPremisesPkg.Address("Addr 1", "Addr 2", None, None, "TEST"), new LocalDate(2002, 1, 2), true),
+        whatDoesYourBusinessDoAtThisAddress = WhatDoesYourBusinessDo(Set.empty[BusinessActivity]),
+        removalReason = Some("Other"),
+        removalReasonOther = Some("Some other reason"))))
+
+      "given a removal reason" in {
+
+        val result = TradingPremises.convert(tradingPremises)(RequestType.Amendment)
+
+        result.agentBusinessPremises match {
+          case Some(p) => p.agentDetails match {
+            case Some(agentDetails :: tail) =>
+              agentDetails.removalReason must be(Some("Other"))
+              agentDetails.removalReasonOther must be(Some("Some other reason"))
+          }
+        }
+
+      }
     }
   }
 }
