@@ -955,20 +955,22 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
       "lastName": "lname"
     },
     "employedWithinBusiness": false,
-    "roleWithinBusiness":{
-      "beneficialShareholder": false,
-      "director": false,
-      "partner": false,
-      "internalAccountant": false,
-      "soleProprietor": false,
-      "nominatedOfficer": false,
-      "designatedMember": false,
-      "other": false
-    },
-    "roleForTheBusiness":{
-      "externalAccountant": true,
-      "other": false
-    }
+     "roleWithinBusiness": {
+       "beneficialShareholder": true,
+       "designatedMember": false,
+       "director": true,
+       "internalAccountant": false,
+       "nominatedOfficer": true,
+       "other": true,
+       "partner": true,
+       "soleProprietor": false,
+       "specifyOtherRoleInBusiness": "manager"
+     },
+     "roleForTheBusiness": {
+       "other": true,
+       "externalAccountant": false,
+       "specifyOtherRoleForBusiness": "manager"
+     }
   }
       }""").as[AmendVariationRequest]
 }
