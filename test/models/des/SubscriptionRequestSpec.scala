@@ -143,7 +143,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           supervisionSection = SupervisionSection.completeModel
         )
       }
-
+      implicit val requestType = RequestType.Subscription
       des.SubscriptionRequest.convert(feSubscriptionReq) must be(desSubscriptionReq)
     }
   }
@@ -303,6 +303,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
       )
       )
 
+      implicit val requestType = RequestType.Subscription
       des.SubscriptionRequest.convert(feRelease7SubscriptionViewModel) must be(desRelease7SubscriptionViewModel)
 
     }

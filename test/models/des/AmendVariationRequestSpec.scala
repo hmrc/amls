@@ -117,11 +117,13 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
     "convert frontend model to des model for amendment" in {
       implicit val mt = Amendment
+      implicit val requestType = RequestType.Amendment
       AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModel.copy(amlsMessageType = "Amendment"))
     }
 
     "convert frontend model to des model for variation" in {
       implicit val mt = Variation
+      implicit val requestType = RequestType.Variation
       AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModel.copy(amlsMessageType = "Variation"))
     }
 
@@ -313,7 +315,6 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
     }
   }
 
-
   "AmendVariationRequest" should {
     "de serialise the subscription json" when {
       "given valid json" in {
@@ -330,14 +331,17 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
       }
     }
 
-
     "convert frontend model to des model for amendment" in {
       implicit val mt = Amendment
-      AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Amendment"))
+      implicit val requestType = RequestType.Amendment
+      AmendVariationRequest.convert(feSubscriptionReq.copy(tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)) must be(
+        convertedDesModelRelease7.copy(amlsMessageType = "Amendment", tradingPremises = DesConstants.tradingPremisesAPI6Release7))
+
     }
 
     "convert frontend model to des model for variation" in {
       implicit val mt = Variation
+      implicit val requestType = RequestType.Variation
       AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Variation"))
     }
 
@@ -354,7 +358,6 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
       convertedDesModelRelease7.extraFields must be(extraField)
 
       convertedDesModelRelease7.extraFields.setEtmpFields(newEtmpField) must be(updatedModel)
-
     }
 
     "update ChangeIndicator  and extra Fields with data from view model[API 5]" in {

@@ -31,46 +31,6 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
   "TradingPremisesUpdateHelperSpec" must {
 
-    "successfully update agent premises start date changed flag when start date is amended" in {
-      val viewModel = DesConstants.SubscriptionViewModelAPI5
-
-      val agentPremisesData = AgentPremises("string",
-        des.tradingpremises.Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
-        Msb(false, false, false, false, false),
-        models.des.tradingpremises.Hvd(false),
-        Asp(false),
-        Tcsp(false),
-        Eab(true),
-        Bpsp(true),
-        Tditpsp(false),
-        "2008-01-01",
-        None,
-        None,
-        None)
-
-      val agentDetailsData = AgentDetails(
-        "Sole Proprietor",
-        None,
-        Some("entity name"),
-        None,
-        agentPremisesData,
-        Some(StatusConstants.Unchanged),
-        Some(StringOrInt(111111)),
-        None)
-
-      val agentPremisesExpectedData = agentPremisesData.copy(dateChangeFlag = Some(true))
-      val agentDetailsExpectedData = agentDetailsData.copy(status = Some(StatusConstants.Updated), agentPremises = agentPremisesExpectedData)
-
-      val modelWithChangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
-        tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-          agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetailsData))))))
-
-      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(modelWithChangedStartDate, viewModel)
-
-      result.tradingPremises.agentBusinessPremises must be(Some(AgentBusinessPremises(true, Some(Seq(agentDetailsExpectedData)))))
-
-    }
-
     "successfully update own business start date changed flag when start date is amended" in {
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
@@ -127,13 +87,18 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
               dateChangeFlag = Some(false)
             ))
           ))
-        ))
+        )),
+        tradingPremises = DesConstants.amendStatusTradingPremisesAPI6.copy(
+          DesConstants.amendStatusOwnBusinessPremisesR7
+        )
       )
 
-      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(DesConstants.amendStatusDesVariationRequestTP, viewModel)
+      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(
+        DesConstants.amendStatusDesVariationRequestTP,
+        viewModel
+      )
 
       result.tradingPremises must be(testRequest.tradingPremises)
-
     }
 
     "return request with an own premises added" in {
@@ -161,7 +126,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         None,
         Some(StatusConstants.Unchanged),
         None,
-        None,
+        Some(false),
         None
       )
 

@@ -253,6 +253,23 @@ object TradingPremisesSection {
       BusinessActivity.MoneyServiceBusiness,
       BusinessActivity.TrustAndCompanyServices)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), Some(555555), Some(StatusConstants.Unchanged))))
+
+
+  val tradingPremisesOnlyAgentModel = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)),
+    YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "aaaaaaaaaa"),
+      new LocalDate(1967,8,13), true),
+    Some(BusinessStructure.SoleProprietor),
+    Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
+    None,
+    None,
+    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
+      BusinessActivity.AccountancyServices,
+      BusinessActivity.EstateAgentBusinessService,
+      BusinessActivity.BillPaymentServices,
+      BusinessActivity.TelephonePaymentService,
+      BusinessActivity.MoneyServiceBusiness,
+      BusinessActivity.TrustAndCompanyServices)),
+    Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), None, Some("Added"))))
 }
 
 object BankDetailsSection {

@@ -16,6 +16,8 @@
 
 package models.des
 
+import java.net.Authenticator.RequestorType
+
 import config.AmlsConfig
 import models.des.aboutthebusiness._
 import models.des.aboutyou.Aboutyou
@@ -155,7 +157,8 @@ object AmendVariationRequest {
      responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
      msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
      hvdConv : fe.hvd.Hvd => Hvd,
-     messageType : AmlsMessageType
+     messageType : AmlsMessageType,
+     requestType: RequestType
   ): Outgoing =
     AmendVariationRequest(
       acknowledgementReference = gen.ackRef,
