@@ -75,7 +75,7 @@ object StringOrInt {
   implicit def convToLineId(desLineId: StringOrInt): Option[Int] = {
     desLineId.data match {
       case Left(intData) => Some(intData)
-      case Right(strData) => None
+      case Right(strData) => Some(Integer.parseInt(strData))
     }
   }
 
