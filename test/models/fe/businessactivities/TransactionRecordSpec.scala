@@ -89,7 +89,7 @@ class TransactionRecordSpec extends PlaySpec with MockitoSugar {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(false, None))
+        None)
 
       TransactionRecord.conv(businessActivitiesAll) must be(Some(TransactionRecordYes(Set(Paper,
         DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))))
@@ -108,7 +108,7 @@ class TransactionRecordSpec extends PlaySpec with MockitoSugar {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(false, None))
+        None)
 
       TransactionRecord.conv(businessActivitiesAll) must be(Some(TransactionRecordNo))
     }

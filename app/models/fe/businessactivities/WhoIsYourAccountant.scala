@@ -28,24 +28,29 @@ object WhoIsYourAccountant {
 
   import play.api.libs.json._
 
-  implicit val jsonWrites : Writes[WhoIsYourAccountant] = Writes[WhoIsYourAccountant] { data:WhoIsYourAccountant =>
+  implicit val jsonWrites: Writes[WhoIsYourAccountant] = Writes[WhoIsYourAccountant] { data: WhoIsYourAccountant =>
     Json.obj("accountantsName" -> data.accountantsName,
-             "accountantsTradingName" -> data.accountantsTradingName) ++
+      "accountantsTradingName" -> data.accountantsTradingName) ++
       Json.toJson(data.address).as[JsObject]
   }
 
-  implicit val jsonReads : Reads[WhoIsYourAccountant] =
+  implicit val jsonReads: Reads[WhoIsYourAccountant] =
     ((__ \ "accountantsName").read[String] and
       (__ \ "accountantsTradingName").readNullable[String] and
-      __.read[AccountantsAddress])(WhoIsYourAccountant.apply _)
+      __.read[AccountantsAddress]) (WhoIsYourAccountant.apply _)
 
-  implicit def conv(mlrAdvisor: MlrAdvisor): Option[WhoIsYourAccountant] = {
-    mlrAdvisor.mlrAdvisorDetails match {
-      case Some(mlrDtls) => mlrDtls.advisorNameAddress match {
-        case Some(advisorDtls) => Some(WhoIsYourAccountant(advisorDtls.name, advisorDtls.tradingName, advisorDtls.address))
-        case None => None
-      }
-      case None => None
+  implicit def conv(mlrAdvisorOpt: Option[MlrAdvisor]): Option[WhoIsYourAccountant] = {
+
+    mlrAdvisorOpt flatMap {
+      mlrAdvisor =>
+        mlrAdvisor.mlrAdvisorDetails match {
+          case Some(mlrDtls) => mlrDtls.advisorNameAddress match {
+            case Some(advisorDtls) => Some(WhoIsYourAccountant(advisorDtls.name, advisorDtls.tradingName, advisorDtls.address))
+            case None => None
+          }
+          case None => None
+        }
     }
+
   }
 }

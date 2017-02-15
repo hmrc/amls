@@ -70,7 +70,7 @@ class HowManyEmployeesSpec extends PlaySpec {
         true,
         true,
         None,
-        MlrAdvisor(false, None)
+        None
       )
       HowManyEmployees.conv(all) must be(Some(HowManyEmployees("12345678901", "11223344556")))
     }
@@ -88,7 +88,7 @@ class HowManyEmployeesSpec extends PlaySpec {
         true,
         true,
         None,
-        MlrAdvisor(false, None)
+        None
       )
       HowManyEmployees.conv(all) must be(None)
     }

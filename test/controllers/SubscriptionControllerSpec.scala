@@ -29,7 +29,7 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -44,13 +44,14 @@ class SubscriptionControllerSpec
     with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
-    with IterateeHelpers {
+    with IterateeHelpers
+    with OneAppPerSuite {
 
   object SubscriptionController extends SubscriptionController {
     override val service = mock[SubscriptionService]
   }
 
-   "SubscriptionController" must {
+  "SubscriptionController" must {
 
     val safeId = "XA0001234567890"
     // scalastyle:off
@@ -71,10 +72,10 @@ class SubscriptionControllerSpec
         ),
       eabSection = None,
       tradingPremisesSection = None,
-      aboutTheBusinessSection = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))),Some(VATRegisteredNo),
-        Some(CorporationTaxRegisteredYes("1234567890")),ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "postcode")),
+      aboutTheBusinessSection = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
+        Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "postcode")),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, BankAccount("name", NonUKAccountNumber("1234567896")))),
-      aboutYouSection = AddPerson("name",Some("name"),"name", RoleWithinBusiness(Set(Director))),
+      aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),
       businessActivitiesSection = BusinessActivities(None),
       responsiblePeopleSection = None,
       tcspSection = None,
@@ -88,11 +89,11 @@ class SubscriptionControllerSpec
       .withHeaders(CONTENT_TYPE -> "application/json")
       .withBody[JsValue](Json.toJson(body))
 
-     val requestWithEmptyBody = FakeRequest()
-       .withHeaders(CONTENT_TYPE -> "application/json")
-       .withBody[JsValue](JsNull)
+    val requestWithEmptyBody = FakeRequest()
+      .withHeaders(CONTENT_TYPE -> "application/json")
+      .withBody[JsValue](JsNull)
 
-     "return a `BadRequest` response when the safeId is invalid" in {
+    "return a `BadRequest` response when the safeId is invalid" in {
 
       val result = SubscriptionController.subscribe("test", "test", "test")(postRequest)
       val failure = Json.obj("errors" -> Seq("Invalid SafeId"))
@@ -129,7 +130,7 @@ class SubscriptionControllerSpec
         SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady (SubscriptionController.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
+      whenReady(SubscriptionController.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -140,27 +141,27 @@ class SubscriptionControllerSpec
 
       val response = Json.obj(
         "errors" -> Seq(
-            Json.obj(
-              "path" -> "obj.aboutTheBusinessSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
-              "path" -> "obj.aboutYouSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
-              "path" -> "obj.businessActivitiesSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
-              "path" -> "obj.businessMatchingSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
-              "path" -> "obj.bankDetailsSection",
-              "error" -> "error.path.missing"
-            )
+          Json.obj(
+            "path" -> "obj.aboutTheBusinessSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.aboutYouSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.businessActivitiesSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.businessMatchingSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.bankDetailsSection",
+            "error" -> "error.path.missing"
           )
+        )
       )
 
       val result = SubscriptionController.subscribe("test", "orgRef", safeId)(requestWithEmptyBody)

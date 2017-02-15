@@ -129,7 +129,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(
+        Some(MlrAdvisor(
           true,
           Some(MlrAdvisorDetails(
             Some(AdvisorNameAddress(
@@ -144,7 +144,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
                 Some("Postcode")))),
             true,
             Some("01234567890")
-        )))
+        ))))
       ))
 
       val feModel = BusinessActivities(Some(InvolvedInOtherNo),None,None,Some(BusinessFranchiseYes("FranchiserName1")),

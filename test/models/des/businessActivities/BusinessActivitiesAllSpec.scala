@@ -44,7 +44,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val nationalCrimeAgencyRegistered = true
       val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
-      val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None)))
+      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
 
       val model = BusinessActivitiesAll(Some("2016-05-25"), None, None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
         nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
@@ -90,7 +90,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true,Some(RiskAssessmentFormat(true,true)))),
-        MlrAdvisor(
+        Some(MlrAdvisor(
           true,
           Some(
             MlrAdvisorDetails(
@@ -107,7 +107,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
                     None))),
               true,
               None)
-          ))))
+          )))))
 
       BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
         BusinessActivitiesSection.modelForView, Some("2000-11-11"), true) must be(model)
