@@ -26,15 +26,18 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpPut, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneServerPerSuite {
+class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   trait Fixture {
 
@@ -967,20 +970,22 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
       "lastName": "lname"
     },
     "employedWithinBusiness": false,
-    "roleWithinBusiness":{
-      "beneficialShareholder": false,
-      "director": false,
-      "partner": false,
-      "internalAccountant": false,
-      "soleProprietor": false,
-      "nominatedOfficer": false,
-      "designatedMember": false,
-      "other": false
-    },
-    "roleForTheBusiness":{
-      "externalAccountant": true,
-      "other": false
-    }
+     "roleWithinBusiness": {
+       "beneficialShareholder": true,
+       "designatedMember": false,
+       "director": true,
+       "internalAccountant": false,
+       "nominatedOfficer": true,
+       "other": true,
+       "partner": true,
+       "soleProprietor": false,
+       "specifyOtherRoleInBusiness": "manager"
+     },
+     "roleForTheBusiness": {
+       "other": true,
+       "externalAccountant": false,
+       "specifyOtherRoleForBusiness": "manager"
+     }
   }
       }""").as[AmendVariationRequest]
 }
