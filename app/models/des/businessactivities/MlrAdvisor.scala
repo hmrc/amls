@@ -51,8 +51,9 @@ object MlrAdvisor {
   implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisor] = {
     bact.accountantForAMLSRegulations match {
       case Some(x) => Some(MlrAdvisor(x.accountantForAMLSRegulations, bact))
-      case _ if (!AmlsConfig.release7) => Some(MlrAdvisor(false))
-      case _ => None
+        // have to keep sending for now as is required in API4 - a defect has been raised
+      case _  => Some(MlrAdvisor(false))
+
     }
   }
 }
