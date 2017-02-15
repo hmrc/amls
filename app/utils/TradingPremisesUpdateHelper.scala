@@ -106,11 +106,8 @@ trait TradingPremisesUpdateHelper {
   private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
     ownDetails.startDate match {
       case _ if !ownDetails.status.contains(StatusConstants.Deleted) =>
-        !ownDetails.startDate.equals(viewOwnDtls.startDate) match {
-          case false => Some(false)
-          case _ => Some(true)
-        }
-      case _ => None
+        Some(!ownDetails.startDate.equals(viewOwnDtls.startDate))
+      case _ => Some(false)
     }
   }
 
@@ -143,10 +140,7 @@ trait TradingPremisesUpdateHelper {
   private def updateAgentDetailsDateOfChangeFlag(agentDetails: AgentDetails, viewAgent: AgentDetails) = {
     agentDetails.startDate match {
       case _ if !agentDetails.status.contains(StatusConstants.Deleted) =>
-        !agentDetails.startDate.equals(viewAgent.startDate) match {
-          case false => Some(false)
-          case _ => Some(true)
-        }
+        Some(!agentDetails.startDate.equals(viewAgent.startDate))
       case _ => Some(false)
     }
   }
