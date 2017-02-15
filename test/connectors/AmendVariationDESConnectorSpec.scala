@@ -161,12 +161,24 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
             "tradingPremises":false,
             "businessActivities":false,
             "bankAccountDetails":false,
-            "msb":false,
-            "hvd":false,
-            "asp":false,
-            "aspOrTcsp":false,
-            "tcsp":false,
-            "eab":false,
+             "msb": {
+              "msb": false
+              },
+              "hvd": {
+              "hvd": false
+              },
+              "asp": {
+              "asp": false
+              },
+              "aspOrTcsp": {
+              "aspOrTcsp": false
+              },
+              "tcsp": {
+              "tcsp": false
+              },
+              "eab": {
+              "eab": false
+              },
             "responsiblePersons":false,
             "filingIndividual":false
          },
