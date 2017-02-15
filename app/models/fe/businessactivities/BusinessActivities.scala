@@ -77,20 +77,22 @@ object BusinessActivities {
 
   implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
     BusinessActivities(involvedInOther = desBA.fold[Option[InvolvedInOther]](None)(x => x.businessActivityDetails),
-      expectedBusinessTurnover = desBA.fold[Option[ExpectedBusinessTurnover]](None)(x =>x.businessActivityDetails),
-      expectedAMLSTurnover = desBA.fold[Option[ExpectedAMLSTurnover]](None)(x=> x.businessActivityDetails),
+      expectedBusinessTurnover = desBA.fold[Option[ExpectedBusinessTurnover]](None)(x => x.businessActivityDetails),
+      expectedAMLSTurnover = desBA.fold[Option[ExpectedAMLSTurnover]](None)(x => x.businessActivityDetails),
       businessFranchise = desBA.fold[Option[BusinessFranchise]](None)(x => x.franchiseDetails),
       transactionRecord = desBA.fold[Option[TransactionRecord]](None)(x => x),
       customersOutsideUK = desBA.fold[Option[CustomersOutsideUK]](None)(x => x),
       ncaRegistered = desBA.fold[Option[NCARegistered]](None)(x => Some(NCARegistered(x.nationalCrimeAgencyRegistered))),
       accountantForAMLSRegulations = desBA.fold[Option[AccountantForAMLSRegulations]](None)(x =>
-        Some(AccountantForAMLSRegulations(x.mlrAdvisor.doYouHaveMlrAdvisor))),
+        Some(AccountantForAMLSRegulations(x.mlrAdvisor match { case Some(x) => x.doYouHaveMlrAdvisor
+        case None => false
+        }))),
       identifySuspiciousActivity = desBA.fold[Option[IdentifySuspiciousActivity]](None)(x =>
         Some(IdentifySuspiciousActivity(x.suspiciousActivityGuidance))),
       riskAssessmentPolicy = desBA.fold[Option[RiskAssessmentPolicy]](None)(x => x.formalRiskAssessmentDetails),
       howManyEmployees = desBA.fold[Option[HowManyEmployees]](None)(x => x),
       whoIsYourAccountant = desBA.fold[Option[WhoIsYourAccountant]](None)(x => x.mlrAdvisor),
-      taxMatters = desBA.fold[Option[TaxMatters]](None)(x => x.mlrAdvisor.mlrAdvisorDetails)
+      taxMatters = desBA.fold[Option[TaxMatters]](None)(x => x.mlrAdvisor flatMap {mlrAdvisor => mlrAdvisor.mlrAdvisorDetails})
     )
   }
 

@@ -103,7 +103,7 @@ object DesConstants {
     true,
     true,
     Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-    MlrAdvisor(true, Some(MlrAdvisorDetails(
+    Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
       Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
         "AdvisorAddressLine1",
         "AdvisorAddressLine2",
@@ -113,7 +113,7 @@ object DesConstants {
         Some("Postcode")))),
       true,
       None
-    )))
+    ))))
   )
 
   val testBusinessActivitiesAllWithDateChangeFlag = BusinessActivitiesAll(
@@ -129,7 +129,7 @@ object DesConstants {
     true,
     true,
     Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-    MlrAdvisor(true, Some(MlrAdvisorDetails(
+    Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
       Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
         "AdvisorAddressLine1",
         "AdvisorAddressLine2",
@@ -139,7 +139,7 @@ object DesConstants {
         Some("Postcode")))),
       true,
       None
-    )))
+    ))))
   )
 
   val testBusinessActivities = BusinessActivities(

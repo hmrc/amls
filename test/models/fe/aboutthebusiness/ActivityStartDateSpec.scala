@@ -59,7 +59,7 @@ class ActivityStartDateSpec extends PlaySpec {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(false, None)
+        None
       ))
       ActivityStartDate.conv(desModel) must be(None)
 

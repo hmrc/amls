@@ -44,7 +44,7 @@ class CustomersOutsideUKSpec extends PlaySpec {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(false, None))
+        None)
 
       CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(true, Some(List("AD", "GB")))))
     }
@@ -62,7 +62,7 @@ class CustomersOutsideUKSpec extends PlaySpec {
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        MlrAdvisor(false, None))
+        None)
 
       CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(false, None)))
     }

@@ -16,6 +16,7 @@
 
 package models.des.businessactivities
 
+import config.AmlsConfig
 import models.fe.businessactivities.WhoIsYourAccountant
 import play.api.libs.json.Json
 
@@ -23,7 +24,7 @@ case class MlrAdvisorDetails(advisorNameAddress: Option[AdvisorNameAddress],
                              agentDealsWithHmrc: Boolean,
                              hmrcAgentRefNo: Option[String])
 
-object MlrAdvisorDetails{
+object MlrAdvisorDetails {
   implicit val format = Json.format[MlrAdvisorDetails]
 
   implicit def convert(ba: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisorDetails] = {
@@ -33,7 +34,7 @@ object MlrAdvisorDetails{
     }
   }
 
-  implicit def dealsWithTaxConvert(accountant:Option[WhoIsYourAccountant]): Option[AdvisorNameAddress] ={
+  implicit def dealsWithTaxConvert(accountant: Option[WhoIsYourAccountant]): Option[AdvisorNameAddress] = {
     accountant match {
       case Some(data) => data
       case None => None
@@ -44,13 +45,15 @@ object MlrAdvisorDetails{
 case class MlrAdvisor(doYouHaveMlrAdvisor: Boolean,
                       mlrAdvisorDetails: Option[MlrAdvisorDetails] = None)
 
-object MlrAdvisor{
+object MlrAdvisor {
   implicit val format = Json.format[MlrAdvisor]
 
-  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): MlrAdvisor ={
-    bact.accountantForAMLSRegulations match{
-      case Some(x) => MlrAdvisor(x.accountantForAMLSRegulations, bact)
-      case _ => MlrAdvisor(false)
+  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisor] = {
+    bact.accountantForAMLSRegulations match {
+      case Some(x) => Some(MlrAdvisor(x.accountantForAMLSRegulations, bact))
+        // have to keep sending for now as is required in API4 - a defect has been raised
+      case _  => Some(MlrAdvisor(false))
+
     }
   }
 }

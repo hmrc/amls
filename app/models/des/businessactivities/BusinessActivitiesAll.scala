@@ -36,7 +36,7 @@ case class BusinessActivitiesAll(
                                   suspiciousActivityGuidance: Boolean,
                                   nationalCrimeAgencyRegistered: Boolean,
                                   formalRiskAssessmentDetails: Option[FormalRiskAssessmentDetails],
-                                  mlrAdvisor: MlrAdvisor)
+                                  mlrAdvisor: Option[MlrAdvisor])
 
 object BusinessActivitiesAll{
 

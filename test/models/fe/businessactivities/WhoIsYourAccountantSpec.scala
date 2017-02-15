@@ -52,7 +52,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
     }
 
     "convert des to frontend model successfully" in {
-      val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(
+      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
         Some(AdvisorNameAddress("Name", Some("TradingName"), Address(
           "AdvisorAddressLine1",
           "AdvisorAddressLine2",
@@ -62,7 +62,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
           Some("AA1 1AA")))),
         true,
         Some("01234567890")
-      )))
+      ))))
 
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant(
         "Name",
@@ -71,7 +71,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
     }
 
     "convert des to frontend model successfully for nonuk address" in {
-      val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(
+      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
         Some(AdvisorNameAddress("Name", Some("TradingName"), Address(
           "line1",
           "line2",
@@ -81,24 +81,30 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
           None))),
         false,
         None
-      )))
+      ))))
 
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant("Name",Some("TradingName"),
         NonUkAccountantsAddress("line1","line2",Some("line3"),Some("line4"),"GB")))
     }
 
+    "convert des to frontend model successfully when MlrAdvisor None" in {
+      val mlrAdvisor = None
+
+      WhoIsYourAccountant.conv(mlrAdvisor) shouldBe None
+    }
+
     "convert des to frontend model successfully when MlrAdvisorDetails None" in {
-      val mlrAdvisor = MlrAdvisor(false, None)
+      val mlrAdvisor = Some(MlrAdvisor(false, None))
 
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe None
     }
 
     "convert des to frontend model successfully when AdvisorNameAddress None" in {
-      val mlrAdvisor = MlrAdvisor(true, Some(MlrAdvisorDetails(
+      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
         None,
         false,
         None
-      )))
+      ))))
 
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe None
     }
