@@ -601,7 +601,8 @@ object DesConstants {
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
-      Some(StatusConstants.Deleted)
+      Some(StatusConstants.Deleted),
+      dateChangeFlag = Some(false)
     )
   ))))
 
