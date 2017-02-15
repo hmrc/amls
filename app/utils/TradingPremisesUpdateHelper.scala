@@ -147,7 +147,7 @@ trait TradingPremisesUpdateHelper {
           case false => Some(false)
           case _ => Some(true)
         }
-      case _ => None
+      case _ => Some(false)
     }
   }
 
