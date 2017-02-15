@@ -82,7 +82,7 @@ object AmendVariationRequest {
   final type Outgoing = AmendVariationRequest
   final type Incoming = fe.SubscriptionRequest
 
-  implicit val jsonReads: Reads[AmendVariationRequest] = {
+  implicit def jsonReads: Reads[AmendVariationRequest] = {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
     import play.api.libs.json._
@@ -111,7 +111,7 @@ object AmendVariationRequest {
       ) (AmendVariationRequest.apply _)
   }
 
-  implicit val jsonWrites: Writes[AmendVariationRequest] = {
+  implicit def jsonWrites: Writes[AmendVariationRequest] = {
     import play.api.libs.functional.syntax._
     (
       (__ \ "acknowledgementReference").write[String] and

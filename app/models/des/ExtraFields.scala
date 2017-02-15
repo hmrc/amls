@@ -30,6 +30,7 @@ case class ExtraFields(declaration: Declaration,
 }
 
 object ExtraFields {
+
   implicit def format = if (AmlsConfig.release7) {
     Json.format[ExtraFields]
   } else {

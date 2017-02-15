@@ -79,8 +79,6 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
 
     "return a succesful future" in new Fixture {
 
-      println("###############"+testRequest)
-
       val response = HttpResponse(
         responseStatus = OK,
         responseHeaders = Map(
