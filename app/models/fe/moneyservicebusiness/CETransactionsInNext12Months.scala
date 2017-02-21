@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.MsbCeDetails
+import models.des.msb.{MsbCeDetails, MsbCeDetailsR7}
 import play.api.libs.json.Json
 
 case class CETransactionsInNext12Months (ceTransaction: String)
@@ -25,9 +25,9 @@ object CETransactionsInNext12Months {
 
   implicit val format = Json.format[CETransactionsInNext12Months]
 
-  implicit def convMsbCe(msbMt: Option[MsbCeDetails]): Option[CETransactionsInNext12Months] = {
+  implicit def convMsbCe(msbMt: Option[MsbCeDetailsR7]): Option[CETransactionsInNext12Months] = {
     msbMt match {
-      case Some(msbDtls) => Some(CETransactionsInNext12Months(msbDtls.currencySources.antNoOfTransNxt12Mnths))
+      case Some(msbDtls) => Some(CETransactionsInNext12Months(msbDtls.antNoOfTransNxt12Mnths))
       case None => None
     }
   }

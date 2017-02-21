@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 
 case class MoneyServiceBusiness (msbAllDetails: Option[MsbAllDetails],
                                  msbMtDetails: Option[MsbMtDetails],
-                                 msbCeDetails: Option[MsbCeDetails],
+                                 msbCeDetails: Option[MsbCeDetailsR7],
                                  msbFxDetails: Option[MsbFxDetails]
                                 )
 
@@ -39,7 +39,7 @@ object MoneyServiceBusiness {
           case true => (msb, bm, amendVariation)
           case false => None
         }
-        val msbCeDetails: Option[MsbCeDetails] = services.contains(CurrencyExchange) match {
+        val msbCeDetails: Option[MsbCeDetailsR7] = services.contains(CurrencyExchange) match {
           case true => msb
           case false => None
         }
