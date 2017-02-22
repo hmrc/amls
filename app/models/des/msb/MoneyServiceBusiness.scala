@@ -16,8 +16,9 @@
 
 package models.des.msb
 
+import config.AmlsConfig
 import models.fe.businessmatching.{CurrencyExchange, MsbService, TransmittingMoney}
-import play.api.libs.json.Json
+import play.api.libs.json._
 
 case class MoneyServiceBusiness (msbAllDetails: Option[MsbAllDetails],
                                  msbMtDetails: Option[MsbMtDetails],
@@ -27,7 +28,46 @@ case class MoneyServiceBusiness (msbAllDetails: Option[MsbAllDetails],
 
 object MoneyServiceBusiness {
 
-  implicit val format = Json.format[MoneyServiceBusiness]
+  implicit def format = if (AmlsConfig.release7) {
+    Json.format[MoneyServiceBusiness]
+  } else {
+    val reads: Reads[MoneyServiceBusiness] = {
+      import play.api.libs.functional.syntax._
+      import play.api.libs.json.Reads._
+      import play.api.libs.json._
+
+      (
+        (__ \ "msbAllDetails").readNullable[MsbAllDetails] and
+          (__ \ "msbMtDetails").readNullable[MsbMtDetails] and
+          (__ \ "msbCeDetails").readNullable[MsbCeDetails].map{x:Option[MsbCeDetails] => MsbCeDetailsR7.convertFromOldModel(x)} and
+          (__ \ "msbFxDetails").readNullable[MsbFxDetails]
+
+        ) (MoneyServiceBusiness.apply _)
+
+    }
+
+    val msbceWrites = new Writes[MsbCeDetailsR7] {
+      override def writes(o: MsbCeDetailsR7): JsValue = {
+        MsbCeDetails.writes.writes(MsbCeDetails.convertFromNewModel(o))
+      }
+    }
+
+    val writes: Writes[MoneyServiceBusiness] = {
+      import play.api.libs.functional.syntax._
+      import play.api.libs.json._
+
+      (
+        (__ \ "msbAllDetails").writeNullable[MsbAllDetails] and
+          (__ \ "msbMtDetails").writeNullable[MsbMtDetails] and
+          (__ \ "msbCeDetails").writeNullable(msbceWrites) and
+          (__ \ "msbFxDetails").writeNullable[MsbFxDetails]
+        ) (unlift(MoneyServiceBusiness.unapply _))
+    }
+    Format(reads, writes)
+
+
+  }
+
 
   implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness], bm: models.fe.businessmatching.BusinessMatching, amendVariation: Boolean)
   : Option[MoneyServiceBusiness] = {

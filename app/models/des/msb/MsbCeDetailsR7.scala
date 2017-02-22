@@ -43,7 +43,7 @@ object MsbCeDetailsR7 {
   implicit val reads: Reads[MsbCeDetailsR7] = {
     (
       (__ \ "dealInPhysCurrencies").readNullable(currencyReader) and
-      (__ \ "currencySources").readNullable[CurrencySourcesR7] and
+        (__ \ "currencySources").readNullable[CurrencySourcesR7] and
         (__ \ "antNoOfTransNxt12Mnths").read[String] and
         (__ \ "currSupplyToCust").readNullable[CurrSupplyToCust]
       ) (MsbCeDetailsR7.apply _)
@@ -52,7 +52,7 @@ object MsbCeDetailsR7 {
   implicit val writes: Writes[MsbCeDetailsR7] = {
     (
       (__ \ "dealInPhysCurrencies").writeNullable[Boolean] and
-      (__ \ "currencySources").writeNullable[CurrencySourcesR7] and
+        (__ \ "currencySources").writeNullable[CurrencySourcesR7] and
         (__ \ "antNoOfTransNxt12Mnths").write[String] and
         (__ \ "currSupplyToCust").writeNullable[CurrSupplyToCust]
       ) (unlift(MsbCeDetailsR7.unapply))
@@ -76,6 +76,16 @@ object MsbCeDetailsR7 {
         case Some(wc) => wc.currencies
         case None => None
       }))
+  }
+
+  implicit def convertFromOldModel(msbceOpt: Option[MsbCeDetails]): Option[MsbCeDetailsR7] = {
+    msbceOpt map {
+      msbce => MsbCeDetailsR7(msbce.dealInPhysCurrencies,
+        Some(CurrencySourcesR7(msbce.currencySources.bankDetails, msbce.currencySources.currencyWholesalerDetails,
+        msbce.currencySources.reSellCurrTakenIn)),
+        msbce.currencySources.antNoOfTransNxt12Mnths,
+        msbce.currencySources.currSupplyToCust)
+    }
   }
 
 

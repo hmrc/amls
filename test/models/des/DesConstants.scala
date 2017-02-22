@@ -1130,8 +1130,8 @@ object DesConstants {
       Some(CountriesList(List("AD", "GB"))),
       Some(false)
     )),
-    Some(MsbCeDetails(
-      CurrencySources(
+    Some(MsbCeDetailsR7( Some(true),
+      Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,
           Some(List("BankNames1"))
@@ -1140,10 +1140,10 @@ object DesConstants {
           true,
           Some(List("CurrencyWholesalerNames"))
         )),
-        true,
-        "11234567890",
-        Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-      ), Some(true)
+        true
+      )),
+      "11234567890",
+      Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
     None
   )
@@ -1168,8 +1168,8 @@ object DesConstants {
       Some(CountriesList(List("AD", "GB"))),
       None
     )),
-    Some(MsbCeDetails(
-      CurrencySources(
+    Some(MsbCeDetailsR7( None,
+      Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,
           Some(List("BankNames1"))
@@ -1178,10 +1178,10 @@ object DesConstants {
           true,
           Some(List("CurrencyWholesalerNames"))
         )),
-        true,
-        "11234567890",
-        Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-      )
+        true
+      )),
+      "11234567890",
+      Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
     None
   )
@@ -1205,8 +1205,8 @@ object DesConstants {
       Some(CountriesList(List("GB", "AD"))),
       Some(CountriesList(List("AD", "GB")))
     )),
-    Some(MsbCeDetails(
-      CurrencySources(
+    Some(MsbCeDetailsR7( Some(true),
+      Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,
           Some(List("BankNames1"))
@@ -1215,10 +1215,10 @@ object DesConstants {
           true,
           Some(List("CurrencyWholesalerNames"))
         )),
-        true,
-        "11234567890",
-        Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-      )
+        true
+      )),
+      "11234567890",
+      Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
     None
   )
