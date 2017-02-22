@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, MsbMtDetails, MsbCeDetails, MsbAllDetails}
+import models.des.msb.{MsbAllDetails, MsbCeDetails, MsbCeDetailsR7, MsbMtDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
 import play.api.libs.json._
 
 case class MoneyServiceBusiness(
@@ -74,7 +74,7 @@ object MoneyServiceBusiness {
     }
   }
 
-  implicit def getMsbCeDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbCeDetails] = {
+  implicit def getMsbCeDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbCeDetailsR7] = {
     msb match {
       case Some(msbDtls) => msbDtls.msbCeDetails
       case None => None

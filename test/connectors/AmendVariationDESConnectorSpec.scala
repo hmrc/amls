@@ -678,6 +678,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                }
             },
             "msbCeDetails":{
+            "dealInPhysCurrencies":true,
                "currencySources":{
                   "bankDetails":{
                      "banks":true,
@@ -691,7 +692,8 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                         "CurrencyWholesalerNames"
                      ]
                   },
-                  "reSellCurrTakenIn":true,
+                  "reSellCurrTakenIn":true
+               },
                   "antNoOfTransNxt12Mnths":"11234567890",
                   "currSupplyToCust":{
                      "currency":[
@@ -700,7 +702,6 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                         "ABC"
                      ]
                   }
-               }
             }
          },
          "hvd":{

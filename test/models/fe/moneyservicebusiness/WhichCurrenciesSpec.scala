@@ -52,18 +52,17 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
     }
 
     "convert des model to frontend model" in {
-      val msbCe = MsbCeDetails(
-        CurrencySources(
-         None,
+      val msbCe = MsbCeDetailsR7( Some(true),
+        Some(CurrencySourcesR7(
+          None,
           Some(CurrencyWholesalerDetails(
             true,
             Some(List("CurrencyWholesalerNames"))
           )),
-          true,
-          "11234567890",
-          Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
-        ),
-        dealInPhysCurrencies = Some(true)
+          true
+        )),
+        "11234567890",
+        Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
       )
 
       val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
@@ -75,18 +74,17 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
     "convert des model to frontend model" when {
 
       "CurrSupplyToCust empty" in {
-        val msbCe = MsbCeDetails(
-          CurrencySources(
+        val msbCe = MsbCeDetailsR7( Some(true),
+          Some(CurrencySourcesR7(
             None,
             Some(CurrencyWholesalerDetails(
               true,
               Some(List("CurrencyWholesalerNames"))
             )),
-            true,
-            "11234567890",
-            None
-          ),
-          dealInPhysCurrencies = Some(true)
+            true
+          )),
+          "11234567890",
+          None
         )
 
         val convertedModel = Some(WhichCurrencies(List.empty, usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
@@ -96,18 +94,17 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
 
       "dealInPhysCurrencies is missing, but contains data" in {
 
-        val msbCe = MsbCeDetails(
-          CurrencySources(
+        val msbCe = MsbCeDetailsR7( None,
+          Some(CurrencySourcesR7(
             None,
             Some(CurrencyWholesalerDetails(
               true,
               Some(List("CurrencyWholesalerNames"))
             )),
-            true,
-            "11234567890",
-            None
-          ),
-          dealInPhysCurrencies = None
+            true
+          )),
+          "11234567890",
+          None
         )
 
         val convertedModel = Some(WhichCurrencies(List.empty, Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
@@ -117,15 +114,14 @@ class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
 
       "dealInPhysCurrencies is missing and contains no data" in {
 
-        val msbCe = MsbCeDetails(
-          CurrencySources(
+        val msbCe = MsbCeDetailsR7( None,
+          Some(CurrencySourcesR7(
             None,
             None,
-            false,
-            "11234567890",
-            None
-          ),
-          dealInPhysCurrencies = None
+            false
+          )),
+          "11234567890",
+          None
         )
 
         val convertedModel = Some(WhichCurrencies(List.empty, Some(false), None, None, false))

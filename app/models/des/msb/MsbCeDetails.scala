@@ -66,4 +66,16 @@ object MsbCeDetails {
 
   }
 
+  implicit def convertFromNewModel(msbceDetailsR7: MsbCeDetailsR7): MsbCeDetails = {
+
+    MsbCeDetails(
+      msbceDetailsR7.currencySources match {
+        case Some(cs7) => CurrencySources(cs7.bankDetails, cs7.currencyWholesalerDetails, cs7.reSellCurrTakenIn,
+          msbceDetailsR7.antNoOfTransNxt12Mnths, msbceDetailsR7.currSupplyToCust)
+        case None => CurrencySources(None, None, false, msbceDetailsR7.antNoOfTransNxt12Mnths, msbceDetailsR7.currSupplyToCust)
+      }, msbceDetailsR7.dealInPhysCurrencies
+    )
+
+  }
+
 }

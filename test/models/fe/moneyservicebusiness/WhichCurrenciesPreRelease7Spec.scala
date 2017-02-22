@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{CurrencySources, CurrencyWholesalerDetails, MsbCeDetails}
+import models.des.msb._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
@@ -28,17 +28,16 @@ class WhichCurrenciesPreRelease7Spec extends PlaySpec with OneAppPerSuite {
 
     "not set the 'uses foreign currency' flag" in {
 
-      val msbCe = MsbCeDetails(
-        CurrencySources(
+      val msbCe = MsbCeDetailsR7( None,
+        Some(CurrencySourcesR7(
           None,
           Some(CurrencyWholesalerDetails(
             true,
             Some(List("CurrencyWholesalerNames"))
           )),
-          true,
-          "11234567890",
-          None
-        ),
+          true
+        )),
+        "11234567890",
         None
       )
 

@@ -18,14 +18,14 @@ package models.des
 
 import models._
 import models.des.aboutthebusiness.Address
-import models.des.aboutyou.{RoleForTheBusiness, RolesWithinBusiness, IndividualDetails, AboutYouRelease7}
+import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
 import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.aboutthebusiness.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsUndefined, Json}
+import play.api.libs.json._
 import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
@@ -51,6 +51,31 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
 
         SubscriptionRequest.format.reads(release6Json).asOpt.get.filingIndividual must be(release7FilingIndividualModel)
 
+      }
+    }
+
+    "given release 6 structure of msbcedetails" must {
+      "read Json correctly" in {
+
+        val release7MsbCeDetails = MsbCeDetailsR7(None, Some(CurrencySourcesR7(Some(MSBBankDetails(false, Some(Seq("bank1", "bank2", "bank3")))),
+          Some(CurrencyWholesalerDetails(true, Some(Seq("name1", "name2", "name3"))
+          )), false)), "94955689863", Some(CurrSupplyToCust(Seq("GBP", "EUR", "USD"))))
+
+        SubscriptionRequest.format.reads(release6Json).asOpt.get.msb.get.msbCeDetails.get must be(release7MsbCeDetails)
+
+      }
+
+      "write Json correctly" in {
+        val json = SubscriptionRequest.format.writes(SubscriptionRequest.format.reads(release6Json).asOpt.get)
+        (json \\ "msbCeDetails").head must be(JsObject(Seq(
+          ("currencySources", JsObject(Seq(
+            ("bankDetails", JsObject(Seq(
+              ("banks", JsBoolean(false)), ("bankNames", JsArray(Seq(JsString("bank1"), JsString("bank2"), JsString("bank3"))))
+            )))
+            , ("currencyWholesalerDetails", JsObject(Seq(
+              ("currencyWholesalers", JsBoolean(true)), ("currencyWholesalersNames", JsArray(Seq(JsString("name1"), JsString("name2"), JsString("name3"))))))),
+            ("reSellCurrTakenIn", JsBoolean(false)),
+          ("antNoOfTransNxt12Mnths", JsString("94955689863")), ("currSupplyToCust", JsObject(Seq(("currency", JsArray(Seq(JsString("GBP"), JsString("EUR"), JsString("USD")))))))))))))
       }
     }
 
@@ -346,6 +371,78 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
   "bankAccountDetails": {
     "noOfMlrBankAccounts": "0"
   },
+  "msb": {
+    "msbAllDetails": {
+      "anticipatedTotThrputNxt12Mths": "39313979301",
+      "otherCntryBranchesOrAgents": true,
+      "countriesList": {
+        "listOfCountries": [
+          "FR",
+          "IT"
+        ]
+      },
+      "sysLinkedTransIdentification": false
+    },
+    "msbMtDetails": {
+      "applyForFcapsrRegNo": false,
+      "fcapsrRefNo": "123456",
+      "ipspServicesDetails": {
+        "ipspServicesUsed": false,
+        "ipspDetails": [
+          {
+            "ipspName": "string",
+            "ipspMlrRegNo": "12345"
+          }
+        ]
+      },
+      "informalFundsTransferSystem": true,
+      "noOfMoneyTrnsfrTransNxt12Mnths": "88248543600",
+      "countriesLrgstMoneyAmtSentTo": {
+        "listOfCountries": [
+          "LT",
+          "JP"
+        ]
+      },
+      "countriesLrgstTranscsSentTo": {
+        "listOfCountries": [
+          "LV",
+          "LA"
+        ]
+      }
+    },
+    "msbCeDetails": {
+      "currencySources": {
+        "bankDetails": {
+          "banks": false,
+          "bankNames": [
+            "bank1",
+            "bank2",
+            "bank3"
+          ]
+        },
+        "currencyWholesalerDetails": {
+          "currencyWholesalers": true,
+          "currencyWholesalersNames": [
+            "name1",
+            "name2",
+            "name3"
+          ]
+        },
+        "reSellCurrTakenIn": false,
+        "antNoOfTransNxt12Mnths": "94955689863",
+        "currSupplyToCust": {
+          "currency": [
+            "GBP",
+            "EUR",
+            "USD"
+          ]
+        }
+      }
+    },
+    "msbFxDetails": {
+      "anticipatedNoOfTransactions": "01234567890"
+    }
+  },
   "asp": {
     "regHmrcAgtRegSchTax": true,
     "hmrcAgentRegNo": "12345678911"
@@ -534,6 +631,32 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
       }
     }
 
+    "given release 7 structure of msbcedetails" must {
+      "read Json correctly" in {
+
+        val release7MsbCeDetails = MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(false, Some(Seq("bank1", "bank2", "bank3")))),
+          Some(CurrencyWholesalerDetails(true, Some(Seq("name1", "name2", "name3"))
+          )), false)), "94955689863", Some(CurrSupplyToCust(Seq("GBP", "EUR", "USD"))))
+
+        SubscriptionRequest.format.reads(release7Json).asOpt.get.msb.get.msbCeDetails.get must be(release7MsbCeDetails)
+
+      }
+
+      "write Json correctly" in {
+        val json = SubscriptionRequest.format.writes(SubscriptionRequest.format.reads(release7Json).asOpt.get)
+        (json \\ "msbCeDetails").head must be(JsObject(Seq(
+          ("dealInPhysCurrencies", JsBoolean(true)),
+          ("currencySources", JsObject(Seq(
+            ("bankDetails", JsObject(Seq(
+              ("banks", JsBoolean(false)), ("bankNames", JsArray(Seq(JsString("bank1"), JsString("bank2"), JsString("bank3"))))
+            )))
+            , ("currencyWholesalerDetails", JsObject(Seq(
+              ("currencyWholesalers", JsBoolean(true)), ("currencyWholesalersNames", JsArray(Seq(JsString("name1"), JsString("name2"), JsString("name3"))))))),
+            ("reSellCurrTakenIn", JsBoolean(false))))),
+          ("antNoOfTransNxt12Mnths", JsString("94955689863")), ("currSupplyToCust", JsObject(Seq(("currency", JsArray(Seq(JsString("GBP"), JsString("EUR"), JsString("USD"))))))))))
+      }
+    }
+
     "businessReferencesAllButSp is None" must {
       "exclude the field from Json" in {
         (Json.toJson(
@@ -616,8 +739,11 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
           IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
           true,
           Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))), None)),
-        Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true, Some(List("Bank names")))),
-          Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true, "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
+        Some(MsbCeDetailsR7(
+          Some(true), Some(CurrencySourcesR7
+          (
+            Some(MSBBankDetails(true, Some(List("Bank names")))),
+            Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
       )
 
       val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), None, BusinessActivityDetails(true,
@@ -698,17 +824,17 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
 
   val msbSectionRelease7 = Some(
     MoneyServiceBusiness(
-      Some(MsbAllDetails(Some("£15k-£50k"),true,Some(CountriesList(List("GB"))),true)),
-      Some(MsbMtDetails(true,Some("123456"),
-        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
+      Some(MsbAllDetails(Some("£15k-£50k"), true, Some(CountriesList(List("GB"))), true)),
+      Some(MsbMtDetails(true, Some("123456"),
+        IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
         true,
-        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
-      Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(true,Some(List("Bank names")))),
-        Some(CurrencyWholesalerDetails(true,Some(List("wholesaler names")))),true,"12345678963",Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), dealInPhysCurrencies = Some(true))), None)
+        Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))))),
+      Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
+        Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
 
-  val desallActivitiesModel = BusinessActivitiesAll(None,Some("2001-01-01"),None, BusinessActivityDetails(true,
-    Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))),  Some("10"), Some("5"),
+  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), None, BusinessActivityDetails(true,
+    Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
       Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))), true, None)))))
@@ -742,11 +868,11 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
     SubscriptionRequest(
       businessMatchingSection = BusinessMatchingSection.model,
       eabSection = EabSection.model,
-      aboutTheBusinessSection = aboutTheBusinessModel ,
-      tradingPremisesSection = TradingPremisesSection.model ,
-      bankDetailsSection = BankDetailsSection.model ,
+      aboutTheBusinessSection = aboutTheBusinessModel,
+      tradingPremisesSection = TradingPremisesSection.model,
+      bankDetailsSection = BankDetailsSection.model,
       aboutYouSection = AboutYouSection.model,
-      businessActivitiesSection = BusinessActivitiesSection.model ,
+      businessActivitiesSection = BusinessActivitiesSection.model,
       responsiblePeopleSection = ResponsiblePeopleSection.model,
       tcspSection = ASPTCSPSection.TcspSection,
       aspSection = ASPTCSPSection.AspSection,
@@ -903,7 +1029,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
           "residential": true,
           "msb": {
             "mt": false,
-            "ce": false,
+            "ce": true,
             "smdcc": false,
             "nonSmdcc": false,
             "fx": false
@@ -937,6 +1063,79 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
   "bankAccountDetails": {
     "noOfMlrBankAccounts": "0"
 
+  },
+    "msb": {
+    "msbAllDetails": {
+      "anticipatedTotThrputNxt12Mths": "£10m+",
+      "otherCntryBranchesOrAgents": true,
+      "countriesList": {
+        "listOfCountries": [
+          "FR",
+          "IT"
+        ]
+      },
+      "sysLinkedTransIdentification": false
+    },
+    "msbMtDetails": {
+      "applyForFcapsrRegNo": false,
+      "fcapsrRefNo": "123456",
+      "ipspServicesDetails": {
+        "ipspServicesUsed": false,
+        "ipspDetails": [
+          {
+            "ipspName": "Ipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipspnameipsp",
+            "ipspMlrRegNo": "12345"
+          }
+        ]
+      },
+      "informalFundsTransferSystem": true,
+      "noOfMoneyTrnsfrTransNxt12Mnths": "88248543600",
+      "countriesLrgstMoneyAmtSentTo": {
+        "listOfCountries": [
+          "LT",
+          "JP"
+        ]
+      },
+      "countriesLrgstTranscsSentTo": {
+        "listOfCountries": [
+          "LV",
+          "LA"
+        ]
+      }
+    },
+    "msbCeDetails": {
+      "dealInPhysCurrencies": true,
+      "currencySources": {
+        "bankDetails": {
+          "banks": false,
+          "bankNames": [
+            "bank1",
+            "bank2",
+            "bank3"
+          ]
+        },
+        "currencyWholesalerDetails": {
+          "currencyWholesalers": true,
+          "currencyWholesalersNames": [
+            "name1",
+            "name2",
+            "name3"
+          ]
+        },
+        "reSellCurrTakenIn": false
+      },
+      "antNoOfTransNxt12Mnths": "94955689863",
+      "currSupplyToCust": {
+        "currency": [
+          "GBP",
+          "EUR",
+          "USD"
+        ]
+      }
+    },
+    "msbFxDetails": {
+      "anticipatedNoOfTransactions": "01234567890"
+    }
   },
   "asp": {
     "regHmrcAgtRegSchTax": true,

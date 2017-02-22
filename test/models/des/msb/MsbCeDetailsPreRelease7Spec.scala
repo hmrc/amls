@@ -58,15 +58,14 @@ class MsbCeDetailsPreRelease7Spec extends PlaySpec with OneAppPerSuite {
 
       "dealInPhysCurrencies is missing" in {
 
-        val msbCe = MsbCeDetails(
-          CurrencySources(
+        val msbCe = MsbCeDetailsR7(None,
+          Some(CurrencySourcesR7(
             None,
             Some(CurrencyWholesalerDetails(true, Some(Seq("Some wholesaler")))),
-            false,
-            "11234567890",
-            None
-          ),
-          dealInPhysCurrencies = None
+            false
+          )),
+          "11234567890",
+          None
         )
 
         val convertedModel = Some(WhichCurrencies(List.empty, None, None, Some(WholesalerMoneySource("Some wholesaler")), false))
