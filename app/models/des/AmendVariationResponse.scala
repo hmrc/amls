@@ -16,7 +16,7 @@
 
 package models.des
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads}
 
 case class AmendVariationResponse(
                                   processingDate: String,
@@ -36,4 +36,24 @@ case class AmendVariationResponse(
 
 object AmendVariationResponse {
   implicit val format = Json.format[AmendVariationResponse]
+
+  implicit val reads: Reads[AmendVariationResponse] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._
+    (
+      (__ \ "processingDate").read[String] and
+        (__ \ "etmpFormBundleNumber").read[String] and
+        (__ \ "registrationFee").readNullable[BigDecimal] and
+        (__ \ "fpFee").read(Reads.optionWithNull[BigDecimal]).orElse((__ \ "fPFee").read(Reads.optionWithNull[BigDecimal])).orElse(Reads.pure(None)) and
+        (__ \ "premiseFee").readNullable[BigDecimal] and
+        (__ \ "totalFees").readNullable[BigDecimal] and
+        (__ \ "paymentReference").readNullable[String] and
+        (__ \ "difference").readNullable[BigDecimal] and
+        (__ \ "addedResponsiblePeople").readNullable[Int] and
+        (__ \ "addedResponsiblePeopleFitAndProper").readNullable[Int] and
+        (__ \ "addedFullYearTradingPremises").readNullable[Int] and
+        (__ \ "halfYearlyTradingPremises").readNullable[Int] and
+        (__ \ "zeroRatedTradingPremises").readNullable[Int]
+      ) apply AmendVariationResponse.apply _
+  }
 }
