@@ -16,7 +16,7 @@
 
 package models.des
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class AmendVariationResponse(
                                   processingDate: String,
@@ -35,7 +35,26 @@ case class AmendVariationResponse(
                                 )
 
 object AmendVariationResponse {
-  implicit val format = Json.format[AmendVariationResponse]
+
+  implicit val writes: Writes[AmendVariationResponse] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._
+    (
+      (__ \ "processingDate").write[String] and
+        (__ \ "etmpFormBundleNumber").write[String] and
+        (__ \ "registrationFee").writeNullable[BigDecimal] and
+        (__ \ "fpFee").writeNullable[BigDecimal] and
+        (__ \ "premiseFee").writeNullable[BigDecimal] and
+        (__ \ "totalFees").writeNullable[BigDecimal] and
+        (__ \ "paymentReference").writeNullable[String] and
+        (__ \ "difference").writeNullable[BigDecimal] and
+        (__ \ "addedResponsiblePeople").writeNullable[Int] and
+        (__ \ "addedResponsiblePeopleFitAndProper").writeNullable[Int] and
+        (__ \ "addedFullYearTradingPremises").writeNullable[Int] and
+        (__ \ "halfYearlyTradingPremises").writeNullable[Int] and
+        (__ \ "zeroRatedTradingPremises").writeNullable[Int]
+      ) (unlift(AmendVariationResponse.unapply _))
+  }
 
   implicit val reads: Reads[AmendVariationResponse] = {
     import play.api.libs.functional.syntax._
