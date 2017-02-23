@@ -74,7 +74,7 @@ object FeeResponse {
     FeeResponse(AmendOrVariationResponseType,
       amlsReferenceNumber,
       amendVariationResponse.registrationFee.getOrElse(0),
-      amendVariationResponse.fPFee,
+      amendVariationResponse.fpFee,
       amendVariationResponse.premiseFee.getOrElse(0),
       amendVariationResponse.totalFees.getOrElse(0),
       amendVariationResponse.paymentReference,

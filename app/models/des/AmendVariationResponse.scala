@@ -22,7 +22,7 @@ case class AmendVariationResponse(
                                   processingDate: String,
                                   etmpFormBundleNumber: String,
                                   registrationFee: Option[BigDecimal] = Some(0),
-                                  fPFee: Option[BigDecimal] = None,
+                                  fpFee: Option[BigDecimal] = None,
                                   premiseFee: Option[BigDecimal] = Some(0),
                                   totalFees: Option[BigDecimal] = Some(0),
                                   paymentReference: Option[String] = None,
