@@ -25,7 +25,9 @@ case class SubscriptionResponse(
                               fpFee: Option[BigDecimal],
                               premiseFee: BigDecimal,
                               totalFees: BigDecimal,
-                              paymentReference: String
+                              paymentReference: String,
+                              premiseFeeRate: Option[BigDecimal] = None,
+                              fpFeeRate: Option[BigDecimal] = None
                              )
 
 object SubscriptionResponse {
