@@ -31,7 +31,9 @@ case class AmendVariationResponse(
                                   addedResponsiblePeopleFitAndProper: Option[Int] = Some(0),
                                   addedFullYearTradingPremises: Option[Int] = Some(0),
                                   halfYearlyTradingPremises: Option[Int] = Some(0),
-                                  zeroRatedTradingPremises: Option[Int] = Some(0)
+                                  zeroRatedTradingPremises: Option[Int] = Some(0),
+                                  premiseFeeRate: Option[BigDecimal] = None,
+                                  fpFeeRate: Option[BigDecimal] = None
                                 )
 
 object AmendVariationResponse {
@@ -52,7 +54,9 @@ object AmendVariationResponse {
         (__ \ "addedResponsiblePeopleFitAndProper").writeNullable[Int] and
         (__ \ "addedFullYearTradingPremises").writeNullable[Int] and
         (__ \ "halfYearlyTradingPremises").writeNullable[Int] and
-        (__ \ "zeroRatedTradingPremises").writeNullable[Int]
+        (__ \ "zeroRatedTradingPremises").writeNullable[Int] and
+        (__ \ "premiseFeeRate").writeNullable[BigDecimal] and
+        (__ \ "fpFeeRate").writeNullable[BigDecimal]
       ) (unlift(AmendVariationResponse.unapply _))
   }
 
@@ -72,7 +76,9 @@ object AmendVariationResponse {
         (__ \ "addedResponsiblePeopleFitAndProper").readNullable[Int] and
         (__ \ "addedFullYearTradingPremises").readNullable[Int] and
         (__ \ "halfYearlyTradingPremises").readNullable[Int] and
-        (__ \ "zeroRatedTradingPremises").readNullable[Int]
+        (__ \ "zeroRatedTradingPremises").readNullable[Int]and
+        (__ \ "premiseFYFeeRate").readNullable[BigDecimal] and
+        (__ \ "fpFeeRate").readNullable[BigDecimal]
       ) apply AmendVariationResponse.apply _
   }
 }
