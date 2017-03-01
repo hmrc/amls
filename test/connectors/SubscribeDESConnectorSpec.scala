@@ -59,7 +59,7 @@ class SubscribeDESConnectorSpec
     val successModel = des.SubscriptionResponse(
       etmpFormBundleNumber = "111111",
       amlsRefNo = "test",
-      1301737.96,
+      Some(1301737.96),
       Some(231.42),
       870458,
       2172427.38,
