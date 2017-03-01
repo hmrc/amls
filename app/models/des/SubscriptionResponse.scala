@@ -19,17 +19,38 @@ package models.des
 import play.api.libs.json._
 
 case class SubscriptionResponse(
-                              etmpFormBundleNumber: String,
-                              amlsRefNo: String,
-                              registrationFee: BigDecimal,
-                              fpFee: Option[BigDecimal],
-                              premiseFee: BigDecimal,
-                              totalFees: BigDecimal,
-                              paymentReference: String,
-                              premiseFeeRate: Option[BigDecimal] = None,
-                              fpFeeRate: Option[BigDecimal] = None
-                             )
+                                 etmpFormBundleNumber: String,
+                                 amlsRefNo: String,
+                                 registrationFee: Option[BigDecimal],
+                                 fpFee: Option[BigDecimal],
+                                 premiseFee: BigDecimal,
+                                 totalFees: BigDecimal,
+                                 paymentReference: String,
+                                 premiseFeeRate: Option[BigDecimal] = None,
+                                 fpFeeRate: Option[BigDecimal] = None
+                               )
 
 object SubscriptionResponse {
-  implicit val format = Json.format[SubscriptionResponse]
+  implicit val reads = Json.reads[SubscriptionResponse]
+
+  implicit val writes: Writes[SubscriptionResponse] = {
+    import play.api.libs.functional.syntax._
+    import play.api.libs.json._
+
+    (
+      (__ \ "etmpFormBundleNumber").write[String] and
+        (__ \ "amlsRefNo").write[String] and
+        (__ \ "registrationFee").write[BigDecimal].contramap[Option[BigDecimal]](
+          _ match {
+            case None => 0
+            case x => x.get
+          }) and
+        (__ \ "fpFee").writeNullable[BigDecimal] and
+        (__ \ "premiseFee").write[BigDecimal] and
+        (__ \ "totalFees").write[BigDecimal] and
+        (__ \ "paymentReference").write[String] and
+        (__ \ "premiseFeeRate").writeNullable[BigDecimal] and
+        (__ \ "fpFeeRate").writeNullable[BigDecimal]
+      ) (unlift(SubscriptionResponse.unapply _))
+  }
 }

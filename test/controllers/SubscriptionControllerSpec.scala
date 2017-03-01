@@ -107,7 +107,7 @@ class SubscriptionControllerSpec
       val response = des.SubscriptionResponse(
         etmpFormBundleNumber = "111111",
         amlsRefNo = "XAAM00000123456",
-        1301737.96,
+        Some(1301737.96),
         Some(231.42),
         870458,
         2172427.38,
