@@ -111,5 +111,10 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
       val desModel = EabResdEstAgncy(false, None, None)
       RedressScheme.conv(Some(desModel)) must be(Some(RedressSchemedNo))
     }
+
+    "convert des model to frontend redress model no when missing" in {
+      val desModel = None
+      RedressScheme.conv(desModel) must be(Some(RedressSchemedNo))
+    }
   }
 }
