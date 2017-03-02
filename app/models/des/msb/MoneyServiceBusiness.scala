@@ -20,11 +20,11 @@ import config.AmlsConfig
 import models.fe.businessmatching.{CurrencyExchange, MsbService, TransmittingMoney}
 import play.api.libs.json._
 
-case class MoneyServiceBusiness (msbAllDetails: Option[MsbAllDetails],
-                                 msbMtDetails: Option[MsbMtDetails],
-                                 msbCeDetails: Option[MsbCeDetailsR7],
-                                 msbFxDetails: Option[MsbFxDetails]
-                                )
+case class MoneyServiceBusiness(msbAllDetails: Option[MsbAllDetails],
+                                msbMtDetails: Option[MsbMtDetails],
+                                msbCeDetails: Option[MsbCeDetailsR7],
+                                msbFxDetails: Option[MsbFxDetails]
+                               )
 
 object MoneyServiceBusiness {
 
@@ -39,7 +39,7 @@ object MoneyServiceBusiness {
       (
         (__ \ "msbAllDetails").readNullable[MsbAllDetails] and
           (__ \ "msbMtDetails").readNullable[MsbMtDetails] and
-          (__ \ "msbCeDetails").readNullable[MsbCeDetails].map{x:Option[MsbCeDetails] => MsbCeDetailsR7.convertFromOldModel(x)} and
+          (__ \ "msbCeDetails").readNullable[MsbCeDetails].map { x: Option[MsbCeDetails] => MsbCeDetailsR7.convertFromOldModel(x) } and
           (__ \ "msbFxDetails").readNullable[MsbFxDetails]
 
         ) (MoneyServiceBusiness.apply _)
@@ -73,7 +73,7 @@ object MoneyServiceBusiness {
   : Option[MoneyServiceBusiness] = {
 
     msbOpt match {
-      case Some(msb) => {
+      case Some(msb) if (msb != models.fe.moneyservicebusiness.MoneyServiceBusiness(None, None, None, None, None, None, None, None, None, None, None)) => {
         val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
         val msbMtDetails: Option[MsbMtDetails] = services.contains(TransmittingMoney) match {
           case true => (msb, bm, amendVariation)
@@ -85,7 +85,7 @@ object MoneyServiceBusiness {
         }
         Some(MoneyServiceBusiness(msb, msbMtDetails, msbCeDetails, msb))
       }
-      case _ =>None
+      case _ => None
     }
   }
 }

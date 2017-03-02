@@ -143,13 +143,13 @@ object SubscriptionRequest {
      conv4 : Seq[fe.bankdetails.BankDetails] => BankDetails,
      tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
      aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
-     aspConv : fe.asp.Asp => Asp,
+     aspConv : Option[fe.asp.Asp] => Option[Asp],
      aspOrTcspConv : fe.supervision.Supervision => AspOrTcsp,
      tcspAllConv: fe.tcsp.Tcsp => TcspAll,
      tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
      responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
      msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
-     hvdConv : fe.hvd.Hvd => Hvd,
+     hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
      requestType: RequestType
   ): Outgoing =
     SubscriptionRequest(
@@ -163,8 +163,8 @@ object SubscriptionRequest {
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection, false),
-      hvd= data.hvdSection.map(hvdConv),
-      asp = data.aspSection.map(aspConv),
+      hvd= data.hvdSection,
+      asp = data.aspSection,
       aspOrTcsp = data.supervisionSection.map(aspOrTcspConv),
       tcspAll = data.tcspSection.map(tcspAllConv),
       tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),

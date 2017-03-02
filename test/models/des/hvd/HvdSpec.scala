@@ -40,8 +40,8 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(true, Some("1956-02-15"),None, true, Some(60),
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(true, Some("1956-02-15"),None, true, Some(60),
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
 
     }
 
@@ -60,8 +60,8 @@ class HvdSpec extends PlaySpec {
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
           dateOfChange = Some("1999-1-1"))
 
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(20),
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(20),
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
     "successfully convert frontend model to valid des model with cashpayment option is none" in {
@@ -77,8 +77,8 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(80),
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(80),
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
     "successfully convert frontend model to valid des model with PercentageOfCashPaymentOver15000 option is Fifth" in {
@@ -94,8 +94,8 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, Some(100),
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(100),
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
     "successfully convert frontend model to valid des model with percentageCashPayment option is none" in {
@@ -110,8 +110,8 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None, None, true, None,
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, None,
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
     "successfully convert frontend model to valid des model with LinkedCashPayment option is none" in {
@@ -125,8 +125,8 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(DefaultReceiveCashPayments),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Hvd(false, None,None, false, None,
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None,None, false, None,
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
   }

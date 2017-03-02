@@ -17,17 +17,17 @@
 package models.des.hvd
 
 import models.fe.hvd.PercentageOfCashPaymentOver15000._
-import models.fe.hvd.{PercentageOfCashPaymentOver15000, CashPaymentNo, CashPaymentYes, CashPayment}
+import models.fe.hvd._
 import play.api.libs.json.Json
 
-case class Hvd (
-                 cashPaymentsAccptOvrThrshld: Boolean,
-                 dateOfTheFirst: Option[String],
-                 dateChangeFlag: Option[Boolean],
-                 sysAutoIdOfLinkedCashPymts: Boolean,
-                 hvPercentageTurnover: Option[Int],
-                 hvdFromUnseenCustDetails: Option[HvdFromUnseenCustDetails]
-               )
+case class Hvd(
+                cashPaymentsAccptOvrThrshld: Boolean,
+                dateOfTheFirst: Option[String],
+                dateChangeFlag: Option[Boolean],
+                sysAutoIdOfLinkedCashPymts: Boolean,
+                hvPercentageTurnover: Option[Int],
+                hvdFromUnseenCustDetails: Option[HvdFromUnseenCustDetails]
+              )
 
 object Hvd {
 
@@ -41,7 +41,7 @@ object Hvd {
 
   def getCashPayment(cashPayment: Option[CashPayment]): (Boolean, Option[String]) = {
     cashPayment match {
-      case Some(data) =>  data match {
+      case Some(data) => data match {
         case CashPaymentYes(date) => (true, Some(date.toString))
         case CashPaymentNo => (false, None)
       }
@@ -49,12 +49,19 @@ object Hvd {
     }
   }
 
-  implicit def conv(hvd: models.fe.hvd.Hvd): Hvd = {
-      val (cashPayment, paymentDate) = getCashPayment(hvd.cashPayment)
-      val sysLinkedCashPayment = hvd.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
+  implicit def conv(hvdOpt: Option[models.fe.hvd.Hvd]): Option[Hvd] = {
 
-      Hvd(cashPayment, paymentDate, None ,sysLinkedCashPayment, hvd.percentageOfCashPaymentOver15000, hvd.receiveCashPayments)
+    hvdOpt match {
+      case Some(models.fe.hvd.Hvd(None, None, None, None, None, None, None, None)) => None
+      case hvd => {
+        val (cashPayment, paymentDate) = getCashPayment(hvd.cashPayment)
+        val sysLinkedCashPayment = hvd.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
+
+        Some(Hvd(cashPayment, paymentDate, None, sysLinkedCashPayment, hvd.percentageOfCashPaymentOver15000, hvd.receiveCashPayments))
+      }
+    }
   }
+
 
   implicit def percentageCashPayment(model: Option[PercentageOfCashPaymentOver15000]): Option[Int] = {
     model match {
