@@ -69,7 +69,7 @@ object RedressScheme {
   implicit def conv(eab:Option[EabResdEstAgncy]): Option[RedressScheme] = {
     eab match {
       case Some(data) => data
-      case None => None
+      case None => Some(RedressSchemedNo)
     }
   }
 
