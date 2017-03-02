@@ -26,11 +26,11 @@ object Asp {
 
   implicit val format = Json.format[Asp]
 
-  implicit def conv(asp: models.fe.asp.Asp) : Asp = {
+  implicit def conv(asp: Option[models.fe.asp.Asp]) : Option[Asp] = {
     asp.otherBusinessTaxMatters match {
-      case Some(OtherBusinessTaxMattersYes) => Asp(true, None)
-      case Some(OtherBusinessTaxMattersNo) => Asp(false, None)
-      case _ => Asp(false, None)
+      case Some(OtherBusinessTaxMattersYes) => Some(Asp(true, None))
+      case Some(OtherBusinessTaxMattersNo) => Some(Asp(false, None))
+      case _ => None
     }
   }
 }

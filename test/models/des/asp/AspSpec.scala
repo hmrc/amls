@@ -30,7 +30,7 @@ class AspSpec extends PlaySpec {
         None,
         Some(otherBusinessTax)
       )
-      Asp.conv(model) must be(Asp(true,None))
+      Asp.conv(Some(model)) must be(Some(Asp(true,None)))
     }
 
     "When given otherBusinessTaxMattersNo convert to frontend model with value false" in {
@@ -40,7 +40,7 @@ class AspSpec extends PlaySpec {
         None,
         Some(otherBusinessTax)
       )
-      Asp.conv(model) must be(Asp(false, None))
+      Asp.conv(Some(model)) must be(Some(Asp(false, None)))
     }
   }
 }
