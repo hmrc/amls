@@ -71,7 +71,9 @@ object MsbCeDetailsR7 {
         case false => None
       }
 
-    Some(MsbCeDetailsR7(dealInPhysCurrencies, msb, msb.ceTransactionsInNext12Months.fold("")(x => x.ceTransaction),
+    Some(MsbCeDetailsR7(dealInPhysCurrencies, if(dealInPhysCurrencies.isEmpty || dealInPhysCurrencies.get) {
+      msb
+    } else None, msb.ceTransactionsInNext12Months.fold("")(x => x.ceTransaction),
       msb.whichCurrencies match {
         case Some(wc) => wc.currencies
         case None => None
