@@ -19,20 +19,20 @@ package models.des.msb
 import models.fe.moneyservicebusiness.WholesalerMoneySource
 import play.api.libs.json.Json
 
-case class CurrencyWholesalerDetails (
-                                       currencyWholesalers: Boolean,
-                                       currencyWholesalersNames: Option[Seq[String]]
-                                     )
+case class CurrencyWholesalerDetails(
+                                      currencyWholesalers: Boolean,
+                                      currencyWholesalersNames: Option[Seq[String]]
+                                    )
 
 object CurrencyWholesalerDetails {
 
   implicit val format = Json.format[CurrencyWholesalerDetails]
 
-  implicit def conv(moneySource: Option[WholesalerMoneySource]) : Option[CurrencyWholesalerDetails] = {
+  implicit def conv(moneySource: Option[WholesalerMoneySource]): Option[CurrencyWholesalerDetails] = {
 
     moneySource match {
       case Some(data) => Some(CurrencyWholesalerDetails(true, Some(Seq(data.wholesalerNames))))
-      case _ => None
+      case _ => Some(CurrencyWholesalerDetails(false, None))
     }
   }
 }
