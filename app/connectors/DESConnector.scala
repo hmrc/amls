@@ -53,7 +53,8 @@ trait DESConnector extends HttpResponseHelper {
 object DESConnector extends SubscribeDESConnector
   with SubscriptionStatusDESConnector
   with ViewDESConnector
-  with AmendVariationDESConnector {
+  with AmendVariationDESConnector
+  with WithdrawSubscriptionConnector {
 
   // $COVERAGE-OFF$
   override private[connectors] lazy val baseUrl: String = AmlsConfig.desUrl
