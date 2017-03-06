@@ -40,6 +40,10 @@ case object API8 extends APITypes {
   override val key: String = "etmp-amls-withdraw-subscription-response"
 }
 
+case object API10 extends APITypes {
+  override val key: String = "etmp-amls-deregister-subscription-response"
+}
+
 case object GGAdmin extends APITypes {
   override val key: String = "gg-admin-amls-add-known-facts"
 }
