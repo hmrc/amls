@@ -16,7 +16,7 @@
 
 package audit
 
-import models.des.{AmendVariationResponse, AmendVariationRequest, SubscriptionRequest, SubscriptionResponse}
+import models.des._
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.audit.AuditExtensions._
@@ -67,5 +67,22 @@ object AmendmentEvent {
           case _ => Map.empty
         }
       }
+    )
+}
+
+
+object WithdrawSubscriptionEvent {
+  def apply
+  (amlsRegistrationNumber: String, request: WithdrawSubscriptionRequest, response: WithdrawSubscriptionResponse)
+  (implicit
+   hc: HeaderCarrier): DataEvent =
+    DataEvent(
+      auditSource = AppName.appName,
+      auditType = "OutboundCall",
+      tags = hc.toAuditTags("WithdrawSubscription", "N/A"),
+      detail = hc.toAuditDetails() ++ Map(
+        "amlsRegistrationNumber" -> amlsRegistrationNumber,
+        "request" -> Json.toJson(request).toString,
+        "response" -> Json.toJson(response).toString)
     )
 }
