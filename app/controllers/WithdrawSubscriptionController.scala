@@ -65,7 +65,7 @@ trait WithdrawSubscriptionController extends BaseController {
         }
         case None =>
           Future.successful {
-            BadRequest(toError("Invalid SafeId"))
+            BadRequest(toError("Invalid amlsRegistrationNumber"))
           }
       }
   }
