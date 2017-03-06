@@ -53,12 +53,15 @@ object Hvd {
 
     hvdOpt match {
       case Some(models.fe.hvd.Hvd(None, None, None, None, None, None, None, None)) => None
-      case hvd => {
-        val (cashPayment, paymentDate) = getCashPayment(hvd.cashPayment)
-        val sysLinkedCashPayment = hvd.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
-
-        Some(Hvd(cashPayment, paymentDate, None, sysLinkedCashPayment, hvd.percentageOfCashPaymentOver15000, hvd.receiveCashPayments))
+      case hvd: Option[models.fe.hvd.Hvd] => {
+        hvd.map {
+          hvdResult =>
+            val (cashPayment, paymentDate) = getCashPayment(hvdResult.cashPayment)
+            val sysLinkedCashPayment = hvdResult.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
+            Hvd(cashPayment, paymentDate, None, sysLinkedCashPayment, hvdResult.percentageOfCashPaymentOver15000, hvdResult.receiveCashPayments)
+        }
       }
+      case _ => None
     }
   }
 
