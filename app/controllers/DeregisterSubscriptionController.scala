@@ -16,7 +16,7 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import connectors.DeregisterSubscriptionConnector
 import models.des.DeregisterSubscriptionRequest
@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-@Singleton
 class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector) extends BaseController {
 
   private val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
