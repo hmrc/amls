@@ -25,7 +25,7 @@ object DeregistrationReason {
 
   case object Ceasedtrading extends DeregistrationReason
   case object HVDPolicyOfNotAcceptingHighValueCashPayments extends DeregistrationReason
-  case object OutOfscope extends DeregistrationReason
+  case object OutOfScope extends DeregistrationReason
   case object NotTradingInOwnRight extends DeregistrationReason
   case object UnderAnotherSupervisor extends DeregistrationReason
   case object ChangeOfLegalEntity extends DeregistrationReason
@@ -35,7 +35,7 @@ object DeregistrationReason {
     Reads {
       case JsString("Ceased Trading") => JsSuccess(Ceasedtrading)
       case JsString("HVD - policy of not accepting high value cash payments") => JsSuccess(HVDPolicyOfNotAcceptingHighValueCashPayments)
-      case JsString("Out of scope") => JsSuccess(OutOfscope)
+      case JsString("Out of scope") => JsSuccess(OutOfScope)
       case JsString("Not trading in own right") => JsSuccess(NotTradingInOwnRight)
       case JsString("Under another supervisor") => JsSuccess(UnderAnotherSupervisor)
       case JsString("Change of Legal Entity") => JsSuccess(ChangeOfLegalEntity)
@@ -47,7 +47,7 @@ object DeregistrationReason {
     Writes[DeregistrationReason] {
       case Ceasedtrading => JsString("Ceased Trading")
       case HVDPolicyOfNotAcceptingHighValueCashPayments => JsString("HVD - policy of not accepting high value cash payments")
-      case OutOfscope => JsString("Out of scope")
+      case OutOfScope => JsString("Out of scope")
       case NotTradingInOwnRight => JsString("Not trading in own right")
       case UnderAnotherSupervisor => JsString("Under another supervisor")
       case ChangeOfLegalEntity => JsString("Change of Legal Entity")
