@@ -213,9 +213,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
                                 addedOwnBusinessZeroRatedTradingPremisesCount: Int,
                                 addedAgentZeroRatedTradingPremisesCount: Int): AmendVariationResponse = {
 
-    val registrationFees = response.registrationFee.fold[BigDecimal](BigDecimal(0))(x =>x)
-    val premisesFees = response.premiseFee.fold[BigDecimal](BigDecimal(0))(x =>x)
-    val totalFees = response.totalFees.fold[BigDecimal](BigDecimal(0))(x =>x)
+    val registrationFees = response.registrationFee.getOrElse (BigDecimal(0))
+    val premisesFees = response.premiseFee.getOrElse (BigDecimal(0))
+    val totalFees = response.totalFees.getOrElse (BigDecimal(0))
 
     response.copy(
       registrationFee = Some(registrationFees),
