@@ -18,8 +18,8 @@ package controllers
 
 import javax.inject.Inject
 
-import connectors.WithdrawSubscriptionConnector
-import models.des.WithdrawSubscriptionRequest
+import connectors.DeregisterSubscriptionConnector
+import models.des.DeregisterSubscriptionRequest
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc.Action
@@ -28,9 +28,9 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class WithdrawSubscriptionController @Inject()(withdrawSubscriptionConnector: WithdrawSubscriptionConnector) extends BaseController {
+class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector) extends BaseController {
 
-  val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
+  private val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
   private def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
     "errors" -> (errors map {
@@ -43,17 +43,16 @@ class WithdrawSubscriptionController @Inject()(withdrawSubscriptionConnector: Wi
   )
 
   private def toError(message: String) = Json.obj(
-    "errors" -> Seq(message)
+      "errors" -> Seq(message)
   )
 
-
-  def withdrawal(amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def deregistration(amlsRegistrationNumber: String) = Action.async(parse.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
-          Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
-            case JsSuccess(body, _) =>
-              withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, body) map {
+          Json.fromJson[DeregisterSubscriptionRequest](request.body) match {
+            case JsSuccess(body,_) =>
+              deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, body) map {
                 response =>
                   Ok(Json.toJson(response))
               }

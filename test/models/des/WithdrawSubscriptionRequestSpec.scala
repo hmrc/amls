@@ -19,12 +19,36 @@ package models.des
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import WithdrawalReason._
 
 class WithdrawSubscriptionRequestSpec extends PlaySpec {
+
+  val withdrawalReasons: Map[String, WithdrawalReason] = Map(
+    "Out of scope" -> OutOfscope,
+    "Not trading in own right" -> NotTradingInOwnRight,
+    "Under another supervisor" -> UnderAnotherSupervisor,
+    "Joined AWRS Group" -> JoinedAWRSGroup
+  )
 
   "WithdrawSubscriptionRequest" must {
 
     "successfully read json" when {
+
+      withdrawalReasons foreach {
+        case (str,md) => {
+          s"withdrawalReason is $str" in {
+            val inputRequest = Json.obj(
+              "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+              "withdrawalDate" -> "2015-08-23",
+              "withdrawalReason" -> str
+            )
+
+            val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+
+            WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
+          }
+        }
+      }
 
       "withdrawalReasonOthers has value" in {
         val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
@@ -53,6 +77,23 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
     }
 
     "successfully write json" when {
+
+      withdrawalReasons foreach {
+        case (str, md) => {
+          s"withdrawalReason is $str" in {
+            val json = Json.obj(
+              "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+              "withdrawalDate" -> "2015-08-23",
+              "withdrawalReason" -> str
+            )
+
+            val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+
+            WithdrawSubscriptionRequest.format.writes(model) must be(json)
+          }
+        }
+      }
+
       "withdrawalReasonOthers has value" in {
         val json = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
           "withdrawalDate" -> "2015-08-23",
@@ -79,7 +120,6 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
     }
 
     "throw error on invalid data" when {
-
       "withdrawalReason is invalid" in {
         val inputRequest  = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",

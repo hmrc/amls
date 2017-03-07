@@ -33,8 +33,9 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API4 -> registry.timer(s"${API4.key}-timer"),
     API5 -> registry.timer(s"${API5.key}-timer"),
     API6 -> registry.timer(s"${API6.key}-timer"),
-    API9 -> registry.timer(s"${API9.key}-timer"),
     API8 -> registry.timer(s"${API8.key}-timer"),
+    API9 -> registry.timer(s"${API9.key}-timer"),
+    API10 -> registry.timer(s"${API10.key}-timer"),
     GGAdmin -> registry.timer(s"${GGAdmin.key}-timer")
   )
 
@@ -42,8 +43,9 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API4 -> registry.counter(s"${API4.key}-success"),
     API5 -> registry.counter(s"${API5.key}-success"),
     API6 -> registry.counter(s"${API6.key}-success"),
-    API9 -> registry.counter(s"${API9.key}-success"),
     API8 -> registry.counter(s"${API8.key}-success"),
+    API9 -> registry.counter(s"${API9.key}-success"),
+    API10 -> registry.counter(s"${API10.key}-success"),
     GGAdmin -> registry.counter(s"${GGAdmin.key}-success")
   )
 
@@ -51,8 +53,9 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API4 -> registry.counter(s"${API4.key}-failure"),
     API5 -> registry.counter(s"${API5.key}-failure"),
     API6 -> registry.counter(s"${API6.key}-failure"),
-    API9 -> registry.counter(s"${API9.key}-failure"),
     API8 -> registry.counter(s"${API8.key}-failure"),
+    API9 -> registry.counter(s"${API9.key}-failure"),
+    API10 -> registry.counter(s"${API10.key}-failure"),
     GGAdmin -> registry.counter(s"${GGAdmin.key}-failure")
   )
 
