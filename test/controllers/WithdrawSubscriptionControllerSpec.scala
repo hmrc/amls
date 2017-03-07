@@ -26,7 +26,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsJson, _}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -93,7 +93,16 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
           status must be(INTERNAL_SERVER_ERROR)
           body must be(Some("message"))
       }
+    }
 
+    "return failed response on invalid amlsRegistrationNumber" in new Fixture {
+      private val response = Json.obj(
+        "errors" -> Seq("Invalid amlsRegistrationNumber")
+      )
+
+      private val result = withdrawSubscriptionController.withdrawal("fsdfsdf")(postRequest)
+      status(result) must be(BAD_REQUEST)
+      contentAsJson(result) must be(response)
     }
   }
 }

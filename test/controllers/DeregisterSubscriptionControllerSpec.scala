@@ -98,5 +98,15 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
       }
 
     }
+
+    "return failed response on invalid amlsRegistrationNumber" in new Fixture {
+      private val response = Json.obj(
+        "errors" -> Seq("Invalid amlsRegistrationNumber")
+      )
+
+      private val result = deregisterSubscriptionController.deregistration("fsdfsdf")(postRequest)
+      status(result) must be(BAD_REQUEST)
+      contentAsJson(result) must be(response)
+    }
   }
 }
