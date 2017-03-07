@@ -16,7 +16,9 @@
 
 package controllers
 
-import connectors.{DESConnector, DeregisterSubscriptionConnector}
+import javax.inject.{Inject, Singleton}
+
+import connectors.DeregisterSubscriptionConnector
 import models.des.DeregisterSubscriptionRequest
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -26,11 +28,10 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait DeregisterSubscriptionController extends BaseController {
+@Singleton
+class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector) extends BaseController {
 
   private val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
-
-  private[controllers] def deregisterSubscriptionConnector: DeregisterSubscriptionConnector
 
   private def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
     "errors" -> (errors map {
@@ -66,9 +67,4 @@ trait DeregisterSubscriptionController extends BaseController {
           }
       }
   }
-}
-
-
-object DeregisterSubscriptionController extends DeregisterSubscriptionController {
-  override private[controllers] val deregisterSubscriptionConnector = DESConnector
 }

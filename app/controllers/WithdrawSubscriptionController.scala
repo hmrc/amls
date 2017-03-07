@@ -16,7 +16,9 @@
 
 package controllers
 
-import connectors.{DESConnector, WithdrawSubscriptionConnector}
+import javax.inject.Inject
+
+import connectors.WithdrawSubscriptionConnector
 import models.des.WithdrawSubscriptionRequest
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -26,27 +28,23 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait WithdrawSubscriptionController extends BaseController {
+class WithdrawSubscriptionController @Inject()(withdrawSubscriptionConnector: WithdrawSubscriptionConnector) extends BaseController {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  private[controllers] def withdrawSubscriptionConnector: WithdrawSubscriptionConnector
+  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
+    "errors" -> (errors map {
+      case (path, error) =>
+        Json.obj(
+          "path" -> path.toJsonString,
+          "error" -> error.head.message
+        )
+    })
+  )
 
-  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
-    Json.obj(
-      "errors" -> (errors map {
-        case (path, error) =>
-          Json.obj(
-            "path" -> path.toJsonString,
-            "error" -> error.head.message
-          )
-      })
-    )
-
-  private def toError(message: String): JsObject =
-    Json.obj(
-      "errors" -> Seq(message)
-    )
+  private def toError(message: String) = Json.obj(
+    "errors" -> Seq(message)
+  )
 
 
   def withdrawal(amlsRegistrationNumber: String) = Action.async(parse.json) {
@@ -54,7 +52,7 @@ trait WithdrawSubscriptionController extends BaseController {
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
-            case JsSuccess(body,_) =>
+            case JsSuccess(body, _) =>
               withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, body) map {
                 response =>
                   Ok(Json.toJson(response))
@@ -69,8 +67,4 @@ trait WithdrawSubscriptionController extends BaseController {
           }
       }
   }
-}
-
-object WithdrawSubscriptionController extends WithdrawSubscriptionController {
-  override private[controllers] val withdrawSubscriptionConnector = DESConnector
 }

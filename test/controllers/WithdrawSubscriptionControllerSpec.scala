@@ -33,11 +33,9 @@ import scala.concurrent.Future
 class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
   trait Fixture {
-
-    object withdrawSubscriptionController extends WithdrawSubscriptionController {
-      private[controllers] override val withdrawSubscriptionConnector = mock[WithdrawSubscriptionConnector]
+    lazy val mockWithdrawConnector = mock[WithdrawSubscriptionConnector]
+    val withdrawSubscriptionController = new WithdrawSubscriptionController(withdrawSubscriptionConnector = mockWithdrawConnector) {
     }
-
   }
 
   val amlsRegistrationNumber = "XAML00000567890"
@@ -59,8 +57,8 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
   "WithdrawSubscriptionController" must {
 
     "successfully return success response on valid request" in new Fixture {
-      when(withdrawSubscriptionController.withdrawSubscriptionConnector.withdrawal(any(), any())
-      (any(), any(), any())).thenReturn(Future.successful(success))
+      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any()))
+        .thenReturn(Future.successful(success))
 
       private val result = withdrawSubscriptionController.withdrawal(amlsRegistrationNumber)(postRequest)
       status(result) must be(OK)
@@ -85,8 +83,8 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
 
 
     "return failed response on exception" in new Fixture {
-      when(withdrawSubscriptionController.withdrawSubscriptionConnector.withdrawal(any(), any())
-      (any(), any(), any())).thenReturn(Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message"))))
+      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any()))
+        .thenReturn(Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message"))))
 
       whenReady(withdrawSubscriptionController.withdrawal(amlsRegistrationNumber)(postRequest).failed) {
         case HttpStatusException(status, body) =>
