@@ -86,3 +86,19 @@ object WithdrawSubscriptionEvent {
         "response" -> Json.toJson(response).toString)
     )
 }
+
+object DeregisterSubscriptionEvent {
+  def apply
+  (amlsRegistrationNumber: String, request: DeregisterSubscriptionRequest, response: DeregisterSubscriptionResponse)
+  (implicit
+   hc: HeaderCarrier): DataEvent =
+    DataEvent(
+      auditSource = AppName.appName,
+      auditType = "OutboundCall",
+      tags = hc.toAuditTags("DeregisterSubscription", "N/A"),
+      detail = hc.toAuditDetails() ++ Map(
+        "amlsRegistrationNumber" -> amlsRegistrationNumber,
+        "request" -> Json.toJson(request).toString,
+        "response" -> Json.toJson(response).toString)
+    )
+}

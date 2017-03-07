@@ -54,7 +54,8 @@ object DESConnector extends SubscribeDESConnector
   with SubscriptionStatusDESConnector
   with ViewDESConnector
   with AmendVariationDESConnector
-  with WithdrawSubscriptionConnector {
+  with WithdrawSubscriptionConnector
+  with DeregisterSubscriptionConnector{
 
   // $COVERAGE-OFF$
   override private[connectors] lazy val baseUrl: String = AmlsConfig.desUrl
