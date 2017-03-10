@@ -42,6 +42,7 @@ object EabResdEstAgncy {
       case Some(ThePropertyOmbudsman) => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None))
       case Some(OmbudsmanServices) => Some(EabResdEstAgncy(true, Some("Ombudsman Services"), None))
       case Some(PropertyRedressScheme) => Some(EabResdEstAgncy(true, Some("Property Redress Scheme"), None))
+      case Some(RedressSchemedNo) => Some(EabResdEstAgncy(false, None, None))
       case _ => None
     }
   }
