@@ -26,15 +26,23 @@ class EabResdEstAgncySpec extends PlaySpec {
     val services = Services(Set(Residential, Commercial, Auction))
     val professionalBody = ProfessionalBodyYes("details")
     val penalisedUnderEAAct =  PenalisedUnderEstateAgentsActYes("test")
-    val redressSchemeOther = Other("test"
+    val redressSchemeOther = Other("test")
+
     val eabResdEstModel = EabResdEstAgncy(false,None,None)
+
+    val eab = EstateAgentBusiness(Some(services),Some(redressSchemeOther), None, None)
+    val eab1 = EstateAgentBusiness(Some(services),Some(RedressSchemedNo), None, None)
+    val eab2 = EstateAgentBusiness(Some(services),None, None, None)
 
     "serialise eabresdestagency model " in {
       EabResdEstAgncy.format.writes(eabResdEstModel) must be(Json.obj("regWithRedressScheme"->false))
     }
 
     "successfully convert frontend eab to des model" in {
-      EabResdEstAgncy.convert()
+      EabResdEstAgncy.convert(Some(eab)) must be(Some(EabResdEstAgncy(true,Some("Other"),Some("test"))))
+      EabResdEstAgncy.convert(Some(eab1)) must be(Some(EabResdEstAgncy(false, None, None)))
+      EabResdEstAgncy.convert(Some(eab2)) must be(None)
+      EabResdEstAgncy.convert(None) must be(None)
 
     }
   }
