@@ -26,19 +26,23 @@ case class EabResdEstAgncy(regWithRedressScheme:Boolean,
   specifyOther: Option[String]
 )
 
-object EabResdEstAgncy
-{
+object EabResdEstAgncy {
   implicit val format = Json.format[EabResdEstAgncy]
 
-  implicit def convert(eab: EstateAgentBusiness): EabResdEstAgncy = {
-
-    val (a, b, c) = eab.redressScheme match {
-      case Some(Other(x)) => (true, Some("Other"), Some(x))
-      case Some(ThePropertyOmbudsman) => (true, Some("The Property Ombudsman Limited"), None)
-      case Some(OmbudsmanServices) => (true, Some("Ombudsman Services"), None)
-      case Some(PropertyRedressScheme) => (true, Some("Property Redress Scheme"), None)
-      case _ => (false, None, None)
+  implicit def convert(eabOpt: Option[EstateAgentBusiness]): Option[EabResdEstAgncy] = {
+    eabOpt match {
+      case Some(eab) => eab
+      case _ => None
     }
-    EabResdEstAgncy(a, b, c)
+  }
+
+  implicit def convert(eab: EstateAgentBusiness): Option[EabResdEstAgncy] = {
+    eab.redressScheme match {
+      case Some(Other(x)) => Some(EabResdEstAgncy(true, Some("Other"), Some(x)))
+      case Some(ThePropertyOmbudsman) => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None))
+      case Some(OmbudsmanServices) => Some(EabResdEstAgncy(true, Some("Ombudsman Services"), None))
+      case Some(PropertyRedressScheme) => Some(EabResdEstAgncy(true, Some("Property Redress Scheme"), None))
+      case _ => None
+    }
   }
 }
