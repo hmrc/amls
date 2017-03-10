@@ -136,7 +136,6 @@ object SubscriptionRequest {
      gen: AckRefGenerator,
      conv: (Incoming, Boolean) => BusinessActivities,
      conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
-     conv3 : fe.estateagentbusiness.EstateAgentBusiness => EabResdEstAgncy,
      prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
      vatABConv : fe.aboutthebusiness.AboutTheBusiness => Option[VATRegistration],
      contactABConv : fe.aboutthebusiness.AboutTheBusiness => BusinessContactDetails,
@@ -169,7 +168,7 @@ object SubscriptionRequest {
       tcspAll = data.tcspSection.map(tcspAllConv),
       tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),
       eabAll = data.eabSection.map(conv2),
-      eabResdEstAgncy = data.eabSection.map(conv3),
+      eabResdEstAgncy = data.eabSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
       filingIndividual = data.aboutYouSection,
       declaration = Declaration(true)
