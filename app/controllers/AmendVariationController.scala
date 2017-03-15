@@ -16,6 +16,8 @@
 
 package controllers
 
+import javax.inject.Inject
+
 import exceptions.HttpStatusException
 import models.des.{RequestType, _}
 import models.fe
@@ -29,9 +31,7 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
 
-trait AmendVariationController extends BaseController {
-
-  private[controllers] def service: AmendVariationService
+class AmendVariationController @Inject() (val service: AmendVariationService)extends BaseController {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
@@ -107,7 +107,3 @@ trait AmendVariationController extends BaseController {
     }
 }
 
-object AmendVariationController extends AmendVariationController {
-  // $COVERAGE-OFF$
-  override private[controllers] val service = AmendVariationService
-}

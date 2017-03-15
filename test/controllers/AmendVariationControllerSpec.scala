@@ -17,8 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
-import models.des.aboutyou.RolesWithinBusiness
-import models.des.{AmendVariationRequest, AmlsMessageType, DesConstants, Renewal}
+import models.des.{AmendVariationRequest, DesConstants}
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
@@ -34,7 +33,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue, Json}
-import play.api.mvc.{Request, Result}
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
@@ -46,9 +45,8 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
   with IterateeHelpers with OneAppPerSuite {
 
   trait Fixture {
-    object Controller extends AmendVariationController {
-      override val service = mock[AmendVariationService]
-    }
+    val service = mock[AmendVariationService]
+    val Controller = new AmendVariationController(service)
   }
 
   val amlsRegistrationNumber = "XAML00000567890"
