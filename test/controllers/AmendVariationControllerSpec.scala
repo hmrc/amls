@@ -18,7 +18,7 @@ package controllers
 
 import exceptions.HttpStatusException
 import models.des.aboutyou.RolesWithinBusiness
-import models.des.{AmendVariationRequest, DesConstants}
+import models.des.{AmendVariationRequest, AmlsMessageType, DesConstants, Renewal}
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
@@ -322,6 +322,33 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
             requestArgument.getValue().amlsMessageType must be("Variation")
           }
         }
+
+
+      "call through to the service with an Renewal messageType" in new Fixture {
+        when(Controller.service.update(any(), any())(any(), any()))
+          .thenReturn(Future.successful(des.AmendVariationResponse(
+            processingDate = "2016-09-17T09:30:47Z",
+            etmpFormBundleNumber = "111111",
+            Some(1301737.96d),
+            Some(231.42d),
+            Some(870458d),
+            Some(2172427.38),
+            Some("string"),
+            Some(3456.12)
+          )))
+
+        val mockRequest = mock[AmendVariationRequest]
+        val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any()))
+          .thenReturn(Future.successful(mockRequest))
+
+        private val resultF = Controller.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
+
+        whenReady(resultF) { result:Result =>
+          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())
+          requestArgument.getValue().amlsMessageType must be("Renewal")
+        }
+      }
       }
   }
 }
