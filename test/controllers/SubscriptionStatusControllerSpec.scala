@@ -62,7 +62,7 @@ class SubscriptionStatusControllerSpec
 
     "return a valid response when the amls registration number is valid" in {
 
-      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false, false, "", None)
+      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
 
       when {
         SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
@@ -75,7 +75,6 @@ class SubscriptionStatusControllerSpec
     }
 
     "return an invalid response when the service fails" in {
-
       when {
         SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))

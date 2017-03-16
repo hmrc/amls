@@ -28,9 +28,9 @@ case class ReadStatusResponse(
                                currentRegYearStartDate: Option[LocalDate],
                                currentRegYearEndDate: Option[LocalDate],
                                renewalConFlag: Boolean,
-                               renewalSubmissionFlag: Boolean,
-                               currentAMLSOutstandingBalance: String,
-                               businessContactNumber: Option[String]
+                               renewalSubmissionFlag: Option[Boolean] = None,
+                               currentAMLSOutstandingBalance: Option[String] = None,
+                               businessContactNumber: Option[String] = None
                              )
 
 object ReadStatusResponse {
