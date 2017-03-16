@@ -734,7 +734,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
       )
 
       val msbSectionRelease7 = Some(MoneyServiceBusiness(
-        Some(MsbAllDetails(Some("£15k-£50k"), true, Some(CountriesList(List("GB"))), true)),
+        Some(MsbAllDetails(Some("£15k-50k"), true, Some(CountriesList(List("GB"))), true)),
         Some(MsbMtDetails(true, Some("123456"),
           IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
           true,
@@ -824,7 +824,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
 
   val msbSectionRelease7 = Some(
     MoneyServiceBusiness(
-      Some(MsbAllDetails(Some("£15k-£50k"), true, Some(CountriesList(List("GB"))), true)),
+      Some(MsbAllDetails(Some("£15k-50k"), true, Some(CountriesList(List("GB"))), true)),
       Some(MsbMtDetails(true, Some("123456"),
         IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
         true,

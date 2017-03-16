@@ -199,7 +199,7 @@ class ExpectedAMLSTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSuite 
     }
 
     "convert des to frontend model successfully" in {
-      val desModel = BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("£1m-£10m"))))
+      val desModel = BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("£1m-10m"))))
       ExpectedAMLSTurnover.conv(desModel) must be(Some(Sixth))
 
     }
@@ -208,7 +208,7 @@ class ExpectedAMLSTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSuite 
       val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£0-£15k")))))
       ExpectedAMLSTurnover.conv(desModel) must be(Some(First))
 
-      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£15k-£50k")))))
+      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£15k-50k")))))
       ExpectedAMLSTurnover.conv(desModel1) must be(Some(Second))
 
       val desModel2 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£50k-£100k")))))
@@ -220,7 +220,7 @@ class ExpectedAMLSTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSuite 
       val desModel4 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£250k-£1m")))))
       ExpectedAMLSTurnover.conv(desModel4) must be(Some(Fifth))
 
-      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£1m-£10m")))))
+      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£1m-10m")))))
       ExpectedAMLSTurnover.conv(desModel5) must be(Some(Sixth))
 
       val desModel7 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","","£10m+")))))

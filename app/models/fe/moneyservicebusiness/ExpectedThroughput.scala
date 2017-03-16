@@ -79,11 +79,11 @@ object ExpectedThroughput {
     }else {
       msbAll match {
         case "£0-£15k" => First
-        case "£15k-£50k" => Second
+        case "£15k-50k" => Second
         case "£50k-£100k" => Third
         case "£100k-£250k" => Fourth
         case "£250k-£1m" => Fifth
-        case "£1m-£10m" => Sixth
+        case "£1m-10m" => Sixth
         case "£10m+" => Seventh
       }
     }

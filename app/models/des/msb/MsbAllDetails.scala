@@ -61,11 +61,11 @@ object MsbAllDetails {
       }else {
         throughput match {
           case First => "£0-£15k"
-          case Second => "£15k-£50k"
+          case Second => "£15k-50k"
           case Third => "£50k-£100k"
           case Fourth => "£100k-£250k"
           case Fifth => "£250k-£1m"
-          case Sixth => "£1m-£10m"
+          case Sixth => "£1m-10m"
           case Seventh => "£10m+"
         }
       }

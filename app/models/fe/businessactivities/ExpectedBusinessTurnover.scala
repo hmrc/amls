@@ -85,11 +85,11 @@ object ExpectedBusinessTurnover {
     } else {
       to match {
         case "£0-£15k" => Some(First)
-        case "£15k-£50k" => Some(Second)
+        case "£15k-50k" => Some(Second)
         case "£50k-£100k" => Some(Third)
         case "£100k-£250k" => Some(Fourth)
         case "£250k-£1m" => Some(Fifth)
-        case "£1m-£10m" => Some(Sixth)
+        case "£1m-10m" => Some(Sixth)
         case "£10m+" => Some(Seventh)
         case  _ => None
       }
