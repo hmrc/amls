@@ -85,7 +85,7 @@ class SubscriptionStatusControllerSpec
       val result = SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
-      contentAsJson(result) must be(Json.toJson(response.copy(withinRenewalPeriod = true)))
+      contentAsJson(result) must be(Json.toJson(response.copy(withinRenewalPeriod = Some(true))))
     }
 
     "return an invalid response when the service fails" in {

@@ -16,8 +16,6 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import exceptions.HttpStatusException
 import models.des.{RequestType, _}
 import models.fe
@@ -31,7 +29,9 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
 
-class AmendVariationController @Inject() (val service: AmendVariationService)extends BaseController {
+trait AmendVariationController extends BaseController {
+
+  private[controllers] def service: AmendVariationService
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
