@@ -47,8 +47,7 @@ trait SubscriptionStatusController extends BaseController {
           case Some(_) =>
             connector.status(amlsRegistrationNumber) map {
               response =>
-                val updatedStatus = response.copy(withinRenewalPeriod = response.currentRegYearEndDate.fold(Some(false))(x =>Some(LocalDate.now().isBefore(x))))
-                Ok(Json.toJson(updatedStatus))
+                Ok(Json.toJson(response))
             } recoverWith {
               case e@HttpStatusException(status, Some(body)) =>
                 Logger.warn(s"$prefix - Status: ${status}, Message: $body")

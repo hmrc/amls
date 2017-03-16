@@ -23,11 +23,14 @@ import play.api.libs.json._
 case class ReadStatusResponse(
                                processingDate: LocalDateTime,
                                formBundleStatus: String,
+                               statusReason: Option[String],
                                deRegistrationDate: Option[LocalDate],
                                currentRegYearStartDate: Option[LocalDate],
                                currentRegYearEndDate: Option[LocalDate],
                                renewalConFlag: Boolean,
-                               withinRenewalPeriod: Option[Boolean] = Some(false)
+                               renewalSubmissionFlag: Boolean,
+                               currentAMLSOutstandingBalance: String,
+                               businessContactNumber: Option[String]
                              )
 
 object ReadStatusResponse {

@@ -101,7 +101,7 @@ trait AmendVariationController extends BaseController {
   def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
     Action.async(parse.json) {
       implicit request =>
-        val prefix = "[AmendVariationController][variation]"
+        val prefix = "[AmendVariationController][renewal]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
     }

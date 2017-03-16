@@ -62,7 +62,7 @@ class SubscriptionStatusControllerSpec
 
     "return a valid response when the amls registration number is valid" in {
 
-      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, false)
+      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false, false, "", None)
 
       when {
         SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
@@ -72,20 +72,6 @@ class SubscriptionStatusControllerSpec
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(response))
-    }
-
-    "return a valid response when the amls registration number is valid and is within renewal period" in {
-
-      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, Some(LocalDate.now().plusDays(15)), false)
-
-      when {
-        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
-      } thenReturn Future.successful(response)
-
-      val result = SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request)
-
-      status(result) must be(OK)
-      contentAsJson(result) must be(Json.toJson(response.copy(withinRenewalPeriod = Some(true))))
     }
 
     "return an invalid response when the service fails" in {

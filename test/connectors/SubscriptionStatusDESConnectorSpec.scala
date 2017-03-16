@@ -62,7 +62,7 @@ class SubscriptionStatusDESConnectorSpec
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
 
-    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, false)
+    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false, false, "2000", None)
 
     val mockTimer = mock[Timer.Context]
 
