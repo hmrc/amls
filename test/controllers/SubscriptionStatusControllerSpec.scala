@@ -19,8 +19,7 @@ package controllers
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import models.des
-import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessType => BT}
-import org.joda.time.LocalDateTime
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -73,6 +72,20 @@ class SubscriptionStatusControllerSpec
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(response))
+    }
+
+    "return a valid response when the amls registration number is valid and is within renewal period" in {
+
+      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, Some(LocalDate.now().plusDays(15)), false)
+
+      when {
+        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
+      } thenReturn Future.successful(response)
+
+      val result = SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request)
+
+      status(result) must be(OK)
+      contentAsJson(result) must be(Json.toJson(response.copy(withinRenewalPeriod = true)))
     }
 
     "return an invalid response when the service fails" in {

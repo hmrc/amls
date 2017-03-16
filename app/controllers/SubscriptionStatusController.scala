@@ -18,13 +18,11 @@ package controllers
 
 import connectors.{DESConnector, SubscriptionStatusDESConnector}
 import exceptions.HttpStatusException
-import models.fe
+import org.joda.time.LocalDate
 import play.api.Logger
-import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc.Action
-import services.SubscriptionService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
@@ -49,7 +47,8 @@ trait SubscriptionStatusController extends BaseController {
           case Some(_) =>
             connector.status(amlsRegistrationNumber) map {
               response =>
-                Ok(Json.toJson(response))
+                val updatedStatus = response.copy(withinRenewalPeriod = response.currentRegYearEndDate.fold(false)(LocalDate.now().isBefore(_)))
+                Ok(Json.toJson(updatedStatus))
             } recoverWith {
               case e@HttpStatusException(status, Some(body)) =>
                 Logger.warn(s"$prefix - Status: ${status}, Message: $body")

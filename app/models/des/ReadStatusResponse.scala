@@ -26,7 +26,8 @@ case class ReadStatusResponse(
                                deRegistrationDate: Option[LocalDate],
                                currentRegYearStartDate: Option[LocalDate],
                                currentRegYearEndDate: Option[LocalDate],
-                               renewalConFlag: Boolean
+                               renewalConFlag: Boolean,
+                               withinRenewalPeriod: Boolean = false
                              )
 
 object ReadStatusResponse {
