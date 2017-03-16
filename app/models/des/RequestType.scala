@@ -23,5 +23,7 @@ object RequestType {
   case object Subscription extends RequestType
   case object Amendment extends RequestType
   case object Variation extends RequestType
+  case object Renewal extends RequestType
+  case object RenewalAmendment extends RequestType
 
 }

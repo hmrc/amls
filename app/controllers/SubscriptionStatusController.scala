@@ -18,13 +18,11 @@ package controllers
 
 import connectors.{DESConnector, SubscriptionStatusDESConnector}
 import exceptions.HttpStatusException
-import models.fe
+import org.joda.time.LocalDate
 import play.api.Logger
-import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc.Action
-import services.SubscriptionService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
