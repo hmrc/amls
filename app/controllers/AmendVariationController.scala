@@ -97,9 +97,18 @@ trait AmendVariationController extends BaseController {
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Variation, RequestType.Variation)
     }
+
+  def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
+    Action.async(parse.json) {
+      implicit request =>
+        val prefix = "[AmendVariationController][renewal]"
+        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
+    }
 }
 
 object AmendVariationController extends AmendVariationController {
   // $COVERAGE-OFF$
   override private[controllers] val service = AmendVariationService
 }
+
