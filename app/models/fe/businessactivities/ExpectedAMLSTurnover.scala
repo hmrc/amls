@@ -95,11 +95,11 @@ object ExpectedAMLSTurnover {
     } else {
       to match {
         case Some("£0-£15k") => Some(First)
-        case Some("£15k-£50k") => Some(Second)
+        case Some("£15k-50k") => Some(Second)
         case Some("£50k-£100k") => Some(Third)
         case Some("£100k-£250k") => Some(Fourth)
         case Some("£250k-£1m") => Some(Fifth)
-        case Some("£1m-£10m") => Some(Sixth)
+        case Some("£1m-10m") => Some(Sixth)
         case Some("£10m+") => Some(Seventh)
         case _ => None
       }

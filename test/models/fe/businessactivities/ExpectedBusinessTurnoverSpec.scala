@@ -183,7 +183,7 @@ class ExpectedBusinessTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSu
       val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£0-£15k","£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel) must be(Some(First))
 
-      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£15k-£50k","£250k-£1m")))))
+      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£15k-50k","£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel1) must be(Some(Second))
 
       val desModel2 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£50k-£100k","£250k-£1m")))))
@@ -195,7 +195,7 @@ class ExpectedBusinessTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSu
       val desModel4 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£250k-£1m","£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel4) must be(Some(Fifth))
 
-      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£1m-£10m","£250k-£1m")))))
+      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£1m-10m","£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel5) must be(Some(Sixth))
 
       val desModel6 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£10m+","£250k-£1m")))))

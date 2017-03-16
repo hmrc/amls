@@ -157,7 +157,7 @@ class MsbAllDetailsRelease7Spec extends PlaySpec with OneAppPerSuite{
     }
 
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Sixth" in {
-      val msbAllDetails = Some(MsbAllDetails(Some("£1m-£10m"), false, None, false))
+      val msbAllDetails = Some(MsbAllDetails(Some("£1m-10m"), false, None, false))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
         Some(ExpectedThroughput.Sixth))
