@@ -189,7 +189,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
         ),
 
         AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
-        AgentDetails("Unincorporated Body", None, None, Some(""), agentPremises2)))))
+        AgentDetails("Unincorporated Body", None, None, None, agentPremises2)))))
 
       val desTradingPremises = TradingPremises(ownBusinessPremises, agentBusinessPremises)
 
