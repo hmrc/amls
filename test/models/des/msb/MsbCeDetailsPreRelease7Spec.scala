@@ -31,7 +31,7 @@ class MsbCeDetailsPreRelease7Spec extends PlaySpec with OneAppPerSuite {
 
       "there is a full set of data" in {
 
-        val msbCeDetails = Some(MsbCeDetails(CurrencySources(None,
+        val msbCeDetails = Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(false, None)),
           Some(CurrencyWholesalerDetails(false, None)), reSellCurrTakenIn = true, "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), None))
 
         val businessUseAnIPSP = BusinessUseAnIPSPNo
