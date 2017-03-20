@@ -96,6 +96,7 @@ object AgentDetails {
     } else {
       None
     }
+
     val (startDate, endDate) = (AmlsConfig.release7, requestType) match {
       case (true, RequestType.Amendment) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
         tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
@@ -110,13 +111,12 @@ object AgentDetails {
         agentName <- tradingPremises.agentName
         dob <- agentName.agentDateOfBirth
       } yield dob,
-      agentLegalEntityName = Some(tradingPremises.businessStructure.fold("")({
-        case BusinessStructure.SoleProprietor => tradingPremises.agentName.fold("")(x => x.agentName)
-        case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
-          tradingPremises.agentCompanyDetails.fold("")(x => x.agentCompanyName)
-        case BusinessStructure.Partnership => tradingPremises.agentPartnership.fold("")(x => x.agentPartnership)
-        case BusinessStructure.UnincorporatedBody => ""
-      })),
+      agentLegalEntityName = tradingPremises.businessStructure flatMap {
+        case BusinessStructure.UnincorporatedBody => None
+        case BusinessStructure.SoleProprietor => tradingPremises.agentName map (_.agentName)
+        case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody => tradingPremises.agentCompanyDetails map (_.agentCompanyName)
+        case BusinessStructure.Partnership => tradingPremises.agentPartnership map (_.agentPartnership)
+      },
       agentPremises = tradingPremises,
       startDate,
       None,
