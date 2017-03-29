@@ -164,7 +164,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
         ad =>
           ad.filter {
-            x => startDateMatcher(x.agentPremises.startDate.getOrElse(""), x => (7 to 11) contains x)
+            x => startDateMatcher(x.startDate.getOrElse(x.agentPremises.startDate.getOrElse("")), x => (7 to 11) contains x)
           }
       })
       case None => 0
@@ -184,7 +184,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
         ad =>
           ad.filter {
-            x => startDateMatcher(x.agentPremises.startDate.getOrElse(""), x => x == 12)
+            x => startDateMatcher(x.startDate.getOrElse(x.agentPremises.startDate.getOrElse("")), x => x == 12)
           }
       })
       case None => 0
