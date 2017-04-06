@@ -16,6 +16,7 @@
 
 package services
 
+import com.eclipsesource.schema.SchemaValidator
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import models.des
 import models.{KnownFact, KnownFactsForService, fe}
@@ -24,12 +25,14 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{JsResult, JsValue, Json, Writes}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.eclipsesource.schema._
+import models.des.SubscriptionRequest
 
 class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
@@ -37,12 +40,14 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
   implicit val format = Json.format[Foo]
 
+  val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
+
   object SubscriptionService extends SubscriptionService {
     override private[services] val desConnector = mock[SubscribeDESConnector]
     override private[services] val ggConnector = mock[GovernmentGatewayAdminConnector]
     override private[services] val feeResponseRepository = mock[FeeResponseRepository]
 
-
+    override private[services] def validateResult(request: SubscriptionRequest) = successValidate
   }
 
   val response = des.SubscriptionResponse(
@@ -69,6 +74,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
   "SubscriptionService" must {
 
     "return a successful response" in {
+
+      when{successValidate.isSuccess} thenReturn true
 
       when {
         SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any())

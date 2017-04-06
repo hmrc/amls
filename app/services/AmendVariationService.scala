@@ -25,7 +25,7 @@ import models.des._
 import models.des.responsiblepeople.ResponsiblePersons
 import org.joda.time.{LocalDate, Months}
 import play.api.Logger
-import play.api.libs.json.Json
+import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
@@ -43,7 +43,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] def viewDesConnector: ViewDESConnector
 
-  private val validator = new SchemaValidator()
+  private[services] val validator: SchemaValidator = new SchemaValidator()
+
+  private[services] def validateResult(request: AmendVariationRequest): JsResult[JsValue]
 
   val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
@@ -99,10 +101,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
    hc: HeaderCarrier,
    ec: ExecutionContext
   ): Future[AmendVariationResponse] = {
-    import com.eclipsesource.schema._
-    val validateResult = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
-    if (!validateResult.isSuccess) {
-      val errors = validateResult.fold(invalid = { errors =>
+    val result = validateResult(request)
+    if (!result.isSuccess) {
+      val errors = result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
         }
@@ -313,4 +314,6 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
+
+  override private[services] def validateResult(request: AmendVariationRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
 }

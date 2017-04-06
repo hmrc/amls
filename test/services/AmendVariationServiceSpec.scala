@@ -20,7 +20,7 @@ import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, V
 import models.des
 import models.des.responsiblepeople.{MsbOrTcsp, RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
-import models.des.{DesConstants, ReadStatusResponse}
+import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -29,6 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
 import play.api.{Application, Mode}
 import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import play.api.libs.json.{JsResult, JsValue}
 import play.api.test.FakeApplication
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -38,11 +39,15 @@ import scala.concurrent.Future
 
 class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
 
+  val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
+
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
+
+    override private[services] def validateResult(request: AmendVariationRequest) = successValidate
   }
 
   val response = des.AmendVariationResponse(
@@ -88,6 +93,8 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
   implicit val hc = HeaderCarrier()
 
   "AmendVariationService" must {
+
+    when{successValidate.isSuccess} thenReturn true
 
     when {
       TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any())
