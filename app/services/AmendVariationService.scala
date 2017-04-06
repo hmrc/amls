@@ -16,11 +16,16 @@
 
 package services
 
+import java.io.InputStream
+
+import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.AmlsConfig
 import connectors._
 import models.des._
 import models.des.responsiblepeople.ResponsiblePersons
 import org.joda.time.{LocalDate, Months}
+import play.api.Logger
+import play.api.libs.json.Json
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
@@ -37,6 +42,13 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   private[services] def feeResponseRepository: FeeResponseRepository
 
   private[services] def viewDesConnector: ViewDESConnector
+
+  private val validator = new SchemaValidator()
+
+  val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
+  val lines = scala.io.Source.fromInputStream(stream).getLines
+  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
 
   def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -87,6 +99,18 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
    hc: HeaderCarrier,
    ec: ExecutionContext
   ): Future[AmendVariationResponse] = {
+    import com.eclipsesource.schema._
+    val validateResult = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+    if (!validateResult.isSuccess) {
+      val errors = validateResult.fold(invalid = { errors =>
+        errors.foldLeft[String]("") {
+          (a, b) => a + "," + b._1.toJsonString
+        }
+      }, valid = { post => post })
+      Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber : Error Paths : ${errors}")
+    } else {
+      Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
+    }
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
       inserted <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
@@ -213,9 +237,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
                                 addedOwnBusinessZeroRatedTradingPremisesCount: Int,
                                 addedAgentZeroRatedTradingPremisesCount: Int): AmendVariationResponse = {
 
-    val registrationFees = response.registrationFee.getOrElse (BigDecimal(0))
-    val premisesFees = response.premiseFee.getOrElse (BigDecimal(0))
-    val totalFees = response.totalFees.getOrElse (BigDecimal(0))
+    val registrationFees = response.registrationFee.getOrElse(BigDecimal(0))
+    val premisesFees = response.premiseFee.getOrElse(BigDecimal(0))
+    val totalFees = response.totalFees.getOrElse(BigDecimal(0))
 
     response.copy(
       registrationFee = Some(registrationFees),
@@ -255,6 +279,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         }
       }
     }
+
     update(desRequest, updates)
 
   }

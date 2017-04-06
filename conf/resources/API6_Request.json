@@ -224,7 +224,6 @@
         },
         "businessEmail": {
           "type": "string",
-          "format": "email",
           "minLength": 3,
           "maxLength": 100
         },

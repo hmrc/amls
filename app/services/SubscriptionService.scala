@@ -16,9 +16,14 @@
 
 package services
 
+import java.io.InputStream
+
+import com.eclipsesource.schema.SchemaValidator
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import models.{KnownFact, KnownFactsForService}
 import models.des.{SubscriptionRequest, SubscriptionResponse}
+import play.api.Logger
+import play.api.libs.json.Json
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -32,12 +37,31 @@ trait SubscriptionService {
 
   private[services] def feeResponseRepository: FeeResponseRepository
 
+  private val validator = new SchemaValidator()
+
+  val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
+  val lines = scala.io.Source.fromInputStream(stream).getLines
+  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
+
   def subscribe
   (safeId: String, request: SubscriptionRequest)
   (implicit
    hc: HeaderCarrier,
    ec: ExecutionContext
-  ): Future[SubscriptionResponse] =
+  ): Future[SubscriptionResponse] = {
+    import com.eclipsesource.schema._
+    val validateResult = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+    if(!validateResult.isSuccess){
+      val errors = validateResult.fold(invalid = { errors =>
+        errors.foldLeft[String]("") {
+          (a, b) => a + "," + b._1.toJsonString
+        }
+      }, valid = { post => post })
+      Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : ${errors}")
+    }else {
+      Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
+    }
     for {
       response <- desConnector.subscribe(safeId, request)
       _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
@@ -49,6 +73,7 @@ trait SubscriptionService {
     } yield {
       response
     }
+  }
 }
 
 object SubscriptionService extends SubscriptionService {

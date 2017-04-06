@@ -95,7 +95,6 @@
           "type": "string",
           "minLength": 3,
           "maxLength": 100,
-          "format": "email"
         },
         "businessWebAddr": {
           "type": "string",
