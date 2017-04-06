@@ -94,7 +94,7 @@
         "businessEmail": {
           "type": "string",
           "minLength": 3,
-          "maxLength": 100,
+          "maxLength": 100
         },
         "businessWebAddr": {
           "type": "string",
