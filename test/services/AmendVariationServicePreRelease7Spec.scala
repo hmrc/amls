@@ -17,24 +17,31 @@
 package services
 
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
+import models.des.AmendVariationRequest
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.{JsResult, JsValue}
 import play.api.test.FakeApplication
 import repositories.FeeResponseRepository
 
 class AmendVariationServicePreRelease7Spec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
 
   override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+  val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
 
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
+    override private[services] def validateResult(request: AmendVariationRequest) = successValidate
   }
 
   "AmendVariationService" must {
+
+    when{successValidate.isSuccess} thenReturn true
     "not be applying release 7 transforms when toggled off" in {
       TestAmendVariationService.updates.size must be(3)
     }

@@ -16,9 +16,14 @@
 
 package services
 
+import java.io.InputStream
+
+import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import models.{KnownFact, KnownFactsForService}
 import models.des.{SubscriptionRequest, SubscriptionResponse}
+import play.api.Logger
+import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeeResponseRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -32,12 +37,33 @@ trait SubscriptionService {
 
   private[services] def feeResponseRepository: FeeResponseRepository
 
+  private[services] val validator: SchemaValidator = new SchemaValidator()
+
+  private [services] def validateResult(request:SubscriptionRequest): JsResult[JsValue]
+
+  val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
+  val lines = scala.io.Source.fromInputStream(stream).getLines
+  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
+
   def subscribe
   (safeId: String, request: SubscriptionRequest)
   (implicit
    hc: HeaderCarrier,
    ec: ExecutionContext
-  ): Future[SubscriptionResponse] =
+  ): Future[SubscriptionResponse] = {
+    import com.eclipsesource.schema._
+    val result = validateResult(request)
+    if (!result.isSuccess) {
+      val errors = result.fold(invalid = { errors =>
+        errors.foldLeft[String]("") {
+          (a, b) => a + "," + b._1.toJsonString
+        }
+      }, valid = { post => post })
+      Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : ${errors}")
+    } else {
+      Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
+    }
     for {
       response <- desConnector.subscribe(safeId, request)
       _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
@@ -49,6 +75,7 @@ trait SubscriptionService {
     } yield {
       response
     }
+  }
 }
 
 object SubscriptionService extends SubscriptionService {
@@ -56,4 +83,5 @@ object SubscriptionService extends SubscriptionService {
   override private[services] val desConnector = DESConnector
   override private[services] val ggConnector = GovernmentGatewayAdminConnector
   override private[services] val feeResponseRepository = FeeResponseRepository()
+  override private[services] def validateResult(request:SubscriptionRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
 }
