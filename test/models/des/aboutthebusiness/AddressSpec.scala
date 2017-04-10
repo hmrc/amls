@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness.{RegisteredOfficeNonUK, RegisteredOfficeUK}
+import models.fe.aboutthebusiness.{CorrespondenceAddress, RegisteredOfficeNonUK, RegisteredOfficeUK, UKCorrespondenceAddress}
 import org.scalatestplus.play.PlaySpec
 
 
@@ -46,6 +46,56 @@ class AddressSpec extends PlaySpec {
       )
 
       Address.convert(registeredOfficeUk) must be(address)
+
+    }
+
+    "convert to uk registered address when post code is empty" in {
+
+      val address = Address (
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
+
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "",
+        Some("2016-1-1")
+      )
+
+      Address.convert(registeredOfficeUk) must be(address)
+
+    }
+
+    "convert to uk alternate address when post code is empty" in {
+
+      val address = Address (
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        None
+      )
+
+      val alternateAddress = Some(UKCorrespondenceAddress(
+        "Name",
+        "Business Name",
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        ""
+      ))
+
+      Address.convertAlternateAddress(alternateAddress) must be(address)
 
     }
 

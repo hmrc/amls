@@ -30,7 +30,15 @@ case class Address (addressLine1: String,
 object Address {
   implicit val format = Json.format[Address]
 
+  private def convertEmptyToOption(str: String) = {
+    str.nonEmpty match {
+      case true => Some(str)
+      case false => None
+    }
+  }
+
   implicit def convert(address: models.fe.tradingpremises.Address): Address = {
-    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB", Some(address.postcode), address.dateOfChange)
+    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB",
+      convertEmptyToOption(address.postcode), address.dateOfChange)
   }
 }
