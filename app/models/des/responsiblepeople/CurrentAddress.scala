@@ -17,12 +17,22 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
+import play.api.Logger
 import play.api.libs.json.Json
 
 case class CurrentAddress (address: AddressWithChangeDate)
 
 object CurrentAddress {
   implicit val format = Json.format[CurrentAddress]
+
+  private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
+
+  private def convertEmptyOrInvalidToNone(str: String) = {
+    (str.nonEmpty,str.matches(postcodeRegex))   match {
+      case (true,true) => Some(str)
+      case _ => None
+    }
+  }
 
   implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonCurrentAddress]): Option[CurrentAddress] = {
     addrHistory match {
@@ -34,7 +44,7 @@ object CurrentAddress {
   implicit def convPersonAddress(addrHistory: ResponsiblePersonCurrentAddress): Option[CurrentAddress] = {
     addrHistory.personAddress match {
       case uk:PersonAddressUK => Some(CurrentAddress(AddressWithChangeDate(uk.addressLine1, uk.addressLine2, uk.addressLine3,
-        uk.addressLine4, "GB" ,Some(uk.postCode), addrHistory.dateOfChange)))
+        uk.addressLine4, "GB" ,convertEmptyOrInvalidToNone(uk.postCode), addrHistory.dateOfChange)))
       case nonUk:PersonAddressNonUK => Some(CurrentAddress(AddressWithChangeDate(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
         nonUk.addressLineNonUK4, nonUk.country, None, addrHistory.dateOfChange)))
     }

@@ -80,7 +80,7 @@ trait ResponsiblePeopleValues {
       Some(PreviousName(Some("FirstName"),Some("MiddleName"),Some("LastName"),new LocalDate(2001,1,1))),Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),UKPassport("AA1111111")),"AA","AA")),
       None,Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
-        "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"Postcode"),
+        "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"AA1 1AA"),
     ThreeYearsPlus)),None,None)),Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
     Some(SaRegisteredYes("1234567890")),Some(VATRegisteredYes("123456789")),
     Some(ExperienceTrainingNo),Some(TrainingYes("TrainingDetails")),Some(false),Some(333333), Some("added")),
@@ -88,9 +88,9 @@ trait ResponsiblePeopleValues {
       Some(PreviousName(Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),
         new LocalDate(1967,8,13))),Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"),"GB","GB")),None,
-      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"bbbbbb"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"bbbbb"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("a","a",Some("a"),Some("a"),"bbbbb1"),SixToElevenMonths)))),
+      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("a","a",Some("a"),Some("a"),"AA1 1AA"),SixToElevenMonths)))),
       Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),Some(SaRegisteredYes("1111111111")),
       Some(VATRegisteredYes("111111111")),Some(ExperienceTrainingYes("bbbbbbbbbb")),Some(TrainingNo),Some(true), Some(222222), Some("added"))))
 

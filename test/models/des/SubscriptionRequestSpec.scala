@@ -750,7 +750,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
         Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
         NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
         true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
-          Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))), true, None)))))
+          Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
 
       val desSubscriptionReq =
         des.SubscriptionRequest(
@@ -837,7 +837,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
     Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
-      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))), true, None)))))
+      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
 
   val desSubscriptionReq =
     des.SubscriptionRequest(

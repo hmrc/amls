@@ -37,7 +37,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.SoleProprietor, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -56,7 +56,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -75,7 +75,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val bm = BusinessMatching( ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -94,7 +94,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     "convert frontend model to des model successfully when user has no data selected" in {
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -112,7 +112,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     "convert des model to frontend model successfully when input is none" in {
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
       PositionInBusiness.conv(None, bm) must be(None)
@@ -133,7 +133,7 @@ class PositionInBusinessWithRelease7Spec extends PlaySpec with MockitoSugar with
 
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.SoleProprietor, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -152,7 +152,7 @@ class PositionInBusinessWithRelease7Spec extends PlaySpec with MockitoSugar with
 
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -171,7 +171,7 @@ class PositionInBusinessWithRelease7Spec extends PlaySpec with MockitoSugar with
 
       val bm = BusinessMatching( ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -189,7 +189,7 @@ class PositionInBusinessWithRelease7Spec extends PlaySpec with MockitoSugar with
     "convert frontend model to des model successfully when user has no data selected" in {
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
 
@@ -207,7 +207,7 @@ class PositionInBusinessWithRelease7Spec extends PlaySpec with MockitoSugar with
     "convert des model to frontend model successfully when input is none" in {
       val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("Postcode"), "AD"), ""),
+        Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
         None, None)
       PositionInBusiness.conv(None, bm) must be(None)

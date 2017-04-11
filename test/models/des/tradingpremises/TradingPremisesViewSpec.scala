@@ -46,7 +46,7 @@ class TradingPremisesViewSpec extends PlaySpec {
           Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),
           "AD",
-          Some("Postcode")),
+          Some("AA1 1AA")),
         false,
         Msb(true, true, true, true, true),
         Hvd(true),
@@ -63,7 +63,7 @@ class TradingPremisesViewSpec extends PlaySpec {
           Some("OB1AddressLine3"),
           Some("OB1AddressLine4"),
           "AD",
-          Some("Postcode")),
+          Some("AA1 1AA")),
         false,
         Msb(true, true, true, true, true),
         Hvd(true),
@@ -88,7 +88,7 @@ class TradingPremisesViewSpec extends PlaySpec {
               Some("AddressLine3"),
               Some("AddressLine4"),
               "AD",
-              Some("Postcode")),
+              Some("AA1 1AA")),
             true,
             Msb(true, true, true, true, true),
             Hvd(true),
@@ -134,7 +134,7 @@ class TradingPremisesViewSpec extends PlaySpec {
               Some("AgentAddressLine3"),
               Some("AgentAddressLine4"),
               "AD",
-              Some("Postcode")),
+              Some("AA1 1AA")),
             true,
             Msb(true, true, true, true, true),
             Hvd(true),
@@ -198,7 +198,7 @@ class TradingPremisesViewSpec extends PlaySpec {
         "addressLine3" -> "OwnBusinessAddressLine3",
         "addressLine4" -> "OwnBusinessAddressLine4",
         "country" -> "AD",
-        "postcode" -> "Postcode"
+        "postcode" -> "AA1 1AA"
       ),
       "residential" -> false,
       "msb" -> Json.obj(
@@ -235,7 +235,7 @@ class TradingPremisesViewSpec extends PlaySpec {
           "addressLine3" -> "OB1AddressLine3",
           "addressLine4" -> "OB1AddressLine4",
           "country" -> "AD",
-          "postcode" -> "Postcode"
+          "postcode" -> "AA1 1AA"
         ),
         "residential" -> false,
         "msb" -> Json.obj(
@@ -281,7 +281,7 @@ class TradingPremisesViewSpec extends PlaySpec {
             "addressLine3" -> "AddressLine3",
             "addressLine4" -> "AddressLine4",
             "country" -> "AD",
-            "postcode" -> "Postcode"
+            "postcode" -> "AA1 1AA"
           ),
           "residential" -> true,
           "msb" -> Json.obj(
@@ -368,7 +368,7 @@ class TradingPremisesViewSpec extends PlaySpec {
               "addressLine3" -> "AgentAddressLine3",
               "addressLine4" -> "AgentAddressLine4",
               "country" -> "AD",
-              "postcode" -> "Postcode"
+              "postcode" -> "AA1 1AA"
             ),
             "residential" -> true,
             "msb" -> Json.obj(
