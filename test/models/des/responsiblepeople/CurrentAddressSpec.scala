@@ -43,6 +43,19 @@ class CurrentAddressSpec extends PlaySpec {
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
       }
+
+      "send no postcode when it is invalid" in {
+
+        val testResponsiblePersonCurrentAddress = ResponsiblePersonCurrentAddress(
+          PersonAddressUK("line1", "line2", None, None, "AB 2CD"),
+          OneToThreeYears,
+          Some("2017-1-1"))
+
+        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", "line2", None, None, "GB", None,Some("2017-1-1")))
+
+        CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
+
+      }
     }
 
     "given a non-UK address" must {
