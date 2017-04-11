@@ -36,11 +36,11 @@ object Address {
 
   private def convertEmptyOrInvalidToNone(str: String) = {
     (str.nonEmpty,str.matches(postcodeRegex))   match {
-      case (true,true) => {
+      case (true,true) => Some(str)
+      case _ => {
         Logger.warn("[Address][Invalid postcode not sent to DES]")
-        Some(str)
+        None
       }
-      case _ => None
     }
   }
 
