@@ -47,7 +47,7 @@ object DesConstants {
       Some("BusinessAddressLine3"),
       Some("BusinessAddressLine4"),
       "GB",
-      Some("Postcode")),
+      Some("AA1 1AA")),
     true,
     Some(AlternativeAddress(
       "Name", "TradingName",
@@ -56,7 +56,7 @@ object DesConstants {
         Some("AlternativeAddressLine3"),
         Some("AlternativeAddressLine4"),
         "GB",
-        Some("Postcode")))),
+        Some("AA1 1AA")))),
     "07000111222",
     "BusinessEmail"
   )
@@ -67,7 +67,7 @@ object DesConstants {
       Some("BusinessAddressLine3"),
       Some("BusinessAddressLine4"),
       "GB",
-      Some("Postcode")),
+      Some("AA1 1AA")),
     false,
     None,
     "07000111222",
@@ -110,7 +110,7 @@ object DesConstants {
         Some("AdvisorAddressLine3"),
         Some("AdvisorAddressLine4"),
         "GB",
-        Some("Postcode")))),
+        Some("AA1 1AA")))),
       true,
       None
     ))))
@@ -136,7 +136,7 @@ object DesConstants {
         Some("AdvisorAddressLine3"),
         Some("AdvisorAddressLine4"),
         "GB",
-        Some("Postcode")))),
+        Some("AA1 1AA")))),
       true,
       None
     ))))
@@ -201,7 +201,7 @@ object DesConstants {
       Some("AddressLine3"),
       Some("AddressLine4"),
       "AD",
-      Some("Postcode")),
+      Some("AA1 1AA")),
     true,
     Msb(false, false, false, false, false),
     Hvd(true),
@@ -219,7 +219,7 @@ object DesConstants {
       Some("AddressLine3"),
       Some("AddressLine4"),
       "AD",
-      Some("Postcode")),
+      Some("AA1 1AA")),
     true,
     Msb(false, false, false, false, false),
     Hvd(false),
@@ -237,7 +237,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -269,7 +269,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, true, true, false),
     Hvd(true),
@@ -334,7 +334,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -365,7 +365,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, true, true, false),
     Hvd(true),
@@ -409,7 +409,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, true, true, false),
     Hvd(true),
@@ -750,7 +750,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -779,7 +779,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -811,7 +811,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -843,7 +843,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -875,7 +875,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -905,7 +905,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -937,7 +937,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -969,7 +969,7 @@ object DesConstants {
       Some("a"),
       Some("a"),
       "GB",
-      Some("aaaaaaaaaa")),
+      Some("AA1 1AA")),
     true,
     Msb(true, true, false, false, false),
     Hvd(true),
@@ -1311,12 +1311,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1360,12 +1360,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1408,12 +1408,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1456,12 +1456,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("bbbbb")))),
+    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1518,7 +1518,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),
@@ -1588,7 +1588,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),
@@ -1656,7 +1656,7 @@ object DesConstants {
         Some("CurrentAddressLine3"),
         Some("CurrentAddressLine4"),
         "GB",
-        Some("Postcode")
+        Some("AA1 1AA")
       )
     )),
     Some("3+ years"),
@@ -1738,7 +1738,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),
@@ -1790,12 +1790,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("bbbbb1")))),
+      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -1853,7 +1853,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),
@@ -1905,12 +1905,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("bbbbb1")))),
+      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -1968,7 +1968,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),
@@ -2020,12 +2020,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("bbbbbb"))
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("bbbbb")))),
+      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("bbbbb1")))),
+      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true, Some(false))),
@@ -2224,7 +2224,7 @@ object DesConstants {
         Some("CurrentAddressLine3"),
         Some("CurrentAddressLine4"),
         "GB",
-        Some("Postcode")
+        Some("AA1 1AA")
       )
     )),
     Some("3+ years"),
@@ -2475,7 +2475,7 @@ object DesConstants {
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
-          Some("Postcode")
+          Some("AA1 1AA")
         )
       )),
       Some("3+ years"),

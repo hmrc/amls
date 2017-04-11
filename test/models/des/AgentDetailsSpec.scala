@@ -31,12 +31,12 @@ class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
       implicit val requestType = RequestType.Amendment
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
+        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
           Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }
@@ -45,12 +45,12 @@ class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
       implicit val requestType = RequestType.Subscription
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
+        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
           Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }
@@ -67,12 +67,12 @@ class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
       implicit val requestType = RequestType.Amendment
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
+        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
           Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),None,None),Some("2008-01-01"),None,None,None))
     }
@@ -81,12 +81,12 @@ class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
       implicit val requestType = RequestType.Subscription
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "string"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("string"),None),true,
+        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
           Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
     }

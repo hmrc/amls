@@ -141,7 +141,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
                 Some("AdvisorAddressLine3"),
                 Some("AdvisorAddressLine4"),
                 "AD",
-                Some("Postcode")))),
+                Some("AA1 1AA")))),
             true,
             Some("01234567890")
         ))))
@@ -153,7 +153,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
         Some(NCARegistered(true)),Some(AccountantForAMLSRegulations(true)),Some(IdentifySuspiciousActivity(true)),
         Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))),Some(HowManyEmployees("14","11")),
         Some(WhoIsYourAccountant("Name",Some("TradingName"),
-          UkAccountantsAddress("AdvisorAddressLine1","AdvisorAddressLine2",Some("AdvisorAddressLine3"),Some("AdvisorAddressLine4"),"Postcode"))),
+          UkAccountantsAddress("AdvisorAddressLine1","AdvisorAddressLine2",Some("AdvisorAddressLine3"),Some("AdvisorAddressLine4"),"AA1 1AA"))),
         Some(TaxMatters(true))
       )
       BusinessActivities.conv(desModel) must be(feModel)

@@ -52,7 +52,7 @@ object DefaultDesValues {
   private val suspiciousActivityGuidance = true
   private val nationalCrimeAgencyRegistered = true
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
-  private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("postcode")))
+  private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
   private val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
   private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"),None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
@@ -92,7 +92,7 @@ object DefaultDesValues {
       Some("string"),
       Some("string"),
       "GB",
-      Some("string")
+      Some("AA1 1AA")
     ),
     false,
     Msb(true, true, true, true, false),
@@ -107,7 +107,7 @@ object DefaultDesValues {
   private val ownBusinessPremises = OwnBusinessPremises(true, Some(Seq(premises)))
 
   private val agentPremises = AgentPremises("string",
-    des.tradingpremises.Address("string", "string", Some("string"), Some("string"), "GB", Some("string")), true,
+    des.tradingpremises.Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
     Msb(false, false, false, false, false),
     models.des.tradingpremises.Hvd(false),
     TPAsp(false),

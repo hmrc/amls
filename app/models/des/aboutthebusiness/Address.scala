@@ -17,6 +17,7 @@
 package models.des.aboutthebusiness
 
 import models.fe.aboutthebusiness._
+import play.api.Logger
 import play.api.libs.json.Json
 
 case class Address (addressLine1: String,
@@ -31,17 +32,22 @@ case class Address (addressLine1: String,
 object Address {
   implicit val format = Json.format[Address]
 
-  private def convertEmptyToOption(str: String) = {
-    str.nonEmpty match {
-      case true => Some(str)
-      case false => None
+  private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
+
+  private def convertEmptyOrInvalidToNone(str: String) = {
+    (str.nonEmpty,str.matches(postcodeRegex))   match {
+      case (true,true) => {
+        Logger.warn("[Address][Invalid postcode not sent to DES]")
+        Some(str)
+      }
+      case _ => None
     }
   }
 
   implicit def convert(registeredOffice : RegisteredOffice):Address = {
     registeredOffice match {
       case x:RegisteredOfficeUK => Address(x.addressLine1, x.addressLine2, x.addressLine3, x.addressLine4, "GB",
-        convertEmptyToOption(x.postCode), x.dateOfChange)
+        convertEmptyOrInvalidToNone(x.postCode), x.dateOfChange)
       case y:RegisteredOfficeNonUK =>Address(y.addressLine1, y.addressLine2, y.addressLine3, y.addressLine4, y.country, None, y.dateOfChange)
     }
   }
@@ -49,7 +55,7 @@ object Address {
   implicit def convertAlternateAddress(model: Option[CorrespondenceAddress]): Address =
     model match {
       case Some(UKCorrespondenceAddress(_ , _,addressLine1, addressLine2, addressLine3, addressLine4, postCode)) =>
-        Address(addressLine1, addressLine2, addressLine3, addressLine4, "GB", convertEmptyToOption(postCode))
+        Address(addressLine1, addressLine2, addressLine3, addressLine4, "GB", convertEmptyOrInvalidToNone(postCode))
       case Some(NonUKCorrespondenceAddress(_ , _,addressLine1, addressLine2, addressLine3, addressLine4, country)) =>
         Address(addressLine1, addressLine2, addressLine3, addressLine4, country, None)
       case None =>

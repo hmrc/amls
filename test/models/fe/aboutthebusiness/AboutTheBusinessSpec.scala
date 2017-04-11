@@ -107,10 +107,10 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
         corporationTaxRegistered = Some(CorporationTaxRegisteredYes("1234567891")),
         contactingYou = ContactingYou("07000111222","BusinessEmail"),
         registeredOffice =  RegisteredOfficeUK("BusinessAddressLine1","BusinessAddressLine2",Some("BusinessAddressLine3"),
-          Some("BusinessAddressLine4"),"Postcode"),
+          Some("BusinessAddressLine4"),"AA1 1AA"),
         correspondenceAddress = Some(UKCorrespondenceAddress("Name","TradingName","AlternativeAddressLine1","AlternativeAddressLine2",
           Some("AlternativeAddressLine3"),
-          Some("AlternativeAddressLine4"),"Postcode"))
+          Some("AlternativeAddressLine4"),"AA1 1AA"))
       )
 
       AboutTheBusiness.conv(DesConstants.SubscriptionViewModel) must be(atb)

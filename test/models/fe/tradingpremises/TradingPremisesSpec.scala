@@ -94,7 +94,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite
       import models.fe.tradingpremises.BusinessActivity._
 
       val agentTradingPremises1 = TradingPremises(Some(RegisteringAgentPremises(true)),
-        YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"), new LocalDate(1967,8,13),true),
+        YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"AA1 1AA"), new LocalDate(1967,8,13),true),
         Some(BusinessStructure.SoleProprietor),Some(AgentName("AgentLegalEntityName", None, Some("1970-01-01"))),None,
        None,
         WhatDoesYourBusinessDo(Set(HighValueDealing, AccountancyServices,
@@ -104,7 +104,7 @@ class TradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite
         Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))),Some(111111),Some("Added"), None)
 
       val agentTradingPremises2 = TradingPremises(Some(RegisteringAgentPremises(true)),
-        YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"aaaaaaaaaa"),
+        YourTradingPremises("aaaaaaaaaaaa",Address("a","a",Some("a"),Some("a"),"AA1 1AA"),
         new LocalDate(1967,8,13),true),
         Some(BusinessStructure.SoleProprietor),Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),None,
         None,

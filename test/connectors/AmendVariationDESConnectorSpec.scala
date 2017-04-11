@@ -204,7 +204,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                "addressLine3":"BusinessAddressLine3",
                "addressLine4":"BusinessAddressLine4",
                "country":"GB",
-               "postcode":"Postcode"
+               "postcode":"AA1 1AA"
             },
             "altCorrespondenceAddress":true,
             "alternativeAddress":{
@@ -216,7 +216,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                   "addressLine3":"AlternativeAddressLine3",
                   "addressLine4":"AlternativeAddressLine4",
                   "country":"GB",
-                  "postcode":"Postcode"
+                  "postcode":"AA1 1AA"
                }
             },
             "businessTelNo":"01921232322",
@@ -364,7 +364,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                            "addressLine3":"AdvisorAddressLine3",
                            "addressLine4":"AdvisorAddressLine4",
                            "country":"GB",
-                           "postcode":"Postcode"
+                           "postcode":"AA1 1AA"
                         }
                      },
                      "agentDealsWithHmrc":true
@@ -472,7 +472,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                            "addressLine3":"a",
                            "addressLine4":"a",
                            "country":"GB",
-                           "postcode":"aaaaaaaaaa"
+                           "postcode":"AA1 1AA"
                         },
                         "residential":true,
                         "msb":{
@@ -516,7 +516,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                            "addressLine3":"a",
                            "addressLine4":"a",
                            "country":"GB",
-                           "postcode":"aaaaaaaaaa"
+                           "postcode":"AA1 1AA"
                         },
                         "residential":true,
                         "msb":{
@@ -823,7 +823,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                      "addressLine3":"CurrentAddressLine3",
                      "addressLine4":"CurrentAddressLine4",
                      "country":"GB",
-                     "postcode":"Postcode"
+                     "postcode":"AA1 1AA"
                   }
                },
                "timeAtCurrentAddress":"3+ years",
@@ -901,7 +901,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                      "addressLine3":"b",
                      "addressLine4":"b",
                      "country":"GB",
-                     "postcode":"bbbbbb"
+                     "postcode":"AA1 1AA"
                   }
                },
                "timeAtCurrentAddress":"0-6 months",
@@ -912,7 +912,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                      "addressLine3":"b",
                      "addressLine4":"b",
                      "country":"GB",
-                     "postcode":"bbbbb"
+                     "postcode":"AA1 1AA"
                   }
                },
                "timeAtAddressUnderThreeYears":"0-6 months",
@@ -923,7 +923,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
                      "addressLine3":"a",
                      "addressLine4":"a",
                      "country":"GB",
-                     "postcode":"bbbbb1"
+                     "postcode":"AA1 1AA"
                   }
                },
                "timeAtAddressUnderOneYear":"7-12 months",

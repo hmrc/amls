@@ -85,7 +85,7 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
 
       val bmModel = BusinessMatching(
         ReviewDetails("CompanyName", SoleProprietor, Address("BusinessAddressLine1", "BusinessAddressLine2", Some("BusinessAddressLine3"),
-          Some("BusinessAddressLine4"), Some("Postcode"), "GB"), ""),
+          Some("BusinessAddressLine4"), Some("AA1 1AA"), "GB"), ""),
         BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
           BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
         Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))),

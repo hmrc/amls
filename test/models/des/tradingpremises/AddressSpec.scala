@@ -49,7 +49,7 @@ class AddressSpec extends PlaySpec {
       Some("addressLine3"),
       Some("addressLine4"),
       "GB",
-      Some("postcode")
+      Some("AA1 1AA")
     )
 
     val feAddress = models.fe.tradingpremises.Address(
@@ -57,7 +57,7 @@ class AddressSpec extends PlaySpec {
       "addressLine2",
       Some("addressLine3"),
       Some("addressLine4"),
-      "postcode"
+      "AA1 1AA"
     )
     Address.convert(feAddress) must be(desAddress)
   }

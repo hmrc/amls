@@ -103,7 +103,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
                     Some("AdvisorAddressLine3"),
                     Some("AdvisorAddressLine4"),
                     "GB",
-                    Some("Postcode"),
+                    Some("AA1 1AA"),
                     None))),
               true,
               None)

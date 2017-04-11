@@ -126,7 +126,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
       PersonAddressUK("CurrentAddressLine1", "CurrentAddressLine2",
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
-        "Postcode"), ThreeYearsPlus)), None, None)
+        "AA1 1AA"), ThreeYearsPlus)), None, None)
     ResponsiblePersonAddressHistory.conv(responsiblePersonsCurrent) must be(Some(convertedModel))
   }
   "current address:convert des model to frontend model for a non-UK address" in {
@@ -143,7 +143,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
       PersonAddressUK("CurrentAddressLine1", "CurrentAddressLine2",
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
-        "Postcode"), SixToElevenMonths)), Some(ResponsiblePersonAddress(
+        "AA1 1AA"), SixToElevenMonths)), Some(ResponsiblePersonAddress(
       PersonAddressUK("AdditionalAddressLine1", "AdditionalAddressLine2",
         Some("AdditionalAddressLine3"), Some("AdditionalAddressLine4"),
         "AdditionalAddressPostcode"), ZeroToFiveMonths)), Some(ResponsiblePersonAddress(
@@ -174,7 +174,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
       Some("CurrentAddressLine3"),
       Some("CurrentAddressLine4"),
       "AD",
-      Some("Postcode")
+      Some("AA1 1AA")
     )
   )
   val currentAddressDetailsNonUK = CurrentAddress(

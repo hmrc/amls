@@ -24,6 +24,8 @@ class AddressSpec extends PlaySpec {
 
   "address" must {
 
+
+
     "convert to uk registered address" in {
 
       val address = Address (
@@ -32,7 +34,7 @@ class AddressSpec extends PlaySpec {
         Some("addressLine3"),
         Some("addressLine4"),
         "GB",
-        Some("postcode"),
+        Some("AA1 1AA"),
         Some("2016-1-1")
       )
 
@@ -41,7 +43,7 @@ class AddressSpec extends PlaySpec {
         "addressLine2",
         Some("addressLine3"),
         Some("addressLine4"),
-        "postcode",
+        "AA1 1AA",
         Some("2016-1-1")
       )
 
@@ -71,6 +73,32 @@ class AddressSpec extends PlaySpec {
       )
 
       Address.convert(registeredOfficeUk) must be(address)
+
+    }
+
+    "convert from uk registered office when postcode is invalid format" in {
+
+      val address = Address (
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
+
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "addressLine1",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "NOT A POSTCODE",
+        Some("2016-1-1")
+      )
+
+      Address.convert(registeredOfficeUk) must be(address)
+
 
     }
 
