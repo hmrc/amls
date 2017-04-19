@@ -39,8 +39,24 @@ object Address {
     }
   }
 
+  private val maxAddressLineLength = 35
+
+  private def removeAmpersands(address: Address): Address = {
+    def removeFromLine(addressLine: Option[String]) = {
+      addressLine map {
+        line => line.replaceAll("&","and").take(maxAddressLineLength)
+      }
+    }
+    address.copy(addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
+      addressLine2 = removeFromLine(Some(address.addressLine2)).getOrElse(""),
+      addressLine3 = removeFromLine(address.addressLine3),
+      addressLine4 = removeFromLine(address.addressLine4)
+    )
+
+  }
+
   implicit def convert(address: models.fe.tradingpremises.Address): Address = {
-    Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB",
-      convertEmptyOrInvalidToNone(address.postcode), address.dateOfChange)
+    removeAmpersands(Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB",
+      convertEmptyOrInvalidToNone(address.postcode), address.dateOfChange))
   }
 }

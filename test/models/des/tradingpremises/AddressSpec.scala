@@ -62,5 +62,26 @@ class AddressSpec extends PlaySpec {
     Address.convert(feAddress) must be(desAddress)
   }
 
+  "convert to fe address to des Address replacing ampersands" in {
+
+    val desAddress = Address (
+      "Hodaway, Hodaway, Hodaway and Hodaw",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("Tyne and Wear"),
+      "GB",
+      Some("AA1 1AA")
+    )
+
+    val feAddress = models.fe.tradingpremises.Address(
+      "Hodaway, Hodaway, Hodaway & Hodaway",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("Tyne & Wear"),
+      "AA1 1AA"
+    )
+    Address.convert(feAddress) must be(desAddress)
+  }
+
 
 }

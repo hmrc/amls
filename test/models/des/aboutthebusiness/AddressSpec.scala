@@ -127,6 +127,31 @@ class AddressSpec extends PlaySpec {
 
     }
 
+    "convert from uk registered address replacing ampersands" in {
+
+      val address = Address (
+        "Hodaway, Hodaway, Hodaway and Hodaw",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("Tyne and Wear"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
+
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "Hodaway, Hodaway, Hodaway & Hodaway",
+        "addressLine2",
+        Some("addressLine3"),
+        Some("Tyne & Wear"),
+        "",
+        Some("2016-1-1")
+      )
+
+      Address.convert(registeredOfficeUk) must be(address)
+
+    }
+
     "convert to non uk registered address" in {
 
       val address = Address (
