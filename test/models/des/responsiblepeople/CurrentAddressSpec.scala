@@ -56,6 +56,31 @@ class CurrentAddressSpec extends PlaySpec {
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
       }
+
+      "convert from uk registered address replacing ampersands" in {
+
+        val address = CurrentAddress(AddressWithChangeDate (
+          "Hodaway, Hodaway, Hodaway and Hodaw",
+          "addressLine2",
+          Some("addressLine3"),
+          Some("Tyne and Wear"),
+          "GB",
+          Some("AB1 2CD"),
+          Some("2016-1-1")
+        ))
+
+        val rpCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressUK(
+          "Hodaway, Hodaway, Hodaway & Hodaway",
+          "addressLine2",
+          Some("addressLine3"),
+          Some("Tyne & Wear"),
+          "AB1 2CD"),OneToThreeYears,
+          Some("2016-1-1")
+        )
+
+        CurrentAddress.convPersonAddress(rpCurrentAddress) must be(Some(address))
+
+      }
     }
 
     "given a non-UK address" must {
