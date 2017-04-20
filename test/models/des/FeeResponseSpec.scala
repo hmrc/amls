@@ -16,7 +16,8 @@
 
 package models.des
 
-import org.joda.time.{DateTimeZone, DateTime, DateTimeUtils}
+import models.des
+import org.joda.time.{DateTime, DateTimeUtils, DateTimeZone}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -38,7 +39,8 @@ class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll 
       "Amend variation response do not hold any fee details" in {
         val response = AmendVariationResponse(
           processingDate = "2016-09-17T09:30:47Z",
-          etmpFormBundleNumber = "111111"
+          etmpFormBundleNumber = "111111",
+          None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
         )
 
         FeeResponse.convert2(response, "test") must be (FeeResponse(AmendOrVariationResponseType,"test",0,None,
@@ -47,11 +49,20 @@ class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll 
     }
 
     "return successful fee response for the valid variation response" in {
-      val response = AmendVariationResponse(
+      val response = des.AmendVariationResponse(
         processingDate = "2016-09-17T09:30:47Z",
         etmpFormBundleNumber = "111111",
         Some(1301737.96d),
+        Some(1),
+        Some(115.0d),
         Some(231.42d),
+        Some(0),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
         Some(870458d),
         Some(2172427.38),
         Some("string"),

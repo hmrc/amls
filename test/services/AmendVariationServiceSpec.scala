@@ -54,11 +54,20 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     processingDate = "2016-09-17T09:30:47Z",
     etmpFormBundleNumber = "111111",
     Some(1301737.96d),
+    Some(1),
+    Some(115.0d),
     Some(231.42d),
+    Some(0),
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
     Some(870458d),
     Some(2172427.38),
     Some("string"),
-    Some(12345.65d)
+    Some(3456.12)
   )
 
   val unchangedExtra: RPExtra = RPExtra(status = Some("Unchanged"))
@@ -122,382 +131,8 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
         result =>
-          result mustEqual response
+          result mustEqual models.fe.AmendVariationResponse.convert(response)
       }
-    }
-
-    "return a successful response with added RPs" in {
-
-      val request = mock[des.AmendVariationRequest]
-      val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(extra = addedExtra))))
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedResponsiblePeopleFitAndProper = Some(1))
-      }
-
-    }
-
-    "return a successful response with 1 responsible person fit and proper" in {
-
-      val request = mock[des.AmendVariationRequest]
-      val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(true)), extra = addedExtra))))
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-
-      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedResponsiblePeopleFitAndProper = Some(1))
-      }
-    }
-
-    "return a successful response with 1 responsible person with Msb or Tscp" in {
-
-      val request = mock[des.AmendVariationRequest]
-      val responseWithFullYearRPsAndTPs = response.copy(addedResponsiblePeople = Some(1))
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons.copy(msbOrTcsp = Some(MsbOrTcsp(false)), extra = addedExtra))))
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-
-      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedResponsiblePeople = Some(1))
-      }
-    }
-
-    "return a successful response with added TPs" in {
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
-
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2016-05-10")
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedFullYearTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with added TPs last full year day" in {
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2016-10-31")
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedFullYearTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with added agent TPs" in {
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      val agentPremises = mock[AgentPremises]
-      when(agentPremises.startDate).thenReturn(Some("2016-02-02"))
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None,
-        agentPremises, None, None, None, Some("Added"), None))))))
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
-        result =>
-          result mustEqual response.copy(addedFullYearTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with 1 added half-year TP" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2016-08-10")
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual response.copy(halfYearlyTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with 1 added half-year TP on first eligible day" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2017, 4, 30))))
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2016-11-01")
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual response.copy(halfYearlyTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with 1 added half-year TP on last eligible day" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2017, 4, 30))))
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2017-03-31")
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithFullYearRPsAndTPs = response.copy(addedFullYearTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual response.copy(halfYearlyTradingPremises = Some(1))
-      }
-
-    }
-
-    "return a successful response with 1 added half-year agent TP" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val agentPremises = mock[AgentPremises]
-
-      when(agentPremises.startDate).thenReturn(Some("2016-08-10"))
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None,
-        Some(""), agentPremises, None, None, None, Some("Added"), None))))))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual response.copy(halfYearlyTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with 1 added half-year agent TP for r7 model" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val agentPremises = mock[AgentPremises]
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None,
-        Some(""), agentPremises, Some("2016-10-01"), None, None, Some("Added"), None))))))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual response.copy(halfYearlyTradingPremises = Some(1))
-      }
-
-
-    }
-
-    "return a successful response with 1 added zero rated TP" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2016-11-01")
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithZeroRatedTPs = response.copy(zeroRatedTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual responseWithZeroRatedTPs
-      }
-
-
-    }
-
-    "return a successful response with 1 added zero rated TP on first eligble day" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2017, 4, 30))))
-
-      val ownBusinessPremisesDetails: OwnBusinessPremisesDetails = mock[OwnBusinessPremisesDetails]
-      when(ownBusinessPremisesDetails.startDate).thenReturn("2017-04-01")
-      when {
-        ownBusinessPremisesDetails.status
-      } thenReturn Some("Added")
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(ownBusinessPremisesDetails)))), premises)
-      val responseWithZeroRatedTPs = response.copy(zeroRatedTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual responseWithZeroRatedTPs
-      }
-
-
     }
 
     "return a successful response with 1 added zero rated agent TP" in {
@@ -508,42 +143,10 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       val agentPremises = mock[AgentPremises]
 
-      when(agentPremises.startDate).thenReturn(Some("2016-11-01"))
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None,
-        agentPremises, None, None, None, Some("Added"), None))))))
-
-      val responseWithZeroRatedTPs = response.copy(zeroRatedTradingPremises = Some(1))
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual responseWithZeroRatedTPs
-      }
-
-    }
-
-    "return a successful response with 1 added zero rated agent TP for r7 model" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val agentPremises = mock[AgentPremises]
-
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None,
         agentPremises, Some("2016-11-01"), None, None, Some("Added"), None))))))
 
-      val responseWithZeroRatedTPs = response.copy(zeroRatedTradingPremises = Some(1))
+      val responseWithZeroRatedTPs = models.fe.AmendVariationResponse.convert(response).copy(zeroRatedTradingPremises = 1,addedFullYearTradingPremises = 2)
 
       val request = mock[des.AmendVariationRequest]
 
@@ -553,7 +156,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
       when {
         TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
-      } thenReturn Future.successful(response)
+      } thenReturn Future.successful(response.copy(premiseFYNumber = Some(2)))
 
       whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
         result =>

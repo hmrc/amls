@@ -106,7 +106,16 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
           processingDate = "2016-09-17T09:30:47Z",
           etmpFormBundleNumber = "111111",
           Some(1301737.96d),
+          Some(1),
+          Some(115.0d),
           Some(231.42d),
+          Some(0),
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
           Some(870458d),
           Some(2172427.38),
           Some("string"),
@@ -120,12 +129,12 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         when {
           Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
-        } thenReturn Future.successful(response)
+        } thenReturn Future.successful(fe.AmendVariationResponse.convert(response))
 
         val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(postRequest)
 
         status(result) must be(OK)
-        contentAsJson(result) must be(Json.toJson(response))
+        contentAsJson(result) must be(Json.toJson(fe.AmendVariationResponse.convert(response)))
       }
 
       "return an invalid response when the service fails" in new Fixture {
@@ -181,16 +190,25 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
       "call through to the service with an Amendment messageType" in new Fixture {
         when(Controller.service.update(any(), any())(any(), any()))
-          .thenReturn(Future.successful(des.AmendVariationResponse(
+          .thenReturn(Future.successful(fe.AmendVariationResponse.convert(des.AmendVariationResponse(
             processingDate = "2016-09-17T09:30:47Z",
             etmpFormBundleNumber = "111111",
             Some(1301737.96d),
+            Some(0),
+            Some(115.0d),
             Some(231.42d),
+            Some(0),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             Some(870458d),
             Some(2172427.38),
             Some("string"),
             Some(3456.12)
-          )))
+          ))))
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
@@ -223,7 +241,16 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
             processingDate = "2016-09-17T09:30:47Z",
             etmpFormBundleNumber = "111111",
             Some(1301737.96d),
+            Some(0),
+            Some(115.0d),
             Some(231.42d),
+            Some(0),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             Some(870458d),
             Some(2172427.38),
             Some("string"),
@@ -237,12 +264,12 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
           when {
             Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
-          } thenReturn Future.successful(response)
+          } thenReturn Future.successful(fe.AmendVariationResponse.convert(response))
 
           val result = Controller.variation("test", "orgRef", amlsRegistrationNumber)(postRequest)
 
           status(result) must be(OK)
-          contentAsJson(result) must be(Json.toJson(response))
+          contentAsJson(result) must be(Json.toJson(fe.AmendVariationResponse.convert(response)))
         }
 
         "return an invalid response when the service fails" in new Fixture {
@@ -298,16 +325,25 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         "call through to the service with an Variation messageType" in new Fixture {
           when(Controller.service.update(any(), any())(any(), any()))
-            .thenReturn(Future.successful(des.AmendVariationResponse(
+            .thenReturn(Future.successful(fe.AmendVariationResponse.convert(des.AmendVariationResponse(
               processingDate = "2016-09-17T09:30:47Z",
               etmpFormBundleNumber = "111111",
               Some(1301737.96d),
+              Some(1),
+              Some(115.0d),
               Some(231.42d),
+              Some(0),
+              None,
+              None,
+              None,
+              None,
+              None,
+              None,
               Some(870458d),
               Some(2172427.38),
               Some("string"),
               Some(3456.12)
-            )))
+            ))))
 
           val mockRequest = mock[AmendVariationRequest]
           val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
@@ -325,16 +361,25 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
       "call through to the service with an Renewal messageType" in new Fixture {
         when(Controller.service.update(any(), any())(any(), any()))
-          .thenReturn(Future.successful(des.AmendVariationResponse(
+          .thenReturn(Future.successful(fe.AmendVariationResponse.convert(des.AmendVariationResponse(
             processingDate = "2016-09-17T09:30:47Z",
             etmpFormBundleNumber = "111111",
             Some(1301737.96d),
+            Some(1),
+            Some(115.0d),
             Some(231.42d),
+            Some(0),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             Some(870458d),
             Some(2172427.38),
             Some("string"),
             Some(3456.12)
-          )))
+          ))))
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])

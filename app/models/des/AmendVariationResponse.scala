@@ -21,22 +21,21 @@ import play.api.libs.json.Json
 case class AmendVariationResponse(
                                    processingDate: String,
                                    etmpFormBundleNumber: String,
-                                   registrationFee: BigDecimal,
+                                   registrationFee: Option[BigDecimal],
+                                   fpNumbers: Option[Int],
+                                   fpFeeRate: Option[BigDecimal],
                                    fpFee: Option[BigDecimal],
-                                   fPFee: Option[BigDecimal],
-                                   premiseFee: BigDecimal,
-                                   totalFees: BigDecimal,
+                                   fpNumbersNotCharged: Option[Int],
+                                   premiseFYNumber: Option[Int],
+                                   premiseFYFeeRate: Option[BigDecimal],
+                                   premiseFYTotal: Option[BigDecimal],
+                                   premiseHYNumber: Option[Int],
+                                   premiseHYFeeRate: Option[BigDecimal],
+                                   premiseHYTotal: Option[BigDecimal],
+                                   premiseFee: Option[BigDecimal],
+                                   totalFees: Option[BigDecimal],
                                    paymentReference: Option[String],
-                                   difference: Option[BigDecimal],
-                                   fpNumbers: Option[Int] = None,
-                                   fpFeeRate: Option[BigDecimal] = None,
-                                   fpNumbersNotCharged: Option[Int] = None,
-                                   premiseFYNumber: Option[Int] = None,
-                                   premiseFYFeeRate: Option[BigDecimal] = None,
-                                   premiseFYTotal: Option[BigDecimal] = None,
-                                   premiseHYNumber: Option[Int] = None,
-                                   premiseHYFeeRate: Option[BigDecimal] = None,
-                                   premiseHYTotal: Option[BigDecimal] = None
+                                   difference: Option[BigDecimal]
                                  )
 
 object AmendVariationResponse {
