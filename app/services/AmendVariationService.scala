@@ -21,9 +21,8 @@ import java.io.InputStream
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.AmlsConfig
 import connectors._
-import models.des._
-import models.des.responsiblepeople.ResponsiblePersons
-import org.joda.time.{LocalDate, Months}
+import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
+import models.fe.AmendVariationResponse
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeeResponseRepository
@@ -52,7 +51,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
 
-  def t(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String)(implicit f: (AmendVariationResponse, String) => FeeResponse) =
+  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => FeeResponse) =
     f(amendVariationResponse, amlsReferenceNumber)
 
   private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
@@ -116,7 +115,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
       inserted <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
       regStatus <- viewStatusDesConnector.status(amlsRegistrationNumber)
-    } yield decorateWithTotals(request, response, regStatus.currentRegYearEndDate)
+    } yield addZeroRatedTPs(request, response)
   }
 
   private def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
@@ -136,134 +135,23 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
   }
 
-  private def monthOfRegistration(startDate: LocalDate, currentRegYearEndDate: Option[LocalDate]): Int = {
-    currentRegYearEndDate match {
-      case Some(endDate) => 12 - Months.monthsBetween(startDate, endDate).getMonths
-      case _ => 0
-    }
-  }
+  private def addZeroRatedTPs(request: AmendVariationRequest, response: DesAmendVariationResponse): AmendVariationResponse = {
 
-  private def decorateWithTotals(request: AmendVariationRequest, response: AmendVariationResponse,
-                                 currentRegYearEndDate: Option[LocalDate]): AmendVariationResponse = {
-
-    def startDateMatcher(startDate: String, monthPredicate: (Int) => Boolean): Boolean = {
-      startDate match {
-        case "" => false
-        case _ => monthPredicate(monthOfRegistration(LocalDate.parse(startDate), currentRegYearEndDate))
+    val zeroRated = {
+      val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
+        case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
+        case None => 0
       }
-    }
-
-    val responsiblePeopleSplit: Option[(Seq[ResponsiblePersons], Seq[ResponsiblePersons])] =
-      request.responsiblePersons.map(_.partition(_.msbOrTcsp.fold(true)(x => x.passedFitAndProperTest)))
-
-    val addedResponsiblePeopleCount = detailsMatch(request.responsiblePersons)
-
-    val responsiblePeopleSplitCount = responsiblePeopleSplit match {
-      case Some(partition) => partition match {
-        case (fp, rp) => (detailsMatch(Some(fp)), detailsMatch(Some(rp)))
-        case _ => (0, 0)
+      val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
+        case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
+        case None => 0
       }
-      case _ => (0, 0)
+
+      response.premiseHYNumber.getOrElse(0) + response.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
     }
 
-    val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
-      case None => 0
-    }
-    val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
-      case None => 0
-    }
+    AmendVariationResponse.convert(response).copy(zeroRatedTradingPremises = zeroRated)
 
-    val addedOwnBusinessHalfYearlyTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails map {
-        obpd =>
-          obpd.filter {
-            x => startDateMatcher(x.startDate, x => (7 to 11) contains x)
-          }
-      })
-      case None => 0
-    }
-
-    val addedAgentHalfYearlyTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
-        ad =>
-          ad.filter {
-            x => startDateMatcher(x.startDate.getOrElse(x.agentPremises.startDate.getOrElse("")), x => (7 to 11) contains x)
-          }
-      })
-      case None => 0
-    }
-
-    val addedOwnBusinessZeroRatedTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
-      case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails map {
-        obpd =>
-          obpd.filter {
-            x => startDateMatcher(x.startDate, x => x == 12)
-          }
-      })
-      case None => 0
-    }
-
-    val addedAgentZeroRatedTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
-      case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails map {
-        ad =>
-          ad.filter {
-            x => startDateMatcher(x.startDate.getOrElse(x.agentPremises.startDate.getOrElse("")), x => x == 12)
-          }
-      })
-      case None => 0
-    }
-
-    decoratedResponse(
-      response,
-      responsiblePeopleSplitCount._2,
-      responsiblePeopleSplitCount._1,
-      addedOwnBusinessTradingPremisesCount,
-      addedAgentTradingPremisesCount,
-      addedOwnBusinessHalfYearlyTradingPremisesCount,
-      addedAgentHalfYearlyTradingPremisesCount,
-      addedOwnBusinessZeroRatedTradingPremisesCount,
-      addedAgentZeroRatedTradingPremisesCount
-    )
-  }
-
-  private def decoratedResponse(response: AmendVariationResponse,
-                                addedResponsiblePeopleCount: Int,
-                                addedResponsiblePeopleFitAndProperCount: Int,
-                                addedOwnBusinessTradingPremisesCount: Int,
-                                addedAgentTradingPremisesCount: Int,
-                                addedOwnBusinessHalfYearlyTradingPremisesCount: Int,
-                                addedAgentHalfYearlyTradingPremisesCount: Int,
-                                addedOwnBusinessZeroRatedTradingPremisesCount: Int,
-                                addedAgentZeroRatedTradingPremisesCount: Int): AmendVariationResponse = {
-
-    val registrationFees = response.registrationFee.getOrElse(BigDecimal(0))
-    val premisesFees = response.premiseFee.getOrElse(BigDecimal(0))
-    val totalFees = response.totalFees.getOrElse(BigDecimal(0))
-
-    response.copy(
-      registrationFee = Some(registrationFees),
-      premiseFee = Some(premisesFees),
-      totalFees = Some(totalFees),
-      addedResponsiblePeople = Some(addedResponsiblePeopleCount),
-      addedResponsiblePeopleFitAndProper = Some(addedResponsiblePeopleFitAndProperCount),
-      addedFullYearTradingPremises = Some(
-        addedOwnBusinessTradingPremisesCount
-          + addedAgentTradingPremisesCount
-          - addedOwnBusinessHalfYearlyTradingPremisesCount
-          - addedAgentHalfYearlyTradingPremisesCount
-          - addedOwnBusinessZeroRatedTradingPremisesCount
-          - addedAgentZeroRatedTradingPremisesCount
-      ),
-      halfYearlyTradingPremises = Some(
-        addedOwnBusinessHalfYearlyTradingPremisesCount
-          + addedAgentHalfYearlyTradingPremisesCount
-      ),
-      zeroRatedTradingPremises = Some(
-        addedOwnBusinessZeroRatedTradingPremisesCount
-          + addedAgentZeroRatedTradingPremisesCount
-      ))
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
