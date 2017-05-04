@@ -16,11 +16,13 @@
 
 package models.des.bankaccountdetails
 
-import models.des.bankdetails.{AccountNumber, BankDetails, BankAccount, ukAccount}
+import models.des.bankdetails.{AccountNumber, BankAccount, BankDetails, ukAccount}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
+import models.fe.bankdetails.{PersonalAccount, UKAccount, BankAccount => FEBankAccount, BankDetails => FEBankDetails}
+import org.scalatest.mock.MockitoSugar
 
-class BankDetailsSpec extends PlaySpec {
+class BankDetailsSpec extends PlaySpec with MockitoSugar {
   "BankAccountDetails" must {
     val bankDetailsModel = BankDetails("1",
       Some(Seq(BankAccount("Personal", "Personal", true, ukAccount(sortCode = "112233", accountNumber = "12345678")))))
@@ -51,7 +53,16 @@ class BankDetailsSpec extends PlaySpec {
 
     "convert frontend to des successfully" in {
       BankDetails.convert(Seq.empty) must be(BankDetails("0",None))
+    }
 
+    "convert frontend to dev successfully with a list of bank accounts" in {
+
+      val bankDetails = Seq(
+        FEBankDetails(PersonalAccount, FEBankAccount("Test account 1", mock[UKAccount])),
+        FEBankDetails(PersonalAccount, FEBankAccount("Test account 2", mock[UKAccount]))
+      )
+
+      BankDetails.convert(bankDetails).noOfMlrBankAccounts mustBe "2"
     }
 
   }
