@@ -29,6 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,6 +47,8 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec with MockitoSugar wit
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+      override private[connectors] def auditConnector = mock[AuditConnector]
+
     }
     val mockTimer = mock[Timer.Context]
     when {

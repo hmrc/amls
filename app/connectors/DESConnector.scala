@@ -19,6 +19,7 @@ package connectors
 import config.{AmlsConfig, MicroserviceAuditConnector, WSHttp}
 import metrics.Metrics
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.http.logging.Authorization
@@ -28,12 +29,21 @@ import utils.HttpResponseHelper
 trait DESConnector extends HttpResponseHelper {
 
   private[connectors] def baseUrl: String
+
   private[connectors] def env: String
+
   private[connectors] def token: String
+
   private[connectors] def httpPost: HttpPost
+
   private[connectors] def httpGet: HttpGet
+
   private[connectors] def metrics: Metrics
+
   private[connectors] def audit: Audit
+
+  private[connectors] def auditConnector: AuditConnector
+
   private[connectors] def fullUrl: String
 
 
@@ -55,7 +65,7 @@ object DESConnector extends SubscribeDESConnector
   with ViewDESConnector
   with AmendVariationDESConnector
   with WithdrawSubscriptionConnector
-  with DeregisterSubscriptionConnector{
+  with DeregisterSubscriptionConnector {
 
   // $COVERAGE-OFF$
   override private[connectors] lazy val baseUrl: String = AmlsConfig.desUrl
@@ -67,4 +77,5 @@ object DESConnector extends SubscribeDESConnector
   override private[connectors] val metrics: Metrics = Metrics
   override private[connectors] val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
   override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+  override private[connectors] val auditConnector: AuditConnector = MicroserviceAuditConnector
 }
