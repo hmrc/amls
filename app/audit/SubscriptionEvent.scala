@@ -31,17 +31,17 @@ object SubscriptionEvent {
    reqW: Writes[SubscriptionRequest],
    resW: Writes[SubscriptionResponse]
   ): ExtendedDataEvent = {
-    val detail = Json.toJson(request).as[JsObject] ++ Json.toJson(hc.toAuditDetails()).as[JsObject] ++
-      JsObject(Map("amlsRegistrationNumber" -> JsString(response.amlsRefNo))) ++
-      JsObject(Map("paymentReference" -> JsString(response.paymentReference))) ++
-      JsObject(Map("safeId" -> JsString(safeId))) ++
-      Json.toJson(response).as[JsObject]
-    println(Json.prettyPrint(detail))
+    val detail =
     ExtendedDataEvent(
       auditSource = AppName.appName,
       auditType = "applicationSubmitted",
       tags = hc.toAuditTags("Subscription", "N/A"),
-      detail = detail
+      detail = Json.toJson(request).as[JsObject]
+        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+        ++ JsObject(Map("amlsRegistrationNumber" -> JsString(response.amlsRefNo)))
+        ++ JsObject(Map("paymentReference" -> JsString(response.paymentReference)))
+        ++ JsObject(Map("safeId" -> JsString(safeId)))
+        ++ Json.toJson(response).as[JsObject]
     )
   }
 }
