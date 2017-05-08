@@ -122,6 +122,7 @@ class BankAccountViewSpec extends PlaySpec {
     "successfully compare view model with amend model for BankDetails" in {
 
       val viewBankDetails = BankDetailsView(
+        "3",
         Some(List(
           BankAccountView("AccountName", "This business's", true, ukAccountView("123456", "12345678")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
@@ -135,12 +136,14 @@ class BankAccountViewSpec extends PlaySpec {
     "successfully compare view model with amend model for BankDetails1" in {
 
       val viewBankDetails = BankDetailsView(
+        "3",
         Some(List(
           BankAccountView("AccountName", "This business's", false, AccountNumberView("123456")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
           BankAccountView("AccountName2", "Another business's", false, AccountNumberView("87654321"))))
       )
       val amendBankDetails = BankDetailsView(
+        "3",
         Some(List(
           BankAccountView("AccountName", "This business's", true, ukAccountView("123456", "12345678")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
@@ -153,6 +156,7 @@ class BankAccountViewSpec extends PlaySpec {
     "successfully compare view model with amend model for BankDetails2" in {
 
       val viewBankDetails = BankDetailsView(
+        "4",
         Some(List(
           BankAccountView("AccountName", "This business's", false, AccountNumberView("123456")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
@@ -161,6 +165,7 @@ class BankAccountViewSpec extends PlaySpec {
         ))
       )
       val amendBankDetails = BankDetailsView(
+        "3",
         Some(List(
           BankAccountView("AccountName", "This business's", true, ukAccountView("123456", "12345678")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
@@ -174,9 +179,11 @@ class BankAccountViewSpec extends PlaySpec {
     "successfully compare view model with amend model for BankDetails3" in {
 
       val viewBankDetails = BankDetailsView(
+        "0",
         None
       )
       val amendBankDetails = BankDetailsView(
+        "3",
         Some(List(
           BankAccountView("AccountName", "This business's", true, ukAccountView("123456", "12345678")),
           BankAccountView("AccountName1", "Personal", false, IBANNumberView("87654321")),
