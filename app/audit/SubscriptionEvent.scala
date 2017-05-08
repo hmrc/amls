@@ -31,7 +31,6 @@ object SubscriptionEvent {
    reqW: Writes[SubscriptionRequest],
    resW: Writes[SubscriptionResponse]
   ): ExtendedDataEvent = {
-    val detail =
     ExtendedDataEvent(
       auditSource = AppName.appName,
       auditType = "applicationSubmitted",
