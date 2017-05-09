@@ -54,7 +54,7 @@ trait AmendVariationDESConnector extends DESConnector{
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
-        audit.sendDataEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
+        auditConnector.sendEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

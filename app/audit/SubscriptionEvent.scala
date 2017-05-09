@@ -49,25 +49,31 @@ object AmendmentEvent {
   def apply
   (amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
   (implicit
-   hc: HeaderCarrier,
-   reqW: Writes[SubscriptionRequest],
-   resW: Writes[SubscriptionResponse]
-  ): DataEvent =
-    DataEvent(
-      auditSource = AppName.appName,
-      auditType = "OutboundCall",
-      tags = hc.toAuditTags("Amendment", "N/A"),
-      detail = hc.toAuditDetails() ++ Map(
-        "amlsRegistrationNumber" -> amlsRegistrationNumber,
-        "request" -> Json.toJson(request).toString,
-        "response" -> Json.toJson(response).toString)
-        ++ {
-        response.paymentReference match {
-          case Some(paymentReference) => Map("paymentReference" -> paymentReference)
-          case _ => Map.empty
-        }
-      }
+   hc: HeaderCarrier
+  ): ExtendedDataEvent = {
+
+    val inputAuditType = request.amlsMessageType match {
+      case "Amendment" => "amendmentSubmitted"
+      case "Variation" => "variationSubmitted"
+      case _ => throw new Exception("Amls Message type is missing")
+    }
+
+    val auditModel = AmendVariationAuditModel(amlsRegistrationNumber,
+      response.paymentReference.getOrElse(""),
+      request.acknowledgementReference,
+      request.businessDetails.typeOfLegalEntity,
+      request.changeIndicators
     )
+    val requiredInfo = Json.toJson(auditModel)
+
+    ExtendedDataEvent(
+      auditSource = AppName.appName,
+      auditType = inputAuditType,
+      tags = hc.toAuditTags("Amendment", "N/A"),
+      detail = requiredInfo.as[JsObject]
+        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+    )
+  }
 }
 
 
