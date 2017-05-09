@@ -23,7 +23,7 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPut, HttpResponse, HeaderNames => _}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPut, HttpReads, HttpResponse, HeaderNames => _}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,7 +46,7 @@ trait AmendVariationDESConnector extends DESConnector {
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpPut.PUT[des.AmendVariationRequest, HttpResponse](url, data) map {
+    httpPut.PUT[des.AmendVariationRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
@@ -55,7 +55,7 @@ trait AmendVariationDESConnector extends DESConnector {
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
-        audit.sendDataEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
+        auditConnector.sendEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
