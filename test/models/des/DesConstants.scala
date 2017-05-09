@@ -1072,7 +1072,7 @@ object DesConstants {
   ))
 
   val testBankDetails = Some(BankDetailsView(
-    "3",
+    Some("3"),
     Some(List(
       BankAccountView(
         "AccountName",
@@ -1096,7 +1096,7 @@ object DesConstants {
   ))
 
   val testAmendBankDetails = Some(BankDetailsView(
-    "1",
+    Some("1"),
     Some(List(
       BankAccountView(
         "AccountName",

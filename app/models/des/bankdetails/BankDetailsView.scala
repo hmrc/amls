@@ -16,9 +16,9 @@
 
 package models.des.bankdetails
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.Json
 
-case class BankDetailsView(noOfMlrBankAccounts: String, bankAccounts: Option[Seq[BankAccountView]])
+case class BankDetailsView(noOfMlrBankAccounts: Option[String], bankAccounts: Option[Seq[BankAccountView]])
 
 object BankDetailsView {
 
@@ -31,7 +31,13 @@ object BankDetailsView {
     }
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Option[BankDetailsView] = {
-    val count = bankdetails.size.toString
-    Some(BankDetailsView(count, emptyToOption(bankdetails)))
+    val details = emptyToOption(bankdetails)
+
+    val count = details match {
+      case Some(d) => Some(d.size.toString)
+      case _ => None
+    }
+
+    Some(BankDetailsView(count, details))
   }
 }
