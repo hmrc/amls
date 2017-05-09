@@ -49,7 +49,9 @@ object AmendmentEvent {
   def apply
   (amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
   (implicit
-   hc: HeaderCarrier
+   hc: HeaderCarrier,
+   reqW: Writes[AmendVariationRequest],
+   resW: Writes[AmendVariationResponse]
   ): ExtendedDataEvent = {
 
     val inputAuditType = request.amlsMessageType match {
