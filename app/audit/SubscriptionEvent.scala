@@ -17,8 +17,8 @@
 package audit
 
 import models.des._
-import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.play.audit.model.DataEvent
+import play.api.libs.json.{JsObject, JsString, Json, Writes}
+import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -30,19 +30,19 @@ object SubscriptionEvent {
    hc: HeaderCarrier,
    reqW: Writes[SubscriptionRequest],
    resW: Writes[SubscriptionResponse]
-  ): DataEvent =
-    DataEvent(
+  ): ExtendedDataEvent = {
+    ExtendedDataEvent(
       auditSource = AppName.appName,
-      auditType = "OutboundCall",
+      auditType = "applicationSubmitted",
       tags = hc.toAuditTags("Subscription", "N/A"),
-      detail = hc.toAuditDetails() ++ Map(
-        "safeId" -> safeId,
-        "request" -> Json.toJson(request).toString,
-        "response" -> Json.toJson(response).toString,
-        "paymentReference" -> response.paymentReference,
-        "amlsRegistrationNumber" -> response.amlsRefNo
-      )
+      detail = Json.toJson(request).as[JsObject]
+        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+        ++ JsObject(Map("amlsRegistrationNumber" -> JsString(response.amlsRefNo)))
+        ++ JsObject(Map("paymentReference" -> JsString(response.paymentReference)))
+        ++ JsObject(Map("safeId" -> JsString(safeId)))
+        ++ Json.toJson(response).as[JsObject]
     )
+  }
 }
 
 object AmendmentEvent {

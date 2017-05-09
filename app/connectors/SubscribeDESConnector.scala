@@ -54,7 +54,7 @@ trait SubscribeDESConnector extends DESConnector{
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
-        audit.sendDataEvent(SubscriptionEvent(safeId, data, body))
+        auditConnector.sendEvent(SubscriptionEvent(safeId, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
