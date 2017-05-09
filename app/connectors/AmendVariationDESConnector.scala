@@ -23,11 +23,11 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderNames => _, HttpPut, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPut, HttpResponse, HeaderNames => _}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationDESConnector extends DESConnector{
+trait AmendVariationDESConnector extends DESConnector {
 
   private[connectors] def httpPut: HttpPut
 
@@ -36,7 +36,8 @@ trait AmendVariationDESConnector extends DESConnector{
   (implicit
    ec: ExecutionContext,
    wr1: Writes[des.AmendVariationRequest],
-   wr2: Writes[des.AmendVariationResponse]
+   wr2: Writes[des.AmendVariationResponse],
+   hc: HeaderCarrier
   ): Future[des.AmendVariationResponse] = {
     val prefix = "[DESConnector][amend]"
     val bodyParser = JsonParsed[des.AmendVariationResponse]
@@ -52,14 +53,14 @@ trait AmendVariationDESConnector extends DESConnector{
         Logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
+      case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
         auditConnector.sendEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r@status(s) =>
         metrics.failed(API6)
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

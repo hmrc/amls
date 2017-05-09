@@ -106,7 +106,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     when{successValidate.isSuccess} thenReturn true
 
     when {
-      TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any())
+      TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
     } thenReturn Future.successful(statusResponse)
 
     val premises: Option[AgentBusinessPremises] = Some(mock[AgentBusinessPremises])
@@ -123,8 +123,8 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
       when(request.tradingPremises).thenReturn(tradingPremises)
 
       when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any())
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
@@ -138,7 +138,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     "return a successful response with 1 added zero rated agent TP" in {
 
       when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any())
+        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any(), any())
       } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
 
       val agentPremises = mock[AgentPremises]
@@ -155,7 +155,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
 
       when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any())
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any(), any())
       } thenReturn Future.successful(response.copy(premiseFYNumber = Some(2)))
 
       whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
@@ -174,7 +174,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any())
+        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.successful(viewModel)
 
       val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(

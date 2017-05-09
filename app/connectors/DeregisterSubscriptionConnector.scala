@@ -24,15 +24,16 @@ import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.HttpResponse
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                    wr1: Writes[DeregisterSubscriptionRequest],
-                                                                                    wr2: Writes[DeregisterSubscriptionResponse]
+                                                                                          wr1: Writes[DeregisterSubscriptionRequest],
+                                                                                          wr2: Writes[DeregisterSubscriptionResponse],
+                                                                                          hc: HeaderCarrier
   ): Future[DeregisterSubscriptionResponse] = {
     val prefix = "[DESConnector][deregistration]"
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]

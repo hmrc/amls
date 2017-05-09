@@ -65,7 +65,7 @@ class SubscriptionStatusControllerSpec
       val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
 
       when {
-        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
+        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       val result = SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request)
@@ -76,7 +76,7 @@ class SubscriptionStatusControllerSpec
 
     "return an invalid response when the service fails" in {
       when {
-        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any())
+        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady (SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request).failed) {

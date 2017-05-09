@@ -57,7 +57,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
   "WithdrawSubscriptionController" must {
 
     "successfully return success response on valid request" in new Fixture {
-      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any()))
+      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(success))
 
       private val result = withdrawSubscriptionController.withdrawal(amlsRegistrationNumber)(postRequest)
@@ -83,7 +83,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
 
 
     "return failed response on exception" in new Fixture {
-      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any()))
+      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message"))))
 
       whenReady(withdrawSubscriptionController.withdrawal(amlsRegistrationNumber)(postRequest).failed) {

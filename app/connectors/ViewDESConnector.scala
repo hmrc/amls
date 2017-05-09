@@ -22,8 +22,8 @@ import metrics.API5
 import models.des.SubscriptionView
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsSuccess, JsError,  Json}
-import uk.gov.hmrc.play.http.{HttpGet, HttpResponse}
+import play.api.libs.json.{JsError, JsSuccess, Json}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +34,7 @@ trait ViewDESConnector extends DESConnector {
 
 
   def view(amlsRegistrationNumber: String)
-          (implicit ec: ExecutionContext): Future[SubscriptionView] = {
+          (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]
     val timer = metrics.timer(API5)
