@@ -24,15 +24,16 @@ import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse}
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.HttpResponse
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait WithdrawSubscriptionConnector extends DESConnector {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                  wr1: Writes[WithdrawSubscriptionRequest],
-                                                                                  wr2: Writes[WithdrawSubscriptionResponse]
+                                                                                    wr1: Writes[WithdrawSubscriptionRequest],
+                                                                                    wr2: Writes[WithdrawSubscriptionResponse],
+                                                                                    hc: HeaderCarrier
   ): Future[WithdrawSubscriptionResponse] = {
     val prefix = "[DESConnector][withdrawal]"
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]

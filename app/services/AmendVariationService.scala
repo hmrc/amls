@@ -70,7 +70,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String): Future[AmendVariationRequest] = {
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(implicit hc: HeaderCarrier): Future[AmendVariationRequest] = {
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
 
       val updatedRequest = updateRequest(desRequest, viewResponse)

@@ -30,7 +30,7 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -54,6 +54,8 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with 
     when {
       withdrawSubscriptionConnector.metrics.timer(eqTo(API8))
     } thenReturn mockTimer
+
+    implicit val hc = HeaderCarrier()
 
     val amlsRegistrationNumber = "1121212UUUI"
     val url = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"

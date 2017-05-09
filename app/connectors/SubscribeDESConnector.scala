@@ -23,11 +23,11 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HttpPost, HttpResponse, HeaderNames => _}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpReads, HttpResponse, HeaderNames => _}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SubscribeDESConnector extends DESConnector{
+trait SubscribeDESConnector extends DESConnector {
 
   private[connectors] def httpPost: HttpPost
 
@@ -36,7 +36,8 @@ trait SubscribeDESConnector extends DESConnector{
   (implicit
    ec: ExecutionContext,
    wr1: Writes[des.SubscriptionRequest],
-   wr2: Writes[des.SubscriptionResponse]
+   wr2: Writes[des.SubscriptionResponse],
+   hc: HeaderCarrier
   ): Future[des.SubscriptionResponse] = {
     val prefix = "[DESConnector][subscribe]"
     val bodyParser = JsonParsed[des.SubscriptionResponse]
@@ -45,21 +46,21 @@ trait SubscribeDESConnector extends DESConnector{
 
     val url = s"$fullUrl/$safeId"
 
-    httpPost.POST[des.SubscriptionRequest, HttpResponse](url, data) map {
+    httpPost.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
         Logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
+      case r@status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
         auditConnector.sendEvent(SubscriptionEvent(safeId, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r@status(s) =>
         metrics.failed(API4)
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
