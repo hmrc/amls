@@ -78,7 +78,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
       when{successValidate.isSuccess} thenReturn true
 
       when {
-        SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any())
+        SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {

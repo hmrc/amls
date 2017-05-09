@@ -24,7 +24,7 @@ import models.des.ReadStatusResponse
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HttpGet, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +33,7 @@ trait SubscriptionStatusDESConnector extends DESConnector {
   private[connectors] def httpGet: HttpGet
 
   def status(amlsRegistrationNumber: String)
-            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse]): Future[ReadStatusResponse] = {
+            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
 
     val prefix = "[DESConnector][readstatus]"
     val bodyParser = JsonParsed[ReadStatusResponse]

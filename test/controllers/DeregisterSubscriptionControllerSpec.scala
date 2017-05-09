@@ -60,7 +60,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
     "successfully return success response on valid request" in new Fixture {
 
       when(
-        mockDeregConnector.deregistration(any(), any())(any(), any(), any())
+        mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any())
       ) thenReturn Future.successful(success)
 
       private val result = deregisterSubscriptionController.deregistration(amlsRegistrationNumber)(postRequest)
@@ -89,7 +89,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
     "return failed response on exception" in new Fixture {
 
       when(
-        mockDeregConnector.deregistration(any(), any())(any(), any(), any())
+        mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any())
       ) thenReturn Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady(deregisterSubscriptionController.deregistration(amlsRegistrationNumber)(postRequest).failed) {

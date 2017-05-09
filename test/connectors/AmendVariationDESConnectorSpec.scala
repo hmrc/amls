@@ -31,7 +31,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpPut, HttpResponse}
+import uk.gov.hmrc.play.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -54,6 +54,8 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
       override private[connectors] def auditConnector = mock[AuditConnector]
     }
+
+    implicit val hc = HeaderCarrier()
 
     val amlsRegistrationNumber = "test"
 

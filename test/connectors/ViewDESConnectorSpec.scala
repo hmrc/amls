@@ -48,7 +48,7 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -73,6 +73,8 @@ class ViewDESConnectorSpec
       override private[connectors] def auditConnector = mock[AuditConnector]
 
     }
+
+    implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
 

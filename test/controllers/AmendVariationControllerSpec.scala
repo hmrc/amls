@@ -37,6 +37,7 @@ import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
+import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.IterateeHelpers
 
 import scala.concurrent.Future
@@ -49,7 +50,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
       override val service = mock[AmendVariationService]
     }
   }
-
+  implicit val hc = HeaderCarrier()
   val amlsRegistrationNumber = "XAML00000567890"
   val body = fe.SubscriptionRequest(
     businessMatchingSection =
@@ -124,7 +125,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -141,7 +142,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -212,7 +213,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
           .thenReturn(Future.successful(mockRequest))
 
         private val resultF = Controller.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
@@ -259,7 +260,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
           val viewModel = DesConstants.SubscriptionViewModelForRp
 
-          when(Controller.service.compareAndUpdate(any(), any()))
+          when(Controller.service.compareAndUpdate(any(), any())(any()))
             .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
           when {
@@ -276,7 +277,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
           val viewModel = DesConstants.SubscriptionViewModelForRp
 
-          when(Controller.service.compareAndUpdate(any(), any()))
+          when(Controller.service.compareAndUpdate(any(), any())(any()))
             .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
           when {
@@ -347,7 +348,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
           val mockRequest = mock[AmendVariationRequest]
           val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-          when(Controller.service.compareAndUpdate(requestArgument.capture(), any()))
+          when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
             .thenReturn(Future.successful(mockRequest))
 
           private val resultF = Controller.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
@@ -383,7 +384,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
           .thenReturn(Future.successful(mockRequest))
 
         private val resultF = Controller.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)

@@ -72,7 +72,7 @@ class SubscriptionViewControllerSpec
       val response = DesConstants.SubscriptionViewModelForRp
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any())
+        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.successful(response)
 
       val result = SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request)
@@ -84,7 +84,7 @@ class SubscriptionViewControllerSpec
     "return an invalid response when the service fails" in {
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any())
+        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady (SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
@@ -175,7 +175,7 @@ class SubscriptionViewControllerSpecRelease7
     "return a valid response when the amls registration number is valid" in {
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any())
+        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.successful(release7SubscriptionViewModel)
 
       val result = SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request)
@@ -187,7 +187,7 @@ class SubscriptionViewControllerSpecRelease7
     "return an invalid response when the service fails" in {
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any())
+        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady (SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {

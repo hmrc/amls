@@ -49,14 +49,14 @@ trait DESConnector extends HttpResponseHelper {
 
   val requestUrl = "anti-money-laundering/subscription"
 
-  protected implicit val hc = HeaderCarrier(
-    extraHeaders = Seq(
+  protected def desHeaderCarrier(implicit hc: HeaderCarrier) = {
+
+    hc.copy(authorization = Some(Authorization(token))).withExtraHeaders(
       "Environment" -> env,
       HeaderNames.ACCEPT -> "application/json",
       HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
-    ),
-    authorization = Some(Authorization(token))
-  )
+    )
+  }
 }
 
 
