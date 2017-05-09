@@ -37,7 +37,7 @@ class BankDetailsSpec extends PlaySpec with MockitoSugar {
     }
 
     "return empty list when des returns none " in {
-      val testBankDetails = Some(BankDetailsView(None))
+      val testBankDetails = Some(BankDetailsView(Some("0"), None))
       BankDetails.conv(testBankDetails) must be(List.empty)
     }
   }
