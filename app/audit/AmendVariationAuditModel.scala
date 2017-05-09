@@ -21,7 +21,7 @@ import models.des.businessdetails.BusinessType
 import play.api.libs.json.Json
 
 case class AmendVariationAuditModel(amlsRegistrationNumber: String,
-                                    paymentReference: String,
+                                    paymentReference: Option[String],
                                     acknowledgementReference: String,
                                     typeOfLegalEntity: BusinessType,
                                     changeIndicators: ChangeIndicators)
