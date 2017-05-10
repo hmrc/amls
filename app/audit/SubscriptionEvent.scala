@@ -57,6 +57,7 @@ object AmendmentEvent {
     val inputAuditType = request.amlsMessageType match {
       case "Amendment" => "amendmentSubmitted"
       case "Variation" => "variationSubmitted"
+      case "Renewal"  => "renewalSubmitted"
       case _ => throw new Exception("Amls Message type is missing")
     }
 
