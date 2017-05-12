@@ -16,6 +16,14 @@
 
 package exceptions
 
-case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
-  lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
+import play.api.libs.json.Json
+
+import scala.util.Try
+
+case class HttpExceptionBody(reason: String)
+
+object HttpExceptionBody {
+  implicit val format = Json.format[HttpExceptionBody]
+
+  def fromJson(json: String): Option[HttpExceptionBody] = Try { Json.parse(json).asOpt[HttpExceptionBody] } getOrElse None
 }
