@@ -169,5 +169,32 @@ class SubscriptionControllerSpec
       status(result) mustEqual BAD_REQUEST
       contentAsJson(result) mustEqual response
     }
+
+    "return a 422 response when DES fails with a duplicate subscription error" in {
+      val reason = "Business Partner already has an active AMLS Subscription"
+      val errorBody = Json.obj("reason" -> reason).toString
+
+      when {
+        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+      } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
+
+      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest)
+
+      status(result) mustBe UNPROCESSABLE_ENTITY
+      contentAsString(result) mustBe reason
+    }
+
+    "return a normal exception response if DES does not return a json body" in {
+      val errorBody = "This isn't json"
+
+      when {
+        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+      } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
+
+      whenReady(SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest).failed) {
+        case HttpStatusException(status, _) => status mustBe BAD_REQUEST
+      }
+    }
+
   }
 }

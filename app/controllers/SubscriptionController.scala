@@ -16,9 +16,8 @@
 
 package controllers
 
-import exceptions.HttpStatusException
-import models.des.SubscriptionRequest
-import models.des.RequestType
+import exceptions.{HttpExceptionBody, HttpStatusException}
+import models.des.{RequestType, SubscriptionRequest}
 import models.fe
 import play.api.Logger
 import play.api.data.validation.ValidationError
@@ -67,8 +66,11 @@ trait SubscriptionController extends BaseController {
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
-                  case ex@HttpStatusException(BAD_REQUEST, Some(msg)) if msg == duplicateSubscriptionMessage =>
+                  case ex@HttpStatusException(BAD_REQUEST, _)
+                    if ex.jsonBody contains HttpExceptionBody(duplicateSubscriptionMessage) =>
+
                     Future.successful(UnprocessableEntity(duplicateSubscriptionMessage))
+
                   case e @ HttpStatusException(status, Some(body)) =>
                     Logger.warn(s"$prefix - Status: ${status}, Message: $body")
                     Future.failed(e)
