@@ -36,6 +36,7 @@ trait SubscriptionController extends BaseController {
 
   val safeIdRegex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
+  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
 
   private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
     Json.obj(
@@ -66,6 +67,8 @@ trait SubscriptionController extends BaseController {
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
+                  case ex@HttpStatusException(BAD_REQUEST, Some(msg)) if msg == duplicateSubscriptionMessage =>
+                    Future.successful(UnprocessableEntity(duplicateSubscriptionMessage))
                   case e @ HttpStatusException(status, Some(body)) =>
                     Logger.warn(s"$prefix - Status: ${status}, Message: $body")
                     Future.failed(e)
