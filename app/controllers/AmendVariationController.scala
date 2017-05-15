@@ -52,14 +52,14 @@ trait AmendVariationController extends BaseController {
     )
 
 
-  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, requestType: RequestType)(implicit request: Request[JsValue]) = {
+  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, inputRequestType: RequestType)(implicit request: Request[JsValue]) = {
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>
         Json.fromJson[fe.SubscriptionRequest](request.body) match {
           case JsSuccess(body, _) =>
             implicit val mt = messageType
-            implicit val requestType = RequestType.Amendment
+            implicit val requestType = inputRequestType
             service.compareAndUpdate(body, amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
@@ -104,6 +104,14 @@ trait AmendVariationController extends BaseController {
         val prefix = "[AmendVariationController][renewal]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
+    }
+
+  def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String) =
+    Action.async(parse.json) {
+      implicit request =>
+        val prefix = "[AmendVariationController][renewalAmendment]"
+        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        update(amlsRegistrationNumber, RenewalAmendment, RequestType.RenewalAmendment)
     }
 }
 
