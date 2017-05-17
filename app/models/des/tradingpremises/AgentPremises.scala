@@ -75,7 +75,7 @@ object AgentPremises {
     val ytp = tradingPremises.yourTradingPremises
 
     val startDate = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => None
+      case (true, _) => None
       case _ => Some(ytp.startDate.toString)
     }
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities

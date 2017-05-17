@@ -98,7 +98,7 @@ object AgentDetails {
     }
 
     val (startDate, endDate) = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
+      case (true, _) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
         tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
       case _ => (None, None)
     }
