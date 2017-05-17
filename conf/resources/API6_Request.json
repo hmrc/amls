@@ -380,7 +380,7 @@
             },
             "specifyOther": {
               "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             },
             "howGoodsAreSold": {
               "type": "object",
@@ -524,7 +524,7 @@
             },
             "specifyOther": {
               "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
           },
           "required": [
@@ -642,7 +642,7 @@
                           "properties": {
                             "otherBusinessActivities": {
                               "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                             },
                             "anticipatedTotBusinessTurnover": {
                               "$ref": "#/definitions/turnOverType"
@@ -1031,7 +1031,7 @@
                   },
                   "removalReasonOther": {
                     "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                   },
                   "status": {
                     "type": "string",
@@ -1539,7 +1539,7 @@
                         "specifyOther": {
                           "type": "string",
                           "description": "Only applicable for &apos;Other means&apos; = true",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
                       "required": [
@@ -1659,7 +1659,7 @@
                 },
                 "supervisionEndingReason": {
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 }
               },
               "required": [
@@ -1688,7 +1688,7 @@
                 "detailsIfFinedWarned": {
                   "type": "string",
                   "description": "Only applicable if  PrevWarnedWRegToASPActivities is true",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 },
                 "professionalBody": {
                   "type": "object",
@@ -1743,7 +1743,7 @@
                         },
                         "specifyOther": {
                           "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
                       "required": [
@@ -1840,7 +1840,7 @@
                         },
                         "specifyOther": {
                           "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
                       "required": [
@@ -1948,7 +1948,7 @@
         },
         "estAgncActProhibProvideDetails": {
           "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         },
         "prevWarnedWRegToEstateAgencyActivities": {
           "type": "boolean",
@@ -1956,7 +1956,7 @@
         },
         "prevWarnWRegProvideDetails": {
           "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         }
       },
       "required": [
@@ -1983,7 +1983,7 @@
         },
         "specifyOther": {
           "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         }
       },
       "required": [
@@ -2336,7 +2336,7 @@
                       },
                       "otherDetails": {
                         "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
                     "required": [
@@ -2393,7 +2393,7 @@
                       },
                       "otherDetails": {
                         "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
                     "required": [
@@ -2464,7 +2464,7 @@
                       },
                       "otherDetails": {
                         "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
                     "required": [
@@ -2530,7 +2530,7 @@
           "descOfPrevExperience": {
             "type": "string",
             "description": "Only applicable if PreviousExperience is true",
-            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
           "amlAndCounterTerrFinTraining": {
             "type": "boolean",
@@ -2539,7 +2539,7 @@
           "trainingDetails": {
             "type": "string",
             "description": "Only applicable if AMLandCounterTerrFinTraining is true",
-            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
           "startDate": {
             "$ref": "#/definitions/dateString"
@@ -2711,7 +2711,7 @@
                 },
                 "specifyOtherRoleInBusiness": {
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 }
               },
               "required": [
@@ -2766,7 +2766,7 @@
                 },
                 "specifyOtherRoleForBusiness": {
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,255}$"
+                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 }
               },
               "required": [
