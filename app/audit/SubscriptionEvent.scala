@@ -58,6 +58,7 @@ object AmendmentEvent {
       case "Amendment" => "amendmentSubmitted"
       case "Variation" => "variationSubmitted"
       case "Renewal"  => "renewalSubmitted"
+      case "Renewal Amendment" => "renewalAmendmentSubmitted"
       case _ => throw new Exception("Amls Message type is missing")
     }
 
