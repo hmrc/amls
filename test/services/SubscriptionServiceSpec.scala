@@ -32,7 +32,9 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.eclipsesource.schema._
+import exceptions.HttpStatusException
 import models.des.SubscriptionRequest
+import play.api.test.Helpers.BAD_REQUEST
 
 class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
@@ -40,7 +42,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
   implicit val format = Json.format[Foo]
 
-  val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
+  val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
+  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
+
 
   object SubscriptionService extends SubscriptionService {
     override private[services] val desConnector = mock[SubscribeDESConnector]
@@ -73,25 +77,61 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
   "SubscriptionService" must {
 
-    "return a successful response" in {
+    "return a successful response" when {
 
-      when{successValidate.isSuccess} thenReturn true
+      "connector returns full response" in {
 
-      when {
-        SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
-      } thenReturn Future.successful(response)
+        when {
+          successValidate.isSuccess
+        } thenReturn true
 
-      when {
-        SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
-      } thenReturn Future.successful(mock[HttpResponse])
+        when {
+          SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+        } thenReturn Future.successful(response)
 
-      when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+        when {
+          SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
 
-      whenReady (SubscriptionService.subscribe(safeId, request)) {
-        result =>
-          result mustEqual (response)
-          verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+        when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+
+        whenReady(SubscriptionService.subscribe(safeId, request)) {
+          result =>
+            result mustEqual (response)
+            verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+        }
+      }
+
+      "connector returns duplicate response with amlsregno" in {
+
+        val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " XGML00000000000")).toString
+
+        when {
+          successValidate.isSuccess
+        } thenReturn true
+
+        when {
+          SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+        } thenReturn Future.failed(new HttpStatusException(BAD_REQUEST, Some(jsonBody)))
+
+        val knownFacts = KnownFactsForService(Seq(
+          KnownFact("SafeId", safeId),
+          KnownFact("MLRRefNumber", "XGML00000000000")
+        ))
+
+        when {
+          SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
+
+        when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+
+        whenReady(SubscriptionService.subscribe(safeId, request)) {
+          result =>
+            result.amlsRefNo mustEqual ("XGML00000000000")
+            verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+        }
       }
     }
   }
 }
+

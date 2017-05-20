@@ -20,6 +20,7 @@ import java.io.InputStream
 
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
+import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.{KnownFact, KnownFactsForService}
 import models.des.{SubscriptionRequest, SubscriptionResponse}
 import play.api.Logger
@@ -31,6 +32,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait SubscriptionService {
 
+  val BAD_REQUEST: scala.Int = 400
+
+  val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
+
+
   private[services] def desConnector: SubscribeDESConnector
 
   private[services] def ggConnector: GovernmentGatewayAdminConnector
@@ -39,11 +45,12 @@ trait SubscriptionService {
 
   private[services] val validator: SchemaValidator = new SchemaValidator()
 
-  private [services] def validateResult(request:SubscriptionRequest): JsResult[JsValue]
+  private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue]
 
   val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
 
 
   def subscribe
@@ -64,8 +71,34 @@ trait SubscriptionService {
     } else {
       Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
+
+    def failResponse(ex: HttpStatusException, body: HttpExceptionBody) = {
+      Logger.warn(s" - Status: ${ex.status}, Message: $body")
+      Future.failed(ex)
+    }
+
     for {
-      response <- desConnector.subscribe(safeId, request)
+      response <- desConnector.subscribe(safeId, request).recoverWith {
+        case ex@HttpStatusException(BAD_REQUEST, _) => {
+          ex.jsonBody map {
+            case body if (body.reason.startsWith(duplicateSubscriptionMessage)) => {
+
+              amlsRegistrationNumberRegex.findFirstIn(body.reason)
+                .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+                amlsRegNo =>
+                  Future.successful(SubscriptionResponse("", amlsRegNo, None, None, 0, 0, "", None, None))
+              }
+            }
+            case body => {
+              failResponse(ex, body)
+            }
+          }
+        }.getOrElse(Future.failed(ex))
+
+        case e@HttpStatusException(status, Some(body)) =>
+          Logger.warn(s" - Status: ${status}, Message: $body")
+          Future.failed(e)
+      }
       _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
         KnownFact("MLRRefNumber", response.amlsRefNo)
@@ -83,5 +116,6 @@ object SubscriptionService extends SubscriptionService {
   override private[services] val desConnector = DESConnector
   override private[services] val ggConnector = GovernmentGatewayAdminConnector
   override private[services] val feeResponseRepository = FeeResponseRepository()
-  override private[services] def validateResult(request:SubscriptionRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+
+  override private[services] def validateResult(request: SubscriptionRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
 }
