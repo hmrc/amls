@@ -22,7 +22,8 @@ import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.{KnownFact, KnownFactsForService}
-import models.des.{SubscriptionRequest, SubscriptionResponse}
+import models.des.SubscriptionRequest
+import models.fe.SubscriptionResponse
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeeResponseRepository
@@ -84,9 +85,9 @@ trait SubscriptionService {
             case body if (body.reason.startsWith(duplicateSubscriptionMessage)) => {
 
               amlsRegistrationNumberRegex.findFirstIn(body.reason)
-                .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+                .fold[Future[models.des.SubscriptionResponse]](failResponse(ex, body)) {
                 amlsRegNo =>
-                  Future.successful(SubscriptionResponse("", amlsRegNo, None, None, 0, 0, "", None, None))
+                  Future.successful(models.des.SubscriptionResponse("", amlsRegNo,0,None,0,0,""))
               }
             }
             case body => {
@@ -106,7 +107,7 @@ trait SubscriptionService {
       )))
       inserted <- feeResponseRepository.insert(response)
     } yield {
-      response
+      SubscriptionResponse.convert(response)
     }
   }
 }

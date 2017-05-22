@@ -28,14 +28,14 @@ class SubscriptionResponseSpec extends PlaySpec {
       val response = des.SubscriptionResponse(
         etmpFormBundleNumber = "111111",
         amlsRefNo = "XAML00000567890",
-        Some(150.00),
+        150.00,
         Some(100.0),
         300.0,
         550.0,
         "XA353523452345"
       )
 
-      SubscriptionResponse.writes.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
+      SubscriptionResponse.format.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
         ("registrationFee", JsNumber(150)), ("fpFee", JsNumber(100)), ("premiseFee", JsNumber(300)), ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")))))
 
@@ -46,14 +46,14 @@ class SubscriptionResponseSpec extends PlaySpec {
       val response = des.SubscriptionResponse(
         etmpFormBundleNumber = "111111",
         amlsRefNo = "XAML00000567890",
-        None,
+        0,
         Some(100.0),
         300.0,
         550.0,
         "XA353523452345"
       )
 
-      SubscriptionResponse.writes.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
+      SubscriptionResponse.format.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
         ("registrationFee", JsNumber(0)), ("fpFee", JsNumber(100)), ("premiseFee", JsNumber(300)), ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")))))
 

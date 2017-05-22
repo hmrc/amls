@@ -34,6 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import com.eclipsesource.schema._
 import exceptions.HttpStatusException
 import models.des.SubscriptionRequest
+import models.fe.SubscriptionResponse
 import play.api.test.Helpers.BAD_REQUEST
 
 class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
@@ -57,7 +58,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
   val response = des.SubscriptionResponse(
     etmpFormBundleNumber = "111111",
     amlsRefNo = "XAML00000567890",
-    Some(150.00),
+    150.00,
     Some(100.0),
     300.0,
     550.0,
@@ -97,7 +98,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         whenReady(SubscriptionService.subscribe(safeId, request)) {
           result =>
-            result mustEqual (response)
+            result mustEqual (SubscriptionResponse.convert(response))
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }

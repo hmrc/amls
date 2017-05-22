@@ -61,7 +61,7 @@ object FeeResponse {
   implicit def convert(subscriptionResponse: SubscriptionResponse): FeeResponse = {
     FeeResponse(SubscriptionResponseType,
       subscriptionResponse.amlsRefNo,
-      subscriptionResponse.registrationFee.getOrElse(0),
+      subscriptionResponse.registrationFee,
       subscriptionResponse.fpFee,
       subscriptionResponse.premiseFee,
       subscriptionResponse.totalFees,

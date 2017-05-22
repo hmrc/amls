@@ -14,27 +14,42 @@
  * limitations under the License.
  */
 
-package models.des
+package models.fe
 
 import play.api.libs.json._
+import models.des.{SubscriptionResponse => DesSubscriptionResponse}
 
 case class SubscriptionResponse(
                                  etmpFormBundleNumber: String,
                                  amlsRefNo: String,
                                  registrationFee: BigDecimal,
                                  fpFee: Option[BigDecimal],
+                                 fpFeeRate: Option[BigDecimal] = None,
                                  premiseFee: BigDecimal,
+                                 premiseFeeRate: Option[BigDecimal] = None,
                                  totalFees: BigDecimal,
                                  paymentReference: String,
-                                 fpNumbers: Option[Int] = None,
-                                 fpFeeRate: Option[BigDecimal] = None,
-                                 fpNumbersNotCharged: Option[Int] = None,
-                                 premiseFYNumber: Option[Int] =None,
-                                 premiseFeeRate: Option[BigDecimal] = None
+                                 addedResponsiblePeople: Int = 0,
+                                 addedResponsiblePeopleFitAndProper: Int = 0
                                )
 
 object SubscriptionResponse {
-
   implicit val format = Json.format[SubscriptionResponse]
+
+  def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
+
+    SubscriptionResponse(desResponse.etmpFormBundleNumber,
+      desResponse.amlsRefNo,
+      desResponse.registrationFee,
+      desResponse.fpFee,
+      desResponse.fpFeeRate,
+      desResponse.premiseFee,
+      desResponse.premiseFeeRate,
+      desResponse.totalFees,
+      desResponse.paymentReference,
+      desResponse.fpNumbers.getOrElse(0),
+      desResponse.fpNumbers.getOrElse(0) - desResponse.fpNumbersNotCharged.getOrElse(0)
+    )
+  }
 
 }
