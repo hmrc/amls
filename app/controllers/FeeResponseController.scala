@@ -16,11 +16,11 @@
 
 package controllers
 
-import models.des.FeeResponse
+import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Action
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 trait FeeResponseController extends BaseController {
 
-  private[controllers] def repository: FeeResponseRepository
+  private[controllers] def repository: FeesRepository
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     Action.async {
@@ -36,7 +36,7 @@ trait FeeResponseController extends BaseController {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
           case Some(feeResponse) => {
             Logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
-            Ok(Json.toJson[FeeResponse](feeResponse))
+            Ok(Json.toJson[Fees](feeResponse))
           }
           case None => NotFound
         }
@@ -53,5 +53,5 @@ trait FeeResponseController extends BaseController {
 
 object FeeResponseController extends FeeResponseController {
   // $COVERAGE-OFF$
-  override private[controllers] val repository: FeeResponseRepository = FeeResponseRepository()
+  override private[controllers] val repository: FeesRepository = FeesRepository()
 }

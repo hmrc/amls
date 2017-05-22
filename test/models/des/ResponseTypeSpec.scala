@@ -16,6 +16,7 @@
 
 package models.des
 
+import models.{AmendOrVariationResponseType, ResponseType, SubscriptionResponseType}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsSuccess, Json}
 

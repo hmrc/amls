@@ -21,12 +21,12 @@ import java.io.InputStream
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{HttpExceptionBody, HttpStatusException}
-import models.{KnownFact, KnownFactsForService}
+import models.{Fees, KnownFact, KnownFactsForService}
 import models.des.SubscriptionRequest
-import models.fe.SubscriptionResponse
+import models.fe.{SubscriptionFees, SubscriptionResponse}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +42,7 @@ trait SubscriptionService {
 
   private[services] def ggConnector: GovernmentGatewayAdminConnector
 
-  private[services] def feeResponseRepository: FeeResponseRepository
+  private[services] def feeResponseRepository: FeesRepository
 
   private[services] val validator: SchemaValidator = new SchemaValidator()
 
@@ -79,15 +79,20 @@ trait SubscriptionService {
     }
 
     for {
-      response <- desConnector.subscribe(safeId, request).recoverWith {
+      response <- desConnector.subscribe(safeId, request).map(desResponse => SubscriptionResponse.convert(desResponse)).recoverWith {
         case ex@HttpStatusException(BAD_REQUEST, _) => {
           ex.jsonBody map {
             case body if (body.reason.startsWith(duplicateSubscriptionMessage)) => {
 
               amlsRegistrationNumberRegex.findFirstIn(body.reason)
-                .fold[Future[models.des.SubscriptionResponse]](failResponse(ex, body)) {
-                amlsRegNo =>
-                  Future.successful(models.des.SubscriptionResponse("", amlsRegNo,0,None,0,0,""))
+                .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+                amlsRegNo => {
+                  feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
+                    case Some(fees) => SubscriptionResponse("", amlsRegNo, 0, 0, 0, Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
+                      fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)))
+                    case None => SubscriptionResponse("", amlsRegNo, 0, 0, 0, None)
+                  }
+                }
               }
             }
             case body => {
@@ -103,11 +108,15 @@ trait SubscriptionService {
       _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
         KnownFact("MLRRefNumber", response.amlsRefNo)
-
       )))
-      inserted <- feeResponseRepository.insert(response)
+      inserted <- {
+        Fees.convert(response) match {
+          case Some(fees) => feeResponseRepository.insert(fees)
+          case _ => Future.successful(false)
+        }
+      }
     } yield {
-      SubscriptionResponse.convert(response)
+      response
     }
   }
 }
@@ -116,7 +125,7 @@ object SubscriptionService extends SubscriptionService {
   // $COVERAGE-OFF$
   override private[services] val desConnector = DESConnector
   override private[services] val ggConnector = GovernmentGatewayAdminConnector
-  override private[services] val feeResponseRepository = FeeResponseRepository()
+  override private[services] val feeResponseRepository = FeesRepository()
 
   override private[services] def validateResult(request: SubscriptionRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
 }

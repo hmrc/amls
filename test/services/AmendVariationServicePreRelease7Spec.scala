@@ -24,7 +24,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import play.api.test.FakeApplication
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 
 class AmendVariationServicePreRelease7Spec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
 
@@ -34,7 +34,7 @@ class AmendVariationServicePreRelease7Spec extends PlaySpec with OneAppPerSuite 
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
-    override private[services] val feeResponseRepository: FeeResponseRepository = mock[FeeResponseRepository]
+    override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
   }

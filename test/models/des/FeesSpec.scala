@@ -16,14 +16,14 @@
 
 package models.des
 
-import models.des
+import models.{AmendOrVariationResponseType, Fees, des}
 import org.joda.time.{DateTime, DateTimeUtils, DateTimeZone}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 
-class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
+class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
 
   override def beforeAll {
     DateTimeUtils.setCurrentMillisFixed(1000000)
@@ -43,7 +43,7 @@ class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll 
           None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
         )
 
-        FeeResponse.convert2(response, "test") must be (FeeResponse(AmendOrVariationResponseType,"test",0,None,
+        Fees.convert2(response, "test") must be (Fees(AmendOrVariationResponseType,"test",0,None,
           0,0,None,None, DateTime.now(DateTimeZone.UTC)))
       }
     }
@@ -69,7 +69,7 @@ class FeeResponseSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll 
         Some(3456.12)
       )
 
-      FeeResponse.convert2(response, "test") must be (FeeResponse(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
+      Fees.convert2(response, "test") must be (Fees(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
         870458.0,2172427.38,Some("string"),Some(3456.12), DateTime.now(DateTimeZone.UTC)))
 
     }

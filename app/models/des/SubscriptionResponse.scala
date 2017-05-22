@@ -29,7 +29,7 @@ case class SubscriptionResponse(
                                  fpNumbers: Option[Int] = None,
                                  fpFeeRate: Option[BigDecimal] = None,
                                  fpNumbersNotCharged: Option[Int] = None,
-                                 premiseFYNumber: Option[Int] =None,
+                                 premiseFYNumber: Option[Int] = None,
                                  premiseFeeRate: Option[BigDecimal] = None
                                )
 

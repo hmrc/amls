@@ -19,7 +19,7 @@ package controllers
 import java.lang.RuntimeException
 
 import exceptions.HttpStatusException
-import models.des.{FeeResponse, SubscriptionResponseType}
+import models.{Fees, SubscriptionResponseType}
 import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import org.joda.time.{DateTime, DateTimeZone}
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -30,12 +30,12 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 import utils.IterateeHelpers
 
 import scala.concurrent.Future
 
-class FeeResponseControllerSpec extends PlaySpec
+class FeesControllerSpec extends PlaySpec
   with MockitoSugar
   with ScalaFutures
   with IntegrationPatience
@@ -43,7 +43,7 @@ class FeeResponseControllerSpec extends PlaySpec
 
 
   object TestFeeResponseController extends FeeResponseController {
-    override private[controllers] val repository: FeeResponseRepository = mock[FeeResponseRepository]
+    override private[controllers] val repository: FeesRepository = mock[FeesRepository]
   }
 
   "Fee Response Controller" when {
@@ -53,7 +53,7 @@ class FeeResponseControllerSpec extends PlaySpec
     val request = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")
 
-    val validFeeResponse = FeeResponse(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None,
+    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None,
       new DateTime(2017,12,1,1,3,DateTimeZone.UTC))
 
     "GET" must {

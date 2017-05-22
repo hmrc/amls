@@ -22,15 +22,10 @@ import models.des.{SubscriptionResponse => DesSubscriptionResponse}
 case class SubscriptionResponse(
                                  etmpFormBundleNumber: String,
                                  amlsRefNo: String,
-                                 registrationFee: BigDecimal,
-                                 fpFee: Option[BigDecimal],
-                                 fpFeeRate: Option[BigDecimal] = None,
-                                 premiseFee: BigDecimal,
-                                 premiseFeeRate: Option[BigDecimal] = None,
-                                 totalFees: BigDecimal,
-                                 paymentReference: String,
                                  addedResponsiblePeople: Int = 0,
-                                 addedResponsiblePeopleFitAndProper: Int = 0
+                                 addedResponsiblePeopleFitAndProper: Int = 0,
+                                 premiseFYNumber: Int = 0,
+                                 subscriptionFees: Option[SubscriptionFees]
                                )
 
 object SubscriptionResponse {
@@ -40,15 +35,17 @@ object SubscriptionResponse {
 
     SubscriptionResponse(desResponse.etmpFormBundleNumber,
       desResponse.amlsRefNo,
-      desResponse.registrationFee,
-      desResponse.fpFee,
-      desResponse.fpFeeRate,
-      desResponse.premiseFee,
-      desResponse.premiseFeeRate,
-      desResponse.totalFees,
-      desResponse.paymentReference,
       desResponse.fpNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0) - desResponse.fpNumbersNotCharged.getOrElse(0)
+      desResponse.fpNumbers.getOrElse(0) - desResponse.fpNumbersNotCharged.getOrElse(0),
+      desResponse.premiseFYNumber.getOrElse(0),
+      Some(SubscriptionFees(desResponse.paymentReference,
+        desResponse.registrationFee,
+        desResponse.fpFee,
+        desResponse.fpFeeRate,
+        desResponse.premiseFee,
+        desResponse.premiseFeeRate,
+        desResponse.totalFees)
+      )
     )
   }
 

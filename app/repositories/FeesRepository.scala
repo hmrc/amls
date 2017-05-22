@@ -16,7 +16,7 @@
 
 package repositories
 
-import models.des.FeeResponse
+import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
 import play.modules.reactivemongo.MongoDbConnection
@@ -29,16 +29,16 @@ import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait FeeResponseRepository extends Repository[FeeResponse, BSONObjectID] {
+trait FeesRepository extends Repository[Fees, BSONObjectID] {
 
-  def insert(feeResponse: FeeResponse):Future[Boolean]
+  def insert(feeResponse: Fees):Future[Boolean]
 
-  def findLatestByAmlsReference(amlsReferenceNumber: String):Future[Option[FeeResponse]]
+  def findLatestByAmlsReference(amlsReferenceNumber: String):Future[Option[Fees]]
 
 }
 
-class FeeResponseMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[FeeResponse, BSONObjectID]("fees", mongo, FeeResponse.format)
-  with FeeResponseRepository{
+class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
+  with FeesRepository{
 
 
 
@@ -51,21 +51,21 @@ class FeeResponseMongoRepository()(implicit mongo: () => DefaultDB) extends Reac
 
   }
 
-  override def insert(feeResponse: FeeResponse):Future[Boolean] = {
-    collection.insert[FeeResponse](feeResponse) map { lastError =>
+  override def insert(feeResponse: Fees):Future[Boolean] = {
+    collection.insert[Fees](feeResponse) map { lastError =>
       Logger.debug(s"[FeeResponseMongoRepository][insert] : { feeResponse : $feeResponse , result: ${lastError.ok}, errors: ${lastError.errmsg} }")
       lastError.ok
     }
   }
 
   override def findLatestByAmlsReference(amlsReferenceNumber: String) = {
-    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[FeeResponse]
+    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Fees]
   }
 }
 
-object FeeResponseRepository extends MongoDbConnection {
+object FeesRepository extends MongoDbConnection {
 
-  private lazy val feeResponseRepository = new FeeResponseMongoRepository
+  private lazy val feesRepository = new FeesMongoRepository
 
-  def apply(): FeeResponseMongoRepository = feeResponseRepository
+  def apply(): FeesMongoRepository = feesRepository
 }

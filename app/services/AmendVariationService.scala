@@ -21,11 +21,12 @@ import java.io.InputStream
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.AmlsConfig
 import connectors._
+import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
@@ -38,7 +39,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] def viewStatusDesConnector: SubscriptionStatusDESConnector
 
-  private[services] def feeResponseRepository: FeeResponseRepository
+  private[services] def feeResponseRepository: FeesRepository
 
   private[services] def viewDesConnector: ViewDESConnector
 
@@ -51,7 +52,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
 
-  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => FeeResponse) =
+  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
 
   private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
@@ -198,7 +199,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
 object AmendVariationService extends AmendVariationService {
   // $COVERAGE-OFF$
-  override private[services] val feeResponseRepository = FeeResponseRepository()
+  override private[services] val feeResponseRepository = FeesRepository()
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
