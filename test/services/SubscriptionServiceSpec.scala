@@ -16,36 +16,31 @@
 
 package services
 
-import com.eclipsesource.schema.SchemaValidator
-import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
+import connectors.{GovernmentGatewayAdminConnector, SubscribeDESConnector}
+import exceptions.HttpStatusException
 import models._
+import models.des.SubscriptionRequest
+import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
+import models.des.tradingpremises.TradingPremises
+import models.fe.{SubscriptionFees, SubscriptionResponse}
+import org.joda.time.DateTime
+import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
-import org.mockito.Mockito._
-import org.mockito.Matchers.{eq => eqTo, _}
-import play.api.libs.json.{JsResult, JsValue, Json, Writes}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.libs.json.{JsResult, JsValue, Json}
+import play.api.test.Helpers.BAD_REQUEST
 import repositories.FeesRepository
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.eclipsesource.schema._
-import exceptions.HttpStatusException
-import models.des.SubscriptionRequest
-import models.fe.{SubscriptionFees, SubscriptionResponse}
-import org.joda.time.DateTime
-import play.api.test.Helpers.BAD_REQUEST
+import scala.concurrent.Future
 
 class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
-  case class Foo(bar: String, quux: Option[String])
-
-  implicit val format = Json.format[Foo]
-
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
-
 
   object SubscriptionService extends SubscriptionService {
     override private[services] val desConnector = mock[SubscribeDESConnector]
@@ -100,7 +95,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         whenReady(SubscriptionService.subscribe(safeId, request)) {
           result =>
-            result mustEqual (SubscriptionResponse.convert(response))
+            result mustEqual SubscriptionResponse.convert(response)
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }
@@ -112,7 +107,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         val amlsRegNo = "XGML00000000000"
         val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegNo)).toString
 
-        val subscriptionResponse = SubscriptionResponse("", amlsRegNo, 0, 0, 0, None)
+        val subscriptionResponse = SubscriptionResponse("", amlsRegNo, 1, 0, 0, None, previouslySubmitted = true)
 
         when {
           successValidate.isSuccess
@@ -120,7 +115,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when {
           SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
-        } thenReturn Future.failed(new HttpStatusException(BAD_REQUEST, Some(jsonBody)))
+        } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("SafeId", safeId),
@@ -135,9 +130,17 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when(SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
 
+
+        when(request.responsiblePersons).thenReturn(Some(Seq(
+          ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
+            RPExtra(None, None, None, None, None, None, None)))))
+        when(request.tradingPremises).thenReturn(mock[TradingPremises])
+        when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
+        when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
+
         whenReady(SubscriptionService.subscribe(safeId, request)) {
           result =>
-            result mustEqual (subscriptionResponse)
+            result mustEqual subscriptionResponse
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }
@@ -150,7 +153,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegNo)).toString
 
         val subscriptionResponse = SubscriptionResponse("", amlsRegNo, 0, 0, 0, Some(SubscriptionFees("PaymentRef",
-          500, Some(50), None, 115, None, 1000)))
+          500, Some(50), None, 115, None, 1000)), previouslySubmitted = true)
 
         when {
           successValidate.isSuccess
@@ -158,7 +161,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when {
           SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
-        } thenReturn Future.failed(new HttpStatusException(BAD_REQUEST, Some(jsonBody)))
+        } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("SafeId", safeId),
@@ -174,9 +177,14 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         when(SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(Some(Fees(SubscriptionResponseType,
           amlsRegNo, 500, Some(50), 115, 1000, Some("PaymentRef"), None, new DateTime()))))
 
+        when(request.responsiblePersons).thenReturn(None)
+        when(request.tradingPremises).thenReturn(mock[TradingPremises])
+        when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
+        when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
+
         whenReady(SubscriptionService.subscribe(safeId, request)) {
           result =>
-            result mustEqual (subscriptionResponse)
+            result mustEqual subscriptionResponse
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }

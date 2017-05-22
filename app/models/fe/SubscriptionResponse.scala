@@ -25,7 +25,8 @@ case class SubscriptionResponse(
                                  addedResponsiblePeople: Int = 0,
                                  addedResponsiblePeopleFitAndProper: Int = 0,
                                  premiseFYNumber: Int = 0,
-                                 subscriptionFees: Option[SubscriptionFees]
+                                 subscriptionFees: Option[SubscriptionFees],
+                                 previouslySubmitted: Boolean = false
                                )
 
 object SubscriptionResponse {
