@@ -171,7 +171,7 @@ class SubscriptionControllerSpec
     }
 
     "return a 422 response when DES fails with a duplicate subscription error" in {
-      val reason = "Business Partner already has an active AMLS Subscription"
+      val reason = "Business Partner already has an active AMLS Subscription with XREF"
       val errorBody = Json.obj("reason" -> reason).toString
 
       when {
