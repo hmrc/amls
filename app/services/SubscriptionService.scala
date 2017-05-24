@@ -29,7 +29,7 @@ import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 trait SubscriptionService {
 
@@ -79,6 +79,8 @@ trait SubscriptionService {
 
     validateRequest(safeId, request)
 
+    val p = Promise[SubscriptionResponse]()
+
     for {
       response <- desConnector.subscribe(safeId, request)
         .map(desResponse => SubscriptionResponse.convert(desResponse))
@@ -89,11 +91,18 @@ trait SubscriptionService {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
-      _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
+
+    } yield {
+      ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
         KnownFact("MLRRefNumber", response.amlsRefNo)
-      )))
-    } yield response
+      ))).onComplete {
+        case _ => p.success(response)
+      }
+
+    }
+
+    p.future
   }
 
   private def validateRequest(safeId: String, request: SubscriptionRequest) = {
