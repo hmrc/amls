@@ -67,9 +67,9 @@ trait SubscriptionController extends BaseController {
                     Ok(Json.toJson(response))
                 } recoverWith {
                   case ex@HttpStatusException(BAD_REQUEST, _)
-                    if ex.jsonBody contains HttpExceptionBody(duplicateSubscriptionMessage) =>
+                    if ex.jsonBody.fold(false)(_.reason.startsWith(duplicateSubscriptionMessage)) =>
 
-                    Future.successful(UnprocessableEntity(duplicateSubscriptionMessage))
+                    Future.successful(UnprocessableEntity(ex.jsonBody.fold(duplicateSubscriptionMessage)(_.reason)))
 
                   case e @ HttpStatusException(status, Some(body)) =>
                     Logger.warn(s"$prefix - Status: ${status}, Message: $body")
