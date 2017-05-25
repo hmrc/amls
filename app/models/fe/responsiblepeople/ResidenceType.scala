@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{UkResident, IdDetail}
+import models.des.responsiblepeople.{IdDetail, NationalityDetails, UkResident}
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
@@ -56,6 +56,29 @@ object ResidenceType {
           (__ \ "dateOfBirth").write[LocalDate] and
             __.write[PassportType]
           ) (unlift(NonUKResidence.unapply)).writes(a)
+    }
+  }
+
+  implicit def conv(nationality: Option[NationalityDetails]): Option[ResidenceType] = {
+    nationality match {
+      case Some(details) => details
+      case None => None
+    }
+  }
+
+  implicit def conv(nationalityDetails: NationalityDetails): Option[ResidenceType] = {
+    nationalityDetails.idDetails match {
+      case Some(idDetail) => {
+
+        val ukResidence:Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
+        val nonUKResidence:Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence(LocalDate.parse(x.dateOfBirth), x.passportDetails))
+
+        nationalityDetails.areYouUkResident match {
+          case true => ukResidence
+          case false => nonUKResidence
+        }
+      }
+      case _ => None
     }
   }
 }

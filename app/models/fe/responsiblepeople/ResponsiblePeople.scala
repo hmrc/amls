@@ -45,7 +45,8 @@ object ResponsiblePeople {
     ResponsiblePeople(
       desRp.nameDetails,
       desRp.nationalityDetails,
-      None,None,None,None,
+      desRp.nationalityDetails,
+      None,None,None,
       desRp.contactCommDetails,
       desRp,
       desRp,
