@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import models.fe.SubscriptionResponse
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
 import models.fe.businesscustomer.{Address, ReviewDetails}
@@ -107,7 +108,7 @@ class SubscriptionControllerSpec
       val response = des.SubscriptionResponse(
         etmpFormBundleNumber = "111111",
         amlsRefNo = "XAAM00000123456",
-        Some(1301737.96),
+        1301737.96,
         Some(231.42),
         870458,
         2172427.38,
@@ -116,12 +117,12 @@ class SubscriptionControllerSpec
 
       when {
         SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
-      } thenReturn Future.successful(response)
+      } thenReturn Future.successful(SubscriptionResponse.convert(response))
 
       val result = SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) must be(OK)
-      contentAsJson(result) must be(Json.toJson(response))
+      contentAsJson(result) must be(Json.toJson(SubscriptionResponse.convert(response)))
     }
 
     "return an invalid response when the service fails" in {

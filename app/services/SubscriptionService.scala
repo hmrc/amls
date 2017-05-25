@@ -20,30 +20,37 @@ import java.io.InputStream
 
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
-import models.{KnownFact, KnownFactsForService}
-import models.des.{SubscriptionRequest, SubscriptionResponse}
+import exceptions.{HttpExceptionBody, HttpStatusException}
+import models.{Fees, KnownFact, KnownFactsForService}
+import models.des.SubscriptionRequest
+import models.fe.{SubscriptionFees, SubscriptionResponse}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
-import repositories.FeeResponseRepository
+import repositories.FeesRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 trait SubscriptionService {
+
+  private val BAD_REQUEST: scala.Int = 400
+
+  private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def desConnector: SubscribeDESConnector
 
   private[services] def ggConnector: GovernmentGatewayAdminConnector
 
-  private[services] def feeResponseRepository: FeeResponseRepository
+  private[services] def feeResponseRepository: FeesRepository
 
-  private[services] val validator: SchemaValidator = new SchemaValidator()
+  private[services] val validator: SchemaValidator = SchemaValidator()
 
-  private [services] def validateResult(request:SubscriptionRequest): JsResult[JsValue]
+  private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue]
 
-  val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
-  val lines = scala.io.Source.fromInputStream(stream).getLines
-  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+  private val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
+  private val lines = scala.io.Source.fromInputStream(stream).getLines
+  protected[SubscriptionService] val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+  private val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
 
 
   def subscribe
@@ -52,29 +59,99 @@ trait SubscriptionService {
    hc: HeaderCarrier,
    ec: ExecutionContext
   ): Future[SubscriptionResponse] = {
-    import com.eclipsesource.schema._
+
+    val handleExceptionWithBody: PartialFunction[Throwable, Future[SubscriptionResponse]] = {
+      case ex@HttpStatusException(BAD_REQUEST, _) => {
+        ex.jsonBody map {
+          case body if body.reason.startsWith(duplicateSubscriptionMessage) => amlsRegistrationNumberRegex.findFirstIn(body.reason)
+            .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+            amlsRegNo => constructedSubscriptionResponse(amlsRegNo, request)(ec)
+          }
+          case body =>
+            failResponse(ex, body)
+        }
+      }.getOrElse(Future.failed(ex))
+
+      case e@HttpStatusException(status, Some(body)) =>
+        Logger.warn(s" - Status: $status, Message: $body")
+        Future.failed(e)
+    }
+
+    validateRequest(safeId, request)
+
+    for {
+      response <- desConnector.subscribe(safeId, request)
+        .map(desResponse => SubscriptionResponse.convert(desResponse))
+        .recoverWith {
+          handleExceptionWithBody
+        }
+      _ <- Fees.convert(response) match {
+        case Some(fees) => feeResponseRepository.insert(fees)
+        case _ => Future.successful(false)
+      }
+      _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
+        KnownFact("SafeId", safeId),
+        KnownFact("MLRRefNumber", response.amlsRefNo)
+      ))).map(_ => response).recover {
+        case ex => Logger.warn("[AddKnownFactsFailed]", ex)
+          response
+      }
+
+    } yield response
+
+  }
+
+  private def validateRequest(safeId: String, request: SubscriptionRequest) = {
     val result = validateResult(request)
     if (!result.isSuccess) {
       val errors = result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
         }
-      }, valid = { post => post })
-      Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : ${errors}")
+      }, valid = identity)
+      Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : $errors")
     } else {
       Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
-    for {
-      response <- desConnector.subscribe(safeId, request)
-      _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
-        KnownFact("SafeId", safeId),
-        KnownFact("MLRRefNumber", response.amlsRefNo)
+  }
 
-      )))
-      inserted <- feeResponseRepository.insert(response)
-    } yield {
-      response
+  private def failResponse(ex: HttpStatusException, body: HttpExceptionBody) = {
+    Logger.warn(s" - Status: ${ex.status}, Message: $body")
+    Future.failed(ex)
+  }
+
+  private def constructedSubscriptionResponse(amlsRegNo: String, request: SubscriptionRequest)(implicit ec: ExecutionContext) = {
+
+    def tradingPremisesCount = {
+      (for {
+        agentPremises <- request.tradingPremises.agentBusinessPremises
+        agentPremisesDetails <- agentPremises.agentDetails
+      } yield agentPremisesDetails.size).getOrElse(0) +
+        (for {
+          ownPremises <- request.tradingPremises.ownBusinessPremises
+          ownBusinessPremisesDetails <- ownPremises.ownBusinessPremisesDetails
+        } yield ownBusinessPremisesDetails.size).getOrElse(0)
     }
+
+    def responsiblePersonsCount = {
+      request.responsiblePersons.fold(0) { rp => rp.size }
+    }
+
+    def responsiblePersonsPassedFitAndProperCount = {
+      request.responsiblePersons.fold(0) { rp =>
+        rp.count(_.msbOrTcsp.fold(false) {
+          _.passedFitAndProperTest
+        })
+      }
+    }
+
+    feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
+      case Some(fees) => SubscriptionResponse("", amlsRegNo, responsiblePersonsCount,
+        responsiblePersonsPassedFitAndProperCount, tradingPremisesCount, Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)), true)
+      case None => SubscriptionResponse("", amlsRegNo, responsiblePersonsCount, responsiblePersonsPassedFitAndProperCount, tradingPremisesCount, None, true)
+    }
+
   }
 }
 
@@ -82,6 +159,9 @@ object SubscriptionService extends SubscriptionService {
   // $COVERAGE-OFF$
   override private[services] val desConnector = DESConnector
   override private[services] val ggConnector = GovernmentGatewayAdminConnector
-  override private[services] val feeResponseRepository = FeeResponseRepository()
-  override private[services] def validateResult(request:SubscriptionRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  override private[services] val feeResponseRepository = FeesRepository()
+
+  override private[services] def validateResult(request: SubscriptionRequest) = {
+    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  }
 }

@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package models.des
+package models
 
-import org.joda.time.{DateTime, DateTimeZone}
+import models.des.AmendVariationResponse
+import models.fe.SubscriptionResponse
 import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.{DateTime, DateTimeZone}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
@@ -47,31 +49,33 @@ object ResponseType {
   }
 }
 
-case class FeeResponse(responseType: ResponseType,
-                       amlsReferenceNumber: String,
-                       registrationFee: BigDecimal = 0,
-                       fpFee: Option[BigDecimal],
-                       premiseFee: BigDecimal = 0,
-                       totalFees: BigDecimal = 0,
-                       paymentReference: Option[String],
-                       difference: Option[BigDecimal],
-                       createdAt: DateTime)
+case class Fees(responseType: ResponseType,
+                amlsReferenceNumber: String,
+                registrationFee: BigDecimal = 0,
+                fpFee: Option[BigDecimal],
+                premiseFee: BigDecimal = 0,
+                totalFees: BigDecimal = 0,
+                paymentReference: Option[String],
+                difference: Option[BigDecimal],
+                createdAt: DateTime)
 
-object FeeResponse {
-  implicit def convert(subscriptionResponse: SubscriptionResponse): FeeResponse = {
-    FeeResponse(SubscriptionResponseType,
-      subscriptionResponse.amlsRefNo,
-      subscriptionResponse.registrationFee.getOrElse(0),
-      subscriptionResponse.fpFee,
-      subscriptionResponse.premiseFee,
-      subscriptionResponse.totalFees,
-      Some(subscriptionResponse.paymentReference),
-      None,
-      DateTime.now(DateTimeZone.UTC))
+object Fees {
+  implicit def convert(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
+    subscriptionResponse.subscriptionFees map {
+      feesResponse =>  Fees(SubscriptionResponseType,
+        subscriptionResponse.amlsRefNo,
+        feesResponse.registrationFee,
+        feesResponse.fpFee,
+        feesResponse.premiseFee,
+        feesResponse.totalFees,
+        Some(feesResponse.paymentReference),
+        None,
+        DateTime.now(DateTimeZone.UTC))
+    }
   }
 
-  implicit def convert2(amendVariationResponse: AmendVariationResponse,  amlsReferenceNumber: String): FeeResponse = {
-    FeeResponse(AmendOrVariationResponseType,
+  implicit def convert2(amendVariationResponse: AmendVariationResponse,  amlsReferenceNumber: String): Fees = {
+    Fees(AmendOrVariationResponseType,
       amlsReferenceNumber,
       amendVariationResponse.registrationFee.getOrElse(0),
       amendVariationResponse.fpFee,
@@ -86,5 +90,5 @@ object FeeResponse {
 
   implicit val dateFormat = ReactiveMongoFormats.dateTimeFormats
 
-  implicit val format = Json.format[FeeResponse]
+  implicit val format = Json.format[Fees]
 }
