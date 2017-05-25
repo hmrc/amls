@@ -47,11 +47,11 @@ object ASPTCSPSection {
 
   val AspSection = Some(Asp(Some(aspServices), Some(aspOtherBusinessTax)))
   val TcspModelForView = Some(Tcsp(Some(TcspTypes(Set(CompanyDirectorEtc,
-    NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(true,true)))),
+    NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(true, true)))),
     Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
-      PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),Some(ServicesOfAnotherTCSPYes("111111111111111"))))
+      PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
   val AspModelForView = Some(Asp(Some(ServicesOfBusiness(Set(Auditing,
-    FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))),Some(OtherBusinessTaxMattersYes)))
+    FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))), Some(OtherBusinessTaxMattersYes)))
 }
 
 object SupervisionSection {
@@ -72,7 +72,7 @@ object SupervisionSection {
     Some(professionalBodyMember),
     Some(professionalBody)))
 
-  val modelForView = Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1), new LocalDate(2001,1,1),"SupervisionEndingReason")),
+  val modelForView = Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
     Some(ProfessionalBodyMemberYes(Set(AccountantsIreland, CharteredCertifiedAccountants, AssociationOfBookkeepers,
       AccountantsEnglandandWales, Bookkeepers, AccountingTechnicians, TaxationTechnicians, InternationalAccountants,
       Other("SpecifyOther"), LawSociety, InstituteOfTaxation, AccountantsScotland, FinancialAccountants, ManagementAccountants))),
@@ -168,14 +168,14 @@ object MsbSection {
   val completeModel = Some(msb)
 
   val modelForView = Some(MoneyServiceBusiness(Some(Third),
-    Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
+    Some(BusinessUseAnIPSPYes("IPSPName1", "IPSPMLRRegNo1")),
     Some(IdentifyLinkedTransactions(true)),
     Some(SendMoneyToOtherCountry(true)),
-    Some(FundsTransfer(true)),Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
-    Some(TransactionsInNext12Months("11111111111")),Some(CETransactionsInNext12Months("11234567890")),
-    Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
+    Some(FundsTransfer(true)), Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
+    Some(TransactionsInNext12Months("11111111111")), Some(CETransactionsInNext12Months("11234567890")),
+    Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)), Some(MostTransactions(List("AD", "GB"))),
     Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")),
-      Some(WholesalerMoneySource("CurrencyWholesalerNames")),true))))
+      Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
 }
 
 object TradingPremisesSection {
@@ -190,7 +190,7 @@ object TradingPremisesSection {
   ),
     TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
       Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
-      Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
+      Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
     )
   ))
@@ -198,7 +198,7 @@ object TradingPremisesSection {
   val modelForView = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("aaaaaaaaaaaa",
     Address("a", "a", Some("a"), Some("a"), "AA1 1AA"), new LocalDate(1967, 8, 13), true), Some(BusinessStructure.SoleProprietor),
     Some(AgentName("AgentLegalEntityName", None, Some("1970-01-01"))),
-    None,None,
+    None, None,
     WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
       BusinessActivity.AccountancyServices,
       BusinessActivity.EstateAgentBusinessService,
@@ -209,7 +209,7 @@ object TradingPremisesSection {
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))), Some(111111), Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
-        new LocalDate(1967,8,13), true),
+        new LocalDate(1967, 8, 13), true),
       Some(BusinessStructure.SoleProprietor),
       Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
       None,
@@ -225,7 +225,7 @@ object TradingPremisesSection {
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("TradingName",
         Address("AgentAddressLine1", "AgentAddressLine2", Some("AgentAddressLine3"), Some("AgentAddressLine4"), "XX1 1XX"),
-        new LocalDate(2001,1,1), true),
+        new LocalDate(2001, 1, 1), true),
       Some(BusinessStructure.SoleProprietor), Some(AgentName("AgentLegalEntityName2", None, Some("1970-01-01"))),
       None,
       None,
@@ -239,14 +239,14 @@ object TradingPremisesSection {
       Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName",
       Address("OwnBusinessAddressLine1", "OwnBusinessAddressLine2", Some("OwnBusinessAddressLine3"), Some("OwnBusinessAddressLine4"), "YY1 1YY"),
-      new LocalDate(2001,5,5), false),
+      new LocalDate(2001, 5, 5), false),
       None, None, None, None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.BillPaymentServices,
         BusinessActivity.EstateAgentBusinessService,
         BusinessActivity.TrustAndCompanyServices)), None, Some(444444), Some(StatusConstants.Unchanged)),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName1",
       Address("OB11AddressLine1", "OB1AddressLine2", Some("OB1AddressLine3"), Some("OB1AddressLine4"), "XX1 1XX"),
-      new LocalDate(2001,1,1), false), None, None, None, None, WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
+      new LocalDate(2001, 1, 1), false), None, None, None, None, WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
       BusinessActivity.AccountancyServices,
       BusinessActivity.EstateAgentBusinessService,
       BusinessActivity.BillPaymentServices,
@@ -258,7 +258,7 @@ object TradingPremisesSection {
 
   val tradingPremisesOnlyAgentModel = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)),
     YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
-      new LocalDate(1967,8,13), true),
+      new LocalDate(1967, 8, 13), true),
     Some(BusinessStructure.SoleProprietor),
     Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
     None,
@@ -296,7 +296,8 @@ object BusinessMatchingSection {
 
   import models.fe.businesscustomer.{Address, ReviewDetails}
   import models.fe.businessmatching.{BusinessType, _}
-  private val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal,CurrencyExchange))
+
+  private val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, CurrencyExchange))
   private val psrPSRNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
   private val bcAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
   private val reviewDetails = ReviewDetails("BusinessName", BusinessType.SoleProprietor, bcAddress, "XE0001234567890")
@@ -320,7 +321,7 @@ object BusinessMatchingSection {
     BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
       BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
     msbServices,
-    Some(TypeOfBusiness("TypeOfBusiness")), Some(CompanyRegistrationNumber("12345678")),psrNumber)
+    Some(TypeOfBusiness("TypeOfBusiness")), Some(CompanyRegistrationNumber("12345678")), psrNumber)
 }
 
 object AboutTheBusinessSection {
@@ -340,7 +341,7 @@ object AboutTheBusinessSection {
       Some("Street"), Some("city"), "EE1 1EE"))
   )
 
-  val modelForView = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(2001,1,1))),
+  val modelForView = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567891")),
     ContactingYou("07000111222", "BusinessEmail"),
@@ -391,6 +392,7 @@ object ResponsiblePeopleSection {
   val model = Some(Seq(ResponsiblePeople(
     Some(personName),
     Some(personResidenceType),
+    None, None, None, None,
     Some(contactDetails),
     Some(addressHistory),
     Some(positions),
@@ -401,23 +403,46 @@ object ResponsiblePeopleSection {
     Some(true))))
 
 
-  val modelForView = Some(List(ResponsiblePeople(Some(PersonName("FirstName",Some("MiddleName"),"LastName",
-    Some(PreviousName(Some("FirstName"),Some("MiddleName"),Some("LastName"),new LocalDate(2001,1,1))),Some("Aliases1"))),
-    Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),UKPassport("AA1111111")),"AA","AA")),
-    None,Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
-      "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"AA1 1AA"),
-      ThreeYearsPlus)),None,None)),Some(Positions(Set(NominatedOfficer,SoleProprietor), Some(new LocalDate()))),
-    Some(SaRegisteredYes("1234567890")),Some(VATRegisteredYes("123456789")),
-    Some(ExperienceTrainingNo),Some(TrainingYes("TrainingDetails")),Some(false),Some(333333), Some("added")),
-    ResponsiblePeople(Some(PersonName("bbbbbbbbbbbb",Some("bbbbbbbbbbb"),"bbbbbbbbbbb",
-      Some(PreviousName(Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),
-        new LocalDate(1967,8,13))),Some("bbbbbbbbbbb"))),
-      Some(PersonResidenceType(UKResidence("BB000000A"),"GB","GB")),None,
-      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("a","a",Some("a"),Some("a"),"AA1 1AA"),SixToElevenMonths)))),
-      Some(Positions(Set(NominatedOfficer,SoleProprietor), Some(new LocalDate()))),Some(SaRegisteredYes("1111111111")),
-      Some(VATRegisteredYes("111111111")),Some(ExperienceTrainingYes("bbbbbbbbbb")),Some(TrainingNo),Some(true), Some(222222), Some("added"))))
+  val modelForView = Some(List(
+    ResponsiblePeople(
+      Some(PersonName("FirstName", Some("MiddleName"), "LastName",
+        Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))),
+        Some("Aliases1"))),
+      Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111")), "AA", "AA")),
+      None, None, None, None, None,
+      Some(ResponsiblePersonAddressHistory(
+        Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
+          "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
+          ThreeYearsPlus)),
+        None,
+        None
+      )),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(SaRegisteredYes("1234567890")),
+      Some(VATRegisteredYes("123456789")),
+      Some(ExperienceTrainingNo),
+      Some(TrainingYes("TrainingDetails")),
+      Some(false),
+      Some(333333),
+      Some("added")),
+    ResponsiblePeople(
+      Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
+        Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"),
+          new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
+      Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
+      None, None, None, None, None,
+      Some(ResponsiblePersonAddressHistory(
+        Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(SaRegisteredYes("1111111111")),
+      Some(VATRegisteredYes("111111111")),
+      Some(ExperienceTrainingYes("bbbbbbbbbb")),
+      Some(TrainingNo),
+      Some(true),
+      Some(222222), Some("added")
+    )))
 }
 
 object HvdSection {
@@ -431,7 +456,7 @@ object HvdSection {
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = Second
-  private val paymentMethods = PaymentMethods(courier = true, direct = true, other= true,details = Some("foo"))
+  private val paymentMethods = PaymentMethods(courier = true, direct = true, other = true, details = Some("foo"))
   private val receiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val completeModel = Some(Hvd(cashPayment = Some(DefaultCashPayment),
@@ -443,11 +468,11 @@ object HvdSection {
     percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
   ))
 
-  val modelForView = Some(Hvd(Some(CashPaymentYes(new LocalDate(2001,1,1))),
+  val modelForView = Some(Hvd(Some(CashPaymentYes(new LocalDate(2001, 1, 1))),
     Some(Products(Set(MobilePhones, Clothing, Jewellery,
       ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
-    Some(ExciseGoods(true)),Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
-    None,Some(ReceiveCashPayments(true, Some(PaymentMethods(true,true,true,Some("aaaaaaaaaaaaa"))))),Some(LinkedCashPayments(true))))
+    Some(ExciseGoods(true)), Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
+    None, Some(ReceiveCashPayments(true, Some(PaymentMethods(true, true, true, Some("aaaaaaaaaaaaa"))))), Some(LinkedCashPayments(true))))
 }
 
 object SubscriptionViewModel {
