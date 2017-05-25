@@ -409,7 +409,8 @@ object ResponsiblePeopleSection {
         Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))),
         Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111")), "AA", "AA")),
-      None, None, None, None, None,
+      Some(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111"))),
+      None, None, None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
@@ -430,7 +431,8 @@ object ResponsiblePeopleSection {
         Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"),
           new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      None, None, None, None, None,
+      Some(UKResidence("BB000000A")),
+      None, None, None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -477,7 +479,8 @@ object HvdSection {
 
 object SubscriptionViewModel {
 
-  val convertedViewModel = SubscriptionView("111111",
+  val convertedViewModel = SubscriptionView(
+    "111111",
     BusinessMatchingSection.modelForView,
     EabSection.modelForView,
     TradingPremisesSection.modelForView,

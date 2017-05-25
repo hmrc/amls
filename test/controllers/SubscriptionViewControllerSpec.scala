@@ -42,7 +42,7 @@ class SubscriptionViewControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with IterateeHelpers
-    with OneAppPerSuite{
+    with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
@@ -87,7 +87,7 @@ class SubscriptionViewControllerSpec
         SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady (SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -125,7 +125,7 @@ class SubscriptionViewControllerSpecRelease7
     with ScalaFutures
     with IntegrationPatience
     with IterateeHelpers
-    with OneAppPerSuite{
+    with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
@@ -133,26 +133,31 @@ class SubscriptionViewControllerSpecRelease7
     override val connector = mock[ViewDESConnector]
   }
 
-  val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None){
-    x => x.agentDetails match {
-      case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
-        startDate = y.agentPremises.startDate)))
-      case _ => None
-    }
+  val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
+    x =>
+      x.agentDetails match {
+        case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
+          startDate = y.agentPremises.startDate)))
+        case _ => None
+      }
   }
 
-  val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRp.copy(businessActivities = DesConstants.testBusinessActivities.copy(
-    all = Some(DesConstants.testBusinessActivitiesAll.copy(
-      businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-    ))
-  ),tradingPremises = DesConstants.testTradingPremisesAPI5.copy(agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))),
+  val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRp.copy(
+    businessActivities = DesConstants.testBusinessActivities.copy(
+      all = Some(DesConstants.testBusinessActivitiesAll.copy(
+        businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
+      ))
+    ),
+    tradingPremises = DesConstants.testTradingPremisesAPI5.copy(
+      agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))
+    ),
     msb = Some(DesConstants.testMsb.copy(
-    msbAllDetails = Some(MsbAllDetails(
-      Some("£50k-£100k"),
-      true,
-      Some(CountriesList(List("AD", "GB"))),
-      true)
-    )))
+      msbAllDetails = Some(MsbAllDetails(
+        Some("£50k-£100k"),
+        true,
+        Some(CountriesList(List("AD", "GB"))),
+        true)
+      )))
   )
 
   val request = FakeRequest()
@@ -190,7 +195,7 @@ class SubscriptionViewControllerSpecRelease7
         SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady (SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
