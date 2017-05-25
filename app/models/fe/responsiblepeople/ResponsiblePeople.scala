@@ -24,7 +24,6 @@ case class ResponsiblePeople(personName: Option[PersonName] = None,
                              personResidenceType: Option[PersonResidenceType] = None,
                              isUKResident: Option[ResidenceType] = None,
                              hasUKPassport: Option[PassportType] = None,
-                             dateOfBirth: Option[LocalDate] = None,
                              contactDetails: Option[ContactDetails] = None,
                              addressHistory: Option[ResponsiblePersonAddressHistory] = None,
                              positions: Option[Positions] = None,
@@ -51,7 +50,6 @@ object ResponsiblePeople {
           non <- id.nonUkResident
         } yield non.passportDetails
       },
-      None,
       desRp.contactCommDetails,
       desRp,
       desRp,
