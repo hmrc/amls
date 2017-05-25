@@ -79,8 +79,6 @@ trait SubscriptionService {
 
     validateRequest(safeId, request)
 
-    //val p = Promise[SubscriptionResponse]()
-
     for {
       response <- desConnector.subscribe(safeId, request)
         .map(desResponse => SubscriptionResponse.convert(desResponse))
@@ -91,7 +89,7 @@ trait SubscriptionService {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
-      result <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
+      _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
         KnownFact("MLRRefNumber", response.amlsRefNo)
       ))).map(_ => response).recover {
