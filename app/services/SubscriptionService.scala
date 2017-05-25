@@ -79,7 +79,7 @@ trait SubscriptionService {
 
     validateRequest(safeId, request)
 
-    val p = Promise[SubscriptionResponse]()
+    //val p = Promise[SubscriptionResponse]()
 
     for {
       response <- desConnector.subscribe(safeId, request)
@@ -91,18 +91,16 @@ trait SubscriptionService {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
-
-    } yield {
-      ggConnector.addKnownFacts(KnownFactsForService(Seq(
+      result <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
         KnownFact("MLRRefNumber", response.amlsRefNo)
-      ))).onComplete {
-        case _ => p.success(response)
+      ))).map(_ => response).recover {
+        case ex => Logger.warn("[AddKnownFactsFailed]", ex)
+          response
       }
 
-    }
+    } yield response
 
-    p.future
   }
 
   private def validateRequest(safeId: String, request: SubscriptionRequest) = {

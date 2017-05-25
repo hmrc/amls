@@ -30,7 +30,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue, Json}
-import play.api.test.Helpers.BAD_REQUEST
+import play.api.test.Helpers.{BAD_REQUEST, BAD_GATEWAY}
 import repositories.FeesRepository
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
@@ -71,7 +71,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
   implicit val hc = HeaderCarrier()
 
-  "SubscriptionService" must {
+  "SubscriptionService subscribe" must {
 
     "return a successful response" when {
 
@@ -157,7 +157,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when {
           successValidate.isSuccess
-        } thenReturn true
+        } thenReturn false
 
         when {
           SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
@@ -186,6 +186,75 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           result =>
             result mustEqual subscriptionResponse
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+        }
+      }
+    }
+
+    "return a failed future" when {
+
+      "bad request is returned" when {
+
+        "jsonbody is returned but does not contain an amlsregno" in {
+          reset(SubscriptionService.ggConnector)
+
+          val jsonBody = Json.obj("reason" -> duplicateSubscriptionMessage).toString
+
+          when {
+            successValidate.isSuccess
+          } thenReturn true
+
+          when {
+            SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+          } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
+
+
+          whenReady(SubscriptionService.subscribe(safeId, request).failed) {
+            case ex@HttpStatusException(status, body) =>
+              status mustEqual BAD_REQUEST
+              ex.jsonBody.get.reason must equal(duplicateSubscriptionMessage)
+
+          }
+        }
+
+        "no body is returned" in {
+          reset(SubscriptionService.ggConnector)
+
+          when {
+            successValidate.isSuccess
+          } thenReturn true
+
+          when {
+            SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+          } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, None))
+
+
+          whenReady(SubscriptionService.subscribe(safeId, request).failed) {
+            case ex@HttpStatusException(status, body) =>
+              status mustEqual BAD_REQUEST
+              ex.jsonBody must equal(None)
+
+          }
+        }
+      }
+
+      "another exception is returned" in {
+
+        reset(SubscriptionService.ggConnector)
+
+        when {
+          successValidate.isSuccess
+        } thenReturn true
+
+        when {
+          SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+        } thenReturn Future.failed(HttpStatusException(BAD_GATEWAY, None))
+
+
+        whenReady(SubscriptionService.subscribe(safeId, request).failed) {
+          case ex@HttpStatusException(status, body) =>
+            status mustEqual BAD_GATEWAY
+            ex.jsonBody must equal(None)
+
         }
       }
     }
