@@ -392,7 +392,7 @@ object ResponsiblePeopleSection {
   val model = Some(Seq(ResponsiblePeople(
     Some(personName),
     Some(personResidenceType),
-    None, None, None, None,
+    None, None, None,
     Some(contactDetails),
     Some(addressHistory),
     Some(positions),
@@ -410,7 +410,7 @@ object ResponsiblePeopleSection {
         Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111")), "AA", "AA")),
       Some(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111"))),
-      None, None, None, None,
+      None, None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
@@ -432,7 +432,7 @@ object ResponsiblePeopleSection {
           new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
       Some(UKResidence("BB000000A")),
-      None, None, None, None,
+      None, None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
