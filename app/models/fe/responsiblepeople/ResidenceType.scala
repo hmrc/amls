@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{IdDetail, NationalityDetails, UkResident}
+import models.des.responsiblepeople.NationalityDetails
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 

@@ -45,7 +45,13 @@ object ResponsiblePeople {
       desRp.nameDetails,
       desRp.nationalityDetails,
       desRp.nationalityDetails,
-      None,None,
+      {for{
+          nd <- desRp.nationalityDetails
+          id <- nd.idDetails
+          non <- id.nonUkResident
+        } yield non.passportDetails
+      },
+      None,
       desRp.contactCommDetails,
       desRp,
       desRp,

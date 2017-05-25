@@ -410,7 +410,7 @@ object ResponsiblePeopleSection {
         Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111")), "AA", "AA")),
       Some(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111"))),
-      None, None, None,
+      Some(UKPassport("AA1111111")), None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
