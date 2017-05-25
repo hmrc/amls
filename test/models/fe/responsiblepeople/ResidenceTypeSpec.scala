@@ -46,7 +46,7 @@ class ResidenceTypeSpec extends PlaySpec {
         Some("AD")
       ))
 
-      val feModel = Some(NonUKResidence(new LocalDate(year, month, date), UKPassport("AA1111111")))
+      val feModel = Some(NonUKResidence(new LocalDate(year, month, date)))
 
       ResidenceType.conv(desModel) must be(feModel)
     }

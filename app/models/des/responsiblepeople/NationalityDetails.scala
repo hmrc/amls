@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.{NonUKResidence, UKResidence, PersonResidenceType}
+import models.fe.responsiblepeople.{NonUKResidence, PersonResidenceType, ResponsiblePeople, UKResidence}
 import play.api.libs.json.Json
 
 case class NationalityDetails (areYouUkResident: Boolean,
@@ -26,19 +26,14 @@ case class NationalityDetails (areYouUkResident: Boolean,
 object NationalityDetails {
   implicit val format = Json.format[NationalityDetails]
 
-  implicit def conv(residenceType: Option[PersonResidenceType]): Option[NationalityDetails] = {
-    residenceType match {
-      case Some(data) => data
-      case _ => None
-    }
-  }
-
-  implicit def convert(residenceType: PersonResidenceType) : Option[NationalityDetails] = {
-    residenceType.isUKResidence match {
-      case uk:UKResidence => Some(NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth),
-        Some(residenceType.nationality)))
-      case nonUk:NonUKResidence => Some(NationalityDetails(false, NonUkResident.convert(nonUk), Some(residenceType.countryOfBirth),
-        Some(residenceType.nationality)))
+  implicit def convert(rp: ResponsiblePeople) : Option[NationalityDetails] = {
+    rp.personResidenceType map { residenceType =>
+      residenceType.isUKResidence match {
+        case uk: UKResidence => NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth),
+          Some(residenceType.nationality))
+        case nonUk: NonUKResidence => NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth),
+          Some(residenceType.nationality))
+      }
     }
   }
 }

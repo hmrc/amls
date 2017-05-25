@@ -80,8 +80,7 @@ trait ResponsiblePeopleValues {
       ResponsiblePeople(
         Some(PersonName("FirstName", Some("MiddleName"), "LastName",
           Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))), Some("Aliases1"))),
-        Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111")), "AA", "AA")),
-        Some(NonUKResidence(new LocalDate(2001, 1, 1), UKPassport("AA1111111"))),
+        Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1)), "AA", "AA")),
         Some(UKPassport("AA1111111")),
         None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
@@ -100,7 +99,6 @@ trait ResponsiblePeopleValues {
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
           Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        Some(UKResidence("BB000000A")),
         None, None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -122,7 +120,7 @@ trait ResponsiblePeopleValues {
     private val residenceMonth = 2
     private val residenceDay = 24
     private val residenceDate = new LocalDate(residenceYear, residenceMonth, residenceDay)
-    private val residence = NonUKResidence(residenceDate, UKPassport("AA1111111"))
+    private val residence = NonUKResidence(residenceDate)
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
     private val newPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "ES")
@@ -144,7 +142,7 @@ trait ResponsiblePeopleValues {
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
     Some(DefaultValues.personResidenceType),
-    None, None,
+    None,
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),
     Some(DefaultValues.positions),

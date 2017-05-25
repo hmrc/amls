@@ -17,12 +17,10 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.ResponsiblePersons
-import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 case class ResponsiblePeople(personName: Option[PersonName] = None,
                              personResidenceType: Option[PersonResidenceType] = None,
-                             isUKResident: Option[ResidenceType] = None,
                              hasUKPassport: Option[PassportType] = None,
                              contactDetails: Option[ContactDetails] = None,
                              addressHistory: Option[ResponsiblePersonAddressHistory] = None,
@@ -42,7 +40,6 @@ object ResponsiblePeople {
   def convertRP(desRp: ResponsiblePersons): ResponsiblePeople = {
     ResponsiblePeople(
       desRp.nameDetails,
-      desRp.nationalityDetails,
       desRp.nationalityDetails,
       {for{
           nd <- desRp.nationalityDetails

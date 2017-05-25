@@ -38,8 +38,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
       }
 
       "Successfully validate non uk residence type model" in {
-        val nonUKModel = PersonResidenceType(NonUKResidence(new LocalDate(year, month, date), UKPassport("AA1111111")),
-          "GB", "GB")
+        val nonUKModel = PersonResidenceType(NonUKResidence(new LocalDate(year, month, date)), "GB", "GB")
 
         PersonResidenceType.jsonRead.reads(
           PersonResidenceType.jsonWrite.writes(nonUKModel)) must
@@ -65,7 +64,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("AD"),
         Some("AD")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date), UKPassport("AA1111111")),"AD","AD"))
+      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date)),"AD","AD"))
       PersonResidenceType.conv(desModel) must be(feModel)
     }
 
@@ -87,7 +86,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("AA"),
         Some("BB")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date), NonUKPassport("AA1111111")),"AA","BB"))
+      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date)),"AA","BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }
@@ -107,7 +106,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("AA"),
         Some("BB")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date), NoPassport),"AA","BB"))
+      val feModel = Some(PersonResidenceType(NonUKResidence(new LocalDate(year, month, date)),"AA","BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }

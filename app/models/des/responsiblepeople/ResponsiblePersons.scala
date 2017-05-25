@@ -126,7 +126,7 @@ object ResponsiblePersons {
 
     ResponsiblePersons(
       rp.personName,
-      rp.personResidenceType,
+      rp,
       rp.contactDetails,
       rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
       rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
