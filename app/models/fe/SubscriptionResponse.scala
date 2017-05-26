@@ -40,7 +40,7 @@ object SubscriptionResponse {
       desResponse.fpNumbers.getOrElse(0) - desResponse.fpNumbersNotCharged.getOrElse(0),
       desResponse.premiseFYNumber.getOrElse(0),
       Some(SubscriptionFees(desResponse.paymentReference,
-        desResponse.registrationFee,
+        desResponse.registrationFee.getOrElse(0),
         desResponse.fpFee,
         desResponse.fpFeeRate,
         desResponse.premiseFee,
