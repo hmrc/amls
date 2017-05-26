@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 
 case class ResponsiblePeople(personName: Option[PersonName] = None,
                              personResidenceType: Option[PersonResidenceType] = None,
-                             hasUKPassport: Option[PassportType] = None,
+                             passportType: Option[PassportType] = None,
                              contactDetails: Option[ContactDetails] = None,
                              addressHistory: Option[ResponsiblePersonAddressHistory] = None,
                              positions: Option[Positions] = None,

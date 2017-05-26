@@ -30,7 +30,7 @@ object NonUkResident {
   implicit def convert(rp: ResponsiblePeople): Option[IdDetail] = {
     for {
       rt <- rp.personResidenceType
-      pp <- rp.hasUKPassport
+      pp <- rp.passportType
     } yield {
       (pp, rt.isUKResidence) match {
         case (UKPassport(num), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
