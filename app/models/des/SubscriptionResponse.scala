@@ -21,7 +21,7 @@ import play.api.libs.json._
 case class SubscriptionResponse(
                                  etmpFormBundleNumber: String,
                                  amlsRefNo: String,
-                                 registrationFee: BigDecimal,
+                                 registrationFee: Option[BigDecimal],
                                  fpFee: Option[BigDecimal],
                                  premiseFee: BigDecimal,
                                  totalFees: BigDecimal,
