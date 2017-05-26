@@ -65,7 +65,10 @@ trait SubscriptionService {
         ex.jsonBody map {
           case body if body.reason.startsWith(duplicateSubscriptionMessage) => amlsRegistrationNumberRegex.findFirstIn(body.reason)
             .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
-            amlsRegNo => constructedSubscriptionResponse(amlsRegNo, request)(ec)
+            amlsRegNo => {
+              Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo" )
+              constructedSubscriptionResponse(amlsRegNo, request)(ec)
+            }
           }
           case body =>
             failResponse(ex, body)
