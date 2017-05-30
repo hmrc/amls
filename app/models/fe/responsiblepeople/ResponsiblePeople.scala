@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
                               personResidenceType: Option[PersonResidenceType] = None,
-                              uKPassport: Option[UKPassport] = None,
+                              ukPassport: Option[UKPassport] = None,
                               nonUKPassport: Option[NonUKPassport] = None,
                               contactDetails: Option[ContactDetails] = None,
                               addressHistory: Option[ResponsiblePersonAddressHistory] = None,

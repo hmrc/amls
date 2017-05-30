@@ -28,7 +28,7 @@ class NonUkResidentSpec extends PlaySpec {
       val residence = NonUKResidence(new LocalDate(1990,2,24))
       val rp = ResponsiblePeople(
         personResidenceType = Some(PersonResidenceType(residence, "GB", "GB")),
-        uKPassport = Some(UKPassportYes("AA111111A"))
+        ukPassport = Some(UKPassportYes("AA111111A"))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",
         true,Some(PassportDetail(true,PassportNum(Some("AA111111A"),None))))))))

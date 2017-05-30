@@ -75,6 +75,7 @@ trait ResponsiblePeopleValues {
     val training = TrainingYes("test")
     val experienceTraining = ExperienceTrainingYes("Some training")
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
+    val ukPassport = UKPassportYes("87654321")
 
     val convertedModel = Some(List(
       ResponsiblePeople(
@@ -143,7 +144,7 @@ trait ResponsiblePeopleValues {
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
     Some(DefaultValues.personResidenceType),
-    None,
+    Some(DefaultValues.ukPassport),
     None,
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),
@@ -169,6 +170,10 @@ trait ResponsiblePeopleValues {
       "nino" -> "AA1111111",
       "countryOfBirth" -> "GB",
       "nationality" -> "GB"
+    ),
+    "ukPassport" -> Json.obj(
+      "ukPassport" -> true,
+      "ukPassportNumber" -> "87654321"
     ),
     "contactDetails" -> Json.obj(
       "phoneNumber" -> "07000001122",

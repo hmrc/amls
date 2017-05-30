@@ -57,7 +57,6 @@ class SubscriptionViewControllerSpec
 
     val amlsRegistrationNumber = "XAML00000567890"
 
-
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
       val result = SubscriptionViewController.view("test", "test", "test")(request)

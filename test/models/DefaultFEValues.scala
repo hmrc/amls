@@ -389,11 +389,14 @@ object ResponsiblePeopleSection {
   private val experienceTraining = ExperienceTrainingYes("Some training")
   private val positions = Positions(Set(SoleProprietor, NominatedOfficer), Some(new LocalDate()))
 
+  private val ukPassport = UKPassportYes("87654321")
+  private val nonUKPassport = NonUKPassportYes("87654321")
+
   val model = Some(Seq(ResponsiblePeople(
     Some(personName),
     Some(personResidenceType),
-    None,
-    None,
+    Some(ukPassport),
+    Some(nonUKPassport),
     Some(contactDetails),
     Some(addressHistory),
     Some(positions),
@@ -401,8 +404,8 @@ object ResponsiblePeopleSection {
     Some(vatRegistered),
     Some(experienceTraining),
     Some(training),
-    Some(true))))
-
+    Some(true)
+  )))
 
   val modelForView = Some(List(
     ResponsiblePeople(
