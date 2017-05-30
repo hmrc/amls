@@ -29,10 +29,10 @@ object NationalityDetails {
   implicit def convert(rp: ResponsiblePeople) : Option[NationalityDetails] = {
     rp.personResidenceType map { residenceType =>
       residenceType.isUKResidence match {
-        case uk: UKResidence => NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth),
-          Some(residenceType.nationality))
-        case nonUk: NonUKResidence => NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth),
-          Some(residenceType.nationality))
+        case uk: UKResidence =>
+          NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
+        case _: NonUKResidence =>
+          NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
       }
     }
   }
