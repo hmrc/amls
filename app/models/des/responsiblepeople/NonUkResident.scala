@@ -28,16 +28,21 @@ object NonUkResident {
   implicit val format = Json.format[NonUkResident]
 
   implicit def convert(rp: ResponsiblePeople): Option[IdDetail] = {
-    for {
-      rt <- rp.personResidenceType
-      pp <- rp.passportType
-    } yield {
-      (pp, rt.isUKResidence) match {
-        case (UKPassport(num), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
-          Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num)))))))
-        case (NonUKPassport(num), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
-          Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
-        case (NoPassport, dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, false, None)))
+    rp.personResidenceType map { rt =>
+      rp.uKPassport flatMap {
+        case UKPassportYes(num) => rt.isUKResidence match {
+          case dtls@NonUKResidence(_) =>
+            Some(IdDetail(
+              None, Some(NonUkResident(dtls.dateOfBirth.toString, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
+            ))
+        }
+        case _ => None
+      } getOrElse {
+        (rp.nonUKPassport, rt.isUKResidence) match {
+          case (Some(NonUKPassportYes(num)), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
+            Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
+          case (Some(NoPassport), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, false, None)))
+        }
       }
     }
   }

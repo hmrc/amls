@@ -81,7 +81,8 @@ trait ResponsiblePeopleValues {
         Some(PersonName("FirstName", Some("MiddleName"), "LastName",
           Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))), Some("Aliases1"))),
         Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1)), "AA", "AA")),
-        Some(UKPassport("AA1111111")),
+        Some(UKPassportYes("AA1111111")),
+        None,
         None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
@@ -99,7 +100,7 @@ trait ResponsiblePeopleValues {
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
           Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        None, None,
+        None, None, None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -142,6 +143,7 @@ trait ResponsiblePeopleValues {
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
     Some(DefaultValues.personResidenceType),
+    None,
     None,
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),

@@ -189,6 +189,7 @@ class SubscriptionViewControllerSpecRelease7
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModel))
 
     }
+
     "return an invalid response when the service fails" in {
 
       when {

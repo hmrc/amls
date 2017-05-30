@@ -53,7 +53,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
   val response = des.SubscriptionResponse(
     etmpFormBundleNumber = "111111",
     amlsRefNo = "XAML00000567890",
-    150.00,
+    Some(150.00),
     Some(100.0),
     300.0,
     550.0,
