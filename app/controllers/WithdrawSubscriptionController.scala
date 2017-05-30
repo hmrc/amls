@@ -46,7 +46,7 @@ trait WithdrawSubscriptionController extends BaseController {
     "errors" -> Seq(message)
   )
 
-  def withdrawal(amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
