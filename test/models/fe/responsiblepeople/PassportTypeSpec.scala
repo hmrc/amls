@@ -28,18 +28,18 @@ class PassportTypeSpec extends PlaySpec {
 
       "Read the json and return the PassportType domain object successfully for the NoPassport" in {
 
-        PassportType.jsonReads.reads(PassportType.jsonWrites.writes(NoPassport)) must
-          be(JsSuccess(NoPassport))
+        PassportType.jsonReads.reads(PassportType.jsonWrites.writes(PassportTypeNoPassport)) must
+          be(JsSuccess(PassportTypeNoPassport))
       }
 
       "Read the json and return NonUKPassport" in {
-        val model = NonUKPassport("22222222222222222222222")
+        val model = PassportTypeNonUKPassport("22222222222222222222222")
         PassportType.jsonReads.reads(PassportType.jsonWrites.writes(model)) must
           be(JsSuccess(model, JsPath \ "nonUKPassportNumber"))
       }
 
       "Read the json and return UKPassport" in {
-        val model = UKPassport("AA1111111")
+        val model = PassportTypeUKPassport("AA1111111")
         PassportType.jsonReads.reads(PassportType.jsonWrites.writes(model)) must
           be(JsSuccess(model, JsPath \ "ukPassportNumber"))
       }

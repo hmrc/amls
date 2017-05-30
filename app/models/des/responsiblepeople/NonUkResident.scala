@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.{NoPassport, NonUKPassport, UKPassport, NonUKResidence}
+import models.fe.responsiblepeople.{PassportTypeNoPassport, PassportTypeNonUKPassport, PassportTypeUKPassport, NonUKResidence}
 import play.api.libs.json.Json
 
 case class NonUkResident (dateOfBirth: String,
@@ -29,11 +29,11 @@ object NonUkResident {
 
   implicit def convert(dtls: NonUKResidence) : Option[IdDetail] = {
     dtls.passportType match {
-      case UKPassport(num) => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
+      case PassportTypeUKPassport(num) => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
         Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))))
-      case NonUKPassport(num) => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
+      case PassportTypeNonUKPassport(num) => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
         Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num))))))))
-      case NoPassport => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, false, None))))
+      case PassportTypeNoPassport => Some(IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, false, None))))
     }
   }
 }

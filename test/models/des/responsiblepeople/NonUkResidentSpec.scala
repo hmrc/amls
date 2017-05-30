@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.{NoPassport, NonUKPassport, UKPassport, NonUKResidence}
+import models.fe.responsiblepeople.{PassportTypeNoPassport, PassportTypeNonUKPassport, PassportTypeUKPassport, NonUKResidence}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 
@@ -25,19 +25,19 @@ class NonUkResidentSpec extends PlaySpec {
   "NonUkResident" should {
     "successfully convert frontend model to des model for UKPassport" in {
       // scalastyle:off magic.number
-      val residence = NonUKResidence(new LocalDate(1990,2,24), UKPassport("AA111111A"))
+      val residence = NonUKResidence(new LocalDate(1990,2,24), PassportTypeUKPassport("AA111111A"))
       NonUkResident.convert(residence) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",
         true,Some(PassportDetail(true,PassportNum(Some("AA111111A"),None))))))))
     }
 
     "successfully convert frontend model to des model for NonUKPassport" in {
-      val residence = NonUKResidence(new LocalDate(1990,2,24), NonUKPassport("1234612124646"))
+      val residence = NonUKResidence(new LocalDate(1990,2,24), PassportTypeNonUKPassport("1234612124646"))
       NonUkResident.convert(residence) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",
         true,Some(PassportDetail(false,PassportNum(None,Some("1234612124646")))))))))
     }
 
     "successfully convert frontend model to des model for NoPassport" in {
-      val residence = NonUKResidence(new LocalDate(1990,2,24), NoPassport)
+      val residence = NonUKResidence(new LocalDate(1990,2,24), PassportTypeNoPassport)
       NonUkResident.convert(residence) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",false,None)))))
     }
   }

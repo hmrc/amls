@@ -78,7 +78,7 @@ trait ResponsiblePeopleValues {
 
     val convertedModel = Some(List(ResponsiblePeople(Some(PersonName("FirstName",Some("MiddleName"),"LastName",
       Some(PreviousName(Some("FirstName"),Some("MiddleName"),Some("LastName"),new LocalDate(2001,1,1))),Some("Aliases1"))),
-      Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),UKPassport("AA1111111")),"AA","AA")),
+      Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),PassportTypeUKPassport("AA1111111")),"AA","AA")),
       None,Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
         "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"AA1 1AA"),
     ThreeYearsPlus)),None,None)),Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
@@ -102,7 +102,7 @@ trait ResponsiblePeopleValues {
     private val residenceMonth = 2
     private val residenceDay = 24
     private val residenceDate = new LocalDate(residenceYear, residenceMonth, residenceDay)
-    private val residence = NonUKResidence(residenceDate, UKPassport("AA1111111"))
+    private val residence = NonUKResidence(residenceDate, PassportTypeUKPassport("AA1111111"))
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
     private val newPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "ES")

@@ -403,7 +403,7 @@ object ResponsiblePeopleSection {
 
   val modelForView = Some(List(ResponsiblePeople(Some(PersonName("FirstName",Some("MiddleName"),"LastName",
     Some(PreviousName(Some("FirstName"),Some("MiddleName"),Some("LastName"),new LocalDate(2001,1,1))),Some("Aliases1"))),
-    Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),UKPassport("AA1111111")),"AA","AA")),
+    Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),PassportTypeUKPassport("AA1111111")),"AA","AA")),
     None,Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
       "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"AA1 1AA"),
       ThreeYearsPlus)),None,None)),Some(Positions(Set(NominatedOfficer,SoleProprietor), Some(new LocalDate()))),
