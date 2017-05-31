@@ -17,10 +17,11 @@
 package modules
 
 import com.google.inject.AbstractModule
-import connectors.{DESConnector, DeregisterSubscriptionConnector}
+import connectors.{DESConnector, DeregisterSubscriptionConnector, WithdrawSubscriptionConnector}
 
 class Module extends AbstractModule {
   override def configure() = {
     bind(classOf[DeregisterSubscriptionConnector]).toInstance(DESConnector)
+    bind(classOf[WithdrawSubscriptionConnector]).toInstance(DESConnector)
   }
 }
