@@ -12,4 +12,4 @@ GET       /subscription/:accountType/:ref/:amlsRegistrationNumber               
 GET       /payment/:accountType/:ref/:amlsRegistrationNumber                        controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
 
 POST       /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal       controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
-POST       /subscription/:amlsRegistrationNumber/deregistration                     @controllers.DeregisterSubscriptionController.deregistration(amlsRegistrationNumber: String)
+POST       /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration   @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)
