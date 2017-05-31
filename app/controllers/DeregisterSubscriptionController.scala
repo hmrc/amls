@@ -46,7 +46,7 @@ class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector
       "errors" -> Seq(message)
   )
 
-  def deregistration(amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {

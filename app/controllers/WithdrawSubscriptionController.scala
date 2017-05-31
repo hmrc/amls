@@ -16,7 +16,9 @@
 
 package controllers
 
-import connectors.{DESConnector, WithdrawSubscriptionConnector}
+import javax.inject.Inject
+
+import connectors.WithdrawSubscriptionConnector
 import models.des.WithdrawSubscriptionRequest
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -26,9 +28,7 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait WithdrawSubscriptionController extends BaseController {
-
-  private[controllers] val desConnector: WithdrawSubscriptionConnector
+class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector) extends BaseController {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
@@ -52,7 +52,7 @@ trait WithdrawSubscriptionController extends BaseController {
         case Some(_) => {
           Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
             case JsSuccess(body, _) =>
-              desConnector.withdrawal(amlsRegistrationNumber, body) map {
+              connector.withdrawal(amlsRegistrationNumber, body) map {
                 response =>
                   Ok(Json.toJson(response))
               }
@@ -66,8 +66,4 @@ trait WithdrawSubscriptionController extends BaseController {
           }
       }
   }
-}
-
-object WithdrawSubscriptionController extends WithdrawSubscriptionController {
-  private[controllers] val desConnector = DESConnector
 }
