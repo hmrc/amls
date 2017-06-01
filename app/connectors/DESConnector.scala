@@ -74,8 +74,8 @@ object DESConnector extends SubscribeDESConnector
   override private[connectors] lazy val httpPost: HttpPost = WSHttp
   override private[connectors] lazy val httpPut: HttpPut = WSHttp
   override private[connectors] lazy val httpGet: HttpGet = WSHttp
-  override private[connectors] val metrics: Metrics = Metrics
-  override private[connectors] val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
-  override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-  override private[connectors] val auditConnector: AuditConnector = MicroserviceAuditConnector
+  override private[connectors] lazy val metrics: Metrics = Metrics
+  override private[connectors] lazy val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
+  override private[connectors] lazy val fullUrl: String = s"$baseUrl/$requestUrl"
+  override private[connectors] lazy val auditConnector: AuditConnector = MicroserviceAuditConnector
 }

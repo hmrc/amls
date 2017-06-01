@@ -33,12 +33,8 @@ import scala.concurrent.Future
 class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
   trait Fixture {
-    lazy val mockWithdrawConnector = mock[WithdrawSubscriptionConnector]
-
-    object TestController extends WithdrawSubscriptionController {
-      override val desConnector = mockWithdrawConnector
-    }
-
+    lazy val desConnector = mock[WithdrawSubscriptionConnector]
+    val controller = new WithdrawSubscriptionController(desConnector)
   }
 
   val amlsRegistrationNumber = "XAML00000567890"
@@ -60,10 +56,10 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
   "WithdrawSubscriptionController" must {
 
     "successfully return success response on valid request" in new Fixture {
-      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any(), any()))
+      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(success))
 
-      private val result = TestController.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest)
+      private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest)
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(success))
     }
@@ -79,17 +75,17 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
           "error" -> "error.path.missing"))
       )
 
-      private val result = TestController.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequestWithNoBody)
+      private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequestWithNoBody)
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
 
 
     "return failed response on exception" in new Fixture {
-      when(mockWithdrawConnector.withdrawal(any(), any())(any(), any(), any(), any()))
+      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message"))))
 
-      whenReady(TestController.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest).failed) {
+      whenReady(controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(INTERNAL_SERVER_ERROR)
           body must be(Some("message"))
@@ -101,7 +97,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
         "errors" -> Seq("Invalid amlsRegistrationNumber")
       )
 
-      private val result = TestController.withdrawal("org", "TestOrgRef", "fsdfsdf")(postRequest)
+      private val result = controller.withdrawal("org", "TestOrgRef", "fsdfsdf")(postRequest)
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }

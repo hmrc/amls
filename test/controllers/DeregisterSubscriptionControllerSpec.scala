@@ -37,6 +37,8 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
     val deregisterSubscriptionController = new DeregisterSubscriptionController(deregisterSubscriptionConnector = mockDeregConnector)
   }
 
+  val accountType = "org"
+  val accountRef = "TestOrgRef"
   val amlsRegistrationNumber = "XAML00000567890"
   val success = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
 
@@ -63,7 +65,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
         mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any())
       ) thenReturn Future.successful(success)
 
-      private val result = deregisterSubscriptionController.deregistration(amlsRegistrationNumber)(postRequest)
+      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest)
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(success))
     }
@@ -80,7 +82,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
             "error" -> "error.path.missing")
         ))
 
-      private val result = deregisterSubscriptionController.deregistration(amlsRegistrationNumber)(postRequestWithNoBody)
+      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequestWithNoBody)
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
@@ -92,7 +94,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
         mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any())
       ) thenReturn Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(deregisterSubscriptionController.deregistration(amlsRegistrationNumber)(postRequest).failed) {
+      whenReady(deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(INTERNAL_SERVER_ERROR)
           body must be(Some("message"))
@@ -105,7 +107,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
         "errors" -> Seq("Invalid amlsRegistrationNumber")
       )
 
-      private val result = deregisterSubscriptionController.deregistration("fsdfsdf")(postRequest)
+      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, "fsdfsdf")(postRequest)
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
