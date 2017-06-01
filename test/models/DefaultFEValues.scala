@@ -397,6 +397,7 @@ object ResponsiblePeopleSection {
     Some(personResidenceType),
     Some(ukPassport),
     Some(nonUKPassport),
+    None,
     Some(contactDetails),
     Some(addressHistory),
     Some(positions),
@@ -415,6 +416,7 @@ object ResponsiblePeopleSection {
       Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1)), "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       None,
+      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
@@ -436,7 +438,7 @@ object ResponsiblePeopleSection {
         Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"),
           new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      None,None,None,
+      None,None,None,None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),

@@ -24,6 +24,7 @@ case class ResponsiblePeople(
                               personResidenceType: Option[PersonResidenceType] = None,
                               ukPassport: Option[UKPassport] = None,
                               nonUKPassport: Option[NonUKPassport] = None,
+                              dateOfBirth: Option[DateOfBirth] = None,
                               contactDetails: Option[ContactDetails] = None,
                               addressHistory: Option[ResponsiblePersonAddressHistory] = None,
                               positions: Option[Positions] = None,
@@ -58,6 +59,7 @@ object ResponsiblePeople {
           non <- id.nonUkResident
         } yield PassportType.conv(non.passportDetails))
       },
+      desRp,
       desRp.contactCommDetails,
       desRp,
       desRp,
