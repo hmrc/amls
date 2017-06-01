@@ -62,7 +62,7 @@ object PersonResidenceType {
       case Some(idDetail) => {
 
         val ukResidence:Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
-        val nonUKResidence:Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence(LocalDate.parse(x.dateOfBirth)))
+        val nonUKResidence:Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
 
         val residenceType = details.areYouUkResident match {
           case true => ukResidence

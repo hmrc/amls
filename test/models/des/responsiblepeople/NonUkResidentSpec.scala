@@ -23,32 +23,32 @@ import org.scalatestplus.play.PlaySpec
 class NonUkResidentSpec extends PlaySpec {
 
   "NonUkResident" should {
-    "successfully convert frontend model to des model for UKPassport" in {
+    "convert frontend model to des model for UKPassport" in {
       // scalastyle:off magic.number
-      val residence = NonUKResidence(new LocalDate(1990,2,24))
       val rp = ResponsiblePeople(
-        personResidenceType = Some(PersonResidenceType(residence, "GB", "GB")),
-        ukPassport = Some(UKPassportYes("AA111111A"))
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
+        ukPassport = Some(UKPassportYes("AA111111A")),
+        dateOfBirth = Some(DateOfBirth(new LocalDate(1990,2,24)))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",
         true,Some(PassportDetail(true,PassportNum(Some("AA111111A"),None))))))))
     }
 
-    "successfully convert frontend model to des model for NonUKPassport" in {
-      val residence = NonUKResidence(new LocalDate(1990,2,24))
+    "convert frontend model to des model for NonUKPassport" in {
       val rp = ResponsiblePeople(
-        personResidenceType = Some(PersonResidenceType(residence, "GB", "GB")),
-        nonUKPassport = Some(NonUKPassportYes("1234612124646"))
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
+        nonUKPassport = Some(NonUKPassportYes("1234612124646")),
+        dateOfBirth = Some(DateOfBirth(new LocalDate(1990,2,24)))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",
         true,Some(PassportDetail(false,PassportNum(None,Some("1234612124646")))))))))
     }
 
-    "successfully convert frontend model to des model for NoPassport" in {
-      val residence = NonUKResidence(new LocalDate(1990,2,24))
+    "convert frontend model to des model for NoPassport" in {
       val rp = ResponsiblePeople(
-        personResidenceType = Some(PersonResidenceType(residence, "GB", "GB")),
-        nonUKPassport = Some(NoPassport)
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
+        nonUKPassport = Some(NoPassport),
+        dateOfBirth = Some(DateOfBirth(new LocalDate(1990,2,24)))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None,Some(NonUkResident("1990-02-24",false,None)))))
     }

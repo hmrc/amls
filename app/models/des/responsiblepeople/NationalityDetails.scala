@@ -31,7 +31,7 @@ object NationalityDetails {
       residenceType.isUKResidence match {
         case uk: UKResidence =>
           NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
-        case _: NonUKResidence =>
+        case NonUKResidence =>
           NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
       }
     }

@@ -16,31 +16,45 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople._
+import models.fe.responsiblepeople.{NonUKResidence, _}
 import play.api.libs.json.Json
 
-case class NonUkResident (dateOfBirth: String,
-                          passportHeld: Boolean,
-                          passportDetails: Option[PassportDetail]
-                         )
+case class NonUkResident(dateOfBirth: String,
+                         passportHeld: Boolean,
+                         passportDetails: Option[PassportDetail]
+                        )
 
 object NonUkResident {
   implicit val format = Json.format[NonUkResident]
 
   implicit def convert(rp: ResponsiblePeople): Option[IdDetail] = {
     rp.personResidenceType map { rt =>
-      rp.ukPassport.fold[Option[IdDetail]](None){
+      rp.ukPassport.fold[Option[IdDetail]](None) {
         case UKPassportYes(num) => rt.isUKResidence match {
-          case dtls@NonUKResidence(_) =>
-            Some(IdDetail(
-              None, Some(NonUkResident(dtls.dateOfBirth.toString, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
-            ))
+          case NonUKResidence =>
+            rp.dateOfBirth map { dob =>
+              IdDetail(
+                None, Some(NonUkResident(dob.dateOfBirth.toString, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
+              )
+            }
         }
       } getOrElse {
         (rp.nonUKPassport, rt.isUKResidence) match {
-          case (Some(NonUKPassportYes(num)), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, true,
-            Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
-          case (Some(NoPassport), dtls@NonUKResidence(_)) => IdDetail(None, Some(NonUkResident(dtls.dateOfBirth.toString, false, None)))
+          case (Some(NonUKPassportYes(num)), NonUKResidence) => {
+            IdDetail(
+              None,
+              rp.dateOfBirth map { dob =>
+                NonUkResident(dob.dateOfBirth.toString, true,
+                  Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))
+              })
+          }
+          case (Some(NoPassport), NonUKResidence) => {
+            IdDetail(
+              None,
+              rp.dateOfBirth map { dob =>
+                NonUkResident(dob.dateOfBirth.toString, false, None)
+              })
+          }
         }
       }
     }

@@ -413,7 +413,7 @@ object ResponsiblePeopleSection {
       Some(PersonName("FirstName", Some("MiddleName"), "LastName",
         Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))),
         Some("Aliases1"))),
-      Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1)), "AA", "AA")),
+      Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       None,
       Some(DateOfBirth(new LocalDate(2001, 1, 1))),

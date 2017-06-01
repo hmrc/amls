@@ -81,7 +81,7 @@ trait ResponsiblePeopleValues {
       ResponsiblePeople(
         Some(PersonName("FirstName", Some("MiddleName"), "LastName",
           Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))), Some("Aliases1"))),
-        Some(PersonResidenceType(NonUKResidence(new LocalDate(2001, 1, 1)), "AA", "AA")),
+        Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
         Some(UKPassportYes("AA1111111")),
         None,
         Some(DateOfBirth(new LocalDate(2001, 1, 1))),
@@ -122,8 +122,7 @@ trait ResponsiblePeopleValues {
     private val residenceYear = 1990
     private val residenceMonth = 2
     private val residenceDay = 24
-    private val residenceDate = new LocalDate(residenceYear, residenceMonth, residenceDay)
-    private val residence = NonUKResidence(residenceDate)
+    private val residence = NonUKResidence
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
     private val newPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "ES")

@@ -24,10 +24,6 @@ class ResidenceTypeSpec extends PlaySpec {
 
   "ResidenceType" must {
 
-    val year = 2001
-    val month = 1
-    val date = 1
-
     "convert des.NationalityDetails to fe.ResidenceType" in {
       val desModel = Some(NationalityDetails(
         false,
@@ -46,7 +42,7 @@ class ResidenceTypeSpec extends PlaySpec {
         Some("AD")
       ))
 
-      val feModel = Some(NonUKResidence(new LocalDate(year, month, date)))
+      val feModel = Some(NonUKResidence)
 
       ResidenceType.conv(desModel) must be(feModel)
     }
