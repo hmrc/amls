@@ -45,20 +45,8 @@ object ResponsiblePeople {
     ResponsiblePeople(
       desRp.nameDetails,
       desRp.nationalityDetails,
-      {
-        convToUKPassport(for {
-          nd <- desRp.nationalityDetails
-          id <- nd.idDetails
-          non <- id.nonUkResident
-        } yield PassportType.conv(non.passportDetails))
-      },
-      {
-        convToNonUKPassport(for {
-          nd <- desRp.nationalityDetails
-          id <- nd.idDetails
-          non <- id.nonUkResident
-        } yield PassportType.conv(non.passportDetails))
-      },
+      desRp,
+      desRp,
       desRp,
       desRp.contactCommDetails,
       desRp,
@@ -77,22 +65,6 @@ object ResponsiblePeople {
     rp match {
       case Some(data) =>
         Some(data.map(x => convertRP(x)))
-      case _ => None
-    }
-  }
-
-  private def convToUKPassport(passportType: Option[PassportType]): Option[UKPassport] = {
-    passportType match {
-      case Some(UKPassportYes(ukPassportNumber)) => Some(UKPassportYes(ukPassportNumber))
-      case Some(UKPassportNo) => Some(UKPassportNo)
-      case _ => None
-    }
-  }
-
-  private def convToNonUKPassport(passportType: Option[PassportType]): Option[NonUKPassport] = {
-    passportType match {
-      case Some(NonUKPassportYes(nonUKPassportNumber)) => Some(NonUKPassportYes(nonUKPassportNumber))
-      case Some(NoPassport) => Some(NoPassport)
       case _ => None
     }
   }

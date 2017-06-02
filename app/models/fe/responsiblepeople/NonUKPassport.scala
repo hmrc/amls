@@ -16,10 +16,10 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.PassportDetail
+import models.des.responsiblepeople.{PassportDetail, ResponsiblePersons}
 import play.api.libs.json._
 
-sealed trait NonUKPassport extends PassportType
+sealed trait NonUKPassport
 
 case class NonUKPassportYes(nonUKPassportNumber: String) extends NonUKPassport
 case object NoPassport extends NonUKPassport
@@ -38,6 +38,22 @@ object NonUKPassport {
       "nonUKPassportNumber" -> value
     )
     case NoPassport => Json.obj("nonUKPassport" -> false)
+  }
+
+  implicit def conv(responsiblePersons: ResponsiblePersons): Option[NonUKPassport] = {
+    for {
+      nd <- responsiblePersons.nationalityDetails
+      id <- nd.idDetails
+      non <- id.nonUkResident
+      nonUKPassport <- non.passportDetails flatMap { passport =>
+        if(!passport.ukPassport) {
+          Some(NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse("")))
+        } else {
+          None
+        }
+      }
+    } yield nonUKPassport
+
   }
 
 }
