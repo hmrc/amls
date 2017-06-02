@@ -29,7 +29,7 @@ object NonUkResident {
 
   implicit def convert(rp: ResponsiblePeople): Option[IdDetail] = {
     rp.personResidenceType map { rt =>
-      rp.ukPassport.fold[Option[IdDetail]](None) {
+      rp.ukPassport flatMap {
         case UKPassportYes(num) => rt.isUKResidence match {
           case NonUKResidence =>
             rp.dateOfBirth map { dob =>
@@ -38,6 +38,7 @@ object NonUkResident {
               )
             }
         }
+        case _ => None
       } getOrElse {
         (rp.nonUKPassport, rt.isUKResidence) match {
           case (Some(NonUKPassportYes(num)), NonUKResidence) => {
