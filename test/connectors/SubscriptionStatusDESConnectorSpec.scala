@@ -66,7 +66,8 @@ class SubscriptionStatusDESConnectorSpec
     }
     implicit val hc = HeaderCarrier()
 
-    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
+    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved",
+      None, None, None, None, false, safeId = "ABCDEF123456789")
 
     val mockTimer = mock[Timer.Context]
 
