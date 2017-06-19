@@ -63,7 +63,7 @@ class SubscriptionStatusControllerSpec
     "return a valid response when the amls registration number is valid" in {
 
       val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved",
-        None, None, None, None, false, safeId = "ABCDEF123456789")
+        None, None, None, None, false)
 
       when {
         SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())

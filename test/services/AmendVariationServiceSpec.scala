@@ -95,7 +95,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     unchangedExtra
   )
 
-  val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false, safeId = "ABCDEF123456789")
+  val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false)
   val amlsRegistrationNumber = "XAAW00000567890"
   val amlsRegForHalfYears = "XAAW00000567891"
 
