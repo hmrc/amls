@@ -31,7 +31,10 @@ object BankDetails {
     }
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): BankDetails = {
-    val noOfMlrBankAccounts = bankdetails.length.toString
+    val noOfMlrBankAccounts = bankdetails.length match {
+      case x if x > 99 =>  "99"
+      case _ => bankdetails.length.toString
+    }
     BankDetails(noOfMlrBankAccounts, emptyToOption(bankdetails))
   }
 }
