@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.SubscriptionEvent
+import audit.{SubscriptionEvent, SubscriptionFailedEvent}
 import exceptions.HttpStatusException
 import metrics.API4
 import models.des
@@ -62,16 +62,19 @@ trait SubscribeDESConnector extends DESConnector {
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API4)
+        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(r.body)))
     } recoverWith {
       case e: HttpStatusException =>
+        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API4)
+        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
