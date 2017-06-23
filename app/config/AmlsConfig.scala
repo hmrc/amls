@@ -20,6 +20,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AmlsConfig {
   def release7: Boolean
+  def enablePostcodeKnownFact: Boolean
 }
 
 object AmlsConfig extends AmlsConfig with ServicesConfig {
@@ -31,5 +32,6 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
 
-  override def release7 = getConfBool("feature-toggle.release7", false)
+  override def release7 = getConfBool("feature-toggle.release7", defBool = false)
+  override def enablePostcodeKnownFact = getConfBool("feature-toggle.knownfact-postcode", defBool = false)
 }
