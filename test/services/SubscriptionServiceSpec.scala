@@ -30,6 +30,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers.{BAD_GATEWAY, BAD_REQUEST}
 import repositories.FeesRepository
@@ -38,8 +39,7 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
-
+trait TestFixture extends MockitoSugar {
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
@@ -73,19 +73,24 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
   val safeId = "safeId"
 
-  val knownFacts = KnownFactsForService(Seq(
-    KnownFact("SafeId", safeId),
-    KnownFact("MLRRefNumber", response.amlsRefNo),
-    KnownFact("POSTCODE", businessAddressPostcode)
-  ))
-
   implicit val hc = HeaderCarrier()
+}
+
+class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+
+  override implicit lazy val app = new GuiceApplicationBuilder()
+    .configure("microservice.services.feature-toggle.knownfact-postcode" -> true)
+    .build()
 
   "SubscriptionService subscribe" must {
-
     "return a successful response" when {
+      "connector returns full response" in new TestFixture {
 
-      "connector returns full response" in {
+        val knownFacts = KnownFactsForService(Seq(
+          KnownFact("SafeId", safeId),
+          KnownFact("MLRRefNumber", response.amlsRefNo),
+          KnownFact("POSTCODE", businessAddressPostcode)
+        ))
 
         reset(SubscriptionService.ggConnector)
 
@@ -110,7 +115,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         }
       }
 
-      "connector returns duplicate response with amlsregno and there are no stored fees" in {
+      "connector returns duplicate response with amlsregno and there are no stored fees" in new TestFixture {
 
         reset(SubscriptionService.ggConnector)
 
@@ -150,12 +155,12 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
         whenReady(SubscriptionService.subscribe(safeId, request)) { result =>
-            result mustEqual subscriptionResponse
-            verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+          result mustEqual subscriptionResponse
+          verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }
 
-      "connector returns duplicate response with amlsregno and there are stored fees" in {
+      "connector returns duplicate response with amlsregno and there are stored fees" in new TestFixture {
 
         reset(SubscriptionService.ggConnector)
 
@@ -202,10 +207,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
     }
 
     "return a failed future" when {
-
       "bad request is returned" when {
+        "jsonbody is returned but does not contain an amlsregno" in new TestFixture {
 
-        "jsonbody is returned but does not contain an amlsregno" in {
           reset(SubscriptionService.ggConnector)
 
           val jsonBody = Json.obj("reason" -> duplicateSubscriptionMessage).toString
@@ -227,7 +231,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           }
         }
 
-        "no body is returned" in {
+        "no body is returned" in new TestFixture {
           reset(SubscriptionService.ggConnector)
 
           when {
@@ -248,7 +252,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         }
       }
 
-      "another exception is returned" in {
+      "another exception is returned" in new TestFixture {
 
         reset(SubscriptionService.ggConnector)
 
@@ -272,3 +276,45 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
   }
 }
 
+class SubscriptionServiceNoPostcodeKnownFactSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+
+  override implicit lazy val app = new GuiceApplicationBuilder()
+    .configure("microservice.services.feature-toggle.knownfact-postcode" -> false)
+    .build()
+
+  implicit val hc = HeaderCarrier()
+
+  "SubscriptionService subscribe" must {
+    "not add the postcode into Known Facts" when {
+      "the feature is toggled off" in new TestFixture {
+
+        val knownFacts = KnownFactsForService(Seq(
+          KnownFact("SafeId", safeId),
+          KnownFact("MLRRefNumber", response.amlsRefNo)
+        ))
+
+        reset(SubscriptionService.ggConnector)
+
+        when {
+          successValidate.isSuccess
+        } thenReturn true
+
+        when {
+          SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
+        } thenReturn Future.successful(response)
+
+        when {
+          SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
+
+        when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+
+        whenReady(SubscriptionService.subscribe(safeId, request)) {
+          result =>
+            result mustEqual SubscriptionResponse.convert(response)
+            verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
+        }
+      }
+    }
+  }
+}

@@ -19,6 +19,7 @@ package services
 import java.io.InputStream
 
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
+import config.AmlsConfig
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.{Fees, KnownFact, KnownFactsForService}
@@ -92,17 +93,25 @@ trait SubscriptionService {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
-      _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
-        KnownFact("SafeId", safeId),
-        KnownFact("MLRRefNumber", response.amlsRefNo),
-        KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.getOrElse(""))
-      ))).map(_ => response).recover {
+      _ <- ggConnector.addKnownFacts(getKnownFacts(safeId, request, response)).map(_ => response).recover {
         case ex => Logger.warn("[AddKnownFactsFailed]", ex)
           response
       }
 
     } yield response
 
+  }
+
+  private def getKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse) = {
+    val facts = Seq(
+      KnownFact("SafeId", safeId),
+      KnownFact("MLRRefNumber", response.amlsRefNo))
+
+    if (AmlsConfig.enablePostcodeKnownFact) {
+      KnownFactsForService(facts :+ KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.getOrElse("")))
+    } else {
+      KnownFactsForService(facts)
+    }
   }
 
   private def validateRequest(safeId: String, request: SubscriptionRequest) = {
