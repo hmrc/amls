@@ -20,6 +20,7 @@ import connectors.{GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.HttpStatusException
 import models._
 import models.des.SubscriptionRequest
+import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
 import models.fe.{SubscriptionFees, SubscriptionResponse}
@@ -30,7 +31,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue, Json}
-import play.api.test.Helpers.{BAD_REQUEST, BAD_GATEWAY}
+import play.api.test.Helpers.{BAD_GATEWAY, BAD_REQUEST}
 import repositories.FeesRepository
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
@@ -60,13 +61,22 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
     "XA353523452345"
   )
 
+  val businessAddressPostcode = "TEST POSTCODE"
+  val contactDetails = mock[BusinessContactDetails]
+  val address = mock[Address]
+
+  when(contactDetails.businessAddress) thenReturn address
+  when(address.postcode) thenReturn Some(businessAddressPostcode)
+
   val request = mock[des.SubscriptionRequest]
+  when(request.businessContactDetails) thenReturn contactDetails
 
   val safeId = "safeId"
 
   val knownFacts = KnownFactsForService(Seq(
     KnownFact("SafeId", safeId),
-    KnownFact("MLRRefNumber", response.amlsRefNo)
+    KnownFact("MLRRefNumber", response.amlsRefNo),
+    KnownFact("POSTCODE", businessAddressPostcode)
   ))
 
   implicit val hc = HeaderCarrier()
@@ -119,7 +129,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("SafeId", safeId),
-          KnownFact("MLRRefNumber", "XGML00000000000")
+          KnownFact("MLRRefNumber", "XGML00000000000"),
+          KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
         when {
@@ -130,16 +141,15 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when(SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
 
-
         when(request.responsiblePersons).thenReturn(Some(Seq(
           ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
             RPExtra(None, None, None, None, None, None, None)))))
+
         when(request.tradingPremises).thenReturn(mock[TradingPremises])
         when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
         when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
-        whenReady(SubscriptionService.subscribe(safeId, request)) {
-          result =>
+        whenReady(SubscriptionService.subscribe(safeId, request)) { result =>
             result mustEqual subscriptionResponse
             verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
@@ -165,7 +175,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("SafeId", safeId),
-          KnownFact("MLRRefNumber", amlsRegNo)
+          KnownFact("MLRRefNumber", amlsRegNo),
+          KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
         when {

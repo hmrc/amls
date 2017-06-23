@@ -94,7 +94,8 @@ trait SubscriptionService {
       }
       _ <- ggConnector.addKnownFacts(KnownFactsForService(Seq(
         KnownFact("SafeId", safeId),
-        KnownFact("MLRRefNumber", response.amlsRefNo)
+        KnownFact("MLRRefNumber", response.amlsRefNo),
+        KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.getOrElse(""))
       ))).map(_ => response).recover {
         case ex => Logger.warn("[AddKnownFactsFailed]", ex)
           response
