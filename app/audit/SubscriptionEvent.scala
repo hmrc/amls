@@ -45,6 +45,25 @@ object SubscriptionEvent {
   }
 }
 
+object SubscriptionFailedEvent {
+  def apply
+  (safeId: String, request: SubscriptionRequest)
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest],
+   resW: Writes[SubscriptionResponse]
+  ): ExtendedDataEvent = {
+    ExtendedDataEvent(
+      auditSource = AppName.appName,
+      auditType = "applicationSubmissionFailed",
+      tags = hc.toAuditTags("Subscription", "N/A"),
+      detail = Json.toJson(request).as[JsObject]
+        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+        ++ JsObject(Map("safeId" -> JsString(safeId)))
+    )
+  }
+}
+
 object AmendmentEvent {
   def apply
   (amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
