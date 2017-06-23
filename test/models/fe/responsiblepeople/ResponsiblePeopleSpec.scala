@@ -75,24 +75,45 @@ trait ResponsiblePeopleValues {
     val training = TrainingYes("test")
     val experienceTraining = ExperienceTrainingYes("Some training")
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
+    val ukPassport = UKPassportYes("87654321")
 
-    val convertedModel = Some(List(ResponsiblePeople(Some(PersonName("FirstName",Some("MiddleName"),"LastName",
-      Some(PreviousName(Some("FirstName"),Some("MiddleName"),Some("LastName"),new LocalDate(2001,1,1))),Some("Aliases1"))),
-      Some(PersonResidenceType(NonUKResidence(new LocalDate(2001,1,1),PassportTypeUKPassport("AA1111111")),"AA","AA")),
-      None,Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
-        "CurrentAddressLine2",Some("CurrentAddressLine3"),Some("CurrentAddressLine4"),"AA1 1AA"),
-    ThreeYearsPlus)),None,None)),Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
-    Some(SaRegisteredYes("1234567890")),Some(VATRegisteredYes("123456789")),
-    Some(ExperienceTrainingNo),Some(TrainingYes("TrainingDetails")),Some(false),Some(333333), Some("added")),
-    ResponsiblePeople(Some(PersonName("bbbbbbbbbbbb",Some("bbbbbbbbbbb"),"bbbbbbbbbbb",
-      Some(PreviousName(Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),Some("bbbbbbbbbbbb"),
-        new LocalDate(1967,8,13))),Some("bbbbbbbbbbb"))),
-      Some(PersonResidenceType(UKResidence("BB000000A"),"GB","GB")),None,
-      Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("b","b",Some("b"),Some("b"),"AA1 1AA"),ZeroToFiveMonths)),
-        Some(ResponsiblePersonAddress(PersonAddressUK("a","a",Some("a"),Some("a"),"AA1 1AA"),SixToElevenMonths)))),
-      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),Some(SaRegisteredYes("1111111111")),
-      Some(VATRegisteredYes("111111111")),Some(ExperienceTrainingYes("bbbbbbbbbb")),Some(TrainingNo),Some(true), Some(222222), Some("added"))))
+    val convertedModel = Some(List(
+      ResponsiblePeople(
+        Some(PersonName("FirstName", Some("MiddleName"), "LastName",
+          Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))), Some("Aliases1"))),
+        Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
+        Some(UKPassportYes("AA1111111")),
+        None,
+        Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+        None,
+        Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
+          "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
+          ThreeYearsPlus)), None, None)),
+        Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+        Some(SaRegisteredYes("1234567890")),
+        Some(VATRegisteredYes("123456789")),
+        Some(ExperienceTrainingNo),
+        Some(TrainingYes("TrainingDetails")),
+        Some(false),
+        Some(333333),
+        Some("added")
+      ),
+      ResponsiblePeople(
+        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
+          Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
+        Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
+        None, None, None,None,
+        Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
+          PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+          Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+          Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
+        Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))), Some(SaRegisteredYes("1111111111")),
+        Some(VATRegisteredYes("111111111")),
+        Some(ExperienceTrainingYes("bbbbbbbbbb")),
+        Some(TrainingNo),
+        Some(true),
+        Some(222222), Some("added")
+      )))
 
   }
 
@@ -101,8 +122,7 @@ trait ResponsiblePeopleValues {
     private val residenceYear = 1990
     private val residenceMonth = 2
     private val residenceDay = 24
-    private val residenceDate = new LocalDate(residenceYear, residenceMonth, residenceDay)
-    private val residence = NonUKResidence(residenceDate, PassportTypeUKPassport("AA1111111"))
+    private val residence = NonUKResidence
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
     private val newPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "ES")
@@ -124,6 +144,9 @@ trait ResponsiblePeopleValues {
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
     Some(DefaultValues.personResidenceType),
+    Some(DefaultValues.ukPassport),
+    None,
+    Some(DateOfBirth(new LocalDate(2001,1,1))),
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),
     Some(DefaultValues.positions),
@@ -148,6 +171,13 @@ trait ResponsiblePeopleValues {
       "nino" -> "AA1111111",
       "countryOfBirth" -> "GB",
       "nationality" -> "GB"
+    ),
+    "ukPassport" -> Json.obj(
+      "ukPassport" -> true,
+      "ukPassportNumber" -> "87654321"
+    ),
+    "dateOfBirth" -> Json.obj(
+      "dateOfBirth" -> "2001-01-01"
     ),
     "contactDetails" -> Json.obj(
       "phoneNumber" -> "07000001122",
