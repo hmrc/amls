@@ -96,7 +96,7 @@ object ResponsiblePersons {
         (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "msbOrTcsp").writeNullable[MsbOrTcsp] and
         __.write[RPExtra]
-      ) (unlift(ResponsiblePersons.unapply _))
+      ) (unlift(ResponsiblePersons.unapply))
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
@@ -124,8 +124,9 @@ object ResponsiblePersons {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
-    ResponsiblePersons(rp.personName,
-      rp.personResidenceType,
+    ResponsiblePersons(
+      rp.personName,
+      rp,
       rp.contactDetails,
       rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
       rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
@@ -187,7 +188,6 @@ object ResponsiblePersons {
   implicit def convDuration(addrHistory: ResponsiblePersonCurrentAddress): Option[String] = {
     Some(addrHistory.timeAtAddress)
   }
-
 
   implicit def covnTimeAtAddrToString(time: TimeAtAddress): String = {
     time match {

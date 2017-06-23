@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{UkResident, IdDetail}
+import models.des.responsiblepeople.NationalityDetails
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
@@ -24,10 +24,7 @@ sealed trait ResidenceType
 
 case class UKResidence(nino: String) extends ResidenceType
 
-case class NonUKResidence(
-                           dateOfBirth: LocalDate,
-                           passportType: PassportType
-                         ) extends ResidenceType
+case object NonUKResidence extends ResidenceType
 
 object ResidenceType {
 
@@ -35,11 +32,9 @@ object ResidenceType {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
     import play.api.libs.json._
-    (__ \ "nino").read[String] fmap UKResidence.apply map identity[ResidenceType] orElse
-      (
-        (__ \ "dateOfBirth").read[LocalDate] and
-          __.read[PassportType]
-        ) (NonUKResidence.apply _)
+    (__ \ "nino").read[String] fmap UKResidence.apply map identity[ResidenceType] orElse {
+      Reads(_ => JsSuccess(NonUKResidence)) map identity[ResidenceType]
+    }
   }
 
   implicit val jsonWrites: Writes[ResidenceType] = {
@@ -47,15 +42,37 @@ object ResidenceType {
     import play.api.libs.json.Writes._
     import play.api.libs.json._
     Writes[ResidenceType] {
-      case a: UKResidence =>
+      case UKResidence(nino) =>
         Json.obj(
-          "nino" -> a.nino
+          "nino" -> nino
         )
-      case a: NonUKResidence =>
-        (
-          (__ \ "dateOfBirth").write[LocalDate] and
-            __.write[PassportType]
-          ) (unlift(NonUKResidence.unapply)).writes(a)
+      case NonUKResidence =>
+        Json.obj(
+          "isUKResidence" -> "false"
+        )
+    }
+  }
+
+  implicit def conv(nationality: Option[NationalityDetails]): Option[ResidenceType] = {
+    nationality match {
+      case Some(details) => details
+      case None => None
+    }
+  }
+
+  implicit def conv(nationalityDetails: NationalityDetails): Option[ResidenceType] = {
+    nationalityDetails.idDetails match {
+      case Some(idDetail) => {
+
+        val ukResidence: Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
+        val nonUKResidence: Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
+
+        nationalityDetails.areYouUkResident match {
+          case true => ukResidence
+          case false => nonUKResidence
+        }
+      }
+      case _ => None
     }
   }
 }

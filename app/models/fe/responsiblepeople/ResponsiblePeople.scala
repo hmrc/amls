@@ -19,26 +19,35 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.ResponsiblePersons
 import play.api.libs.json.Json
 
-case class ResponsiblePeople(personName: Option[PersonName] = None,
-                             personResidenceType: Option[PersonResidenceType] = None,
-                             contactDetails: Option[ContactDetails] = None,
-                             addressHistory: Option[ResponsiblePersonAddressHistory] = None,
-                             positions: Option[Positions] = None,
-                             saRegistered: Option[SaRegistered] = None,
-                             vatRegistered: Option[VATRegistered] = None,
-                             experienceTraining: Option[ExperienceTraining] = None,
-                             training: Option[Training] = None,
-                             hasAlreadyPassedFitAndProper: Option[Boolean] = None,
-                             lineId: Option[Int] = None,
-                             status: Option[String] = None
-                          )
+case class ResponsiblePeople(
+                              personName: Option[PersonName] = None,
+                              personResidenceType: Option[PersonResidenceType] = None,
+                              ukPassport: Option[UKPassport] = None,
+                              nonUKPassport: Option[NonUKPassport] = None,
+                              dateOfBirth: Option[DateOfBirth] = None,
+                              contactDetails: Option[ContactDetails] = None,
+                              addressHistory: Option[ResponsiblePersonAddressHistory] = None,
+                              positions: Option[Positions] = None,
+                              saRegistered: Option[SaRegistered] = None,
+                              vatRegistered: Option[VATRegistered] = None,
+                              experienceTraining: Option[ExperienceTraining] = None,
+                              training: Option[Training] = None,
+                              hasAlreadyPassedFitAndProper: Option[Boolean] = None,
+                              lineId: Option[Int] = None,
+                              status: Option[String] = None
+                            )
+
 object ResponsiblePeople {
 
   implicit val format = Json.format[ResponsiblePeople]
 
   def convertRP(desRp: ResponsiblePersons): ResponsiblePeople = {
-    ResponsiblePeople(desRp.nameDetails,
+    ResponsiblePeople(
+      desRp.nameDetails,
       desRp.nationalityDetails,
+      desRp,
+      desRp,
+      desRp,
       desRp.contactCommDetails,
       desRp,
       desRp,
@@ -59,4 +68,5 @@ object ResponsiblePeople {
       case _ => None
     }
   }
+
 }

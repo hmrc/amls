@@ -72,7 +72,7 @@ trait SubscriptionController extends BaseController {
                     Future.successful(UnprocessableEntity(ex.jsonBody.fold(duplicateSubscriptionMessage)(_.reason)))
 
                   case e @ HttpStatusException(status, Some(body)) =>
-                    Logger.warn(s"$prefix - Status: ${status}, Message: $body")
+                    Logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
               case JsError(errors) =>
