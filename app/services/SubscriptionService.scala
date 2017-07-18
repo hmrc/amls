@@ -104,11 +104,12 @@ trait SubscriptionService {
 
   private def getKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse) = {
     val facts = Seq(
-      KnownFact("SafeId", safeId),
-      KnownFact("MLRRefNumber", response.amlsRefNo))
+      KnownFact("MLRRefNumber", response.amlsRefNo),
+      KnownFact("SAFEID", safeId)
+    )
 
-    if (AmlsConfig.enablePostcodeKnownFact) {
-      KnownFactsForService(facts :+ KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.getOrElse("")))
+    if (AmlsConfig.enablePostcodeKnownFact && request.businessContactDetails.businessAddress.postcode.isDefined) {
+      KnownFactsForService(facts :+ KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.get))
     } else {
       KnownFactsForService(facts)
     }
