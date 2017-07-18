@@ -17,7 +17,7 @@
 package models.fe
 
 import play.api.libs.json.Json
-import models.des.{AmendVariationResponse => DesAmendVariationResponse}
+import models.des.{AmendVariationRequest, StatusProvider, AmendVariationResponse => DesAmendVariationResponse}
 
 case class AmendVariationResponse(
                                    processingDate: String,
@@ -61,5 +61,41 @@ object AmendVariationResponse {
     )
 
   }
+
+  def withZeroRatedTPs(request: AmendVariationRequest, des: DesAmendVariationResponse): AmendVariationResponse = {
+
+    def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
+
+      def statusMatch(status: Option[String]) = status match {
+        case Some(st) if st equals "Added" => true
+        case None => true
+        case _ => false
+      }
+
+      seqOption match {
+        case Some(contained) => contained count {
+          detail => statusMatch(statusProvider.getStatus(detail))
+        }
+        case _ => 0
+      }
+    }
+
+    val zeroRated = {
+      val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
+        case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
+        case None => 0
+      }
+      val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
+        case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
+        case None => 0
+      }
+
+      des.premiseHYNumber.getOrElse(0) + des.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
+    }
+
+    AmendVariationResponse.convert(des).copy(zeroRatedTradingPremises = zeroRated)
+
+  }
+
 
 }

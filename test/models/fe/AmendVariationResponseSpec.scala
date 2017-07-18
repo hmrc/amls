@@ -16,9 +16,25 @@
 
 package models.fe
 
+import models.des.{AmendVariationRequest, ChangeIndicators, DesConstants}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec};
 
 class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
+
+  val amendvariationRequest = AmendVariationRequest(
+    acknowledgementReference = "ackRef",
+    changeIndicators = ChangeIndicators(
+      tradingPremises = true
+    ),
+    amlsMessageType = "msgType",
+    businessDetails = DesConstants.testBusinessDetails,
+    businessContactDetails = DesConstants.testViewBusinessContactDetails,
+    businessReferencesAll = None,
+    businessReferencesAllButSp = None,
+    businessReferencesCbUbLlp = None,
+    businessActivities = DesConstants.testBusinessActivities,
+    tradingPremises = ???
+  )
 
   "AmendVariationResponse" must {
     "convert a DES response to a AmendVariationResponse" in {
@@ -35,7 +51,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
       val etmpFormBundleNumber = "082000004607"
       val processingDate = "2017-07-18T09:49:25Z"
 
-      AmendVariationResponse.convert(models.des.AmendVariationResponse(
+      AmendVariationResponse.withZeroRatedTPs(amendvariationRequest, models.des.AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
         fpNumbers = Some(1),

@@ -114,44 +114,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
-      inserted <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
-      regStatus <- viewStatusDesConnector.status(amlsRegistrationNumber)
-    } yield addZeroRatedTPs(request, response)
-  }
-
-  private def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
-
-    def statusMatch(status: Option[String]) = status match {
-      case Some(st) if st equals "Added" => true
-      case None => true
-      case _ => false
-    }
-
-    seqOption match {
-      case Some(contained) => contained count {
-        detail => statusMatch(statusProvider.getStatus(detail))
-      }
-      case _ => 0
-    }
-  }
-
-  private def addZeroRatedTPs(request: AmendVariationRequest, response: DesAmendVariationResponse): AmendVariationResponse = {
-
-    val zeroRated = {
-      val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
-        case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
-        case None => 0
-      }
-      val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
-        case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
-        case None => 0
-      }
-
-      response.premiseHYNumber.getOrElse(0) + response.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
-    }
-
-    AmendVariationResponse.convert(response).copy(zeroRatedTradingPremises = zeroRated)
-
+      _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
+      _ <- viewStatusDesConnector.status(amlsRegistrationNumber)
+    } yield AmendVariationResponse.withZeroRatedTPs(request, response)
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
