@@ -41,23 +41,23 @@ object AmendVariationResponse {
 
   implicit val format = Json.format[AmendVariationResponse]
 
-  def convert(desResponse: DesAmendVariationResponse): AmendVariationResponse = {
+  def convert(des: DesAmendVariationResponse): AmendVariationResponse = {
 
     AmendVariationResponse(
-      desResponse.processingDate,
-      desResponse.etmpFormBundleNumber,
-      desResponse.registrationFee.getOrElse(0),
-      desResponse.fpFee,
-      desResponse.fpFeeRate,
-      desResponse.premiseFee.getOrElse(0),
-      desResponse.premiseFYFeeRate,
-      desResponse.totalFees.getOrElse(0),
-      desResponse.paymentReference,
-      desResponse.difference,
-      desResponse.fpNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0)-desResponse.fpNumbersNotCharged.getOrElse(0),
-      desResponse.premiseFYNumber.getOrElse(0),
-      desResponse.premiseHYNumber.getOrElse(0)
+      processingDate = des.processingDate,
+      etmpFormBundleNumber = des.etmpFormBundleNumber,
+      registrationFee = des.registrationFee.getOrElse(0),
+      fpFee = des.fpFee,
+      fpFeeRate = des.fpFeeRate,
+      premiseFee = des.premiseFee.getOrElse(0),
+      premiseFeeRate = des.premiseFYFeeRate,
+      totalFees = des.totalFees.getOrElse(0),
+      paymentReference = des.paymentReference,
+      difference = des.difference,
+      addedResponsiblePeople = des.fpNumbers.getOrElse(0),
+      addedResponsiblePeopleFitAndProper = des.fpNumbersNotCharged.getOrElse(0),
+      addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
+      halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0)
     )
 
   }

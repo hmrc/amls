@@ -122,7 +122,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   private def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
 
     def statusMatch(status: Option[String]) = status match {
-      case Some(status) if status == "Added" => true
+      case Some(st) if st equals "Added" => true
       case None => true
       case _ => false
     }
@@ -130,7 +130,6 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     seqOption match {
       case Some(contained) => contained count {
         detail => statusMatch(statusProvider.getStatus(detail))
-
       }
       case _ => 0
     }
