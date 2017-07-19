@@ -27,7 +27,7 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with OneAppPerSu
                |  "processingDate": "2017-07-18T09:49:18Z",
                |  "formBundleStatus": "Approved",
                |  "currentRegYearStartDate": "2017-06-01",
-               |  "currentRegYearEndDate": "2018-05-31",
+               |  "currentRegYearEndDate": "2018-12-31",
                |  "renewalConFlag": true,
                |  "renewalSubmissionFlag": true,
                |  "currentAMLSOutstandingBalance": "0.00",
@@ -40,7 +40,7 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     statusReason = None,
     deRegistrationDate = None ,
     currentRegYearStartDate = Some(new LocalDate(2017,6,1)),
-    currentRegYearEndDate = Some(new LocalDate(2018,5,31)),
+    currentRegYearEndDate = Some(new LocalDate(2018,12,31)),
     renewalConFlag = true,
     renewalSubmissionFlag = Some(true),
     currentAMLSOutstandingBalance = Some("0.00"),
@@ -60,16 +60,15 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
     "confirm isRenewalPeriod" when {
       "date today is day after renewal period began" in {
-
-
+        model.isRenewalPeriod(new LocalDate(2018,12,2)) mustBe false
       }
       "date today is same day as renweal period begins" in {
-
+        model.isRenewalPeriod(new LocalDate(2018,12,1)) mustBe true
       }
     }
     "deny isRenewalPeriod" when {
       "date today is date before renewal period begins" in {
-
+        model.isRenewalPeriod(new LocalDate(2018,11,30)) mustBe true
       }
     }
   }

@@ -34,14 +34,15 @@ case class ReadStatusResponse(
                                safeId: Option[String] = None
                              ) {
 
-  def isRenewalPeriod = {
+  def isRenewalPeriod(dateTime: LocalDate = LocalDate.now()) = {
 
     val renewalWindow = 30
 
     currentRegYearEndDate match {
-      case Some(endDate) => endDate.toDateTimeAtStartOfDay.minusDays(renewalWindow).isAfter(LocalDate.now().toDateTimeAtStartOfDay)
+      case Some(endDate) => !dateTime.toDateTimeAtStartOfDay.isAfter(endDate.toDateTimeAtStartOfDay.minusDays(renewalWindow))
       case _ => false
     }
+
   }
 
 }
@@ -61,6 +62,5 @@ object ReadStatusResponse {
   }
 
   implicit val format = Json.format[ReadStatusResponse]
-
 
 }

@@ -118,7 +118,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
       status <- viewStatusDesConnector.status(amlsRegistrationNumber)
       _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
-    } yield amendVariationResponse(request, status.isRenewalPeriod, response)
+    } yield amendVariationResponse(request, status.isRenewalPeriod(), response)
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
