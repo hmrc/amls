@@ -34,22 +34,28 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with OneAppPerSu
                |  "safeId": "XY0000100095375"
                |}""".stripMargin)
 
+  val model = ReadStatusResponse(
+    processingDate = new LocalDateTime(2017,7,18, 9,49,18),
+    formBundleStatus = "Approved",
+    statusReason = None,
+    deRegistrationDate = None ,
+    currentRegYearStartDate = Some(new LocalDate(2017,6,1)),
+    currentRegYearEndDate = Some(new LocalDate(2018,5,31)),
+    renewalConFlag = true,
+    renewalSubmissionFlag = Some(true),
+    currentAMLSOutstandingBalance = Some("0.00"),
+    businessContactNumber = None,
+    safeId = Some("XY0000100095375")
+  )
+
   "ReadStatusResponse" must {
 
     "serialise json to model" in {
-      ReadStatusResponse.format.reads(json) mustBe JsSuccess(ReadStatusResponse(
-        processingDate = new LocalDateTime(2017,7,18, 9,49,18),
-        formBundleStatus = "Approved",
-        statusReason = None,
-        deRegistrationDate = None ,
-        currentRegYearStartDate = Some(new LocalDate(2017,6,1)),
-        currentRegYearEndDate = Some(new LocalDate(2018,5,31)),
-        renewalConFlag = true,
-        renewalSubmissionFlag = Some(true),
-        currentAMLSOutstandingBalance = Some("0.00"),
-        businessContactNumber = None,
-        safeId = Some("XY0000100095375")
-      ))
+      ReadStatusResponse.format.reads(json) mustBe JsSuccess(model)
+    }
+
+    "deserialise json to model" in {
+      ReadStatusResponse.format.writes(model) mustBe json
     }
 
     "confirm isRenewalPeriod" when {
