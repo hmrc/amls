@@ -87,9 +87,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
       "connector returns full response" in new TestFixture {
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("SafeId", safeId),
           KnownFact("MLRRefNumber", response.amlsRefNo),
-          KnownFact("POSTCODE", businessAddressPostcode)
+          KnownFact("SAFEID", safeId),
+          KnownFact("Postcode", businessAddressPostcode)
         ))
 
         reset(SubscriptionService.ggConnector)
@@ -133,9 +133,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("SafeId", safeId),
           KnownFact("MLRRefNumber", "XGML00000000000"),
-          KnownFact("POSTCODE", businessAddressPostcode)
+          KnownFact("SAFEID", safeId),
+          KnownFact("Postcode", businessAddressPostcode)
         ))
 
         when {
@@ -179,9 +179,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("SafeId", safeId),
           KnownFact("MLRRefNumber", amlsRegNo),
-          KnownFact("POSTCODE", businessAddressPostcode)
+          KnownFact("SAFEID", safeId),
+          KnownFact("Postcode", businessAddressPostcode)
         ))
 
         when {
@@ -289,8 +289,8 @@ class SubscriptionServiceNoPostcodeKnownFactSpec extends PlaySpec with MockitoSu
       "the feature is toggled off" in new TestFixture {
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("SafeId", safeId),
-          KnownFact("MLRRefNumber", response.amlsRefNo)
+          KnownFact("MLRRefNumber", response.amlsRefNo),
+          KnownFact("SAFEID", safeId)
         ))
 
         reset(SubscriptionService.ggConnector)
