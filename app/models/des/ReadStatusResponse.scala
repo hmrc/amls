@@ -39,7 +39,7 @@ case class ReadStatusResponse(
     val renewalWindow = 30
 
     currentRegYearEndDate match {
-      case Some(endDate) if endDate.minusDays(renewalWindow).isAfter(LocalDate.now()) => true
+      case Some(endDate) => endDate.toDateTimeAtStartOfDay.minusDays(renewalWindow).isAfter(LocalDate.now().toDateTimeAtStartOfDay)
       case _ => false
     }
   }
