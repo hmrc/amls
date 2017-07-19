@@ -32,7 +32,20 @@ case class ReadStatusResponse(
                                currentAMLSOutstandingBalance: Option[String] = None,
                                businessContactNumber: Option[String] = None,
                                safeId: Option[String] = None
-                             )
+                             ) {
+
+  def isRenewalPeriod(dateTime: LocalDate = LocalDate.now()) = {
+
+    val renewalWindow = 30
+
+    currentRegYearEndDate match {
+      case Some(endDate) => !dateTime.toDateTimeAtStartOfDay.isAfter(endDate.toDateTimeAtStartOfDay.minusDays(renewalWindow))
+      case _ => false
+    }
+
+  }
+
+}
 
 object ReadStatusResponse {
 
@@ -49,4 +62,5 @@ object ReadStatusResponse {
   }
 
   implicit val format = Json.format[ReadStatusResponse]
+
 }

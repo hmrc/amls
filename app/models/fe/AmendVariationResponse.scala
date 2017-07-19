@@ -17,7 +17,7 @@
 package models.fe
 
 import play.api.libs.json.Json
-import models.des.{AmendVariationResponse => DesAmendVariationResponse}
+import models.des.{AmendVariationRequest, StatusProvider, AmendVariationResponse => DesAmendVariationResponse}
 
 case class AmendVariationResponse(
                                    processingDate: String,
@@ -41,7 +41,36 @@ object AmendVariationResponse {
 
   implicit val format = Json.format[AmendVariationResponse]
 
-  def convert(des: DesAmendVariationResponse): AmendVariationResponse = {
+  def convert(request: AmendVariationRequest, isRenewalPeriod: Boolean, des: DesAmendVariationResponse): AmendVariationResponse = {
+
+    def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
+
+      def statusMatch(status: Option[String]) = status match {
+        case Some(st) if st equals "Added" => true
+        case None => true
+        case _ => false
+      }
+
+      seqOption match {
+        case Some(contained) => contained count {
+          detail => statusMatch(statusProvider.getStatus(detail))
+        }
+        case _ => 0
+      }
+    }
+
+    val zeroRated = {
+      val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
+        case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
+        case None => 0
+      }
+      val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
+        case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
+        case None => 0
+      }
+
+      des.premiseHYNumber.getOrElse(0) + des.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
+    }
 
     AmendVariationResponse(
       processingDate = des.processingDate,
@@ -57,7 +86,8 @@ object AmendVariationResponse {
       addedResponsiblePeople = des.fpNumbers.getOrElse(0),
       addedResponsiblePeopleFitAndProper = des.fpNumbersNotCharged.getOrElse(0),
       addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
-      halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0)
+      halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
+      zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated
     )
 
   }

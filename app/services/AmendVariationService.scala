@@ -24,6 +24,7 @@ import connectors._
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
+import org.joda.time.LocalDate
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
@@ -47,10 +48,11 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] def validateResult(request: AmendVariationRequest): JsResult[JsValue]
 
+  private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse): AmendVariationResponse
+
   val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -114,44 +116,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
-      inserted <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
-      regStatus <- viewStatusDesConnector.status(amlsRegistrationNumber)
-    } yield addZeroRatedTPs(request, response)
-  }
-
-  private def detailsMatch[T](seqOption: Option[Seq[T]])(implicit statusProvider: StatusProvider[T]) = {
-
-    def statusMatch(status: Option[String]) = status match {
-      case Some(st) if st equals "Added" => true
-      case None => true
-      case _ => false
-    }
-
-    seqOption match {
-      case Some(contained) => contained count {
-        detail => statusMatch(statusProvider.getStatus(detail))
-      }
-      case _ => 0
-    }
-  }
-
-  private def addZeroRatedTPs(request: AmendVariationRequest, response: DesAmendVariationResponse): AmendVariationResponse = {
-
-    val zeroRated = {
-      val addedOwnBusinessTradingPremisesCount = request.tradingPremises.ownBusinessPremises match {
-        case Some(ownBusinessPremises) => detailsMatch(ownBusinessPremises.ownBusinessPremisesDetails)
-        case None => 0
-      }
-      val addedAgentTradingPremisesCount = request.tradingPremises.agentBusinessPremises match {
-        case Some(agentBusinessPremises) => detailsMatch(agentBusinessPremises.agentDetails)
-        case None => 0
-      }
-
-      response.premiseHYNumber.getOrElse(0) + response.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
-    }
-
-    AmendVariationResponse.convert(response).copy(zeroRatedTradingPremises = zeroRated)
-
+      status <- viewStatusDesConnector.status(amlsRegistrationNumber)
+      _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
+    } yield amendVariationResponse(request, status.isRenewalPeriod(), response)
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
@@ -203,5 +170,9 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
 
-  override private[services] def validateResult(request: AmendVariationRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  override private[services] def validateResult(request: AmendVariationRequest) =
+    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+
+  override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
+    AmendVariationResponse.convert(request, isRenewalWindow, des)
 }
