@@ -88,8 +88,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("MLRRefNumber", response.amlsRefNo),
-          KnownFact("SAFEID", safeId),
-          KnownFact("Postcode", businessAddressPostcode)
+          KnownFact("SafeId", safeId),
+          KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
         reset(SubscriptionService.ggConnector)
@@ -134,8 +134,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("MLRRefNumber", "XGML00000000000"),
-          KnownFact("SAFEID", safeId),
-          KnownFact("Postcode", businessAddressPostcode)
+          KnownFact("SafeId", safeId),
+          KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
         when {
@@ -180,8 +180,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("MLRRefNumber", amlsRegNo),
-          KnownFact("SAFEID", safeId),
-          KnownFact("Postcode", businessAddressPostcode)
+          KnownFact("SafeId", safeId),
+          KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
         when {
@@ -290,7 +290,7 @@ class SubscriptionServiceNoPostcodeKnownFactSpec extends PlaySpec with MockitoSu
 
         val knownFacts = KnownFactsForService(Seq(
           KnownFact("MLRRefNumber", response.amlsRefNo),
-          KnownFact("SAFEID", safeId)
+          KnownFact("SafeId", safeId)
         ))
 
         reset(SubscriptionService.ggConnector)
