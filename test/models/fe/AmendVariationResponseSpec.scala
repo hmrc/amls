@@ -19,9 +19,10 @@ package models.fe
 import models.des._
 import models.des.aboutyou.AboutYouRelease7
 import models.des.tradingpremises._
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec};
 
-class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
+class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
   val amendvariationRequest = AmendVariationRequest(
     acknowledgementReference = "ackRef",
@@ -38,7 +39,8 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
     tradingPremises = TradingPremises(
       ownBusinessPremises = Some(OwnBusinessPremises(
         ownBusinessPremises = true,
-        ownBusinessPremisesDetails = Some(Seq(OwnBusinessPremisesDetails(
+        ownBusinessPremisesDetails = Some(Seq(
+          OwnBusinessPremisesDetails(
           tradingName = Some("COMPANY NAME 925"),
           businessAddress = Address(
             addressLine1 = "M House 0002",
@@ -84,7 +86,8 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
             endDate = Some("9999-12-31"),
             status = Some("Added"),
             dateChangeFlag = Some(false)
-          )))
+          )
+        ))
       )),
       agentBusinessPremises = Some(AgentBusinessPremises(
         agentBusinessPremises = true,
@@ -135,7 +138,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
     )
   )
 
-  "AmendVariationResponse" must {
+  "AmendVariationResponse for renewalAmendment" must {
     "convert a DES response to a AmendVariationResponse" in {
 
       val fpFee = 100
@@ -150,7 +153,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
       val etmpFormBundleNumber = "082000004607"
       val processingDate = "2017-07-18T09:49:25Z"
 
-      AmendVariationResponse.withZeroRatedTPs(amendvariationRequest, models.des.AmendVariationResponse(
+      AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
         fpNumbers = Some(1),

@@ -49,7 +49,7 @@ trait SubscriptionStatusDESConnector extends DESConnector {
         Logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     }flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
+      case _ @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
         metrics.success(API9)
         audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
         Logger.debug(s"$prefix - Success response")

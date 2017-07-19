@@ -18,19 +18,17 @@ package services
 
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import models.des
-import models.des.responsiblepeople.{MsbOrTcsp, RPExtra, ResponsiblePersons}
+import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
+import models.fe.AmendVariationResponse
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
-import play.api.{Application, Mode}
-import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
-import play.api.test.FakeApplication
 import repositories.FeesRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -41,6 +39,19 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
   val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
 
+  val feAmendVariationResponse = AmendVariationResponse(
+    processingDate = "2016-09-17T09:30:47Z",
+    etmpFormBundleNumber = "111111",
+    1301737.96,
+    Some(1),
+    Some(115.0d),
+    231.42,
+    Some(0),
+    123.12,
+    None,
+    None
+  )
+
   object TestAmendVariationService extends AmendVariationService {
     override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
@@ -48,6 +59,8 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
 
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
+
+    override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
   val response = des.AmendVariationResponse(
@@ -69,6 +82,8 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     Some("string"),
     Some(3456.12)
   )
+
+  val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false)
 
   val unchangedExtra: RPExtra = RPExtra(status = Some("Unchanged"))
   val addedExtra: RPExtra = RPExtra(status = Some("Added"))
@@ -95,7 +110,6 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     unchangedExtra
   )
 
-  val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false)
   val amlsRegistrationNumber = "XAAW00000567890"
   val amlsRegForHalfYears = "XAAW00000567891"
 
@@ -103,66 +117,46 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
 
   "AmendVariationService" must {
 
-    when{successValidate.isSuccess} thenReturn true
+    when{
+      successValidate.isSuccess
+    } thenReturn true
 
     when {
       TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
     } thenReturn Future.successful(statusResponse)
 
     val premises: Option[AgentBusinessPremises] = Some(mock[AgentBusinessPremises])
-    when(premises.get.agentDetails).thenReturn(None)
 
+    when {
+      premises.get.agentDetails
+    } thenReturn None
 
     "return a successful response" in {
 
       val request = mock[des.AmendVariationRequest]
-
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-      when(request.tradingPremises).thenReturn(tradingPremises)
+      when{
+        request.responsiblePersons
+      } thenReturn Some(Seq(unchangedResponsiblePersons))
+
+      when {
+        request.tradingPremises
+      } thenReturn tradingPremises
 
       when {
         TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
         TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      when(TestAmendVariationService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+      when{
+        TestAmendVariationService.feeResponseRepository.insert(any())
+      } thenReturn Future.successful(true)
 
       whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
         result =>
-          result mustEqual models.fe.AmendVariationResponse.convert(response)
+          result mustEqual feAmendVariationResponse
       }
-    }
-
-    "return a successful response with 1 added zero rated agent TP" in {
-
-      when {
-        TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegForHalfYears))(any(), any(), any())
-      } thenReturn Future.successful(statusResponse.copy(currentRegYearEndDate = Some(new LocalDate(2016, 11, 11))))
-
-      val agentPremises = mock[AgentPremises]
-
-      val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), Some(AgentBusinessPremises(true, Some(Seq(AgentDetails("", None, None, None,
-        agentPremises, Some("2016-11-01"), None, None, Some("Added"), None))))))
-
-      val responseWithZeroRatedTPs = models.fe.AmendVariationResponse.convert(response).copy(zeroRatedTradingPremises = 1,addedFullYearTradingPremises = 2)
-
-      val request = mock[des.AmendVariationRequest]
-
-      when(request.tradingPremises).thenReturn(tradingPremises)
-      when(request.responsiblePersons).thenReturn(Some(Seq(unchangedResponsiblePersons)))
-
-
-      when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegForHalfYears), eqTo(request))(any(), any(), any(), any())
-      } thenReturn Future.successful(response.copy(premiseFYNumber = Some(2)))
-
-      whenReady(TestAmendVariationService.update(amlsRegForHalfYears, request)) {
-        result =>
-          result mustEqual responseWithZeroRatedTPs
-      }
-
     }
 
     "evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {

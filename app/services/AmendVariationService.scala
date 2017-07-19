@@ -24,6 +24,7 @@ import connectors._
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
+import org.joda.time.LocalDate
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
@@ -47,9 +48,12 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] def validateResult(request: AmendVariationRequest): JsResult[JsValue]
 
+  private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse): AmendVariationResponse
+
   val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+  val renewalWindow = 30
 
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
@@ -114,9 +118,14 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
+      status <- viewStatusDesConnector.status(amlsRegistrationNumber)
       _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
-      _ <- viewStatusDesConnector.status(amlsRegistrationNumber)
-    } yield AmendVariationResponse.withZeroRatedTPs(request, response)
+    } yield amendVariationResponse(request, isRenewalPeriod(status), response)
+  }
+
+  def isRenewalPeriod(status: ReadStatusResponse) = status.currentRegYearEndDate match {
+    case Some(endDate) if endDate.minusDays(renewalWindow).isAfter(LocalDate.now()) => true
+    case _ => false
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
@@ -168,5 +177,9 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
 
-  override private[services] def validateResult(request: AmendVariationRequest) = validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  override private[services] def validateResult(request: AmendVariationRequest) =
+    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+
+  override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
+    AmendVariationResponse.convert(request, isRenewalWindow, des)
 }
