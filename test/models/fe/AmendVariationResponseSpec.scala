@@ -16,7 +16,9 @@
 
 package models.fe
 
-import models.des.{AmendVariationRequest, ChangeIndicators, DesConstants}
+import models.des._
+import models.des.aboutyou.AboutYouRelease7
+import models.des.tradingpremises._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec};
 
 class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
@@ -33,7 +35,104 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite {
     businessReferencesAllButSp = None,
     businessReferencesCbUbLlp = None,
     businessActivities = DesConstants.testBusinessActivities,
-    tradingPremises = ???
+    tradingPremises = TradingPremises(
+      ownBusinessPremises = Some(OwnBusinessPremises(
+        ownBusinessPremises = true,
+        ownBusinessPremisesDetails = Some(Seq(OwnBusinessPremisesDetails(
+          tradingName = Some("COMPANY NAME 925"),
+          businessAddress = Address(
+            addressLine1 = "M House 0002",
+            addressLine2 = "Grange 0002",
+            addressLine3 = Some("Telford 0002"),
+            addressLine4 = Some("Shropshire"),
+            country = "GB",
+            postcode = Some("TF3 4ER")
+          ),
+          residential = false,
+          msb = Msb(false, true, false, false, false),
+          hvd = Hvd(false),
+          asp = Asp(false),
+          tcsp = Tcsp(false),
+          eab = Eab(false),
+          bpsp = Bpsp(false),
+          tditpsp = Tditpsp(false),
+          startDate = "2001-01-01",
+          endDate = Some("9999-12-31"),
+          lineId = Some("000001"),
+          status = Some("Updated"),
+          dateChangeFlag = Some(false)
+        ),
+          OwnBusinessPremisesDetails(
+            tradingName = Some("trade3"),
+            businessAddress = Address(
+              addressLine1 = "add3",
+              addressLine2 = "add3d",
+              addressLine3 = None,
+              addressLine4 = None,
+              country = "GB",
+              postcode = Some("e3 4rg")
+            ),
+            residential = false,
+            msb = Msb(true, false, false, false, false),
+            hvd = Hvd(false),
+            asp = Asp(false),
+            tcsp = Tcsp(false),
+            eab = Eab(false),
+            bpsp = Bpsp(false),
+            tditpsp = Tditpsp(false),
+            startDate = "2018-02-01",
+            endDate = Some("9999-12-31"),
+            status = Some("Added"),
+            dateChangeFlag = Some(false)
+          )))
+      )),
+      agentBusinessPremises = Some(AgentBusinessPremises(
+        agentBusinessPremises = true,
+        agentDetails = Some(Seq(AgentDetails(
+          agentLegalEntity = "Partnership",
+          agentLegalEntityName = Some("test partner"),
+          dateOfBirth = None,
+          agentPremises = AgentPremises(
+            tradingName = "trade2",
+            businessAddress = Address(
+              addressLine1 = "add2",
+              addressLine2 = "add2",
+              addressLine3 = None,
+              addressLine4 = None,
+              country = "GB",
+              postcode = Some("gr4 5th")
+            ),
+            residential = false,
+            msb = Msb(false,true,false,false,false),
+            hvd = Hvd(false),
+            asp = Asp(false),
+            tcsp = Tcsp(false),
+            eab = Eab(false),
+            bpsp = Bpsp(false),
+            tditpsp = Tditpsp(false),
+            startDate = None
+          ),
+          startDate = Some("2017-01-12"),
+          dateChangeFlag = Some(false),
+          status = Some("Added")
+        )))
+      ))
+    ),
+    bankAccountDetails = None,
+    msb = None,
+    hvd = None,
+    asp = None,
+    aspOrTcsp = None,
+    tcspAll = None,
+    tcspTrustCompFormationAgt = None,
+    eabAll = None,
+    eabResdEstAgncy = None,
+    responsiblePersons = None,
+    extraFields = ExtraFields(
+      declaration = Declaration(true),
+      filingIndividual = AboutYouRelease7(None, true, None, None),
+      etmpFields = None
+    )
   )
 
   "AmendVariationResponse" must {
