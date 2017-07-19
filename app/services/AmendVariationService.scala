@@ -53,8 +53,6 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-  val renewalWindow = 30
-
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -120,12 +118,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
       status <- viewStatusDesConnector.status(amlsRegistrationNumber)
       _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
-    } yield amendVariationResponse(request, isRenewalPeriod(status), response)
-  }
-
-  def isRenewalPeriod(status: ReadStatusResponse) = status.currentRegYearEndDate match {
-    case Some(endDate) if endDate.minusDays(renewalWindow).isAfter(LocalDate.now()) => true
-    case _ => false
+    } yield amendVariationResponse(request, status.isRenewalPeriod, response)
   }
 
   private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
