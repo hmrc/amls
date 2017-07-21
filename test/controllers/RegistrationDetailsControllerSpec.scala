@@ -17,14 +17,16 @@
 package controllers
 
 import connectors.RegistrationDetailsDesConnector
-import models.des.registrationdetails.RegistrationDetails
+import models.des.registrationdetails.{CorporateBody, Organisation, RegistrationDetails}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.MustMatchers
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -40,14 +42,17 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
   "The RegistrationDetailsController" must {
     "use the Des connector to retrieve registration details" in {
       val safeId = "SAFEID"
+      val details = RegistrationDetails(isAnIndividual = false, Organisation("Test Org", isAGroup = false, CorporateBody))
 
       when {
         controller.registrationDetailsConnector.getRegistrationDetails(eqTo(safeId))(any(), any())
-      } thenReturn Future.successful(mock[RegistrationDetails])
+      } thenReturn Future.successful(details)
 
-      whenReady(controller.get(safeId)(FakeRequest())) { _ =>
-        verify(controller.registrationDetailsConnector).getRegistrationDetails(eqTo(safeId))(any(), any())
-      }
+      val response = controller.get(safeId)(FakeRequest())
+
+      status(response) mustBe OK
+      contentAsJson(response) mustBe Json.toJson(details)
+      verify(controller.registrationDetailsConnector).getRegistrationDetails(eqTo(safeId))(any(), any())
     }
   }
 
