@@ -26,7 +26,7 @@ trait RegistrationDetailsController extends BaseController {
 
   def get(safeId: String) = Action.async {
     implicit request =>
-      registrationDetailsConnector.getRegistrationDetails(safeId) map { _ =>
+      registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
         Ok
       }
   }

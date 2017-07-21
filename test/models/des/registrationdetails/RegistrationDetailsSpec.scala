@@ -24,68 +24,123 @@ import play.api.libs.json.{JsString, JsSuccess, Json}
 class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
 
   "The RegistrationDetails model" when {
+
+    val organisationJson = Json.obj(
+      "isAnIndividual" -> false,
+      "organisation" -> Json.obj(
+        "organisationName" -> "Test Organisation",
+        "isAGroup" -> true,
+        "organisationType" -> "LLP"
+      )
+    )
+
+    val organisationModel = RegistrationDetails(isAnIndividual = false, Organisation("Test Organisation", isAGroup = true, LLP))
+
+    val individualJson = Json.obj(
+      "isAnIndividual" -> true,
+      "individual" -> Json.obj(
+        "firstName" -> "Firstname",
+        "middleName" -> "Middlename",
+        "lastName" -> "Lastname",
+        "dateOfBirth" -> "2002-05-10"
+      ))
+
+    //noinspection ScalaStyle
+    val individualModel = RegistrationDetails(isAnIndividual = true, Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10)))
+
     "deserialised" must {
       "produce the correct json" when {
         "the data represents an organisation" in {
-          val expectedModel = RegistrationDetails(false, Organisation("Test Organisation", true, LLP))
-
-          val json = Json.obj(
-            "isAnIndividual" -> false,
-            "organisation" -> Json.obj(
-              "organisationName" -> "Test Organisation",
-              "isAGroup" -> true,
-              "organisationType" -> "LLP"
-            )
-          )
-
-          Json.fromJson[RegistrationDetails](json) mustBe JsSuccess(expectedModel)
+          Json.fromJson[RegistrationDetails](organisationJson) mustBe JsSuccess(organisationModel)
         }
 
         "the data represents an individual" in {
-          //noinspection ScalaStyle
-          val expectedModel = RegistrationDetails(true, Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10)))
+          Json.fromJson[RegistrationDetails](individualJson) mustBe JsSuccess(individualModel)
+        }
+      }
+    }
 
-          val json = Json.obj(
-            "isAnIndividual" -> true,
-            "individual" -> Json.obj(
-              "firstName" -> "Firstname",
-              "middleName" -> "Middlename",
-              "lastName" -> "Lastname",
-              "dateOfBirth" -> "2002-05-10"
-            ))
+    "serialised" must {
+      "produce the correct json" when {
+        "the data represents an organisation" in {
+          Json.toJson(organisationModel) mustBe organisationJson
+        }
 
-          Json.fromJson[RegistrationDetails](json) mustBe JsSuccess(expectedModel)
+        "the data represents an individual" in {
+          Json.toJson(individualModel) mustBe individualJson
         }
       }
     }
   }
 
   "The Organisation model" when {
+
+    val model = Organisation("Test Organisation", true, Partnership)
+
+    val json = Json.obj(
+      "organisationName" -> "Test Organisation",
+      "isAGroup" -> true,
+      "organisationType" -> "Partnership"
+    )
+
     "deserialised" must {
+      "produce the correct model" in {
+        Json.fromJson[Organisation](json) mustBe JsSuccess(model)
+      }
+    }
+
+    "serialised" must {
       "produce the correct json" in {
-        val expectedModel = Organisation("Test Organisation", true, Partnership)
+        Json.toJson(model) mustBe json
+      }
+    }
+  }
 
-        val json = Json.obj(
-          "organisationName" -> "Test Organisation",
-          "isAGroup" -> true,
-          "organisationType" -> "Partnership"
-        )
+  "The Individual model" when {
+    //noinspection ScalaStyle
+    val model = Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10))
 
-        Json.fromJson[Organisation](json) mustBe JsSuccess(expectedModel)
+    val json = Json.obj(
+      "firstName" -> "Firstname",
+      "middleName" -> "Middlename",
+      "lastName" -> "Lastname",
+      "dateOfBirth" -> "2002-05-10"
+    )
+
+    "deserialised" must {
+      "produce the correct model" in {
+        Json.fromJson[Individual](json) mustBe JsSuccess(model)
+      }
+    }
+
+    "serialised" must {
+      "produce the correct json" in {
+        Json.toJson(model) mustBe json
       }
     }
   }
 
   "The organisation type objects" when {
+
+    val types = Seq(
+      (Partnership, "Partnership"),
+      (LLP, "LLP"),
+      (CorporateBody, "Corporate body"),
+      (UnincorporatedBody, "Unincorporated body")
+    )
+
     "deserialised" must {
       "produce the correct values" in {
-        Seq(
-          (Partnership, "Partnership"),
-          (LLP, "LLP"),
-          (CorporateBody, "Corporate body"),
-          (UnincorporatedBody, "Unincorporated body")
-        ) foreach {
+        types foreach {
           case (t, str) => Json.fromJson[OrganisationType](JsString(str)) mustBe JsSuccess(t)
+        }
+      }
+    }
+
+    "serialised" must {
+      "write the correct values" in {
+        types foreach {
+          case (t, str) => Json.toJson(t) mustBe JsString(str)
         }
       }
     }
