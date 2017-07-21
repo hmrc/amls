@@ -42,6 +42,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
         }
 
         "the data represents an individual" in {
+          //noinspection ScalaStyle
           val expectedModel = RegistrationDetails(true, Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10)))
 
           val json = Json.obj(
