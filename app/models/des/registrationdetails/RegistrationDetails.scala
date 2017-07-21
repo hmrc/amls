@@ -66,7 +66,6 @@ object Individual {
 
 object OrganisationBodyDetails {
   import play.api.libs.json._
-  import play.api.libs.functional.syntax._
 
   implicit val reads: Reads[OrganisationBodyDetails] = {
     (__ \ "isAnIndividual").read[Boolean] flatMap {
