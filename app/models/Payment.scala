@@ -18,6 +18,7 @@ package models
 
 import enumeratum.{Enum, EnumEntry}
 import java.time.LocalDateTime
+
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, _}
 
@@ -105,16 +106,21 @@ case class Payment(_id: String,
                    commissionInPence: Int,
                    totalInPence: Int,
                    returnUrl: String,
-                   card: Option[Card] = None,
-                   additionalInformation: Map[String, String] = Map.empty,
-                   orders: Seq[PaymentOrder] = Seq())
+                   card: Option[Card],
+                   additionalInformation: Map[String, String],
+                   provider: Option[Provider],
+                   confirmed: Option[LocalDateTime],
+                   status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)
   implicit val statusFormat = EnumFormat(PaymentStatuses)
+  implicit val providerFormat = Json.format[Provider]
   implicit val paymentOrder = Json.format[PaymentOrder]
 
   implicit val format = Json.format[Payment]
 }
+
+case class Provider(name: String, reference: String)
 
 case class PaymentOrder(id: String, providerName: String, status: PaymentStatus, lastUpdatedOrCreated: LocalDateTime)

@@ -18,13 +18,13 @@ package models
 
 import java.time.LocalDateTime
 
-import models.PaymentStatuses.Created
+import models.PaymentStatuses.{Created, Successful}
 import models.TaxTypes.`other`
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class PaymentSpec extends PlaySpec with MockitoSugar{
+class PaymentSpec extends PlaySpec with MockitoSugar {
 
   val _id = "biuh98huiu"
   val ref = "ref"
@@ -37,6 +37,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar{
 
   val id = "uihuibhjbui"
   val name = "providerName"
+  val providerRef = "providerRef"
 
   val now = LocalDateTime.now()
 
@@ -51,16 +52,14 @@ class PaymentSpec extends PlaySpec with MockitoSugar{
         commissionInPence,
         totalInPence,
         url,
-        None,
+        Some(Card(
+          models.CardTypes.`visa-debit`,
+          Some(20.00)
+        )),
         Map.empty,
-        Seq(
-          PaymentOrder(
-            id,
-            name,
-            Created,
-            now
-          )
-        )
+        Some(Provider(name, providerRef)),
+        Some(now),
+        Successful
       )) must be(Json.obj(
         "_id" -> _id,
         "taxType" -> "other",
@@ -70,13 +69,17 @@ class PaymentSpec extends PlaySpec with MockitoSugar{
         "commissionInPence" -> commissionInPence,
         "totalInPence" -> totalInPence,
         "returnUrl" -> url,
+        "card" -> Json.obj(
+          "type" -> "visa-debit",
+          "creditCardCommissionRate" -> 20.00
+        ),
         "additionalInformation" -> Json.obj(),
-        "orders" -> Json.arr(Json.obj(
-          "id" -> id,
-          "providerName" -> name,
-          "status" -> "Created",
-          "lastUpdatedOrCreated" -> Json.toJson(now)
-        ))
+        "provider" -> Json.obj(
+          "name" -> name,
+          "reference" -> providerRef
+        ),
+        "confirmed" -> Json.toJson(now),
+        "status" -> "Successful"
       ))
     }
   }
