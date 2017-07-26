@@ -98,19 +98,20 @@ object Card {
   implicit val cardWrite = Json.writes[Card]
 }
 
-case class Payment(_id: String,
-                   taxType: TaxType,
-                   reference: String,
-                   description: String,
-                   amountInPence: Int,
-                   commissionInPence: Int,
-                   totalInPence: Int,
-                   returnUrl: String,
-                   card: Option[Card],
-                   additionalInformation: Map[String, String],
-                   provider: Option[Provider],
-                   confirmed: Option[LocalDateTime],
-                   status: PaymentStatus)
+case class Payment(
+                    _id: String,
+                    taxType: TaxType,
+                    reference: String,
+                    description: String,
+                    amountInPence: Int,
+                    commissionInPence: Int,
+                    totalInPence: Int,
+                    returnUrl: String,
+                    card: Option[Card],
+                    additionalInformation: Map[String, String],
+                    provider: Option[Provider],
+                    confirmed: Option[LocalDateTime],
+                    status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)

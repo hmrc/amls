@@ -31,6 +31,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "com.eclipsesource" %% "play-json-schema-validator" % "0.8.8",
+    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10"
   )
 

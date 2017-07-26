@@ -16,30 +16,22 @@
 
 package repositories
 
+import javax.inject.{Inject, Singleton}
+
 import models.Payment
 import play.api.Logger
 import play.api.libs.json.Json
-import play.modules.reactivemongo.MongoDbConnection
-import reactivemongo.api.DefaultDB
+import reactivemongo.api.{DB, DefaultDB}
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
+import uk.gov.hmrc.mongo.ReactiveRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait PaymentsRepository extends Repository[Payment, BSONObjectID] {
-
-  def insert(paymentDetails: Payment):Future[Boolean]
-
-  def findLatestByAmlsReference(amlsReferenceNumber: String):Future[Option[Payment]]
-
-}
-
-class PaymentsMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format)
-  with PaymentsRepository{
-
-
+@Singleton
+class PaymentsRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, String]("payments", mongo, Payment.format) {
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
@@ -50,21 +42,19 @@ class PaymentsMongoRepository()(implicit mongo: () => DefaultDB) extends Reactiv
 
   }
 
-  override def insert(paymentDetails: Payment):Future[Boolean] = {
-    collection.insert[Payment](paymentDetails) map { lastError =>
-      Logger.debug(s"[PaymentsMongoRepository][insert] : { paymentDetails : $paymentDetails , result: ${lastError.ok}, errors: ${lastError.errmsg} }")
-      lastError.ok
-    }
-  }
+  def insert(newPayment: Payment): Future[Payment] = collection.insert(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
 
-  override def findLatestByAmlsReference(amlsReferenceNumber: String) = {
+  def findLatestByAmlsReference(amlsReferenceNumber: String) = {
     collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
-}
 
-object PaymentsRepository extends MongoDbConnection {
+  private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
+    case writeResult: WriteResult if isError(writeResult) => {
+      Logger.debug(s"[PaymentsMongoRepository][insert] : { paymentDetails : $payment , result: ${writeResult.ok}, errors: ${writeResult.errmsg} }")
+      Future.failed(new Exception(writeResult.errmsg.getOrElse("[PaymentsMongoRepository][insert] Unknown write result error.")))
+    }
+    case _ => Future.successful(payment)
+  }
 
-  private lazy val paymentsRepository = new PaymentsMongoRepository
-
-  def apply(): PaymentsMongoRepository = paymentsRepository
+  private def isError(writeResult: WriteResult) = !writeResult.ok || writeResult.hasErrors
 }
