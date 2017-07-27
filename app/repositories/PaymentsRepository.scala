@@ -28,17 +28,16 @@ import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import uk.gov.hmrc.mongo.ReactiveRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentsRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, String]("payments", mongo, Payment.format) {
+class PaymentsRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
 
     Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("paymentDetailsExpiry"),
       options = BSONDocument("expireAfterSeconds" -> 2592000)))
-
 
   }
 

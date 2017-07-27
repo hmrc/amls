@@ -69,15 +69,14 @@ class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutur
   "PaymentRepository" should {
     "insert new payment" in {
       val result = for {
-        payment <- paymentRepository.insert(testPayment)
-        storedPayment <- {
-          paymentRepository.findById(payment._id)
-        }
+        _ <- paymentRepository.insert(testPayment)
+        storedPayment <- paymentRepository.findAll()
       } yield storedPayment
-      whenReady(result) { p =>
-        p shouldBe 'defined
-        p.get shouldEqual testPayment
-      }
+      whenReady(result) ( p =>
+        p.exists( payment =>
+          payment._id.equals(_id)
+        )
+      )
     }
   }
 
