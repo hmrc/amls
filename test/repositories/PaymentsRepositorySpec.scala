@@ -16,55 +16,19 @@
 
 package repositories
 
-import java.time.LocalDateTime
-
-import models.PaymentStatuses.Successful
-import models.TaxTypes.`other`
-import models.{Card, Payment, Provider}
+import generators.PaymentGenerator
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{Matchers, WordSpec}
-import reactivemongo.bson.BSONObjectID
 import repository.EmbeddedMongo
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutures with Matchers with IntegrationPatience {
+class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutures with Matchers with IntegrationPatience with PaymentGenerator {
 
-  val _id = "biuh98huiu"
-  val ref = "ref"
-  val desc = "desc"
-  val url = "url"
-
-  val amountInPence = 100
-  val commissionInPence = 20
-  val totalInPence = 120
-
-  val id = "uihuibhjbui"
-  val name = "providerName"
-  val providerRef = "providerRef"
-
-  val now = LocalDateTime.now()
 
   private val db = connection("payments")
   private val paymentRepository = new PaymentsRepository(() => db)
-  private val testPayment = Payment(
-    _id,
-    other,
-    ref,
-    desc,
-    amountInPence,
-    commissionInPence,
-    totalInPence,
-    url,
-    Some(Card(
-      models.CardTypes.`visa-debit`,
-      Some(20.00)
-    )),
-    Map.empty,
-    Some(Provider(name, providerRef)),
-    Some(now),
-    Successful
-  )
+  private val testPayment = paymentGen.sample.get
 
   "PaymentRepository" should {
     "insert new payment" in {
@@ -74,7 +38,7 @@ class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutur
       } yield storedPayment
       whenReady(result) ( p =>
         p.exists( payment =>
-          payment._id.equals(_id)
+          payment._id.equals(testPayment._id)
         )
       )
     }
