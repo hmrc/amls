@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 @Singleton
 class PaymentController @Inject() extends BaseController {
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, paymentId: String) = Action.async(parse.json) {
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
     ???
   }
 
