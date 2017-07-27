@@ -25,22 +25,26 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutures with Matchers with IntegrationPatience with PaymentGenerator {
 
-
   private val db = connection("payments")
-  private val paymentRepository = new PaymentsRepository(() => db)
+  private val testRepo = new PaymentsRepository(() => db)
   private val testPayment = paymentGen.sample.get
 
   "PaymentRepository" should {
     "insert new payment" in {
       val result = for {
-        _ <- paymentRepository.insert(testPayment)
-        storedPayment <- paymentRepository.findAll()
+        _ <- testRepo.insert(testPayment)
+        storedPayment <- testRepo.findAll()
       } yield storedPayment
       whenReady(result) ( p =>
         p.exists( payment =>
           payment._id.equals(testPayment._id)
         )
       )
+    }
+    "findLatestByAmlsReference" should {
+      "return None if the amlsRefNo does not exist in the database" in {
+        whenReady(testRepo.findLatestByAmlsReference("asdfghjkl"))(r => r shouldBe None)
+      }
     }
   }
 
