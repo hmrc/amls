@@ -16,12 +16,10 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.PaymentGenerator
-import metrics.{GGAdmin, Metrics}
-import models.{KnownFact, KnownFactsForService}
+import metrics.{Metrics, PayAPI}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
@@ -37,11 +35,12 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
   trait Fixture {
 
+    val http = mock[WSHttp]
+
     val testConnector = new PayAPIConnector(
-      mock[WSHttp],
+      http,
       "url",
-      mock[Metrics],
-      MockAudit
+      mock[Metrics]
     )
 
     val testPayment = paymentGen.sample.get
@@ -53,7 +52,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
     val mockTimer = mock[Timer.Context]
 
     when {
-      testConnector.metrics.timer(eqTo(GGAdmin))
+      testConnector.metrics.timer(eqTo(PayAPI))
     } thenReturn mockTimer
   }
 
@@ -62,6 +61,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
     "return a successful response" in new Fixture {
 
       val response = HttpResponse(OK, responseString = Some("message"))
+
       when {
         testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
       } thenReturn Future.successful(response)

@@ -41,8 +41,7 @@ import scala.concurrent.Future
 @Singleton
 class PayAPIConnector @Inject()(
                                  private[connectors] val http: WSHttp, serviceURL: String,
-                                 private[connectors] val metrics: Metrics,
-                                 audit: Audit
+                                 private[connectors] val metrics: Metrics
                                ) extends HttpResponseHelper with ServicesConfig {
 
   def getPayment(payment: Payment)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
@@ -61,7 +60,6 @@ class PayAPIConnector @Inject()(
     } flatMap {
       case response @ status(OK) =>
         metrics.success(PayAPI)
-//        audit.sendDataEvent(KnownFactsEvent(knownFacts))
         Logger.debug(s"$prefix - Success Response")
         Logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
