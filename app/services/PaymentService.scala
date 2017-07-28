@@ -19,8 +19,10 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import connectors.PayAPIConnector
+import models.Payment
+import uk.gov.hmrc.play.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentService @Inject()(
@@ -28,5 +30,9 @@ class PaymentService @Inject()(
                               ) {
 
   def savePayment(paymentId: String): Future[Option[String]] = ???
+
+  def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] = {
+    paymentConnector.getPayment(paymentId)
+  }
 
 }

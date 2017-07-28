@@ -25,6 +25,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
@@ -43,11 +44,16 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
     "getPayment is called" must {
       "respond with payment if call to connector is successful" in {
 
+        val payment = testPayment
+
         when {
-          testPayAPIConnector.getPayment(any())(hc)
+          testPayAPIConnector.getPayment(any())(any())
         } thenReturn {
-          Future.successful(testPayment)
+          Future.successful(payment)
         }
+
+        val result = testPaymentService.getPayment(payment._id)
+        await(result) mustBe payment
 
       }
     }
