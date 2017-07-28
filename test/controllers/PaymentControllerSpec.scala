@@ -16,35 +16,54 @@
 
 package controllers
 
+import generators.PaymentGenerator
+import org.mockito.Mockito._
+import org.mockito.Matchers._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.PaymentService
 
-class PaymentControllerSpec extends PlaySpec with MockitoSugar {
+import scala.concurrent.Future
+
+class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
 
   trait Fixture {
-    val testController = new PaymentController()
+
+    val testPaymentService = mock[PaymentService]
+
+    def testPayment = paymentGen.sample.get
+
+    val testController = new PaymentController(
+      paymentService = testPaymentService
+    )
 
     val accountType = "org"
     val accountRef = "TestOrgRef"
     val amlsRegistrationNumber = "XAML00000567890"
 
     val postRequest = FakeRequest("POST", "/")
-      .withHeaders("CONTENT_TYPE" -> "application/json")
+      .withHeaders("CONTENT_TYPE" -> "text/plain")
       .withBody[String]("")
 
     private val postRequestWithNoBody = FakeRequest("POST", "/")
-      .withHeaders("CONTENT_TYPE" -> "application/json")
+      .withHeaders("CONTENT_TYPE" -> "text/plain")
   }
 
   "PaymentController" must {
-    "return OK" when {
-      "AMLSRefNo is found" in new Fixture {
+    "return CREATED" when {
+      "paymentService returns payment details" in new Fixture {
+
+        when {
+          testPaymentService.savePayment(any())
+        } thenReturn {
+          Future.successful(Some(testPayment))
+        }
 
         val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
-        status(result) mustBe OK
+        status(result) mustBe CREATED
 
 
       }
