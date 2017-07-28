@@ -23,7 +23,7 @@ import metrics.{Metrics, PayAPI}
 import models.{KnownFactsForService, Payment}
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -44,9 +44,11 @@ class PayAPIConnector @Inject()(
                                  private[connectors] val metrics: Metrics
                                ) extends HttpResponseHelper with ServicesConfig {
 
-  def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
-    val url = s"$serviceURL/payment/${paymentId}"
+    val url = s"$serviceURL/payment/$paymentId"
+
+    val bodyParser = JsonParsed[Payment]
 
     val prefix = "[PayAPIConnector][getPayment]"
     val timer = metrics.timer(PayAPI)
@@ -58,11 +60,11 @@ class PayAPIConnector @Inject()(
         Logger.debug(s"$prefix - Response body: ${response.body}")
         response
     } flatMap {
-      case response @ status(OK) =>
+      case response @ status(OK) & bodyParser(JsSuccess(body: Payment, _)) =>
         metrics.success(PayAPI)
         Logger.debug(s"$prefix - Success Response")
         Logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
-        Future.successful(response)
+        Future.successful(body)
       case response @ status(s) =>
         metrics.failed(PayAPI)
         Logger.warn(s"$prefix - Failure Response: $s")

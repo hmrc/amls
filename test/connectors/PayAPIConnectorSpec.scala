@@ -25,6 +25,8 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.http.Status.OK
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
@@ -62,14 +64,17 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     "return a successful response" in new Fixture {
 
-      val response = HttpResponse(OK, responseString = Some("message"))
-
+      val response = HttpResponse(
+        responseStatus = OK,
+        responseHeaders = Map.empty,
+        responseJson = Some(Json.toJson(testPayment))
+      )
       when {
         testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
-        _ mustEqual response
+        _ mustEqual testPayment
       }
     }
 

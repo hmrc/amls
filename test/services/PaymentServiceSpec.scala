@@ -16,17 +16,41 @@
 
 package services
 
+import connectors.PayAPIConnector
 import generators.PaymentGenerator
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator{
+import scala.concurrent.Future
 
-  "PaymentService" must {
-    
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
+
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
+
+  val testPayAPIConnector = mock[PayAPIConnector]
+
+  def testPayment = paymentGen.sample.get
+
+  val testPaymentService = new PaymentService(
+    testPayAPIConnector
+  )
+
+  "PaymentService" when {
+    "getPayment is called" must {
+      "respond with payment if call to connector is successful" in {
+
+        when {
+          testPayAPIConnector.getPayment(any())(hc)
+        } thenReturn {
+          Future.successful(testPayment)
+        }
+
+      }
+    }
   }
 
 }

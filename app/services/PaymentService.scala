@@ -18,10 +18,14 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
+import connectors.PayAPIConnector
+
 import scala.concurrent.Future
 
 @Singleton
-class PaymentService @Inject()() {
+class PaymentService @Inject()(
+                              val paymentConnector: PayAPIConnector
+                              ) {
 
   def savePayment(paymentId: String): Future[Option[String]] = ???
 
