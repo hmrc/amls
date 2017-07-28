@@ -18,14 +18,24 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import models.des.DeregisterSubscriptionRequest
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.ControllerHelper
+
+import scala.concurrent.Future
 
 @Singleton
-class PaymentController @Inject() extends BaseController {
+class PaymentController @Inject() extends BaseController with ControllerHelper {
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
-    ???
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.text) {
+    implicit request =>
+      findAMLSRefNo(amlsRegistrationNumber) match {
+        case Some(_) => Future.successful(Ok)
+        case _ => Future.successful (BadRequest(toError("Invalid amlsRegistrationNumber")))
+      }
   }
+
 
 }
