@@ -19,6 +19,7 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import connectors.PayAPIConnector
+import exceptions.HttpStatusException
 import models.Payment
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -31,8 +32,10 @@ class PaymentService @Inject()(
 
   def savePayment(paymentId: String): Future[Option[String]] = ???
 
-  def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] = {
-    paymentConnector.getPayment(paymentId)
+  def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+    paymentConnector.getPayment(paymentId).map(Some(_)) recover {
+      case e:HttpStatusException if e.status.equals(404) => None
+    }
   }
 
 }

@@ -17,6 +17,7 @@
 package services
 
 import connectors.PayAPIConnector
+import exceptions.HttpStatusException
 import generators.PaymentGenerator
 import org.mockito.Mockito._
 import org.mockito.Matchers._
@@ -53,9 +54,36 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
         }
 
         val result = testPaymentService.getPayment(payment._id)
-        await(result) mustBe payment
+        await(result) mustBe Some(payment)
 
       }
+
+      "respond with None if call to connector returns HttpStatusException NotFound" in {
+
+        when {
+          testPayAPIConnector.getPayment(any())(any())
+        } thenReturn {
+          Future.failed(new HttpStatusException(404, None))
+        }
+
+        val result = testPaymentService.getPayment(testPayment._id)
+        await(result) mustBe None
+
+      }
+
+      "respond with INTERNAL_SERVER_ERROR if connector returns HttpStatusException anything else" in {
+
+        when {
+          testPayAPIConnector.getPayment(any())(any())
+        } thenReturn {
+          Future.failed(new Exception(""))
+        }
+
+        val result = testPaymentService.getPayment(testPayment._id)
+        await(result) mustBe INTERNAL_SERVER_ERROR
+
+      }
+
     }
   }
 
