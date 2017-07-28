@@ -16,13 +16,17 @@
 
 package services
 
-import javax.inject.{Inject, Singleton}
+import generators.PaymentGenerator
+import org.mockito.Mockito._
+import org.mockito.Matchers._
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.test.Helpers._
 
-import scala.concurrent.Future
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator{
 
-@Singleton
-class PaymentService @Inject()() {
-
-  def savePayment(paymentId: String): Future[Option[String]] = ???
+  "PaymentService" must {
+    
+  }
 
 }

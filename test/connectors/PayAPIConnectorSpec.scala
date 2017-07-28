@@ -45,6 +45,8 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     val testPayment = paymentGen.sample.get
 
+    val testPaymentId = testPayment._id
+
     val url = s"url/payment/${testPayment._id}"
 
     implicit val hc = HeaderCarrier()
@@ -66,7 +68,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
         testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady (testConnector.getPayment(testPayment)) {
+      whenReady (testConnector.getPayment(testPaymentId)) {
         _ mustEqual response
       }
     }
@@ -79,7 +81,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
         testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady (testConnector.getPayment(testPayment).failed) {
+      whenReady (testConnector.getPayment(testPaymentId).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
           body mustEqual Some("message")
@@ -92,7 +94,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
         testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady (testConnector.getPayment(testPayment).failed) {
+      whenReady (testConnector.getPayment(testPaymentId).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

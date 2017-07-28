@@ -35,6 +35,8 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     def testPayment = paymentGen.sample.get
 
+    val testPaymentId = testPayment._id
+
     val testController = new PaymentController(
       paymentService = testPaymentService
     )
@@ -58,7 +60,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         when {
           testPaymentService.savePayment(any())
         } thenReturn {
-          Future.successful(Some(testPayment))
+          Future.successful(Some(testPaymentId))
         }
 
         val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)

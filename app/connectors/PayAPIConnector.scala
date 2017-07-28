@@ -44,13 +44,13 @@ class PayAPIConnector @Inject()(
                                  private[connectors] val metrics: Metrics
                                ) extends HttpResponseHelper with ServicesConfig {
 
-  def getPayment(payment: Payment)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
 
-    val url = s"$serviceURL/payment/${payment._id}"
+    val url = s"$serviceURL/payment/${paymentId}"
 
     val prefix = "[PayAPIConnector][getPayment]"
     val timer = metrics.timer(PayAPI)
-    Logger.debug(s"$prefix - Request body: ${Json.toJson(payment)}")
+    Logger.debug(s"$prefix - Request body: ${Json.toJson(paymentId)}")
     http.GET[HttpResponse](url) map {
       response =>
         timer.stop()
