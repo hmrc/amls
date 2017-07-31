@@ -17,7 +17,7 @@
 package services
 
 import connectors.PayAPIConnector
-import exceptions.HttpStatusException
+import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
 import org.mockito.Mockito._
 import org.mockito.Matchers._
@@ -63,7 +63,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
         when {
           testPayAPIConnector.getPayment(any())(any())
         } thenReturn {
-          Future.failed(new HttpStatusException(404, None))
+          Future.failed(new HttpStatusException(NOT_FOUND, None))
         }
 
         val result = testPaymentService.getPayment(testPayment._id)
@@ -71,7 +71,21 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
       }
 
-      "respond with INTERNAL_SERVER_ERROR if connector returns HttpStatusException anything else" in {
+      "respond with PaymentException if connector returns HttpStatusException with anything else" in {
+
+        when {
+          testPayAPIConnector.getPayment(any())(any())
+        } thenReturn {
+          Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, None))
+        }
+
+        val result = testPaymentService.getPayment(testPayment._id).failed
+
+        await(result) mustBe PaymentException(Some(INTERNAL_SERVER_ERROR), "Could not retrieve payment")
+
+      }
+
+      "respond with PaymentException if connector returns anything else" in {
 
         when {
           testPayAPIConnector.getPayment(any())(any())
@@ -79,8 +93,9 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           Future.failed(new Exception(""))
         }
 
-        val result = testPaymentService.getPayment(testPayment._id)
-        await(result) mustBe INTERNAL_SERVER_ERROR
+        val result = testPaymentService.getPayment(testPayment._id).failed
+
+        await(result) mustBe PaymentException(None, "Could not retrieve payment")
 
       }
 

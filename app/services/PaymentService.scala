@@ -19,10 +19,10 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import connectors.PayAPIConnector
-import exceptions.HttpStatusException
+import exceptions.{HttpStatusException, PaymentException}
 import models.Payment
 import uk.gov.hmrc.play.http.HeaderCarrier
-
+import play.api.http.Status._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -33,8 +33,10 @@ class PaymentService @Inject()(
   def savePayment(paymentId: String): Future[Option[String]] = ???
 
   def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
-    paymentConnector.getPayment(paymentId).map(Some(_)) recover {
-      case e:HttpStatusException if e.status.equals(404) => None
+    paymentConnector.getPayment(paymentId).map(Some(_)) recoverWith {
+      case e:HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
+      case e:HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
+      case _ => Future.failed(PaymentException(None, "Could not retrieve payment"))
     }
   }
 
