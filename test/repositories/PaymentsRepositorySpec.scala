@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class PaymentsRepositorySpec extends WordSpec with EmbeddedMongo with ScalaFutures with Matchers with IntegrationPatience with PaymentGenerator {
 
   private val db = connection("payments")
-  private val testRepo = new PaymentsRepository(() => db)
+  private val testRepo = new PaymentRepository(() => db)
   private val testPayment = paymentGen.sample.get
 
   "PaymentRepository" should {

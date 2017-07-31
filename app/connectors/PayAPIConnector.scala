@@ -47,7 +47,7 @@ class PayAPIConnector @Inject()(
 
     val prefix = "[PayAPIConnector][getPayment]"
     val timer = metrics.timer(PayAPI)
-    Logger.debug(s"$prefix - Request body: ${Json.toJson(paymentId)}")
+    Logger.debug(s"$prefix - Request body: $paymentId}")
     http.GET[HttpResponse](url) map {
       response =>
         timer.stop()

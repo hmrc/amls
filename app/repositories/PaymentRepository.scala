@@ -31,7 +31,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentsRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
+class PaymentRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._

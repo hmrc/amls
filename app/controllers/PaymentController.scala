@@ -39,7 +39,7 @@ class PaymentController @Inject()(
           val paymentId = request.body
 
           paymentService.savePayment(paymentId) map {
-            case Some(payment) => Created
+            case Some(_) => Created
             case _ => InternalServerError
           }
 

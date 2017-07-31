@@ -23,14 +23,21 @@ import exceptions.{HttpStatusException, PaymentException}
 import models.Payment
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.http.Status._
+import repositories.PaymentRepository
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentService @Inject()(
-                              val paymentConnector: PayAPIConnector
+                              val paymentConnector: PayAPIConnector,
+                              val paymentsRepository: PaymentRepository
                               ) {
 
-  def savePayment(paymentId: String): Future[Option[String]] = ???
+  def savePayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+    getPayment(paymentId) flatMap {
+      case Some(payment) => paymentsRepository.insert(payment).map(Some(_))
+    }
+  }
 
   def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     paymentConnector.getPayment(paymentId).map(Some(_)) recoverWith {

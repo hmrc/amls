@@ -19,33 +19,35 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import org.mockito.Mockito._
+import models.Payment
 import org.mockito.Matchers._
+import org.mockito.Mockito._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
+import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator with ScalaFutures {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   val testPayAPIConnector = mock[PayAPIConnector]
+  val testPaymentRepo = mock[PaymentRepository]
 
-  def testPayment = paymentGen.sample.get
+  val testPayment = paymentGen.sample.get
 
-  val testPaymentService = new PaymentService(
-    testPayAPIConnector
-  )
+  val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
     "getPayment is called" must {
       "respond with payment if call to connector is successful" in {
 
-        val payment = testPayment
+        def payment = testPayment
 
         when {
           testPayAPIConnector.getPayment(any())(any())
@@ -97,6 +99,34 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
         await(result) mustBe PaymentException(None, "Could not retrieve payment")
 
+      }
+
+    }
+
+    "savePayment is called" must {
+
+      "send payment to insert" when {
+        "call to getPayment is successful" in {
+
+          val payment = testPayment
+
+          val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo) {
+            override def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] =
+              Future.successful(Some(payment))
+          }
+
+          when {
+            testPaymentService.paymentsRepository.insert(payment)
+          } thenReturn {
+            Future.successful(payment)
+          }
+
+          whenReady(testPaymentService.savePayment(payment._id)) { res =>
+            verify(
+              testPaymentService.paymentsRepository
+            ).insert(payment)
+          }
+        }
       }
 
     }
