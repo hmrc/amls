@@ -33,11 +33,6 @@ import utils.HttpResponseHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-//override private[connectors] val http = WSHttp
-//override private[connectors] lazy val serviceURL = baseUrl("government-gateway-admin")
-//override private[connectors] val metrics = Metrics
-//override private[connectors] val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
-
 @Singleton
 class PayAPIConnector @Inject()(
                                  private[connectors] val http: WSHttp, serviceURL: String,
