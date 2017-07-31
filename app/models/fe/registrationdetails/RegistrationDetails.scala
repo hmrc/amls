@@ -17,10 +17,13 @@
 package models.fe.registrationdetails
 
 import models.des.registrationdetails.{Individual, Organisation, RegistrationDetails => DesRegistrationDetails}
+import play.api.libs.json.Json
 
 case class RegistrationDetails(companyName: String, isIndividual: Boolean)
 
 object RegistrationDetails {
+  implicit val writes = Json.writes[RegistrationDetails]
+
   implicit def convert(details: DesRegistrationDetails) = details match {
     case DesRegistrationDetails(x@true, details: Individual) => RegistrationDetails(s"${details.firstName} ${details.lastName}", x)
     case DesRegistrationDetails(x@false, details: Organisation) => RegistrationDetails(details.organisationName, x)

@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.{DESConnector, RegistrationDetailsDesConnector}
+import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
@@ -29,7 +30,7 @@ trait RegistrationDetailsController extends BaseController {
   def get(safeId: String) = Action.async {
     implicit request =>
       registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
-        Ok(Json.toJson(details))
+        Ok(Json.toJson(RegistrationDetails.convert(details)))
       }
   }
 }
