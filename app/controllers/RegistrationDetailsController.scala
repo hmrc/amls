@@ -27,7 +27,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait RegistrationDetailsController extends BaseController {
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector
 
-  def get(safeId: String) = Action.async {
+  def get(accountType: String, ref: String, safeId: String) = Action.async {
     implicit request =>
       registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
         Ok(Json.toJson(RegistrationDetails.convert(details)))

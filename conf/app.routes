@@ -14,4 +14,4 @@ GET         /payment/:accountType/:ref/:amlsRegistrationNumber                  
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal              @controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration          @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)
 
-GET         /registration/details/:safeId                                                   controllers.RegistrationDetailsController.get(safeId: String)
+GET         /registration/:accountType/:ref/details/:safeId                                 controllers.RegistrationDetailsController.get(accountType: String, ref: String, safeId: String)

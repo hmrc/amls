@@ -51,7 +51,7 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
         controller.registrationDetailsConnector.getRegistrationDetails(eqTo(safeId))(any(), any())
       } thenReturn Future.successful(desDetails)
 
-      val response = controller.get(safeId)(FakeRequest())
+      val response = controller.get("account", "ref", safeId)(FakeRequest())
 
       status(response) mustBe OK
       contentAsJson(response) mustBe Json.toJson(feDetails)
