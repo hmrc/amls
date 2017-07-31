@@ -1,15 +1,17 @@
 # microservice specific routes
 
-POST      /subscription/:accountType/:ref/:safeId                                   controllers.SubscriptionController.subscribe(accountType:String, ref:String, safeId: String)
-POST      /subscription/:accountType/:ref/:amlsRegistrationNumber/update            controllers.AmendVariationController.amend(accountType:String, ref:String, amlsRegistrationNumber: String)
-POST      /subscription/:accountType/:ref/:amlsRegistrationNumber/variation         controllers.AmendVariationController.variation(accountType:String, ref:String, amlsRegistrationNumber: String)
-POST      /subscription/:accountType/:ref/:amlsRegistrationNumber/renewal           controllers.AmendVariationController.renewal(accountType:String, ref:String, amlsRegistrationNumber: String)
-POST      /subscription/:accountType/:ref/:amlsRegistrationNumber/renewalAmendment  controllers.AmendVariationController.renewalAmendment(accountType:String, ref:String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:safeId                                         controllers.SubscriptionController.subscribe(accountType:String, ref:String, safeId: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/update                  controllers.AmendVariationController.amend(accountType:String, ref:String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/variation               controllers.AmendVariationController.variation(accountType:String, ref:String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/renewal                 controllers.AmendVariationController.renewal(accountType:String, ref:String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/renewalAmendment        controllers.AmendVariationController.renewalAmendment(accountType:String, ref:String, amlsRegistrationNumber: String)
 
-GET       /subscription/:accountType/:ref/:amlsRegistrationNumber/status            controllers.SubscriptionStatusController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
-GET       /subscription/:accountType/:ref/:amlsRegistrationNumber                   controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
+GET         /subscription/:accountType/:ref/:amlsRegistrationNumber/status                  controllers.SubscriptionStatusController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
+GET         /subscription/:accountType/:ref/:amlsRegistrationNumber                         controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
 
-GET       /payment/:accountType/:ref/:amlsRegistrationNumber                        controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
+GET         /payment/:accountType/:ref/:amlsRegistrationNumber                              controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
 
-POST       /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal       @controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
-POST       /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration   @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal              @controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
+POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration          @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)
+
+GET         /registration/details/:safeId                                                   controllers.RegistrationDetailsController.get(safeId: String)
