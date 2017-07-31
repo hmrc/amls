@@ -36,13 +36,10 @@ class PaymentController @Inject()(
     implicit request =>
       findAMLSRefNo(amlsRegistrationNumber) match {
         case Some(_) => {
-          val paymentId = request.body
-
-          paymentService.savePayment(paymentId) map {
+          paymentService.savePayment(request.body) map {
             case Some(_) => Created
             case _ => InternalServerError
           }
-
         }
         case _ => Future.successful (BadRequest(toError("Invalid amlsRegistrationNumber")))
       }

@@ -19,10 +19,9 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.Payment
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
@@ -30,9 +29,9 @@ import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator with ScalaFutures {
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator with ScalaFutures with IntegrationPatience {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -44,19 +43,30 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
-    "getPayment is called" must {
+    "savePayment is called" must {
       "respond with payment if call to connector is successful" in {
 
-        def payment = testPayment
+        val payment = testPayment
 
         when {
-          testPayAPIConnector.getPayment(any())(any())
+          testPayAPIConnector.getPayment(payment._id)(hc)
         } thenReturn {
           Future.successful(payment)
         }
 
-        val result = testPaymentService.getPayment(payment._id)
-        await(result) mustBe Some(payment)
+        when {
+          testPaymentService.paymentsRepository.insert(payment)
+        } thenReturn {
+          Future.successful(payment)
+        }
+
+        whenReady(testPaymentService.savePayment(payment._id)) { res =>
+          res mustBe Some(payment)
+
+          verify(
+            testPaymentService.paymentsRepository
+          ).insert(payment)
+        }
 
       }
 
@@ -68,7 +78,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           Future.failed(new HttpStatusException(NOT_FOUND, None))
         }
 
-        val result = testPaymentService.getPayment(testPayment._id)
+        val result = testPaymentService.savePayment(testPayment._id)
         await(result) mustBe None
 
       }
@@ -81,55 +91,30 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, None))
         }
 
-        val result = testPaymentService.getPayment(testPayment._id).failed
+        val result = testPaymentService.savePayment(testPayment._id).failed
 
         await(result) mustBe PaymentException(Some(INTERNAL_SERVER_ERROR), "Could not retrieve payment")
 
       }
 
-      "respond with PaymentException if connector returns anything else" in {
+      "replay exception if anything other than HttpStatusException" in {
+
+        val e = new Exception("")
 
         when {
           testPayAPIConnector.getPayment(any())(any())
         } thenReturn {
-          Future.failed(new Exception(""))
+          Future.failed(e)
         }
 
-        val result = testPaymentService.getPayment(testPayment._id).failed
+        val result = testPaymentService.savePayment(testPayment._id).failed
 
-        await(result) mustBe PaymentException(None, "Could not retrieve payment")
+        await(result) mustBe e
 
       }
 
     }
 
-    "savePayment is called" must {
-
-      "send payment to insert" when {
-        "call to getPayment is successful" in {
-
-          val payment = testPayment
-
-          val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo) {
-            override def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] =
-              Future.successful(Some(payment))
-          }
-
-          when {
-            testPaymentService.paymentsRepository.insert(payment)
-          } thenReturn {
-            Future.successful(payment)
-          }
-
-          whenReady(testPaymentService.savePayment(payment._id)) { res =>
-            verify(
-              testPaymentService.paymentsRepository
-            ).insert(payment)
-          }
-        }
-      }
-
-    }
   }
 
 }

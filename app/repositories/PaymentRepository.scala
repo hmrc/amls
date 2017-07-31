@@ -18,6 +18,7 @@ package repositories
 
 import javax.inject.{Inject, Singleton}
 
+import exceptions.PaymentException
 import models.Payment
 import play.api.Logger
 import play.api.libs.json.Json
@@ -50,7 +51,7 @@ class PaymentRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Pa
   private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
     case writeResult: WriteResult if isError(writeResult) => {
       Logger.debug(s"[PaymentsMongoRepository][insert] : { paymentDetails : $payment , result: ${writeResult.ok}, errors: ${writeResult.errmsg} }")
-      Future.failed(new Exception(writeResult.errmsg.getOrElse("[PaymentsMongoRepository][insert] Unknown write result error.")))
+      Future.failed(new PaymentException(None, writeResult.errmsg.getOrElse("[PaymentsMongoRepository][insert] Unknown write result error.")))
     }
     case _ => Future.successful(payment)
   }

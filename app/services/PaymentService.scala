@@ -18,6 +18,8 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
+import cats.data.OptionT
+import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import models.Payment
@@ -32,18 +34,14 @@ class PaymentService @Inject()(
                               val paymentConnector: PayAPIConnector,
                               val paymentsRepository: PaymentRepository
                               ) {
-
   def savePayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
-    getPayment(paymentId) flatMap {
-      case Some(payment) => paymentsRepository.insert(payment).map(Some(_))
-    }
-  }
-
-  def getPayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
-    paymentConnector.getPayment(paymentId).map(Some(_)) recoverWith {
+    (for {
+      pm <- paymentConnector.getPayment(paymentId)
+      _ <- paymentsRepository.insert(pm)
+    } yield pm.some) recoverWith {
       case e:HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
       case e:HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
-      case _ => Future.failed(PaymentException(None, "Could not retrieve payment"))
+      case e:PaymentException => Future.failed(e)
     }
   }
 
