@@ -23,6 +23,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, _}
 
 object EnumFormat {
+  // $COVERAGE-OFF$
   def apply[T <: EnumEntry](e: Enum[T]): Format[T] = Format(
     Reads {
       case JsString(value) => e.withNameOption(value).map(JsSuccess(_))
