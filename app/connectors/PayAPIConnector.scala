@@ -20,11 +20,10 @@ import javax.inject.{Inject, Singleton}
 
 import exceptions.HttpStatusException
 import metrics.{Metrics, PayAPI}
-import models.{KnownFactsForService, Payment}
+import models.Payment
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.audit.model.Audit
+import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.http.ws.WSHttp

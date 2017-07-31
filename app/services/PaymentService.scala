@@ -18,7 +18,6 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
