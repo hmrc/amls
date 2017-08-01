@@ -18,12 +18,10 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.mvc.Action
+import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.ControllerHelper
-
-import scala.concurrent.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -32,17 +30,13 @@ class PaymentController @Inject()(
                                    private[controllers] val paymentService: PaymentService
                                  ) extends BaseController with ControllerHelper {
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.text) {
-    implicit request =>
-      findAMLSRefNo(amlsRegistrationNumber) match {
-        case Some(_) => {
-          paymentService.savePayment(request.body) map {
-            case Some(_) => Created
-            case _ => InternalServerError
-          }
-        }
-        case _ => Future.successful (BadRequest(toError("Invalid amlsRegistrationNumber")))
+  def savePayment(accountType: String, ref: String) = Action.async(parse.text) {
+    implicit request: Request[String] => {
+      paymentService.savePayment(request.body) map {
+        case Some(_) => Created
+        case _ => InternalServerError
       }
+    }
   }
 
 

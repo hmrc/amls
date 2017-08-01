@@ -17,6 +17,7 @@
 package connectors
 
 import com.codahale.metrics.Timer
+import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import generators.PaymentGenerator
 import metrics.{Metrics, PayAPI}
@@ -29,7 +30,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 
@@ -37,19 +38,19 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
   trait Fixture {
 
-    val http = mock[WSHttp]
-
-    val testConnector = new PayAPIConnector(
-      http,
-      "url",
-      mock[Metrics]
-    )
+    val mockHttp = mock[WSHttp]
 
     val testPayment = paymentGen.sample.get
 
-    val testPaymentId = testPayment._id
+    val paymentUrl = s"url/payment/${testPayment._id}"
 
-    val url = s"url/payment/${testPayment._id}"
+    object testConnector extends PayAPIConnector {
+      override private[connectors] val httpGet: HttpGet = mockHttp
+      override private[connectors] val paymentUrl = "url"
+      override private[connectors] val metrics = mock[Metrics]
+    }
+
+    val testPaymentId = testPayment._id
 
     implicit val hc = HeaderCarrier()
 
@@ -64,13 +65,16 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     "return a successful response" in new Fixture {
 
+      println(">>>" + paymentUrl)
+
       val response = HttpResponse(
         responseStatus = OK,
         responseHeaders = Map.empty,
         responseJson = Some(Json.toJson(testPayment))
       )
+
       when {
-        testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
@@ -83,7 +87,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {
@@ -96,7 +100,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.http.GET[HttpResponse](eqTo(url))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {

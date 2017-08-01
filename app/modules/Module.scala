@@ -17,7 +17,8 @@
 package modules
 
 import com.google.inject.AbstractModule
-import connectors.{DESConnector, DeregisterSubscriptionConnector, WithdrawSubscriptionConnector}
+import connectors.{DESConnector, DeregisterSubscriptionConnector, PayAPIConnector, WithdrawSubscriptionConnector}
+import metrics.Metrics
 
 class Module extends AbstractModule {
   override def configure() = {

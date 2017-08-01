@@ -10,7 +10,7 @@ GET         /subscription/:accountType/:ref/:amlsRegistrationNumber/status      
 GET         /subscription/:accountType/:ref/:amlsRegistrationNumber                         controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
 
 GET         /payment/:accountType/:ref/:amlsRegistrationNumber                              controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
-POST        /payment/:accountType/:ref/:amlsRegistrationNumber/                       @controllers.PaymentController.savePayment(accountType:String, ref:String, amlsRegistrationNumber: String)
+POST        /payment/:accountType/:ref/                                                     @controllers.PaymentController.savePayment(accountType:String, ref:String)
 
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal              @controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration          @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)

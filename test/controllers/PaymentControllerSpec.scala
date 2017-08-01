@@ -63,7 +63,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
           Future.successful(Some(testPayment))
         }
 
-        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+        val result = testController.savePayment(accountType, accountRef)(postRequest)
 
         status(result) mustBe CREATED
 
@@ -78,7 +78,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
           Future.successful(None)
         }
 
-        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+        val result = testController.savePayment(accountType, accountRef)(postRequest)
 
         status(result) mustBe INTERNAL_SERVER_ERROR
 
@@ -87,7 +87,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     "return BAD_REQUEST" when {
       "AMLSRefNo is not found" in new Fixture {
 
-        val result = testController.savePayment(accountType, accountRef, "123")(postRequest)
+        val result = testController.savePayment(accountType, accountRef)(postRequest)
 
         status(result) mustBe BAD_REQUEST
 

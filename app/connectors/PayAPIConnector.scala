@@ -16,8 +16,7 @@
 
 package connectors
 
-import javax.inject.{Inject, Singleton}
-
+import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import metrics.{Metrics, PayAPI}
 import models.Payment
@@ -25,29 +24,33 @@ import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import scala.concurrent.Future
 
-@Singleton
-class PayAPIConnector @Inject()(
-                                 private[connectors] val http: WSHttp, serviceURL: String,
-                                 private[connectors] val metrics: Metrics
-                               ) extends HttpResponseHelper with ServicesConfig {
+trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
+
+  private[connectors] def httpGet: HttpGet
+  private[connectors] val paymentUrl: String
+  private[connectors] val metrics: Metrics
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
-    val url = s"$serviceURL/payment/$paymentId"
+    val url = s"$paymentUrl/payment/$paymentId"
 
     val bodyParser = JsonParsed[Payment]
 
     val prefix = "[PayAPIConnector][getPayment]"
     val timer = metrics.timer(PayAPI)
+
     Logger.debug(s"$prefix - Request body: $paymentId}")
-    http.GET[HttpResponse](url) map {
+
+    println(">>>" + url)
+
+    httpGet.GET[HttpResponse](url) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
@@ -75,4 +78,10 @@ class PayAPIConnector @Inject()(
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }
+}
+
+object PayAPIConnector extends PayAPIConnector {
+  override private[connectors] val httpGet: HttpGet = WSHttp
+  override private[connectors] val paymentUrl = AmlsConfig.payAPIUrl
+  override private[connectors] val metrics = Metrics
 }

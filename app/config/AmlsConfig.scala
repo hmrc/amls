@@ -34,4 +34,7 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
 
   override def release7 = getConfBool("feature-toggle.release7", defBool = false)
   override def enablePostcodeKnownFact = getConfBool("feature-toggle.knownfact-postcode", defBool = false)
+
+  lazy val payAPIUrl = baseUrl("pay-api")
+
 }
