@@ -17,6 +17,7 @@
 package connectors
 
 import audit.MockAudit
+import config.AmlsConfig
 import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.Mockito._
@@ -24,13 +25,15 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.{BeforeAndAfter, MustMatchers}
 import org.scalatest.concurrent._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost}
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar with BeforeAndAfter {
+class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
 
   val mockHttpGet = mock[HttpGet]
 
@@ -59,7 +62,7 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers wit
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", false, Partnership))
 
       when {
-        mockHttpGet.GET[RegistrationDetails](eqTo(s"${connector.fullUrl}/details?safeid=$safeId"))(any(), any())
+        mockHttpGet.GET[RegistrationDetails](eqTo(s"${AmlsConfig.desUrl}/anti-money-laundering/registration/details?safeid=$safeId"))(any(), any())
       } thenReturn Future.successful(details)
 
       whenReady (connector.getRegistrationDetails(safeId)) { r =>
