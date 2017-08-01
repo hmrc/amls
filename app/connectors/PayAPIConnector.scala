@@ -48,8 +48,6 @@ trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 
     Logger.debug(s"$prefix - Request body: $paymentId}")
 
-    println(">>>" + url)
-
     httpGet.GET[HttpResponse](url) map {
       response =>
         timer.stop()

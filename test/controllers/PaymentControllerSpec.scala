@@ -84,15 +84,6 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
       }
     }
-    "return BAD_REQUEST" when {
-      "AMLSRefNo is not found" in new Fixture {
-
-        val result = testController.savePayment(accountType, accountRef)(postRequest)
-
-        status(result) mustBe BAD_REQUEST
-
-      }
-    }
   }
 
 }

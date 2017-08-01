@@ -65,8 +65,6 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     "return a successful response" in new Fixture {
 
-      println(">>>" + paymentUrl)
-
       val response = HttpResponse(
         responseStatus = OK,
         responseHeaders = Map.empty,
