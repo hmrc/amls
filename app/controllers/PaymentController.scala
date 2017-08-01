@@ -18,6 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.Logger
 import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
@@ -32,6 +33,7 @@ class PaymentController @Inject()(
 
   def savePayment(accountType: String, ref: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
+      Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
       paymentService.savePayment(request.body) map {
         case Some(_) => Created
         case _ => InternalServerError

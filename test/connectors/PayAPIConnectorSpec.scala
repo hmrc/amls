@@ -42,7 +42,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     val testPayment = paymentGen.sample.get
 
-    val paymentUrl = s"url/payment/${testPayment._id}"
+    val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
     object testConnector extends PayAPIConnector {
       override private[connectors] val httpGet: HttpGet = mockHttp

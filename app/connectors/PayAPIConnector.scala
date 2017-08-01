@@ -39,14 +39,14 @@ trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
-    val url = s"$paymentUrl/payment/$paymentId"
+    val url = s"$paymentUrl/pay-api/payment/$paymentId"
 
     val bodyParser = JsonParsed[Payment]
 
     val prefix = "[PayAPIConnector][getPayment]"
     val timer = metrics.timer(PayAPI)
 
-    Logger.debug(s"$prefix - Request body: $paymentId}")
+    Logger.debug(s"$prefix - Request body: $paymentId")
 
     httpGet.GET[HttpResponse](url) map {
       response =>
