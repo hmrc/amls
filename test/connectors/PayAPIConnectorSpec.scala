@@ -23,7 +23,7 @@ import generators.PaymentGenerator
 import metrics.{Metrics, PayAPI}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.OK
@@ -34,7 +34,7 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PaymentGenerator {
+class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PaymentGenerator with IntegrationPatience {
 
   trait Fixture {
 

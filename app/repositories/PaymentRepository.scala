@@ -29,10 +29,10 @@ import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import uk.gov.hmrc.mongo.ReactiveRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
-class PaymentRepository @Inject()(mongo: () => DB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
+class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._

@@ -79,7 +79,7 @@ trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 }
 
 object PayAPIConnector extends PayAPIConnector {
-  override private[connectors] val httpGet: HttpGet = WSHttp
-  override private[connectors] val paymentUrl = AmlsConfig.payAPIUrl
-  override private[connectors] val metrics = Metrics
+  override private[connectors] lazy val httpGet: HttpGet = WSHttp
+  override private[connectors] lazy val paymentUrl = AmlsConfig.payAPIUrl
+  override private[connectors] lazy val metrics = Metrics
 }
