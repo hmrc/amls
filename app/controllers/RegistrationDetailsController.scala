@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.{DESConnector, RegistrationDetailsDesConnector}
+import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
@@ -26,10 +27,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait RegistrationDetailsController extends BaseController {
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector
 
-  def get(safeId: String) = Action.async {
+  def get(accountType: String, ref: String, safeId: String) = Action.async {
     implicit request =>
       registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
-        Ok(Json.toJson(details))
+        Ok(Json.toJson(RegistrationDetails.convert(details)))
       }
   }
 }

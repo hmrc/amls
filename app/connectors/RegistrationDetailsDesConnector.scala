@@ -16,6 +16,7 @@
 
 package connectors
 
+import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.Logger
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -24,13 +25,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait RegistrationDetailsDesConnector extends DESConnector  {
 
-  override val requestUrl = "anti-money-laundering/registration"
-
   private val debug: String => String => Unit = method => msg => Logger.debug(s"[RegistrationDetailsConnector.$method] $msg")
 
   def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val d = debug("getRegistrationDetails")
-    val url = s"$fullUrl/details?safeid=$safeId"
+    val url = s"${AmlsConfig.desUrl}/anti-money-laundering/registration/details?safeid=$safeId"
 
     d(s"Requesting registration details for $safeId")
     httpGet.GET[RegistrationDetails](url) map { result =>
