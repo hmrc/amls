@@ -22,14 +22,11 @@ import play.api.Logger
 import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ControllerHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class PaymentController @Inject()(
-                                   private[controllers] val paymentService: PaymentService
-                                 ) extends BaseController with ControllerHelper {
+class PaymentController @Inject()(private[controllers] val paymentService: PaymentService) extends BaseController {
 
   def savePayment(accountType: String, ref: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
