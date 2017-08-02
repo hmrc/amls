@@ -37,11 +37,16 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
 
-    Seq(Index(Seq(
-      "createdAt" -> IndexType.Ascending),
-      name = Some("paymentDetailsExpiry"),
-      options = BSONDocument("expireAfterSeconds" -> 2592000)
-    ))
+    Seq(
+      Index(
+        key = Seq("createdAt" -> IndexType.Ascending),
+        name = Some("paymentDetailsExpiry")
+      ),
+      Index(
+        key = Seq("amlsRefNo" -> IndexType.Ascending),
+        name = Some("amlsRefNoIndex")
+      )
+    )
 
   }
 
