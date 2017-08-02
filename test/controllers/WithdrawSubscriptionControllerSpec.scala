@@ -18,6 +18,7 @@ package controllers
 
 import connectors.WithdrawSubscriptionConnector
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -30,14 +31,13 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
+class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with AmlsReferenceNumberGenerator {
 
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
     val controller = new WithdrawSubscriptionController(desConnector)
   }
 
-  val amlsRegistrationNumber = "XAML00000567890"
   val success = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
 
   private val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",

@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{GGAdmin, Metrics}
 import models.{KnownFact, KnownFactsForService}
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -32,11 +33,11 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.Future
 
-class GovernmentGatewayAdminConnectorSpec
-  extends PlaySpec
+class GovernmentGatewayAdminConnectorSpec extends PlaySpec
   with OneServerPerSuite
   with MockitoSugar
-  with ScalaFutures {
+  with ScalaFutures
+  with AmlsReferenceNumberGenerator{
 
   trait Fixture {
 
@@ -49,7 +50,7 @@ class GovernmentGatewayAdminConnectorSpec
 
     val knownFacts = KnownFactsForService(Seq(
       KnownFact("SafeId", "safeId"),
-      KnownFact("MLRRefNumber", "amlsRefNo")
+      KnownFact("MLRRefNumber", amlsRegistrationNumber)
     ))
 
     val url = "url/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"

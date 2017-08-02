@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{API10, Metrics}
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
@@ -35,7 +36,11 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeregisterSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneServerPerSuite {
+class DeregisterSubscriptionConnectorSpec extends PlaySpec
+  with MockitoSugar
+  with ScalaFutures
+  with OneServerPerSuite
+  with AmlsReferenceNumberGenerator {
 
   trait Fixture {
     object deregisterSubscriptionConnector extends DeregisterSubscriptionConnector {
@@ -57,7 +62,6 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec with MockitoSugar wit
 
     implicit val hc = HeaderCarrier()
 
-    val amlsRegistrationNumber = "1121212UUUI"
     val url = s"${deregisterSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/deregistration"
   }
 

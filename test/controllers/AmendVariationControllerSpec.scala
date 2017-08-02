@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.des.{AmendVariationRequest, DesConstants}
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
@@ -42,8 +43,13 @@ import utils.IterateeHelpers
 
 import scala.concurrent.Future
 
-class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience
-  with IterateeHelpers with OneAppPerSuite {
+class AmendVariationControllerSpec extends PlaySpec
+  with MockitoSugar
+  with ScalaFutures
+  with IntegrationPatience
+  with AmlsReferenceNumberGenerator
+  with IterateeHelpers
+  with OneAppPerSuite {
 
   trait Fixture {
 
@@ -54,7 +60,7 @@ class AmendVariationControllerSpec extends PlaySpec with MockitoSugar with Scala
   }
 
   implicit val hc = HeaderCarrier()
-  val amlsRegistrationNumber = "XAML00000567890"
+
   val body = fe.SubscriptionRequest(
     businessMatchingSection =
       BusinessMatching(

@@ -24,12 +24,12 @@ import models.TaxTypes._
 import models.{Card, Payment, Provider}
 import org.scalacheck.Gen
 
-trait PaymentGenerator {
+trait PaymentGenerator extends AmlsReferenceNumberGenerator{
 
   val strLength = 10
   val numLength = 4
 
-  def stringOfLengthGen(maxLength: Int) = {
+  def alphaNumOfLengthGen(maxLength: Int) = {
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(x => x.mkString)
   }
 
@@ -62,7 +62,7 @@ trait PaymentGenerator {
     `maestro`
   )
 
-  def providerGen = stringOfLengthGen(strLength).map(str => Provider(str, str))
+  def providerGen = alphaNumOfLengthGen(strLength).map(str => Provider(str, str))
 
   def now = LocalDateTime.now()
 
@@ -75,15 +75,15 @@ trait PaymentGenerator {
   )
 
   val paymentGen: Gen[Payment] = for {
-    _id <- stringOfLengthGen(strLength)
-    amlsRefNo <- stringOfLengthGen(strLength)
+    _id <- alphaNumOfLengthGen(strLength)
+    amlsRefNo <- amlsRefNoGen
     taxType <- taxTypesGen
-    ref <- stringOfLengthGen(strLength)
-    desc <- stringOfLengthGen(strLength)
+    ref <- alphaNumOfLengthGen(strLength)
+    desc <- alphaNumOfLengthGen(strLength)
     amountInPence <- numGen
     commissionInPence <- numGen
     totalInPence <- numGen
-    url <- stringOfLengthGen(strLength)
+    url <- alphaNumOfLengthGen(strLength)
     card <- cardGen
     provider <- providerGen
     paymentStatus <- paymentStatusGen

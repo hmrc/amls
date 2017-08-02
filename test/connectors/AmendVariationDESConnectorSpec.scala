@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{API6, Metrics}
 import models.des
 import models.des.AmendVariationRequest
@@ -36,7 +37,12 @@ import uk.gov.hmrc.play.http._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+class AmendVariationDESConnectorSpec extends PlaySpec
+    with MockitoSugar
+    with ScalaFutures
+    with IntegrationPatience
+    with OneAppPerSuite
+    with AmlsReferenceNumberGenerator {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
@@ -56,8 +62,6 @@ class AmendVariationDESConnectorSpec extends PlaySpec with MockitoSugar with Sca
     }
 
     implicit val hc = HeaderCarrier()
-
-    val amlsRegistrationNumber = "test"
 
     val successModel = des.AmendVariationResponse(
       processingDate = "2016-09-17T09:30:47Z",

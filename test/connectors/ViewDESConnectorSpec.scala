@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{API4, API5, Metrics}
 import models.des
 import models.des._
@@ -57,7 +58,9 @@ class ViewDESConnectorSpec
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
-    with IntegrationPatience with OneServerPerSuite {
+    with IntegrationPatience
+    with OneServerPerSuite
+    with AmlsReferenceNumberGenerator {
 
   trait Fixture {
 
@@ -77,8 +80,6 @@ class ViewDESConnectorSpec
     implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
-
-    val amlsRegistrationNumber = "test"
 
     val url = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber"
 

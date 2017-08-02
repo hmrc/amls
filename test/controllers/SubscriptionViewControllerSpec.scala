@@ -18,6 +18,7 @@ package controllers
 
 import connectors.ViewDESConnector
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.{SubscriptionViewModel, des}
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
@@ -42,7 +43,8 @@ class SubscriptionViewControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with IterateeHelpers
-    with OneAppPerSuite {
+    with OneAppPerSuite
+    with AmlsReferenceNumberGenerator{
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
@@ -54,8 +56,6 @@ class SubscriptionViewControllerSpec
     .withHeaders(CONTENT_TYPE -> "application/json")
 
   "SubscriptionViewController" must {
-
-    val amlsRegistrationNumber = "XAML00000567890"
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 

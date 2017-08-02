@@ -43,7 +43,6 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val accountType = "org"
     val accountRef = "TestOrgRef"
-    val amlsRegistrationNumber = "XAML00000567890"
 
     val postRequest = FakeRequest("POST", "/")
       .withHeaders("CONTENT_TYPE" -> "text/plain")

@@ -17,6 +17,7 @@
 package services
 
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
+import generators.AmlsReferenceNumberGenerator
 import models.des
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
@@ -35,7 +36,12 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with ScalaFutures with IntegrationPatience {
+class AmendVariationServiceSpec extends PlaySpec
+  with OneAppPerSuite
+  with MockitoSugar
+  with ScalaFutures
+  with IntegrationPatience
+  with AmlsReferenceNumberGenerator {
 
   val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
 
@@ -110,8 +116,7 @@ class AmendVariationServiceSpec extends PlaySpec with OneAppPerSuite with Mockit
     unchangedExtra
   )
 
-  val amlsRegistrationNumber = "XAAW00000567890"
-  val amlsRegForHalfYears = "XAAW00000567891"
+  val amlsRegForHalfYears = amlsRefNoGen.sample.get
 
   implicit val hc = HeaderCarrier()
 

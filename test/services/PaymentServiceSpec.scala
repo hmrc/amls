@@ -40,8 +40,6 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
   val testPayment = paymentGen.sample.get
 
-  val amlsRegistrationNumber = "XAML00000567890"
-
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
