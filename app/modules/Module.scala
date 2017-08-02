@@ -16,12 +16,21 @@
 
 package modules
 
-import com.google.inject.AbstractModule
-import connectors.{DESConnector, DeregisterSubscriptionConnector, WithdrawSubscriptionConnector}
+import javax.inject.Singleton
+
+import com.google.inject.{AbstractModule, Provides}
+import connectors.{DESConnector, DeregisterSubscriptionConnector, PayAPIConnector, WithdrawSubscriptionConnector}
+import play.modules.reactivemongo.ReactiveMongoComponent
+import reactivemongo.api.{DB, DefaultDB}
 
 class Module extends AbstractModule {
   override def configure() = {
     bind(classOf[DeregisterSubscriptionConnector]).toInstance(DESConnector)
     bind(classOf[WithdrawSubscriptionConnector]).toInstance(DESConnector)
+    bind(classOf[PayAPIConnector]).toInstance(PayAPIConnector)
   }
+
+  @Provides
+  @Singleton
+  def mongoDB(reactiveMongoComponent: ReactiveMongoComponent): () => DefaultDB = reactiveMongoComponent.mongoConnector.db
 }

@@ -47,3 +47,7 @@ case object API10 extends APITypes {
 case object GGAdmin extends APITypes {
   override val key: String = "gg-admin-amls-add-known-facts"
 }
+
+case object PayAPI extends APITypes {
+  override val key: String = "pay-api-getPayment-with-id"
+}
