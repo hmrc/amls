@@ -24,27 +24,12 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.ControllerHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector) extends BaseController {
-
-  val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
-
-  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
-    "errors" -> (errors map {
-      case (path, error) =>
-        Json.obj(
-          "path" -> path.toJsonString,
-          "error" -> error.head.message
-        )
-    })
-  )
-
-  private def toError(message: String) = Json.obj(
-    "errors" -> Seq(message)
-  )
+class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector) extends BaseController with ControllerHelper {
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
     implicit request =>

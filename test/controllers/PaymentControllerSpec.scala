@@ -84,6 +84,20 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
       }
     }
+    "return BAD_REQUEST" when {
+      "amlsRefNo does not meet regex" in new Fixture {
+
+        when {
+          testPaymentService.savePayment(any(), any())(any(),any())
+        } thenReturn {
+          Future.successful(None)
+        }
+
+        val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
+
+        status(result) mustBe BAD_REQUEST
+      }
+    }
   }
 
 }
