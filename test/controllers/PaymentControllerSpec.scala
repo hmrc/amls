@@ -58,12 +58,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "paymentService returns payment details" in new Fixture {
 
         when {
-          testPaymentService.savePayment(any())(any(), any())
+          testPaymentService.savePayment(any(), any())(any(), any())
         } thenReturn {
           Future.successful(Some(testPayment))
         }
 
-        val result = testController.savePayment(accountType, accountRef)(postRequest)
+        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
         status(result) mustBe CREATED
 
@@ -73,12 +73,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "paymentService does not return payment details" in new Fixture {
 
         when {
-          testPaymentService.savePayment(any())(any(),any())
+          testPaymentService.savePayment(any(), any())(any(),any())
         } thenReturn {
           Future.successful(None)
         }
 
-        val result = testController.savePayment(accountType, accountRef)(postRequest)
+        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
         status(result) mustBe INTERNAL_SERVER_ERROR
 

@@ -27,6 +27,7 @@ import play.api.libs.json.Json
 class PaymentSpec extends PlaySpec with MockitoSugar {
 
   val _id = "biuh98huiu"
+  val amlsRefNo = "XA0000DWE"
   val ref = "ref"
   val desc = "desc"
   val url = "url"
@@ -45,6 +46,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar {
     "serialise to JSON" in {
       Json.toJson(Payment(
         _id,
+        Some(amlsRefNo),
         other,
         ref,
         desc,
@@ -62,6 +64,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar {
         Successful
       )) must be(Json.obj(
         "_id" -> _id,
+        "amlsRefNo" -> amlsRefNo,
         "taxType" -> "other",
         "reference" -> ref,
         "description" -> desc,

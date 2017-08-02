@@ -76,6 +76,7 @@ trait PaymentGenerator {
 
   val paymentGen: Gen[Payment] = for {
     _id <- stringOfLengthGen(strLength)
+    amlsRefNo <- stringOfLengthGen(strLength)
     taxType <- taxTypesGen
     ref <- stringOfLengthGen(strLength)
     desc <- stringOfLengthGen(strLength)
@@ -87,7 +88,8 @@ trait PaymentGenerator {
     provider <- providerGen
     paymentStatus <- paymentStatusGen
   } yield Payment(
-    _id.toString,
+    _id,
+    Some(amlsRefNo),
     taxType.head,
     ref,
     desc,
