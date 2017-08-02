@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{API4, Metrics}
 import models.des
 import models.des.SubscriptionRequest
@@ -35,12 +36,12 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SubscribeDESConnectorSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with OneAppPerSuite {
+class SubscribeDESConnectorSpec extends PlaySpec
+  with MockitoSugar
+  with ScalaFutures
+  with IntegrationPatience
+  with OneAppPerSuite
+  with AmlsReferenceNumberGenerator{
 
   trait Fixture {
 
@@ -63,7 +64,7 @@ class SubscribeDESConnectorSpec
 
     val successModel = des.SubscriptionResponse(
       etmpFormBundleNumber = "111111",
-      amlsRefNo = "test",
+      amlsRefNo = amlsRegistrationNumber,
       Some(1301737.96),
       Some(231.42),
       870458,

@@ -19,6 +19,7 @@ package controllers
 import java.lang.RuntimeException
 
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.{Fees, SubscriptionResponseType}
 import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import org.joda.time.{DateTime, DateTimeZone}
@@ -39,7 +40,8 @@ class FeesControllerSpec extends PlaySpec
   with MockitoSugar
   with ScalaFutures
   with IntegrationPatience
-  with IterateeHelpers{
+  with IterateeHelpers
+  with AmlsReferenceNumberGenerator{
 
 
   object TestFeeResponseController extends FeeResponseController {
@@ -47,8 +49,6 @@ class FeesControllerSpec extends PlaySpec
   }
 
   "Fee Response Controller" when {
-
-    val amlsRegistrationNumber = "ABCDabcd0000011"
 
     val request = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")

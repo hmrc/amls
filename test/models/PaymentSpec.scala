@@ -18,13 +18,14 @@ package models
 
 import java.time.LocalDateTime
 
+import generators.AmlsReferenceNumberGenerator
 import models.PaymentStatuses.{Created, Successful}
 import models.TaxTypes.`other`
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class PaymentSpec extends PlaySpec with MockitoSugar {
+class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGenerator {
 
   val _id = "biuh98huiu"
   val ref = "ref"
@@ -45,6 +46,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar {
     "serialise to JSON" in {
       Json.toJson(Payment(
         _id,
+        Some(amlsRegistrationNumber),
         other,
         ref,
         desc,
@@ -62,6 +64,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar {
         Successful
       )) must be(Json.obj(
         "_id" -> _id,
+        "amlsRefNo" -> amlsRegistrationNumber,
         "taxType" -> "other",
         "reference" -> ref,
         "description" -> desc,

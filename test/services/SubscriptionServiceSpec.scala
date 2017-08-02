@@ -18,6 +18,7 @@ package services
 
 import connectors.{GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models._
 import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
@@ -39,7 +40,7 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait TestFixture extends MockitoSugar {
+trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
@@ -53,7 +54,7 @@ trait TestFixture extends MockitoSugar {
 
   val response = des.SubscriptionResponse(
     etmpFormBundleNumber = "111111",
-    amlsRefNo = "XAML00000567890",
+    amlsRefNo = amlsRegistrationNumber,
     Some(150.00),
     Some(100.0),
     300.0,

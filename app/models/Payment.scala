@@ -101,6 +101,7 @@ object Card {
 
 case class Payment(
                     _id: String,
+                    amlsRefNo: Option[String],
                     taxType: TaxType,
                     reference: String,
                     description: String,

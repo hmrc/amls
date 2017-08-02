@@ -22,18 +22,30 @@ import play.api.Logger
 import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.ControllerHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
-class PaymentController @Inject()(private[controllers] val paymentService: PaymentService) extends BaseController {
+class PaymentController @Inject()(
+                                   private[controllers] val paymentService: PaymentService
+                                 ) extends BaseController with ControllerHelper {
 
-  def savePayment(accountType: String, ref: String) = Action.async(parse.text) {
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
-      Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-      paymentService.savePayment(request.body) map {
-        case Some(_) => Created
-        case _ => InternalServerError
+      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
+        case Some(_) => {
+          Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
+          paymentService.savePayment(request.body, amlsRegistrationNumber) map {
+            case Some(_) => Created
+            case _ => InternalServerError
+          }
+        }
+        case None =>
+          Future.successful {
+            BadRequest(toError("Invalid amlsRegistrationNumber"))
+          }
       }
     }
   }

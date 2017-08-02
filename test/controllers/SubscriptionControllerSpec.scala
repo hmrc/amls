@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.fe.SubscriptionResponse
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
@@ -46,7 +47,8 @@ class SubscriptionControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with IterateeHelpers
-    with OneAppPerSuite {
+    with OneAppPerSuite
+    with AmlsReferenceNumberGenerator{
 
   object SubscriptionController extends SubscriptionController {
     override val service = mock[SubscriptionService]
@@ -107,7 +109,7 @@ class SubscriptionControllerSpec
 
       val response = des.SubscriptionResponse(
         etmpFormBundleNumber = "111111",
-        amlsRefNo = "XAAM00000123456",
+        amlsRefNo = amlsRegistrationNumber,
         Some(1301737.96),
         Some(231.42),
         870458,

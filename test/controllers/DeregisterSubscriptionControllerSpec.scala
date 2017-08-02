@@ -18,6 +18,7 @@ package controllers
 
 import connectors.DeregisterSubscriptionConnector
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.des.DeregisterSubscriptionResponse
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -30,7 +31,7 @@ import play.api.test.Helpers.{contentAsJson, _}
 
 import scala.concurrent.Future
 
-class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
+class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with AmlsReferenceNumberGenerator {
 
   trait Fixture {
     lazy val mockDeregConnector = mock[DeregisterSubscriptionConnector]
@@ -39,7 +40,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec with MockitoSugar wi
 
   val accountType = "org"
   val accountRef = "TestOrgRef"
-  val amlsRegistrationNumber = "XAML00000567890"
+
   val success = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
 
   private val inputRequest = Json.obj(

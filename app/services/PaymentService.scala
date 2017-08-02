@@ -33,10 +33,11 @@ class PaymentService @Inject()(
                               val paymentConnector: PayAPIConnector,
                               val paymentsRepository: PaymentRepository
                               ) {
-  def savePayment(paymentId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+  def savePayment(paymentId: String, amlsRegistrationNumber: String)
+                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
-      _ <- paymentsRepository.insert(pm)
+      _ <- paymentsRepository.insert(pm.copy(amlsRefNo = amlsRegistrationNumber.some))
     } yield pm.some) recoverWith {
       case e:HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
       case e:HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))

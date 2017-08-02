@@ -19,6 +19,7 @@ package connectors
 import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import metrics.{API9, Metrics}
 import models.des
 import org.joda.time.{DateTimeUtils, LocalDateTime}
@@ -40,7 +41,10 @@ class SubscriptionStatusDESConnectorSpec
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
-    with IntegrationPatience with OneServerPerSuite with BeforeAndAfterAll {
+    with IntegrationPatience
+    with OneServerPerSuite
+    with BeforeAndAfterAll
+    with AmlsReferenceNumberGenerator {
 
   override def beforeAll {
     DateTimeUtils.setCurrentMillisFixed(1000)
@@ -70,8 +74,6 @@ class SubscriptionStatusDESConnectorSpec
       None, None, None, None, false)
 
     val mockTimer = mock[Timer.Context]
-
-    val amlsRegistrationNumber = "test"
 
     val url = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber/status"
 

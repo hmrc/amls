@@ -43,7 +43,6 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val accountType = "org"
     val accountRef = "TestOrgRef"
-    val amlsRegistrationNumber = "XAML00000567890"
 
     val postRequest = FakeRequest("POST", "/")
       .withHeaders("CONTENT_TYPE" -> "text/plain")
@@ -58,12 +57,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "paymentService returns payment details" in new Fixture {
 
         when {
-          testPaymentService.savePayment(any())(any(), any())
+          testPaymentService.savePayment(any(), any())(any(), any())
         } thenReturn {
           Future.successful(Some(testPayment))
         }
 
-        val result = testController.savePayment(accountType, accountRef)(postRequest)
+        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
         status(result) mustBe CREATED
 
@@ -73,15 +72,29 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "paymentService does not return payment details" in new Fixture {
 
         when {
-          testPaymentService.savePayment(any())(any(),any())
+          testPaymentService.savePayment(any(), any())(any(),any())
         } thenReturn {
           Future.successful(None)
         }
 
-        val result = testController.savePayment(accountType, accountRef)(postRequest)
+        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
         status(result) mustBe INTERNAL_SERVER_ERROR
 
+      }
+    }
+    "return BAD_REQUEST" when {
+      "amlsRefNo does not meet regex" in new Fixture {
+
+        when {
+          testPaymentService.savePayment(any(), any())(any(),any())
+        } thenReturn {
+          Future.successful(None)
+        }
+
+        val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
+
+        status(result) mustBe BAD_REQUEST
       }
     }
   }

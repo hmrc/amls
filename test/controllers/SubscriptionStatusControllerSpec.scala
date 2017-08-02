@@ -18,6 +18,7 @@ package controllers
 
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.des
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -37,7 +38,8 @@ class SubscriptionStatusControllerSpec
     with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
-    with IterateeHelpers {
+    with IterateeHelpers
+    with AmlsReferenceNumberGenerator{
 
   object SubscriptionStatusController extends SubscriptionStatusController {
     override val connector = mock[SubscriptionStatusDESConnector]
@@ -47,9 +49,6 @@ class SubscriptionStatusControllerSpec
     .withHeaders(CONTENT_TYPE -> "application/json")
 
   "SubscriptionStatusController" must {
-
-    val amlsRegistrationNumber = "XAML00000567890"
-
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
