@@ -45,4 +45,7 @@ class PaymentService @Inject()(
     }
   }
 
+  def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext): Future[Option[Payment]] =
+    paymentsRepository.find("reference" -> paymentReference).map { r => r.headOption }
+
 }

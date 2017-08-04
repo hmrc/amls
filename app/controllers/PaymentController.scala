@@ -19,6 +19,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
+import play.api.libs.json.Json
 import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
@@ -47,6 +48,13 @@ class PaymentController @Inject()(
             BadRequest(toError("Invalid amlsRegistrationNumber"))
           }
       }
+    }
+  }
+
+  def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = Action.async {
+    implicit request => paymentService.getPaymentByReference(paymentReference) map {
+      case Some(payment) => Ok(Json.toJson(payment))
+      case _ => NotFound
     }
   }
 

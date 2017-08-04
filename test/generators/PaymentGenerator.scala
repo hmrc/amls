@@ -29,6 +29,8 @@ trait PaymentGenerator extends AmlsReferenceNumberGenerator{
   val strLength = 10
   val numLength = 4
 
+  val paymentRefGen = alphaNumOfLengthGen(strLength - 1) map { ref => s"X$ref" }
+
   def alphaNumOfLengthGen(maxLength: Int) = {
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(x => x.mkString)
   }
@@ -78,7 +80,7 @@ trait PaymentGenerator extends AmlsReferenceNumberGenerator{
     _id <- alphaNumOfLengthGen(strLength)
     amlsRefNo <- amlsRefNoGen
     taxType <- taxTypesGen
-    ref <- alphaNumOfLengthGen(strLength)
+    ref <- paymentRefGen
     desc <- alphaNumOfLengthGen(strLength)
     amountInPence <- numGen
     commissionInPence <- numGen
