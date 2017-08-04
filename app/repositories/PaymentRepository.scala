@@ -45,6 +45,10 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
       Index(
         key = Seq("amlsRefNo" -> IndexType.Ascending),
         name = Some("amlsRefNoIndex")
+      ),
+      Index(
+        key = Seq("reference" -> IndexType.Ascending),
+        name = Some("reference")
       )
     )
 
