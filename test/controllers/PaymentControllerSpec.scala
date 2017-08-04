@@ -18,9 +18,10 @@ package controllers
 
 import generators.PaymentGenerator
 import org.mockito.Mockito._
-import org.mockito.Matchers._
+import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
@@ -43,7 +44,9 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val accountType = "org"
     val accountRef = "TestOrgRef"
+  }
 
+  trait CreateRequestFixture extends Fixture {
     val postRequest = FakeRequest("POST", "/")
       .withHeaders("CONTENT_TYPE" -> "text/plain")
       .withBody[String]("")
@@ -52,49 +55,83 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       .withHeaders("CONTENT_TYPE" -> "text/plain")
   }
 
-  "PaymentController" must {
-    "return CREATED" when {
-      "paymentService returns payment details" in new Fixture {
+  trait GetPaymentFixture extends Fixture {
+    val request = FakeRequest("GET", "/")
+  }
 
-        when {
-          testPaymentService.savePayment(any(), any())(any(), any())
-        } thenReturn {
-          Future.successful(Some(testPayment))
+  "PaymentController" when {
+    "saving a new payment" must {
+      "return CREATED" when {
+        "paymentService returns payment details" in new CreateRequestFixture {
+
+          when {
+            testPaymentService.savePayment(any(), any())(any(), any())
+          } thenReturn {
+            Future.successful(Some(testPayment))
+          }
+
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+
+          status(result) mustBe CREATED
+
         }
+      }
+      "return INTERNAL_SERVER_ERROR" when {
+        "paymentService does not return payment details" in new CreateRequestFixture {
 
-        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          when {
+            testPaymentService.savePayment(any(), any())(any(), any())
+          } thenReturn {
+            Future.successful(None)
+          }
 
-        status(result) mustBe CREATED
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
 
+          status(result) mustBe INTERNAL_SERVER_ERROR
+
+        }
+      }
+      "return BAD_REQUEST" when {
+        "amlsRefNo does not meet regex" in new CreateRequestFixture {
+
+          when {
+            testPaymentService.savePayment(any(), any())(any(), any())
+          } thenReturn {
+            Future.successful(None)
+          }
+
+          val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
+
+          status(result) mustBe BAD_REQUEST
+        }
       }
     }
-    "return INTERNAL_SERVER_ERROR" when {
-      "paymentService does not return payment details" in new Fixture {
+
+    "querying a payment reference" must {
+      "find a payment given a payment reference" in new GetPaymentFixture {
+        val paymentRef = paymentRefGen.sample.get
+        val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.savePayment(any(), any())(any(),any())
-        } thenReturn {
-          Future.successful(None)
-        }
+          testPaymentService.getPaymentByReference(eqTo(paymentRef))(any())
+        } thenReturn Future.successful(Some(payment))
 
-        val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+        val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
 
-        status(result) mustBe INTERNAL_SERVER_ERROR
-
+        status(result) mustBe OK
+        contentAsJson(result) mustBe Json.toJson(payment)
       }
-    }
-    "return BAD_REQUEST" when {
-      "amlsRefNo does not meet regex" in new Fixture {
 
-        when {
-          testPaymentService.savePayment(any(), any())(any(),any())
-        } thenReturn {
-          Future.successful(None)
+      "return a 404 Not Found" when {
+        "the reference number does not match a payment" in new GetPaymentFixture {
+          when {
+            testPaymentService.getPaymentByReference(any())(any())
+          } thenReturn Future.successful(None)
+
+          val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
+
+          status(result) mustBe NOT_FOUND
         }
-
-        val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
-
-        status(result) mustBe BAD_REQUEST
       }
     }
   }
