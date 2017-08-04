@@ -19,11 +19,12 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import org.mockito.Matchers._
+import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -37,9 +38,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
-
-  val testPayment = paymentGen.sample.get
-
+  def testPayment = paymentGen.sample.get
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
@@ -115,6 +114,20 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
     }
 
-  }
+    "getPaymentByReference is called" must {
+      val paymentRef = paymentRefGen.sample.get
+      val payment = testPayment.copy(reference = paymentRef)
 
+      when {
+        testPaymentRepo.find(any())(any())
+      } thenReturn Future.successful(List(payment))
+
+      whenReady(testPaymentService.getPaymentByReference(paymentRef)) {
+        case Some(result) =>
+          verify(testPaymentRepo).find("reference" -> paymentRef)
+          result mustBe payment
+        case _ => fail("No payment was returned")
+      }
+    }
+  }
 }
