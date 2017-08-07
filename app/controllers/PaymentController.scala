@@ -24,7 +24,6 @@ import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.ControllerHelper
-import cats.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -65,5 +64,4 @@ class PaymentController @Inject()(
       case _ => NotFound
     }
   }
-
 }

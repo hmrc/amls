@@ -51,10 +51,14 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
         name = Some("reference")
       )
     )
-
   }
 
   def insert(newPayment: Payment): Future[Payment] = collection.insert(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
+
+  def update(payment: Payment) = collection.update(
+    Json.obj("_id" -> payment._id),
+    payment
+  )
 
   def findLatestByAmlsReference(amlsReferenceNumber: String) = {
     collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]

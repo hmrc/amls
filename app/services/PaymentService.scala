@@ -53,7 +53,7 @@ class PaymentService @Inject()(
     for {
       payment <- OptionT(getPaymentByReference(paymentReference))
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
-      _ <- OptionT.liftF(paymentsRepository.insert(payment.copy(status = refreshedPayment.status)))
+      _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
     } yield {
       RefreshStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
     }
