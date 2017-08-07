@@ -19,6 +19,8 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
+import models.{PaymentStatuses, RefreshStatusResult}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -38,7 +40,9 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
+
   def testPayment = paymentGen.sample.get
+
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
@@ -127,6 +131,34 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           verify(testPaymentRepo).find("reference" -> paymentRef)
           result mustBe payment
         case _ => fail("No payment was returned")
+      }
+    }
+
+    "refresh the status from pay-api" when {
+      "refreshStatus is called" in {
+        val paymentRef = paymentRefGen.sample.get
+        val paymentId = paymentIdGen.sample.get
+        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
+        val payApiPayment = amlsPayment.copy(status = PaymentStatuses.Successful)
+        val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
+
+        when {
+          testPaymentRepo.find(any())(any())
+        } thenReturn Future.successful(List(amlsPayment))
+
+        when {
+          testPaymentRepo.insert(any())
+        } thenReturn Future.successful(updatedPayment)
+
+        when {
+          testPayAPIConnector.getPayment(eqTo(paymentId))(any())
+        } thenReturn Future.successful(payApiPayment)
+
+        whenReady(testPaymentService.refreshStatus(paymentRef)) { result =>
+          result mustBe RefreshStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
+          verify(testPaymentRepo).insert(updatedPayment)
+        }
+
       }
     }
   }
