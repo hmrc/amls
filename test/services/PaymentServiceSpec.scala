@@ -19,7 +19,7 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.{PaymentStatuses, RefreshStatusResult}
+import models.{PaymentStatuses, PaymentStatusResult}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -156,7 +156,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
         } thenReturn Future.successful(payApiPayment)
 
         testPaymentService.refreshStatus(paymentRef) map { result =>
-          result mustBe RefreshStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
+          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
           verify(testPaymentRepo).insert(updatedPayment)
         }
       }

@@ -22,7 +22,7 @@ import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import models.{Payment, RefreshStatusResult}
+import models.{Payment, PaymentStatusResult}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.http.Status._
 import repositories.PaymentRepository
@@ -49,13 +49,13 @@ class PaymentService @Inject()(
   def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.find("reference" -> paymentReference).map { r => r.headOption }
 
-  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, RefreshStatusResult] = {
+  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {
       payment <- OptionT(getPaymentByReference(paymentReference))
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
       _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
     } yield {
-      RefreshStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
+      PaymentStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
     }
   }
 

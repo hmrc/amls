@@ -18,7 +18,7 @@ package controllers
 
 import cats.data.OptionT
 import generators.PaymentGenerator
-import models.{PaymentStatuses, RefreshStatusResult}
+import models.{PaymentStatuses, PaymentStatusResult}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.mock.MockitoSugar
@@ -145,11 +145,11 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     "refreshing the payment status" must {
       "refresh the status using the payments service" in new RefreshStatusFixture {
         val paymentRef = paymentRefGen.sample.get
-        val statusResult = RefreshStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatuses.Successful)
+        val statusResult = PaymentStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatuses.Successful)
 
         when {
           testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
-        } thenReturn OptionT[Future, RefreshStatusResult](Future.successful(statusResult.some))
+        } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(statusResult.some))
 
         val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
 
@@ -161,7 +161,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
         when {
           testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
-        } thenReturn OptionT[Future, RefreshStatusResult](Future.successful(None))
+        } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(None))
 
         val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
 

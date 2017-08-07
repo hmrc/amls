@@ -18,9 +18,9 @@ package models
 
 import play.api.libs.json.Json
 
-case class RefreshStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
+case class PaymentStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
 
-object RefreshStatusResult {
+object PaymentStatusResult {
   import Payment._
-  implicit val writes = Json.writes[RefreshStatusResult]
+  implicit val writes = Json.writes[PaymentStatusResult]
 }
