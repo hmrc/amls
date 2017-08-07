@@ -24,6 +24,7 @@ import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.ControllerHelper
+import cats.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -59,7 +60,10 @@ class PaymentController @Inject()(
   }
 
   def refreshStatus(accountType: String, ref: String, paymentReference: String) = Action.async {
-    implicit request => paymentService.refreshStatus(paymentReference) map { r => Ok(Json.toJson(r)) }
+    implicit request => paymentService.refreshStatus(paymentReference).value map {
+      case Some(result) => Ok(Json.toJson(result))
+      case _ => NotFound
+    }
   }
 
 }

@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.OptionT
 import generators.PaymentGenerator
 import models.{PaymentStatuses, RefreshStatusResult}
 import org.mockito.Mockito._
@@ -26,6 +27,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
+import cats.implicits._
 
 import scala.concurrent.Future
 
@@ -141,17 +143,29 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     }
 
     "refreshing the payment status" must {
-      "refresh the status using the payments service" in new Fixture {
+      "refresh the status using the payments service" in new RefreshStatusFixture {
         val paymentRef = paymentRefGen.sample.get
         val statusResult = RefreshStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatuses.Successful)
 
         when {
           testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
-        } thenReturn Future.successful(statusResult)
+        } thenReturn OptionT[Future, RefreshStatusResult](Future.successful(statusResult.some))
 
         val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
 
         status(result) mustBe OK
+      }
+
+      "return a 404 when there is no RefreshStatusResult" in new RefreshStatusFixture {
+        val paymentRef = paymentRefGen.sample.get
+
+        when {
+          testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
+        } thenReturn OptionT[Future, RefreshStatusResult](Future.successful(None))
+
+        val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
+
+        status(result) mustBe NOT_FOUND
       }
     }
   }

@@ -49,16 +49,14 @@ class PaymentService @Inject()(
   def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.find("reference" -> paymentReference).map { r => r.headOption }
 
-  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[RefreshStatusResult] = {
-    val updateOp = for {
+  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, RefreshStatusResult] = {
+    for {
       payment <- OptionT(getPaymentByReference(paymentReference))
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
       _ <- OptionT.liftF(paymentsRepository.insert(payment.copy(status = refreshedPayment.status)))
     } yield {
       RefreshStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
     }
-
-    updateOp getOrElseF Future.failed(new Exception("Unable to refresh payment status"))
   }
 
 }

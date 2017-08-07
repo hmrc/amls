@@ -30,6 +30,7 @@ import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
+import cats.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -134,8 +135,8 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
       }
     }
 
-    "refresh the status from pay-api" when {
-      "refreshStatus is called" in {
+    "refreshStatus is called" must {
+      "refresh the status" in {
         val paymentRef = paymentRefGen.sample.get
         val paymentId = paymentIdGen.sample.get
         val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
@@ -154,11 +155,22 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           testPayAPIConnector.getPayment(eqTo(paymentId))(any())
         } thenReturn Future.successful(payApiPayment)
 
-        whenReady(testPaymentService.refreshStatus(paymentRef)) { result =>
+        testPaymentService.refreshStatus(paymentRef) map { result =>
           result mustBe RefreshStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
           verify(testPaymentRepo).insert(updatedPayment)
         }
+      }
 
+      "return None" when {
+        "the payment is not found" in {
+          when {
+            testPaymentRepo.find(any())(any())
+          } thenReturn Future.successful(List())
+
+          testPaymentService.refreshStatus(paymentRefGen.sample.get) map { result =>
+            result mustBe None
+          }
+        }
       }
     }
   }
