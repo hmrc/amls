@@ -18,6 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import models.RefreshPaymentStatusRequest
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -58,10 +59,13 @@ class PaymentController @Inject()(
     }
   }
 
-  def refreshStatus(accountType: String, ref: String, paymentReference: String) = Action.async {
-    implicit request => paymentService.refreshStatus(paymentReference).value map {
-      case Some(result) => Ok(Json.toJson(result))
-      case _ => NotFound
-    }
+  def refreshStatus(accountType: String, ref: String) = Action.async(parse.json) {
+    implicit request =>
+      request.body.asOpt[RefreshPaymentStatusRequest] map { r =>
+        paymentService.refreshStatus(r.paymentReference).value map {
+          case Some(result) => Ok(Json.toJson(result))
+          case _ => NotFound
+        }
+      } getOrElse Future.successful(BadRequest)
   }
 }
