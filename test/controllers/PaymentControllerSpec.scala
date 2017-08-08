@@ -16,7 +16,9 @@
 
 package controllers
 
+import cats.data.OptionT
 import generators.PaymentGenerator
+import models.{PaymentStatuses, PaymentStatusResult}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.mock.MockitoSugar
@@ -25,6 +27,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
+import cats.implicits._
 
 import scala.concurrent.Future
 
@@ -44,6 +47,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val accountType = "org"
     val accountRef = "TestOrgRef"
+    val request = FakeRequest("GET", "/")
   }
 
   trait CreateRequestFixture extends Fixture {
@@ -56,7 +60,10 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
   }
 
   trait GetPaymentFixture extends Fixture {
-    val request = FakeRequest("GET", "/")
+  }
+
+  trait RefreshStatusFixture extends Fixture {
+    override val request = FakeRequest("PUT", "/")
   }
 
   "PaymentController" when {
@@ -113,7 +120,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByReference(eqTo(paymentRef))(any())
+          testPaymentService.getPaymentByReference(eqTo(paymentRef))(any(), any())
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
@@ -125,13 +132,40 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "return a 404 Not Found" when {
         "the reference number does not match a payment" in new GetPaymentFixture {
           when {
-            testPaymentService.getPaymentByReference(any())(any())
+            testPaymentService.getPaymentByReference(any())(any(), any())
           } thenReturn Future.successful(None)
 
           val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
 
           status(result) mustBe NOT_FOUND
         }
+      }
+    }
+
+    "refreshing the payment status" must {
+      "refresh the status using the payments service" in new RefreshStatusFixture {
+        val paymentRef = paymentRefGen.sample.get
+        val statusResult = PaymentStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatuses.Successful)
+
+        when {
+          testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
+        } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(statusResult.some))
+
+        val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
+
+        status(result) mustBe OK
+      }
+
+      "return a 404 when there is no RefreshStatusResult" in new RefreshStatusFixture {
+        val paymentRef = paymentRefGen.sample.get
+
+        when {
+          testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
+        } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(None))
+
+        val result = testController.refreshStatus(accountType, accountRef, paymentRef)(request)
+
+        status(result) mustBe NOT_FOUND
       }
     }
   }

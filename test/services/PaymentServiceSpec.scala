@@ -19,6 +19,8 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
+import models.{PaymentStatuses, PaymentStatusResult}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -28,6 +30,7 @@ import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
+import cats.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +41,9 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
+
   def testPayment = paymentGen.sample.get
+
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
@@ -127,6 +132,45 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
           verify(testPaymentRepo).find("reference" -> paymentRef)
           result mustBe payment
         case _ => fail("No payment was returned")
+      }
+    }
+
+    "refreshStatus is called" must {
+      "refresh the status" in {
+        val paymentRef = paymentRefGen.sample.get
+        val paymentId = paymentIdGen.sample.get
+        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
+        val payApiPayment = amlsPayment.copy(status = PaymentStatuses.Successful)
+        val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
+
+        when {
+          testPaymentRepo.find(any())(any())
+        } thenReturn Future.successful(List(amlsPayment))
+
+        when {
+          testPaymentRepo.insert(any())
+        } thenReturn Future.successful(updatedPayment)
+
+        when {
+          testPayAPIConnector.getPayment(eqTo(paymentId))(any())
+        } thenReturn Future.successful(payApiPayment)
+
+        testPaymentService.refreshStatus(paymentRef) map { result =>
+          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
+          verify(testPaymentRepo).insert(updatedPayment)
+        }
+      }
+
+      "return None" when {
+        "the payment is not found" in {
+          when {
+            testPaymentRepo.find(any())(any())
+          } thenReturn Future.successful(List())
+
+          testPaymentService.refreshStatus(paymentRefGen.sample.get) map { result =>
+            result mustBe None
+          }
+        }
       }
     }
   }

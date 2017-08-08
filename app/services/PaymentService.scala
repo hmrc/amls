@@ -18,10 +18,11 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
+import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import models.Payment
+import models.{Payment, PaymentStatusResult}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.http.Status._
 import repositories.PaymentRepository
@@ -30,8 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentService @Inject()(
-                              val paymentConnector: PayAPIConnector,
-                              val paymentsRepository: PaymentRepository
+                                val paymentConnector: PayAPIConnector,
+                                val paymentsRepository: PaymentRepository
                               ) {
   def savePayment(paymentId: String, amlsRegistrationNumber: String)
                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
@@ -39,13 +40,23 @@ class PaymentService @Inject()(
       pm <- paymentConnector.getPayment(paymentId)
       _ <- paymentsRepository.insert(pm.copy(amlsRefNo = amlsRegistrationNumber.some))
     } yield pm.some) recoverWith {
-      case e:HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
-      case e:HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
-      case e:PaymentException => Future.failed(e)
+      case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
+      case e: HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
+      case e: PaymentException => Future.failed(e)
     }
   }
 
-  def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext): Future[Option[Payment]] =
+  def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.find("reference" -> paymentReference).map { r => r.headOption }
+
+  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
+    for {
+      payment <- OptionT(getPaymentByReference(paymentReference))
+      refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
+      _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
+    } yield {
+      PaymentStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
+    }
+  }
 
 }

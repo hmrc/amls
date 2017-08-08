@@ -58,4 +58,10 @@ class PaymentController @Inject()(
     }
   }
 
+  def refreshStatus(accountType: String, ref: String, paymentReference: String) = Action.async {
+    implicit request => paymentService.refreshStatus(paymentReference).value map {
+      case Some(result) => Ok(Json.toJson(result))
+      case _ => NotFound
+    }
+  }
 }
