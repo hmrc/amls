@@ -19,7 +19,7 @@ package services
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.{PaymentStatuses, PaymentStatusResult}
+import models.{Payment, PaymentStatusResult, PaymentStatuses}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -59,7 +59,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
         }
 
         when {
-          testPaymentService.paymentsRepository.insert(payment)
+          testPaymentService.paymentsRepository.insert(any())
         } thenReturn {
           Future.successful(payment)
         }
@@ -69,7 +69,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
 
           verify(
             testPaymentService.paymentsRepository
-          ).insert(payment)
+          ).insert(any[Payment])
         }
 
       }
@@ -124,12 +124,11 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
       val payment = testPayment.copy(reference = paymentRef)
 
       when {
-        testPaymentRepo.find(any())(any())
-      } thenReturn Future.successful(List(payment))
+        testPaymentRepo.findLatestByPaymentReference(eqTo(paymentRef))
+      } thenReturn Future.successful(Some(payment))
 
       whenReady(testPaymentService.getPaymentByReference(paymentRef)) {
         case Some(result) =>
-          verify(testPaymentRepo).find("reference" -> paymentRef)
           result mustBe payment
         case _ => fail("No payment was returned")
       }
@@ -144,8 +143,8 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
         val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
 
         when {
-          testPaymentRepo.find(any())(any())
-        } thenReturn Future.successful(List(amlsPayment))
+          testPaymentRepo.findLatestByPaymentReference(paymentRef)
+        } thenReturn Future.successful(Some(amlsPayment))
 
         when {
           testPaymentRepo.insert(any())
@@ -164,8 +163,8 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerato
       "return None" when {
         "the payment is not found" in {
           when {
-            testPaymentRepo.find(any())(any())
-          } thenReturn Future.successful(List())
+            testPaymentRepo.findLatestByPaymentReference(any())
+          } thenReturn Future.successful(None)
 
           testPaymentService.refreshStatus(paymentRefGen.sample.get) map { result =>
             result mustBe None

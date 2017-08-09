@@ -61,7 +61,8 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         Map.empty,
         Some(Provider(name, providerRef)),
         Some(now),
-        Successful
+        Successful,
+        Some(now)
       )) must be(Json.obj(
         "_id" -> _id,
         "amlsRefNo" -> amlsRegistrationNumber,
@@ -82,8 +83,10 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
           "reference" -> providerRef
         ),
         "confirmed" -> Json.toJson(now),
-        "status" -> "Successful"
+        "status" -> "Successful",
+        "createdAt" -> Json.toJson(now)
       ))
+
     }
   }
 

@@ -47,8 +47,8 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
         name = Some("amlsRefNoIndex")
       ),
       Index(
-        key = Seq("reference" -> IndexType.Ascending),
-        name = Some("reference")
+        key = Seq("reference" -> IndexType.Ascending, "createdAt" -> IndexType.Descending),
+        name = Some("reference lookup")
       )
     )
   }
@@ -63,6 +63,9 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
   def findLatestByAmlsReference(amlsReferenceNumber: String) = {
     collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
+
+  def findLatestByPaymentReference(paymentReference: String) =
+    collection.find(Json.obj("reference" -> paymentReference)).sort(Json.obj("createdAt" -> -1)).one[Payment]
 
   private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
     case writeResult: WriteResult if isError(writeResult) => {
