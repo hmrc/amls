@@ -105,7 +105,8 @@ trait PaymentGenerator extends AmlsReferenceNumberGenerator{
     Map.empty,
     Some(provider),
     Some(now),
-    paymentStatus.head
+    paymentStatus.head,
+    Some(now)
   )
 
 }
