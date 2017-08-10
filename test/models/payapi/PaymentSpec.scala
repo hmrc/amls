@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package models.payapi
 
 import java.time.LocalDateTime
 
 import generators.AmlsReferenceNumberGenerator
-import models.payapi.{Card, CardTypes, Payment, Provider}
-import models.payapi.PaymentStatuses.{Created, Successful}
+import models.payapi.PaymentStatuses.Successful
 import models.payapi.TaxTypes.`other`
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec

@@ -24,12 +24,14 @@ import utils.EnumFormat
 
 case class Payment(
                     _id: String,
-                    amlsRefNo: Option[String],
+                    amlsRefNo: String,
                     reference: String,
                     description: String,
                     amountInPence: Int,
                     status: PaymentStatus,
-                    createdAt: Option[LocalDateTime])
+                    createdAt: LocalDateTime,
+                    updatedAt: Option[LocalDateTime] = None
+                  )
 
 object Payment {
   implicit val statusFormat = EnumFormat(PaymentStatuses)
