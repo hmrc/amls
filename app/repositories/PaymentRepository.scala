@@ -19,7 +19,7 @@ package repositories
 import javax.inject.{Inject, Singleton}
 
 import exceptions.PaymentException
-import models.Payment
+import models.payapi.Payment
 import play.api.Logger
 import play.api.libs.json.Json
 import reactivemongo.api.{DB, DefaultDB}

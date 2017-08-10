@@ -18,10 +18,10 @@ package generators
 
 import java.time.LocalDateTime
 
-import models.CardTypes._
-import models.PaymentStatuses._
-import models.TaxTypes._
-import models.{Card, Payment, Provider}
+import models.payapi.CardTypes._
+import models.payapi.PaymentStatuses._
+import models.payapi.TaxTypes._
+import models.payapi.{Card, Payment, Provider}
 import org.scalacheck.Gen
 
 trait PaymentGenerator extends AmlsReferenceNumberGenerator{
@@ -37,6 +37,7 @@ trait PaymentGenerator extends AmlsReferenceNumberGenerator{
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(x => x.mkString)
   }
 
+  //noinspection ScalaStyle
   def numGen = Gen.chooseNum(0,1000)
 
   def taxTypesGen = Gen.pick(1,

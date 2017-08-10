@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package models.payments
 
 import play.api.libs.json.Json
 
-case class PaymentStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
+case class RefreshPaymentStatusRequest(paymentReference: String)
 
-object PaymentStatusResult {
-  import Payment._
-  implicit val writes = Json.writes[PaymentStatusResult]
+object RefreshPaymentStatusRequest {
+  implicit val format = Json.format[RefreshPaymentStatusRequest]
 }

@@ -20,27 +20,13 @@ import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API4, API5, Metrics}
-import models.des
+import metrics.{API5, Metrics}
 import models.des._
 import models.des.aboutthebusiness.{Address => AboutTheBusinessAddress}
-import models.des.aboutthebusiness._
-import models.des.aboutyou.{Aboutyou, IndividualDetails}
 import models.des.asp.{Asp => AspModel}
-import models.des.bankdetails._
-import models.des.businessactivities._
-import models.des.businessdetails.{BusinessDetails, BusinessType, CorpAndBodyLlps, UnincorpBody}
-import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.{Hvd => HvdModel}
-import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods}
-import models.des.msb._
-import models.des.payment.Payment
 import models.des.responsiblepeople.{Address => ResponsiblePeopleAddress}
-import models.des.responsiblepeople._
-import models.des.supervision._
-import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Address => TradingPremisesAddress}
-import models.des.tradingpremises._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}

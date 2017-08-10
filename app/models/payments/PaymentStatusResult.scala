@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package models.payments
 
+import models.payapi.{EnumFormat, PaymentStatus, PaymentStatuses}
 import play.api.libs.json.Json
 
-case class RefreshPaymentStatusRequest(paymentReference: String)
+case class PaymentStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
 
-object RefreshPaymentStatusRequest {
-  implicit val format = Json.format[RefreshPaymentStatusRequest]
+object PaymentStatusResult {
+  implicit val statusFormat = EnumFormat(PaymentStatuses)
+  implicit val writes = Json.writes[PaymentStatusResult]
 }

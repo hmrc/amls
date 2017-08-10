@@ -16,21 +16,20 @@
 
 package services
 
+import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.{Payment, PaymentStatusResult, PaymentStatuses}
-import org.mockito.ArgumentCaptor
+import models.payapi.{Payment, PaymentStatuses}
+import models.payments.PaymentStatusResult
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsString, Json}
 import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
-import cats.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

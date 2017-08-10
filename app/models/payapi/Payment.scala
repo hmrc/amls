@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.payapi
 
-import enumeratum.{Enum, EnumEntry}
 import java.time.LocalDateTime
 
+import enumeratum.{Enum, EnumEntry}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, _}
 
@@ -61,7 +61,7 @@ object TaxTypes extends Enum[TaxType] {
   override def values = findValues
 }
 
-import models.CardTypes.IsCreditCard
+import models.payapi.CardTypes.IsCreditCard
 
 sealed abstract class CardType(val schemeCode: String, val isCreditCard: IsCreditCard) extends EnumEntry
 

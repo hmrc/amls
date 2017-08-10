@@ -19,7 +19,7 @@ package connectors
 import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import metrics.{Metrics, PayAPI}
-import models.Payment
+import models.payapi.Payment
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.concurrent.Future
 
 trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {

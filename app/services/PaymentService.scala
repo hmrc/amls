@@ -23,7 +23,8 @@ import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import models.{Payment, PaymentStatusResult}
+import models.payapi.Payment
+import models.payments.PaymentStatusResult
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.http.Status._
 import repositories.PaymentRepository

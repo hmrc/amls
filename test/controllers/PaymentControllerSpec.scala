@@ -18,7 +18,6 @@ package controllers
 
 import cats.data.OptionT
 import generators.PaymentGenerator
-import models.{PaymentStatusResult, PaymentStatuses, RefreshPaymentStatusRequest}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.mock.MockitoSugar
@@ -28,6 +27,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
 import cats.implicits._
+import models.payapi.PaymentStatuses
+import models.payments.{PaymentStatusResult, RefreshPaymentStatusRequest}
 
 import scala.concurrent.Future
 

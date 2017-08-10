@@ -24,7 +24,6 @@ import models.des.businessdetails.BusinessDetails
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.Hvd
 import models.des.msb.MoneyServiceBusiness
-import models.des.payment.Payment
 import models.des.responsiblepeople.ResponsiblePersons
 import models.des.supervision.AspOrTcsp
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}

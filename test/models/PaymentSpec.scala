@@ -19,8 +19,9 @@ package models
 import java.time.LocalDateTime
 
 import generators.AmlsReferenceNumberGenerator
-import models.PaymentStatuses.{Created, Successful}
-import models.TaxTypes.`other`
+import models.payapi.{Card, CardTypes, Payment, Provider}
+import models.payapi.PaymentStatuses.{Created, Successful}
+import models.payapi.TaxTypes.`other`
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
@@ -55,7 +56,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         totalInPence,
         url,
         Some(Card(
-          models.CardTypes.`visa-debit`,
+          CardTypes.`visa-debit`,
           Some(20.00)
         )),
         Map.empty,
