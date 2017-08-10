@@ -21,30 +21,9 @@ import java.time.LocalDateTime
 import enumeratum.{Enum, EnumEntry}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, _}
+import utils.EnumFormat
 
-object EnumFormat {
-  // $COVERAGE-OFF$
-  def apply[T <: EnumEntry](e: Enum[T]): Format[T] = Format(
-    Reads {
-      case JsString(value) => e.withNameOption(value).map(JsSuccess(_))
-        .getOrElse(JsError(ValidationError(s"Unknown ${e.getClass.getSimpleName} value: $value", s"error.invalid.${e.getClass.getSimpleName.toLowerCase.replaceAllLiterally("$", "")}")))
-      case _ => JsError("Can only parse String")
-    },
-    Writes(v => JsString(v.entryName))
-  )
-}
 
-sealed abstract class PaymentStatus(val isFinal: Boolean, val validNextStates: Seq[PaymentStatus] = Seq()) extends EnumEntry
-
-object PaymentStatuses extends Enum[PaymentStatus] {
-  case object Created extends PaymentStatus(false, Seq(Sent))
-  case object Successful extends PaymentStatus(true)
-  case object Sent extends PaymentStatus(false, Seq(Successful, Failed, Cancelled))
-  case object Failed extends PaymentStatus(true)
-  case object Cancelled extends PaymentStatus(true)
-
-  override def values = findValues
-}
 
 
 sealed abstract class TaxType extends EnumEntry
@@ -118,7 +97,6 @@ case class Payment(
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)
-  implicit val statusFormat = EnumFormat(PaymentStatuses)
   implicit val providerFormat = Json.format[Provider]
   implicit val paymentOrder = Json.format[PaymentOrder]
 

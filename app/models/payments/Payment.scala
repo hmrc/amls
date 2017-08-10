@@ -16,11 +16,22 @@
 
 package models.payments
 
-import models.payapi.PaymentStatus
+import java.time.LocalDateTime
+
+import models.payapi._
 import play.api.libs.json.Json
+import utils.EnumFormat
 
-case class PaymentStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
+case class Payment(
+                    _id: String,
+                    amlsRefNo: Option[String],
+                    reference: String,
+                    description: String,
+                    amountInPence: Int,
+                    status: PaymentStatus,
+                    createdAt: Option[LocalDateTime])
 
-object PaymentStatusResult {
-  implicit val writes = Json.writes[PaymentStatusResult]
+object Payment {
+  implicit val statusFormat = EnumFormat(PaymentStatuses)
+  implicit val format = Json.format[Payment]
 }
