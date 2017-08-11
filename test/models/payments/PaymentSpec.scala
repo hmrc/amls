@@ -18,12 +18,14 @@ package models.payments
 
 import java.time.LocalDateTime
 
+import generators.PayApiGenerator
 import models.payapi.PaymentStatuses.Successful
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+import models.payapi.{Payment => PayApiPayment}
 
-class PaymentSpec extends PlaySpec with MustMatchers {
+class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
 
   "The Payment model" when {
     "serialising" must {
@@ -58,6 +60,24 @@ class PaymentSpec extends PlaySpec with MustMatchers {
 
       "deserialise from Json" in {
         Json.fromJson[Payment](json) mustBe JsSuccess(model)
+      }
+    }
+
+    "converting" must {
+      "convert from a Pay Api payment" in {
+        val payApiModel = paymentGen.sample.get
+        val refNumber = amlsRefNoGen.sample.get
+
+        Payment.from(refNumber, payApiModel) mustBe Payment(
+          payApiModel._id,
+          refNumber,
+          payApiModel.reference,
+          payApiModel.description,
+          payApiModel.amountInPence,
+          payApiModel.status,
+          LocalDateTime.now,
+          None
+        )
       }
     }
   }

@@ -92,8 +92,7 @@ case class Payment(
                     additionalInformation: Map[String, String],
                     provider: Option[Provider],
                     confirmed: Option[LocalDateTime],
-                    status: PaymentStatus,
-                    createdAt: Option[LocalDateTime])
+                    status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)

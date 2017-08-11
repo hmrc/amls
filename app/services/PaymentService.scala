@@ -40,7 +40,7 @@ class PaymentService @Inject()(
                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
-      _ <- paymentsRepository.insert(pm.copy(amlsRefNo = amlsRegistrationNumber.some, createdAt = Some(LocalDateTime.now())))
+      _ <- paymentsRepository.insert(pm)
     } yield pm.some) recoverWith {
       case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
       case e: HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))

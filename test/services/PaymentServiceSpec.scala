@@ -19,7 +19,7 @@ package services
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import generators.PaymentGenerator
+import generators.PayApiGenerator
 import models.payapi.{Payment, PaymentStatuses}
 import models.payments.PaymentStatusResult
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -34,7 +34,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PaymentGenerator with ScalaFutures with IntegrationPatience {
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator with ScalaFutures with IntegrationPatience {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 

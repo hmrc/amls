@@ -24,7 +24,7 @@ import models.payapi.TaxTypes._
 import models.payapi.{Card, Payment, Provider}
 import org.scalacheck.Gen
 
-trait PaymentGenerator extends AmlsReferenceNumberGenerator{
+trait PayApiGenerator extends AmlsReferenceNumberGenerator {
 
   val strLength = 10
   val numLength = 4
@@ -106,8 +106,7 @@ trait PaymentGenerator extends AmlsReferenceNumberGenerator{
     Map.empty,
     Some(provider),
     Some(now),
-    paymentStatus.head,
-    Some(now)
+    paymentStatus.head
   )
 
 }

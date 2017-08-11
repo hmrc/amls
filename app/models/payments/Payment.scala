@@ -18,7 +18,7 @@ package models.payments
 
 import java.time.LocalDateTime
 
-import models.payapi._
+import models.payapi.{Payment => PayApiPayment, _}
 import play.api.libs.json.Json
 import utils.EnumFormat
 
@@ -34,6 +34,18 @@ case class Payment(
                   )
 
 object Payment {
+
+  val from: (String, PayApiPayment) => Payment = (amlsRefNo, apiPayment) =>
+    Payment(
+      apiPayment._id,
+      amlsRefNo,
+      apiPayment.reference,
+      apiPayment.description,
+      apiPayment.amountInPence,
+      apiPayment.status,
+      LocalDateTime.now
+    )
+
   implicit val statusFormat = EnumFormat(PaymentStatuses)
   implicit val format = Json.format[Payment]
 }
