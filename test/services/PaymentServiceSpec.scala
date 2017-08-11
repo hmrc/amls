@@ -20,8 +20,8 @@ import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PayApiGenerator
-import models.payapi.{Payment, PaymentStatuses}
-import models.payments.PaymentStatusResult
+import models.payapi.{PaymentStatuses, Payment => PayApiPayment}
+import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -41,30 +41,28 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
 
-  def testPayment = paymentGen.sample.get
+  val testPayApiPayment = payApiPaymentGen.sample.get
+  val testPayment = Payment.from(amlsRefNoGen.sample.get, testPayApiPayment)
 
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   "PaymentService" when {
     "savePayment is called" must {
       "respond with payment if call to connector is successful" in {
-
-        val payment = testPayment.copy(amlsRefNo = Some(amlsRegistrationNumber))
-
         when {
-          testPayAPIConnector.getPayment(payment._id)(hc)
+          testPayAPIConnector.getPayment(eqTo(testPayApiPayment._id))(any())
         } thenReturn {
-          Future.successful(payment)
+          Future.successful(testPayApiPayment)
         }
 
         when {
           testPaymentService.paymentsRepository.insert(any())
         } thenReturn {
-          Future.successful(payment)
+          Future.successful(testPayment)
         }
 
-        whenReady(testPaymentService.savePayment(payment._id, amlsRegistrationNumber)) { res =>
-          res mustBe Some(payment)
+        whenReady(testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber)) { res =>
+          res mustBe Some(testPayment)
 
           verify(
             testPaymentService.paymentsRepository
@@ -78,10 +76,10 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         when {
           testPayAPIConnector.getPayment(any())(any())
         } thenReturn {
-          Future.failed(new HttpStatusException(NOT_FOUND, None))
+          Future.failed(HttpStatusException(NOT_FOUND, None))
         }
 
-        val result = testPaymentService.savePayment(testPayment._id, amlsRegistrationNumber)
+        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber)
         await(result) mustBe None
 
       }
@@ -91,10 +89,10 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         when {
           testPayAPIConnector.getPayment(any())(any())
         } thenReturn {
-          Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, None))
+          Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, None))
         }
 
-        val result = testPaymentService.savePayment(testPayment._id, amlsRegistrationNumber).failed
+        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber).failed
 
         await(result) mustBe PaymentException(Some(INTERNAL_SERVER_ERROR), "Could not retrieve payment")
 
@@ -110,7 +108,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
           Future.failed(e)
         }
 
-        val result = testPaymentService.savePayment(testPayment._id, amlsRegistrationNumber).failed
+        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber).failed
 
         await(result) mustBe e
 
@@ -138,7 +136,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         val paymentRef = paymentRefGen.sample.get
         val paymentId = paymentIdGen.sample.get
         val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
-        val payApiPayment = amlsPayment.copy(status = PaymentStatuses.Successful)
+        val payApiPayment = testPayApiPayment.copy(status = PaymentStatuses.Successful)
         val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
 
         when {

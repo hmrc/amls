@@ -18,15 +18,20 @@ package generators
 
 import org.scalacheck.Gen
 
-trait AmlsReferenceNumberGenerator extends BaseGenerator {
+trait BaseGenerator {
+  val refLength = 10
 
-  def amlsRefNoGen = {
-    for {
-      a <- Gen.listOfN(1, Gen.alphaUpperChar).map(x => x.mkString)
-      b <- Gen.listOfN(6, Gen.numChar).map(x => x.mkString)
-    } yield s"X${a}ML00000$b"
+  //noinspection ScalaStyle
+  def hashGen: Gen[String] = {
+    val c = Gen.oneOf(Seq("a", "b", "c", "d", "e", "f"))
+    val n = Gen.chooseNum(0, 9).map(_.toString)
+    Gen.listOfN(32, Gen.oneOf(c, n)).map(l => l.mkString)
   }
 
-  val amlsRegistrationNumber = amlsRefNoGen.sample.get
+  def alphaNumOfLengthGen(maxLength: Int) = {
+    Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
+  }
 
+  //noinspection ScalaStyle
+  def numGen = Gen.chooseNum(0,1000)
 }

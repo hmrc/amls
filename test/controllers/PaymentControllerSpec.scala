@@ -17,7 +17,7 @@
 package controllers
 
 import cats.data.OptionT
-import generators.PayApiGenerator
+import generators.{PayApiGenerator, PaymentGenerator}
 import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.scalatest.mock.MockitoSugar
@@ -28,18 +28,16 @@ import play.api.test.Helpers._
 import services.PaymentService
 import cats.implicits._
 import models.payapi.PaymentStatuses
-import models.payments.{PaymentStatusResult, RefreshPaymentStatusRequest}
+import models.payments.{Payment, PaymentStatusResult, RefreshPaymentStatusRequest}
 
 import scala.concurrent.Future
 
-class PaymentControllerSpec extends PlaySpec with MockitoSugar with PayApiGenerator {
+class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
 
   trait Fixture {
 
     val testPaymentService = mock[PaymentService]
-
     def testPayment = paymentGen.sample.get
-
     val testPaymentId = testPayment._id
 
     val testController = new PaymentController(

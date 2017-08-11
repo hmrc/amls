@@ -40,7 +40,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
 
     val mockHttp = mock[WSHttp]
 
-    val testPayment = paymentGen.sample.get
+    val testPayment = payApiPaymentGen.sample.get
 
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 

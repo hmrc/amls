@@ -16,18 +16,17 @@
 
 package services
 
-import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
 
 import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import models.payapi.Payment
-import models.payments.PaymentStatusResult
-import uk.gov.hmrc.play.http.HeaderCarrier
+import models.payapi.{Payment => PayApiPayment}
+import models.payments.{Payment, PaymentStatusResult}
 import play.api.http.Status._
 import repositories.PaymentRepository
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,8 +39,8 @@ class PaymentService @Inject()(
                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
-      _ <- paymentsRepository.insert(pm)
-    } yield pm.some) recoverWith {
+      newPayment <- paymentsRepository.insert(Payment.from(amlsRegistrationNumber, pm))
+    } yield newPayment.some) recoverWith {
       case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
       case e: HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
       case e: PaymentException => Future.failed(e)

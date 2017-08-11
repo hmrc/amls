@@ -65,7 +65,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
 
     "converting" must {
       "convert from a Pay Api payment" in {
-        val payApiModel = paymentGen.sample.get
+        val payApiModel = payApiPaymentGen.sample.get
         val refNumber = amlsRefNoGen.sample.get
 
         Payment.from(refNumber, payApiModel) mustBe Payment(

@@ -24,21 +24,9 @@ import models.payapi.TaxTypes._
 import models.payapi.{Card, Payment, Provider}
 import org.scalacheck.Gen
 
-trait PayApiGenerator extends AmlsReferenceNumberGenerator {
-
-  val strLength = 10
-  val numLength = 4
-
-  val paymentRefGen = alphaNumOfLengthGen(strLength - 1) map { ref => s"X$ref" }
-
-  val paymentIdGen = alphaNumOfLengthGen(strLength)
-
-  def alphaNumOfLengthGen(maxLength: Int) = {
-    Gen.listOfN(maxLength, Gen.alphaNumChar).map(x => x.mkString)
-  }
-
-  //noinspection ScalaStyle
-  def numGen = Gen.chooseNum(0,1000)
+trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
+  val paymentRefGen = alphaNumOfLengthGen(refLength - 1) map { ref => s"X$ref" }
+  val paymentIdGen = alphaNumOfLengthGen(refLength)
 
   def taxTypesGen = Gen.pick(1,
     `self-assessment`,
@@ -67,7 +55,7 @@ trait PayApiGenerator extends AmlsReferenceNumberGenerator {
     `maestro`
   )
 
-  def providerGen = alphaNumOfLengthGen(strLength).map(str => Provider(str, str))
+  def providerGen = alphaNumOfLengthGen(refLength).map(str => Provider(str, str))
 
   def now = LocalDateTime.now()
 
@@ -79,16 +67,16 @@ trait PayApiGenerator extends AmlsReferenceNumberGenerator {
     Cancelled
   )
 
-  val paymentGen: Gen[Payment] = for {
-    _id <- paymentIdGen
+  val payApiPaymentGen: Gen[Payment] = for {
+    _id <- hashGen
     amlsRefNo <- amlsRefNoGen
     taxType <- taxTypesGen
     ref <- paymentRefGen
-    desc <- alphaNumOfLengthGen(strLength)
+    desc <- alphaNumOfLengthGen(refLength)
     amountInPence <- numGen
     commissionInPence <- numGen
     totalInPence <- numGen
-    url <- alphaNumOfLengthGen(strLength)
+    url <- alphaNumOfLengthGen(refLength)
     card <- cardGen
     provider <- providerGen
     paymentStatus <- paymentStatusGen
