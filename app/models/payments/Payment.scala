@@ -30,6 +30,7 @@ case class Payment(
                     amountInPence: Int,
                     status: PaymentStatus,
                     createdAt: LocalDateTime,
+                    isBacs: Option[Boolean] = None,
                     updatedAt: Option[LocalDateTime] = None
                   )
 
