@@ -28,7 +28,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
-import reactivemongo.api.commands.UpdateWriteResult
+import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -47,6 +47,17 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
 
   val successWriteResult = mock[UpdateWriteResult]
   when(successWriteResult.ok) thenReturn true
+
+  def errorWriteResult(error: String): UpdateWriteResult = UpdateWriteResult(
+    ok = false,
+    0,
+    0,
+    Seq.empty[Upserted],
+    Seq.empty[WriteError],
+    None,
+    None,
+    Some(error)
+  )
 
   "PaymentService" when {
     "createPayment is called" must {
@@ -148,6 +159,24 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         whenReady(testPaymentService.updatePayment(updatedPayment)) { result =>
           result mustBe true
           verify(testPaymentRepo).update(eqTo(updatedPayment))
+        }
+      }
+
+      "throws an exception when the write failed" in {
+        val updatedPayment = testPayment.copy()
+
+        when {
+          testPaymentRepo.findLatestByPaymentReference(any())
+        } thenReturn Future.successful(Some(testPayment))
+
+        when {
+          testPaymentRepo.update(any())
+        } thenReturn Future.successful(errorWriteResult("Could not write the payment"))
+
+        intercept[Exception] {
+          whenReady(testPaymentService.updatePayment(updatedPayment)) { _ =>
+            verify(testPaymentRepo).update(eqTo(updatedPayment))
+          }
         }
       }
     }
