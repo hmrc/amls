@@ -35,8 +35,8 @@ class PaymentService @Inject()(
                                 val paymentConnector: PayAPIConnector,
                                 val paymentsRepository: PaymentRepository
                               ) {
-  def savePayment(paymentId: String, amlsRegistrationNumber: String)
-                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+  def createPayment(paymentId: String, amlsRegistrationNumber: String)
+                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
       newPayment <- paymentsRepository.insert(Payment.from(amlsRegistrationNumber, pm))

@@ -39,7 +39,7 @@ class PaymentController @Inject()(
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.savePayment(request.body, amlsRegistrationNumber) map {
+          paymentService.createPayment(request.body, amlsRegistrationNumber) map {
             case Some(_) => Created
             case _ => InternalServerError
           }

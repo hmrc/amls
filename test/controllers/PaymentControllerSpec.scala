@@ -64,7 +64,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService returns payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.savePayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any())(any(), any())
           } thenReturn {
             Future.successful(Some(testPayment))
           }
@@ -79,7 +79,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService does not return payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.savePayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
@@ -94,7 +94,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "amlsRefNo does not meet regex" in new CreateRequestFixture {
 
           when {
-            testPaymentService.savePayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
