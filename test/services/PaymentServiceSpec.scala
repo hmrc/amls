@@ -28,6 +28,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
+import reactivemongo.api.commands.UpdateWriteResult
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -40,11 +41,12 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
 
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
-
   val testPayApiPayment = payApiPaymentGen.sample.get
   val testPayment = Payment.from(amlsRefNoGen.sample.get, testPayApiPayment)
-
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
+
+  val successWriteResult = mock[UpdateWriteResult]
+  when(successWriteResult.ok) thenReturn true
 
   "PaymentService" when {
     "createPayment is called" must {
@@ -128,6 +130,25 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         case Some(result) =>
           result mustBe payment
         case _ => fail("No payment was returned")
+      }
+    }
+
+    "updatePayment is called" must {
+      "update the payment in-place" in {
+        val updatedPayment = testPayment.copy()
+
+        when {
+          testPaymentRepo.findLatestByPaymentReference(any())
+        } thenReturn Future.successful(Some(testPayment))
+
+        when {
+          testPaymentRepo.update(any())
+        } thenReturn Future.successful(successWriteResult)
+
+        whenReady(testPaymentService.updatePayment(updatedPayment)) { result =>
+          result mustBe true
+          verify(testPaymentRepo).update(eqTo(updatedPayment))
+        }
       }
     }
 

@@ -50,6 +50,9 @@ class PaymentService @Inject()(
   def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.findLatestByPaymentReference(paymentReference)
 
+  def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
+    paymentsRepository.update(payment) map { _.ok }
+
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {
       payment <- OptionT(getPaymentByReference(paymentReference))
