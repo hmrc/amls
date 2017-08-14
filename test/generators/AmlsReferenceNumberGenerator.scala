@@ -18,7 +18,7 @@ package generators
 
 import org.scalacheck.Gen
 
-trait AmlsReferenceNumberGenerator {
+trait AmlsReferenceNumberGenerator extends BaseGenerator {
 
   def amlsRefNoGen = {
     for {

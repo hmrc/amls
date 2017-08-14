@@ -19,7 +19,7 @@ package connectors
 import com.codahale.metrics.Timer
 import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
-import generators.PaymentGenerator
+import generators.PayApiGenerator
 import metrics.{Metrics, PayAPI}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -34,13 +34,13 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PaymentGenerator with IntegrationPatience {
+class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PayApiGenerator with IntegrationPatience {
 
   trait Fixture {
 
     val mockHttp = mock[WSHttp]
 
-    val testPayment = paymentGen.sample.get
+    val testPayment = payApiPaymentGen.sample.get
 
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 

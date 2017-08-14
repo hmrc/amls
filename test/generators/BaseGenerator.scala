@@ -16,14 +16,22 @@
 
 package generators
 
-import models.payments.Payment
 import org.scalacheck.Gen
 
-trait PaymentGenerator extends BaseGenerator with PayApiGenerator {
+trait BaseGenerator {
+  val refLength = 10
 
-  val paymentGen: Gen[Payment] = for {
-    refNo <- amlsRefNoGen
-    payApiPayment <- payApiPaymentGen
-  } yield Payment.from(refNo, payApiPayment)
+  //noinspection ScalaStyle
+  def hashGen: Gen[String] = {
+    val c = Gen.oneOf(Seq("a", "b", "c", "d", "e", "f"))
+    val n = Gen.chooseNum(0, 9).map(_.toString)
+    Gen.listOfN(32, Gen.oneOf(c, n)).map(l => l.mkString)
+  }
 
+  def alphaNumOfLengthGen(maxLength: Int) = {
+    Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
+  }
+
+  //noinspection ScalaStyle
+  def numGen = Gen.chooseNum(0,1000)
 }

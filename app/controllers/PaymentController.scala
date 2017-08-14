@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import models.RefreshPaymentStatusRequest
+import models.payments.RefreshPaymentStatusRequest
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._

@@ -19,7 +19,7 @@ package repositories
 import javax.inject.{Inject, Singleton}
 
 import exceptions.PaymentException
-import models.Payment
+import models.payments.Payment
 import play.api.Logger
 import play.api.libs.json.Json
 import reactivemongo.api.{DB, DefaultDB}
@@ -61,7 +61,7 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
   )
 
   def findLatestByAmlsReference(amlsReferenceNumber: String) = {
-    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
+    collection.find(Json.obj("amlsRefNo" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
 
   def findLatestByPaymentReference(paymentReference: String) =
