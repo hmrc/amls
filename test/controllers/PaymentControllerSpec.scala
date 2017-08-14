@@ -17,24 +17,26 @@
 package controllers
 
 import cats.data.OptionT
-import generators.{PayApiGenerator, PaymentGenerator}
-import org.mockito.Mockito._
+import cats.implicits._
+import generators.PaymentGenerator
+import models.payapi.PaymentStatuses
+import models.payments.{PaymentStatusResult, RefreshPaymentStatusRequest, SetBacsRequest}
 import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
-import cats.implicits._
-import models.payapi.PaymentStatuses
-import models.payments.{Payment, PaymentStatusResult, RefreshPaymentStatusRequest}
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
 class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
 
   trait Fixture {
+    implicit val hc = HeaderCarrier()
 
     val testPaymentService = mock[PaymentService]
     def testPayment = paymentGen.sample.get
@@ -171,6 +173,41 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val result = testController.refreshStatus(accountType, accountRef)(putRequest)
 
         status(result) mustBe BAD_REQUEST
+      }
+    }
+
+    "updating payment BACS flag" must {
+      "set the BACS flag according to input data" in new Fixture {
+        val payment = paymentGen.sample.get.copy(isBacs = None)
+        val bacsRequest = SetBacsRequest(isBacs = true)
+
+        when {
+          testController.paymentService.getPaymentByReference(eqTo(payment.reference))(any(), any())
+        } thenReturn Future.successful(Some(payment))
+
+        when {
+          testController.paymentService.updatePayment(any())(any(), any())
+        } thenReturn Future.successful(true)
+
+        val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
+
+        val result = testController.updateBacsFlag(accountType, accountRef, payment.reference)(putRequest)
+
+        status(result) mustBe NO_CONTENT
+        verify(testController.paymentService).updatePayment(eqTo(payment.copy(isBacs = Some(true))))(any(), any())
+      }
+
+      "return 404 Not Found if the payment was not found" in new Fixture {
+        val bacsRequest = SetBacsRequest(isBacs = true)
+
+        when {
+          testController.paymentService.getPaymentByReference(any())(any(), any())
+        } thenReturn Future.successful(None)
+
+        val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
+        val result = testController.updateBacsFlag(accountType, accountRef, paymentRefGen.sample.get)(putRequest)
+
+        status(result) mustBe NOT_FOUND
       }
     }
   }

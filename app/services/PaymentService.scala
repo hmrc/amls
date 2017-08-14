@@ -58,7 +58,6 @@ class PaymentService @Inject()(
       }
     }
 
-
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {
       payment <- OptionT(getPaymentByReference(paymentReference))
