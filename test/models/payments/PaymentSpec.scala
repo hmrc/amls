@@ -70,6 +70,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
       "convert from a Pay Api payment" in {
         val payApiModel = payApiPaymentGen.sample.get
         val refNumber = amlsRefNoGen.sample.get
+        val now = LocalDateTime.now
 
         Payment.from(refNumber, payApiModel) mustBe Payment(
           payApiModel._id,
@@ -78,10 +79,10 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
           payApiModel.description,
           payApiModel.amountInPence,
           payApiModel.status,
-          LocalDateTime.now,
+          now,
           isBacs = None,
           None
-        )
+        ).copy(createdAt = now)
       }
     }
   }
