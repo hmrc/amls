@@ -47,7 +47,10 @@ class PaymentService @Inject()(
     }
   }
 
-  def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
+  def getPaymentByAmlsReference(amlsRefNo: String)(implicit ec: ExecutionContext, hc: HeaderCarrier) =
+    paymentsRepository.findLatestByAmlsReference(amlsRefNo)
+
+  def getPaymentByPaymentReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.findLatestByPaymentReference(paymentReference)
 
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
@@ -60,7 +63,7 @@ class PaymentService @Inject()(
 
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {
-      payment <- OptionT(getPaymentByReference(paymentReference))
+      payment <- OptionT(getPaymentByPaymentReference(paymentReference))
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
       _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
     } yield {

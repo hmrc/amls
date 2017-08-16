@@ -129,18 +129,35 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
 
     }
 
-    "getPaymentByReference is called" must {
-      val paymentRef = paymentRefGen.sample.get
-      val payment = testPayment.copy(reference = paymentRef)
+    "retrieving a payment" must {
+      "support getting a payment by payment reference" in {
+        val paymentRef = paymentRefGen.sample.get
+        val payment = testPayment.copy(reference = paymentRef)
 
-      when {
-        testPaymentRepo.findLatestByPaymentReference(eqTo(paymentRef))
-      } thenReturn Future.successful(Some(payment))
+        when {
+          testPaymentRepo.findLatestByPaymentReference(eqTo(paymentRef))
+        } thenReturn Future.successful(Some(payment))
 
-      whenReady(testPaymentService.getPaymentByReference(paymentRef)) {
-        case Some(result) =>
-          result mustBe payment
-        case _ => fail("No payment was returned")
+        whenReady(testPaymentService.getPaymentByPaymentReference(paymentRef)) {
+          case Some(result) =>
+            result mustBe payment
+          case _ => fail("No payment was returned")
+        }
+      }
+
+      "support getting a payment by AMLS reference number" in {
+        val amlsRef = amlsRefNoGen.sample.get
+        val payment = testPayment.copy(amlsRefNo = amlsRef)
+
+        when {
+          testPaymentRepo.findLatestByAmlsReference(eqTo(amlsRef))
+        } thenReturn Future.successful(Some(payment))
+
+        whenReady(testPaymentService.getPaymentByAmlsReference(amlsRef)) {
+          case Some(result) =>
+            result mustBe payment
+          case _ => fail("No payment was returned")
+        }
       }
     }
 

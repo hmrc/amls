@@ -114,7 +114,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByReference(eqTo(paymentRef))(any(), any())
+          testPaymentService.getPaymentByPaymentReference(eqTo(paymentRef))(any(), any())
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
@@ -126,7 +126,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       "return a 404 Not Found" when {
         "the reference number does not match a payment" in new Fixture {
           when {
-            testPaymentService.getPaymentByReference(any())(any(), any())
+            testPaymentService.getPaymentByPaymentReference(any())(any(), any())
           } thenReturn Future.successful(None)
 
           val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
@@ -182,7 +182,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByReference(eqTo(payment.reference))(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(eqTo(payment.reference))(any(), any())
         } thenReturn Future.successful(Some(payment))
 
         when {
@@ -201,7 +201,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByReference(any())(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(any())(any(), any())
         } thenReturn Future.successful(None)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
