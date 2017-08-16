@@ -39,7 +39,9 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     implicit val hc = HeaderCarrier()
 
     val testPaymentService = mock[PaymentService]
+
     def testPayment = paymentGen.sample.get
+
     val testPaymentId = testPayment._id
 
     val testController = new PaymentController(
@@ -108,8 +110,8 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
       }
     }
 
-    "querying a payment reference" must {
-      "find a payment given a payment reference" in new Fixture {
+    "retrieving a payment by payment reference" must {
+      "return the payment" in new Fixture {
         val paymentRef = paymentRefGen.sample.get
         val payment = paymentGen.sample.get
 
@@ -123,16 +125,41 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         contentAsJson(result) mustBe Json.toJson(payment)
       }
 
-      "return a 404 Not Found" when {
-        "the reference number does not match a payment" in new Fixture {
-          when {
-            testPaymentService.getPaymentByPaymentReference(any())(any(), any())
-          } thenReturn Future.successful(None)
+      "return a 404 Not Found when the reference doesn't match" in new Fixture {
+        when {
+          testPaymentService.getPaymentByPaymentReference(any())(any(), any())
+        } thenReturn Future.successful(None)
 
-          val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
+        val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
 
-          status(result) mustBe NOT_FOUND
-        }
+        status(result) mustBe NOT_FOUND
+      }
+
+    }
+
+    "retrieving a payment by AMLS reference" must {
+      "return the payment" in new Fixture {
+        val amlsRef = amlsRefNoGen.sample.get
+        val payment = paymentGen.sample.get
+
+        when {
+          testPaymentService.getPaymentByAmlsReference(eqTo(amlsRef))(any(), any())
+        } thenReturn Future.successful(Some(payment))
+
+        val result = testController.getPaymentByAmlsRef(accountType, accountRef, amlsRef)(request)
+
+        status(result) mustBe OK
+        contentAsJson(result) mustBe Json.toJson(payment)
+      }
+
+      "return a 404 Not Found when the reference doesn't match" in new Fixture {
+        when {
+          testPaymentService.getPaymentByAmlsReference(any())(any(), any())
+        } thenReturn Future.successful(None)
+
+        val result = testController.getPaymentByAmlsRef(accountType, accountRef, paymentRefGen.sample.get)(request)
+
+        status(result) mustBe NOT_FOUND
       }
     }
 

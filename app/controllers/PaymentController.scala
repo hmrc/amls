@@ -62,6 +62,14 @@ class PaymentController @Inject()(
       }
   }
 
+  def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = Action.async {
+    implicit request =>
+      paymentService.getPaymentByAmlsReference(amlsReference) map {
+        case Some(payment) => Ok(Json.toJson(payment))
+        case _ => NotFound
+      }
+  }
+
   def updateBacsFlag(accountType: String, ref: String, paymentReference: String) = Action.async(parse.json) {
     implicit request =>
       val processBody = for {
