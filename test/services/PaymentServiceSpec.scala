@@ -28,6 +28,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
+import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -40,14 +41,26 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
 
   val testPayAPIConnector = mock[PayAPIConnector]
   val testPaymentRepo = mock[PaymentRepository]
-
   val testPayApiPayment = payApiPaymentGen.sample.get
   val testPayment = Payment.from(amlsRefNoGen.sample.get, testPayApiPayment)
-
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
+  val successWriteResult = mock[UpdateWriteResult]
+  when(successWriteResult.ok) thenReturn true
+
+  def errorWriteResult(error: String): UpdateWriteResult = UpdateWriteResult(
+    ok = false,
+    0,
+    0,
+    Seq.empty[Upserted],
+    Seq.empty[WriteError],
+    None,
+    None,
+    Some(error)
+  )
+
   "PaymentService" when {
-    "savePayment is called" must {
+    "createPayment is called" must {
       "respond with payment if call to connector is successful" in {
         when {
           testPayAPIConnector.getPayment(eqTo(testPayApiPayment._id))(any())
@@ -61,7 +74,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
           Future.successful(testPayment)
         }
 
-        whenReady(testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber)) { res =>
+        whenReady(testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber)) { res =>
           res mustBe Some(testPayment)
 
           verify(
@@ -79,7 +92,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
           Future.failed(HttpStatusException(NOT_FOUND, None))
         }
 
-        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber)
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber)
         await(result) mustBe None
 
       }
@@ -92,7 +105,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, None))
         }
 
-        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber).failed
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber).failed
 
         await(result) mustBe PaymentException(Some(INTERNAL_SERVER_ERROR), "Could not retrieve payment")
 
@@ -108,7 +121,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
           Future.failed(e)
         }
 
-        val result = testPaymentService.savePayment(testPayApiPayment._id, amlsRegistrationNumber).failed
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber).failed
 
         await(result) mustBe e
 
@@ -128,6 +141,43 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
         case Some(result) =>
           result mustBe payment
         case _ => fail("No payment was returned")
+      }
+    }
+
+    "updatePayment is called" must {
+      "update the payment in-place" in {
+        val updatedPayment = testPayment.copy()
+
+        when {
+          testPaymentRepo.findLatestByPaymentReference(any())
+        } thenReturn Future.successful(Some(testPayment))
+
+        when {
+          testPaymentRepo.update(any())
+        } thenReturn Future.successful(successWriteResult)
+
+        whenReady(testPaymentService.updatePayment(updatedPayment)) { result =>
+          result mustBe true
+          verify(testPaymentRepo).update(eqTo(updatedPayment))
+        }
+      }
+
+      "throws an exception when the write failed" in {
+        val updatedPayment = testPayment.copy()
+
+        when {
+          testPaymentRepo.findLatestByPaymentReference(any())
+        } thenReturn Future.successful(Some(testPayment))
+
+        when {
+          testPaymentRepo.update(any())
+        } thenReturn Future.successful(errorWriteResult("Could not write the payment"))
+
+        intercept[Exception] {
+          whenReady(testPaymentService.updatePayment(updatedPayment)) { _ =>
+            verify(testPaymentRepo).update(eqTo(updatedPayment))
+          }
+        }
       }
     }
 

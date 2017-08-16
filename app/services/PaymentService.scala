@@ -35,8 +35,8 @@ class PaymentService @Inject()(
                                 val paymentConnector: PayAPIConnector,
                                 val paymentsRepository: PaymentRepository
                               ) {
-  def savePayment(paymentId: String, amlsRegistrationNumber: String)
-                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+  def createPayment(paymentId: String, amlsRegistrationNumber: String)
+                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
       newPayment <- paymentsRepository.insert(Payment.from(amlsRegistrationNumber, pm))
@@ -49,6 +49,14 @@ class PaymentService @Inject()(
 
   def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.findLatestByPaymentReference(paymentReference)
+
+  def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
+    paymentsRepository.update(payment) map { result =>
+      result match {
+        case r if r.ok => true
+        case _ => throw result
+      }
+    }
 
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {

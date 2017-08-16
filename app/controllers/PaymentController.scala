@@ -18,7 +18,9 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import models.payments.RefreshPaymentStatusRequest
+import cats.data.OptionT
+import cats.implicits._
+import models.payments.{RefreshPaymentStatusRequest, SetBacsRequest}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -39,7 +41,7 @@ class PaymentController @Inject()(
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.savePayment(request.body, amlsRegistrationNumber) map {
+          paymentService.createPayment(request.body, amlsRegistrationNumber) map {
             case Some(_) => Created
             case _ => InternalServerError
           }
@@ -53,10 +55,22 @@ class PaymentController @Inject()(
   }
 
   def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = Action.async {
-    implicit request => paymentService.getPaymentByReference(paymentReference) map {
-      case Some(payment) => Ok(Json.toJson(payment))
-      case _ => NotFound
-    }
+    implicit request =>
+      paymentService.getPaymentByReference(paymentReference) map {
+        case Some(payment) => Ok(Json.toJson(payment))
+        case _ => NotFound
+      }
+  }
+
+  def updateBacsFlag(accountType: String, ref: String, paymentReference: String) = Action.async(parse.json) {
+    implicit request =>
+      val processBody = for {
+        bacsRequest <- OptionT.fromOption[Future](request.body.asOpt[SetBacsRequest])
+        payment <- OptionT(paymentService.getPaymentByReference(paymentReference))
+        _ <- OptionT.liftF(paymentService.updatePayment(payment.copy(isBacs = Some(bacsRequest.isBacs))))
+      } yield NoContent
+
+      processBody getOrElse NotFound
   }
 
   def refreshStatus(accountType: String, ref: String) = Action.async(parse.json) {

@@ -25,6 +25,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 import models.payapi.{Payment => PayApiPayment}
 
+//noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
 
   "The Payment model" when {
@@ -40,6 +41,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
         10000,
         Successful,
         now,
+        isBacs = Some(true),
         Some(now.plusDays(1))
       )
 
@@ -50,6 +52,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
         "description" -> "A test payment",
         "amountInPence" -> 10000,
         "status" -> "Successful",
+        "isBacs" -> true,
         "createdAt" -> now.toString,
         "updatedAt" -> now.plusDays(1).toString
       )
@@ -76,6 +79,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
           payApiModel.amountInPence,
           payApiModel.status,
           LocalDateTime.now,
+          isBacs = None,
           None
         )
       }
