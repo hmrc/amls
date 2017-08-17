@@ -12,6 +12,7 @@ GET         /subscription/:accountType/:ref/:amlsRegistrationNumber             
 GET         /payment/:accountType/:ref/:amlsRegistrationNumber                              controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
 POST        /payment/:accountType/:ref/:amlsRegistrationNumber                              @controllers.PaymentController.savePayment(accountType:String, ref:String, amlsRegistrationNumber: String)
 GET         /payment/:accountType/:ref/ref/:paymentReference                                @controllers.PaymentController.getPaymentByRef(accountType, ref, paymentReference)
+GET         /payment/:accountType/:ref/amlsref/:reference                                   @controllers.PaymentController.getPaymentByAmlsRef(accountType, ref, reference)
 PUT         /payment/:accountType/:ref/refreshstatus                                        @controllers.PaymentController.refreshStatus(accountType, ref)
 PUT         /payment/:accountType/:ref/:paymentReference/bacs                               @controllers.PaymentController.updateBacsFlag(accountType, ref, paymentReference)
 
