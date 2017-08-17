@@ -22,8 +22,7 @@ import models.payapi.{Payment => PayApiPayment, _}
 import play.api.libs.json.Json
 import utils.EnumFormat
 
-case class Payment(
-                    _id: String,
+case class Payment(_id: String,
                     amlsRefNo: String,
                     reference: String,
                     description: String,
