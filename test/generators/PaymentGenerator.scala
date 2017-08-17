@@ -23,7 +23,8 @@ trait PaymentGenerator extends BaseGenerator with PayApiGenerator {
 
   val paymentGen: Gen[Payment] = for {
     refNo <- amlsRefNoGen
+    safeId <- amlsRefNoGen
     payApiPayment <- payApiPaymentGen
-  } yield Payment.from(refNo, payApiPayment)
+  } yield Payment(refNo, safeId, payApiPayment)
 
 }

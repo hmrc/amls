@@ -44,6 +44,8 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val testPaymentId = testPayment._id
 
+    val safeId = amlsRefNoGen.sample.get
+
     val testController = new PaymentController(
       paymentService = testPaymentService
     )
@@ -68,12 +70,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService returns payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(Some(testPayment))
           }
 
-          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber, safeId)(postRequest)
 
           status(result) mustBe CREATED
 
@@ -83,12 +85,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService does not return payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
 
-          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber, safeId)(postRequest)
 
           status(result) mustBe INTERNAL_SERVER_ERROR
 
@@ -98,12 +100,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "amlsRefNo does not meet regex" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
 
-          val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
+          val result = testController.savePayment(accountType, accountRef, "amlsRefNo", safeId)(postRequest)
 
           status(result) mustBe BAD_REQUEST
         }

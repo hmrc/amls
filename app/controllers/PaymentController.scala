@@ -36,12 +36,12 @@ class PaymentController @Inject()(
                                    private[controllers] val paymentService: PaymentService
                                  ) extends BaseController with ControllerHelper {
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.text) {
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.createPayment(request.body, amlsRegistrationNumber) map {
+          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
             case Some(_) => Created
             case _ => InternalServerError
           }
