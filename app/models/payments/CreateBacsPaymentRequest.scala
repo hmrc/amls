@@ -14,24 +14,6 @@
  * limitations under the License.
  */
 
-package generators
+package models.payments
 
-import models.payments.{CreateBacsPaymentRequest, Payment}
-import org.scalacheck.Gen
-
-trait PaymentGenerator extends BaseGenerator with PayApiGenerator {
-
-  val paymentGen: Gen[Payment] = for {
-    refNo <- amlsRefNoGen
-    safeId <- amlsRefNoGen
-    payApiPayment <- payApiPaymentGen
-  } yield Payment(refNo, safeId, payApiPayment)
-
-  val createBacsPaymentRequestGen: Gen[CreateBacsPaymentRequest] = for {
-    amlsRef <- amlsRefNoGen
-    safeId <- amlsRefNoGen
-    payRef <- paymentRefGen
-    amount <- numGen
-  } yield CreateBacsPaymentRequest(amlsRef, payRef, safeId, amount)
-
-}
+case class CreateBacsPaymentRequest(amlsReference: String, paymentReference: String, safeId: String, amountInPence: Int)

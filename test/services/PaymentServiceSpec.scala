@@ -19,11 +19,13 @@ package services
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import generators.PayApiGenerator
+import generators.{PayApiGenerator, PaymentGenerator}
+import models.payapi.PaymentStatuses.Created
 import models.payapi.{PaymentStatuses, Payment => PayApiPayment}
-import models.payments.{Payment, PaymentStatusResult}
+import models.payments.{CreateBacsPaymentRequest, Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -35,7 +37,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator with ScalaFutures with IntegrationPatience {
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -59,6 +61,10 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
     None,
     Some(error)
   )
+
+  before {
+    Seq(testPayAPIConnector, testPaymentRepo, testPayAPIConnector).foreach(reset(_))
+  }
 
   "PaymentService" when {
     "createPayment is called" must {
@@ -233,6 +239,20 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
             result mustBe None
           }
         }
+      }
+    }
+  }
+
+  "PaymentService" must {
+    "create a bacs payment from a bacs payment request" in {
+      val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
+
+      when {
+        testPaymentRepo.insert(any())
+      } thenReturn Future.successful(mock[Payment])
+
+      whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { _ =>
+        verify(testPaymentRepo).insert(any[Payment])
       }
     }
   }

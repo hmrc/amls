@@ -23,7 +23,7 @@ import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import models.payapi.{Payment => PayApiPayment}
-import models.payments.{Payment, PaymentStatusResult}
+import models.payments.{CreateBacsPaymentRequest, Payment, PaymentStatusResult}
 import play.api.http.Status._
 import repositories.PaymentRepository
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -47,6 +47,10 @@ class PaymentService @Inject()(
     }
   }
 
+  def createBacsPayment(request: CreateBacsPaymentRequest)
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] =
+    paymentsRepository.insert(Payment(request))
+
   def getPaymentByAmlsReference(amlsRefNo: String)(implicit ec: ExecutionContext, hc: HeaderCarrier) =
     paymentsRepository.findLatestByAmlsReference(amlsRefNo)
 
@@ -54,11 +58,9 @@ class PaymentService @Inject()(
     paymentsRepository.findLatestByPaymentReference(paymentReference)
 
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
-    paymentsRepository.update(payment) map { result =>
-      result match {
-        case r if r.ok => true
-        case _ => throw result
-      }
+    paymentsRepository.update(payment) map {
+      case r if r.ok => true
+      case result => throw result
     }
 
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
