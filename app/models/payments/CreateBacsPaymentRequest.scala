@@ -16,4 +16,10 @@
 
 package models.payments
 
+import play.api.libs.json.Json
+
 case class CreateBacsPaymentRequest(amlsReference: String, paymentReference: String, safeId: String, amountInPence: Int)
+
+object CreateBacsPaymentRequest {
+  implicit val format = Json.format[CreateBacsPaymentRequest]
+}

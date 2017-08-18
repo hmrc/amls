@@ -20,7 +20,7 @@ import cats.data.OptionT
 import cats.implicits._
 import generators.PaymentGenerator
 import models.payapi.PaymentStatuses
-import models.payments.{PaymentStatusResult, RefreshPaymentStatusRequest, SetBacsRequest}
+import models.payments._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -241,4 +241,28 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     }
   }
 
+  "PaymentController" must {
+    "use the payments service to create a new bacs payment" in new Fixture {
+      val createBacsRequest = createBacsPaymentRequestGen.sample.get
+      val payment = Payment(createBacsRequest)
+
+      when {
+        testController.paymentService.createBacsPayment(eqTo(createBacsRequest))(any(), any())
+      } thenReturn Future.successful(payment)
+
+      val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.toJson(createBacsRequest))
+      val result = testController.createBacsPayment(accountType, accountRef)(postRequest)
+
+      status(result) mustBe CREATED
+      contentAsJson(result) mustBe Json.toJson(payment)
+    }
+
+    "return 400 if the input json can't be parsed" in new Fixture {
+
+      val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.obj("nonsense" -> "value"))
+      val result = testController.createBacsPayment(accountType, accountRef)(postRequest)
+
+      status(result) mustBe BAD_REQUEST
+    }
+  }
 }

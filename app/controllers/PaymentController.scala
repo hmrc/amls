@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import cats.data.OptionT
 import cats.implicits._
-import models.payments.{RefreshPaymentStatusRequest, SetBacsRequest}
+import models.payments.{CreateBacsPaymentRequest, RefreshPaymentStatusRequest, SetBacsRequest}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -35,6 +35,14 @@ import scala.concurrent.Future
 class PaymentController @Inject()(
                                    private[controllers] val paymentService: PaymentService
                                  ) extends BaseController with ControllerHelper {
+
+  def createBacsPayment(accountType: String, accountRef: String) = Action.async(parse.json) {
+    implicit request =>
+      request.body.asOpt[CreateBacsPaymentRequest] match {
+        case Some(r) => paymentService.createBacsPayment(r) map { p => Created(Json.toJson(p)) }
+        case _ => Future.successful(BadRequest)
+      }
+  }
 
   def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
