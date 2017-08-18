@@ -22,9 +22,9 @@ import models.payapi.{Payment => PayApiPayment, _}
 import play.api.libs.json.Json
 import utils.EnumFormat
 
-case class Payment(
-                    _id: String,
+case class Payment(_id: String,
                     amlsRefNo: String,
+                    safeId: String,
                     reference: String,
                     description: String,
                     amountInPence: Int,
@@ -36,10 +36,11 @@ case class Payment(
 
 object Payment {
 
-  val from: (String, PayApiPayment) => Payment = (amlsRefNo, apiPayment) =>
+  def apply(amlsRegNo: String, safeId: String, apiPayment: PayApiPayment): Payment =
     Payment(
       apiPayment._id,
-      amlsRefNo,
+      amlsRegNo,
+      safeId,
       apiPayment.reference,
       apiPayment.description,
       apiPayment.amountInPence,

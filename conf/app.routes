@@ -10,8 +10,9 @@ GET         /subscription/:accountType/:ref/:amlsRegistrationNumber/status      
 GET         /subscription/:accountType/:ref/:amlsRegistrationNumber                         controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
 
 GET         /payment/:accountType/:ref/:amlsRegistrationNumber                              controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
-POST        /payment/:accountType/:ref/:amlsRegistrationNumber                              @controllers.PaymentController.savePayment(accountType:String, ref:String, amlsRegistrationNumber: String)
-GET         /payment/:accountType/:ref/ref/:paymentReference                                @controllers.PaymentController.getPaymentByRef(accountType, ref, paymentReference)
+POST        /payment/:accountType/:ref/:amlsRegistrationNumber/:safeId                      @controllers.PaymentController.savePayment(accountType:String, ref:String, amlsRegistrationNumber: String, safeId: String)
+GET         /payment/:accountType/:ref/payref/:paymentReference                             @controllers.PaymentController.getPaymentByRef(accountType, ref, paymentReference)
+GET         /payment/:accountType/:ref/amlsref/:reference                                   @controllers.PaymentController.getPaymentByAmlsRef(accountType, ref, reference)
 PUT         /payment/:accountType/:ref/refreshstatus                                        @controllers.PaymentController.refreshStatus(accountType, ref)
 PUT         /payment/:accountType/:ref/:paymentReference/bacs                               @controllers.PaymentController.updateBacsFlag(accountType, ref, paymentReference)
 

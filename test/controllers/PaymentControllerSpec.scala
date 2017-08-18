@@ -39,8 +39,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
     implicit val hc = HeaderCarrier()
 
     val testPaymentService = mock[PaymentService]
+
     def testPayment = paymentGen.sample.get
+
     val testPaymentId = testPayment._id
+
+    val safeId = amlsRefNoGen.sample.get
 
     val testController = new PaymentController(
       paymentService = testPaymentService
@@ -66,12 +70,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService returns payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(Some(testPayment))
           }
 
-          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber, safeId)(postRequest)
 
           status(result) mustBe CREATED
 
@@ -81,12 +85,12 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "paymentService does not return payment details" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
 
-          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          val result = testController.savePayment(accountType, accountRef, amlsRegistrationNumber, safeId)(postRequest)
 
           status(result) mustBe INTERNAL_SERVER_ERROR
 
@@ -96,25 +100,25 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         "amlsRefNo does not meet regex" in new CreateRequestFixture {
 
           when {
-            testPaymentService.createPayment(any(), any())(any(), any())
+            testPaymentService.createPayment(any(), any(), any())(any(), any())
           } thenReturn {
             Future.successful(None)
           }
 
-          val result = testController.savePayment(accountType, accountRef, "amlsRefNo")(postRequest)
+          val result = testController.savePayment(accountType, accountRef, "amlsRefNo", safeId)(postRequest)
 
           status(result) mustBe BAD_REQUEST
         }
       }
     }
 
-    "querying a payment reference" must {
-      "find a payment given a payment reference" in new Fixture {
+    "retrieving a payment by payment reference" must {
+      "return the payment" in new Fixture {
         val paymentRef = paymentRefGen.sample.get
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByReference(eqTo(paymentRef))(any(), any())
+          testPaymentService.getPaymentByPaymentReference(eqTo(paymentRef))(any(), any())
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
@@ -123,16 +127,41 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         contentAsJson(result) mustBe Json.toJson(payment)
       }
 
-      "return a 404 Not Found" when {
-        "the reference number does not match a payment" in new Fixture {
-          when {
-            testPaymentService.getPaymentByReference(any())(any(), any())
-          } thenReturn Future.successful(None)
+      "return a 404 Not Found when the reference doesn't match" in new Fixture {
+        when {
+          testPaymentService.getPaymentByPaymentReference(any())(any(), any())
+        } thenReturn Future.successful(None)
 
-          val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
+        val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
 
-          status(result) mustBe NOT_FOUND
-        }
+        status(result) mustBe NOT_FOUND
+      }
+
+    }
+
+    "retrieving a payment by AMLS reference" must {
+      "return the payment" in new Fixture {
+        val amlsRef = amlsRefNoGen.sample.get
+        val payment = paymentGen.sample.get
+
+        when {
+          testPaymentService.getPaymentByAmlsReference(eqTo(amlsRef))(any(), any())
+        } thenReturn Future.successful(Some(payment))
+
+        val result = testController.getPaymentByAmlsRef(accountType, accountRef, amlsRef)(request)
+
+        status(result) mustBe OK
+        contentAsJson(result) mustBe Json.toJson(payment)
+      }
+
+      "return a 404 Not Found when the reference doesn't match" in new Fixture {
+        when {
+          testPaymentService.getPaymentByAmlsReference(any())(any(), any())
+        } thenReturn Future.successful(None)
+
+        val result = testController.getPaymentByAmlsRef(accountType, accountRef, paymentRefGen.sample.get)(request)
+
+        status(result) mustBe NOT_FOUND
       }
     }
 
@@ -182,7 +211,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByReference(eqTo(payment.reference))(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(eqTo(payment.reference))(any(), any())
         } thenReturn Future.successful(Some(payment))
 
         when {
@@ -201,7 +230,7 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByReference(any())(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(any())(any(), any())
         } thenReturn Future.successful(None)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))

@@ -36,12 +36,12 @@ class PaymentController @Inject()(
                                    private[controllers] val paymentService: PaymentService
                                  ) extends BaseController with ControllerHelper {
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.text) {
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) = Action.async(parse.text) {
     implicit request: Request[String] => {
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.createPayment(request.body, amlsRegistrationNumber) map {
+          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
             case Some(_) => Created
             case _ => InternalServerError
           }
@@ -56,7 +56,15 @@ class PaymentController @Inject()(
 
   def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = Action.async {
     implicit request =>
-      paymentService.getPaymentByReference(paymentReference) map {
+      paymentService.getPaymentByPaymentReference(paymentReference) map {
+        case Some(payment) => Ok(Json.toJson(payment))
+        case _ => NotFound
+      }
+  }
+
+  def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = Action.async {
+    implicit request =>
+      paymentService.getPaymentByAmlsReference(amlsReference) map {
         case Some(payment) => Ok(Json.toJson(payment))
         case _ => NotFound
       }
@@ -66,7 +74,7 @@ class PaymentController @Inject()(
     implicit request =>
       val processBody = for {
         bacsRequest <- OptionT.fromOption[Future](request.body.asOpt[SetBacsRequest])
-        payment <- OptionT(paymentService.getPaymentByReference(paymentReference))
+        payment <- OptionT(paymentService.getPaymentByPaymentReference(paymentReference))
         _ <- OptionT.liftF(paymentService.updatePayment(payment.copy(isBacs = Some(bacsRequest.isBacs))))
       } yield NoContent
 

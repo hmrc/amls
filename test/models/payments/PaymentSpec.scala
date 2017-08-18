@@ -36,6 +36,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
       val model = Payment(
         "123456789",
         "X12345678",
+        "X73289473",
         "X987654321",
         "A test payment",
         10000,
@@ -48,6 +49,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
       val json = Json.obj(
         "_id" -> "123456789",
         "amlsRefNo" -> "X12345678",
+        "safeId" -> "X73289473",
         "reference" -> "X987654321",
         "description" -> "A test payment",
         "amountInPence" -> 10000,
@@ -70,11 +72,13 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
       "convert from a Pay Api payment" in {
         val payApiModel = payApiPaymentGen.sample.get
         val refNumber = amlsRefNoGen.sample.get
+        val safeId = amlsRefNoGen.sample.get
         val now = LocalDateTime.now
 
-        Payment.from(refNumber, payApiModel) mustBe Payment(
+        Payment(refNumber, safeId, payApiModel) mustBe Payment(
           payApiModel._id,
           refNumber,
+          safeId,
           payApiModel.reference,
           payApiModel.description,
           payApiModel.amountInPence,

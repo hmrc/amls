@@ -35,11 +35,11 @@ class PaymentService @Inject()(
                                 val paymentConnector: PayAPIConnector,
                                 val paymentsRepository: PaymentRepository
                               ) {
-  def createPayment(paymentId: String, amlsRegistrationNumber: String)
+  def createPayment(paymentId: String, amlsRegistrationNumber: String, safeId: String)
                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {
       pm <- paymentConnector.getPayment(paymentId)
-      newPayment <- paymentsRepository.insert(Payment.from(amlsRegistrationNumber, pm))
+      newPayment <- paymentsRepository.insert(Payment(amlsRegistrationNumber, safeId, pm))
     } yield newPayment.some) recoverWith {
       case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
       case e: HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
@@ -47,7 +47,10 @@ class PaymentService @Inject()(
     }
   }
 
-  def getPaymentByReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
+  def getPaymentByAmlsReference(amlsRefNo: String)(implicit ec: ExecutionContext, hc: HeaderCarrier) =
+    paymentsRepository.findLatestByAmlsReference(amlsRefNo)
+
+  def getPaymentByPaymentReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
     paymentsRepository.findLatestByPaymentReference(paymentReference)
 
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
@@ -60,7 +63,7 @@ class PaymentService @Inject()(
 
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
     for {
-      payment <- OptionT(getPaymentByReference(paymentReference))
+      payment <- OptionT(getPaymentByPaymentReference(paymentReference))
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
       _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
     } yield {
