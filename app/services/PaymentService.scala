@@ -48,8 +48,14 @@ class PaymentService @Inject()(
   }
 
   def createBacsPayment(request: CreateBacsPaymentRequest)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] =
-    paymentsRepository.insert(Payment(request))
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] = {
+    paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
+      case Some(p) =>
+        val copied = p.copy(isBacs = Some(true))
+        updatePayment(copied) map { _ => copied }
+      case _ => paymentsRepository.insert(Payment(request))
+    }
+  }
 
   def getPaymentByAmlsReference(amlsRefNo: String)(implicit ec: ExecutionContext, hc: HeaderCarrier) =
     paymentsRepository.findLatestByAmlsReference(amlsRefNo)

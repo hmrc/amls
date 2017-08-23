@@ -19,10 +19,9 @@ package services
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import generators.{PayApiGenerator, PaymentGenerator}
-import models.payapi.PaymentStatuses.Created
+import generators.PaymentGenerator
 import models.payapi.{PaymentStatuses, Payment => PayApiPayment}
-import models.payments.{CreateBacsPaymentRequest, Payment, PaymentStatusResult}
+import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
@@ -248,11 +247,29 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
 
       when {
+        testPaymentRepo.findLatestByPaymentReference(any())
+      } thenReturn Future.successful(None)
+
+      when {
         testPaymentRepo.insert(any())
       } thenReturn Future.successful(mock[Payment])
 
       whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { _ =>
         verify(testPaymentRepo).insert(any[Payment])
+      }
+    }
+
+    "return the existing payment when trying to create a duplicate payment" in {
+      val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
+      val payment = paymentGen.sample.get.copy(reference = bacsPaymentRequest.paymentReference)
+
+      when {
+        testPaymentRepo.findLatestByPaymentReference(eqTo(bacsPaymentRequest.paymentReference))
+      } thenReturn Future.successful(Some(payment))
+
+      whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { result =>
+        result mustBe payment
+        verify(testPaymentRepo, never).insert(any())
       }
     }
   }
