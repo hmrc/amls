@@ -22,6 +22,7 @@ API
 |```/payment/:accountType/:ref/amlsref/:amlsRegistrationNumber``` | GET | Retrieve the latest payment made given the AMLS registration number |
 |```/payment/:accountType/:ref/refreshstatus``` | PUT | Refreshes the status of a payment, given an amls reference in the body |
 |```/payment/:accountType/:ref/:paymentReference/bacs``` | PUT | Updates the BACS status of a payment (see below) |
+|```/payment/:accountType/:ref/:paymentReference/bacs``` | POST | Creates a new BACS payment (see below) |
 
 ## Retrieving a payment
 
@@ -55,5 +56,18 @@ To update the BACS status of a given payment, contact `/payment/:accountType/:re
 ```
 {
   "isBacs": true|false
+}
+```
+
+## Creating a new BACS payment
+
+This endpoints creates a new payment in the database which is already configured to be BACS. This is a POST to `/payment/:accountType/:ref/:paymentReference/bacs` with the following JSON data:
+
+```
+{
+    "amlsReference": "X000000000000123",
+    "paymentReference": "X000000000000456",
+    "safeId": "X000000000000456",
+    "amountInPence": 10000
 }
 ```
