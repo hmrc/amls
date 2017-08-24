@@ -52,7 +52,7 @@ class PaymentService @Inject()(
     paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
       case Some(p) =>
         val copied = p.copy(isBacs = Some(true))
-        updatePayment(copied) map { _ => copied }
+        paymentsRepository.update(copied) map { _ => copied }
       case _ => paymentsRepository.insert(Payment(request))
     }
   }

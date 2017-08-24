@@ -267,8 +267,12 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         testPaymentRepo.findLatestByPaymentReference(eqTo(bacsPaymentRequest.paymentReference))
       } thenReturn Future.successful(Some(payment))
 
+      when {
+        testPaymentRepo.update(any())
+      } thenReturn Future.successful(successWriteResult)
+
       whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { result =>
-        result mustBe payment
+        result mustBe payment.copy(isBacs = Some(true))
         verify(testPaymentRepo, never).insert(any())
       }
     }
