@@ -15,6 +15,7 @@ GET         /payment/:accountType/:ref/payref/:paymentReference                 
 GET         /payment/:accountType/:ref/amlsref/:reference                                   @controllers.PaymentController.getPaymentByAmlsRef(accountType, ref, reference)
 PUT         /payment/:accountType/:ref/refreshstatus                                        @controllers.PaymentController.refreshStatus(accountType, ref)
 PUT         /payment/:accountType/:ref/:paymentReference/bacs                               @controllers.PaymentController.updateBacsFlag(accountType, ref, paymentReference)
+POST        /payment/:accountType/:ref/bacs                                                 @controllers.PaymentController.createBacsPayment(accountType, ref)
 
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal              @controllers.WithdrawSubscriptionController.withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration          @controllers.DeregisterSubscriptionController.deregistration(accountType: String, ref: String, amlsRegistrationNumber: String)

@@ -18,8 +18,11 @@ package models.payments
 
 import java.time.LocalDateTime
 
+import models.payapi.PaymentStatuses.Created
 import models.payapi.{Payment => PayApiPayment, _}
+import play.api.http.Writeable
 import play.api.libs.json.Json
+import reactivemongo.bson.BSONObjectID
 import utils.EnumFormat
 
 case class Payment(_id: String,
@@ -46,6 +49,18 @@ object Payment {
       apiPayment.amountInPence,
       apiPayment.status,
       LocalDateTime.now
+    )
+
+  def apply(bacsPaymentRequest: CreateBacsPaymentRequest): Payment =
+    Payment(BSONObjectID.generate.stringify,
+      bacsPaymentRequest.amlsReference,
+      bacsPaymentRequest.safeId,
+      bacsPaymentRequest.paymentReference,
+      "BACS Payment",
+      bacsPaymentRequest.amountInPence,
+      Created,
+      LocalDateTime.now,
+      isBacs = Some(true)
     )
 
   implicit val statusFormat = EnumFormat(PaymentStatuses)

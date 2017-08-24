@@ -19,11 +19,12 @@ package services
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import generators.PayApiGenerator
+import generators.PaymentGenerator
 import models.payapi.{PaymentStatuses, Payment => PayApiPayment}
 import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -35,7 +36,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator with ScalaFutures with IntegrationPatience {
+class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -59,6 +60,10 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
     None,
     Some(error)
   )
+
+  before {
+    Seq(testPayAPIConnector, testPaymentRepo, testPayAPIConnector).foreach(reset(_))
+  }
 
   "PaymentService" when {
     "createPayment is called" must {
@@ -233,6 +238,42 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with PayApiGenerator
             result mustBe None
           }
         }
+      }
+    }
+  }
+
+  "PaymentService" must {
+    "create a bacs payment from a bacs payment request" in {
+      val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
+
+      when {
+        testPaymentRepo.findLatestByPaymentReference(any())
+      } thenReturn Future.successful(None)
+
+      when {
+        testPaymentRepo.insert(any())
+      } thenReturn Future.successful(mock[Payment])
+
+      whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { _ =>
+        verify(testPaymentRepo).insert(any[Payment])
+      }
+    }
+
+    "return the existing payment when trying to create a duplicate payment" in {
+      val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
+      val payment = paymentGen.sample.get.copy(reference = bacsPaymentRequest.paymentReference)
+
+      when {
+        testPaymentRepo.findLatestByPaymentReference(eqTo(bacsPaymentRequest.paymentReference))
+      } thenReturn Future.successful(Some(payment))
+
+      when {
+        testPaymentRepo.update(any())
+      } thenReturn Future.successful(successWriteResult)
+
+      whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { result =>
+        result mustBe payment.copy(isBacs = Some(true))
+        verify(testPaymentRepo, never).insert(any())
       }
     }
   }

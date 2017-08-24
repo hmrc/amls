@@ -18,15 +18,15 @@ package models.payments
 
 import java.time.LocalDateTime
 
-import generators.PayApiGenerator
-import models.payapi.PaymentStatuses.Successful
+import generators.{PayApiGenerator, PaymentGenerator}
+import models.payapi.PaymentStatuses.{Created, Successful}
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 import models.payapi.{Payment => PayApiPayment}
 
 //noinspection ScalaStyle
-class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
+class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
 
   "The Payment model" when {
     "serialising" must {
@@ -55,8 +55,8 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
-        "createdAt" -> now.toString,
-        "updatedAt" -> now.plusDays(1).toString
+        "createdAt" -> now,
+        "updatedAt" -> now.plusDays(1)
       )
 
       "serialise to Json" in {
@@ -87,6 +87,25 @@ class PaymentSpec extends PlaySpec with MustMatchers with PayApiGenerator {
           isBacs = None,
           None
         ).copy(createdAt = now)
+      }
+
+      "convert from a BACS payment request" in {
+        val paymentRequest = createBacsPaymentRequestGen.sample.get
+
+        Payment(paymentRequest) match {
+          case Payment(_,
+          paymentRequest.amlsReference,
+          paymentRequest.safeId,
+          paymentRequest.paymentReference,
+          _,
+          paymentRequest.amountInPence,
+          Created,
+          _,
+          Some(true),
+          None
+          ) =>
+          case _ => fail("The resulting payment object was not expected")
+        }
       }
     }
   }
