@@ -41,12 +41,11 @@ object PositionInBusiness {
     }
   }
 
-  def getPositionAsflags(positions: Positions) = {
+  private def getPositionAsflags(positions: Positions) = {
     positions.positions.foldLeft(false, false, false, false, false, false, false, false){
       (pos, p) => p match {
         case BeneficialOwner => pos.copy(_1 = true)
         case Director => pos.copy(_2 = true)
-        case InternalAccountant => pos.copy(_3 = true)
         case NominatedOfficer => pos.copy(_4 = true)
         case Partner => pos.copy(_5 = true)
         case FeSoleProprietor => pos.copy(_6 = true)
@@ -60,7 +59,7 @@ object PositionInBusiness {
     val (
       beneficialOwner,
       director,
-      internalAccountant,
+      _,
       nominatedOfficer,
       partner,
       soleProprietor,
@@ -68,8 +67,9 @@ object PositionInBusiness {
       other
       ) = getPositionAsflags(positions)
 
-    val assignOther = Some(other)
-    val otherVal = positions.positions.collectFirst { case Other(v) => v }
+    val assignOther = if (AmlsConfig.release7) Some(other) else None
+    val otherVal = positions.positions.collectFirst { case Other(v) if AmlsConfig.release7 => v }
+    val r7DesignatedMember = if (AmlsConfig.release7) Some(designatedMember) else None
 
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(
@@ -85,7 +85,7 @@ object PositionInBusiness {
       case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(
         None,
         None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, Some(designatedMember), assignOther, otherVal))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, r7DesignatedMember, assignOther, otherVal))
       ))
     }
 
