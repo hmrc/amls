@@ -33,6 +33,7 @@ case object NominatedOfficer extends PositionWithinBusiness
 case object Partner extends PositionWithinBusiness
 case object SoleProprietor extends PositionWithinBusiness
 case object DesignatedMember extends PositionWithinBusiness
+case class Other(value: String) extends PositionWithinBusiness
 
 object PositionWithinBusiness {
 
@@ -45,6 +46,7 @@ object PositionWithinBusiness {
       case JsString("05") => JsSuccess(Partner)
       case JsString("06") => JsSuccess(SoleProprietor)
       case JsString("07") => JsSuccess(DesignatedMember)
+      case JsObject(m) if m.contains("other") => JsSuccess(Other(m("other").as[String]))
       case _ => JsError((JsPath \ "positions") -> ValidationError("error.invalid"))
     }
 
@@ -56,6 +58,7 @@ object PositionWithinBusiness {
     case Partner => JsString("05")
     case SoleProprietor => JsString("06")
     case DesignatedMember => JsString("07")
+    case Other(v) => Json.obj("other" -> v)
   }
 }
 

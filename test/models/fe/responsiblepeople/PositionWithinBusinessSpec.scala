@@ -58,6 +58,10 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
         be(JsSuccess(SoleProprietor))
     }
 
+    "successfully validate given an Other value" in {
+      Json.fromJson[PositionWithinBusiness](Json.obj("other" -> "some other role")) mustBe JsSuccess(Other("some other role"))
+    }
+
     "fail to validate when given an empty value" in {
       Json.fromJson[PositionWithinBusiness](JsString("")) must
         be(JsError((JsPath \ "positions") -> ValidationError("error.invalid")))
@@ -85,6 +89,10 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
 
     "write the correct value for SoleProprietor" in {
       Json.toJson(SoleProprietor) must be(JsString("06"))
+    }
+
+    "write the correct value for Other" in {
+      Json.toJson(Other("some other role")) mustBe Json.obj("other" -> "some other role")
     }
 
     "convert des model to frontend model successfully" in {
