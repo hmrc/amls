@@ -37,7 +37,7 @@ object PositionInBusiness {
   }
 
   def getPositionAsflags(positions: Positions) = {
-    positions.positions.foldLeft(false, false, false, false, false, false, false){
+    positions.positions.foldLeft(false, false, false, false, false, false, false, false){
       (pos, p) => p match {
         case BeneficialOwner => pos.copy(_1 = true)
         case Director => pos.copy(_2 = true)
@@ -46,6 +46,7 @@ object PositionInBusiness {
         case Partner => pos.copy(_5 = true)
         case FeSoleProprietor => pos.copy(_6 = true)
         case DesignatedMember => pos.copy(_7 = true)
+        case Other(_) => pos.copy(_8 = true)
       }
     }
   }
@@ -58,26 +59,28 @@ object PositionInBusiness {
       nominatedOfficer,
       partner,
       soleProprietor,
-      designatedMember
+      designatedMember,
+      other
       ) = getPositionAsflags(positions)
 
-    def assignOther = Some(false)
+    val assignOther = Some(other)
+    val otherVal = positions.positions.collectFirst { case Other(v) => v }
 
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(
-        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther)),
+        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther, otherVal)),
         None,
         None
       ))
       case BusinessType.Partnership => Some(PositionInBusiness(
         None,
-        Some(Partnership(partner, nominatedOfficer, assignOther)),
+        Some(Partnership(partner, nominatedOfficer, assignOther, otherVal)),
         None
       ))
       case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(
         None,
         None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, Some(designatedMember), assignOther))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, Some(designatedMember), assignOther, otherVal))
       ))
     }
 

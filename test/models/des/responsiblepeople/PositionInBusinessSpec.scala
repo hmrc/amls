@@ -40,12 +40,12 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
         None, None)
 
       val desModel = Some(PositionInBusiness(
-        Some(DesSoleProprietor(true, true, Some(false))),
+        Some(DesSoleProprietor(true, true, Some(true), Some("some other role"))),
         None,
         None
       ))
 
-      val positions = Some(Positions(Set(Partner, FESoleProprietor, NominatedOfficer, Director, BeneficialOwner), Some(today)))
+      val positions = Some(Positions(Set(Partner, FESoleProprietor, NominatedOfficer, Director, BeneficialOwner, Other("some other role")), Some(today)))
 
       PositionInBusiness.conv(positions, bm) must be(desModel)
     }
@@ -61,10 +61,10 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       val desModel = Some(PositionInBusiness(
         None,
         None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true), Some(false)))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true), Some(true), Some("some other role")))
       ))
 
-      val positions = Some(Positions(Set(Director, NominatedOfficer, DesignatedMember, BeneficialOwner), Some(today)))
+      val positions = Some(Positions(Set(Director, NominatedOfficer, DesignatedMember, BeneficialOwner, Other("some other role")), Some(today)))
 
       PositionInBusiness.conv(positions, bm) must be(desModel)
     }
@@ -79,11 +79,11 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val desModel = Some(PositionInBusiness(
         None,
-        Some(Partnership(true, true, Some(false))),
+        Some(Partnership(true, true, Some(true), Some("another role"))),
         None
       ))
 
-      val positions = Some(Positions(Set(Partner, NominatedOfficer),Some(today)))
+      val positions = Some(Positions(Set(Partner, NominatedOfficer, Other("another role")),Some(today)))
 
       PositionInBusiness.conv(positions, bm) must be(desModel)
     }
@@ -97,7 +97,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val desModel = Some(PositionInBusiness(
         None,
-        Some(Partnership(other = Some(false))),
+        Some(Partnership(other = Some(false), otherDetails = None)),
         None
       ))
 

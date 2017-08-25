@@ -22,7 +22,8 @@ case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
                                         beneficialOwner: Boolean = false,
                                         nominatedOfficer: Boolean = false,
                                         designatedMember: Option[Boolean] = None,
-                                        other: Option[Boolean] = None)
+                                        other: Option[Boolean] = None,
+                                        otherDetails: Option[String] = None)
 
 object CorpBodyOrUnInCorpBodyOrLlp {
 
