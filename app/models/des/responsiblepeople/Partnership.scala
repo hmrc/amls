@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 case class Partnership (partner: Boolean = false,
                         nominatedOfficer: Boolean = false,
                         other: Option[Boolean] = None,
-                        otherDetails: Option[String] = None)
+                        otherDetails: Option[String] = None) extends OtherDetails
 
 object Partnership {
   implicit val format = Json.format[Partnership]

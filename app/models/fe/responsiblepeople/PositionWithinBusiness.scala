@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{PositionInBusiness, ResponsiblePersons}
+import models.des.responsiblepeople.{OtherDetails, PositionInBusiness, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -68,12 +68,18 @@ object Positions {
   implicit def conv(desRp: ResponsiblePersons): Option[Positions] = {
 
     desRp.positionInBusiness match {
-      case Some(positions) if(!convPositions(positions).isEmpty) => Some(Positions(positions,desRp.startDate map {
+      case Some(positions) if convPositions(positions).nonEmpty => Some(Positions(positions, desRp.startDate map {
         date => LocalDate.parse(date)
       }))
       case _ => None
     }
   }
+
+  private def extractOther(d: Option[OtherDetails]): Option[PositionWithinBusiness] = for {
+    p <- d
+    hasOther <- p.other
+    otherValue <- p.otherDetails if hasOther
+  } yield Other(otherValue)
 
   implicit def convPositions(position: PositionInBusiness): Set[PositionWithinBusiness] = {
 
@@ -86,7 +92,10 @@ object Positions {
       CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.director), Director),
       CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.designatedMember.getOrElse(false)),
         DesignatedMember),
-      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.nominatedOfficer), NominatedOfficer)
+      CommonMethods.getSpecificType[PositionWithinBusiness](position.corpBodyOrUnInCorpBodyOrLlp.fold(false)(_.nominatedOfficer), NominatedOfficer),
+      extractOther(position.partnership),
+      extractOther(position.soleProprietor),
+      extractOther(position.corpBodyOrUnInCorpBodyOrLlp)
     ).flatten
 
     positions

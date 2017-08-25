@@ -23,7 +23,7 @@ case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
                                         nominatedOfficer: Boolean = false,
                                         designatedMember: Option[Boolean] = None,
                                         other: Option[Boolean] = None,
-                                        otherDetails: Option[String] = None)
+                                        otherDetails: Option[String] = None) extends OtherDetails
 
 object CorpBodyOrUnInCorpBodyOrLlp {
 

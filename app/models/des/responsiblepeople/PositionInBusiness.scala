@@ -22,6 +22,11 @@ import models.fe.businessmatching.BusinessType
 import models.fe.responsiblepeople.{SoleProprietor => FeSoleProprietor, _}
 import play.api.libs.json.Json
 
+trait OtherDetails {
+  val other: Option[Boolean]
+  val otherDetails: Option[String]
+}
+
 case class PositionInBusiness(soleProprietor: Option[SoleProprietor],
                               partnership: Option[Partnership],
                               corpBodyOrUnInCorpBodyOrLlp: Option[CorpBodyOrUnInCorpBodyOrLlp])
