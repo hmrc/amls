@@ -29,7 +29,7 @@ trait RegistrationDetailsDesConnector extends DESConnector  {
 
   def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val d = debug("getRegistrationDetails")
-    val url = s"${AmlsConfig.desUrl}/anti-money-laundering/registration/details?safeid=$safeId"
+    val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
 
     d(s"Requesting registration details for $safeId")
     httpGet.GET[RegistrationDetails](url) map { result =>
