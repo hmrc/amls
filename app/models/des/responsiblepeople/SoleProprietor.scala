@@ -20,7 +20,9 @@ import play.api.libs.json.Json
 
 case class SoleProprietor (soleProprietor: Boolean =  false,
                            nominatedOfficer: Boolean = false,
-                           other: Option[Boolean] = None)
+                           other: Option[Boolean] = None,
+                           otherDetails: Option[String] = None
+                          ) extends OtherDetails
 
 object SoleProprietor {
   implicit val format = Json.format[SoleProprietor]

@@ -22,6 +22,11 @@ import models.fe.businessmatching.BusinessType
 import models.fe.responsiblepeople.{SoleProprietor => FeSoleProprietor, _}
 import play.api.libs.json.Json
 
+trait OtherDetails {
+  val other: Option[Boolean]
+  val otherDetails: Option[String]
+}
+
 case class PositionInBusiness(soleProprietor: Option[SoleProprietor],
                               partnership: Option[Partnership],
                               corpBodyOrUnInCorpBodyOrLlp: Option[CorpBodyOrUnInCorpBodyOrLlp])
@@ -36,17 +41,16 @@ object PositionInBusiness {
     }
   }
 
-  def getPositionAsflags(positions: Positions) = {
-    positions.positions.foldLeft(false, false,
-      false, false, false, false, false){
+  private def getPositionAsflags(positions: Positions) = {
+    positions.positions.foldLeft(false, false, false, false, false, false, false, false){
       (pos, p) => p match {
         case BeneficialOwner => pos.copy(_1 = true)
         case Director => pos.copy(_2 = true)
-        case InternalAccountant => pos.copy(_3 = true)
         case NominatedOfficer => pos.copy(_4 = true)
         case Partner => pos.copy(_5 = true)
         case FeSoleProprietor => pos.copy(_6 = true)
         case DesignatedMember => pos.copy(_7 = true)
+        case Other(_) => pos.copy(_8 = true)
       }
     }
   }
@@ -55,34 +59,33 @@ object PositionInBusiness {
     val (
       beneficialOwner,
       director,
-      internalAccountant,
+      _,
       nominatedOfficer,
       partner,
       soleProprietor,
-      designatedMember
+      designatedMember,
+      other
       ) = getPositionAsflags(positions)
-    val designatedMemberRl7 = AmlsConfig.release7 match {
-                            case true => Some(designatedMember)
-                            case _ => None
-                          }
 
-    def assignOther = if (AmlsConfig.release7) Some(false) else None
+    val assignOther = if (AmlsConfig.release7) Some(other) else None
+    val otherVal = positions.positions.collectFirst { case Other(v) if AmlsConfig.release7 => v }
+    val r7DesignatedMember = if (AmlsConfig.release7) Some(designatedMember) else None
 
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(
-        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther)),
+        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther, otherVal)),
         None,
         None
       ))
       case BusinessType.Partnership => Some(PositionInBusiness(
         None,
-        Some(Partnership(partner, nominatedOfficer, assignOther)),
+        Some(Partnership(partner, nominatedOfficer, assignOther, otherVal)),
         None
       ))
       case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(
         None,
         None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, designatedMemberRl7, assignOther))
+        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, r7DesignatedMember, assignOther, otherVal))
       ))
     }
 
