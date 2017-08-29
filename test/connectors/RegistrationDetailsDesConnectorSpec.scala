@@ -62,7 +62,7 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers wit
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", false, Partnership))
 
       when {
-        mockHttpGet.GET[RegistrationDetails](eqTo(s"${AmlsConfig.desUrl}/anti-money-laundering/registration/details?safeid=$safeId"))(any(), any())
+        mockHttpGet.GET[RegistrationDetails](eqTo(s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any())
       } thenReturn Future.successful(details)
 
       whenReady (connector.getRegistrationDetails(safeId)) { r =>
