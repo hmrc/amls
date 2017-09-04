@@ -19,7 +19,7 @@ package connectors
 import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.Logger
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpReads}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +32,7 @@ trait RegistrationDetailsDesConnector extends DESConnector  {
     val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
 
     d(s"Requesting registration details for $safeId")
-    httpGet.GET[RegistrationDetails](url) map { result =>
+    httpGet.GET[RegistrationDetails](url)(implicitly[HttpReads[RegistrationDetails]], desHeaderCarrier) map { result =>
       d(s"Response: ${result.toString}")
       result
     }
