@@ -52,7 +52,7 @@ object OrganisationType {
 }
 
 sealed trait OrganisationBodyDetails
-case class Organisation(organisationName: String, isAGroup: Boolean, organisationType: OrganisationType) extends OrganisationBodyDetails
+case class Organisation(organisationName: String, isAGroup: Option[Boolean] = None, organisationType: Option[OrganisationType] = None) extends OrganisationBodyDetails
 
 object Organisation {
   implicit val format = Json.format[Organisation]

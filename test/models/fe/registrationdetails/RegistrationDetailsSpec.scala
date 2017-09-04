@@ -36,7 +36,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
       }
 
       "given an 'organisation' des model" in {
-        val model = DesRegistrationDetails(false, Organisation("Test Company Name", isAGroup = false, LLP))
+        val model = DesRegistrationDetails(false, Organisation("Test Company Name", isAGroup = Some(false), Some(LLP)))
 
         RegistrationDetails.convert(model) mustBe RegistrationDetails(
           companyName = "Test Company Name",

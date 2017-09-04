@@ -44,7 +44,7 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
     "use the Des connector to retrieve registration details" in {
       val safeId = "SAFEID"
 
-      val desDetails = DesRegistrationDetails(isAnIndividual = false, Organisation("Test Company", isAGroup = false, Partnership))
+      val desDetails = DesRegistrationDetails(isAnIndividual = false, Organisation("Test Company", isAGroup = Some(false), Some(Partnership)))
       val feDetails = RegistrationDetails("Test Company", isIndividual = false)
 
       when {
