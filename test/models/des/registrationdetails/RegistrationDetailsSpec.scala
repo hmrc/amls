@@ -34,7 +34,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
       )
     )
 
-    val organisationModel = RegistrationDetails(isAnIndividual = false, Organisation("Test Organisation", isAGroup = true, LLP))
+    val organisationModel = RegistrationDetails(isAnIndividual = false, Organisation("Test Organisation", isAGroup = Some(true), Some(LLP)))
 
     val individualJson = Json.obj(
       "isAnIndividual" -> true,
@@ -75,7 +75,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
 
   "The Organisation model" when {
 
-    val model = Organisation("Test Organisation", true, Partnership)
+    val model = Organisation("Test Organisation", Some(true), Some(Partnership))
 
     val json = Json.obj(
       "organisationName" -> "Test Organisation",
@@ -87,11 +87,19 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
       "produce the correct model" in {
         Json.fromJson[Organisation](json) mustBe JsSuccess(model)
       }
+
+      "produce the correct model with missing optional fields" in {
+        Json.fromJson[Organisation](Json.obj("organisationName" -> "Test")) mustBe JsSuccess(Organisation("Test"))
+      }
     }
 
     "serialised" must {
       "produce the correct json" in {
         Json.toJson(model) mustBe json
+      }
+
+      "produce the correct json minus optional fields" in {
+        Json.toJson(Organisation("Test")) mustBe Json.obj("organisationName" -> "Test")
       }
     }
   }
