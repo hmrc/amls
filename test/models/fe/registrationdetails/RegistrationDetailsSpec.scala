@@ -27,7 +27,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
     "serialise to Json" when {
       "given an 'Individual' des model" in {
         //noinspection ScalaStyle
-        val model = DesRegistrationDetails(true, Individual("Forename", None, "Surname", new LocalDate(2000, 1, 1)))
+        val model = DesRegistrationDetails(true, Individual("Forename", None, "Surname"))
 
         RegistrationDetails.convert(model) mustBe RegistrationDetails(
           companyName = "Forename Surname",

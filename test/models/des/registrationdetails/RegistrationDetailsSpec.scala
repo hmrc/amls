@@ -41,12 +41,11 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
       "individual" -> Json.obj(
         "firstName" -> "Firstname",
         "middleName" -> "Middlename",
-        "lastName" -> "Lastname",
-        "dateOfBirth" -> "2002-05-10"
+        "lastName" -> "Lastname"
       ))
 
     //noinspection ScalaStyle
-    val individualModel = RegistrationDetails(isAnIndividual = true, Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10)))
+    val individualModel = RegistrationDetails(isAnIndividual = true, Individual("Firstname", Some("Middlename"), "Lastname"))
 
     "deserialised" must {
       "produce the correct json" when {
@@ -106,13 +105,12 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
 
   "The Individual model" when {
     //noinspection ScalaStyle
-    val model = Individual("Firstname", Some("Middlename"), "Lastname", new LocalDate(2002, 5, 10))
+    val model = Individual("Firstname", Some("Middlename"), "Lastname")
 
     val json = Json.obj(
       "firstName" -> "Firstname",
       "middleName" -> "Middlename",
-      "lastName" -> "Lastname",
-      "dateOfBirth" -> "2002-05-10"
+      "lastName" -> "Lastname"
     )
 
     "deserialised" must {
