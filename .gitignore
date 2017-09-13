@@ -18,4 +18,4 @@ dist
 /.settings
 *.iws
 
-    
+    .DS_Store
