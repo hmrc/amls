@@ -58,7 +58,7 @@ object Organisation {
   implicit val format = Json.format[Organisation]
 }
 
-case class Individual(firstName: String, middleName: Option[String], lastName: String, dateOfBirth: LocalDate) extends OrganisationBodyDetails
+case class Individual(firstName: String, middleName: Option[String], lastName: String) extends OrganisationBodyDetails
 
 object Individual {
   implicit val format = Json.format[Individual]
