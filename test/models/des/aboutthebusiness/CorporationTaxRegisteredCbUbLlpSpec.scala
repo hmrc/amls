@@ -32,6 +32,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
         RegisteredOfficeUK("line1", "line2",
           Some("some street"), Some("some city"), "EE1 1EE"),
+        false,
         None
       )
       CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890"))))
@@ -46,6 +47,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
         RegisteredOfficeUK("line1", "line2",
           Some("some street"), Some("some city"), "EE1 1EE"),
+        false,
         None
       )
       CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(Some(CorporationTaxRegisteredCbUbLlp(false, None)))
@@ -59,6 +61,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
         RegisteredOfficeUK("line1", "line2",
           Some("some street"), Some("some city"), "EE1 1EE"),
+        false,
         None
       )
       CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(None)

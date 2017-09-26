@@ -25,6 +25,7 @@ case class AboutTheBusiness(
                              corporationTaxRegistered: Option[CorporationTaxRegistered] = None,
                              contactingYou: ContactingYou,
                              registeredOffice: RegisteredOffice,
+                             altCorrespondenceAddress: Boolean,
                              correspondenceAddress: Option[CorrespondenceAddress] = None
                            )
 
@@ -42,7 +43,9 @@ object AboutTheBusiness {
       view.businessReferencesAllButSp,
       view.businessReferencesCbUbLlp,
       ContactingYou(bcDetails.businessTelNo, bcDetails.businessEmail),
-      bcDetails.businessAddress, bcDetails.alternativeAddress)
+      bcDetails.businessAddress,
+      bcDetails.altCorrespondenceAddress,
+      bcDetails.alternativeAddress)
 
   }
 

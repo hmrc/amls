@@ -32,7 +32,7 @@ object BusinessContactDetails {
   implicit def convert(aboutTheBusiness: AboutTheBusiness) : BusinessContactDetails = {
     BusinessContactDetails(
       businessAddress = aboutTheBusiness.registeredOffice,
-      altCorrespondenceAddress = aboutTheBusiness.correspondenceAddress.isDefined,
+      altCorrespondenceAddress = aboutTheBusiness.altCorrespondenceAddress,
       alternativeAddress = aboutTheBusiness.correspondenceAddress,
       businessTelNo = aboutTheBusiness.contactingYou.phoneNumber,
         businessEmail = aboutTheBusiness.contactingYou.email

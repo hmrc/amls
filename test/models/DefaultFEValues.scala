@@ -337,6 +337,7 @@ object AboutTheBusinessSection {
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
     RegisteredOfficeUK("line1", "line2",
       Some("some street"), Some("some city"), "EE1 1EE"),
+    true,
     Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
       Some("Street"), Some("city"), "EE1 1EE"))
   )
@@ -346,6 +347,7 @@ object AboutTheBusinessSection {
     Some(CorporationTaxRegisteredYes("1234567891")),
     ContactingYou("07000111222", "BusinessEmail"),
     RegisteredOfficeUK("BusinessAddressLine1", "BusinessAddressLine2", Some("BusinessAddressLine3"), Some("BusinessAddressLine4"), "AA1 1AA"),
+    true,
     Some(UKCorrespondenceAddress("Name", "TradingName", "AlternativeAddressLine1", "AlternativeAddressLine2", Some("AlternativeAddressLine3"),
       Some("AlternativeAddressLine4"), "AA1 1AA")))
 }
