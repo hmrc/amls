@@ -165,6 +165,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
       RegisteredOfficeUK("doornumber", "some street", None, None, "AA1 1AA"),
+      true,
       Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "BB1 1BB")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
@@ -185,6 +186,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
       RegisteredOfficeNonUK("doornumber", "some street", None, None, "AG"),
+      true,
       Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "AR")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
@@ -205,6 +207,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
       RegisteredOfficeUK("doornumber", "some street", None, None, "BB1 1BB"),
+      true,
       Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "AR")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
@@ -226,6 +229,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
       RegisteredOfficeNonUK("doornumber", "some street", None, None, "AB"),
+      true,
       Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "BB1 1BB")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
@@ -247,6 +251,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
       RegisteredOfficeNonUK("doornumber", "some street", None, None, "AB"),
+      false,
       None)
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(

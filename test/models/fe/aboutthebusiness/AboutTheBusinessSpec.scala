@@ -66,6 +66,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
       "addressLine3" -> JsNull,
       "addressLine4" -> JsNull,
       "postCode" -> "AA1 1AA"),
+      "altCorrespondenceAddress" -> true,
       "correspondenceAddress" -> Json.obj(
       "yourName" -> "Name",
       "businessName" -> "Business Name",
@@ -85,6 +86,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
       corporationTaxRegistered = Some(regForCorpTax),
       contactingYou = contactingYou,
       registeredOffice = regOfficeOrMainPlaceUK,
+      altCorrespondenceAddress = true,
       correspondenceAddress = Some(uKCorrespondenceAddress)
     )
 
@@ -108,6 +110,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
         contactingYou = ContactingYou("07000111222","BusinessEmail"),
         registeredOffice =  RegisteredOfficeUK("BusinessAddressLine1","BusinessAddressLine2",Some("BusinessAddressLine3"),
           Some("BusinessAddressLine4"),"AA1 1AA"),
+        altCorrespondenceAddress = true,
         correspondenceAddress = Some(UKCorrespondenceAddress("Name","TradingName","AlternativeAddressLine1","AlternativeAddressLine2",
           Some("AlternativeAddressLine3"),
           Some("AlternativeAddressLine4"),"AA1 1AA"))

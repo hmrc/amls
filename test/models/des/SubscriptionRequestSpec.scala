@@ -729,6 +729,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
         ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
         RegisteredOfficeUK("line1", "line2",
           Some("some street"), Some("some city"), "EE1 1EE"),
+        true,
         Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
           Some("Street"), Some("city"), "EE1 1EE"))
       )
@@ -818,6 +819,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
     RegisteredOfficeUK("line1", "line2",
       Some("some street"), Some("some city"), "EE1 1EE"),
+    true,
     Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
       Some("Street"), Some("city"), "EE1 1EE"))
   )

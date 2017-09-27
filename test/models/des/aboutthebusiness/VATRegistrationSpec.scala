@@ -39,13 +39,13 @@ class VATRegistrationSpec extends PlaySpec {
       }
 
       "convert front end Vat model to VATRegistrationYes" in {
-        val from = AboutTheBusiness(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office)
+        val from = AboutTheBusiness(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         VATRegistration.convert(from) must be (Some(VATRegistration(true, Some("12345678"))))
       }
 
       "convert front end Vat model to VATRegistrationNo" in {
-        val from = AboutTheBusiness(PreviouslyRegisteredNo, None, Some(VATRegisteredNo), None, Contact, Office)
+        val from = AboutTheBusiness(PreviouslyRegisteredNo, None, Some(VATRegisteredNo), None, Contact, Office, false)
 
         VATRegistration.convert(from) must be (Some(VATRegistration(false, None)))
       }
