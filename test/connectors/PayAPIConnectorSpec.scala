@@ -30,9 +30,9 @@ import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PayApiGenerator with IntegrationPatience {
 

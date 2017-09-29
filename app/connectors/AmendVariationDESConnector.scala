@@ -23,9 +23,10 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPut, HttpReads, HttpResponse, HeaderNames => _}
+import uk.gov.hmrc.play.http.{HeaderNames => _}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HeaderNames, HttpPut, HttpReads, HttpResponse }
 
 trait AmendVariationDESConnector extends DESConnector {
 

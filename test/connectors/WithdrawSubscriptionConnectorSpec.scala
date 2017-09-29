@@ -30,12 +30,17 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
+import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneServerPerSuite {
+
+  implicit val defaultPatience =
+
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
     object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector {
@@ -50,6 +55,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with 
       override private[connectors] def auditConnector = mock[AuditConnector]
 
     }
+
     val mockTimer = mock[Timer.Context]
     when {
       withdrawSubscriptionConnector.metrics.timer(eqTo(API8))

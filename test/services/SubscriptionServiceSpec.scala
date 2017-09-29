@@ -35,10 +35,10 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers.{BAD_GATEWAY, BAD_REQUEST}
 import repositories.FeesRepository
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
 
 trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]

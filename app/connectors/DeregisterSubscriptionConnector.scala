@@ -25,9 +25,9 @@ import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads, HttpResponse }
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 

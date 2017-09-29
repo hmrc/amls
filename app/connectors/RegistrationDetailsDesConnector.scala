@@ -19,9 +19,9 @@ package connectors
 import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.Logger
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpReads}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads }
 
 trait RegistrationDetailsDesConnector extends DESConnector  {
 

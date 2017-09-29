@@ -38,10 +38,10 @@ import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
-import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.IterateeHelpers
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class AmendVariationControllerSpec extends PlaySpec
   with MockitoSugar

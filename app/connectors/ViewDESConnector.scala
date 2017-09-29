@@ -23,9 +23,9 @@ import models.des.SubscriptionView
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess, Json}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpReads, HttpResponse }
 
 
 trait ViewDESConnector extends DESConnector {
