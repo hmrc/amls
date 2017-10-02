@@ -82,7 +82,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -101,7 +101,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
@@ -122,7 +122,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {

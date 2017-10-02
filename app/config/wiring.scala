@@ -19,7 +19,8 @@ package config
 import com.typesafe.config.Config
 import play.api.Play
 import uk.gov.hmrc.http.hooks.HttpHooks
-import uk.gov.hmrc.http.{HttpDelete, HttpGet, HttpPost, HttpPut}
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
@@ -29,14 +30,15 @@ import uk.gov.hmrc.play.http.ws._
 import uk.gov.hmrc.play.microservice.config.LoadAuditingConfig
 import uk.gov.hmrc.play.microservice.filters.{AuditFilter, LoggingFilter, MicroserviceFilterSupport}
 
-trait Hooks extends HttpHooks{
+trait Hooks extends HttpHooks with HttpAuditing {
   override val hooks = Seq.empty
+  override lazy val auditConnector: AuditConnector = MicroserviceAuditConnector
 }
 
 trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
-      with Hooks with WSPatch with AppName with RunMode
-  // TODO: Determine whether we need auditing here
-  //  override val auditConnector = MicroserviceAuditConnector
+      with Hooks with HttpPatch with WSPatch with AppName with RunMode {
+
+}
 
 object WSHttp extends WSHttp
 

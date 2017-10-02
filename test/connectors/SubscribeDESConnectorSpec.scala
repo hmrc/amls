@@ -95,7 +95,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPost.POST[des.SubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.subscribe(safeId, testRequest)) {
@@ -113,7 +113,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
       )
       when {
         testDESConnector.httpPost.POST[des.SubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
@@ -135,7 +135,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPost.POST[des.SubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
@@ -149,7 +149,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPost.POST[des.SubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {

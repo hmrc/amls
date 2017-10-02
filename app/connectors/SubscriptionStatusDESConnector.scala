@@ -42,7 +42,7 @@ trait SubscriptionStatusDESConnector extends DESConnector {
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpGet.GET[HttpResponse](s"$Url/status")(implicitly[HttpReads[HttpResponse]],desHeaderCarrier) map {
+    httpGet.GET[HttpResponse](s"$Url/status")(implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

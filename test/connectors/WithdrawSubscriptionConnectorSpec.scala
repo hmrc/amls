@@ -84,7 +84,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with 
 
       when {
         withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest)) {
@@ -103,7 +103,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with 
 
       when {
         withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
@@ -124,7 +124,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with 
 
       when {
         withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {

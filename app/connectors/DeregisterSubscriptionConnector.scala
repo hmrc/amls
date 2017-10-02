@@ -42,7 +42,7 @@ trait DeregisterSubscriptionConnector extends DESConnector {
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier) map {
+    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

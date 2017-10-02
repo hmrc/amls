@@ -85,7 +85,7 @@ class ViewDESConnectorSpec
         responseJson = Some(Json.toJson(ViewSuccessModel))
       )
 
-      when(testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any()))
+      when(testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any()))
         .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
@@ -100,7 +100,7 @@ class ViewDESConnectorSpec
         responseHeaders = Map.empty
       )
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -119,7 +119,7 @@ class ViewDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -131,7 +131,7 @@ class ViewDESConnectorSpec
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {

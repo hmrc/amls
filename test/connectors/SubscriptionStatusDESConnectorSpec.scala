@@ -93,7 +93,7 @@ class SubscriptionStatusDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber)) {
@@ -108,7 +108,7 @@ class SubscriptionStatusDESConnectorSpec
         responseHeaders = Map.empty
       )
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
@@ -127,7 +127,7 @@ class SubscriptionStatusDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
@@ -140,7 +140,7 @@ class SubscriptionStatusDESConnectorSpec
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {

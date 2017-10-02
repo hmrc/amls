@@ -14,7 +14,7 @@ private object AppDependencies {
   private val microserviceBootstrapVersion = "6.9.0"
   private val playUrlBindersVersion = "2.1.0"
   private val domainVersion = "4.1.0"
-  private val playReactivemongoVersion = "6.1.0"
+  private val playReactivemongoVersion = "5.2.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,

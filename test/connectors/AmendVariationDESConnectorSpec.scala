@@ -107,7 +107,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(),any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -125,7 +125,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
       )
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {
@@ -147,7 +147,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {
@@ -161,7 +161,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {

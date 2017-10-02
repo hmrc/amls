@@ -32,7 +32,7 @@ trait RegistrationDetailsDesConnector extends DESConnector  {
     val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
 
     d(s"Requesting registration details for $safeId")
-    httpGet.GET[RegistrationDetails](url)(implicitly[HttpReads[RegistrationDetails]], desHeaderCarrier) map { result =>
+    httpGet.GET[RegistrationDetails](url)(implicitly[HttpReads[RegistrationDetails]], desHeaderCarrier,ec) map { result =>
       d(s"Response: ${result.toString}")
       result
     }

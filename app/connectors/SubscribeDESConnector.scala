@@ -23,8 +23,6 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderNames => _}
-
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{ HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse }
 
@@ -47,7 +45,7 @@ trait SubscribeDESConnector extends DESConnector {
 
     val url = s"$fullUrl/$safeId"
 
-    httpPost.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier) map {
+    httpPost.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
@@ -56,26 +54,26 @@ trait SubscribeDESConnector extends DESConnector {
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
-        auditConnector.sendEvent(SubscriptionEvent(safeId, data, body))
+        auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API4)
-        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(r.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API4)
-        auditConnector.sendEvent(SubscriptionFailedEvent(safeId, data))
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
