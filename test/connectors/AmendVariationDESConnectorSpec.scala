@@ -36,6 +36,7 @@ import uk.gov.hmrc.play.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse }
 
 class AmendVariationDESConnectorSpec extends PlaySpec
     with MockitoSugar
@@ -106,7 +107,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(),any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -124,7 +125,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
       )
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {
@@ -146,7 +147,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {
@@ -160,7 +161,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
 
       when {
         testDESConnector.httpPut.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest).failed) {

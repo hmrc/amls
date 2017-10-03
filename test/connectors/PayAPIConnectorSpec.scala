@@ -30,15 +30,15 @@ import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PayApiGenerator with IntegrationPatience {
 
   trait Fixture {
 
-    val mockHttp = mock[WSHttp]
+    val mockHttp = mock[HttpGet]
 
     val testPayment = payApiPaymentGen.sample.get
 
@@ -72,7 +72,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
       )
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
@@ -85,7 +85,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {
@@ -98,7 +98,7 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any())
+        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {

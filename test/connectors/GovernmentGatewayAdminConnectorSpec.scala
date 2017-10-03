@@ -28,10 +28,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http._
 
 class GovernmentGatewayAdminConnectorSpec extends PlaySpec
   with OneServerPerSuite
@@ -42,10 +41,11 @@ class GovernmentGatewayAdminConnectorSpec extends PlaySpec
   trait Fixture {
 
     object GGAdminConnector extends GovernmentGatewayAdminConnector {
-      override private[connectors] val http = mock[WSHttp]
       override private[connectors] val serviceURL = "url"
       override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
+
+      override private[connectors] val http = mock[CorePost with CoreGet with CorePut]
     }
 
     val knownFacts = KnownFactsForService(Seq(
@@ -74,7 +74,7 @@ class GovernmentGatewayAdminConnectorSpec extends PlaySpec
 
       val response = HttpResponse(OK, responseString = Some("message"))
       when {
-        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any())
+        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (GGAdminConnector.addKnownFacts(knownFacts)) {
@@ -87,7 +87,7 @@ class GovernmentGatewayAdminConnectorSpec extends PlaySpec
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any())
+        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (GGAdminConnector.addKnownFacts(knownFacts).failed) {
@@ -100,7 +100,7 @@ class GovernmentGatewayAdminConnectorSpec extends PlaySpec
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any())
+        GGAdminConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (GGAdminConnector.addKnownFacts(knownFacts).failed) {

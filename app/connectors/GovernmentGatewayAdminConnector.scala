@@ -27,16 +27,17 @@ import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import uk.gov.hmrc.play.http._
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext
 
 trait GovernmentGatewayAdminConnector extends HttpResponseHelper {
 
   private[connectors] def serviceURL: String
-  private[connectors] def http: HttpPost
+  private[connectors] def http: CorePost with CoreGet with CorePut
   private[connectors] def metrics: Metrics
   private[connectors] def audit: Audit
 
@@ -84,7 +85,7 @@ trait GovernmentGatewayAdminConnector extends HttpResponseHelper {
 
 object GovernmentGatewayAdminConnector extends GovernmentGatewayAdminConnector with ServicesConfig {
   // $COVERAGE-OFF$
-  override private[connectors] val http = WSHttp
+  override private[connectors] val http:CorePost with CoreGet with CorePut = WSHttp
   override private[connectors] lazy val serviceURL = baseUrl("government-gateway-admin")
   override private[connectors] val metrics = Metrics
   override private[connectors] val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)

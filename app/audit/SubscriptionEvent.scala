@@ -21,7 +21,7 @@ import play.api.libs.json.{JsObject, JsString, Json, Writes}
 import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.config.AppName
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 object SubscriptionEvent {
   def apply

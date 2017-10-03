@@ -31,10 +31,10 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class DeregisterSubscriptionConnectorSpec extends PlaySpec
   with MockitoSugar
@@ -82,7 +82,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -101,7 +101,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
@@ -122,7 +122,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {

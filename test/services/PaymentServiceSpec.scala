@@ -31,10 +31,10 @@ import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
 import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}
 import repositories.PaymentRepository
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
 

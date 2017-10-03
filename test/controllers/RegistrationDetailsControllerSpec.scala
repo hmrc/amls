@@ -28,9 +28,9 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
 

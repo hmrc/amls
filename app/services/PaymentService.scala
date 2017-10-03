@@ -26,9 +26,9 @@ import models.payapi.{Payment => PayApiPayment}
 import models.payments.{CreateBacsPaymentRequest, Payment, PaymentStatusResult}
 import play.api.http.Status._
 import repositories.PaymentRepository
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
 class PaymentService @Inject()(

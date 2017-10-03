@@ -28,9 +28,9 @@ import models.fe.{SubscriptionFees, SubscriptionResponse}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
+import uk.gov.hmrc.http.HeaderCarrier
 
 trait SubscriptionService {
 

@@ -24,9 +24,9 @@ import models.des.ReadStatusResponse
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpReads, HttpResponse }
 
 trait SubscriptionStatusDESConnector extends DESConnector {
 
@@ -42,7 +42,7 @@ trait SubscriptionStatusDESConnector extends DESConnector {
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpGet.GET[HttpResponse](s"$Url/status")(implicitly[HttpReads[HttpResponse]],desHeaderCarrier) map {
+    httpGet.GET[HttpResponse](s"$Url/status")(implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

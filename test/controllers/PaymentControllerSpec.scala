@@ -29,9 +29,9 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
 

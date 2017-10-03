@@ -25,9 +25,9 @@ import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads, HttpResponse }
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
@@ -42,7 +42,7 @@ trait DeregisterSubscriptionConnector extends DESConnector {
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier) map {
+    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

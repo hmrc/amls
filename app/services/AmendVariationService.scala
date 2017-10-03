@@ -28,11 +28,11 @@ import org.joda.time.LocalDate
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
-import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 

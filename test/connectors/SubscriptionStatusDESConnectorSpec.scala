@@ -32,10 +32,10 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class SubscriptionStatusDESConnectorSpec
   extends PlaySpec
@@ -93,7 +93,7 @@ class SubscriptionStatusDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber)) {
@@ -108,7 +108,7 @@ class SubscriptionStatusDESConnectorSpec
         responseHeaders = Map.empty
       )
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
@@ -127,7 +127,7 @@ class SubscriptionStatusDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
@@ -140,7 +140,7 @@ class SubscriptionStatusDESConnectorSpec
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any())
+        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
