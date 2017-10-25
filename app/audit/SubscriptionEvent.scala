@@ -17,7 +17,8 @@
 package audit
 
 import models.des._
-import play.api.libs.json.{JsObject, JsString, Json, Writes}
+import play.api.data.validation.ValidationError
+import play.api.libs.json._
 import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.config.AppName
@@ -60,6 +61,27 @@ object SubscriptionFailedEvent {
       detail = Json.toJson(request).as[JsObject]
         ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
         ++ JsObject(Map("safeId" -> JsString(safeId)))
+    )
+  }
+}
+
+object SubscriptionValidationFailedEvent {
+  def apply
+  (safeId: String, request: SubscriptionRequest, validationResults: Seq[JsObject])
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest],
+   resW: Writes[SubscriptionResponse]
+  ): ExtendedDataEvent = {
+    ExtendedDataEvent(
+      auditSource = AppName.appName,
+      auditType = "applicationSubmissionFailedValidation",
+      tags = hc.toAuditTags("Subscription", "N/A"),
+      detail = Json.obj(
+        "request" -> request,
+        "validationResults" -> validationResults,
+        "safeId" -> safeId
+      )
     )
   }
 }
