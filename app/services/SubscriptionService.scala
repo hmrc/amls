@@ -128,18 +128,16 @@ trait SubscriptionService {
         }
       }, valid = identity)
 
-      // $COVERAGE-OFF$
       result.fold(invalid = validationResult => {
-        val vresults = validationResult.map {
+        val resultObjects = validationResult.map {
           case (path, messages) => Json.obj(
             "path" -> path.toJsonString,
             "messages" -> messages.map(_.messages)
           )
         }
 
-        auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, vresults))
+        auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, resultObjects))
       }, valid = identity)
-      // $COVERAGE-ON$
 
       Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : $errors")
     } else {

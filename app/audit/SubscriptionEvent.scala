@@ -82,10 +82,6 @@ object SubscriptionValidationFailedEvent {
         "validationResults" -> validationResults,
         "safeId" -> safeId
       )
-//      detail = Json.toJson(request).as[JsObject]
-//        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
-//        ++ JsObject(Map("safeId" -> JsString(safeId)))
-//        ++ validationResult.as[JsObject]
     )
   }
 }
