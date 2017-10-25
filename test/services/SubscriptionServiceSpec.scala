@@ -17,6 +17,7 @@
 package services
 
 import connectors.{GovernmentGatewayAdminConnector, SubscribeDESConnector}
+import config.MicroserviceAuditConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models._
@@ -38,7 +39,8 @@ import repositories.FeesRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
@@ -48,7 +50,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
     override private[services] val desConnector = mock[SubscribeDESConnector]
     override private[services] val ggConnector = mock[GovernmentGatewayAdminConnector]
     override private[services] val feeResponseRepository = mock[FeesRepository]
-
+    override private[services] val auditConnector = mock[AuditConnector]
     override private[services] def validateResult(request: SubscriptionRequest) = successValidate
   }
 

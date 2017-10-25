@@ -18,8 +18,9 @@ package services
 
 import java.io.InputStream
 
+import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.AmlsConfig
+import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.{Fees, KnownFact, KnownFactsForService}
@@ -31,6 +32,7 @@ import repositories.FeesRepository
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait SubscriptionService {
 
@@ -47,6 +49,8 @@ trait SubscriptionService {
   private[services] val validator: SchemaValidator = SchemaValidator()
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue]
+
+  private[services] def auditConnector: AuditConnector
 
   private val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
   private val lines = scala.io.Source.fromInputStream(stream).getLines
@@ -115,7 +119,7 @@ trait SubscriptionService {
     }
   }
 
-  private def validateRequest(safeId: String, request: SubscriptionRequest) = {
+  private def validateRequest(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     val result = validateResult(request)
     if (!result.isSuccess) {
       val errors = result.fold(invalid = { errors =>
@@ -123,6 +127,20 @@ trait SubscriptionService {
           (a, b) => a + "," + b._1.toJsonString
         }
       }, valid = identity)
+
+      // $COVERAGE-OFF$
+      result.fold(invalid = validationResult => {
+        val vresults = validationResult.map {
+          case (path, messages) => Json.obj(
+            "path" -> path.toJsonString,
+            "messages" -> messages.map(_.messages)
+          )
+        }
+
+        auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, vresults))
+      }, valid = identity)
+      // $COVERAGE-ON$
+
       Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : $errors")
     } else {
       Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
@@ -174,7 +192,7 @@ object SubscriptionService extends SubscriptionService {
   override private[services] val desConnector = DESConnector
   override private[services] val ggConnector = GovernmentGatewayAdminConnector
   override private[services] val feeResponseRepository = FeesRepository()
-
+  override private[services] val auditConnector = MicroserviceAuditConnector
   override private[services] def validateResult(request: SubscriptionRequest) = {
     validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
   }
