@@ -75,8 +75,7 @@ trait SubscriptionController extends BaseController {
                     Logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
-              case JsError(errors) =>
-                Future.successful(BadRequest(toError(errors)))
+              case JsError(errors) => Future.successful(BadRequest(toError(errors)))
             }
           case _ =>
             Future.successful {

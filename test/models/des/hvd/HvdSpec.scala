@@ -32,12 +32,12 @@ class HvdSpec extends PlaySpec {
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Third
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(Some(DefaultCashPayment),
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(true, Some("1956-02-15"),None, true, Some(60),
@@ -51,12 +51,12 @@ class HvdSpec extends PlaySpec {
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = First
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(Some(DefaultCashPayment),
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
           dateOfChange = Some("1999-1-1"))
 
@@ -69,12 +69,12 @@ class HvdSpec extends PlaySpec {
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Fourth
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(80),
@@ -86,12 +86,12 @@ class HvdSpec extends PlaySpec {
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Fifth
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(100),
@@ -102,12 +102,12 @@ class HvdSpec extends PlaySpec {
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = Some(DefaultLinkedCashPayment),
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = None
       )
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, None,
@@ -117,12 +117,12 @@ class HvdSpec extends PlaySpec {
     "successfully convert frontend model to valid des model with LinkedCashPayment option is none" in {
       val DefaultExciseGoods = ExciseGoods(true)
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val DefaultReceiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
       val completeModel = FEHvd(None,
         exciseGoods = Some(DefaultExciseGoods),
         linkedCashPayment = None,
-        receiveCashPayments = Some(DefaultReceiveCashPayments),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = None
       )
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None,None, false, None,

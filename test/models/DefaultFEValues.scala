@@ -467,22 +467,25 @@ object HvdSection {
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = Second
   private val paymentMethods = PaymentMethods(courier = true, direct = true, other = true, details = Some("foo"))
-  private val receiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val completeModel = Some(Hvd(cashPayment = Some(DefaultCashPayment),
     products = Some(DefaultProducts),
     exciseGoods = Some(DefaultExciseGoods),
     linkedCashPayment = Some(DefaultLinkedCashPayment),
     howWillYouSellGoods = Some(DefaultHowWillYouSellGoods),
-    receiveCashPayments = Some(receiveCashPayments),
+    receiveCashPayments = Some(true),
+    cashPaymentMethods = Some(paymentMethods),
     percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
   ))
 
-  val modelForView = Some(Hvd(Some(CashPaymentYes(new LocalDate(2001, 1, 1))),
-    Some(Products(Set(MobilePhones, Clothing, Jewellery,
-      ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
+  val modelForView = Some(Hvd(
+    Some(CashPaymentYes(new LocalDate(2001, 1, 1))),
+    Some(Products(Set(MobilePhones, Clothing, Jewellery, ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
     Some(ExciseGoods(true)), Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
-    None, Some(ReceiveCashPayments(true, Some(PaymentMethods(true, true, true, Some("aaaaaaaaaaaaa"))))), Some(LinkedCashPayments(true))))
+    None,
+    Some(true),
+    Some(PaymentMethods(true, true, true, Some("aaaaaaaaaaaaa"))),
+    Some(LinkedCashPayments(true))))
 }
 
 object SubscriptionViewModel {
