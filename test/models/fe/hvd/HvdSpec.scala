@@ -45,12 +45,14 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
       "cashPayment" -> Json.obj(
         "acceptedAnyPayment" -> true,
         "paymentDate" -> new LocalDate(1956, 2, 15)),
-      "products" -> Json.obj("products" -> Json.arr("12"),
+      "products" -> Json.obj(
+        "products" -> Json.arr("12"),
         "otherDetails" -> "Details"),
       "exciseGoods" -> Json.obj("exciseGoods" -> true),
       "linkedCashPayment" -> Json.obj("linkedCashPayments" -> true),
       "howWillYouSellGoods" -> Json.obj("salesChannels" -> Json.arr("Retail", "Wholesale", "Auction")),
-      "receiveCashPayments" -> Json.obj("receivePayments" -> true, "paymentMethods" -> Json.obj("courier" -> true, "direct" -> true, "other" -> true, "details" -> "foo")),
+      "receiveCashPayments" -> true,
+      "cashPaymentMethods" -> Json.obj("courier" -> true, "direct" -> true, "other" -> true, "details" -> "foo"),
       "percentageOfCashPaymentOver15000" -> Json.obj("percentage" -> "01"),
       "dateOfChange" -> "2016-02-24"
     )
@@ -60,14 +62,14 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
       exciseGoods = Some(DefaultExciseGoods),
       linkedCashPayment = Some(DefaultLinkedCashPayment),
       howWillYouSellGoods = Some(DefaultHowWillYouSellGoods),
-      receiveCashPayments = Some(DefaultReceiveCashPayments),
+      receiveCashPayments = Some(true),
+      cashPaymentMethods = Some(paymentMethods),
       percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
       dateOfChange = Some("2016-02-24")
     )
 
     "Serialise as expected" in {
       Json.toJson(completeModel) must be(completeJson)
-
     }
 
     "Deserialise as expected" in {
@@ -81,7 +83,8 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
         exciseGoods = DesConstants.testBusinessActivities,
         howWillYouSellGoods = DesConstants.testBusinessActivities,
         percentageOfCashPaymentOver15000 = DesConstants.testHvd,
-        receiveCashPayments = DesConstants.testHvd,
+        receiveCashPayments = Hvd.convPayments(DesConstants.testHvd),
+        cashPaymentMethods = Hvd.convPaymentMethods(DesConstants.testHvd),
         linkedCashPayment = DesConstants.testHvd
       )
 

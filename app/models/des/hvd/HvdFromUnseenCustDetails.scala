@@ -16,7 +16,6 @@
 
 package models.des.hvd
 
-import models.fe.hvd.ReceiveCashPayments
 import play.api.libs.json.Json
 
 case class HvdFromUnseenCustDetails (hvdFromUnseenCustomers: Boolean,
@@ -26,14 +25,13 @@ object HvdFromUnseenCustDetails {
 
   implicit val format = Json.format[HvdFromUnseenCustDetails]
 
-  implicit def conv(model: Option[ReceiveCashPayments]): Option[HvdFromUnseenCustDetails] = {
-
-    model match {
-      case Some(data) => data.paymentMethods match {
-        case Some(paymentMtd) => Some(HvdFromUnseenCustDetails(true, paymentMtd))
-        case None => Some(HvdFromUnseenCustDetails(false, None))
-      }
-      case None => None
+  implicit def conv(model: models.fe.hvd.Hvd): Option[HvdFromUnseenCustDetails] = {
+    (model.receiveCashPayments, model.cashPaymentMethods) match {
+      case (Some(cash), Some(methods)) => Some(HvdFromUnseenCustDetails(cash, methods))
+      case (None, None) => None
+      case (_, Some(methods)) => Some(HvdFromUnseenCustDetails(true, methods))
+      case (_, None) => Some(HvdFromUnseenCustDetails(false, None))
     }
   }
-}
+
+  }

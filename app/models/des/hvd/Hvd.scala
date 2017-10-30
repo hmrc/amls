@@ -49,21 +49,17 @@ object Hvd {
     }
   }
 
-  implicit def conv(hvdOpt: Option[models.fe.hvd.Hvd]): Option[Hvd] = {
-
+  implicit def conv(hvdOpt: Option[models.fe.hvd.Hvd]): Option[Hvd] =
     hvdOpt match {
-      case Some(models.fe.hvd.Hvd(None, None, None, None, None, None, None, None)) => None
-      case hvd: Option[models.fe.hvd.Hvd] => {
-        hvd.map {
-          hvdResult =>
-            val (cashPayment, paymentDate) = getCashPayment(hvdResult.cashPayment)
-            val sysLinkedCashPayment = hvdResult.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
-            Hvd(cashPayment, paymentDate, None, sysLinkedCashPayment, hvdResult.percentageOfCashPaymentOver15000, hvdResult.receiveCashPayments)
-        }
+      case Some(models.fe.hvd.Hvd(None, None, None, None, None, None, None, None, None)) => None
+      case hvd: Option[models.fe.hvd.Hvd] => hvd.map {
+        hvdResult =>
+          val (cashPayment, paymentDate) = getCashPayment(hvdResult.cashPayment)
+          val sysLinkedCashPayment = hvdResult.linkedCashPayment.fold(false)(x => x.linkedCashPayments)
+          Hvd(cashPayment, paymentDate, None, sysLinkedCashPayment, hvdResult.percentageOfCashPaymentOver15000, hvdResult)
       }
       case _ => None
     }
-  }
 
 
   implicit def percentageCashPayment(model: Option[PercentageOfCashPaymentOver15000]): Option[Int] = {
