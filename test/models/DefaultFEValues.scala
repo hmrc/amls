@@ -467,7 +467,6 @@ object HvdSection {
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = Second
   private val paymentMethods = PaymentMethods(courier = true, direct = true, other = true, details = Some("foo"))
-  private val receiveCashPayments = ReceiveCashPayments(true, Some(paymentMethods))
 
   val completeModel = Some(Hvd(cashPayment = Some(DefaultCashPayment),
     products = Some(DefaultProducts),
