@@ -13,7 +13,7 @@ private object AppDependencies {
 
   private val microserviceBootstrapVersion = "6.11.0"
   private val playUrlBindersVersion = "2.1.0"
-  private val domainVersion = "4.1.0"
+  private val domainVersion = "5.0.0"
   private val playReactivemongoVersion = "5.2.0"
 
   val compile = Seq(
@@ -36,7 +36,7 @@ private object AppDependencies {
   private val scalatestVersion = "2.2.6"
   private val scalatestPlusPlayVersion = "1.5.1"
   private val pegdownVersion = "1.6.0"
-  private val hmrctestVersion = "2.3.0"
+  private val hmrctestVersion = "2.4.0"
 
   object Test {
     def apply() = new TestDependencies {
