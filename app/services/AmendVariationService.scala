@@ -18,8 +18,9 @@ package services
 
 import java.io.InputStream
 
+import audit.{AmendVariationValidationFailedEvent, SubscriptionValidationFailedEvent}
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.AmlsConfig
+import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors._
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
@@ -33,6 +34,7 @@ import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPr
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
@@ -49,6 +51,8 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   private[services] def validateResult(request: AmendVariationRequest): JsResult[JsValue]
 
   private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse): AmendVariationResponse
+
+  private[services] val auditConnector: AuditConnector
 
   val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
@@ -103,17 +107,34 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
    hc: HeaderCarrier,
    ec: ExecutionContext
   ): Future[AmendVariationResponse] = {
+
     val result = validateResult(request)
+
     if (!result.isSuccess) {
       val errors = result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
         }
-      }, valid = { post => post })
+      }, valid = identity)
+
+      result.fold(invalid = validationResult => {
+        val resultObjects = validationResult.map {
+          case (path, messages) => Json.obj(
+            "path" -> path.toJsonString,
+            "messages" -> messages.map(_.messages)
+          )
+        }
+
+        auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
+      }, valid = identity)
+
+      throw new Exception("Validation failure")
+
       Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber : Error Paths : ${errors}")
     } else {
       Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
+
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
       status <- viewStatusDesConnector.status(amlsRegistrationNumber)
@@ -169,6 +190,7 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val amendVariationDesConnector = DESConnector
   override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
+  override private[services] val auditConnector = MicroserviceAuditConnector
 
   override private[services] def validateResult(request: AmendVariationRequest) =
     validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
