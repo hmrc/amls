@@ -25,7 +25,7 @@ class PreviousNameDetailsSpec extends PlaySpec {
     "successfully convert frontend model to des model" in {
       // scalastyle:off magic.number
       PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head) mustBe
-        PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-2-24"), Some(true))
+        Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))
     }
   }
 }

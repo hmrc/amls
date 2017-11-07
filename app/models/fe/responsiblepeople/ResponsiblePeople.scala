@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
-import models.fe
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 

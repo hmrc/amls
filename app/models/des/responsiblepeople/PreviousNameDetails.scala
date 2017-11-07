@@ -32,7 +32,7 @@ object PreviousNameDetails {
 
   def from(person: ResponsiblePeople): Option[PreviousNameDetails] = {
     (person.legalName, person.legalNameChangeDate) match {
-      case (Some(name), date) => Some(PreviousNameDetails(true, name, date.map(_.toString), date.map(_ => true)))
+      case (Some(name), date) => Some(PreviousNameDetails(true, name, date.map(_.toString)))
       case _ => Some(PreviousNameDetails(false, None, None))
     }
   }

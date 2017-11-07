@@ -185,6 +185,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           supervisionSection = SupervisionSection.completeModel
         )
       }
+
       implicit val requestType = RequestType.Subscription
       des.SubscriptionRequest.convert(feSubscriptionReq) must be(desSubscriptionReq)
     }
