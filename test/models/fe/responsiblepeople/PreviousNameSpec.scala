@@ -24,9 +24,7 @@ class PreviousNameSpec extends PlaySpec {
 
   "PreviousName" must {
     "Json Read/write with PreviousName details" in {
-      val previousName = PreviousName(Some("fname"), Some("mname"), Some("lname"), // scalastyle:off magic.number
-        new LocalDate(1990, 2, 24)
-      )
+      val previousName = PreviousName(Some("fname"), Some("mname"), Some("lname"))
 
       PreviousName.format.reads(PreviousName.format.writes(previousName))
     }
@@ -38,9 +36,8 @@ class PreviousNameSpec extends PlaySpec {
         Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
         Some("2001-01-01")
       ))
-      val previousName = PreviousName(Some("first name"), Some("middle name"), Some("last name"), // scalastyle:off magic.number
-        new LocalDate(2001, 1, 1)
-      )
+
+      val previousName = PreviousName(Some("first name"), Some("middle name"), Some("last name"))
       PreviousName.conv(previousNameDetails) must be(Some(previousName))
     }
 

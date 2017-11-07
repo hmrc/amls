@@ -26,8 +26,9 @@ case class PersonName (firstName: Option[String],
 case object PersonName {
   implicit val format = Json.format[PersonName]
 
-  implicit def convert(person: FEPersonName) : PersonName = {
-    PersonName(Some(person.firstName), person.middleName, Some(person.lastName))
+  implicit def convert(maybePerson: Option[FEPersonName]) : PersonName = maybePerson match {
+    case Some(person) => PersonName(Some(person.firstName), person.middleName, Some(person.lastName))
+    case _ => PersonName(None, None, None)
   }
 
   implicit def convertPreviousName(person: PreviousName) : Option[PersonName] = {

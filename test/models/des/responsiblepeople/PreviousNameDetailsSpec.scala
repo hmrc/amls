@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import models.ResponsiblePeopleSection
 import org.scalatestplus.play.PlaySpec
 
 class PreviousNameDetailsSpec extends PlaySpec {
@@ -23,7 +24,8 @@ class PreviousNameDetailsSpec extends PlaySpec {
   "PreviousNameDetails" should {
     "successfully convert frontend model to des model" in {
       // scalastyle:off magic.number
-      PreviousNameDetails.conv(None) must be(Some(PreviousNameDetails(false,None,None)))
+      PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head) mustBe
+        PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-2-24"), Some(true))
     }
   }
 }

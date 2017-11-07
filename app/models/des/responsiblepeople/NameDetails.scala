@@ -17,7 +17,7 @@
 package models.des.responsiblepeople
 
 import play.api.libs.json.Json
-import models.fe.responsiblepeople.{PersonName => FEPersonName}
+import models.fe.responsiblepeople.{ResponsiblePeople, PersonName => FEPersonName}
 
 case class NameDetails (personName: PersonName,
                         othrNamesOrAliasesDetails: Option[OthrNamesOrAliasesDetails], //it is not optional
@@ -26,9 +26,12 @@ case class NameDetails (personName: PersonName,
 object NameDetails {
   implicit val format = Json.format[NameDetails]
 
-  implicit def convert(person: Option[FEPersonName]) : Option[NameDetails] = {
-    person match {
-      case Some(data) => Some(NameDetails(data, data.otherNames, data.previousName))
+  def from(maybePerson: Option[ResponsiblePeople]) : Option[NameDetails] = {
+    maybePerson match {
+      case Some(person) => Some(NameDetails(
+        person.personName,
+        person.knownBy,
+        PreviousNameDetails.from(person)))
       case _ => None
     }
   }

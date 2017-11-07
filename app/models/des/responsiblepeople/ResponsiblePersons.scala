@@ -125,7 +125,7 @@ object ResponsiblePersons {
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
     ResponsiblePersons(
-      rp.personName,
+      NameDetails.from(Some(rp)),
       rp,
       rp.contactDetails,
       rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
