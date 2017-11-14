@@ -40,9 +40,9 @@ class HvdSpec extends PlaySpec {
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
+
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(true, Some("1956-02-15"),None, true, Some(60),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
-
     }
 
     "successfully convert frontend model to valid des model with cashpayment no" in {
@@ -77,6 +77,7 @@ class HvdSpec extends PlaySpec {
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
+
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(80),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
@@ -94,7 +95,25 @@ class HvdSpec extends PlaySpec {
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
+
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(100),
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
+    }
+
+    "successfully convert frontend model to valid des model with PercentageOfCashPaymentOver15000 option is not given" in {
+      val DefaultExciseGoods = ExciseGoods(true)
+      val DefaultLinkedCashPayment = LinkedCashPayments(true)
+      val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+
+      val completeModel = FEHvd(None,
+        exciseGoods = Some(DefaultExciseGoods),
+        linkedCashPayment = Some(DefaultLinkedCashPayment),
+        receiveCashPayments = Some(true),
+        cashPaymentMethods = Some(paymentMethods),
+        percentageOfCashPaymentOver15000 = None
+      )
+
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(0),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
@@ -110,7 +129,8 @@ class HvdSpec extends PlaySpec {
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, None,
+
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(0),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
@@ -125,7 +145,8 @@ class HvdSpec extends PlaySpec {
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = None
       )
-      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None,None, false, None,
+
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None,None, false, Some(0),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 

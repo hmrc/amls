@@ -33,6 +33,7 @@ object Hvd {
 
   implicit val format = Json.format[Hvd]
 
+  private val Zero = 0
   private val Twenty = 20
   private val Forty = 40
   private val Sixty = 60
@@ -71,7 +72,7 @@ object Hvd {
         case Fourth => Some(Eighty)
         case Fifth => Some(Hundred)
       }
-      case None => None
+      case None => Some(Zero)
     }
 
   }
