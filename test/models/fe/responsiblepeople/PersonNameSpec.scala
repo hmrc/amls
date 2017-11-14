@@ -72,17 +72,5 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
     "convert when input is none" in {
       PersonName.conv(None) must be(None)
     }
-//    "convert othernames successfully when input is none" in {
-//      PersonName.convOtherNames(None) must be (None)
-//    }
-//
-//    "convert othernames successfully" in {
-//
-//      val desModel = Some(OthrNamesOrAliasesDetails(
-//        true,
-//        Some(List.empty)
-//      ))
-//      PersonName.convOtherNames(desModel) must be (None)
-//    }
   }
 }
