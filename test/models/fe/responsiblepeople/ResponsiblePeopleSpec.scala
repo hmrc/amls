@@ -56,17 +56,14 @@ trait ResponsiblePeopleValues {
     private val currentAddress = ResponsiblePersonAddress(currentPersonAddress, ZeroToFiveMonths)
     private val additionalPersonAddress = PersonAddressUK("Line 1", "Line 2", None, None, "BB1 1BB")
     private val additionalAddress = ResponsiblePersonAddress(additionalPersonAddress, ZeroToFiveMonths)
-    private val previousName = PreviousName(Some("ABCD"), Some("XYZ"), Some("Fly"),
-      // scalastyle:off magic.number
-      new LocalDate(1990, 2, 24)
-    )
+    val previousName = PreviousName(Some("ABCD"), Some("XYZ"), Some("Fly"))
+
     val personName = PersonName(
       firstName = "name",
       middleName = Some("middle name"),
-      lastName = "surname",
-      previousName = Some(previousName),
-      otherNames = Some("Doc")
+      lastName = "surname"
     )
+
     val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
     val saRegistered = SaRegisteredYes("0123456789")
     val contactDetails = ContactDetails("07000001122", "test@test.com")
@@ -79,8 +76,10 @@ trait ResponsiblePeopleValues {
 
     val convertedModel = Some(List(
       ResponsiblePeople(
-        Some(PersonName("FirstName", Some("MiddleName"), "LastName",
-          Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))), Some("Aliases1"))),
+        Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+        Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+        Some(new LocalDate(2001, 1, 1)),
+        Some("Aliases1"),
         Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
         Some(UKPassportYes("AA1111111")),
         None,
@@ -98,11 +97,14 @@ trait ResponsiblePeopleValues {
         Some(333333),
         Some("added")
       ),
+
       ResponsiblePeople(
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
-          Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
+        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
+        Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+        Some(new LocalDate(1967, 8, 13)),
+        Some("bbbbbbbbbbb"),
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        None, None, None,None,
+        None, None, None, None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -130,7 +132,8 @@ trait ResponsiblePeopleValues {
     private val currentAddress = ResponsiblePersonAddress(newPersonAddress, ZeroToFiveMonths)
     private val additionalAddress = ResponsiblePersonAddress(newAdditionalPersonAddress, ZeroToFiveMonths)
 
-    val personName = PersonName("first", Some("middle"), "last", None, None)
+    val personName = PersonName("first", Some("middle"), "last")
+    val previousName = PreviousName(Some("Old"), Some("middle"), Some("Name"))
     val contactDetails = ContactDetails("07000001122", "new@test.com")
     val addressHistory = ResponsiblePersonAddressHistory(Some(currentAddress), Some(additionalAddress))
     val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
@@ -143,10 +146,13 @@ trait ResponsiblePeopleValues {
 
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
+    Some(DefaultValues.previousName),
+    Some(new LocalDate(1990, 2, 24)),
+    Some("Doc"),
     Some(DefaultValues.personResidenceType),
     Some(DefaultValues.ukPassport),
     None,
-    Some(DateOfBirth(new LocalDate(2001,1,1))),
+    Some(DateOfBirth(new LocalDate(2001, 1, 1))),
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),
     Some(DefaultValues.positions),
@@ -160,13 +166,13 @@ trait ResponsiblePeopleValues {
     "personName" -> Json.obj(
       "firstName" -> "name",
       "middleName" -> "middle name",
-      "lastName" -> "surname",
-      "previousName" -> Json.obj("firstName" -> "ABCD",
-        "middleName" -> "XYZ",
-        "lastName" -> "Fly",
-        "date" -> "1990-02-24"),
-      "otherNames" -> "Doc"
+      "lastName" -> "surname"
     ),
+    "legalName" -> Json.obj("firstName" -> "ABCD",
+      "middleName" -> "XYZ",
+      "lastName" -> "Fly"),
+    "legalNameChangeDate" -> "1990-02-24",
+    "knownBy" -> "Doc",
     "personResidenceType" -> Json.obj(
       "nino" -> "AA1111111",
       "countryOfBirth" -> "GB",

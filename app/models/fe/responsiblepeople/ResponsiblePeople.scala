@@ -16,11 +16,15 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.ResponsiblePersons
+import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
+                              legalName: Option[PreviousName] = None,
+                              legalNameChangeDate: Option[LocalDate] = None,
+                              knownBy: Option[String] = None,
                               personResidenceType: Option[PersonResidenceType] = None,
                               ukPassport: Option[UKPassport] = None,
                               nonUKPassport: Option[NonUKPassport] = None,
@@ -41,9 +45,25 @@ object ResponsiblePeople {
 
   implicit val format = Json.format[ResponsiblePeople]
 
+  def legalNameChangeDate(maybeDetails: Option[NameDetails]) = for {
+    details <- maybeDetails
+    name <- details.previousNameDetails
+    date <- name.dateOfChange
+  } yield LocalDate.parse(date)
+
+  implicit def convOtherNames(otherNames: Option[OthrNamesOrAliasesDetails]): Option[String] = {
+    otherNames match {
+      case Some(names) => names.aliases.fold[Option[String]](None)(x => x.headOption)
+      case None => None
+    }
+  }
+
   def convertRP(desRp: ResponsiblePersons): ResponsiblePeople = {
     ResponsiblePeople(
       desRp.nameDetails,
+      desRp.nameDetails flatMap { n => n.previousNameDetails },
+      legalNameChangeDate(desRp.nameDetails) orElse Some(LocalDate.now),
+      desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
       desRp.nationalityDetails,
       desRp,
       desRp,

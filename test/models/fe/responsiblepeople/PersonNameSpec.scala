@@ -25,16 +25,10 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
 
   "PersonName" must {
     "Read/Write Json" in {
-      val previousName = PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"),
-        // scalastyle:off magic.number
-        new LocalDate(1990, 2, 24)
-      )
       val personName = PersonName(
         firstName = "FirstName",
         middleName = Some("MiddleName"),
-        lastName = "LastName",
-        previousName = Some(previousName),
-        otherNames = Some("Doc")
+        lastName = "LastName"
       )
 
       PersonName.format.reads(PersonName.format.writes(personName))
@@ -44,10 +38,9 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
       val personName = PersonName(
         firstName = "name",
         middleName = Some("some"),
-        lastName = "surname",
-        previousName = None,
-        otherNames = Some("Doc")
+        lastName = "surname"
       )
+
       PersonName.format.reads(PersonName.format.writes(personName))
     }
 
@@ -67,35 +60,17 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
         ))
       ))
 
-      val previousName = PreviousName(Some("FirstName1"), Some("MiddleName1"), Some("LastName1"), // scalastyle:off magic.number
-        new LocalDate(2001, 1, 1)
-      )
-
       val fePersonName = PersonName(
         firstName = "FirstName",
         middleName = Some("MiddleName"),
-        lastName = "LastName",
-        previousName = Some(previousName),
-        otherNames = Some("Aliases1")
+        lastName = "LastName"
       )
+
       PersonName.conv(desModel) must be(Some(fePersonName))
     }
 
     "convert when input is none" in {
       PersonName.conv(None) must be(None)
-    }
-
-    "convert othernames successfully when input is none" in {
-      PersonName.convOtherNames(None) must be (None)
-    }
-
-    "convert othernames successfully" in {
-
-      val desModel = Some(OthrNamesOrAliasesDetails(
-        true,
-        Some(List.empty)
-      ))
-      PersonName.convOtherNames(desModel) must be (None)
     }
   }
 }

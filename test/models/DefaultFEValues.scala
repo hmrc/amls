@@ -370,18 +370,17 @@ object ResponsiblePeopleSection {
   private val personName = PersonName(
     firstName = "name",
     middleName = Some("some"),
-    lastName = "surname",
-    previousName = Some(
-      PreviousName(
-        firstName = Some("fname"),
-        middleName = Some("mname"),
-        lastName = Some("lname"),
-        date = new LocalDate(1990, 2, 24)
-      )
-    ),
-    otherNames = Some("Doc")
+    lastName = "surname"
   )
 
+  private val previousName = PreviousName(
+    firstName = Some("fname"),
+    middleName = Some("mname"),
+    lastName = Some("lname")
+  )
+
+  private val otherNames = Some("Doc")
+  private val nameDateOfChange = new LocalDate(1990, 2, 24)
   private val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
   private val saRegistered = SaRegisteredYes("0123456789")
   private val contactDetails = ContactDetails("07000001122", "test@test.com")
@@ -396,6 +395,9 @@ object ResponsiblePeopleSection {
 
   val model = Some(Seq(ResponsiblePeople(
     Some(personName),
+    Some(previousName),
+    Some(nameDateOfChange),
+    otherNames,
     Some(personResidenceType),
     Some(ukPassport),
     Some(nonUKPassport),
@@ -412,9 +414,10 @@ object ResponsiblePeopleSection {
 
   val modelForView = Some(List(
     ResponsiblePeople(
-      Some(PersonName("FirstName", Some("MiddleName"), "LastName",
-        Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"), new LocalDate(2001, 1, 1))),
-        Some("Aliases1"))),
+      Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+      Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+      Some(new LocalDate(2001, 1, 1)),
+      Some("Aliases1"),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       None,
@@ -435,12 +438,14 @@ object ResponsiblePeopleSection {
       Some(false),
       Some(333333),
       Some("added")),
+
     ResponsiblePeople(
-      Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb",
-        Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"),
-          new LocalDate(1967, 8, 13))), Some("bbbbbbbbbbb"))),
+      Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
+      Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+      Some(new LocalDate(1967, 8, 13)),
+      Some("bbbbbbbbbbb"),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      None,None,None,None,
+      None, None, None, None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),

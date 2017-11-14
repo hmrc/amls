@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.PreviousName
+import models.fe.responsiblepeople.{PreviousName, ResponsiblePeople}
 import play.api.libs.json.Json
 
 
@@ -30,11 +30,10 @@ case class PreviousNameDetails (nameEverChanged: Boolean,
 object PreviousNameDetails {
   implicit val format = Json.format[PreviousNameDetails]
 
-  implicit def conv(previousName:Option[PreviousName]): Option[PreviousNameDetails] = {
-
-    previousName match {
-      case Some(name) => Some(PreviousNameDetails(true, name, Some(name.date.toString)))
-      case _ =>Some(PreviousNameDetails(false, None, None))
+  def from(person: ResponsiblePeople): Option[PreviousNameDetails] = {
+    (person.legalName, person.legalNameChangeDate) match {
+      case (Some(name), date) => Some(PreviousNameDetails(true, name, date.map(_.toString)))
+      case _ => Some(PreviousNameDetails(false, None, None))
     }
   }
 }

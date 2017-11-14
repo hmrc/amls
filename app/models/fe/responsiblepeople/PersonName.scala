@@ -22,9 +22,7 @@ import play.api.libs.json.{Writes => _}
 case class PersonName(
                        firstName: String,
                        middleName: Option[String],
-                       lastName: String,
-                       previousName: Option[PreviousName],
-                       otherNames: Option[String]
+                       lastName: String
                      )
 
 object PersonName {
@@ -37,17 +35,8 @@ object PersonName {
     desNameDtls match {
       case Some(data) => Some(PersonName(data.personName.firstName.getOrElse(""),
         data.personName.middleName,
-        data.personName.lastName.getOrElse(""),
-        data.previousNameDetails,
-        data.othrNamesOrAliasesDetails
+        data.personName.lastName.getOrElse("")
       ))
-      case None => None
-    }
-  }
-
-  implicit def convOtherNames(otherNames: Option[OthrNamesOrAliasesDetails]): Option[String] = {
-    otherNames match {
-      case Some(names) => names.aliases.fold[Option[String]](None)(x => x.headOption)
       case None => None
     }
   }

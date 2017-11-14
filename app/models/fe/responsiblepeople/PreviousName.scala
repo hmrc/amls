@@ -23,8 +23,7 @@ import play.api.libs.json.Json
 case class PreviousName(
                          firstName: Option[String],
                          middleName: Option[String],
-                         lastName: Option[String],
-                         date: LocalDate
+                         lastName: Option[String]
                        )
 
 object PreviousName {
@@ -37,8 +36,7 @@ object PreviousName {
           pName.previousName match {
             case Some(name) => Some(PreviousName(name.firstName,
               name.middleName,
-              name.lastName,
-              pName.dateOfChange.fold(LocalDate.now)(x => LocalDate.parse(x))
+              name.lastName
             ))
             case None => None
           }
