@@ -121,6 +121,26 @@ object AmendmentEvent {
   }
 }
 
+object AmendVariationValidationFailedEvent {
+  def apply
+  (amlsReferenceNumber: String, request: AmendVariationRequest, validationResults: Seq[JsObject])
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[AmendVariationRequest]
+  ) = {
+    ExtendedDataEvent(
+      auditSource = AppName.appName,
+      auditType = "amendVariationValidationFailedEvent",
+      tags = hc.toAuditTags("Amendment", "N/A"),
+      detail = Json.toJson(hc.toAuditDetails()).as[JsObject] ++
+        Json.obj(
+          "request" -> request,
+        "validationResults" -> validationResults,
+        "amlsRefNo" -> amlsReferenceNumber
+      )
+    )
+  }
+}
 
 object WithdrawSubscriptionEvent {
   def apply

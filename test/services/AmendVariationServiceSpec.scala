@@ -35,6 +35,7 @@ import repositories.FeesRepository
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class AmendVariationServiceSpec extends PlaySpec
   with OneAppPerSuite
@@ -63,7 +64,7 @@ class AmendVariationServiceSpec extends PlaySpec
     override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
     override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
-
+    override private[services] val auditConnector = mock[AuditConnector]
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
 
     override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: models.des.AmendVariationResponse) = feAmendVariationResponse

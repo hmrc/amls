@@ -1229,7 +1229,7 @@ object DesConstants {
     Some("2001-01-01"),
     None,
     true,
-    None,
+    Some(0),
     Some(HvdFromUnseenCustDetails(
       true,
       Some(ReceiptMethods(true, true, true, Some("aaaaaaaaaaaaa")))
