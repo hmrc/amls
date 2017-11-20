@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.json.Json
 
 case class OthrNamesOrAliasesDetails (otherNamesOrAliases: Boolean,
@@ -24,9 +25,9 @@ case class OthrNamesOrAliasesDetails (otherNamesOrAliases: Boolean,
 object OthrNamesOrAliasesDetails {
   implicit val format = Json.format[OthrNamesOrAliasesDetails]
 
-  implicit def convert(otherName: Option[String]): Option[OthrNamesOrAliasesDetails] = {
-    otherName match {
-      case Some(data)  => Some(OthrNamesOrAliasesDetails(true, Some(Seq(data))))
+  def from(person: ResponsiblePeople): Option[OthrNamesOrAliasesDetails] = {
+    (person.knownBy) match {
+      case Some(name) => Some(OthrNamesOrAliasesDetails(true, name.otherName))
       case _ => Some(OthrNamesOrAliasesDetails(false, None))
     }
   }

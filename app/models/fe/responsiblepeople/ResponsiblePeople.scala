@@ -24,7 +24,7 @@ case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
                               legalName: Option[PreviousName] = None,
                               legalNameChangeDate: Option[LocalDate] = None,
-                              knownBy: Option[String] = None,
+                              knownBy: Option[KnownBy] = None,
                               personResidenceType: Option[PersonResidenceType] = None,
                               ukPassport: Option[UKPassport] = None,
                               nonUKPassport: Option[NonUKPassport] = None,
@@ -51,6 +51,11 @@ object ResponsiblePeople {
     date <- name.dateOfChange
   } yield LocalDate.parse(date)
 
+  def knownBy(maybeDetails: Option[NameDetails]) = for {
+    details <- maybeDetails
+    name <- details.othrNamesOrAliasesDetails
+  } yield name
+
   implicit def convOtherNames(otherNames: Option[OthrNamesOrAliasesDetails]): Option[String] = {
     otherNames match {
       case Some(names) => names.aliases.fold[Option[String]](None)(x => x.headOption)
@@ -63,6 +68,7 @@ object ResponsiblePeople {
       desRp.nameDetails,
       desRp.nameDetails flatMap { n => n.previousNameDetails },
       legalNameChangeDate(desRp.nameDetails) orElse Some(LocalDate.now),
+      //knownBy(desRp.nameDetails),
       desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
       desRp.nationalityDetails,
       desRp,
