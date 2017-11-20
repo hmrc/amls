@@ -68,7 +68,6 @@ object ResponsiblePeople {
       desRp.nameDetails,
       desRp.nameDetails flatMap { n => n.previousNameDetails },
       legalNameChangeDate(desRp.nameDetails) orElse Some(LocalDate.now),
-      //knownBy(desRp.nameDetails),
       desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
       desRp.nationalityDetails,
       desRp,
