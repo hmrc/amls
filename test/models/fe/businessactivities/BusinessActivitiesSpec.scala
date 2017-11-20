@@ -27,7 +27,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
-
   val DefaultFranchiseName = "DEFAULT FRANCHISE NAME"
   val DefaultSoftwareName = "DEFAULT SOFTWARE"
   val DefaultBusinessTurnover = ExpectedBusinessTurnover.First
@@ -45,7 +44,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val DefaultTaxMatters = TaxMatters(true)
   val DefaultIdentifySuspiciousActivity = IdentifySuspiciousActivity(true)
 
-
   val NewFranchiseName = "NEW FRANCHISE NAME"
   val NewBusinessFranchise = BusinessFranchiseYes(NewFranchiseName)
   val NewInvolvedInOtherDetails = "NEW INVOLVED"
@@ -61,7 +59,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val NewWhoIsYourAccountant = WhoIsYourAccountant("newName", Some("newTradingName"),
     UkAccountantsAddress("98E", "Building1", Some("street1"), Some("road1"), "NE27 0QQ"))
   val NewTaxMatters = TaxMatters(false)
-
 
   "BusinessActivities" must {
 
@@ -104,7 +101,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       whoIsYourAccountant = Some(DefaultWhoIsYourAccountant),
       taxMatters = Some(DefaultTaxMatters)
     )
-
 
     "Serialise as expected" in {
       Json.toJson(completeModel) must be(completeJson)

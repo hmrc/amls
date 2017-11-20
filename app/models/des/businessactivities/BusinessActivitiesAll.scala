@@ -48,20 +48,25 @@ object BusinessActivitiesAll{
     val aspDate = feModel.aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
     val eabDate = feModel.eabSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
     val hvdDate = feModel.hvdSection.fold[Option[String]](None)(_.dateOfChange)
-    val dateLst = Seq(aspDate, eabDate, hvdDate).flatten
+    val baDate = feModel.businessMatchingSection.activities.dateOfChange
+    val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
 
     dateLst.map(x => DateTime.parse(x)).sorted(ord).headOption.map(_.toString("yyyy-MM-dd"))
   }
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, amendVariation: Boolean): Option[BusinessActivitiesAll] = {
-    val earliestDate = getEarliestDate(feModel)
-      convert(feModel.aboutTheBusinessSection, feModel.businessActivitiesSection,
-        earliestDate, amendVariation)
+      convert(
+        feModel.aboutTheBusinessSection,
+        feModel.businessActivitiesSection,
+        getEarliestDate(feModel),
+        amendVariation
+      )
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
               activities: models.fe.businessactivities.BusinessActivities,
-              dateOfChange: Option[String], amendVariation:Boolean): Option[BusinessActivitiesAll] = {
+              dateOfChange: Option[String],
+              amendVariation:Boolean): Option[BusinessActivitiesAll] = {
 
     Some(BusinessActivitiesAll(
       dateOfChange,
