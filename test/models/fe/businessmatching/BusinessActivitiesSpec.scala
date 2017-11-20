@@ -32,14 +32,20 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
       "successfully validate given an enum value" in {
         val json = Json.obj("businessActivities" -> Seq("05", "06", "07"))
 
-        Json.fromJson[BusinessActivities](json) must
-          be(JsSuccess(BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService)), JsPath \ "businessActivities"))
+        Json.fromJson[BusinessActivities](json) must be(JsSuccess(BusinessActivities(
+          Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService),
+          None
+        ), JsPath))
 
-        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("01", "02", "03"))) must
-          be(JsSuccess(BusinessActivities(Set(AccountancyServices, BillPaymentServices, EstateAgentBusinessService)), JsPath \ "businessActivities"))
+        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("01", "02", "03"))) must be(JsSuccess(BusinessActivities(
+          Set(AccountancyServices, BillPaymentServices, EstateAgentBusinessService),
+          None
+        ), JsPath))
 
-        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("04"))) must
-          be(JsSuccess(BusinessActivities(Set(HighValueDealing)), JsPath \ "businessActivities"))
+        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("04"))) must be(JsSuccess(BusinessActivities(
+          Set(HighValueDealing),
+          None
+        ), JsPath))
 
       }
 

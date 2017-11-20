@@ -20,7 +20,7 @@ import models.des.businessactivities.MlrActivitiesAppliedFor
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
-case class BusinessActivities(businessActivities: Set[BusinessActivity])
+case class BusinessActivities(businessActivities: Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 sealed trait BusinessActivity
 
