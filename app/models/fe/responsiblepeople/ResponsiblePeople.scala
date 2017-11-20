@@ -24,7 +24,7 @@ case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
                               legalName: Option[PreviousName] = None,
                               legalNameChangeDate: Option[LocalDate] = None,
-                              knownBy: Option[String] = None,
+                              knownBy: Option[KnownBy] = None,
                               personResidenceType: Option[PersonResidenceType] = None,
                               ukPassport: Option[UKPassport] = None,
                               nonUKPassport: Option[NonUKPassport] = None,
@@ -50,6 +50,11 @@ object ResponsiblePeople {
     name <- details.previousNameDetails
     date <- name.dateOfChange
   } yield LocalDate.parse(date)
+
+  def knownBy(maybeDetails: Option[NameDetails]) = for {
+    details <- maybeDetails
+    name <- details.othrNamesOrAliasesDetails
+  } yield name
 
   implicit def convOtherNames(otherNames: Option[OthrNamesOrAliasesDetails]): Option[String] = {
     otherNames match {

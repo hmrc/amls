@@ -30,7 +30,7 @@ object NameDetails {
     maybePerson match {
       case Some(person) => Some(NameDetails(
         person.personName,
-        person.knownBy,
+        OthrNamesOrAliasesDetails.from(person),
         PreviousNameDetails.from(person)))
       case _ => None
     }
