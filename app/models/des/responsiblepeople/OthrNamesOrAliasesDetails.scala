@@ -26,8 +26,8 @@ object OthrNamesOrAliasesDetails {
   implicit val format = Json.format[OthrNamesOrAliasesDetails]
 
   def from(person: ResponsiblePeople): Option[OthrNamesOrAliasesDetails] = {
-    (person.knownBy) match {
-      case Some(name) => Some(OthrNamesOrAliasesDetails(true, name.otherName))
+    person.knownBy match {
+      case Some(name) => Some(OthrNamesOrAliasesDetails(true, Some(Seq(name.otherNames.get))))
       case _ => Some(OthrNamesOrAliasesDetails(false, None))
     }
   }

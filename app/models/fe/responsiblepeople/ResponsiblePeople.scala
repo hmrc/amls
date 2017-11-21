@@ -51,11 +51,6 @@ object ResponsiblePeople {
     date <- name.dateOfChange
   } yield LocalDate.parse(date)
 
-  def knownBy(maybeDetails: Option[NameDetails]) = for {
-    details <- maybeDetails
-    name <- details.othrNamesOrAliasesDetails
-  } yield name
-
   implicit def convOtherNames(otherNames: Option[OthrNamesOrAliasesDetails]): Option[String] = {
     otherNames match {
       case Some(names) => names.aliases.fold[Option[String]](None)(x => x.headOption)

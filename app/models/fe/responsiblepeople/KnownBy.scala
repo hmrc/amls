@@ -20,7 +20,8 @@ import models.des.responsiblepeople.OthrNamesOrAliasesDetails
 import play.api.libs.json.Json
 
 case class KnownBy(
-                    otherName: Option[Seq[String]]
+                    hasOtherNames: Option[Boolean] = None,
+                    otherNames: Option[String]
                        )
 
 object KnownBy {
@@ -31,7 +32,7 @@ object KnownBy {
       case Some(pName) => pName.otherNamesOrAliases match {
         case true => {
           pName.aliases match {
-            case Some(name) => Some(KnownBy(Some(name)))
+            case Some(name) => Some(KnownBy(Some(true), Some(name.mkString(" "))))
             case None => None
           }
         }
