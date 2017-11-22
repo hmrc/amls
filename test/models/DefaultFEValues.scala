@@ -380,7 +380,7 @@ object ResponsiblePeopleSection {
     lastName = Some("lname")
   )
 
-  private val otherNames = Some(KnownBy(Some(true), Some("Doc")))
+  private val otherNames = Some(KnownBy(true, Some("Doc")))
   private val nameDateOfChange = new LocalDate(1990, 2, 24)
   private val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
   private val saRegistered = SaRegisteredYes("0123456789")
@@ -418,7 +418,7 @@ object ResponsiblePeopleSection {
       Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
       Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
       Some(new LocalDate(2001, 1, 1)),
-      Some(KnownBy(Some(true), Some("Aliases1"))),
+      Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       None,
@@ -444,7 +444,7 @@ object ResponsiblePeopleSection {
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
       Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
       Some(new LocalDate(1967, 8, 13)),
-      Some(KnownBy(Some(true), Some("bbbbbbbbbbb"))),
+      Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
       None, None, None, None,
       Some(ResponsiblePersonAddressHistory(

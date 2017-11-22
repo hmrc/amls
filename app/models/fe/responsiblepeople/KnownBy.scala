@@ -20,23 +20,25 @@ import models.des.responsiblepeople.OthrNamesOrAliasesDetails
 import play.api.libs.json.Json
 
 case class KnownBy(
-                    hasOtherNames: Option[Boolean] = None,
-                    otherNames: Option[String]
-                       )
+                    hasOtherNames: Boolean,
+                    otherNames: Option[String] = None
+                  )
 
 object KnownBy {
   implicit val format = Json.format[KnownBy]
+
+  val noOtherNames = KnownBy(hasOtherNames = false)
 
   implicit def conv(desOtherNames: Option[OthrNamesOrAliasesDetails]): Option[KnownBy] = {
     desOtherNames match {
       case Some(pName) => pName.otherNamesOrAliases match {
         case true => {
           pName.aliases match {
-            case Some(name) => Some(KnownBy(Some(true), Some(name.mkString(" "))))
-            case None => None
+            case Some(name) => Some(KnownBy(hasOtherNames = true, Some(name.mkString(" "))))
+            case None => Some(noOtherNames)
           }
         }
-        case false => None
+        case false => Some(noOtherNames)
       }
       case None => None
     }
