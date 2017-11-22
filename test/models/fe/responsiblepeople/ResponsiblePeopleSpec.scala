@@ -30,11 +30,11 @@ class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with ResponsibleP
 
     "validate complete json" must {
 
-      "Serialise as expected" in {
+      "serialise as expected" in {
         Json.toJson(CompleteResponsiblePeople) must be(CompleteJson)
       }
 
-      "Deserialise as expected" in {
+      "deserialise as expected" in {
         CompleteJson.as[ResponsiblePeople] must be(CompleteResponsiblePeople)
       }
     }
@@ -56,7 +56,7 @@ trait ResponsiblePeopleValues {
     private val currentAddress = ResponsiblePersonAddress(currentPersonAddress, ZeroToFiveMonths)
     private val additionalPersonAddress = PersonAddressUK("Line 1", "Line 2", None, None, "BB1 1BB")
     private val additionalAddress = ResponsiblePersonAddress(additionalPersonAddress, ZeroToFiveMonths)
-    val previousName = PreviousName(Some("ABCD"), Some("XYZ"), Some("Fly"))
+    val previousName = PreviousName(true, Some("ABCD"), Some("XYZ"), Some("Fly"))
 
     val personName = PersonName(
       firstName = "name",
@@ -77,9 +77,9 @@ trait ResponsiblePeopleValues {
     val convertedModel = Some(List(
       ResponsiblePeople(
         Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-        Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+        Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
         Some(new LocalDate(2001, 1, 1)),
-        Some(KnownBy(Some(Seq("Aliases1")))),
+        Some(KnownBy(Some(true), Some("Aliases1"))),
         Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
         Some(UKPassportYes("AA1111111")),
         None,
@@ -100,9 +100,9 @@ trait ResponsiblePeopleValues {
 
       ResponsiblePeople(
         Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
-        Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+        Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some(new LocalDate(1967, 8, 13)),
-        Some(KnownBy(Some(Seq("bbbbbbbbbbb")))),
+        Some(KnownBy(Some(true), Some("bbbbbbbbbbb"))),
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
         None, None, None, None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
@@ -133,7 +133,7 @@ trait ResponsiblePeopleValues {
     private val additionalAddress = ResponsiblePersonAddress(newAdditionalPersonAddress, ZeroToFiveMonths)
 
     val personName = PersonName("first", Some("middle"), "last")
-    val previousName = PreviousName(Some("Old"), Some("middle"), Some("Name"))
+    val previousName = PreviousName(true, Some("Old"), Some("middle"), Some("Name"))
     val contactDetails = ContactDetails("07000001122", "new@test.com")
     val addressHistory = ResponsiblePersonAddressHistory(Some(currentAddress), Some(additionalAddress))
     val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
@@ -148,7 +148,7 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.personName),
     Some(DefaultValues.previousName),
     Some(new LocalDate(1990, 2, 24)),
-    Some(KnownBy(Some(Seq("Doc")))),
+    Some(KnownBy(Some(true), Some("Doc"))),
     Some(DefaultValues.personResidenceType),
     Some(DefaultValues.ukPassport),
     None,
@@ -168,11 +168,16 @@ trait ResponsiblePeopleValues {
       "middleName" -> "middle name",
       "lastName" -> "surname"
     ),
-    "legalName" -> Json.obj("firstName" -> "ABCD",
+    "legalName" -> Json.obj(
+      "hasPreviousName" -> true,
+      "firstName" -> "ABCD",
       "middleName" -> "XYZ",
       "lastName" -> "Fly"),
     "legalNameChangeDate" -> "1990-02-24",
-    "knownBy" -> Json.obj("otherName" -> Seq("Doc")),
+    "knownBy" -> Json.obj(
+      "hasOtherNames" -> true,
+      "otherNames" -> "Doc"
+    ),
     "personResidenceType" -> Json.obj(
       "nino" -> "AA1111111",
       "countryOfBirth" -> "GB",

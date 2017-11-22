@@ -24,7 +24,7 @@ class PreviousNameSpec extends PlaySpec {
 
   "PreviousName" must {
     "Json Read/write with PreviousName details" in {
-      val previousName = PreviousName(Some("fname"), Some("mname"), Some("lname"))
+      val previousName = PreviousName(true, Some("fname"), Some("mname"), Some("lname"))
 
       PreviousName.format.reads(PreviousName.format.writes(previousName))
     }
@@ -37,12 +37,12 @@ class PreviousNameSpec extends PlaySpec {
         Some("2001-01-01")
       ))
 
-      val previousName = PreviousName(Some("first name"), Some("middle name"), Some("last name"))
+      val previousName = PreviousName(true, Some("first name"), Some("middle name"), Some("last name"))
       PreviousName.conv(previousNameDetails) must be(Some(previousName))
     }
 
     "convert des name details to frontend when previousNameDetails is none" in {
-      PreviousName.conv(None) must be(None)
+      PreviousName.conv(None) mustBe Some(PreviousName.noPreviousName)
     }
 
     "convert des name details to frontend when previousNameDetails has none values" in {
@@ -51,7 +51,8 @@ class PreviousNameSpec extends PlaySpec {
         None,
         None
       ))
-      PreviousName.conv(previousNameDetails) must be(None)
+
+      PreviousName.conv(previousNameDetails) mustBe Some(PreviousName.noPreviousName)
     }
   }
 }

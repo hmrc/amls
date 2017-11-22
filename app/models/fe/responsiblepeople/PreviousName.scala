@@ -21,29 +21,35 @@ import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 case class PreviousName(
+                         hasPreviousName: Boolean,
                          firstName: Option[String],
                          middleName: Option[String],
                          lastName: Option[String]
-                       )
+                       ) {
+}
 
 object PreviousName {
   implicit val format = Json.format[PreviousName]
+
+  val noPreviousName = PreviousName(false, None, None, None)
 
   implicit def conv(desPrevNames: Option[PreviousNameDetails]): Option[PreviousName] = {
     desPrevNames match {
       case Some(pName) => pName.nameEverChanged match {
         case true => {
           pName.previousName match {
-            case Some(name) => Some(PreviousName(name.firstName,
+            case Some(name) => Some(PreviousName(
+              true,
+              name.firstName,
               name.middleName,
               name.lastName
             ))
-            case None => None
+            case None => Some(noPreviousName)
           }
         }
-        case false => None
+        case false => Some(noPreviousName)
       }
-      case None => None
+      case _ => Some(noPreviousName)
     }
   }
 }
