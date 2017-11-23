@@ -374,12 +374,13 @@ object ResponsiblePeopleSection {
   )
 
   private val previousName = PreviousName(
+    hasPreviousName = true,
     firstName = Some("fname"),
     middleName = Some("mname"),
     lastName = Some("lname")
   )
 
-  private val otherNames = Some(KnownBy(Some(Seq("Doc"))))
+  private val otherNames = Some(KnownBy(true, Some("Doc")))
   private val nameDateOfChange = new LocalDate(1990, 2, 24)
   private val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
   private val saRegistered = SaRegisteredYes("0123456789")
@@ -415,9 +416,9 @@ object ResponsiblePeopleSection {
   val modelForView = Some(List(
     ResponsiblePeople(
       Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-      Some(PreviousName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+      Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
       Some(new LocalDate(2001, 1, 1)),
-      Some(KnownBy(Some(Seq("Aliases1")))),
+      Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       None,
@@ -441,9 +442,9 @@ object ResponsiblePeopleSection {
 
     ResponsiblePeople(
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
-      Some(PreviousName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+      Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
       Some(new LocalDate(1967, 8, 13)),
-      Some(KnownBy(Some(Seq("bbbbbbbbbbb")))),
+      Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
       None, None, None, None,
       Some(ResponsiblePersonAddressHistory(
