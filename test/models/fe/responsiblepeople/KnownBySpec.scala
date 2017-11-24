@@ -38,7 +38,7 @@ class KnownBySpec extends PlaySpec with MustMatchers {
       }
 
       "given None" in {
-        KnownBy.conv(None) mustBe None
+        KnownBy.conv(None) mustBe Some(KnownBy(hasOtherNames = false, None))
       }
     }
 
