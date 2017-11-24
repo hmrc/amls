@@ -40,7 +40,7 @@ object KnownBy {
         }
         case false => Some(noOtherNames)
       }
-      case None => None
+      case None => Some(noOtherNames)
     }
   }
 
