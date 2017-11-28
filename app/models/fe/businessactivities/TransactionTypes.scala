@@ -17,7 +17,6 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.{AuditableRecordsDetails, BusinessActivitiesAll}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 sealed trait TransactionType {
@@ -41,27 +40,26 @@ object TransactionTypes {
 
   import play.api.libs.json.Reads._
   import play.api.libs.functional.syntax._
+  import play.api.data.validation.{ValidationError => VE}
 
-  implicit val typesReader: Reads[Set[TransactionType]] =
-    (__ \ "types").read[Set[String]].flatMap { x: Set[String] =>
-      x.map {
-        case "01" => Reads(_ => JsSuccess(Paper)) map identity[TransactionType]
-        case "02" => Reads(_ => JsSuccess(DigitalSpreadsheet)) map identity[TransactionType]
-        case "03" =>
-          (JsPath \ "software").read[String].map(DigitalSoftware.apply _) map identity[TransactionType]
-        case _ =>
-          Reads(_ => JsError((JsPath \ "transactions") -> ValidationError("error.invalid")))
-      }.foldLeft[Reads[Set[TransactionType]]](
-        Reads[Set[TransactionType]](_ => JsSuccess(Set.empty))
-      ) {
-        (result, data) =>
-          data flatMap { m =>
-            result.map { n =>
-              n + m
-            }
-          }
+  implicit val typesReader = new Reads[Set[TransactionType]] {
+    override def reads(json: JsValue) = {
+      val t = (json \ "types").asOpt[Set[String]]
+      val n = (json \ "software").asOpt[String]
+      val validValues = Set("01", "02", "03")
+
+      (t, n) match {
+        case (None, _) => JsError(__ \ "types" -> VE("error.missing"))
+        case (Some(types), None) if types.contains("03") => JsError(__ \ "software" -> VE("error.missing"))
+        case (Some(types), _) if types.diff(validValues).nonEmpty => JsError(__ \ "types" -> VE("error.invalid"))
+        case (Some(types), maybeName) => JsSuccess(types map {
+          case "01" => Paper
+          case "02" => DigitalSpreadsheet
+          case "03" => DigitalSoftware(maybeName.getOrElse(""))
+        })
       }
     }
+  }
 
   implicit val jsonWrites = Writes[TransactionTypes] { t =>
     val softwareName = t.types.collectFirst {
