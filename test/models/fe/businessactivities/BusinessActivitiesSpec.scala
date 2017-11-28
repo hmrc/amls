@@ -34,7 +34,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val DefaultInvolvedInOtherDetails = "DEFAULT INVOLVED"
   val DefaultInvolvedInOther = InvolvedInOtherYes(DefaultInvolvedInOtherDetails)
   val DefaultBusinessFranchise = BusinessFranchiseYes(DefaultFranchiseName)
-  val DefaultTransactionRecord = TransactionRecordYes(Set(Paper, DigitalSoftware(DefaultSoftwareName)))
   val DefaultCustomersOutsideUK = CustomersOutsideUK(true, Some(Seq("GB")))
   val DefaultNCARegistered = NCARegistered(true)
   val DefaultAccountantForAMLSRegulations = AccountantForAMLSRegulations(true)
@@ -43,6 +42,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
     UkAccountantsAddress("address1", "address2", Some("address3"), Some("address4"), "POSTCODE"))
   val DefaultTaxMatters = TaxMatters(true)
   val DefaultIdentifySuspiciousActivity = IdentifySuspiciousActivity(true)
+  val DefaultTransactionRecordTypes = TransactionTypes(Set(Paper, DigitalSoftware(DefaultSoftwareName)))
 
   val NewFranchiseName = "NEW FRANCHISE NAME"
   val NewBusinessFranchise = BusinessFranchiseYes(NewFranchiseName)
@@ -50,7 +50,6 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val NewInvolvedInOther = InvolvedInOtherYes(NewInvolvedInOtherDetails)
   val NewBusinessTurnover = ExpectedBusinessTurnover.Second
   val NewAMLSTurnover = ExpectedAMLSTurnover.Second
-  val NewTransactionRecord = TransactionRecordNo
   val NewCustomersOutsideUK = CustomersOutsideUK(false, None)
   val NewNCARegistered = NCARegistered(false)
   val NewAccountantForAMLSRegulations = AccountantForAMLSRegulations(false)
@@ -59,6 +58,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
   val NewWhoIsYourAccountant = WhoIsYourAccountant("newName", Some("newTradingName"),
     UkAccountantsAddress("98E", "Building1", Some("street1"), Some("road1"), "NE27 0QQ"))
   val NewTaxMatters = TaxMatters(false)
+  val NewTransactionRecordTypes = TransactionTypes(Set(DigitalSpreadsheet))
 
   "BusinessActivities" must {
 
@@ -70,8 +70,10 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       "businessFranchise" -> true,
       "franchiseName" -> DefaultFranchiseName,
       "isRecorded" -> true,
-      "transactions" -> Seq("01", "03"),
-      "digitalSoftwareName" -> DefaultSoftwareName,
+      "transactionTypes" -> Json.obj(
+        "types" -> Seq("01", "03"),
+        "software" -> DefaultSoftwareName
+      ),
       "isOutside" -> true,
       "countries" -> Json.arr("GB"),
       "ncaRegistered" -> true,
@@ -93,13 +95,14 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       expectedBusinessTurnover = Some(DefaultBusinessTurnover),
       expectedAMLSTurnover = Some(DefaultAMLSTurnover),
       businessFranchise = Some(DefaultBusinessFranchise),
-      transactionRecord = Some(DefaultTransactionRecord),
+      transactionRecord = Some(true),
       customersOutsideUK = Some(DefaultCustomersOutsideUK),
       ncaRegistered = Some(DefaultNCARegistered),
       accountantForAMLSRegulations = Some(DefaultAccountantForAMLSRegulations),
       riskAssessmentPolicy = Some(DefaultRiskAssessments),
       whoIsYourAccountant = Some(DefaultWhoIsYourAccountant),
-      taxMatters = Some(DefaultTaxMatters)
+      taxMatters = Some(DefaultTaxMatters),
+      transactionRecordTypes = Some(DefaultTransactionRecordTypes)
     )
 
     "Serialise as expected" in {
@@ -143,15 +146,21 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
         ))))
       ))
 
-      val feModel = BusinessActivities(Some(InvolvedInOtherNo),None,None,Some(BusinessFranchiseYes("FranchiserName1")),
-        Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))),
+      val feModel = BusinessActivities(
+        Some(InvolvedInOtherNo),
+        None,
+        None,
+        Some(BusinessFranchiseYes("FranchiserName1")),
+        Some(true),
         Some(CustomersOutsideUK(true, Some(List("AD", "GB")))),
         Some(NCARegistered(true)),Some(AccountantForAMLSRegulations(true)),Some(IdentifySuspiciousActivity(true)),
         Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))),Some(HowManyEmployees("14","11")),
         Some(WhoIsYourAccountant("Name",Some("TradingName"),
           UkAccountantsAddress("AdvisorAddressLine1","AdvisorAddressLine2",Some("AdvisorAddressLine3"),Some("AdvisorAddressLine4"),"AA1 1AA"))),
-        Some(TaxMatters(true))
+        Some(TaxMatters(true)),
+        Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName"))))
       )
+
       BusinessActivities.conv(desModel) must be(feModel)
     }
 

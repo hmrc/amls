@@ -16,7 +16,7 @@
 
 package models.des.businessactivities
 
-import models.fe.businessactivities._
+import models.fe.businessactivities.{BusinessActivities => FEBusinessActivities, _}
 import play.api.libs.json.Json
 
 
@@ -43,12 +43,14 @@ case class AuditableRecordsDetails(detailedRecordsKept: String,
                                    transactionRecordingMethod: Option[TransactionRecordingMethod] = None)
 
 object AuditableRecordsDetails {
+  import TransactionRecordingMethod._
+
   implicit val format = Json.format[AuditableRecordsDetails]
 
-  implicit def convert(record: Option[TransactionRecord]): AuditableRecordsDetails = {
-    record match {
-      case Some(TransactionRecordYes(x)) => AuditableRecordsDetails("Yes", x)
-      case _ => AuditableRecordsDetails("No")
-    }
-  }
+  def boolToString(b: Option[Boolean]): String = if (b.getOrElse(false)) "Yes" else "No"
+
+  implicit def convert(activities: FEBusinessActivities): AuditableRecordsDetails =
+    AuditableRecordsDetails(boolToString(activities.transactionRecord),
+      activities.transactionRecordTypes.flatMap(t => t.types))
+
 }

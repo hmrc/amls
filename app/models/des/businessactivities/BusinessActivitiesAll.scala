@@ -77,12 +77,11 @@ object BusinessActivitiesAll{
       employeeCount(activities.howManyEmployees),
       mlremployeeCount(activities.howManyEmployees),
       activities.customersOutsideUK,
-      activities.transactionRecord,
+      AuditableRecordsDetails.convert(activities),
       activities.identifySuspiciousActivity,
       activities.ncaRegistered,
       activities.riskAssessmentPolicy,
       activities))
-
   }
 
   implicit def convStartDate(startDate: Option[ActivityStartDate]): Option[String] = {

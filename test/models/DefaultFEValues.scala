@@ -72,7 +72,8 @@ object SupervisionSection {
     Some(professionalBodyMember),
     Some(professionalBody)))
 
-  val modelForView = Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
+  val modelForView = Some(Supervision(
+    Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
     Some(ProfessionalBodyMemberYes(Set(AccountantsIreland, CharteredCertifiedAccountants, AssociationOfBookkeepers,
       AccountantsEnglandandWales, Bookkeepers, AccountingTechnicians, TaxationTechnicians, InternationalAccountants,
       Other("SpecifyOther"), LawSociety, InstituteOfTaxation, AccountantsScotland, FinancialAccountants, ManagementAccountants))),
@@ -94,9 +95,12 @@ object BusinessActivitiesSection {
   import models.fe.businessactivities._
   import models.fe.businessactivities.ExpectedAMLSTurnover.Third
 
-  val model = BusinessActivities(Some(InvolvedInOtherNo), None, Some(ExpectedAMLSTurnover.First),
+  val model = BusinessActivities(
+    Some(InvolvedInOtherNo),
+    None,
+    Some(ExpectedAMLSTurnover.First),
     Some(BusinessFranchiseYes("Name")),
-    Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("value")))),
+    Some(true),
     Some(CustomersOutsideUK(true, Some(Seq("GB", "AB")))),
     Some(NCARegistered(true)),
     Some(AccountantForAMLSRegulations(true)),
@@ -105,19 +109,24 @@ object BusinessActivitiesSection {
     Some(HowManyEmployees("10", "5")),
     Some(WhoIsYourAccountant("Name", Some("TradingName"),
       UkAccountantsAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "AA1 1AA"))),
-    Some(TaxMatters(true))
+    Some(TaxMatters(true)),
+    Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("value"))))
   )
 
 
-  val modelForView = BusinessActivities(Some(InvolvedInOtherNo), None, Some(Third),
+  val modelForView = BusinessActivities(Some(InvolvedInOtherNo),
+    None,
+    Some(Third),
     Some(BusinessFranchiseYes("FranchiserName1")),
-    Some(TransactionRecordYes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName")))),
+    Some(true),
     Some(CustomersOutsideUK(true, Some(List("AD", "GB")))), Some(NCARegistered(true)),
     Some(AccountantForAMLSRegulations(true)), Some(IdentifySuspiciousActivity(true)),
     Some(RiskAssessmentPolicyYes(Set(Digital, PaperBased))), Some(HowManyEmployees("12345678901", "11223344556")),
     Some(WhoIsYourAccountant("Name", Some("TradingName"),
       UkAccountantsAddress("AdvisorAddressLine1", "AdvisorAddressLine2", Some("AdvisorAddressLine3"), Some("AdvisorAddressLine4"), "AA1 1AA"))),
-    Some(TaxMatters(true)))
+    Some(TaxMatters(true)),
+    Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName"))))
+  )
 }
 
 object EabSection {

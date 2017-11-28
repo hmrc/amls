@@ -23,7 +23,7 @@ case class BusinessActivities(
                                expectedBusinessTurnover: Option[ExpectedBusinessTurnover] = None,
                                expectedAMLSTurnover: Option[ExpectedAMLSTurnover] = None,
                                businessFranchise: Option[BusinessFranchise] = None,
-                               transactionRecord: Option[TransactionRecord] = None,
+                               transactionRecord: Option[Boolean] = None,
                                customersOutsideUK: Option[CustomersOutsideUK] = None,
                                ncaRegistered: Option[NCARegistered] = None,
                                accountantForAMLSRegulations: Option[AccountantForAMLSRegulations] = None,
@@ -31,7 +31,8 @@ case class BusinessActivities(
                                riskAssessmentPolicy: Option[RiskAssessmentPolicy] = None,
                                howManyEmployees: Option[HowManyEmployees] = None,
                                whoIsYourAccountant: Option[WhoIsYourAccountant] = None,
-                               taxMatters: Option[TaxMatters] = None)
+                               taxMatters: Option[TaxMatters] = None,
+                               transactionRecordTypes: Option[TransactionTypes] = None)
 
 object BusinessActivities {
 
@@ -43,7 +44,7 @@ object BusinessActivities {
       __.read(Reads.optionNoError[ExpectedBusinessTurnover]) and
       __.read(Reads.optionNoError[ExpectedAMLSTurnover]) and
       __.read(Reads.optionNoError[BusinessFranchise]) and
-      __.read(Reads.optionNoError[TransactionRecord]) and
+      (__ \ "isRecorded").readNullable[Boolean] and
       __.read(Reads.optionNoError[CustomersOutsideUK]) and
       __.read(Reads.optionNoError[NCARegistered]) and
       __.read(Reads.optionNoError[AccountantForAMLSRegulations]) and
@@ -51,7 +52,8 @@ object BusinessActivities {
       __.read(Reads.optionNoError[RiskAssessmentPolicy]) and
       __.read(Reads.optionNoError[HowManyEmployees]) and
       __.read(Reads.optionNoError[WhoIsYourAccountant]) and
-      __.read(Reads.optionNoError[TaxMatters])
+      __.read(Reads.optionNoError[TaxMatters]) and
+      (__ \ "transactionTypes").readNullable[TransactionTypes]
     ) (BusinessActivities.apply _)
 
   implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {
@@ -61,7 +63,7 @@ object BusinessActivities {
         Json.toJson(model.expectedBusinessTurnover).asOpt[JsObject],
         Json.toJson(model.expectedAMLSTurnover).asOpt[JsObject],
         Json.toJson(model.businessFranchise).asOpt[JsObject],
-        Json.toJson(model.transactionRecord).asOpt[JsObject],
+        model.transactionRecord map { t => Json.obj("isRecorded" -> t) },
         Json.toJson(model.customersOutsideUK).asOpt[JsObject],
         Json.toJson(model.ncaRegistered).asOpt[JsObject],
         Json.toJson(model.accountantForAMLSRegulations).asOpt[JsObject],
@@ -69,18 +71,21 @@ object BusinessActivities {
         Json.toJson(model.riskAssessmentPolicy).asOpt[JsObject],
         Json.toJson(model.howManyEmployees).asOpt[JsObject],
         Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
-        Json.toJson(model.taxMatters).asOpt[JsObject]
+        Json.toJson(model.taxMatters).asOpt[JsObject],
+        model.transactionRecordTypes.map(t => Json.obj("transactionTypes" -> Json.toJson(t)))
       ).flatten.fold(Json.obj()) {
         _ ++ _
       }
   }
 
   implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
+    import TransactionTypes._
+
     BusinessActivities(involvedInOther = desBA.fold[Option[InvolvedInOther]](None)(x => x.businessActivityDetails),
       expectedBusinessTurnover = desBA.fold[Option[ExpectedBusinessTurnover]](None)(x => x.businessActivityDetails),
       expectedAMLSTurnover = desBA.fold[Option[ExpectedAMLSTurnover]](None)(x => x.businessActivityDetails),
       businessFranchise = desBA.fold[Option[BusinessFranchise]](None)(x => x.franchiseDetails),
-      transactionRecord = desBA.fold[Option[TransactionRecord]](None)(x => x),
+      transactionRecord = desBA.fold[Option[Boolean]](None)(TransactionTypes.convertRecordsKept),
       customersOutsideUK = desBA.fold[Option[CustomersOutsideUK]](None)(x => x),
       ncaRegistered = desBA.fold[Option[NCARegistered]](None)(x => Some(NCARegistered(x.nationalCrimeAgencyRegistered))),
       accountantForAMLSRegulations = desBA.fold[Option[AccountantForAMLSRegulations]](None)(x =>
@@ -92,7 +97,8 @@ object BusinessActivities {
       riskAssessmentPolicy = desBA.fold[Option[RiskAssessmentPolicy]](None)(x => x.formalRiskAssessmentDetails),
       howManyEmployees = desBA.fold[Option[HowManyEmployees]](None)(x => x),
       whoIsYourAccountant = desBA.fold[Option[WhoIsYourAccountant]](None)(x => x.mlrAdvisor),
-      taxMatters = desBA.fold[Option[TaxMatters]](None)(x => x.mlrAdvisor flatMap {mlrAdvisor => mlrAdvisor.mlrAdvisorDetails})
+      taxMatters = desBA.fold[Option[TaxMatters]](None)(x => x.mlrAdvisor flatMap {mlrAdvisor => mlrAdvisor.mlrAdvisorDetails}),
+      transactionRecordTypes = desBA.fold[Option[TransactionTypes]](None)(_.auditableRecordsDetails)
     )
   }
 
