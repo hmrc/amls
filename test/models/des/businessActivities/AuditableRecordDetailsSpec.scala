@@ -16,24 +16,32 @@
 
 package models.des.businessActivities
 
-import models.des.businessactivities.{TransactionRecordingMethod, AuditableRecordsDetails}
-import models.fe.businessactivities.{DigitalSoftware, DigitalSpreadsheet, Paper, TransactionRecordYes}
+import models.des.businessactivities.{AuditableRecordsDetails, TransactionRecordingMethod}
+import models.fe.businessactivities.{DigitalSoftware, DigitalSpreadsheet, Paper, TransactionTypes, BusinessActivities => FEBusinessActivities}
 import org.scalatestplus.play.PlaySpec
 
 class AuditableRecordDetailsSpec extends PlaySpec {
   "TransactionRecord" must {
-    "convertible to DES record" in{
-      val FETransactionRecord = Some(TransactionRecordYes(Set(Paper,DigitalSpreadsheet, DigitalSoftware("Value"))))
+    "convertible to DES record" in {
+      val FETransactionRecord = Some(FEBusinessActivities(
+        transactionRecord = Some(true),
+        transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("Value"))))
+      ))
+
       val auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("Value"))))
 
-      AuditableRecordsDetails.convert(FETransactionRecord) must be(auditableRecordsDetails)
-      }
+      AuditableRecordsDetails.convert(FETransactionRecord.get) must be(auditableRecordsDetails)
+    }
 
-    "convertible to DES record without all records" in{
-      val FETransactionRecord = Some(TransactionRecordYes(Set(Paper,DigitalSpreadsheet)))
+    "convertible to DES record without all records" in {
+      val FETransactionRecord = Some(FEBusinessActivities(
+        transactionRecord = Some(true),
+        transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet)))
+      ))
+
       val auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, false, None)))
 
-      AuditableRecordsDetails.convert(FETransactionRecord) must be(auditableRecordsDetails)
-    }
+      AuditableRecordsDetails.convert(FETransactionRecord.get) must be(auditableRecordsDetails)
     }
   }
+}

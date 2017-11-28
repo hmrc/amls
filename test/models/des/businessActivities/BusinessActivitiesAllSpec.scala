@@ -46,9 +46,19 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
       val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
 
-      val model = BusinessActivitiesAll(Some("2016-05-25"), None, None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
-        nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
-        formalRiskAssessmentDetails, mlrAdvisor)
+      val model = BusinessActivitiesAll(Some("2016-05-25"),
+        None,
+        None,
+        activityDetails,
+        franchiseDetails,
+        noOfEmployees,
+        noOfEmployeesForMlr,
+        nonUkResidentCustDetails,
+        auditableRecordsDetails,
+        suspiciousActivityGuidance,
+        nationalCrimeAgencyRegistered,
+        formalRiskAssessmentDetails,
+        mlrAdvisor)
 
       BusinessActivitiesAll.format.writes(model) must be(Json.obj(
         "busActivitiesChangeDate" ->"2016-05-25",

@@ -67,7 +67,6 @@ class SubscriptionViewControllerSpec
     }
 
     "return a valid response when the amls registration number is valid" in {
-
       val response = DesConstants.SubscriptionViewModelForRp
 
       when {
@@ -78,10 +77,9 @@ class SubscriptionViewControllerSpec
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModel))
-
     }
-    "return an invalid response when the service fails" in {
 
+    "return an invalid response when the service fails" in {
       when {
         SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
