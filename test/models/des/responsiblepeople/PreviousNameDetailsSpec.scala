@@ -17,6 +17,7 @@
 package models.des.responsiblepeople
 
 import models.ResponsiblePeopleSection
+import models.fe.responsiblepeople.{PreviousName, ResponsiblePeople}
 import org.scalatestplus.play.PlaySpec
 
 class PreviousNameDetailsSpec extends PlaySpec {
@@ -26,6 +27,12 @@ class PreviousNameDetailsSpec extends PlaySpec {
       // scalastyle:off magic.number
       PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head) mustBe
         Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))
+    }
+
+    "successfully convert a person without a previous name" in {
+      val person = ResponsiblePeople(legalName = Some(PreviousName(hasPreviousName = false, None, None, None)))
+
+      PreviousNameDetails.from(person) mustBe Some(PreviousNameDetails(false, None, None, None))
     }
   }
 }
