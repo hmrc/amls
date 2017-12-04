@@ -18,12 +18,12 @@ package models.payments
 
 import java.time.LocalDateTime
 
-import generators.{PayApiGenerator, PaymentGenerator}
+import generators.PaymentGenerator
 import models.payapi.PaymentStatuses.{Created, Successful}
+import models.payapi.{Payment => PayApiPayment}
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
-import models.payapi.{Payment => PayApiPayment}
 
 //noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
@@ -75,7 +75,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         val safeId = amlsRefNoGen.sample.get
         val now = LocalDateTime.now
 
-        Payment(refNumber, safeId, payApiModel) mustBe Payment(
+        Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
           payApiModel._id,
           refNumber,
           safeId,
@@ -86,7 +86,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           now,
           isBacs = None,
           None
-        ).copy(createdAt = now)
+        )
       }
 
       "convert from a BACS payment request" in {
