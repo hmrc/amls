@@ -29,20 +29,30 @@ object BankAccountView {
   implicit val format = Json.format[BankAccountView]
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccountView] = {
-    bankdetails map (x => x.bankAccount.account match {
-      case uk: UKAccount => BankAccountView(x.bankAccount.accountName,
-        convertType(x.bankAccountType),
-        true, ukAccountView(uk.sortCode, uk.accountNumber))
+    bankdetails map { x =>
+      x.bankAccount match {
+        case uk: UKAccount => BankAccountView(
+          x.accountName,
+          convertType(x.bankAccountType),
+          true,
+          ukAccountView(uk.sortCode, uk.accountNumber)
+        )
 
-      case nonukacc: NonUKAccountNumber => BankAccountView(x.bankAccount.accountName,
-        convertType(x.bankAccountType),
-        false, AccountNumberView(nonukacc.accountNumber))
+        case nonukacc: NonUKAccountNumber => BankAccountView(
+          x.accountName,
+          convertType(x.bankAccountType),
+          false,
+          AccountNumberView(nonukacc.accountNumber)
+        )
 
-      case nonukiban: NonUKIBANNumber => BankAccountView(x.bankAccount.accountName,
-        convertType(x.bankAccountType),
-        false, IBANNumberView(nonukiban.IBANNumber))
+        case nonukiban: NonUKIBANNumber => BankAccountView(
+          x.accountName,
+          convertType(x.bankAccountType),
+          false,
+          IBANNumberView(nonukiban.IBANNumber)
+        )
+      }
     }
-      )
   }
 
   def convertType(accountType: BankAccountType): String = {

@@ -76,39 +76,8 @@ case class UKAccount(
                       sortCode: String
                     ) extends Account
 
-
 sealed trait NonUKAccount extends Account
 
 case class NonUKAccountNumber(accountNumber: String) extends NonUKAccount
 
 case class NonUKIBANNumber(IBANNumber: String) extends NonUKAccount
-
-
-case class BankAccount(accountName: String, account: Account)
-
-object BankAccount {
-
-  implicit val jsonReads: Reads[BankAccount] = {
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-
-    (
-      (__ \ "accountName").read[String] and
-        (__).read[Account]
-      ) (BankAccount.apply _)
-  }
-
-  implicit val jsonWrites: Writes[BankAccount] = {
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "accountName").write[String] and
-        (__).write[Account]
-      ) (unlift(BankAccount.unapply _))
-
-  }
-
-  implicit def convBankAccount(bankDtls: BankAccountView): BankAccount = {
-    BankAccount(bankDtls.accountName, bankDtls)
-  }
-}
