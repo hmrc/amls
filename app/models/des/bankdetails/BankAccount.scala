@@ -24,21 +24,30 @@ case class BankAccount(accountName: String, accountType:String, doYouHaveUkBankA
 object BankAccount {
   implicit val format = Json.format[BankAccount]
 
-  implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]):Seq[BankAccount] ={
-    bankdetails map(x => x.bankAccount.account match {
-        case uk:UKAccount => BankAccount(x.bankAccount.accountName,
+  implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]):Seq[BankAccount] = {
+    bankdetails map { x =>
+      x.bankAccount match {
+        case uk: UKAccount => BankAccount(
+          x.accountName,
           convertType(x.bankAccountType),
-          true, ukAccount(uk.sortCode,uk.accountNumber))
+          true,
+          ukAccount(uk.sortCode, uk.accountNumber)
+        )
 
-        case nonukacc:NonUKAccountNumber => BankAccount(x.bankAccount.accountName,
+        case nonukacc: NonUKAccountNumber => BankAccount(
+          x.accountName,
           convertType(x.bankAccountType),
-          false, AccountNumber(nonukacc.accountNumber))
+          false,
+          AccountNumber(nonukacc.accountNumber))
 
-        case nonukiban:NonUKIBANNumber => BankAccount(x.bankAccount.accountName,
+        case nonukiban: NonUKIBANNumber => BankAccount(
+          x.accountName,
           convertType(x.bankAccountType),
-          false, IBANNumber(nonukiban.IBANNumber))
+          false,
+          IBANNumber(nonukiban.IBANNumber)
+        )
       }
-    )
+    }
   }
 
   def convertType(accountType:BankAccountType):String ={

@@ -20,7 +20,8 @@ import models.des.bankdetails.{BankAccountView, BankDetailsView}
 
 case class BankDetails (
                          bankAccountType: BankAccountType,
-                         bankAccount: BankAccount
+                         accountName: String,
+                         bankAccount: Account
                         )
 
 object BankDetails {
@@ -31,7 +32,7 @@ object BankDetails {
 
   def convBankAccount(bankDtls: BankAccountView): BankDetails = {
 
-    BankDetails(bankDtls.accountType, bankDtls)
+    BankDetails(bankDtls.accountType, bankDtls.accountName, bankDtls)
 
   }
 
