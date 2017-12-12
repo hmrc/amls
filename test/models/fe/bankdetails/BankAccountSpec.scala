@@ -82,7 +82,7 @@ class BankAccountSpec extends PlaySpec with MockitoSugar {
         ukAccountView("123456","12345678")
       )
 
-      BankAccount.convBankAccount(desModel) must be(BankAccount("AccountName", UKAccount("12345678","123456")))
+      Account.convBankAccount(desModel) must be(UKAccount("12345678","123456"))
     }
 
     "convert des non uk bankAccount to frontend non uk bankAccount" in {
@@ -93,7 +93,7 @@ class BankAccountSpec extends PlaySpec with MockitoSugar {
         AccountNumberView("123456")
       )
 
-      BankAccount.convBankAccount(desModel) must be(BankAccount("AccountName", NonUKAccountNumber("123456")))
+      Account.convBankAccount(desModel) must be(NonUKAccountNumber("123456"))
     }
 
     "convert des non uk iban bankAccount to frontend non uk iban bankAccount" in {
@@ -104,7 +104,7 @@ class BankAccountSpec extends PlaySpec with MockitoSugar {
         IBANNumberView("123456898980980809809809809809809809")
       )
 
-      BankAccount.convBankAccount(desModel) must be(BankAccount("sams account", NonUKIBANNumber("123456898980980809809809809809809809")))
+      Account.convBankAccount(desModel) must be(NonUKIBANNumber("123456898980980809809809809809809809"))
     }
   }
 

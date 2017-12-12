@@ -288,16 +288,16 @@ object BankDetailsSection {
 
   val model = Seq(
     BankDetails(PersonalAccount,
-      BankAccount("Personal account", UKAccount("12345678", "112233"))),
+      "Personal account", UKAccount("12345678", "112233")),
     BankDetails(BelongsToBusiness,
-      BankAccount("Business account", NonUKAccountNumber("12345678"))),
+      "Business account", NonUKAccountNumber("12345678")),
     BankDetails(BelongsToOtherBusiness,
-      BankAccount("Another Business account", NonUKIBANNumber("12345678")))
+      "Another Business account", NonUKIBANNumber("12345678"))
   )
 
-  val modelForView = List(BankDetails(BelongsToBusiness, BankAccount("AccountName", UKAccount("12345678", "123456"))),
-    BankDetails(PersonalAccount, BankAccount("AccountName1", NonUKIBANNumber("87654321"))),
-    BankDetails(BelongsToOtherBusiness, BankAccount("AccountName2", NonUKAccountNumber("87654321"))))
+  val modelForView = List(BankDetails(BelongsToBusiness, "AccountName", UKAccount("12345678", "123456")),
+    BankDetails(PersonalAccount, "AccountName1", NonUKIBANNumber("87654321")),
+    BankDetails(BelongsToOtherBusiness, "AccountName2", NonUKAccountNumber("87654321")))
 
 }
 

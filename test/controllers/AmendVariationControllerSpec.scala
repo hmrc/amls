@@ -87,7 +87,7 @@ class AmendVariationControllerSpec extends PlaySpec
       RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"),
       altCorrespondenceAddress = false
     ),
-    bankDetailsSection = Seq(BankDetails(PersonalAccount, BankAccount("name", NonUKAccountNumber("1234567896")))),
+    bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
     aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),
     businessActivitiesSection = BusinessActivities(None),
     responsiblePeopleSection = None,
