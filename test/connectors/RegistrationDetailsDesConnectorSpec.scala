@@ -27,11 +27,12 @@ import org.scalatest.concurrent._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
+import play.api.test.Helpers._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
 
@@ -62,12 +63,10 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers wit
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        mockHttpGet.GET[RegistrationDetails](eqTo(s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
-      } thenReturn Future.successful(details)
+        mockHttpGet.GET[HttpResponse](eqTo(s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
+      } thenReturn Future.successful(HttpResponse(OK, Some(Json.toJson(details))))
 
-      whenReady (connector.getRegistrationDetails(safeId)) { r =>
-        r mustBe details
-      }
+      whenReady (connector.getRegistrationDetails(safeId)) { _ mustBe details }
 
     }
   }
