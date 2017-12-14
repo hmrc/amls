@@ -18,24 +18,18 @@ package connectors
 
 import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
-import play.api.Logger
+import play.api.http.Status.OK
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads }
 
 trait RegistrationDetailsDesConnector extends DESConnector  {
-
-  private val debug: String => String => Unit = method => msg => Logger.debug(s"[RegistrationDetailsConnector.$method] $msg")
-
   def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
-    val d = debug("getRegistrationDetails")
     val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
 
-    d(s"Requesting registration details for $safeId")
-    httpGet.GET[RegistrationDetails](url)(implicitly[HttpReads[RegistrationDetails]], desHeaderCarrier,ec) map { result =>
-      d(s"Response: ${result.toString}")
-      result
+    httpGet.GET[HttpResponse](url)(implicitly, desHeaderCarrier, ec) map {
+      case response if response.status == OK => response.json.as[RegistrationDetails]
+      case response => throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
     }
   }
-
 }
