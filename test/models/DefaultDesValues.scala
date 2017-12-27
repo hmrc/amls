@@ -33,6 +33,7 @@ import models.des.responsiblepeople.{Address => RPAddress, _}
 import models.des.tradingpremises.{Asp => TPAsp, _}
 import models.des.asp._
 import org.joda.time.LocalDate
+import utils.StatusConstants
 
 object DefaultDesValues {
 
@@ -172,6 +173,7 @@ object DefaultDesValues {
     RPExtra()
   )
   ))
+
   val ResponsiblePersonsSectionForRelease7 = Some(Seq(ResponsiblePersons(
     nameDtls,
     nationalDtls,

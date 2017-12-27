@@ -16,15 +16,14 @@
 
 package utils
 
-import config.AmlsConfig
 import models.des.DesConstants
 import org.mockito.Matchers.{eq => eqTo}
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
-class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
+class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
   override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
@@ -32,73 +31,162 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
 
   "ResponsiblePeopleUpdateHelper" must {
 
+    "correctly register the responsible person as 'unchanged' if the data is the same" in {
+
+      val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+          rps => Seq(rps.head)
+        }
+      )
+
+      val request = DesConstants.updateAmendVariationRequestRP.copy(
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+          rps => Seq(rps.tail.head)
+        }
+      )
+
+      val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+          rps =>
+            Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
+        })
+
+      val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
+
+      result.responsiblePersons must be(convertedRequest.responsiblePersons)
+    }
+
+    "register the person as 'unchanged' if specified in RP Extra, even if the data is different" in {
+
+      val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+          rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+        }
+      )
+
+      val request = DesConstants.updateAmendVariationRequestRP.copy(
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+          rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Unchanged)))}
+        }
+      )
+
+      val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+          rps =>
+            Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
+              extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
+        })
+
+      val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
+
+      result.responsiblePersons must be(convertedRequest.responsiblePersons)
+
+    }
+
+    "assume that the responsible person has changed if specified in RPExtra" in {
+
+      val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+          rps => Seq(rps.head)
+        }
+      )
+
+      val request = DesConstants.updateAmendVariationRequestRP.copy(
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+          rps =>
+            Seq(rps.tail.head) map {
+              p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Updated)))
+            }
+        }
+      )
+
+      val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+          rps =>
+            Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+        })
+
+      val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
+
+      result.responsiblePersons must be(convertedRequest.responsiblePersons)
+    }
+
     "successfully compare and update api6 request with api5 data" when {
 
-      "responsible people start date changes" in {
+      "status is None in RPExtra" when {
 
-        val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-          responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-            rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
-          }
-        )
-        val request = DesConstants.updateAmendVariationRequestRP.copy(
-          responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-            rps => Seq(rps.tail.head)
-          }
-        )
-        val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-          responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-            rps =>
-              Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
-                extra = rps.tail.head.extra.copy(status = Some("Updated"))))
-          })
+        "responsible people start date changes" in {
 
-        val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
+          val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+              rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+            }
+          )
 
-        result.responsiblePersons must be(convertedRequest.responsiblePersons)
+          val request = DesConstants.updateAmendVariationRequestRP.copy(
+            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+              rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = None))}
+            }
+          )
 
-      }
+          val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+              rps =>
+                Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
+                  extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+            })
 
-      "user has modified the previous name date of change of an RP" in {
-        val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-          responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-            rps => Seq(rps.head.copy(nameDetails = rps.head.nameDetails map {
-              nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
-                pnd => pnd.copy(dateOfChange = Some("1970-01-01"))
-              })
-            }))
-          }
-        )
-        val request = DesConstants.updateAmendVariationRequestRP.copy(
-          responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-            rps => Seq(rps.tail.head)
-          }
-        )
-        val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-          responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-            rps => Seq(rps.tail.head.copy(
-              nameDetails = rps.tail.head.nameDetails map {
-                nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
-                  pnd => pnd.copy(dateChangeFlag = Some(true))
-                })
-              }
-              , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
-          }
-        )
+          val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
-        val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
+          result.responsiblePersons must be(convertedRequest.responsiblePersons)
 
-        result.responsiblePersons must be(convertedRequest.responsiblePersons)
-      }
+        }
 
-      "user has deleted a record, added one new record and has not changed one record of responsible people" in {
-        val viewModel = DesConstants.SubscriptionViewStatusRP
+        "user has modified the previous name date of change of an RP" in {
+          val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
+            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
+              rps =>
+                Seq(rps.head.copy(nameDetails = rps.head.nameDetails map {
+                  nd =>
+                    nd.copy(previousNameDetails = nd.previousNameDetails map {
+                      pnd => pnd.copy(dateOfChange = Some("1970-01-01"))
+                    })
+                }))
+            }
+          )
+          val request = DesConstants.updateAmendVariationRequestRP.copy(
+            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
+              rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = None))}
+            }
+          )
+          val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
+            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
+              rps =>
+                Seq(rps.tail.head.copy(
+                  nameDetails = rps.tail.head.nameDetails map {
+                    nd =>
+                      nd.copy(previousNameDetails = nd.previousNameDetails map {
+                        pnd => pnd.copy(dateChangeFlag = Some(true))
+                      })
+                  }
+                  , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
+            }
+          )
 
-        val testRequest = DesConstants.amendStatusAmendVariationRP
+          val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
-        val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(DesConstants.updateAmendVariationRequestRP, viewModel)
+          result.responsiblePersons must be(convertedRequest.responsiblePersons)
+        }
 
-        result.responsiblePersons must be(testRequest.responsiblePersons)
+        "user has deleted a record, added one new record and has not changed one record of responsible people" in {
+          val viewModel = DesConstants.SubscriptionViewStatusRP
+
+          val testRequest = DesConstants.amendStatusAmendVariationRP
+
+          val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(DesConstants.updateAmendVariationRequestRP, viewModel)
+
+          result.responsiblePersons must be(testRequest.responsiblePersons)
+        }
       }
     }
   }

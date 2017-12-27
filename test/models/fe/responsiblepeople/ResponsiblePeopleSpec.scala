@@ -22,6 +22,7 @@ import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
+import utils.StatusConstants
 
 
 class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with ResponsiblePeopleValues {
@@ -94,8 +95,7 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingNo),
         Some(TrainingYes("TrainingDetails")),
         Some(false),
-        Some(333333),
-        Some("added")
+        Some(333333)
       ),
 
       ResponsiblePeople(
@@ -114,13 +114,12 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingYes("bbbbbbbbbb")),
         Some(TrainingNo),
         Some(true),
-        Some(222222), Some("added")
+        Some(222222)
       )))
 
   }
 
   object NewValues {
-
     private val residenceYear = 1990
     private val residenceMonth = 2
     private val residenceDay = 24
@@ -234,6 +233,7 @@ trait ResponsiblePeopleValues {
     "training" -> Json.obj(
       "training" -> true,
       "information" -> "test"
-    )
+    ),
+    "hasChanged" -> false
   )
 }
