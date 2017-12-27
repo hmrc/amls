@@ -81,9 +81,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
 
 class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
-  override implicit lazy val app = new GuiceApplicationBuilder()
-    .configure("microservice.services.feature-toggle.knownfact-postcode" -> true)
-    .build()
+  override implicit lazy val app = new GuiceApplicationBuilder().build()
 
   "SubscriptionService subscribe" must {
     "return a successful response" when {
@@ -273,49 +271,6 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
             status mustEqual BAD_GATEWAY
             ex.jsonBody must equal(None)
 
-        }
-      }
-    }
-  }
-}
-
-class SubscriptionServiceNoPostcodeKnownFactSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
-
-  override implicit lazy val app = new GuiceApplicationBuilder()
-    .configure("microservice.services.feature-toggle.knownfact-postcode" -> false)
-    .build()
-
-  implicit val hc = HeaderCarrier()
-
-  "SubscriptionService subscribe" must {
-    "not add the postcode into Known Facts" when {
-      "the feature is toggled off" in new TestFixture {
-
-        val knownFacts = KnownFactsForService(Seq(
-          KnownFact("MLRRefNumber", response.amlsRefNo),
-          KnownFact("SafeId", safeId)
-        ))
-
-        reset(SubscriptionService.ggConnector)
-
-        when {
-          successValidate.isSuccess
-        } thenReturn true
-
-        when {
-          SubscriptionService.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
-        } thenReturn Future.successful(response)
-
-        when {
-          SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
-        } thenReturn Future.successful(mock[HttpResponse])
-
-        when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
-
-        whenReady(SubscriptionService.subscribe(safeId, request)) {
-          result =>
-            result mustEqual SubscriptionResponse.convert(response)
-            verify(SubscriptionService.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())
         }
       }
     }
