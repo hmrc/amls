@@ -41,8 +41,6 @@ trait ResponsiblePeopleUpdateHelper {
 
     val desResponsiblePeople = desRp.copy(extra = desRPExtra)
 
-    println(s"${Console.BLUE}${desResponsiblePeople.extra.status}${Console.RESET}")
-
     val updatedStatus = desResponsiblePeople.extra.status.getOrElse(
       if (desResponsiblePeople.equals(viewRp)) {
       StatusConstants.Unchanged
