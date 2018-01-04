@@ -38,30 +38,32 @@ trait ResponsiblePeopleUpdateHelper {
       testResult = viewRp.extra.testResult,
       testDate = viewRp.extra.testDate
     )
+
     val desResponsiblePeople = desRp.copy(extra = desRPExtra)
 
-    val updatedStatus = desResponsiblePeople.extra.status match {
-      case Some(StatusConstants.Deleted) => StatusConstants.Deleted
-      case _ => desResponsiblePeople.equals(viewRp) match {
-        case true => StatusConstants.Unchanged
-        case false => StatusConstants.Updated
-      }
-    }
+    val updatedStatus = desResponsiblePeople.extra.status.getOrElse(
+      if (desResponsiblePeople.equals(viewRp)) {
+      StatusConstants.Unchanged
+    } else {
+      StatusConstants.Updated
+    })
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
-
     val updatedStatusRp = desResponsiblePeople.copy(extra = statusExtraField)
+
     if (AmlsConfig.release7) {
       updatedStatusRp.copy(nameDetails = updatedStatusRp.nameDetails map {
-        nd => nd.copy(previousNameDetails = nd.previousNameDetails map {
-          pnd => pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
-            for {
-              nameDetails <- viewRp.nameDetails
-              previousNameDetails <- nameDetails.previousNameDetails
-              prevDateOfChange <- previousNameDetails.dateOfChange
-            } yield prevDateOfChange
-          }))
-        })
+        nd =>
+          nd.copy(previousNameDetails = nd.previousNameDetails map {
+            pnd =>
+              pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+                for {
+                  nameDetails <- viewRp.nameDetails
+                  previousNameDetails <- nameDetails.previousNameDetails
+                  prevDateOfChange <- previousNameDetails.dateOfChange
+                } yield prevDateOfChange
+              }))
+          })
       },
         dateChangeFlag = Some(updatedStatusRp.startDate !=
           viewRp.startDate
@@ -80,9 +82,10 @@ trait ResponsiblePeopleUpdateHelper {
         val rpWithAddedStatus = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
         if (AmlsConfig.release7) {
           val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
-            nds => nds.copy(previousNameDetails = nds.previousNameDetails map {
-              pnd => pnd.copy(dateChangeFlag = Some(false))
-            })
+            nds =>
+              nds.copy(previousNameDetails = nds.previousNameDetails map {
+                pnd => pnd.copy(dateChangeFlag = Some(false))
+              })
           }, dateChangeFlag = Some(false)))
           rpWithLineIds ++ rpWithDateChangeFlags
         } else {

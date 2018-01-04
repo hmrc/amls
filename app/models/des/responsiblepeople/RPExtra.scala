@@ -20,7 +20,8 @@ import models.des.StringOrInt
 import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{Json, _}
+import play.api.libs.json._
+import utils.StatusConstants
 
 case class RPExtra(
                     lineId: Option[StringOrInt] = None,
@@ -53,10 +54,17 @@ object RPExtra {
         (__ \ "retest").writeNullable[String] and
         (__ \ "testResult").writeNullable[String] and
         (__ \ "testDate").writeNullable[String]
-      ) (unlift(RPExtra.unapply _))
+      ) (unlift(RPExtra.unapply))
   }
 
   implicit def conv(rp: ResponsiblePeople): RPExtra = {
-    RPExtra(rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))), None, rp.status, None, None, None, None)
+    RPExtra(
+      rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))),
+      None,
+      rp.lineId.fold[Option[String]](None)(_ => if(rp.hasChanged) Some(StatusConstants.Updated) else Some(StatusConstants.Unchanged)),
+      None,
+      None,
+      None,
+      None)
   }
 }

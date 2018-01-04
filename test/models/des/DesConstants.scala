@@ -1766,7 +1766,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt(333333)), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -1813,7 +1813,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt(222222)), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
     )
   )
 
@@ -1881,7 +1881,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -1928,7 +1928,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
   )
 
@@ -1996,7 +1996,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -2043,7 +2043,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("222222")), None, Some("added"), None, None, None)
+      RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
   )
 

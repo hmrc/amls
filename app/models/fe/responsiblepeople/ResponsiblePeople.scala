@@ -38,7 +38,8 @@ case class ResponsiblePeople(
                               training: Option[Training] = None,
                               hasAlreadyPassedFitAndProper: Option[Boolean] = None,
                               lineId: Option[Int] = None,
-                              status: Option[String] = None
+                              status: Option[String] = None,
+                              hasChanged: Boolean = false
                             )
 
 object ResponsiblePeople {
