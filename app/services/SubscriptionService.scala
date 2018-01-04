@@ -112,7 +112,7 @@ trait SubscriptionService {
       KnownFact("SafeId", safeId)
     )
 
-    if (AmlsConfig.enablePostcodeKnownFact && request.businessContactDetails.businessAddress.postcode.isDefined) {
+    if (request.businessContactDetails.businessAddress.postcode.isDefined) {
       KnownFactsForService(facts :+ KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.get))
     } else {
       KnownFactsForService(facts)
