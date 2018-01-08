@@ -28,55 +28,6 @@ case class ProfessionalBodyMemberYes(transactionType: Set[BusinessType]) extends
 
 case object ProfessionalBodyMemberNo extends ProfessionalBodyMember
 
-
-sealed trait BusinessType {
-  val value: String =
-    this match {
-      case AccountingTechnicians => "01"
-      case CharteredCertifiedAccountants => "02"
-      case InternationalAccountants => "03"
-      case TaxationTechnicians => "04"
-      case ManagementAccountants => "05"
-      case InstituteOfTaxation => "06"
-      case Bookkeepers => "07"
-      case AccountantsIreland => "08"
-      case AccountantsScotland => "09"
-      case AccountantsEnglandandWales => "10"
-      case FinancialAccountants => "11"
-      case AssociationOfBookkeepers => "12"
-      case LawSociety => "13"
-      case Other(_) => "14"
-    }
-}
-
-case object AccountingTechnicians extends BusinessType
-
-case object CharteredCertifiedAccountants extends BusinessType
-
-case object InternationalAccountants extends BusinessType
-
-case object TaxationTechnicians extends BusinessType
-
-case object ManagementAccountants extends BusinessType
-
-case object InstituteOfTaxation extends BusinessType
-
-case object Bookkeepers extends BusinessType
-
-case object AccountantsIreland extends BusinessType
-
-case object AccountantsScotland extends BusinessType
-
-case object AccountantsEnglandandWales extends BusinessType
-
-case object FinancialAccountants extends BusinessType
-
-case object AssociationOfBookkeepers extends BusinessType
-
-case object LawSociety extends BusinessType
-
-case class Other(businessDetails: String) extends BusinessType
-
 object ProfessionalBodyMember {
 
   implicit val jsonReads: Reads[ProfessionalBodyMember] = {
