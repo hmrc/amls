@@ -22,12 +22,11 @@ import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
 
-
 class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
 
-    "JSON validation" must {
+  "JSON validation" must {
 
-      "successfully validate given values" in {
+      "validate given values" in {
         val json =  Json.obj("isAMember" -> true,
           "businessType" -> Seq("01","02"))
 
@@ -35,14 +34,14 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
           be(JsSuccess(ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants))))
       }
 
-      "successfully validate given values with option No" in {
+      "validate given values with option No" in {
         val json =  Json.obj("isAMember" -> false)
 
         Json.fromJson[ProfessionalBodyMember](json) must
           be(JsSuccess(ProfessionalBodyMemberNo))
       }
 
-      "successfully validate given values with option Digital software" in {
+      "validate given values with option Digital software" in {
         val json =  Json.obj("isAMember" -> true,
           "businessType" -> Seq("14", "12"),
         "specifyOtherBusiness" -> "test")
@@ -72,7 +71,8 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
       "write valid data in using json write with Option No" in {
         Json.toJson[ProfessionalBodyMember](ProfessionalBodyMemberNo) must be (Json.obj("isAMember" -> false))
       }
-    }
+
+  }
 
   "convert des to frontend model successfully" in {
     val desModel = Some(ProfessionalBodyDetails(
