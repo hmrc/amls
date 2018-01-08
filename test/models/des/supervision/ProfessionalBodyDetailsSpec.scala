@@ -24,9 +24,12 @@ class ProfessionalBodyDetailsSpec extends  PlaySpec {
   "ProfessionalBodyDetails" should {
 
     "convert frontend supervision model correctly to des ProfessionalBodyDetails" in {
-      val model = Supervision(None,
+      val model = Supervision(
         None,
-        Some(ProfessionalBodyYes("details")))
+        None,
+        None,
+        Some(ProfessionalBodyYes("details"))
+      )
 
       ProfessionalBodyDetails.conv(model) must be (Some(ProfessionalBodyDetails(true,Some("details"),None)))
     }

@@ -38,6 +38,7 @@ trait SupervisionValues {
     val DefaultAnotherBody = AnotherBodyYes(supervisor, start, end, reason)
     val DefaultProfessionalBody = ProfessionalBodyYes("details")
     val DefaultProfessionalBodyMember = ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
+    val DefaultBusinessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
   }
 
   object NewValues {
@@ -46,8 +47,10 @@ trait SupervisionValues {
     val ProfessionalBodyMemberYes = ProfessionalBodyMemberNo
   }
 
-  val completeModel = Supervision(Some(DefaultValues.DefaultAnotherBody),
+  val completeModel = Supervision(
+    Some(DefaultValues.DefaultAnotherBody),
     Some(DefaultValues.DefaultProfessionalBodyMember),
+    Some(DefaultValues.DefaultBusinessTypes),
     Some(DefaultValues.DefaultProfessionalBody))
   val partialModel = Supervision(Some(DefaultValues.DefaultAnotherBody))
 
@@ -60,6 +63,10 @@ trait SupervisionValues {
       "endingReason" -> "Ending reason"),
     "professionalBodyMember" -> Json.obj(
       "isAMember" -> true,
+      "businessType" -> Json.arr("01", "02", "14"),
+      "specifyOtherBusiness" -> "test"
+    ),
+    "businessTypes" -> Json.obj(
       "businessType" -> Json.arr("01", "02", "14"),
       "specifyOtherBusiness" -> "test"
     ),
@@ -112,16 +119,32 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         ))
       )
 
-      val convertedModel = Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),
-        new LocalDate(2001,1,1), "SupervisionEndingReason")),
-        Some(ProfessionalBodyMemberYes(Set(AccountantsIreland, CharteredCertifiedAccountants, InternationalAccountants,
-          Other("SpecifyOther")))),Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
+      val convertedModel = Some(Supervision(
+        Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1), new LocalDate(2001,1,1), "SupervisionEndingReason")),
+        Some(ProfessionalBodyMemberYes(Set(
+          AccountantsIreland,
+          CharteredCertifiedAccountants,
+          InternationalAccountants,
+          Other("SpecifyOther")
+        ))),
+        Some(BusinessTypes(Set(
+          AccountantsIreland,
+          CharteredCertifiedAccountants,
+          InternationalAccountants,
+          Other("SpecifyOther")
+        ))),
+        Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
 
       Supervision.conv(Some(desModel)) must be(convertedModel)
     }
 
     "convert supervision des to frontend successfully wne input is none" in {
-      Supervision.conv(None) must be(Some(Supervision(Some(AnotherBodyNo),Some(ProfessionalBodyMemberNo),Some(ProfessionalBodyNo))))
+      Supervision.conv(None) must be(Some(Supervision(
+        Some(AnotherBodyNo),
+        Some(ProfessionalBodyMemberNo),
+        None,
+        Some(ProfessionalBodyNo)
+      )))
     }
 
     "convert supervision des to frontend successfully when no professional body details returned" in {
@@ -138,7 +161,12 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         )),
         None)
 
-      Supervision.conv(Some(desModel)) must be(Some(Supervision(Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),Some(ProfessionalBodyMemberNo),Some(ProfessionalBodyNo))))
+      Supervision.conv(Some(desModel)) must be(Some(Supervision(
+        Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),
+        Some(ProfessionalBodyMemberNo),
+        None,
+        Some(ProfessionalBodyNo))
+      ))
     }
 
   }

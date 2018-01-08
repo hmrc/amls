@@ -20,6 +20,7 @@ import models.des.supervision.AspOrTcsp
 
 case class Supervision(anotherBody: Option[AnotherBody] = None,
                        professionalBodyMember: Option[ProfessionalBodyMember] = None,
+                       businessTypes: Option[BusinessTypes] = None,
                        professionalBody: Option[ProfessionalBody] = None)
 
 object Supervision {
@@ -30,8 +31,18 @@ object Supervision {
 
   implicit def conv(aspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
     aspOrTcsp match {
-      case Some(supervision) => Some(Supervision(supervision.supervisionDetails, supervision.professionalBodyDetails, supervision.professionalBodyDetails))
-      case None => Some(Supervision(Some(AnotherBodyNo),Some(ProfessionalBodyMemberNo),Some(ProfessionalBodyNo)))
+      case Some(supervision) => Some(Supervision(
+        supervision.supervisionDetails,
+        supervision.professionalBodyDetails,
+        supervision.professionalBodyDetails,
+        supervision.professionalBodyDetails
+      ))
+      case None => Some(Supervision(
+        Some(AnotherBodyNo),
+        Some(ProfessionalBodyMemberNo),
+        None,
+        Some(ProfessionalBodyNo)
+      ))
     }
   }
 

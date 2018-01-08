@@ -67,16 +67,49 @@ object SupervisionSection {
   private val anotherBody = AnotherBodyYes(supervisor, start, end, reason)
   private val professionalBody = ProfessionalBodyYes("details")
   private val professionalBodyMember = ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
+  private val businessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
 
-  val completeModel = Some(Supervision(Some(anotherBody),
+  val completeModel = Some(Supervision(
+    Some(anotherBody),
     Some(professionalBodyMember),
-    Some(professionalBody)))
+    Some(businessTypes),
+    Some(professionalBody)
+  ))
 
   val modelForView = Some(Supervision(
     Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
-    Some(ProfessionalBodyMemberYes(Set(AccountantsIreland, CharteredCertifiedAccountants, AssociationOfBookkeepers,
-      AccountantsEnglandandWales, Bookkeepers, AccountingTechnicians, TaxationTechnicians, InternationalAccountants,
-      Other("SpecifyOther"), LawSociety, InstituteOfTaxation, AccountantsScotland, FinancialAccountants, ManagementAccountants))),
+    Some(ProfessionalBodyMemberYes(Set(
+      AccountantsIreland,
+      CharteredCertifiedAccountants,
+      AssociationOfBookkeepers,
+      AccountantsEnglandandWales,
+      Bookkeepers,
+      AccountingTechnicians,
+      TaxationTechnicians,
+      InternationalAccountants,
+      Other("SpecifyOther"),
+      LawSociety,
+      InstituteOfTaxation,
+      AccountantsScotland,
+      FinancialAccountants,
+      ManagementAccountants
+    ))),
+    Some(BusinessTypes(Set(
+      AccountantsIreland,
+      CharteredCertifiedAccountants,
+      AssociationOfBookkeepers,
+      AccountantsEnglandandWales,
+      Bookkeepers,
+      AccountingTechnicians,
+      TaxationTechnicians,
+      InternationalAccountants,
+      Other("SpecifyOther"),
+      LawSociety,
+      InstituteOfTaxation,
+      AccountantsScotland,
+      FinancialAccountants,
+      ManagementAccountants
+    ))),
     Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
 }
 
