@@ -100,6 +100,37 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
       BusinessTypes.conv(desModel) must be(convertedModel)
     }
 
+    "convert to none" when {
+      "MemberOfProfessionalBody is none" in {
+        val desModel = Some(ProfessionalBodyDetails(
+          true,
+          Some("DetailsIfFinedWarned"),
+          Some(ProfessionalBodyDesMember(
+            false,
+            None)
+          ))
+        )
+        BusinessTypes.conv(desModel) must be(None)
+      }
+
+      "input is none" in {
+        BusinessTypes.conv(None) must be(None)
+      }
+
+      "ProfessionalBodyDesMember is none" in {
+        val desModel = Some(ProfessionalBodyDetails(
+          true,
+          Some("DetailsIfFinedWarned"),
+          None
+        ))
+        BusinessTypes.conv(desModel) must be(None)
+      }
+
+      "there is no 'Other' value defined" in {
+        BusinessTypes.convOther(false, "") must be(None)
+      }
+    }
+
   }
 
 }
