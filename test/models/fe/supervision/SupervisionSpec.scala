@@ -37,7 +37,7 @@ trait SupervisionValues {
 
     val DefaultAnotherBody = AnotherBodyYes(supervisor, start, end, reason)
     val DefaultProfessionalBody = ProfessionalBodyYes("details")
-    val DefaultProfessionalBodyMember = ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
+    val DefaultProfessionalBodyMember = ProfessionalBodyMemberYes
     val DefaultBusinessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
   }
 

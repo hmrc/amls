@@ -24,7 +24,7 @@ import utils.CommonMethods
 
 sealed trait ProfessionalBodyMember
 
-case class ProfessionalBodyMemberYes(transactionType: Set[BusinessType]) extends ProfessionalBodyMember
+case object ProfessionalBodyMemberYes extends ProfessionalBodyMember
 
 case object ProfessionalBodyMemberNo extends ProfessionalBodyMember
 
@@ -32,61 +32,15 @@ object ProfessionalBodyMember {
 
   implicit val jsonReads: Reads[ProfessionalBodyMember] = {
     (__ \ "isAMember").read[Boolean] flatMap {
-      case true => (__ \ "businessType").read[Set[String]].flatMap { x: Set[String] =>
-        x.map {
-          case "01" => Reads(_ => JsSuccess(AccountingTechnicians)) map identity[BusinessType]
-          case "02" => Reads(_ => JsSuccess(CharteredCertifiedAccountants)) map identity[BusinessType]
-          case "03" => Reads(_ => JsSuccess(InternationalAccountants)) map identity[BusinessType]
-          case "04" => Reads(_ => JsSuccess(TaxationTechnicians)) map identity[BusinessType]
-          case "05" => Reads(_ => JsSuccess(ManagementAccountants)) map identity[BusinessType]
-          case "06" => Reads(_ => JsSuccess(InstituteOfTaxation)) map identity[BusinessType]
-          case "07" => Reads(_ => JsSuccess(Bookkeepers)) map identity[BusinessType]
-          case "08" => Reads(_ => JsSuccess(AccountantsIreland)) map identity[BusinessType]
-          case "09" => Reads(_ => JsSuccess(AccountantsScotland)) map identity[BusinessType]
-          case "10" => Reads(_ => JsSuccess(AccountantsEnglandandWales)) map identity[BusinessType]
-          case "11" => Reads(_ => JsSuccess(FinancialAccountants)) map identity[BusinessType]
-          case "12" => Reads(_ => JsSuccess(AssociationOfBookkeepers)) map identity[BusinessType]
-          case "13" => Reads(_ => JsSuccess(LawSociety)) map identity[BusinessType]
-          case "14" =>
-            (JsPath \ "specifyOtherBusiness").read[String].map(Other.apply _) map identity[BusinessType]
-          case _ =>
-            Reads(_ => JsError((JsPath \ "businessType") -> ValidationError("error.invalid")))
-        }.foldLeft[Reads[Set[BusinessType]]](
-          Reads[Set[BusinessType]](_ => JsSuccess(Set.empty))
-        ) {
-          (result, data) =>
-            data flatMap { m =>
-              result.map { n =>
-                n + m
-              }
-            }
-        }
-      } map ProfessionalBodyMemberYes.apply
+      case true => Reads(_ => JsSuccess(ProfessionalBodyMemberYes))
       case false => Reads(_ => JsSuccess(ProfessionalBodyMemberNo))
     }
   }
 
   implicit val jsonWrites = Writes[ProfessionalBodyMember] {
+    case ProfessionalBodyMemberYes => Json.obj("isAMember" -> true)
     case ProfessionalBodyMemberNo => Json.obj("isAMember" -> false)
-    case ProfessionalBodyMemberYes(business) =>
-      Json.obj(
-        "isAMember" -> true,
-        "businessType" -> (business map {
-          _.value
-        }).toSeq
-      ) ++ business.foldLeft[JsObject](Json.obj()) {
-        case (m, Other(name)) =>
-          m ++ Json.obj("specifyOtherBusiness" -> name)
-        case (m, _) =>
-          m
-      }
   }
-
-  def convOther(other: Boolean, specifyOther: String): Option[BusinessType] =
-    other match{
-      case true => Some(Other(specifyOther))
-      case false => None
-    }
 
   implicit def conv(supDtls: Option[ProfessionalBodyDetails] ): Option[ProfessionalBodyMember] = {
     supDtls match {
@@ -100,22 +54,7 @@ object ProfessionalBodyMember {
 
   implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[ProfessionalBodyMember]  = {
     pBodyMember match {
-      case Some(member) => Some(ProfessionalBodyMemberYes(
-        Set(CommonMethods.getSpecificType[BusinessType](member.associationofAccountingTechnicians, AccountingTechnicians),
-          CommonMethods.getSpecificType[BusinessType](member.associationofCharteredCertifiedAccountants, CharteredCertifiedAccountants),
-          CommonMethods.getSpecificType[BusinessType](member.associationofInternationalAccountants, InternationalAccountants),
-          CommonMethods.getSpecificType[BusinessType](member.associationofTaxationTechnicians, TaxationTechnicians),
-          CommonMethods.getSpecificType[BusinessType](member.charteredInstituteofManagementAccountants, ManagementAccountants),
-          CommonMethods.getSpecificType[BusinessType](member.charteredInstituteofTaxation, InstituteOfTaxation),
-          CommonMethods.getSpecificType[BusinessType](member.instituteofCertifiedBookkeepers, Bookkeepers),
-          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsinIreland, AccountantsIreland),
-          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsinScotland, AccountantsScotland),
-          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsofEnglandandWales, AccountantsEnglandandWales),
-          CommonMethods.getSpecificType[BusinessType](member.instituteofFinancialAccountants, FinancialAccountants),
-          CommonMethods.getSpecificType[BusinessType](member.internationalAssociationofBookKeepers, AssociationOfBookkeepers),
-          CommonMethods.getSpecificType[BusinessType](member.lawSociety, LawSociety),
-          convOther(member.other, member.specifyOther.getOrElse(""))
-      ).flatten))
+      case Some(_) => Some(ProfessionalBodyMemberYes)
       case None => Some(ProfessionalBodyMemberNo)
     }
   }
