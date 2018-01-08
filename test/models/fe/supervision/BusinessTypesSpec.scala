@@ -16,6 +16,7 @@
 
 package models.fe.supervision
 
+import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
@@ -62,6 +63,41 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
           "businessType" -> Seq("09", "14"),
           "specifyOtherBusiness" -> "test657"
         ))
+    }
+
+  }
+
+  "DES to frontend conversion" must {
+
+    "define BusinessTypes" in {
+      val desModel = Some(ProfessionalBodyDetails(
+        true,
+        Some("DetailsIfFinedWarned"),
+        Some(ProfessionalBodyDesMember(
+          true,
+          Some(MemberOfProfessionalBody(
+            true, true, true, true, true, true, true, true, true, true, true, true, true, false, None
+          ))
+        ))
+      ))
+
+      val convertedModel = Some(BusinessTypes(Set(
+        AccountantsIreland,
+        CharteredCertifiedAccountants,
+        AssociationOfBookkeepers,
+        AccountantsEnglandandWales,
+        Bookkeepers,
+        AccountingTechnicians,
+        TaxationTechnicians,
+        InternationalAccountants,
+        LawSociety,
+        InstituteOfTaxation,
+        AccountantsScotland,
+        FinancialAccountants,
+        ManagementAccountants
+      )))
+
+      BusinessTypes.conv(desModel) must be(convertedModel)
     }
 
   }

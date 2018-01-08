@@ -16,8 +16,10 @@
 
 package models.fe.supervision
 
+import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDetails}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
+import utils.CommonMethods
 
 sealed trait BusinessType {
   val value: String =
@@ -115,5 +117,38 @@ object BusinessTypes {
     }
   }
 
+  def convOther(other: Boolean, specifyOther: String): Option[BusinessType] =
+    other match{
+      case true => Some(Other(specifyOther))
+      case false => None
+    }
+
+  implicit def conv(supDtls: Option[ProfessionalBodyDetails] ): Option[BusinessTypes] = {
+    (for {
+      pBodyDtls <- supDtls
+      member <- pBodyDtls.professionalBody
+    } yield member.professionalBodyDetails).flatten
+  }
+
+  implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[BusinessTypes]  =
+    pBodyMember map { member =>
+      BusinessTypes(
+        Set(CommonMethods.getSpecificType[BusinessType](member.associationofAccountingTechnicians, AccountingTechnicians),
+          CommonMethods.getSpecificType[BusinessType](member.associationofCharteredCertifiedAccountants, CharteredCertifiedAccountants),
+          CommonMethods.getSpecificType[BusinessType](member.associationofInternationalAccountants, InternationalAccountants),
+          CommonMethods.getSpecificType[BusinessType](member.associationofTaxationTechnicians, TaxationTechnicians),
+          CommonMethods.getSpecificType[BusinessType](member.charteredInstituteofManagementAccountants, ManagementAccountants),
+          CommonMethods.getSpecificType[BusinessType](member.charteredInstituteofTaxation, InstituteOfTaxation),
+          CommonMethods.getSpecificType[BusinessType](member.instituteofCertifiedBookkeepers, Bookkeepers),
+          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsinIreland, AccountantsIreland),
+          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsinScotland, AccountantsScotland),
+          CommonMethods.getSpecificType[BusinessType](member.instituteofCharteredAccountantsofEnglandandWales, AccountantsEnglandandWales),
+          CommonMethods.getSpecificType[BusinessType](member.instituteofFinancialAccountants, FinancialAccountants),
+          CommonMethods.getSpecificType[BusinessType](member.internationalAssociationofBookKeepers, AssociationOfBookkeepers),
+          CommonMethods.getSpecificType[BusinessType](member.lawSociety, LawSociety),
+          convOther(member.other, member.specifyOther.getOrElse(""))
+        ).flatten
+      )
+    }
 
 }
