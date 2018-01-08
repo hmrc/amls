@@ -26,17 +26,24 @@ class ProfessionalBodyDesMemberSpec extends PlaySpec with MockitoSugar {
   "ProfessionalBodyDesMember" must {
 
     "convert front end model to ProfessionalBodyDesMember true" in {
-      val from =  Some(ProfessionalBodyMemberYes(Set(AccountantsIreland,
-        CharteredCertifiedAccountants,
-        AssociationOfBookkeepers, AccountantsScotland,
-        FinancialAccountants, ManagementAccountants)))
+      val from = Supervision(
+        professionalBodyMember = Some(ProfessionalBodyMemberYes),
+        businessTypes = Some(BusinessTypes(Set(
+          AccountantsIreland,
+          CharteredCertifiedAccountants,
+          AssociationOfBookkeepers,
+          AccountantsScotland,
+          FinancialAccountants,
+          ManagementAccountants
+        )))
+      )
 
-      ProfessionalBodyDesMember.conv(from) must be (Some(ProfessionalBodyDesMember(true,Some(MemberOfProfessionalBody(false,
-        true,false,false,true,false,false,true,true,false,true,true,false,false,None)))))
+      ProfessionalBodyDesMember.conv(from) must
+        be(Some(ProfessionalBodyDesMember(true,Some(MemberOfProfessionalBody(false,true,false,false,true,false,false,true,true,false,true,true,false,false,None)))))
     }
 
     "convert front end model to ProfessionalBodyDesMember false" in {
-      val from = Some(ProfessionalBodyMemberNo)
+      val from = Supervision(professionalBodyMember = Some(ProfessionalBodyMemberNo))
 
       ProfessionalBodyDesMember.conv(from) must be (Some(ProfessionalBodyDesMember(false,None)))
     }

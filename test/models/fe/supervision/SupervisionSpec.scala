@@ -121,12 +121,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
 
       val convertedModel = Some(Supervision(
         Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1), new LocalDate(2001,1,1), "SupervisionEndingReason")),
-        Some(ProfessionalBodyMemberYes(Set(
-          AccountantsIreland,
-          CharteredCertifiedAccountants,
-          InternationalAccountants,
-          Other("SpecifyOther")
-        ))),
+        Some(ProfessionalBodyMemberYes),
         Some(BusinessTypes(Set(
           AccountantsIreland,
           CharteredCertifiedAccountants,

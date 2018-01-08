@@ -32,8 +32,8 @@ object ProfessionalBodyDetails {
   implicit def conv(supervision: Supervision): Option[ProfessionalBodyDetails] = {
 
     supervision.professionalBody match {
-      case Some(ProfessionalBodyYes(reason)) => Some(ProfessionalBodyDetails(true, Some(reason), supervision.professionalBodyMember))
-      case Some(ProfessionalBodyNo) => Some(ProfessionalBodyDetails(false, None, supervision.professionalBodyMember))
+      case Some(ProfessionalBodyYes(reason)) => Some(ProfessionalBodyDetails(true, Some(reason), supervision))
+      case Some(ProfessionalBodyNo) => Some(ProfessionalBodyDetails(false, None, supervision))
       case _ => None
     }
   }
