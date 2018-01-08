@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package models.des.msb
+package models.fe.supervision
 
-import play.api.libs.json.Json
+/**
+  * Created by darryl on 08/01/18.
+  */
+class BusinessTypes {
 
-case class CurrSupplyToCust (
-                              currency: Seq[String]
-                            )
-
-object CurrSupplyToCust {
-
-  implicit val format = Json.format[CurrSupplyToCust]
-
-  implicit def conv(countryList: Seq[String]) : Option[CurrSupplyToCust] = {
-
-    Some(CurrSupplyToCust(countryList))
-
-  }
 }
