@@ -28,10 +28,10 @@ class EnrolmentStoreConnector @Inject()(http: CorePost){
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
 
-    val url = s"${AmlsConfig.enrolmentStoreUrl}/enrolments/${enrolmentKey.key}"
+    val url = s"${AmlsConfig.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
 
     http.POST(url, knownFacts)
-    
+
   }
 
 

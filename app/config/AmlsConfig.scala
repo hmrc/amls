@@ -34,6 +34,6 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
   override def release7 = getConfBool("feature-toggle.release7", defBool = false)
 
   lazy val payAPIUrl = baseUrl("pay-api")
-  lazy val enrolmentStoreUrl = baseUrl("enrolment-store-proxy")
+  lazy val enrolmentStoreUrl = s"${baseUrl("enrolment-store-proxy")}/enrolment-store-proxy"
 
 }
