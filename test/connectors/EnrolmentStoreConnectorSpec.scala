@@ -24,31 +24,31 @@ import org.mockito.Mockito.{verify, when}
 import org.scalatest.MustMatchers
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import sun.security.krb5.internal.AuthContext
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnectorSpec extends PlaySpec
   with MustMatchers
   with ScalaFutures
   with MockitoSugar
   with AmlsReferenceNumberGenerator
-  with BaseGenerator {
+  with BaseGenerator
+  with OneAppPerSuite {
 
   trait Fixture {
 
-    implicit val headerCarrier = HeaderCarrier()
-    implicit val authContext = mock[AuthContext]
+    implicit val hc = HeaderCarrier()
+    implicit val ec = mock[ExecutionContext]
 
     val http = mock[WSHttp]
     val authConnector = mock[AuthConnector]
 
     val connector = new EnrolmentStoreConnector(http)
-    val baseUrl = "http://enrolments:3001"
+    val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
 
   }

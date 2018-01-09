@@ -18,11 +18,21 @@ package connectors
 
 import javax.inject.Inject
 
-import config.WSHttp
+import config.AmlsConfig
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
+import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
 
-class EnrolmentStoreConnector @Inject()(http: WSHttp) {
+import scala.concurrent.{ExecutionContext, Future}
 
-  def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts) = ???
+class EnrolmentStoreConnector @Inject()(http: CorePost){
+
+  def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+
+    val url = s"${AmlsConfig.enrolmentStoreUrl}/enrolments/${enrolmentKey.key}"
+
+    http.POST(url, knownFacts)
+    
+  }
+
 
 }
