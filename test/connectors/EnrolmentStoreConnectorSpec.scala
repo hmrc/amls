@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package connectors
 
 import config.WSHttp
@@ -22,44 +38,11 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
   with AmlsReferenceNumberGenerator
   with BaseGenerator {
 
-  trait Fixture {
-
-    implicit val headerCarrier = HeaderCarrier()
-    implicit val authContext = mock[AuthContext]
-
-    val http = mock[WSHttp]
-    val appConfig = mock[AppConfig]
-    val authConnector = mock[AuthConnector]
-
-    val connector = new EnrolmentStoreConnector(http, appConfig, authConnector)
-    val baseUrl = "http://tax-enrolments:3001"
-    val userDetails = UserDetailsResponse("Test User", None, "123456789", "Organisation")
-    val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
-
-    when {
-      appConfig.enrolmentStoreUrl
-    } thenReturn baseUrl
-
-    when {
-      authConnector.userDetails(any(), any(), any())
-    } thenReturn Future.successful(userDetails)
-  }
+  trait Fixture
 
   "enrol" when {
     "called" must {
-      "call the ES6 enrolment store endpoint for known facts" in new Fixture {
-        val enrolment = EnrolmentStoreEnrolment("123456789", postcodeGen.sample.get)
-        val endpointUrl = s"$baseUrl/tax-enrolments/groups/${userDetails.affinityGroup}/enrolments/${enrolKey.key}"
-
-        when {
-          http.POST[EnrolmentStoreEnrolment, HttpResponse](any(), any(), any())(any(), any(), any(), any())
-        } thenReturn Future.successful(HttpResponse(OK))
-
-        whenReady(connector.enrol(enrolKey, enrolment)) { _ =>
-          verify(authConnector).userDetails(any(), any(), any())
-          verify(http).POST[EnrolmentStoreEnrolment, HttpResponse](eqTo(endpointUrl), eqTo(enrolment), any())(any(), any(), any(), any())
-        }
-      }
+      "call the ES6 enrolment store endpoint for known facts" in new Fixture {}
     }
   }
 
