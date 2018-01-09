@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,13 @@ object MemberOfProfessionalBody {
 
   // scalastyle:off
 
-  implicit def convBusinessTypes(members: Set[BusinessType]): Option[MemberOfProfessionalBody] = {
+  implicit def convBusinessTypes(members: BusinessTypes): Option[MemberOfProfessionalBody] = {
 
-    val memberOfProfessionalBody = members.foldLeft[MemberOfProfessionalBody](MemberOfProfessionalBody(false, false, false, false, false, false, false,
-      false, false, false, false, false, false, false, None))((result, businessType) =>
+    val memberOfProfessionalBody = members.businessType.foldLeft[MemberOfProfessionalBody](MemberOfProfessionalBody(
+      false, false, false, false, false, false, false,
+      false, false, false, false, false, false, false,
+      None
+    ))((result, businessType) =>
       businessType match {
         case AccountingTechnicians => result.copy(associationofAccountingTechnicians = true)
         case CharteredCertifiedAccountants => result.copy(associationofCharteredCertifiedAccountants = true)

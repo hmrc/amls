@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,17 +66,35 @@ object SupervisionSection {
   private val reason = "Ending reason"
   private val anotherBody = AnotherBodyYes(supervisor, start, end, reason)
   private val professionalBody = ProfessionalBodyYes("details")
-  private val professionalBodyMember = ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
+  private val professionalBodyMember = ProfessionalBodyMemberYes
+  private val businessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
 
-  val completeModel = Some(Supervision(Some(anotherBody),
+  val completeModel = Some(Supervision(
+    Some(anotherBody),
     Some(professionalBodyMember),
-    Some(professionalBody)))
+    Some(businessTypes),
+    Some(professionalBody)
+  ))
 
   val modelForView = Some(Supervision(
     Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
-    Some(ProfessionalBodyMemberYes(Set(AccountantsIreland, CharteredCertifiedAccountants, AssociationOfBookkeepers,
-      AccountantsEnglandandWales, Bookkeepers, AccountingTechnicians, TaxationTechnicians, InternationalAccountants,
-      Other("SpecifyOther"), LawSociety, InstituteOfTaxation, AccountantsScotland, FinancialAccountants, ManagementAccountants))),
+    Some(ProfessionalBodyMemberYes),
+    Some(BusinessTypes(Set(
+      AccountantsIreland,
+      CharteredCertifiedAccountants,
+      AssociationOfBookkeepers,
+      AccountantsEnglandandWales,
+      Bookkeepers,
+      AccountingTechnicians,
+      TaxationTechnicians,
+      InternationalAccountants,
+      Other("SpecifyOther"),
+      LawSociety,
+      InstituteOfTaxation,
+      AccountantsScotland,
+      FinancialAccountants,
+      ManagementAccountants
+    ))),
     Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
 }
 

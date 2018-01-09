@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,27 +25,36 @@ class MemberOfProfessionalBodySpec extends PlaySpec {
 
     "convert frontend model to des MemberOfProfessionalBody" in {
 
-      val professionalBodyMember = ProfessionalBodyMemberYes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
-      MemberOfProfessionalBody.convBusinessTypes(professionalBodyMember.transactionType) must be(Some(MemberOfProfessionalBody(true, true,
-        false, false, false, false, false, false, false, false, false, false, false, true, Some("test"))))
+      val businessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
+
+      MemberOfProfessionalBody.convBusinessTypes(businessTypes) must
+        be(Some(MemberOfProfessionalBody(true, true, false, false, false, false, false, false, false, false, false, false, false, true, Some("test"))))
     }
 
     "return default des model when front end model is empty" in {
-
-      MemberOfProfessionalBody.convBusinessTypes(Set.empty) must be(Some(MemberOfProfessionalBody(false, false,
-        false, false, false, false, false, false, false, false, false, false, false, false, None)))
+      MemberOfProfessionalBody.convBusinessTypes(BusinessTypes(Set.empty)) must
+        be(Some(MemberOfProfessionalBody(false, false, false, false, false, false, false, false, false, false, false, false, false, false, None)))
     }
 
     "convert frontend model to des MemberOfProfessionalBody2" in {
-         val feModel = ProfessionalBodyMemberYes(Set(AccountantsIreland,
+      val feModel = BusinessTypes(Set(
+        AccountantsIreland,
         CharteredCertifiedAccountants,
-        AssociationOfBookkeepers, AccountantsEnglandandWales,
-        Bookkeepers, AccountingTechnicians, TaxationTechnicians,
-        InternationalAccountants, LawSociety, InstituteOfTaxation, AccountantsScotland,
-        FinancialAccountants, ManagementAccountants))
+        AssociationOfBookkeepers,
+        AccountantsEnglandandWales,
+        Bookkeepers,
+        AccountingTechnicians,
+        TaxationTechnicians,
+        InternationalAccountants,
+        LawSociety,
+        InstituteOfTaxation,
+        AccountantsScotland,
+        FinancialAccountants,
+        ManagementAccountants
+      ))
 
-      MemberOfProfessionalBody.convBusinessTypes(feModel.transactionType) must be(Some(MemberOfProfessionalBody(true,true,
-        true,true,true,true,true,true,true,true,true,true,true,false,None)))
+      MemberOfProfessionalBody.convBusinessTypes(feModel) must
+        be(Some(MemberOfProfessionalBody(true,true, true,true,true,true,true,true,true,true,true,true,true,false,None)))
     }
   }
 
