@@ -51,3 +51,7 @@ case object GGAdmin extends APITypes {
 case object PayAPI extends APITypes {
   override val key: String = "pay-api-getPayment-with-id"
 }
+
+case object EnrolmentStoreKnownFacts extends APITypes {
+  override val key: String = "enrolment-store-known-facts"
+}
