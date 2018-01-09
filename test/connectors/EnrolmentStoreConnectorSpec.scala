@@ -18,6 +18,7 @@ package connectors
 
 import config.WSHttp
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
+import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.MustMatchers
@@ -38,11 +39,39 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
   with AmlsReferenceNumberGenerator
   with BaseGenerator {
 
-  trait Fixture
+  trait Fixture {
+
+    implicit val headerCarrier = HeaderCarrier()
+    implicit val authContext = mock[AuthContext]
+
+    val http = mock[WSHttp]
+    val authConnector = mock[AuthConnector]
+
+    val connector = new EnrolmentStoreConnector(http)
+    val baseUrl = "http://enrolments:3001"
+    val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
+
+  }
 
   "enrol" when {
     "called" must {
-      "call the ES6 enrolment store endpoint for known facts" in new Fixture {}
+      "call the ES6 enrolment store endpoint for known facts" in new Fixture {
+
+        val knownFacts = KnownFacts(Set(
+          KnownFact("Postcode", postcodeGen.sample.get),
+          KnownFact("SafeId", "safeId"),
+          KnownFact("MLRRefNumber", amlsRegistrationNumber)
+        ))
+        val endpointUrl = s"$baseUrl/enrolments/${enrolKey.key}"
+
+        when {
+          http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
+        } thenReturn Future.successful(HttpResponse(OK))
+
+        whenReady(connector.enrol(enrolKey, knownFacts)) { _ =>
+          verify(http).POST[KnownFacts, HttpResponse](eqTo(endpointUrl), eqTo(knownFacts), any())(any(), any(), any(), any())
+        }
+      }
     }
   }
 

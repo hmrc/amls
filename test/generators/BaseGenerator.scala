@@ -28,10 +28,26 @@ trait BaseGenerator {
     Gen.listOfN(32, Gen.oneOf(c, n)).map(l => l.mkString)
   }
 
+  def stringOfLengthGen(maxLength: Int) = {
+    Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
+  }
+
   def alphaNumOfLengthGen(maxLength: Int) = {
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
   }
 
   //noinspection ScalaStyle
   def numGen = Gen.chooseNum(0,1000)
+
+  def safeIdGen = alphaNumOfLengthGen(9) map { ref =>
+    s"X${ref.toUpperCase}"
+  }
+
+  val postcodeGen: Gen[String] = for {
+    a <- stringOfLengthGen(2)
+    num1 <- Gen.chooseNum(1, 99)
+    num2 <- Gen.chooseNum(1, 9)
+    b <- stringOfLengthGen(2)
+  } yield s"$a$num1 $num2$b"
+
 }
