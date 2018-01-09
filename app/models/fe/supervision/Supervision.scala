@@ -20,7 +20,7 @@ import models.des.supervision.AspOrTcsp
 
 case class Supervision(anotherBody: Option[AnotherBody] = None,
                        professionalBodyMember: Option[ProfessionalBodyMember] = None,
-                       businessTypes: Option[BusinessTypes] = None,
+                       professionalBodies: Option[BusinessTypes] = None,
                        professionalBody: Option[ProfessionalBody] = None)
 
 object Supervision {

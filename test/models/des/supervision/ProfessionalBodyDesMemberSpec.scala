@@ -28,7 +28,7 @@ class ProfessionalBodyDesMemberSpec extends PlaySpec with MockitoSugar {
     "convert front end model to ProfessionalBodyDesMember true" in {
       val from = Supervision(
         professionalBodyMember = Some(ProfessionalBodyMemberYes),
-        businessTypes = Some(BusinessTypes(Set(
+        professionalBodies = Some(BusinessTypes(Set(
           AccountantsIreland,
           CharteredCertifiedAccountants,
           AssociationOfBookkeepers,
