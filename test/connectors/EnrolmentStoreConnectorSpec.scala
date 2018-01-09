@@ -17,9 +17,8 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.WSHttp
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
-import metrics.{GGAdmin, Metrics}
+import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify, when}
@@ -28,7 +27,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,7 +46,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     implicit val ec = mock[ExecutionContext]
 
     val metrics = mock[Metrics]
-    val http = mock[WSHttp]
+    val http = mock[CorePost]
     val authConnector = mock[AuthConnector]
 
     val mockTimer = mock[Timer.Context]
@@ -57,7 +56,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
 
     when {
-      connector.metrics.timer(eqTo(GGAdmin))
+      connector.metrics.timer(eqTo(EnrolmentStoreKnownFacts))
     } thenReturn mockTimer
 
   }
@@ -72,17 +71,17 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
           KnownFact("MLRRefNumber", amlsRegistrationNumber)
         ))
 
-        val endpointUrl = s"$baseUrl/enrolments/${enrolKey.key}"
+        val endpointUrl = s"$baseUrl/enrolment-store-proxy/enrolment-store/enrolments/${enrolKey.key}"
 
         val response = HttpResponse(OK, responseString = Some("message"))
 
         when {
-          http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
+          connector.http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
         } thenReturn Future.successful(response)
 
         whenReady(connector.enrol(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(http).POST[KnownFacts, HttpResponse](eqTo(endpointUrl), eqTo(knownFacts), any())(any(), any(), any(), any())
+          verify(connector.http).POST[KnownFacts, HttpResponse](eqTo(endpointUrl), eqTo(knownFacts), any())(any(), any(), any(), any())
         }
       }
     }

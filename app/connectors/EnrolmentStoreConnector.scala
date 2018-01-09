@@ -28,7 +28,7 @@ import utils.HttpResponseHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject()(
-                                         http: CorePost,
+                                         val http: CorePost,
                                          val metrics: Metrics) extends HttpResponseHelper {
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
@@ -38,13 +38,7 @@ class EnrolmentStoreConnector @Inject()(
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)
 
-    http.POST(url, knownFacts) map {
-      response =>
-        timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response body: ${response.body}")
-        response
-    }
+    http.POST(url, knownFacts)
 
   }
 
