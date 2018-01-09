@@ -19,18 +19,32 @@ package connectors
 import javax.inject.Inject
 
 import config.AmlsConfig
+import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
+import play.api.Logger
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
+import utils.HttpResponseHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnector @Inject()(http: CorePost){
+class EnrolmentStoreConnector @Inject()(
+                                         http: CorePost,
+                                         val metrics: Metrics) extends HttpResponseHelper {
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
 
     val url = s"${AmlsConfig.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
 
-    http.POST(url, knownFacts)
+    val prefix = "[EnrolmentStore][Enrolments]"
+    val timer = metrics.timer(EnrolmentStoreKnownFacts)
+
+    http.POST(url, knownFacts) map {
+      response =>
+        timer.stop()
+        Logger.debug(s"$prefix - Base Response: ${response.status}")
+        Logger.debug(s"$prefix - Response body: ${response.body}")
+        response
+    }
 
   }
 
