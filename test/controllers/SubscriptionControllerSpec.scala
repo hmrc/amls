@@ -50,9 +50,9 @@ class SubscriptionControllerSpec
     with OneAppPerSuite
     with AmlsReferenceNumberGenerator{
 
-  object SubscriptionController extends SubscriptionController {
-    override val service = mock[SubscriptionService]
-  }
+  val controller = new SubscriptionController (
+    subscriptionService = mock[SubscriptionService]
+  )
 
   "SubscriptionController" must {
 
@@ -98,7 +98,7 @@ class SubscriptionControllerSpec
 
     "return a `BadRequest` response when the safeId is invalid" in {
 
-      val result = SubscriptionController.subscribe("test", "test", "test")(postRequest)
+      val result = controller.subscribe("test", "test", "test")(postRequest)
       val failure = Json.obj("errors" -> Seq("Invalid SafeId"))
 
       status(result) must be(BAD_REQUEST)
@@ -118,10 +118,10 @@ class SubscriptionControllerSpec
       )
 
       when {
-        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.successful(SubscriptionResponse.convert(response))
 
-      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest)
+      val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionResponse.convert(response)))
@@ -130,10 +130,10 @@ class SubscriptionControllerSpec
     "return an invalid response when the service fails" in {
 
       when {
-        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(SubscriptionController.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
+      whenReady(controller.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -167,7 +167,7 @@ class SubscriptionControllerSpec
         )
       )
 
-      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(requestWithEmptyBody)
+      val result = controller.subscribe("test", "orgRef", safeId)(requestWithEmptyBody)
 
       status(result) mustEqual BAD_REQUEST
       contentAsJson(result) mustEqual response
@@ -178,10 +178,10 @@ class SubscriptionControllerSpec
       val errorBody = Json.obj("reason" -> reason).toString
 
       when {
-        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
 
-      val result = SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest)
+      val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) mustBe UNPROCESSABLE_ENTITY
       contentAsString(result) mustBe reason
@@ -191,10 +191,10 @@ class SubscriptionControllerSpec
       val errorBody = "This isn't json"
 
       when {
-        SubscriptionController.service.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
 
-      whenReady(SubscriptionController.subscribe("test", "orgRef", safeId)(postRequest).failed) {
+      whenReady(controller.subscribe("test", "orgRef", safeId)(postRequest).failed) {
         case HttpStatusException(status, _) => status mustBe BAD_REQUEST
       }
     }

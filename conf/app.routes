@@ -1,6 +1,6 @@
 # microservice specific routes
 
-POST        /subscription/:accountType/:ref/:safeId                                         controllers.SubscriptionController.subscribe(accountType:String, ref:String, safeId: String)
+POST        /subscription/:accountType/:ref/:safeId                                         @controllers.SubscriptionController.subscribe(accountType:String, ref:String, safeId: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/update                  controllers.AmendVariationController.amend(accountType:String, ref:String, amlsRegistrationNumber: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/variation               controllers.AmendVariationController.variation(accountType:String, ref:String, amlsRegistrationNumber: String)
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/renewal                 controllers.AmendVariationController.renewal(accountType:String, ref:String, amlsRegistrationNumber: String)

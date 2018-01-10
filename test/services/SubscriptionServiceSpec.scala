@@ -16,8 +16,7 @@
 
 package services
 
-import connectors.{GovernmentGatewayAdminConnector, SubscribeDESConnector}
-import config.MicroserviceAuditConnector
+import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models._
@@ -25,6 +24,7 @@ import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
+import models.enrolment.{AmlsEnrolmentKey, KnownFacts, KnownFact => EnrolmentKnownFact}
 import models.fe.{SubscriptionFees, SubscriptionResponse}
 import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -36,11 +36,11 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers.{BAD_GATEWAY, BAD_REQUEST}
 import repositories.FeesRepository
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
@@ -49,6 +49,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
   object SubscriptionService extends SubscriptionService {
     override private[services] val desConnector = mock[SubscribeDESConnector]
     override private[services] val ggConnector = mock[GovernmentGatewayAdminConnector]
+    override private[services] val enrolmentStoreConnector = mock[EnrolmentStoreConnector]
     override private[services] val feeResponseRepository = mock[FeesRepository]
     override private[services] val auditConnector = mock[AuditConnector]
     override private[services] def validateResult(request: SubscriptionRequest) = successValidate
@@ -93,6 +94,12 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
+        val enrolmentKnownFacts = KnownFacts(Set(
+          EnrolmentKnownFact("MLRRefNumber", response.amlsRefNo),
+          EnrolmentKnownFact("SafeId", safeId),
+          EnrolmentKnownFact("POSTCODE", businessAddressPostcode)
+        ))
+
         reset(SubscriptionService.ggConnector)
 
         when {
@@ -107,7 +114,13 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
         } thenReturn Future.successful(mock[HttpResponse])
 
-        when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+        when {
+          SubscriptionService.enrolmentStoreConnector.enrol(any(), eqTo(enrolmentKnownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
+
+        when {
+          SubscriptionService.feeResponseRepository.insert(any())
+        } thenReturn Future.successful(true)
 
         whenReady(SubscriptionService.subscribe(safeId, request)) {
           result =>

@@ -16,6 +16,7 @@
 
 package models.enrolment
 
+import models.KnownFactsForService
 import play.api.libs.json.Json
 
 case class KnownFact(key: String, value: String)
@@ -28,4 +29,12 @@ object KnownFact {
 
 object KnownFacts {
   implicit val format = Json.format[KnownFacts]
+
+  implicit def conv(knownFactsForService: KnownFactsForService): KnownFacts = {
+    val knownFacts = knownFactsForService.facts map { kf =>
+      KnownFact(kf.`type`, kf.value)
+    }
+    KnownFacts(knownFacts.toSet)
+  }
+
 }
