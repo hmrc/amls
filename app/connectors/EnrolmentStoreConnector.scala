@@ -18,20 +18,18 @@ package connectors
 
 import javax.inject.Inject
 
-import audit.KnownFactsEvent
 import config.AmlsConfig
 import exceptions.HttpStatusException
 import metrics.{EnrolmentStoreKnownFacts, GGAdmin, Metrics}
-import models.KnownFactsForService
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
-import play.api.http.Status.OK
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
 import utils.HttpResponseHelper
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePost,
@@ -65,6 +63,15 @@ class EnrolmentStoreConnector @Inject()(
         Logger.warn(s"$prefix - Failure Response: $s")
         Logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(response.body)))
+    } recoverWith {
+      case e: HttpStatusException =>
+        Logger.warn(s"$prefix - Failure: Exception", e)
+        Future.failed(e)
+      case e =>
+        timer.stop()
+        metrics.failed(EnrolmentStoreKnownFacts)
+        Logger.warn(s"$prefix - Failure: Exception", e)
+        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
 
   }
