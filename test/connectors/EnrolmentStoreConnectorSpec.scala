@@ -17,6 +17,7 @@
 package connectors
 
 import com.codahale.metrics.Timer
+import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
@@ -52,12 +53,25 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     val mockTimer = mock[Timer.Context]
 
     val connector = new EnrolmentStoreConnector(http, metrics)
+    
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
+    val url = s"$baseUrl/enrolment-store-proxy/enrolment-store/enrolments/${enrolKey.key}"
+
+    val knownFacts = KnownFacts(Set(
+      KnownFact("Postcode", postcodeGen.sample.get),
+      KnownFact("SafeId", "safeId"),
+      KnownFact("MLRRefNumber", amlsRegistrationNumber)
+    ))
 
     when {
       connector.metrics.timer(eqTo(EnrolmentStoreKnownFacts))
     } thenReturn mockTimer
+
+    def mockResponse(response: Future[HttpResponse]) =
+      when {
+        connector.http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
+      } thenReturn response
 
   }
 
@@ -65,23 +79,35 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     "called" must {
       "call the ES6 enrolment store endpoint for known facts" in new Fixture {
 
-        val knownFacts = KnownFacts(Set(
-          KnownFact("Postcode", postcodeGen.sample.get),
-          KnownFact("SafeId", "safeId"),
-          KnownFact("MLRRefNumber", amlsRegistrationNumber)
-        ))
-
-        val endpointUrl = s"$baseUrl/enrolment-store-proxy/enrolment-store/enrolments/${enrolKey.key}"
-
         val response = HttpResponse(OK, responseString = Some("message"))
 
-        when {
-          connector.http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
-        } thenReturn Future.successful(response)
+        mockResponse(Future.successful(response))
 
         whenReady(connector.enrol(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.http).POST[KnownFacts, HttpResponse](eqTo(endpointUrl), eqTo(knownFacts), any())(any(), any(), any(), any())
+          verify(connector.http).POST[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        }
+      }
+
+      "return an unsuccessful response when a non-200 response is returned" in new Fixture {
+
+        mockResponse(Future.successful(HttpResponse(BAD_REQUEST, responseString = Some("message"))))
+
+        whenReady (connector.enrol(enrolKey, knownFacts).failed) {
+          case HttpStatusException(status, body) =>
+            status mustEqual BAD_REQUEST
+            body mustEqual Some("message")
+        }
+      }
+
+      "return an unsuccessful response when an exception is thrown" in new Fixture {
+
+        mockResponse(Future.failed(new Exception("message")))
+
+        whenReady (connector.enrol(enrolKey, knownFacts).failed) {
+          case HttpStatusException(status, body) =>
+            status mustEqual INTERNAL_SERVER_ERROR
+            body mustEqual Some("message")
         }
       }
     }
