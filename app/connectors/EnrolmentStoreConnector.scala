@@ -18,14 +18,17 @@ package connectors
 
 import javax.inject.Inject
 
-import config.AmlsConfig
+import audit.KnownFactsEvent
+import config.{AmlsConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
-import metrics.{EnrolmentStoreKnownFacts, GGAdmin, Metrics}
+import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.audit.model.Audit
+import uk.gov.hmrc.play.config.AppName
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -33,7 +36,8 @@ import scala.concurrent.Future
 
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePost,
-                                         val metrics: Metrics) extends HttpResponseHelper {
+                                         val metrics: Metrics,
+                                         val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)) extends HttpResponseHelper {
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                     headerCarrier: HeaderCarrier,
@@ -54,7 +58,7 @@ class EnrolmentStoreConnector @Inject()(
     } flatMap {
       case response @ status(OK) =>
         metrics.success(EnrolmentStoreKnownFacts)
-//        audit.sendDataEvent(KnownFactsEvent(knownFacts))
+        audit.sendDataEvent(KnownFactsEvent(knownFacts))
         Logger.debug(s"$prefix - Success Response")
         Logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
