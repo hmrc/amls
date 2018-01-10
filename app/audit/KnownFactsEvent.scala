@@ -16,6 +16,7 @@
 
 package audit
 
+import models.enrolment.{KnownFacts, KnownFact => EnrolmentKnownFact}
 import models.{KnownFact, KnownFactsForService}
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.config.AppName
@@ -31,6 +32,23 @@ object KnownFactsEvent {
 
     val factsMap = knownFacts.facts.map {
       case KnownFact(key, value) => (key, value)
+    }.toMap
+
+    DataEvent(
+      auditSource = AppName.appName,
+      auditType = "OutboundCall",
+      tags = hc.toAuditTags("AddKnownFacts", "N/A"),
+      detail = hc.toAuditDetails() ++ factsMap
+    )
+  }
+  def apply
+  (knownFacts: KnownFacts)
+  (implicit
+   hc: HeaderCarrier
+  ): DataEvent = {
+
+    val factsMap = knownFacts.verifiers.map {
+      case EnrolmentKnownFact(key, value) => (key, value)
     }.toMap
 
     DataEvent(

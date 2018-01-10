@@ -16,6 +16,7 @@
 
 package connectors
 
+import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
@@ -52,7 +53,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
     val mockTimer = mock[Timer.Context]
 
-    val connector = new EnrolmentStoreConnector(http, metrics)
+    val connector = new EnrolmentStoreConnector(http, metrics, MockAudit)
     
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
