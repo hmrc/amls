@@ -20,6 +20,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AmlsConfig {
   def release7: Boolean
+  def enrolmentStoreToggle: Boolean
 }
 
 object AmlsConfig extends AmlsConfig with ServicesConfig {
@@ -32,6 +33,7 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
   lazy val desEnv = loadConfig("des.env")
 
   override def release7 = getConfBool("feature-toggle.release7", defBool = false)
+  override def enrolmentStoreToggle = getConfBool("feature-toggle.enrolment-store", defBool = false)
 
   lazy val payAPIUrl = baseUrl("pay-api")
   lazy val enrolmentStoreUrl = s"${baseUrl("enrolment-store-proxy")}/enrolment-store-proxy"
