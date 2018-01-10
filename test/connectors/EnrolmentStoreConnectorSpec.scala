@@ -18,7 +18,7 @@ package connectors
 
 import com.codahale.metrics.Timer
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
-import metrics.{EnrolmentStoreKnownFacts, Metrics}
+import metrics.{EnrolmentStoreKnownFacts, GGAdmin, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify, when}
@@ -55,10 +55,6 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
 
-    when {
-      connector.metrics.timer(eqTo(EnrolmentStoreKnownFacts))
-    } thenReturn mockTimer
-
   }
 
   "enrol" when {
@@ -74,6 +70,10 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
         val endpointUrl = s"$baseUrl/enrolment-store-proxy/enrolment-store/enrolments/${enrolKey.key}"
 
         val response = HttpResponse(OK, responseString = Some("message"))
+
+        when {
+          connector.metrics.timer(eqTo(EnrolmentStoreKnownFacts))
+        } thenReturn mockTimer
 
         when {
           connector.http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
