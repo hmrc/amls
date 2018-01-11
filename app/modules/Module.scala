@@ -19,15 +19,20 @@ package modules
 import javax.inject.Singleton
 
 import com.google.inject.{AbstractModule, Provides}
-import connectors.{DESConnector, DeregisterSubscriptionConnector, PayAPIConnector, WithdrawSubscriptionConnector}
+import connectors._
+import metrics.Metrics
 import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.{DB, DefaultDB}
+import reactivemongo.api.DefaultDB
 
 class Module extends AbstractModule {
   override def configure() = {
     bind(classOf[DeregisterSubscriptionConnector]).toInstance(DESConnector)
     bind(classOf[WithdrawSubscriptionConnector]).toInstance(DESConnector)
     bind(classOf[PayAPIConnector]).toInstance(PayAPIConnector)
+    bind(classOf[Metrics]).toInstance(Metrics)
+    bind(classOf[GovernmentGatewayAdminConnector]).toInstance(GovernmentGatewayAdminConnector)
+    bind(classOf[SubscribeDESConnector]).toInstance(DESConnector)
+    bind(classOf[repositories.FeesRepository]).toInstance(repositories.FeesRepository())
   }
 
   @Provides

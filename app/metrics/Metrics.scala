@@ -37,7 +37,8 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API9 -> registry.timer(s"${API9.key}-timer"),
     API10 -> registry.timer(s"${API10.key}-timer"),
     GGAdmin -> registry.timer(s"${GGAdmin.key}-timer"),
-    PayAPI -> registry.timer(s"${PayAPI.key}-timer")
+    PayAPI -> registry.timer(s"${PayAPI.key}-timer"),
+    EnrolmentStoreKnownFacts -> registry.timer(s"${EnrolmentStoreKnownFacts.key}-timer")
   )
 
   val successCounters = Map[APITypes, Counter](
@@ -48,7 +49,8 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API9 -> registry.counter(s"${API9.key}-success"),
     API10 -> registry.counter(s"${API10.key}-success"),
     GGAdmin -> registry.counter(s"${GGAdmin.key}-success"),
-    PayAPI -> registry.counter(s"${PayAPI.key}-success")
+    PayAPI -> registry.counter(s"${PayAPI.key}-success"),
+    EnrolmentStoreKnownFacts -> registry.counter(s"${EnrolmentStoreKnownFacts.key}-success")
   )
 
   val failedCounters = Map[APITypes, Counter](
@@ -59,7 +61,8 @@ object Metrics extends Metrics with MicroserviceMetrics {
     API9 -> registry.counter(s"${API9.key}-failure"),
     API10 -> registry.counter(s"${API10.key}-failure"),
     GGAdmin -> registry.counter(s"${GGAdmin.key}-failure"),
-    PayAPI -> registry.counter(s"${PayAPI.key}-failure")
+    PayAPI -> registry.counter(s"${PayAPI.key}-failure"),
+    EnrolmentStoreKnownFacts -> registry.counter(s"${EnrolmentStoreKnownFacts.key}-failure")
   )
 
   override def timer(api: APITypes): Context = timers(api).time()
