@@ -24,7 +24,7 @@ import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
-import models.enrolment.{AmlsEnrolmentKey, KnownFacts, KnownFact => EnrolmentKnownFact}
+import models.enrolment.{KnownFact => EnrolmentKnownFact}
 import models.fe.{SubscriptionFees, SubscriptionResponse}
 import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -94,12 +94,6 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           KnownFact("POSTCODE", businessAddressPostcode)
         ))
 
-        val enrolmentKnownFacts = KnownFacts(Set(
-          EnrolmentKnownFact("MLRRefNumber", response.amlsRefNo),
-          EnrolmentKnownFact("SafeId", safeId),
-          EnrolmentKnownFact("POSTCODE", businessAddressPostcode)
-        ))
-
         reset(SubscriptionService.ggConnector)
 
         when {
@@ -115,7 +109,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         } thenReturn Future.successful(mock[HttpResponse])
 
         when {
-          SubscriptionService.enrolmentStoreConnector.enrol(any(), eqTo(enrolmentKnownFacts))(any(), any())
+          SubscriptionService.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
         } thenReturn Future.successful(mock[HttpResponse])
 
         when {
@@ -156,13 +150,17 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
         } thenReturn Future.successful(mock[HttpResponse])
 
+        when {
+          SubscriptionService.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
+
         when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
 
         when(SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
 
-        when(request.responsiblePersons).thenReturn(Some(Seq(
-          ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
-            RPExtra(None, None, None, None, None, None, None)))))
+        when(request.responsiblePersons).thenReturn(Some(Seq(ResponsiblePersons(
+          None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, RPExtra(None, None, None, None, None, None, None))
+        )))
 
         when(request.tradingPremises).thenReturn(mock[TradingPremises])
         when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
@@ -200,6 +198,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when {
           SubscriptionService.ggConnector.addKnownFacts(eqTo(knownFacts))(any(), any())
+        } thenReturn Future.successful(mock[HttpResponse])
+
+        when {
+          SubscriptionService.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
         } thenReturn Future.successful(mock[HttpResponse])
 
         when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))

@@ -189,7 +189,7 @@ trait SubscriptionService {
       ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
     } else {
       enrolmentStoreConnector.enrol(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
-    }) map(_ => response) recover {
+    }) map (_ => response) recover {
       case ex => Logger.warn("[AddKnownFactsFailed]", ex)
         response
     }
