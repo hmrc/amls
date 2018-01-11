@@ -19,7 +19,7 @@ package connectors
 import javax.inject.Inject
 
 import audit.KnownFactsEvent
-import config.{AmlsConfig, MicroserviceAuditConnector}
+import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
@@ -37,13 +37,14 @@ import scala.concurrent.Future
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePost,
                                          val metrics: Metrics,
-                                         val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)) extends HttpResponseHelper {
+                                         val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector),
+                                         config: AppConfig) extends HttpResponseHelper {
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                     headerCarrier: HeaderCarrier,
                                                                     writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
-    val url = s"${AmlsConfig.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
+    val url = s"${config.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
 
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)
