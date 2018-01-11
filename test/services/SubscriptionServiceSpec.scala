@@ -24,7 +24,6 @@ import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
-import models.enrolment.{KnownFact => EnrolmentKnownFact}
 import models.fe.{SubscriptionFees, SubscriptionResponse}
 import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -42,7 +41,8 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator{
+trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
+
   val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
@@ -127,10 +127,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         reset(SubscriptionService.ggConnector)
 
-        val amlsRegNo = "XGML00000000000"
-        val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegNo)).toString
+        val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
 
-        val subscriptionResponse = SubscriptionResponse("", amlsRegNo, 1, 0, 0, None, previouslySubmitted = true)
+        val subscriptionResponse = SubscriptionResponse("", amlsRegistrationNumber, 1, 0, 0, None, previouslySubmitted = true)
 
         when {
           successValidate.isSuccess
@@ -141,7 +140,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("MLRRefNumber", "XGML00000000000"),
+          KnownFact("MLRRefNumber", amlsRegistrationNumber),
           KnownFact("SafeId", safeId),
           KnownFact("POSTCODE", businessAddressPostcode)
         ))
@@ -176,11 +175,11 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         reset(SubscriptionService.ggConnector)
 
-        val amlsRegNo = "XGML00000000000"
-        val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegNo)).toString
+        val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
 
-        val subscriptionResponse = SubscriptionResponse("", amlsRegNo, 0, 0, 0, Some(SubscriptionFees("PaymentRef",
-          500, Some(50), None, 115, None, 1000)), previouslySubmitted = true)
+        val subscriptionResponse = SubscriptionResponse(
+          "", amlsRegistrationNumber, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000)), previouslySubmitted = true
+        )
 
         when {
           successValidate.isSuccess
@@ -191,7 +190,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
         val knownFacts = KnownFactsForService(Seq(
-          KnownFact("MLRRefNumber", amlsRegNo),
+          KnownFact("MLRRefNumber", amlsRegistrationNumber),
           KnownFact("SafeId", safeId),
           KnownFact("POSTCODE", businessAddressPostcode)
         ))
@@ -206,8 +205,9 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         when(SubscriptionService.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
 
-        when(SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(Some(Fees(SubscriptionResponseType,
-          amlsRegNo, 500, Some(50), 115, 1000, Some("PaymentRef"), None, new DateTime()))))
+        when{
+          SubscriptionService.feeResponseRepository.findLatestByAmlsReference(any())
+        } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000, Some("PaymentRef"), None, new DateTime())))
 
         when(request.responsiblePersons).thenReturn(None)
         when(request.tradingPremises).thenReturn(mock[TradingPremises])
@@ -240,7 +240,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
 
           whenReady(SubscriptionService.subscribe(safeId, request).failed) {
-            case ex@HttpStatusException(status, body) =>
+            case ex@HttpStatusException(status, _) =>
               status mustEqual BAD_REQUEST
               ex.jsonBody.get.reason must equal(duplicateSubscriptionMessage)
 
@@ -260,7 +260,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
 
           whenReady(SubscriptionService.subscribe(safeId, request).failed) {
-            case ex@HttpStatusException(status, body) =>
+            case ex@HttpStatusException(status, _) =>
               status mustEqual BAD_REQUEST
               ex.jsonBody must equal(None)
 
@@ -289,5 +289,6 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
         }
       }
     }
+
   }
 }
