@@ -43,7 +43,7 @@ class SubscriptionService @Inject()(
                                      private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository(),
                                      private[services] val auditConnector: AuditConnector = MicroserviceAuditConnector,
-                                     config: AppConfig
+                                     val config: AppConfig
                                    ){
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
@@ -184,9 +184,9 @@ class SubscriptionService @Inject()(
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
                            (implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     (if(config.enrolmentStoreToggle) {
-      ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
-    } else {
       enrolmentStoreConnector.enrol(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
+    } else {
+      ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
     }) map (_ => response) recover {
       case ex => Logger.warn("[AddKnownFactsFailed]", ex)
         response
