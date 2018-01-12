@@ -16,17 +16,14 @@
 
 package metrics
 
+import javax.inject.Inject
+
 import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
-import uk.gov.hmrc.play.graphite.MicroserviceMetrics
 
-trait Metrics {
-  def timer(api: APITypes): Timer.Context
-  def success(api: APITypes): Unit
-  def failed(api: APITypes): Unit
-}
-
-object Metrics extends Metrics with MicroserviceMetrics {
+class Metrics @Inject()(
+                       metrics: com.kenshoo.play.metrics.Metrics
+                       ) {
   // $COVERAGE-OFF$
   val registry: MetricRegistry = metrics.defaultRegistry
   val timers = Map[APITypes, Timer](
@@ -65,7 +62,7 @@ object Metrics extends Metrics with MicroserviceMetrics {
     EnrolmentStoreKnownFacts -> registry.counter(s"${EnrolmentStoreKnownFacts.key}-failure")
   )
 
-  override def timer(api: APITypes): Context = timers(api).time()
-  override def success(api: APITypes): Unit = successCounters(api).inc()
-  override def failed(api: APITypes): Unit = failedCounters(api).inc()
+  def timer(api: APITypes): Context = timers(api).time()
+  def success(api: APITypes): Unit = successCounters(api).inc()
+  def failed(api: APITypes): Unit = failedCounters(api).inc()
 }

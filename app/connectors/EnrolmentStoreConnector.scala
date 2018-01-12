@@ -19,7 +19,7 @@ package connectors
 import javax.inject.Inject
 
 import audit.KnownFactsEvent
-import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
+import config.{AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}

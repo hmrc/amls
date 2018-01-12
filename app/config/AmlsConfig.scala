@@ -40,9 +40,7 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
 
 }
 
-class AppConfig @Inject()(
-                           servicesConfig: iServicesConfig
-                         ){
+class AppConfig @Inject()(val servicesConfig: iServicesConfig){
 
   lazy val enrolmentStoreUrl = s"${servicesConfig.baseUrl("enrolment-store-proxy")}/enrolment-store-proxy"
   def enrolmentStoreToggle = servicesConfig.getConfBool("feature-toggle.enrolment-store", defBool = false)
