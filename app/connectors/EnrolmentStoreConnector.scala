@@ -39,9 +39,9 @@ class EnrolmentStoreConnector @Inject()(
                                          val metrics: Metrics,
                                          config: AppConfig) extends HttpResponseHelper {
 
-  def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
-                                                                    headerCarrier: HeaderCarrier,
-                                                                    writes: Writes[KnownFacts]): Future[HttpResponse] = {
+  def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
+                                                                            headerCarrier: HeaderCarrier,
+                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
     val url = s"${config.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
 

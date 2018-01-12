@@ -51,11 +51,12 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     desConnector = mock[SubscribeDESConnector],
     ggConnector = mock[GovernmentGatewayAdminConnector],
     enrolmentStoreConnector = mock[EnrolmentStoreConnector],
-    feeResponseRepository = mock[FeesRepository],
     auditConnector = mock[AuditConnector],
     config = mock[AppConfig]
   ) {
     override private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = successValidate
+
+    override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
   }
 
   val connector = new MockSubscriptionService
@@ -112,7 +113,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           } thenReturn Future.successful(response)
 
           when {
-            connector.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
+            connector.enrolmentStoreConnector.addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           } thenReturn Future.successful(mock[HttpResponse])
 
           when {
@@ -126,7 +127,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           whenReady(connector.subscribe(safeId, request)) {
             result =>
               result mustEqual SubscriptionResponse.convert(response)
-              verify(connector.enrolmentStoreConnector, times(1)).enrol(any(), eqTo(knownFacts))(any(), any())
+              verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           }
         }
 
@@ -149,7 +150,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           ))
 
           when {
-            connector.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
+            connector.enrolmentStoreConnector.addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           } thenReturn Future.successful(mock[HttpResponse])
 
           when(connector.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
@@ -170,7 +171,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           whenReady(connector.subscribe(safeId, request)) { result =>
             result mustEqual subscriptionResponse
-            verify(connector.enrolmentStoreConnector, times(1)).enrol(any(), eqTo(knownFacts))(any(), any())
+            verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           }
         }
 
@@ -199,7 +200,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           ))
 
           when {
-            connector.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
+            connector.enrolmentStoreConnector.addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           } thenReturn Future.successful(mock[HttpResponse])
 
           when {
@@ -220,7 +221,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           whenReady(connector.subscribe(safeId, request)) {
             result =>
               result mustEqual subscriptionResponse
-              verify(connector.enrolmentStoreConnector, times(1)).enrol(any(), eqTo(knownFacts))(any(), any())
+              verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           }
         }
 
@@ -310,7 +311,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           } thenReturn Future.successful(mock[HttpResponse])
 
           when {
-            connector.enrolmentStoreConnector.enrol(any(), eqTo(knownFacts))(any(), any())
+            connector.enrolmentStoreConnector.addKnownFacts(any(), eqTo(knownFacts))(any(), any())
           } thenReturn Future.successful(mock[HttpResponse])
 
           when {

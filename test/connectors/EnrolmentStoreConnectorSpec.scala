@@ -55,7 +55,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
     val mockTimer = mock[Timer.Context]
 
-    val connector = new EnrolmentStoreConnector(http, metrics, MockAudit, config)
+    val connector = new EnrolmentStoreConnector(http, metrics, config)
     
     val baseUrl = "http://localhost:7775/enrolment-store-proxy"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
@@ -90,7 +90,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         mockResponse(Future.successful(response))
 
-        whenReady(connector.enrol(enrolKey, knownFacts)) { result =>
+        whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
           verify(connector.http).POST[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
         }
@@ -100,7 +100,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         mockResponse(Future.successful(HttpResponse(BAD_REQUEST, responseString = Some("message"))))
 
-        whenReady (connector.enrol(enrolKey, knownFacts).failed) {
+        whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual BAD_REQUEST
             body mustEqual Some("message")
@@ -111,7 +111,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         mockResponse(Future.failed(new Exception("message")))
 
-        whenReady (connector.enrol(enrolKey, knownFacts).failed) {
+        whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual INTERNAL_SERVER_ERROR
             body mustEqual Some("message")
