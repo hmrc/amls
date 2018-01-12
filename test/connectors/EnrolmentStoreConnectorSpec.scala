@@ -30,7 +30,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{CorePost, CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +49,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     implicit val ec = mock[ExecutionContext]
 
     val metrics = mock[Metrics]
-    val http = mock[CorePost]
+    val http = mock[CorePut]
     val authConnector = mock[AuthConnector]
     val config = mock[AppConfig]
 
@@ -77,7 +77,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
     def mockResponse(response: Future[HttpResponse]) =
       when {
-        connector.http.POST[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
+        connector.http.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
       } thenReturn response
 
   }
@@ -92,7 +92,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.http).POST[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+          verify(connector.http).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
         }
       }
 
