@@ -31,9 +31,10 @@ object KnownFacts {
   implicit val format = Json.format[KnownFacts]
 
   implicit def conv(knownFactsForService: KnownFactsForService): KnownFacts = {
-    val knownFacts = knownFactsForService.facts map { kf =>
-      KnownFact(kf.`type`, kf.value)
-    }
+    val knownFacts = knownFactsForService.facts
+      .filterNot ( kf => kf.`type` equals "MLRRefNumber")
+      .map ( kf => KnownFact(kf.`type`, kf.value))
+
     KnownFacts(knownFacts.toSet)
   }
 

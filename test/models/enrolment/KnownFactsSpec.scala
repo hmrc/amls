@@ -16,10 +16,12 @@
 
 package models.enrolment
 
+import generators.AmlsReferenceNumberGenerator
+import models.{KnownFactsForService, KnownFact => GGKNownFact}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class KnownFactsSpec extends PlaySpec{
+class KnownFactsSpec extends PlaySpec with AmlsReferenceNumberGenerator {
 
   "The model" must {
     "serialize to the correct Json" in {
@@ -36,6 +38,25 @@ class KnownFactsSpec extends PlaySpec{
       )
 
       Json.toJson(model) mustBe expectedJson
+    }
+
+    "convert from legacy KnownFacts model" which {
+      "filters identifier MLRRefNumber" in {
+
+        val legacyModel = KnownFactsForService(Seq(
+          GGKNownFact("MLRRefNumber", amlsRegistrationNumber),
+          GGKNownFact("Postcode", "TF2 6NU"),
+          GGKNownFact("NINO", "AB123456X")
+        ))
+
+        val currentModel = KnownFacts(Set(
+          KnownFact("Postcode", "TF2 6NU"),
+          KnownFact("NINO", "AB123456X")
+        ))
+
+        KnownFacts.conv(legacyModel) must be(currentModel)
+
+      }
     }
   }
 

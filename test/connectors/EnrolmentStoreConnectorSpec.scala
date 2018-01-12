@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import config.AppConfig
 import exceptions.HttpStatusException
@@ -30,7 +29,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{CorePost, CorePut, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
