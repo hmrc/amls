@@ -18,8 +18,9 @@ package models
 
 import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
-import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import org.joda.time.{DateTime, DateTimeZone}
+import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
@@ -33,7 +34,7 @@ object ResponseType {
 
   import utils.MappingUtils.Implicits._
 
-  implicit val jsonWrites = Writes[ResponseType] {
+  implicit val jsonWrites: Writes[ResponseType] = Writes[ResponseType] {
     case SubscriptionResponseType => JsString("SubscriptionReponse")
     case AmendOrVariationResponseType => JsString("AmendOrVariationResponse")
   }
@@ -60,7 +61,7 @@ case class Fees(responseType: ResponseType,
                 createdAt: DateTime)
 
 object Fees {
-  implicit def convert(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
+  def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
     subscriptionResponse.subscriptionFees map {
       feesResponse =>  Fees(SubscriptionResponseType,
         subscriptionResponse.amlsRefNo,
@@ -74,7 +75,7 @@ object Fees {
     }
   }
 
-  implicit def convert2(amendVariationResponse: AmendVariationResponse,  amlsReferenceNumber: String): Fees = {
+  implicit def convertAmendmentVariation(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String): Fees = {
     Fees(AmendOrVariationResponseType,
       amlsReferenceNumber,
       amendVariationResponse.registrationFee.getOrElse(0),
@@ -86,9 +87,9 @@ object Fees {
       DateTime.now(DateTimeZone.UTC))
   }
 
-  val dateTimeFormat = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
+  val dateTimeFormat: DateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
 
-  implicit val dateFormat = ReactiveMongoFormats.dateTimeFormats
+  implicit val dateFormat: Format[DateTime] = ReactiveMongoFormats.dateTimeFormats
 
-  implicit val format = Json.format[Fees]
+  implicit val format: OFormat[Fees] = Json.format[Fees]
 }

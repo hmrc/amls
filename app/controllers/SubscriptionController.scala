@@ -30,14 +30,14 @@ import services.SubscriptionService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
+import scala.util.matching.Regex
 
 class SubscriptionController @Inject()(
                                         val subscriptionService: SubscriptionService
                                       ) extends BaseController {
 
-  val safeIdRegex = "^X[A-Z]000[0-9]{10}$".r
+  val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
-  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
 
   private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
     Json.obj(
@@ -55,13 +55,13 @@ class SubscriptionController @Inject()(
       "errors" -> Seq(message)
     )
 
-  def subscribe(accountType: String, ref: String, safeId: String) =
+  def subscribe(accountType: String, ref: String, safeId: String): Action[JsValue] =
     Action.async(parse.json) {
       implicit request =>
         Logger.debug(s"$prefix - SafeId: $safeId")
         safeIdRegex.findFirstIn(safeId) match {
           case Some(_) =>
-            implicit val requestType = RequestType.Subscription
+            implicit val requestType: RequestType.Subscription.type = RequestType.Subscription
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
                 subscriptionService.subscribe(safeId, SubscriptionRequest.convert(body)) map {
@@ -69,9 +69,9 @@ class SubscriptionController @Inject()(
                     Ok(Json.toJson(response))
                 } recoverWith {
                   case ex@HttpStatusException(BAD_REQUEST, _)
-                    if ex.jsonBody.fold(false)(_.reason.startsWith(duplicateSubscriptionMessage)) =>
+                    if ex.jsonBody.fold(false)(_.reason.startsWith(services.Constants.duplicateSubscriptionErrorMessage)) =>
 
-                    Future.successful(UnprocessableEntity(ex.jsonBody.fold(duplicateSubscriptionMessage)(_.reason)))
+                    Future.successful(UnprocessableEntity(ex.jsonBody.fold(services.Constants.duplicateSubscriptionErrorMessage)(_.reason)))
 
                   case e @ HttpStatusException(status, Some(body)) =>
                     Logger.warn(s"$prefix - Status: $status, Message: $body")

@@ -49,15 +49,39 @@ class SubscriptionService @Inject()(
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
-  private val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
-
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
     SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
   }
-  private val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
-  private val lines = scala.io.Source.fromInputStream(stream).getLines
 
-  protected[SubscriptionService] val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+  private lazy val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
+  private lazy val lines = scala.io.Source.fromInputStream(stream).getLines
+  protected[SubscriptionService] lazy val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
+  private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest)
+                                               (implicit ec: ExecutionContext): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
+    case ex@HttpStatusException(BAD_REQUEST, _) => {
+      ex.jsonBody map {
+        case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) => amlsRegistrationNumberRegex.findFirstIn(body.reason)
+          .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+          amlsRegNo => {
+            Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo" )
+            constructedSubscriptionResponse(amlsRegNo, request)(ec) flatMap {
+              case response if response.subscriptionFees.isDefined => Future.successful(response)
+              case _ =>
+                Logger.warn(s"[SubscriptionService] - Reconstructed Subscription Response contains no fees for $amlsRegNo; failing..")
+                failResponse(ex, body)
+            }
+          }
+        }
+        case body =>
+          failResponse(ex, body)
+      }
+    }.getOrElse(Future.failed(ex))
+
+    case e@HttpStatusException(status, Some(body)) =>
+      Logger.warn(s" - Status: $status, Message: $body")
+      Future.failed(e)
+  }
 
   def subscribe
   (safeId: String, request: SubscriptionRequest)
@@ -66,35 +90,15 @@ class SubscriptionService @Inject()(
    ec: ExecutionContext
   ): Future[SubscriptionResponse] = {
 
-    val handleExceptionWithBody: PartialFunction[Throwable, Future[SubscriptionResponse]] = {
-      case ex@HttpStatusException(BAD_REQUEST, _) => {
-        ex.jsonBody map {
-          case body if body.reason.startsWith(duplicateSubscriptionMessage) => amlsRegistrationNumberRegex.findFirstIn(body.reason)
-            .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
-            amlsRegNo => {
-              Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo" )
-              constructedSubscriptionResponse(amlsRegNo, request)(ec)
-            }
-          }
-          case body =>
-            failResponse(ex, body)
-        }
-      }.getOrElse(Future.failed(ex))
-
-      case e@HttpStatusException(status, Some(body)) =>
-        Logger.warn(s" - Status: $status, Message: $body")
-        Future.failed(e)
-    }
-
     validateRequest(safeId, request)
 
     for {
       response <- desConnector.subscribe(safeId, request)
         .map(desResponse => SubscriptionResponse.convert(desResponse))
         .recoverWith {
-          handleExceptionWithBody
+          duplicateSubscriptionErrorHandler(request)
         }
-      _ <- Fees.convert(response) match {
+      _ <- Fees.convertSubscription(response) match {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
@@ -117,7 +121,7 @@ class SubscriptionService @Inject()(
     }
   }
 
-  private def validateRequest(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def validateRequest(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     val result = validateResult(request)
     if (!result.isSuccess) {
       val errors = result.fold(invalid = { errors =>
@@ -169,15 +173,27 @@ class SubscriptionService @Inject()(
       request.responsiblePersons.fold(0) { rp =>
         rp.count(_.msbOrTcsp.fold(false) {
           _.passedFitAndProperTest
+
         })
       }
     }
 
     feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
-      case Some(fees) => SubscriptionResponse("", amlsRegNo, responsiblePersonsCount,
-        responsiblePersonsPassedFitAndProperCount, tradingPremisesCount, Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)), true)
-      case None => SubscriptionResponse("", amlsRegNo, responsiblePersonsCount, responsiblePersonsPassedFitAndProperCount, tradingPremisesCount, None, true)
+      case Some(fees) => SubscriptionResponse("",
+        amlsRegNo,
+        responsiblePersonsCount,
+        responsiblePersonsPassedFitAndProperCount,
+        tradingPremisesCount,
+        Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)), previouslySubmitted = true)
+
+      case None => SubscriptionResponse("",
+        amlsRegNo,
+        responsiblePersonsCount,
+        responsiblePersonsPassedFitAndProperCount,
+        tradingPremisesCount,
+        None,
+        previouslySubmitted = true)
     }
 
   }
