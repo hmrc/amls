@@ -16,7 +16,9 @@
 
 package controllers
 
-import exceptions.{HttpExceptionBody, HttpStatusException}
+import javax.inject.Inject
+
+import exceptions.HttpStatusException
 import models.des.{RequestType, SubscriptionRequest}
 import models.fe
 import play.api.Logger
@@ -29,9 +31,9 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
 
-trait SubscriptionController extends BaseController {
-
-  private[controllers] def service: SubscriptionService
+class SubscriptionController @Inject()(
+                                        val subscriptionService: SubscriptionService
+                                      ) extends BaseController {
 
   val safeIdRegex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
@@ -62,7 +64,7 @@ trait SubscriptionController extends BaseController {
             implicit val requestType = RequestType.Subscription
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
-                service.subscribe(safeId, SubscriptionRequest.convert(body)) map {
+                subscriptionService.subscribe(safeId, SubscriptionRequest.convert(body)) map {
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
@@ -83,9 +85,4 @@ trait SubscriptionController extends BaseController {
             }
         }
     }
-}
-
-object SubscriptionController extends SubscriptionController {
-  // $COVERAGE-OFF$
-  override private[controllers] val service = SubscriptionService
 }

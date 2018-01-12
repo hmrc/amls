@@ -16,7 +16,10 @@
 
 package config
 
+import javax.inject.Inject
+
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.config.inject.{ServicesConfig => iServicesConfig}
 
 trait AmlsConfig {
   def release7: Boolean
@@ -34,6 +37,12 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
   override def release7 = getConfBool("feature-toggle.release7", defBool = false)
 
   lazy val payAPIUrl = baseUrl("pay-api")
-  lazy val enrolmentStoreUrl = s"${baseUrl("enrolment-store-proxy")}/enrolment-store-proxy"
+
+}
+
+class AppConfig @Inject()(servicesConfig: iServicesConfig){
+
+  lazy val enrolmentStoreUrl = s"${servicesConfig.baseUrl("enrolment-store-proxy")}/enrolment-store-proxy"
+  def enrolmentStoreToggle = servicesConfig.getConfBool("feature-toggle.enrolment-store", defBool = false)
 
 }

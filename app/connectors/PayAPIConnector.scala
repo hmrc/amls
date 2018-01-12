@@ -20,7 +20,7 @@ import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
-import play.api.Logger
+import play.api.{Logger, Play}
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -28,7 +28,7 @@ import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 
@@ -80,5 +80,5 @@ trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 object PayAPIConnector extends PayAPIConnector {
   override private[connectors] lazy val httpGet: HttpGet = WSHttp
   override private[connectors] lazy val paymentUrl = AmlsConfig.payAPIUrl
-  override private[connectors] lazy val metrics = Metrics
+  override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
 }

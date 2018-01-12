@@ -17,46 +17,47 @@
 package services
 
 import java.io.InputStream
+import javax.inject.Inject
 
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, MicroserviceAuditConnector}
-import connectors.{DESConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
+import config.{AppConfig, MicroserviceAuditConnector}
+import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{HttpExceptionBody, HttpStatusException}
-import models.{Fees, KnownFact, KnownFactsForService}
 import models.des.SubscriptionRequest
+import models.enrolment.AmlsEnrolmentKey
 import models.fe.{SubscriptionFees, SubscriptionResponse}
+import models.{Fees, KnownFact, KnownFactsForService}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
+import play.mvc.Http.Status._
 import repositories.FeesRepository
-
-import scala.concurrent.{ExecutionContext, Future, Promise}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-trait SubscriptionService {
+import scala.concurrent.{ExecutionContext, Future}
 
-  private val BAD_REQUEST: scala.Int = 400
+class SubscriptionService @Inject()(
+                                     private[services] val desConnector: SubscribeDESConnector,
+                                     private[services] val ggConnector: GovernmentGatewayAdminConnector,
+                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
+                                     private[services] val auditConnector: AuditConnector = MicroserviceAuditConnector,
+                                     val config: AppConfig
+                                   ){
+
+  private[services] val feeResponseRepository: FeesRepository = FeesRepository()
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
-  private[services] def desConnector: SubscribeDESConnector
-
-  private[services] def ggConnector: GovernmentGatewayAdminConnector
-
-  private[services] def feeResponseRepository: FeesRepository
-
-  private[services] val validator: SchemaValidator = SchemaValidator()
-
-  private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue]
-
-  private[services] def auditConnector: AuditConnector
-
-  private val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
-  private val lines = scala.io.Source.fromInputStream(stream).getLines
-  protected[SubscriptionService] val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
   private val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription"
 
+  private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
+    SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  }
+  private val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
+  private val lines = scala.io.Source.fromInputStream(stream).getLines
+
+  protected[SubscriptionService] val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
   def subscribe
   (safeId: String, request: SubscriptionRequest)
@@ -97,10 +98,7 @@ trait SubscriptionService {
         case Some(fees) => feeResponseRepository.insert(fees)
         case _ => Future.successful(false)
       }
-      _ <- ggConnector.addKnownFacts(getKnownFacts(safeId, request, response)).map(_ => response).recover {
-        case ex => Logger.warn("[AddKnownFactsFailed]", ex)
-          response
-      }
+      _ <- addKnownFacts(safeId, request, response)
 
     } yield response
 
@@ -183,15 +181,17 @@ trait SubscriptionService {
     }
 
   }
-}
 
-object SubscriptionService extends SubscriptionService {
-  // $COVERAGE-OFF$
-  override private[services] val desConnector = DESConnector
-  override private[services] val ggConnector = GovernmentGatewayAdminConnector
-  override private[services] val feeResponseRepository = FeesRepository()
-  override private[services] val auditConnector = MicroserviceAuditConnector
-  override private[services] def validateResult(request: SubscriptionRequest) = {
-    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
+                           (implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+    (if(config.enrolmentStoreToggle) {
+      enrolmentStoreConnector.addKnownFacts(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
+    } else {
+      ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
+    }) map (_ => response) recover {
+      case ex => Logger.warn("[AddKnownFactsFailed]", ex)
+        response
+    }
   }
+
 }
