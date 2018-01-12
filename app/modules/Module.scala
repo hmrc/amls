@@ -23,7 +23,7 @@ import config.{MicroserviceAuditConnector, WSHttp}
 import connectors._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
-import uk.gov.hmrc.http.CorePost
+import uk.gov.hmrc.http.{CorePost, CorePut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class Module extends AbstractModule {
@@ -34,6 +34,7 @@ class Module extends AbstractModule {
     bind(classOf[GovernmentGatewayAdminConnector]).toInstance(GovernmentGatewayAdminConnector)
     bind(classOf[SubscribeDESConnector]).toInstance(DESConnector)
     bind(classOf[CorePost]).toInstance(WSHttp)
+    bind(classOf[CorePut]).toInstance(WSHttp)
     bind(classOf[AuditConnector]).toInstance(MicroserviceAuditConnector)
   }
 

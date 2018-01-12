@@ -26,7 +26,7 @@ import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{CorePost, CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
 import utils.HttpResponseHelper
@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class EnrolmentStoreConnector @Inject()(
-                                         val http: CorePost,
+                                         val http: CorePut,
                                          val metrics: Metrics,
                                          config: AppConfig) extends HttpResponseHelper {
 
@@ -52,7 +52,7 @@ class EnrolmentStoreConnector @Inject()(
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 
-    http.POST(url, knownFacts) map { response =>
+    http.PUT(url, knownFacts) map { response =>
       timer.stop()
       Logger.debug(s"$prefix - Base Response: ${response.status}")
       Logger.debug(s"$prefix - Response body: ${response.body}")
