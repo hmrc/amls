@@ -85,7 +85,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     "called" must {
       "call the ES6 enrolment store endpoint for known facts" in new Fixture {
 
-        val response = HttpResponse(OK, responseString = Some("message"))
+        val response = HttpResponse(NO_CONTENT, responseString = Some("message"))
 
         mockResponse(Future.successful(response))
 

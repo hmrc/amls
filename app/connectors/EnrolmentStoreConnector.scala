@@ -24,9 +24,9 @@ import exceptions.HttpStatusException
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.http.{CorePost, CorePut, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
 import utils.HttpResponseHelper
@@ -58,7 +58,7 @@ class EnrolmentStoreConnector @Inject()(
       Logger.debug(s"$prefix - Response body: ${response.body}")
       response
     } flatMap {
-      case response @ status(OK) =>
+      case response @ status(NO_CONTENT) =>
         metrics.success(EnrolmentStoreKnownFacts)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
         Logger.debug(s"$prefix - Success Response")
