@@ -37,7 +37,6 @@ import scala.concurrent.Future
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePost,
                                          val metrics: Metrics,
-                                         val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector),
                                          config: AppConfig) extends HttpResponseHelper {
 
   def enrol(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
@@ -48,6 +47,8 @@ class EnrolmentStoreConnector @Inject()(
 
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)
+
+    val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 
