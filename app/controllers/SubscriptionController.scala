@@ -62,6 +62,7 @@ class SubscriptionController @Inject()(
         safeIdRegex.findFirstIn(safeId) match {
           case Some(_) =>
             implicit val requestType: RequestType.Subscription.type = RequestType.Subscription
+
             Json.fromJson[fe.SubscriptionRequest](request.body) match {
               case JsSuccess(body, _) =>
                 subscriptionService.subscribe(safeId, SubscriptionRequest.convert(body)) map {
