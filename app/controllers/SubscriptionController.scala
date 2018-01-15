@@ -16,21 +16,22 @@
 
 package controllers
 
-import javax.inject.Inject
+ import javax.inject.Inject
 
-import exceptions.HttpStatusException
-import models.des.{RequestType, SubscriptionRequest}
-import models.fe
-import play.api.Logger
-import play.api.data.validation.ValidationError
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.json._
-import play.api.mvc.Action
-import services.SubscriptionService
-import uk.gov.hmrc.play.microservice.controller.BaseController
+ import exceptions.{DuplicateSubscriptionException, HttpStatusException}
+ import models.des.{RequestType, SubscriptionRequest}
+ import models.fe
+ import models.fe.SubscriptionErrorResponse
+ import play.api.Logger
+ import play.api.data.validation.ValidationError
+ import play.api.libs.concurrent.Execution.Implicits._
+ import play.api.libs.json._
+ import play.api.mvc.Action
+ import services.SubscriptionService
+ import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.concurrent.Future
-import scala.util.matching.Regex
+ import scala.concurrent.Future
+ import scala.util.matching.Regex
 
 class SubscriptionController @Inject()(
                                         val subscriptionService: SubscriptionService
@@ -69,10 +70,10 @@ class SubscriptionController @Inject()(
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
-                  case ex@HttpStatusException(BAD_REQUEST, _)
-                    if ex.jsonBody.fold(false)(_.reason.startsWith(services.Constants.duplicateSubscriptionErrorMessage)) =>
-
-                    Future.successful(UnprocessableEntity(ex.jsonBody.fold(services.Constants.duplicateSubscriptionErrorMessage)(_.reason)))
+                  case ex: DuplicateSubscriptionException =>
+                    Future.successful(
+                      UnprocessableEntity(Json.toJson(SubscriptionErrorResponse(ex.amlsRegNumber, ex.message)).toString)
+                        .as("application/json"))
 
                   case e @ HttpStatusException(status, Some(body)) =>
                     Logger.warn(s"$prefix - Status: $status, Message: $body")

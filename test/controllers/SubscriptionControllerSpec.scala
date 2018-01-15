@@ -16,9 +16,9 @@
 
 package controllers
 
-import exceptions.HttpStatusException
+import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
-import models.fe.SubscriptionResponse
+import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
 import models.fe.businesscustomer.{Address, ReviewDetails}
@@ -48,7 +48,7 @@ class SubscriptionControllerSpec
     with IntegrationPatience
     with IterateeHelpers
     with OneAppPerSuite
-    with AmlsReferenceNumberGenerator{
+    with AmlsReferenceNumberGenerator {
 
   val controller = new SubscriptionController (
     subscriptionService = mock[SubscriptionService]
@@ -174,17 +174,17 @@ class SubscriptionControllerSpec
     }
 
     "return a 422 response when DES fails with a duplicate subscription error" in {
-      val reason = "Business Partner already has an active AMLS Subscription with XREF"
+      val reason = s"Business Partner already has an active AMLS Subscription with $amlsRegistrationNumber"
       val errorBody = Json.obj("reason" -> reason).toString
 
       when {
         controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
-      } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
+      } thenReturn Future.failed(DuplicateSubscriptionException(HttpStatusException(BAD_REQUEST, Some(reason)), amlsRegistrationNumber, reason))
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) mustBe UNPROCESSABLE_ENTITY
-      contentAsString(result) mustBe reason
+      contentAsJson(result).as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, reason)
     }
 
     "return a normal exception response if DES does not return a json body" in {
