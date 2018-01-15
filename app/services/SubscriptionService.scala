@@ -26,7 +26,7 @@ import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, Sub
 import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
-import models.fe.{SubscriptionFees, SubscriptionResponse}
+import models.fe.{SubscriptionErrorResponse, SubscriptionFees, SubscriptionResponse}
 import models.{Fees, KnownFact, KnownFactsForService}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
@@ -43,7 +43,7 @@ class SubscriptionService @Inject()(
                                      private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                      private[services] val auditConnector: AuditConnector = MicroserviceAuditConnector,
                                      val config: AppConfig
-                                   ){
+                                   ) {
 
   private[services] val feeResponseRepository: FeesRepository = FeesRepository()
 
@@ -61,18 +61,20 @@ class SubscriptionService @Inject()(
                                                (implicit ec: ExecutionContext): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
     case ex@HttpStatusException(BAD_REQUEST, _) => {
       ex.jsonBody map {
-        case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) => amlsRegistrationNumberRegex.findFirstIn(body.reason)
-          .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
-          amlsRegNo => {
-            Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo" )
-            constructedSubscriptionResponse(amlsRegNo, request)(ec) flatMap {
-              case response if response.subscriptionFees.isDefined => Future.successful(response)
-              case _ =>
-                Logger.warn(s"[SubscriptionService] - Reconstructed Subscription Response contains no fees for $amlsRegNo; failing..")
-                failResponse(ex, body)
+        case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
+          amlsRegistrationNumberRegex
+            .findFirstIn(body.reason)
+            .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
+            amlsRegNo => {
+              Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo")
+              constructedSubscriptionResponse(amlsRegNo, request)(ec) flatMap {
+                case response if response.subscriptionFees.isDefined => Future.successful(response)
+                case _ =>
+                  Logger.warn(s"[SubscriptionService] - Reconstructed Subscription Response contains no fees for $amlsRegNo; failing..")
+                  failResponse(HttpStatusException(BAD_REQUEST, Some(Json.toJson(SubscriptionErrorResponse(amlsRegNo, body.reason)).toString())), body)
+              }
             }
           }
-        }
         case body =>
           failResponse(ex, body)
       }
@@ -200,7 +202,7 @@ class SubscriptionService @Inject()(
 
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
                            (implicit hc: HeaderCarrier, ec: ExecutionContext) = {
-    (if(config.enrolmentStoreToggle) {
+    (if (config.enrolmentStoreToggle) {
       enrolmentStoreConnector.addKnownFacts(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
     } else {
       ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))

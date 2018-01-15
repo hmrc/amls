@@ -25,7 +25,7 @@ import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
-import models.fe.{SubscriptionFees, SubscriptionResponse}
+import models.fe.{SubscriptionErrorResponse, SubscriptionFees, SubscriptionResponse}
 import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -34,7 +34,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsResult, JsValue, Json}
-import play.api.test.Helpers.{BAD_GATEWAY, BAD_REQUEST}
+import play.api.test.Helpers._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -135,25 +135,12 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           reset(connector.ggConnector)
 
-          val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
-
+          val exceptionBody: String = Json.obj("reason" -> s"$duplicateSubscriptionMessage $amlsRegistrationNumber").toString
           val subscriptionResponse = SubscriptionResponse("", amlsRegistrationNumber, 1, 0, 0, None, previouslySubmitted = true)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any())
-          } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
-
-          val knownFacts = KnownFactsForService(Seq(
-            KnownFact("MLRRefNumber", amlsRegistrationNumber),
-            KnownFact("SafeId", safeId),
-            KnownFact("POSTCODE", businessAddressPostcode)
-          ))
-
-          when {
-            connector.enrolmentStoreConnector.addKnownFacts(any(), eqTo(knownFacts))(any(), any())
-          } thenReturn Future.successful(mock[HttpResponse])
-
-          when(connector.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
+          } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(exceptionBody)))
 
           when(connector.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
 
@@ -169,10 +156,15 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
           when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
-          whenReady(connector.subscribe(safeId, request)) { result =>
-            result mustEqual subscriptionResponse
-            verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
+          val ex: HttpStatusException = intercept[HttpStatusException] {
+            await(connector.subscribe(safeId, request))
           }
+
+          ex.jsonBody.foreach { body =>
+            Json.parse(body.reason).as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, exceptionBody)
+          }
+          
+          verify(connector.enrolmentStoreConnector, never).addKnownFacts(any(), any())(any(), any())
         }
 
         "returns duplicate response with amlsregno and there are stored fees" in new TestFixture {
