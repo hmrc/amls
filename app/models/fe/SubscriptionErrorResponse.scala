@@ -21,5 +21,5 @@ import play.api.libs.json.Json
 case class SubscriptionErrorResponse(amlsRegNumber: String, message: String)
 
 object SubscriptionErrorResponse {
-  implicit val format = Json.writes[SubscriptionErrorResponse]
+  implicit val format = Json.format[SubscriptionErrorResponse]
 }

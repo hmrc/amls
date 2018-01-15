@@ -34,4 +34,15 @@ class SubscriptionErrorResponseSpec extends PlaySpec with MustMatchers with Amls
     }
   }
 
+  "Deserializing" must {
+    "produce the correct model from the Json" in {
+      val json = Json.obj(
+        "amlsRegNumber" -> amlsRegistrationNumber,
+        "message" -> "This is another error message"
+      )
+
+      json.as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, "This is another error message")
+    }
+  }
+
 }
