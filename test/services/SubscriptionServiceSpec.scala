@@ -18,7 +18,7 @@ package services
 
 import config.AppConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
-import exceptions.HttpStatusException
+import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
 import models._
 import models.des.SubscriptionRequest
@@ -135,7 +135,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           reset(connector.ggConnector)
 
-          val exceptionBody: String = Json.obj("reason" -> s"$duplicateSubscriptionMessage $amlsRegistrationNumber").toString
+          val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
+          val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
           val subscriptionResponse = SubscriptionResponse("", amlsRegistrationNumber, 1, 0, 0, None, previouslySubmitted = true)
 
           when {
@@ -156,14 +157,14 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
           when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
-          val ex: HttpStatusException = intercept[HttpStatusException] {
+          val ex: DuplicateSubscriptionException = intercept[DuplicateSubscriptionException] {
             await(connector.subscribe(safeId, request))
           }
 
-          ex.jsonBody.foreach { body =>
-            Json.parse(body.reason).as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, exceptionBody)
-          }
-          
+          ex.amlsRegNumber mustBe amlsRegistrationNumber
+          ex.message mustBe errorMessage
+          ex.cause mustBe HttpStatusException(BAD_REQUEST, Some(exceptionBody))
+
           verify(connector.enrolmentStoreConnector, never).addKnownFacts(any(), any())(any(), any())
         }
 

@@ -23,7 +23,7 @@ import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.{AppConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
-import exceptions.{HttpExceptionBody, HttpStatusException}
+import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
 import models.fe.{SubscriptionErrorResponse, SubscriptionFees, SubscriptionResponse}
@@ -71,7 +71,7 @@ class SubscriptionService @Inject()(
                 case response if response.subscriptionFees.isDefined => Future.successful(response)
                 case _ =>
                   Logger.warn(s"[SubscriptionService] - Reconstructed Subscription Response contains no fees for $amlsRegNo; failing..")
-                  failResponse(HttpStatusException(BAD_REQUEST, Some(Json.toJson(SubscriptionErrorResponse(amlsRegNo, body.reason)).toString())), body)
+                  failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
             }
           }
@@ -149,8 +149,12 @@ class SubscriptionService @Inject()(
     }
   }
 
-  private def failResponse(ex: HttpStatusException, body: HttpExceptionBody) = {
-    Logger.warn(s" - Status: ${ex.status}, Message: $body")
+  private def failResponse(ex: Throwable, body: HttpExceptionBody) = {
+    ex match {
+      case e: HttpStatusException => Logger.warn(s" - Status: ${e.status}, Message: $body")
+      case _ => Logger.warn(s" - Exception thrown - Message: $body")
+    }
+
     Future.failed(ex)
   }
 
