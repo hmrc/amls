@@ -43,7 +43,7 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
           None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
         )
 
-        Fees.convert2(response, "test") must be (Fees(AmendOrVariationResponseType,"test",0,None,
+        Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",0,None,
           0,0,None,None, DateTime.now(DateTimeZone.UTC)))
       }
     }
@@ -69,7 +69,7 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
         Some(3456.12)
       )
 
-      Fees.convert2(response, "test") must be (Fees(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
+      Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
         870458.0,2172427.38,Some("string"),Some(3456.12), DateTime.now(DateTimeZone.UTC)))
 
     }
