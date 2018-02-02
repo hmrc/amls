@@ -16,15 +16,9 @@
 
 package models.payapi
 
-import java.time.LocalDateTime
-
 import enumeratum.{Enum, EnumEntry}
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, _}
+import play.api.libs.json._
 import utils.EnumFormat
-
-
-
 
 sealed abstract class TaxType extends EnumEntry
 
@@ -40,68 +34,15 @@ object TaxTypes extends Enum[TaxType] {
   override def values = findValues
 }
 
-import models.payapi.CardTypes.IsCreditCard
-
-sealed abstract class CardType(val schemeCode: String, val isCreditCard: IsCreditCard) extends EnumEntry
-
-object CardTypes extends Enum[CardType] {
-
-  type IsCreditCard = Boolean
-
-  case object `visa-debit` extends CardType("V", false)
-  case object `visa-credit` extends CardType("V", true)
-  case object `mastercard-debit` extends CardType("M", false)
-  case object `mastercard-credit` extends CardType("M", true)
-  case object `visa-electron` extends CardType("V", false)
-  case object `maestro` extends CardType("M", false)
-
-  override def values = findValues
-}
-
-case class Card(`type`: CardType, creditCardCommissionRate: Option[BigDecimal] = None)
-
-object Card {
-
-  import play.api.libs.functional.syntax._
-
-  implicit val cardTypeFormat = EnumFormat(CardTypes)
-
-  val nonNegativeRateValidator: Reads[BigDecimal] = Reads.of[BigDecimal]
-    .filter(ValidationError("Credit Card Commission Rate should be non-negative numbers greater than equal to 0", "error.invalid.rate")
-    )(amount => amount >= 0.0)
-
-  implicit val cardRead: Reads[Card] = (
-    (__ \ "type").read[CardType] and
-      (__ \ "creditCardCommissionRate").readNullable[BigDecimal](nonNegativeRateValidator)
-    ) (Card.apply _)
-
-  implicit val cardWrite = Json.writes[Card]
-}
-
-case class Payment(
-                    _id: String,
-                    amlsRefNo: Option[String],
+case class Payment(_id: String,
                     taxType: TaxType,
                     reference: String,
                     description: String,
                     amountInPence: Int,
-                    commissionInPence: Int,
-                    totalInPence: Int,
                     returnUrl: String,
-                    card: Option[Card],
-                    additionalInformation: Map[String, String],
-                    provider: Option[Provider],
-                    confirmed: Option[LocalDateTime],
                     status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)
-  implicit val providerFormat = Json.format[Provider]
-  implicit val paymentOrder = Json.format[PaymentOrder]
-
   implicit val format = Json.format[Payment]
 }
-
-case class Provider(name: String, reference: String)
-
-case class PaymentOrder(id: String, providerName: String, status: PaymentStatus, lastUpdatedOrCreated: LocalDateTime)
