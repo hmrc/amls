@@ -18,10 +18,9 @@ package generators
 
 import java.time.LocalDateTime
 
-import models.payapi.CardTypes._
+import models.payapi.Payment
 import models.payapi.PaymentStatuses._
 import models.payapi.TaxTypes._
-import models.payapi.{Card, Payment, Provider}
 import org.scalacheck.Gen
 
 trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
@@ -38,25 +37,6 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     `other`
   )
 
-  def cardGen = for {
-    cardType <- cardTypesGen
-    creditCardCommission <- numGen
-  } yield Card(
-    cardType.head,
-    Some(creditCardCommission)
-  )
-
-  def cardTypesGen = Gen.pick(1,
-    `visa-debit`,
-    `visa-credit`,
-    `mastercard-debit`,
-    `mastercard-credit`,
-    `visa-electron`,
-    `maestro`
-  )
-
-  def providerGen = alphaNumOfLengthGen(refLength).map(str => Provider(str, str))
-
   def now = LocalDateTime.now()
 
   def paymentStatusGen = Gen.pick(1,
@@ -69,31 +49,19 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
 
   val payApiPaymentGen: Gen[Payment] = for {
     _id <- hashGen
-    amlsRefNo <- amlsRefNoGen
     taxType <- taxTypesGen
     ref <- paymentRefGen
     desc <- alphaNumOfLengthGen(refLength)
     amountInPence <- numGen
-    commissionInPence <- numGen
-    totalInPence <- numGen
     url <- alphaNumOfLengthGen(refLength)
-    card <- cardGen
-    provider <- providerGen
     paymentStatus <- paymentStatusGen
   } yield Payment(
     _id,
-    Some(amlsRefNo),
     taxType.head,
     ref,
     desc,
     amountInPence,
-    commissionInPence,
-    totalInPence,
     url,
-    Some(card),
-    Map.empty,
-    Some(provider),
-    Some(now),
     paymentStatus.head
   )
 

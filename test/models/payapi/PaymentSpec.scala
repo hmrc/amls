@@ -46,42 +46,19 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
     "serialise to JSON" in {
       Json.toJson(Payment(
         _id,
-        Some(amlsRegistrationNumber),
         other,
         ref,
         desc,
         amountInPence,
-        commissionInPence,
-        totalInPence,
         url,
-        Some(Card(
-          CardTypes.`visa-debit`,
-          Some(20.00)
-        )),
-        Map.empty,
-        Some(Provider(name, providerRef)),
-        Some(now),
-        Successful
+        PaymentStatuses.Successful
       )) must be(Json.obj(
         "_id" -> _id,
-        "amlsRefNo" -> amlsRegistrationNumber,
         "taxType" -> "other",
         "reference" -> ref,
         "description" -> desc,
         "amountInPence" -> amountInPence,
-        "commissionInPence" -> commissionInPence,
-        "totalInPence" -> totalInPence,
         "returnUrl" -> url,
-        "card" -> Json.obj(
-          "type" -> "visa-debit",
-          "creditCardCommissionRate" -> 20.00
-        ),
-        "additionalInformation" -> Json.obj(),
-        "provider" -> Json.obj(
-          "name" -> name,
-          "reference" -> providerRef
-        ),
-        "confirmed" -> Json.toJson(now),
         "status" -> "Successful"
       ))
 
