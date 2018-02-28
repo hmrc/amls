@@ -46,13 +46,16 @@ trait SubscriptionViewController extends BaseController {
         Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
           case Some(_) =>
+            println("**** 1 ****")
             connector.view(amlsRegistrationNumber) map {
               response =>
+                println("**** 2 **** " + response)
                val feModel:SubscriptionView = response
                 val prefix = "[SubscriptionViewController][view]"
                 Logger.debug(s"$prefix model - $feModel")
                 val json = Json.toJson(feModel)
                 Logger.debug(s"$prefix Json - $json")
+                println("**** 3 **** " + json)
                 Ok(json)
             } recoverWith {
               case e@HttpStatusException(status, Some(body)) =>
