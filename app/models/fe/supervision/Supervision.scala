@@ -29,7 +29,7 @@ object Supervision {
 
   implicit val formats = Json.format[Supervision]
 
-  implicit def conv(aspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
+  def makeSupervisionSectionFromAspOrTcsp(aspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
     aspOrTcsp match {
       case Some(supervision) => Some(Supervision(
         supervision.supervisionDetails,
@@ -38,10 +38,10 @@ object Supervision {
         supervision.professionalBodyDetails
       ))
       case None => Some(Supervision(
-        Some(AnotherBodyNo),
-        Some(ProfessionalBodyMemberNo),
         None,
-        Some(ProfessionalBodyNo)
+        None,
+        None,
+        None
       ))
     }
   }
