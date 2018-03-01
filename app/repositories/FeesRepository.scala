@@ -16,6 +16,8 @@
 
 package repositories
 
+import java.util.concurrent.TimeUnit
+
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
@@ -23,11 +25,12 @@ import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
+import reactivemongo.bson.DefaultBSONHandlers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 trait FeesRepository extends Repository[Fees, BSONObjectID] {
 
@@ -40,15 +43,14 @@ trait FeesRepository extends Repository[Fees, BSONObjectID] {
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
   with FeesRepository{
 
+  private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending), name = Some("FeeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> 31536000))
+  private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending), name = Some("amlsRefNumber"))
 
 
   override def indexes: Seq[Index] = {
-    import reactivemongo.bson.DefaultBSONHandlers._
-
-      Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
-          options = BSONDocument("expireAfterSeconds" -> 2592000)))
-
-
+    //REMOVE LINE BELOW AFTER 1 DEPLOYMENT
+    Await.result(collection.indexesManager.drop("FeeResponseExpiry"), Duration(30, TimeUnit.SECONDS))
+    Seq(feeResponseIndex, amlsRefNumberIndex)
   }
 
   override def insert(feeResponse: Fees):Future[Boolean] = {
