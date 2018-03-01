@@ -68,7 +68,7 @@ object RiskAssessmentPolicy {
             Json.obj("hasPolicy" -> false)
   }
 
-  implicit def conv(riskAssessment: Option[FormalRiskAssessmentDetails]) : Option[RiskAssessmentPolicy] = {
+  def conv(riskAssessment: Option[FormalRiskAssessmentDetails]) : Option[RiskAssessmentPolicy] = {
     riskAssessment match {
       case Some(data) => data.riskAssessmentFormat match {
         case Some(dtls) => {

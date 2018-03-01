@@ -66,7 +66,7 @@ object ExpectedAMLSTurnover {
     case Seventh => Json.obj("expectedAMLSTurnover" -> "07")
   }
 
-  implicit def conv(activityDtls: BusinessActivityDetails): Option[ExpectedAMLSTurnover] = {
+  def conv(activityDtls: BusinessActivityDetails): Option[ExpectedAMLSTurnover] = {
     Logger.debug(s"[ExpectedAMLSTurnover][conv] desValue = $activityDtls")
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
       case Some(data) => activityDtls.actvtsBusRegForOnlyActvtsCarOut match {

@@ -39,7 +39,7 @@ object WhoIsYourAccountant {
       (__ \ "accountantsTradingName").readNullable[String] and
       __.read[AccountantsAddress]) (WhoIsYourAccountant.apply _)
 
-  implicit def conv(mlrAdvisorOpt: Option[MlrAdvisor]): Option[WhoIsYourAccountant] = {
+  def conv(mlrAdvisorOpt: Option[MlrAdvisor]): Option[WhoIsYourAccountant] = {
 
     mlrAdvisorOpt flatMap {
       mlrAdvisor =>
