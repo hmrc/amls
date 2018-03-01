@@ -16,6 +16,7 @@
 
 package models.fe.businessactivities
 
+import models.des.businessactivities.BusinessActivitiesAll
 import play.api.libs.json.Json
 
 case class AccountantForAMLSRegulations(accountantForAMLSRegulations: Boolean)
@@ -24,4 +25,12 @@ object AccountantForAMLSRegulations {
 
   implicit val formats = Json.format[AccountantForAMLSRegulations]
 
+  def convertAccountant(desBA: Option[BusinessActivitiesAll]): Option[AccountantForAMLSRegulations] = {
+    for {
+      dba <- desBA
+      mlrAdvisor <- dba.mlrAdvisor
+    } yield {
+      AccountantForAMLSRegulations(mlrAdvisor.doYouHaveMlrAdvisor)
+    }
+  }
 }

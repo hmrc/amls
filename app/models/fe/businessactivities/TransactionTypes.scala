@@ -78,7 +78,7 @@ object TransactionTypes {
     }
   }
 
-  implicit def convert(details: AuditableRecordsDetails): Option[TransactionTypes] = {
+  def convert(details: AuditableRecordsDetails): Option[TransactionTypes] = {
     details.transactionRecordingMethod map { method =>
       val typeMap = Seq[(Boolean, TransactionType)](
         method.manual -> Paper,

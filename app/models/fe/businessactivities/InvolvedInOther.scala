@@ -41,7 +41,7 @@ object InvolvedInOther {
     case involvedInOtherNo => Json.obj("involvedInOther" -> false)
   }
 
-  implicit def conv(activityDtls: BusinessActivityDetails) : Option[InvolvedInOther] = {
+  def conv(activityDtls: BusinessActivityDetails) : Option[InvolvedInOther] = {
     activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
       case true => Some(InvolvedInOtherNo)
       case false => activityDtls.respActvtsBusRegForOnlyActvtsCarOut.fold[Option[InvolvedInOther]](None)(x => x.otherBusActivitiesCarriedOut match {
