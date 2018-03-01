@@ -22,15 +22,17 @@ import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
 import play.modules.reactivemongo.MongoDbConnection
-import reactivemongo.api.DefaultDB
+import reactivemongo.api.commands.Command
+import reactivemongo.api.{BSONSerializationPack, DefaultDB}
 import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.bson.{BSONArray, BSONDocument, BSONInteger, BSONObjectID}
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
 import reactivemongo.bson.DefaultBSONHandlers._
+import views.html.helper.options
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 trait FeesRepository extends Repository[Fees, BSONObjectID] {
 
@@ -43,17 +45,33 @@ trait FeesRepository extends Repository[Fees, BSONObjectID] {
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
   with FeesRepository{
 
-  private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending), name = Some("FeeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> 31536000))
+  private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> 31536000))
   private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending), name = Some("amlsRefNumber"))
 
+  def commandResult()(implicit ec: ExecutionContext): Future[BSONDocument] = {
+    //db.runCommand( {"collMod": "fees" , "index": { "keyPattern": {"createdAt" : 1} , "expireAfterSeconds": 31536000 }})
+    val commandDoc = BSONDocument(
+      "collMod" -> "fees",
+      "index" -> BSONArray(
+        BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1)),
+        BSONDocument("expireAfterSeconds" -> 31536000)
+      )
+    )
+
+    val runner: Command.CommandWithPackRunner[BSONSerializationPack.type] = Command.run(BSONSerializationPack)
+
+    runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
+  }
 
   override def indexes: Seq[Index] = {
-    //REMOVE LINE BELOW AFTER 1 DEPLOYMENT
-    Await.result(collection.indexesManager.drop("FeeResponseExpiry"), Duration(30, TimeUnit.SECONDS))
     Seq(feeResponseIndex, amlsRefNumberIndex)
   }
 
   override def insert(feeResponse: Fees):Future[Boolean] = {
+
+    //REMOVE LINE BELOW AFTER 1st DEPLOYMENT to live
+    commandResult()
+
     collection.insert[Fees](feeResponse) map { lastError =>
       Logger.debug(s"[FeeResponseMongoRepository][insert] : { feeResponse : $feeResponse , result: ${lastError.ok}, errors: ${lastError.errmsg} }")
       lastError.ok
