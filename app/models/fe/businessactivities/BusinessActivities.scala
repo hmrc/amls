@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.BusinessActivitiesAll
+import models.des.businessactivities.{BusinessActivitiesAll, MlrAdvisor}
 
 case class BusinessActivities(
                                involvedInOther: Option[InvolvedInOther] = None,
@@ -79,27 +79,26 @@ object BusinessActivities {
   }
 
   implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
-    import TransactionTypes._
 
-    BusinessActivities(involvedInOther = desBA.fold[Option[InvolvedInOther]](None)(x => x.businessActivityDetails),
-      expectedBusinessTurnover = desBA.fold[Option[ExpectedBusinessTurnover]](None)(x => x.businessActivityDetails),
-      expectedAMLSTurnover = desBA.fold[Option[ExpectedAMLSTurnover]](None)(x => x.businessActivityDetails),
-      businessFranchise = desBA.fold[Option[BusinessFranchise]](None)(x => x.franchiseDetails),
-      transactionRecord = desBA.fold[Option[Boolean]](None)(TransactionTypes.convertRecordsKept),
-      customersOutsideUK = desBA.fold[Option[CustomersOutsideUK]](None)(x => x),
-      ncaRegistered = desBA.fold[Option[NCARegistered]](None)(x => Some(NCARegistered(x.nationalCrimeAgencyRegistered))),
-      accountantForAMLSRegulations = desBA.fold[Option[AccountantForAMLSRegulations]](None)(x =>
-        Some(AccountantForAMLSRegulations(x.mlrAdvisor match { case Some(x) => x.doYouHaveMlrAdvisor
-        case None => false
-        }))),
-      identifySuspiciousActivity = desBA.fold[Option[IdentifySuspiciousActivity]](None)(x =>
-        Some(IdentifySuspiciousActivity(x.suspiciousActivityGuidance))),
-      riskAssessmentPolicy = desBA.fold[Option[RiskAssessmentPolicy]](None)(x => x.formalRiskAssessmentDetails),
-      howManyEmployees = desBA.fold[Option[HowManyEmployees]](None)(x => x),
-      whoIsYourAccountant = desBA.fold[Option[WhoIsYourAccountant]](None)(x => x.mlrAdvisor),
-      taxMatters = desBA.fold[Option[TaxMatters]](None)(x => x.mlrAdvisor flatMap {mlrAdvisor => mlrAdvisor.mlrAdvisorDetails}),
-      transactionRecordTypes = desBA.fold[Option[TransactionTypes]](None)(_.auditableRecordsDetails)
-    )
+    val businessActivitiesOpt = desBA.map { dba =>
+      BusinessActivities(
+        involvedInOther = InvolvedInOther.conv(dba.businessActivityDetails),
+        expectedBusinessTurnover = ExpectedBusinessTurnover.conv(dba.businessActivityDetails),
+        expectedAMLSTurnover = ExpectedAMLSTurnover.conv(dba.businessActivityDetails),
+        businessFranchise = BusinessFranchise.conv(dba.franchiseDetails),
+        transactionRecord = TransactionTypes.convertRecordsKept(dba),
+        customersOutsideUK = CustomersOutsideUK.conv(dba),
+        ncaRegistered = Some(NCARegistered(dba.nationalCrimeAgencyRegistered)),
+        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA),
+        identifySuspiciousActivity = Some(IdentifySuspiciousActivity(dba.suspiciousActivityGuidance)),
+        riskAssessmentPolicy = RiskAssessmentPolicy.conv(dba.formalRiskAssessmentDetails),
+        howManyEmployees = HowManyEmployees.conv(dba),
+        whoIsYourAccountant = WhoIsYourAccountant.conv(dba.mlrAdvisor),
+        taxMatters = dba.mlrAdvisor flatMap { mlrAdvisor => TaxMatters.conv(mlrAdvisor.mlrAdvisorDetails) },
+        transactionRecordTypes = TransactionTypes.convert(dba.auditableRecordsDetails)
+      )
+    }
+    businessActivitiesOpt getOrElse BusinessActivities()
   }
 
 }

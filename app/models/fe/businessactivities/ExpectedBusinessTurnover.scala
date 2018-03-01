@@ -60,7 +60,7 @@ object ExpectedBusinessTurnover {
     case Seventh => Json.obj("expectedBusinessTurnover" -> "07")
   }
 
-  implicit def conv(activityDtls: BusinessActivityDetails) : Option[ExpectedBusinessTurnover] = {
+  def conv(activityDtls: BusinessActivityDetails) : Option[ExpectedBusinessTurnover] = {
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
       case Some(data) => data.otherBusActivitiesCarriedOut match {
         case Some(other) => other.anticipatedTotBusinessTurnover

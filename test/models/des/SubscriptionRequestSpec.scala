@@ -22,6 +22,7 @@ import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusin
 import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.aboutthebusiness.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
+import models.fe.businessactivities.ExpectedBusinessTurnover
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
@@ -808,7 +809,7 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
       }
 
       val feRelease7SubscriptionViewModel = feSubscriptionReq.copy(businessActivitiesSection = BusinessActivitiesSection.model.copy(
-        expectedBusinessTurnover = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k"))))
+        expectedBusinessTurnover = Some(ExpectedBusinessTurnover.First)
       )
       )
 

@@ -34,7 +34,7 @@ object TaxMatters {
     case TaxMatters(bool) => Json.obj("manageYourTaxAffairs" -> bool)
   }
 
-  implicit def conv(advisor : Option[MlrAdvisorDetails]) : Option[TaxMatters] = {
+  def conv(advisor : Option[MlrAdvisorDetails]) : Option[TaxMatters] = {
     advisor match {
       case Some(data) => Some(TaxMatters(data.agentDealsWithHmrc))
       case None => None
