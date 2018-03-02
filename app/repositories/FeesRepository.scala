@@ -46,46 +46,23 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
   with FeesRepository{
 
   private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending),
-                                                name = Some("feeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> "31536000"))
+                                                name = Some("feeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> 31536000))
   private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending), name = Some("amlsRefNumber"))
 
   def commandResult()(implicit ec: ExecutionContext): Future[BSONDocument] = {
-    //db.runCommand( {"collMod": "fees" , "index": { "keyPattern": {"createdAt" : 1} , "expireAfterSeconds": 31536000 }})
+
     val commandDoc = BSONDocument(
       "collMod" -> "fees",
-      "index" -> BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1), "expireAfterSeconds" -> "31536000")
+      "index" -> BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1), "expireAfterSeconds" -> 31536000)
     )
-    println(s">>>>>>>>>>>>>>>>>>>>>>>>>  About to run index update ${BSONDocument.pretty(commandDoc)}")
 
     val runner: Command.CommandWithPackRunner[BSONSerializationPack.type] = Command.run(BSONSerializationPack)
 
-    val stuff = runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
+    runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
 
-    println(">>>>>>>>>>>>>>>>>>>>>>>>>  index update run")
-
-    stuff
   }
 
   override def indexes: Seq[Index] = {
-
-    //REMOVE LINES BELOW AFTER 1st DEPLOYMENT to live
-    val resultOfCommand: Future[BSONDocument] = commandResult()
-
-    val test = resultOfCommand.map(a => a).onComplete {
-      case Success(res) => {
-        println(s">>>>>>>>>>>>>>>>>>>>>>>>  ${BSONDocument.pretty(res)}")
-      }
-      case Failure(t) => {
-        println(s">>>>>>>>>>>>>  ERROR  >>>>>>>>>>>  ${t}")
-      }
-    }
-val result: BSONDocument = Await.result(resultOfCommand, Duration(10, TimeUnit.SECONDS))
-
-    println(s">>>>>>>>>>>>>>>old>>>>>>>>>  ${result.get("expireAfterSeconds_old")}")
-    println(s"new ${result.get("expireAfterSeconds_new")}")
-    println(s">>>>>>>>>>>>>>>ok>>>>>>>>>  ${result.get("ok")}")
-    //REMOVE LINES ABOVE AFTER 1st DEPLOYMENT to live
-
     Seq(feeResponseIndex, amlsRefNumberIndex)
   }
 
