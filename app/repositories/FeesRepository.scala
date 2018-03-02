@@ -18,6 +18,7 @@ package repositories
 
 import java.util.concurrent.TimeUnit
 
+import javax.inject.{Inject, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
@@ -31,6 +32,35 @@ import reactivemongo.bson.DefaultBSONHandlers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
+
+@Singleton
+class IndexUpdater @Inject()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format) {
+
+  private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending),
+    name = Some("feeResponseExpiry"),
+    options = BSONDocument("expireAfterSeconds" -> 31536000))
+
+  def commandResult()(implicit ec: ExecutionContext): Future[BSONDocument] = {
+    //db.runCommand( {"collMod": "fees" , "index": { "keyPattern": {"createdAt" : 1} , "expireAfterSeconds": 31536000 }})
+    val commandDoc = BSONDocument(
+      "collMod" -> "fees",
+      "index" -> BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1), "expireAfterSeconds" -> 31536000)
+    )
+
+    println(s">>>>>>>>>>>>>>>>>>>>>>>>>  About to run index update ${BSONDocument.pretty(commandDoc)}")
+
+    val runner: Command.CommandWithPackRunner[BSONSerializationPack.type] = Command.run(BSONSerializationPack)
+
+    val stuff = runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
+
+    println(">>>>>>>>>>>>>>>>>>>>>>>>>  index update run")
+
+    stuff
+  }
+
+  def update = commandResult()
+}
 import scala.concurrent.{Await, ExecutionContext, Future, duration}
 import scala.util.{Failure, Success}
 
@@ -43,26 +73,18 @@ trait FeesRepository extends Repository[Fees, BSONObjectID] {
 }
 
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
-  with FeesRepository{
+  with FeesRepository {
 
   private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending),
-                                                name = Some("feeResponseExpiry"), options = BSONDocument("expireAfterSeconds" -> 31536000))
-  private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending), name = Some("amlsRefNumber"))
+    name = Some("feeResponseExpiry"),
+    options = BSONDocument("expireAfterSeconds" -> 31536000))
 
-  def commandResult()(implicit ec: ExecutionContext): Future[BSONDocument] = {
-
-    val commandDoc = BSONDocument(
-      "collMod" -> "fees",
-      "index" -> BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1), "expireAfterSeconds" -> 31536000)
-    )
-
-    val runner: Command.CommandWithPackRunner[BSONSerializationPack.type] = Command.run(BSONSerializationPack)
-
-    runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
-
-  }
+  private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending),
+    name = Some("amlsRefNumber"))
 
   override def indexes: Seq[Index] = {
+    //REMOVE LINE BELOW AFTER 1 DEPLOYMENT
+//    Await.result(collection.indexesManager.drop("FeeResponseExpiry"), Duration(30, TimeUnit.SECONDS))
     Seq(feeResponseIndex, amlsRefNumberIndex)
   }
 
