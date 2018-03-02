@@ -27,7 +27,7 @@ object HowManyEmployees {
 
   implicit val formats = Json.format[HowManyEmployees]
 
-  implicit def conv(activityDtls: BusinessActivitiesAll) : Option[HowManyEmployees] = {
+  def conv(activityDtls: BusinessActivitiesAll) : Option[HowManyEmployees] = {
     (activityDtls.noOfEmployees, activityDtls.noOfEmployeesForMlr) match {
       case (Some(noOfEmployees), Some(noOfEmployeesForMlr)) => Some(HowManyEmployees(noOfEmployees, noOfEmployeesForMlr))
       case _ => None

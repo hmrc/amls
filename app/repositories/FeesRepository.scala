@@ -16,8 +16,6 @@
 
 package repositories
 
-import java.util.concurrent.TimeUnit
-
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
@@ -25,10 +23,9 @@ import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.commands.Command
 import reactivemongo.api.{BSONSerializationPack, DefaultDB}
 import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONArray, BSONDocument, BSONInteger, BSONObjectID}
+import reactivemongo.bson.{BSONArray, BSONDocument, BSONObjectID}
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
 import reactivemongo.bson.DefaultBSONHandlers._
-import views.html.helper.options
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -68,9 +65,6 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
   }
 
   override def insert(feeResponse: Fees):Future[Boolean] = {
-
-    //REMOVE LINE BELOW AFTER 1st DEPLOYMENT to live
-    commandResult()
 
     collection.insert[Fees](feeResponse) map { lastError =>
       Logger.debug(s"[FeeResponseMongoRepository][insert] : { feeResponse : $feeResponse , result: ${lastError.ok}, errors: ${lastError.errmsg} }")

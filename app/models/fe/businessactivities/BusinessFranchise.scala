@@ -41,7 +41,7 @@ object BusinessFranchise {
     case BusinessFranchiseNo => Json.obj("businessFranchise" -> false)
   }
 
-  implicit def conv(des: Option[FranchiseDetails]): Option[BusinessFranchise] = {
+  def conv(des: Option[FranchiseDetails]): Option[BusinessFranchise] = {
     des match {
       case Some(data) => data.franchiserName.fold[Option[String]](None)(x => x.headOption) match {
         case Some(yes) => Some(BusinessFranchiseYes(yes))

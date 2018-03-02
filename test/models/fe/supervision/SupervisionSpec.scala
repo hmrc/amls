@@ -42,6 +42,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
     }
 
     "convert supervision des to frontend successfully" in {
+
       val desModel = AspOrTcsp(
         Some(SupervisionDetails(
           true,
@@ -76,15 +77,15 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         ))),
         Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
 
-      Supervision.conv(Some(desModel)) must be(convertedModel)
+      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(convertedModel)
     }
 
     "convert supervision des to frontend successfully wne input is none" in {
-      Supervision.conv(None) must be(Some(Supervision(
-        Some(AnotherBodyNo),
-        Some(ProfessionalBodyMemberNo),
+      Supervision.makeSupervisionSectionFromAspOrTcsp(None) must be(Some(Supervision(
         None,
-        Some(ProfessionalBodyNo)
+        None,
+        None,
+        None
       )))
     }
 
@@ -102,7 +103,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         )),
         None)
 
-      Supervision.conv(Some(desModel)) must be(Some(Supervision(
+      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(Some(Supervision(
         Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),
         Some(ProfessionalBodyMemberNo),
         None,
