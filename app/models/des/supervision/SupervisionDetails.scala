@@ -27,7 +27,7 @@ object SupervisionDetails {
 
   implicit val format = Json.format[SupervisionDetails]
 
-  implicit def conv(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
+  def conv(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
 
     anotherBody match {
       case Some(AnotherBodyYes(supervisorName, startDate, endDate, endingReason)) =>

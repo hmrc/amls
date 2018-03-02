@@ -16,22 +16,20 @@
 
 package models.des.supervision
 
-import models.fe.supervision.Supervision
-import play.api.libs.json.Json
+import models.fe.supervision._
+import org.scalatestplus.play.PlaySpec
 
-case class AspOrTcsp (supervisionDetails: Option[SupervisionDetails],
-                      professionalBodyDetails: Option[ProfessionalBodyDetails])
+class AspOrTcspSpec extends PlaySpec {
 
-object AspOrTcsp {
+  "MemberOfProfessionalBody" should {
 
-  implicit val format = Json.format[AspOrTcsp]
+    "convert frontend model to des AspOrTcspSpec" in {
 
-  def conv(supervision: Option[Supervision]): Option[AspOrTcsp] = {
-
-    supervision match {
-      case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv(x.anotherBody), ProfessionalBodyDetails.conv(x)))
-      case _ => None
     }
+
+    "return default des model when front end model is empty" in {
+         }
+
   }
 
 }

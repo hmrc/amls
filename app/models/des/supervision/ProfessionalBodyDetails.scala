@@ -29,7 +29,7 @@ object ProfessionalBodyDetails {
 
   implicit val format = Json.format[ProfessionalBodyDetails]
 
-  implicit def conv(supervision: Supervision): Option[ProfessionalBodyDetails] = {
+  def conv(supervision: Supervision): Option[ProfessionalBodyDetails] = {
 
     supervision.professionalBody match {
       case Some(ProfessionalBodyYes(reason)) => Some(ProfessionalBodyDetails(true, Some(reason), supervision))
