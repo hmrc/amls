@@ -21,15 +21,47 @@ import org.scalatestplus.play.PlaySpec
 
 class AspOrTcspSpec extends PlaySpec {
 
-  "MemberOfProfessionalBody" should {
+  "Supervision" should {
 
-    "convert frontend model to des AspOrTcspSpec" in {
+    "convert frontend model to des AspOrTcsp" when {
+      "given a complete frontend Supervision model" in {
 
+        val frontendModel = Some(
+          Supervision(Some(AnotherBodyNo),
+            Some(ProfessionalBodyMemberNo),
+            Some(BusinessTypes(Set(AccountingTechnicians))),
+            Some(ProfessionalBodyNo))
+        )
+
+        val desModel = Some(AspOrTcsp(
+          Some(SupervisionDetails(false, None)),
+          Some(ProfessionalBodyDetails(false, None, Some(ProfessionalBodyDesMember(false, None))))
+        ))
+
+        AspOrTcsp.conv(frontendModel) mustBe desModel
+
+      }
     }
 
-    "return default des model when front end model is empty" in {
-         }
+    "return None" when {
+      "given an empty frontend Supervision model" in {
 
+        val frontendModel = Some(
+          Supervision()
+        )
+
+        AspOrTcsp.conv(frontendModel) mustBe None
+
+      }
+
+      "front end model is None" in {
+
+        val frontendModel = None
+
+        AspOrTcsp.conv(frontendModel) mustBe None
+
+      }
+    }
   }
 
 }
