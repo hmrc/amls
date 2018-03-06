@@ -27,8 +27,6 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
 
   "Supervision" must {
 
-    "Complete Model" when {
-
       "correctly convert between json formats" when {
 
         "Serialise as expected" in {
@@ -39,7 +37,6 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
           completeJson.as[Supervision] must be(completeModel)
         }
       }
-    }
 
     "convert supervision des to frontend successfully" in {
 
@@ -66,7 +63,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         ))
       )
 
-      val convertedModel = Some(Supervision(
+      val frontendModel = Some(Supervision(
         Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1), new LocalDate(2001,1,1), "SupervisionEndingReason")),
         Some(ProfessionalBodyMemberYes),
         Some(BusinessTypes(Set(
@@ -75,9 +72,10 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
           InternationalAccountants,
           Other("SpecifyOther")
         ))),
-        Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
+        Some(ProfessionalBodyYes("DetailsIfFinedWarned"))
+      ))
 
-      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(convertedModel)
+      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(frontendModel)
     }
 
     "convert supervision des to frontend successfully wne input is none" in {
@@ -103,14 +101,15 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         )),
         None)
 
-      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(Some(Supervision(
-        Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),
+      val frontendModel = Some(Supervision(
+        Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
         Some(ProfessionalBodyMemberNo),
         None,
         Some(ProfessionalBodyNo))
-      ))
-    }
+      )
 
+      Supervision.makeSupervisionSectionFromAspOrTcsp(Some(desModel)) must be(frontendModel)
+    }
   }
 }
 
@@ -119,8 +118,8 @@ trait SupervisionValues {
   object DefaultValues {
 
     private val supervisor = "Company A"
-    private val start = new LocalDate(1993, 8, 25)
     //scalastyle:off magic.number
+    private val start = new LocalDate(1993, 8, 25)
     private val end = new LocalDate(1999, 8, 25)
     //scalastyle:off magic.number
     private val reason = "Ending reason"
