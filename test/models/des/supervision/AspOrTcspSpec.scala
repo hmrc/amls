@@ -41,19 +41,19 @@ class AspOrTcspSpec extends PlaySpec {
         AspOrTcsp.conv(frontendModel) mustBe desModel
 
       }
-    }
 
-    "return None" when {
       "given an empty frontend Supervision model" in {
 
         val frontendModel = Some(
           Supervision()
         )
 
-        AspOrTcsp.conv(frontendModel) mustBe None
+        AspOrTcsp.conv(frontendModel) mustBe Some(AspOrTcsp(None, None))
 
       }
+    }
 
+    "return None" when {
       "front end model is None" in {
 
         val frontendModel = None

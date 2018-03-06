@@ -30,6 +30,7 @@ object AspOrTcsp {
 
     supervision match {
       case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv(x.anotherBody), ProfessionalBodyDetails.conv(x)))
+      case Some(_) => Some(AspOrTcsp(None, None))
       case _ => None
     }
   }
