@@ -63,7 +63,7 @@ object AnotherBody {
     case AnotherBodyNo => Json.obj("anotherBody" -> false)
   }
 
-  def conv(supDtls: Option[SupervisionDetails] ): Option[AnotherBody] = {
+  implicit def conv(supDtls: Option[SupervisionDetails] ): Option[AnotherBody] = {
     supDtls match {
       case Some(sup) => sup.supervisorDetails.fold[Option[AnotherBody]](Some(AnotherBodyNo))(x => Some(AnotherBodyYes(x.nameOfLastSupervisor,
         LocalDate.parse(x.supervisionStartDate),
