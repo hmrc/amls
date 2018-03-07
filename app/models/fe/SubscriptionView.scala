@@ -72,7 +72,7 @@ object SubscriptionView {
       aspSection = desView,
       msbSection = desView,
       hvdSection = desView,
-      supervisionSection = Supervision.makeSupervisionSectionFromAspOrTcsp(desView.aspOrTcsp)
+      supervisionSection = desView.aspOrTcsp
     )
     if (view.businessMatchingSection.activities.businessActivities.exists(act => act == models.fe.businessmatching.MoneyServiceBusiness || act == TrustAndCompanyServices)) {
       view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
