@@ -37,12 +37,7 @@ object Supervision {
         supervision.professionalBodyDetails,
         supervision.professionalBodyDetails
       ))
-      case None => Some(Supervision(
-        Some(AnotherBodyNo),
-        Some(ProfessionalBodyMemberNo),
-        None,
-        Some(ProfessionalBodyNo)
-      ))
+      case None => None
     }
   }
 
