@@ -80,12 +80,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
     }
 
     "convert supervision des to frontend successfully wne input is none" in {
-      Supervision.conv(None) must be(Some(Supervision(
-        Some(AnotherBodyNo),
-        Some(ProfessionalBodyMemberNo),
-        None,
-        Some(ProfessionalBodyNo)
-      )))
+      Supervision.conv(None) mustBe None
     }
 
     "convert supervision des to frontend successfully when no professional body details returned" in {
