@@ -60,7 +60,7 @@ trait AmendVariationController extends BaseController {
           case JsSuccess(body, _) =>
             implicit val mt = messageType
             implicit val requestType = RequestType.Amendment
-            service.compareAndUpdate(body, amlsRegistrationNumber) flatMap {
+            service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
                   response =>
