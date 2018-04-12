@@ -48,7 +48,7 @@ class AspOrTcspSpec extends PlaySpec {
           Supervision()
         )
 
-        AspOrTcsp.conv(frontendModel) mustBe Some(AspOrTcsp(None, None))
+        AspOrTcsp.conv(frontendModel) mustBe None
 
       }
     }
