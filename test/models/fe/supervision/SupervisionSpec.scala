@@ -76,11 +76,16 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         ))),
         Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
 
-      Supervision.convertFrom(Some(desModel)) must be(convertedModel)
+      Supervision.conv(Some(desModel)) must be(convertedModel)
     }
 
-    "convert supervision des to frontend successfully when input is none" in {
-      Supervision.convertFrom(None) must not be defined
+    "convert supervision des to frontend successfully wne input is none" in {
+      Supervision.conv(None) must be(Some(Supervision(
+        Some(AnotherBodyNo),
+        Some(ProfessionalBodyMemberNo),
+        None,
+        Some(ProfessionalBodyNo)
+      )))
     }
 
     "convert supervision des to frontend successfully when no professional body details returned" in {
@@ -97,7 +102,7 @@ class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues 
         )),
         None)
 
-      Supervision.convertFrom(Some(desModel)) must be(Some(Supervision(
+      Supervision.conv(Some(desModel)) must be(Some(Supervision(
         Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),
         Some(ProfessionalBodyMemberNo),
         None,
