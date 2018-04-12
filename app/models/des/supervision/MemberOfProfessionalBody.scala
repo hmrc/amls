@@ -43,7 +43,7 @@ object MemberOfProfessionalBody {
 
   // scalastyle:off
 
-  def convBusinessTypes(members: BusinessTypes): Option[MemberOfProfessionalBody] = {
+  implicit def convBusinessTypes(members: BusinessTypes): Option[MemberOfProfessionalBody] = {
 
     val memberOfProfessionalBody = members.businessType.foldLeft[MemberOfProfessionalBody](MemberOfProfessionalBody(
       false, false, false, false, false, false, false,

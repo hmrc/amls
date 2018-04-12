@@ -16,18 +16,37 @@
 
 package repositories
 
+import javax.inject.{Inject, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
 import play.modules.reactivemongo.MongoDbConnection
-import reactivemongo.api.DefaultDB
+import reactivemongo.api.commands.Command
 import reactivemongo.api.indexes.{Index, IndexType}
+import reactivemongo.api.{BSONSerializationPack, DefaultDB}
+import reactivemongo.bson.DefaultBSONHandlers._
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+
+@Singleton
+class IndexUpdater @Inject()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format) {
+
+  private def commandResult()(implicit ec: ExecutionContext): Future[BSONDocument] = {
+    val commandDoc = BSONDocument(
+      "collMod" -> "fees",
+      "index" -> BSONDocument("keyPattern" -> BSONDocument("createdAt" -> 1), "expireAfterSeconds" -> 31536000)
+    )
+
+    val runner: Command.CommandWithPackRunner[BSONSerializationPack.type] = Command.run(BSONSerializationPack)
+
+    runner.apply(collection.db, runner.rawCommand(commandDoc)).one[BSONDocument]
+  }
+
+  def update: Future[BSONDocument] = commandResult()
+}
 
 trait FeesRepository extends Repository[Fees, BSONObjectID] {
 
@@ -38,17 +57,17 @@ trait FeesRepository extends Repository[Fees, BSONObjectID] {
 }
 
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
-  with FeesRepository{
+  with FeesRepository {
 
+  private lazy val feeResponseIndex = Index(Seq("createdAt" -> IndexType.Ascending),
+    name = Some("feeResponseExpiry"),
+    options = BSONDocument("expireAfterSeconds" -> 31536000))
 
+  private lazy val amlsRefNumberIndex = Index(Seq("amlsReferenceNumber" -> IndexType.Descending),
+    name = Some("amlsRefNumber"))
 
   override def indexes: Seq[Index] = {
-    import reactivemongo.bson.DefaultBSONHandlers._
-
-      Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
-          options = BSONDocument("expireAfterSeconds" -> 2592000)))
-
-
+    Seq(feeResponseIndex, amlsRefNumberIndex)
   }
 
   override def insert(feeResponse: Fees):Future[Boolean] = {

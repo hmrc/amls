@@ -16,11 +16,10 @@
 
 package modules
 
-import javax.inject.Singleton
-
 import com.google.inject.{AbstractModule, Provides}
 import config.{MicroserviceAuditConnector, WSHttp}
 import connectors._
+import javax.inject.Singleton
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
 import uk.gov.hmrc.http.{CorePost, CorePut}
