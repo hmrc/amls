@@ -29,13 +29,20 @@ object Supervision {
 
   implicit val formats = Json.format[Supervision]
 
-  def convertFrom(maybeAspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
-    maybeAspOrTcsp map { aspOrTcsp => Supervision(
-        AnotherBody.conv(aspOrTcsp.supervisionDetails),
-        ProfessionalBodyMember.conv(aspOrTcsp.professionalBodyDetails),
-        BusinessTypes.conv(aspOrTcsp.professionalBodyDetails),
-        ProfessionalBody.conv(aspOrTcsp.professionalBodyDetails)
-      )
+  implicit def conv(aspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
+    aspOrTcsp match {
+      case Some(supervision) => Some(Supervision(
+        supervision.supervisionDetails,
+        supervision.professionalBodyDetails,
+        supervision.professionalBodyDetails,
+        supervision.professionalBodyDetails
+      ))
+      case None => Some(Supervision(
+        Some(AnotherBodyNo),
+        Some(ProfessionalBodyMemberNo),
+        None,
+        Some(ProfessionalBodyNo)
+      ))
     }
   }
 
