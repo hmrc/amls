@@ -23,42 +23,33 @@ import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait FeesRepository extends Repository[Fees, BSONObjectID] {
-
   def insert(feeResponse: Fees):Future[Boolean]
-
   def findLatestByAmlsReference(amlsReferenceNumber: String):Future[Option[Fees]]
-
 }
 
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
   with FeesRepository{
 
-
-
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
-
       Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
-          options = BSONDocument("expireAfterSeconds" -> 2592000)))
-
-
+          options = BSONDocument("expireAfterSeconds" -> 31536000)))
   }
 
-  override def insert(feeResponse: Fees):Future[Boolean] = {
+  override def insert(feeResponse: Fees): Future[Boolean] = {
     collection.insert[Fees](feeResponse) map { lastError =>
       Logger.debug(s"[FeeResponseMongoRepository][insert] : { feeResponse : $feeResponse , result: ${lastError.ok}, errors: ${lastError.errmsg} }")
       lastError.ok
     }
   }
 
-  override def findLatestByAmlsReference(amlsReferenceNumber: String) = {
+  override def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] = {
     collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Fees]
   }
 }
