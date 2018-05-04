@@ -172,7 +172,7 @@ object AmendVariationRequest {
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection, true),
-      hvd= data.hvdSection,
+      hvd = data.hvdSection,
       asp = data.aspSection,
       aspOrTcsp = data.supervisionSection.map(aspOrTcspConv),
       tcspAll = data.tcspSection.map(tcspAllConv),
