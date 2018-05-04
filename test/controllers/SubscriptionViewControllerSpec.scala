@@ -33,8 +33,6 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers._
-import reactivemongo.bson.BSONDocument
-import repositories.IndexUpdater
 import utils.IterateeHelpers
 
 import scala.concurrent.Future
@@ -46,18 +44,13 @@ class SubscriptionViewControllerSpec
     with IntegrationPatience
     with IterateeHelpers
     with OneAppPerSuite
-    with AmlsReferenceNumberGenerator {
+    with AmlsReferenceNumberGenerator{
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   object SubscriptionViewController extends SubscriptionViewController {
     override val connector = mock[ViewDESConnector]
-    override val indexUpdater = mock[IndexUpdater]
   }
-
-  when {
-    SubscriptionViewController.indexUpdater.update
-  } thenReturn Future.successful(mock[BSONDocument])
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")
@@ -135,13 +128,8 @@ class SubscriptionViewControllerSpecRelease7
 
   object SubscriptionViewController extends SubscriptionViewController {
     override val connector = mock[ViewDESConnector]
-    override val indexUpdater = mock[IndexUpdater]
   }
 
-  when {
-    SubscriptionViewController.indexUpdater.update
-  } thenReturn Future.successful(mock[BSONDocument])
-  
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
       x.agentDetails match {

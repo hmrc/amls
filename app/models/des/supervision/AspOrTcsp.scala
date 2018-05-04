@@ -26,10 +26,11 @@ object AspOrTcsp {
 
   implicit val format = Json.format[AspOrTcsp]
 
-  implicit def conv(supervision: Supervision): AspOrTcsp = {
-
-    AspOrTcsp(supervision.anotherBody, supervision)
-
+  def conv(supervision: Option[Supervision]): Option[AspOrTcsp] = {
+    supervision match {
+      case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv(x.anotherBody), ProfessionalBodyDetails.conv(x)))
+      case _ => None
+    }
   }
 
 }
