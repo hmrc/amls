@@ -16,27 +16,26 @@
 
 package repositories
 
-import javax.inject.{Inject, Singleton}
-
 import exceptions.PaymentException
+import javax.inject.{Inject, Singleton}
 import models.payments.Payment
 import play.api.Logger
 import play.api.libs.json.Json
-import reactivemongo.api.{DB, DefaultDB}
-import reactivemongo.api.commands.WriteResult
+import reactivemongo.api.DefaultDB
+import reactivemongo.api.commands.{UpdateWriteResult, WriteError, WriteResult}
 import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.mongo.ReactiveRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import utils.MongoUtils._
 
 @Singleton
 class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
 
   override def indexes: Seq[Index] = {
-    import reactivemongo.bson.DefaultBSONHandlers._
-
     Seq(
       Index(
         key = Seq("createdAt" -> IndexType.Ascending),
@@ -55,25 +54,25 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
 
   def insert(newPayment: Payment): Future[Payment] = collection.insert(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
 
-  def update(payment: Payment) = collection.update(
+  def update(payment: Payment): Future[UpdateWriteResult] = collection.update(
     Json.obj("_id" -> payment._id),
     payment
   )
 
-  def findLatestByAmlsReference(amlsReferenceNumber: String) = {
+  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] = {
     collection.find(Json.obj("amlsRefNo" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
 
-  def findLatestByPaymentReference(paymentReference: String) =
+  def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] =
     collection.find(Json.obj("reference" -> paymentReference)).sort(Json.obj("createdAt" -> -1)).one[Payment]
 
   private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
     case writeResult: WriteResult if isError(writeResult) => {
-      Logger.debug(s"[PaymentsMongoRepository][insert] : { paymentDetails : $payment , result: ${writeResult.ok}, errors: ${writeResult.errmsg} }")
-      Future.failed(new PaymentException(None, writeResult.errmsg.getOrElse("[PaymentsMongoRepository][insert] Unknown write result error.")))
+      Logger.debug(s"[PaymentsMongoRepository][insert] paymentDetails: $payment, result: ${writeResult.ok}, errors: ${writeResult.writeErrors.getMessages}")
+      Future.failed(PaymentException(None, writeResult.writeErrors.getMessages))
     }
     case _ => Future.successful(payment)
   }
 
-  private def isError(writeResult: WriteResult) = !writeResult.ok || writeResult.hasErrors
+  private def isError(writeResult: WriteResult) = !writeResult.ok || writeResult.writeErrors.nonEmpty
 }

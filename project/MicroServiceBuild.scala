@@ -14,7 +14,7 @@ private object AppDependencies {
   private val microserviceBootstrapVersion = "6.17.0"
   private val playUrlBindersVersion = "2.1.0"
   private val domainVersion = "5.1.0"
-  private val playReactivemongoVersion = "5.2.0"
+  private val playReactivemongoVersion = "6.2.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
@@ -45,7 +45,7 @@ private object AppDependencies {
         "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.scalacheck" %% "scalacheck" % "1.12.5" % scope,
         "uk.gov.hmrc" %% "hmrctest" % hmrctestVersion % scope,
-         "org.pegdown" % "pegdown" % pegdownVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.mockito" % "mockito-core" % "1.9.5" % scope
       )

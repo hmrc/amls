@@ -23,7 +23,9 @@ import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.play.json.ImplicitBSONHandlers._
 import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
+import utils.MongoUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +46,7 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
 
   override def insert(feeResponse: Fees): Future[Boolean] = {
     collection.insert[Fees](feeResponse) map { lastError =>
-      Logger.debug(s"[FeeResponseMongoRepository][insert] : { feeResponse : $feeResponse , result: ${lastError.ok}, errors: ${lastError.errmsg} }")
+      Logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result: ${lastError.ok}, errors: ${lastError.writeErrors.getMessages}")
       lastError.ok
     }
   }
