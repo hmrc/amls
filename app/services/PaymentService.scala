@@ -66,7 +66,7 @@ class PaymentService @Inject()(
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
     paymentsRepository.update(payment) map {
       case r if r.ok => true
-      case result => throw result
+      case result => throw new Exception(result.errmsg.getOrElse(s"Unknown error when trying to update payment ref ${payment.reference}"))
     }
 
   def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
