@@ -20,7 +20,8 @@ import org.scalatestplus.play.PlaySpec
 
 class FundsTransferSpec extends PlaySpec {
   "FundsTransfer" must {
-    FundsTransfer.convMsbAll(None) must be(None)
-
+    "convert the model correctly" in {
+      FundsTransfer.convMsbAll(None) must be(None)
+    }
   }
 }

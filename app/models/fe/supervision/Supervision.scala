@@ -16,6 +16,7 @@
 
 package models.fe.supervision
 
+import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision.AspOrTcsp
 
 case class Supervision(anotherBody: Option[AnotherBody] = None,
@@ -29,14 +30,20 @@ object Supervision {
 
   implicit val formats = Json.format[Supervision]
 
-  def convertFrom(maybeAspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
-    maybeAspOrTcsp map { aspOrTcsp => Supervision(
-        AnotherBody.conv(aspOrTcsp.supervisionDetails),
-        ProfessionalBodyMember.conv(aspOrTcsp.professionalBodyDetails),
-        BusinessTypes.conv(aspOrTcsp.professionalBodyDetails),
-        ProfessionalBody.conv(aspOrTcsp.professionalBodyDetails)
-      )
+  def convertFrom(maybeAspOrTcsp: Option[AspOrTcsp], maybeActivities: Option[MlrActivitiesAppliedFor]): Option[Supervision] =
+    (maybeAspOrTcsp, maybeActivities) match {
+      case (None, Some(activities)) if activities.tcsp || activities.asp =>
+        Some(Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo)))
+
+      case (Some(aspOrTcsp), _) =>
+        Some(Supervision(
+          AnotherBody.conv(aspOrTcsp.supervisionDetails),
+          ProfessionalBodyMember.conv(aspOrTcsp.professionalBodyDetails),
+          BusinessTypes.conv(aspOrTcsp.professionalBodyDetails),
+          ProfessionalBody.conv(aspOrTcsp.professionalBodyDetails)
+        ))
+
+      case _ => None
     }
-  }
 
 }

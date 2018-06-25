@@ -72,8 +72,9 @@ object SubscriptionView {
       aspSection = desView,
       msbSection = desView,
       hvdSection = desView,
-      supervisionSection = Supervision.convertFrom(desView.aspOrTcsp)
+      supervisionSection = Supervision.convertFrom(desView.aspOrTcsp, desView.businessActivities.mlrActivitiesAppliedFor)
     )
+
     if (view.businessMatchingSection.activities.businessActivities.exists(act => act == models.fe.businessmatching.MoneyServiceBusiness || act == TrustAndCompanyServices)) {
       view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
         case None => None
@@ -87,6 +88,7 @@ object SubscriptionView {
         }
       })
     } else view
+
   }
 
 }
