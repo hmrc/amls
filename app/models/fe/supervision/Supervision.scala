@@ -16,6 +16,7 @@
 
 package models.fe.supervision
 
+import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision.AspOrTcsp
 
 case class Supervision(anotherBody: Option[AnotherBody] = None,
@@ -29,14 +30,34 @@ object Supervision {
 
   implicit val formats = Json.format[Supervision]
 
-  def convertFrom(maybeAspOrTcsp: Option[AspOrTcsp]) : Option[Supervision] = {
-    maybeAspOrTcsp map { aspOrTcsp => Supervision(
-        AnotherBody.conv(aspOrTcsp.supervisionDetails),
-        ProfessionalBodyMember.conv(aspOrTcsp.professionalBodyDetails),
-        BusinessTypes.conv(aspOrTcsp.professionalBodyDetails),
-        ProfessionalBody.conv(aspOrTcsp.professionalBodyDetails)
-      )
+  /**
+    * Converts from the ETMP 'supervision' model to our frontend model.
+    *
+    * This mostly converts from the ETMP model to the frontend model for Supervision.
+    *
+    * The ETMP model may not be available if the user has answered 'no' to all of the Supervision
+    * questions on the frontend. If maybeAspOrTcsp is None, and the submission activities include TCSP or ASP, then
+    * we know that the user must have selected 'no' for all of the Supervision questions.
+    * Otherwise, either the converted model should be returned, or None if there's no Supervision data to convert from
+    * and the activites don't include either ASP or TCSP.
+    * @param maybeAspOrTcsp The ETMP supervision model
+    * @param maybeActivities The activities that have been applied for as part of the submission data
+    * @return The Supervision model after having been converted from ETMP's supervision model
+    */
+  def convertFrom(maybeAspOrTcsp: Option[AspOrTcsp], maybeActivities: Option[MlrActivitiesAppliedFor]): Option[Supervision] =
+    (maybeAspOrTcsp, maybeActivities) match {
+      case (None, Some(activities)) if activities.tcsp || activities.asp =>
+        Some(Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo)))
+
+      case (Some(aspOrTcsp), _) =>
+        Some(Supervision(
+          AnotherBody.conv(aspOrTcsp.supervisionDetails),
+          ProfessionalBodyMember.conv(aspOrTcsp.professionalBodyDetails),
+          BusinessTypes.conv(aspOrTcsp.professionalBodyDetails),
+          ProfessionalBody.conv(aspOrTcsp.professionalBodyDetails)
+        ))
+
+      case _ => None
     }
-  }
 
 }

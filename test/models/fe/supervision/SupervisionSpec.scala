@@ -16,145 +16,115 @@
 
 package models.fe.supervision
 
+import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision._
 import org.joda.time.LocalDate
-import org.mockito.Mockito._
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues {
+class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues with PropertyChecks {
 
   "Supervision" must {
+    "convert supervision des to frontend successfully" when {
+      "Neither ASP or TCSP have been selected" in {
+        forAll(arbitrary[AspOrTcsp], arbitrary[MlrActivitiesAppliedFor]) { (aspOrTcsp, activities) =>
+          val result = Supervision.convertFrom(Some(aspOrTcsp), Some(withoutAspOrTcsp(activities))).get
 
-    "Complete Model" when {
-
-      "correctly convert between json formats" when {
-
-        "Serialise as expected" in {
-          Json.toJson(completeModel) must be(completeJson)
-        }
-
-        "Deserialise as expected" in {
-          completeJson.as[Supervision] must be(completeModel)
+          result.anotherBody mustBe defined
+          result.professionalBody mustBe defined
+          result.professionalBodyMember mustBe defined
+          result.professionalBodies mustBe defined
         }
       }
     }
 
-    "convert supervision des to frontend successfully" in {
-      val desModel = AspOrTcsp(
-        Some(SupervisionDetails(
-          true,
-          Some(SupervisorDetails(
-            "NameOfLastSupervisor",
-            "2001-01-01",
-            "2001-01-01",
-            None,
-            "SupervisionEndingReason")
-          )
-        )),
-        Some(ProfessionalBodyDetails(
-          true,
-          Some("DetailsIfFinedWarned"),
-          Some(ProfessionalBodyDesMember(
-            true,
-            Some(MemberOfProfessionalBody(
-              false, true, true, false, false, false, false, true, false, false, false, false, false, true, Some("SpecifyOther")
-            ))
-          ))
-        ))
-      )
+    "convert Supervision des to frontend" which {
+      "has all of the questions set to 'no'" when {
+        "the des model is None and the application contains ASP or TCSP" in {
+          forAll(activitiesWithSupervision) { activitySet =>
+            val result = Supervision.convertFrom(None, Some(activitySet))
+            result mustBe Some(Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo)))
+          }
+        }
+      }
 
-      val convertedModel = Some(Supervision(
-        Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1), new LocalDate(2001,1,1), "SupervisionEndingReason")),
-        Some(ProfessionalBodyMemberYes),
-        Some(BusinessTypes(Set(
-          AccountantsIreland,
-          CharteredCertifiedAccountants,
-          InternationalAccountants,
-          Other("SpecifyOther")
-        ))),
-        Some(ProfessionalBodyYes("DetailsIfFinedWarned"))))
-
-      Supervision.convertFrom(Some(desModel)) must be(convertedModel)
-    }
-
-    "convert supervision des to frontend successfully when input is none" in {
-      Supervision.convertFrom(None) must not be defined
+      "is None" when {
+        "the des model is None and the application contains neither ASP or TCSP" in {
+          forAll(arbitrary[MlrActivitiesAppliedFor]) { activities =>
+            val result = Supervision.convertFrom(None, Some(withoutAspOrTcsp(activities)))
+            result must not be defined
+          }
+        }
+      }
     }
 
     "convert supervision des to frontend successfully when no professional body details returned" in {
-      val desModel = AspOrTcsp(
-        Some(SupervisionDetails(
-          true,
-          Some(SupervisorDetails(
-            "NameOfLastSupervisor",
-            "2001-01-01",
-            "2001-01-01",
-            None,
-            "SupervisionEndingReason")
-          )
-        )),
-        None)
+      forAll(arbitrary[AspOrTcsp]) { model =>
+        val result = Supervision.convertFrom(Some(model.copy(professionalBodyDetails = None)), None)
 
-      Supervision.convertFrom(Some(desModel)) must be(Some(Supervision(
-        Some(AnotherBodyYes("NameOfLastSupervisor",new LocalDate(2001,1,1),new LocalDate(2001,1,1),"SupervisionEndingReason")),
-        Some(ProfessionalBodyMemberNo),
-        None,
-        Some(ProfessionalBodyNo))
-      ))
+        result.get.professionalBody must contain(ProfessionalBodyNo)
+      }
     }
-
   }
 }
 
 trait SupervisionValues {
+  val activitiesWithAspTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = true, eab = false, bpsp = false, tditpsp = false)
+  val activitiesWithAsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = false, eab = false, bpsp = false, tditpsp = false)
+  val activitiesWithTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = false, tcsp = true, eab = false, bpsp = false, tditpsp = false)
+  val activitiesWithSupervision = Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
 
-  object DefaultValues {
+  val activityGen: Gen[MlrActivitiesAppliedFor] = for {
+    msb <- arbitrary[Boolean]
+    hvd <- arbitrary[Boolean]
+    asp <- arbitrary[Boolean]
+    tcsp <- arbitrary[Boolean]
+    eab <- arbitrary[Boolean]
+    bpsp <- arbitrary[Boolean]
+    tditpsp <- arbitrary[Boolean]
+  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp)
 
-    private val supervisor = "Company A"
-    private val start = new LocalDate(1993, 8, 25)
-    //scalastyle:off magic.number
-    private val end = new LocalDate(1999, 8, 25)
-    //scalastyle:off magic.number
-    private val reason = "Ending reason"
+  implicit val arbitraryMlrActivities: Arbitrary[MlrActivitiesAppliedFor] = Arbitrary(activityGen.sample.get)
+  implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(LocalDate.now())
 
-    val DefaultAnotherBody = AnotherBodyYes(supervisor, start, end, reason)
-    val DefaultProfessionalBody = ProfessionalBodyYes("details")
-    val DefaultProfessionalBodyMember = ProfessionalBodyMemberYes
-    val DefaultBusinessTypes = BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants, Other("test")))
-  }
+  val supervisorDetailsGen: Gen[SupervisorDetails] = for {
+    name <- arbitrary[String]
+    startDate <- Gen.const(LocalDate.now())
+    endDate <- Gen.const(LocalDate.now())
+    dateChange <- arbitrary[Boolean]
+    reason <- arbitrary[String]
+  } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), Some(dateChange), reason)
 
-  object NewValues {
-    val NewAnotherBody = AnotherBodyNo
-    val NewProfessionalBody = ProfessionalBodyNo
-    val ProfessionalBodyMemberYes = ProfessionalBodyMemberNo
-  }
+  val supervisionDetailsGen: Gen[SupervisionDetails] = for {
+    supervised <- arbitrary[Boolean]
+    supervisor <- supervisorDetailsGen
+  } yield SupervisionDetails(supervised, if (supervised) Some(supervisor) else None)
 
-  val completeModel = Supervision(
-    Some(DefaultValues.DefaultAnotherBody),
-    Some(DefaultValues.DefaultProfessionalBodyMember),
-    Some(DefaultValues.DefaultBusinessTypes),
-    Some(DefaultValues.DefaultProfessionalBody))
-  val partialModel = Supervision(Some(DefaultValues.DefaultAnotherBody))
-
-  val completeJson = Json.obj(
-    "anotherBody" -> Json.obj(
-      "anotherBody" -> true,
-      "supervisorName" -> "Company A",
-      "startDate" -> "1993-08-25",
-      "endDate" -> "1999-08-25",
-      "endingReason" -> "Ending reason"),
-    "professionalBodyMember" -> Json.obj(
-      "isAMember" -> true
-    ),
-    "professionalBodies" -> Json.obj(
-      "businessType" -> Json.arr("01", "02", "14"),
-      "specifyOtherBusiness" -> "test"
-    ),
-    "professionalBody" -> Json.obj(
-      "penalised" -> true,
-      "professionalBody" -> "details")
+  val memberOfProfessionalBodyGen: Gen[MemberOfProfessionalBody] = Gen.const(
+    MemberOfProfessionalBody(false, false, false, false, false, false, false, false, false, false, false, false, false, false, None)
   )
+
+  val professionalBodyGen: Gen[ProfessionalBodyDetails] = for {
+    preWarned <- arbitrary[Boolean]
+    details <- arbitrary[String]
+    professionalBodyMember <- arbitrary[Boolean]
+    member <- Gen.const(ProfessionalBodyDesMember(professionalBodyMember, memberOfProfessionalBodyGen.sample))
+  } yield ProfessionalBodyDetails(preWarned, if (preWarned) Some(details) else None, Some(member))
+
+  val aspOrTcspGen: Gen[AspOrTcsp] = for {
+    details <- supervisionDetailsGen
+    professionalBody <- professionalBodyGen
+  } yield AspOrTcsp(Some(details), Some(professionalBody))
+
+  def withoutAspOrTcsp(model: MlrActivitiesAppliedFor): MlrActivitiesAppliedFor =
+    model.copy(asp = false, tcsp = false)
+
+  implicit val arbitraryAspOrTcsp: Arbitrary[AspOrTcsp] = Arbitrary(aspOrTcspGen)
+
+  val negativeSupervision = Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
 
 }

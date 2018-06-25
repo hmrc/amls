@@ -47,7 +47,6 @@ trait DESConnector extends HttpResponseHelper {
 
   private[connectors] def fullUrl: String
 
-
   val requestUrl = "anti-money-laundering/subscription"
 
   protected def desHeaderCarrier(implicit hc: HeaderCarrier) = {
