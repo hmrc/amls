@@ -20,7 +20,7 @@ import models.fe.aboutthebusiness.AboutTheBusiness
 import models.fe.asp.Asp
 import models.fe.bankdetails.BankDetails
 import models.fe.businessactivities.BusinessActivities
-import models.fe.businessmatching.{BusinessMatching, TrustAndCompanyServices}
+import models.fe.businessmatching.{BusinessActivity, BusinessMatching, TrustAndCompanyServices, MoneyServiceBusiness => MSBActivity}
 import models.fe.declaration.AddPerson
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
@@ -66,7 +66,7 @@ object SubscriptionView {
       aboutTheBusinessSection = desView,
       bankDetailsSection = desView.bankAccountDetails,
       aboutYouSection = desView.extraFields.filingIndividual,
-      businessActivitiesSection = desView.businessActivities.all,
+      businessActivitiesSection = BusinessActivities.convertBusinessActivities(desView.businessActivities.all),
       responsiblePeopleSection = desView.responsiblePersons,
       tcspSection = desView,
       aspSection = desView,
@@ -75,20 +75,23 @@ object SubscriptionView {
       supervisionSection = Supervision.convertFrom(desView.aspOrTcsp, desView.businessActivities.mlrActivitiesAppliedFor)
     )
 
-    if (view.businessMatchingSection.activities.businessActivities.exists(act => act == models.fe.businessmatching.MoneyServiceBusiness || act == TrustAndCompanyServices)) {
+    val isMsbOrTcsp = (activity: BusinessActivity) => activity == MSBActivity || activity == TrustAndCompanyServices
+
+    if (view.businessMatchingSection.activities.businessActivities.exists(isMsbOrTcsp)) {
       view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
         case None => None
-        case Some(rpSeq) => {
+
+        case Some(rpSeq) =>
           Some(rpSeq.map {
             rp => rp.hasAlreadyPassedFitAndProper match {
               case Some(a) => rp
               case None => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
             }
           })
-        }
       })
-    } else view
 
+    } else {
+      view
+    }
   }
-
 }

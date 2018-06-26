@@ -78,9 +78,9 @@ object BusinessActivities {
       }
   }
 
-  implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
+  def convertBusinessActivities(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
 
-    val businessActivitiesOpt = desBA.map { dba =>
+    desBA.map { dba =>
       BusinessActivities(
         involvedInOther = InvolvedInOther.conv(dba.businessActivityDetails),
         expectedBusinessTurnover = ExpectedBusinessTurnover.conv(dba.businessActivityDetails),
@@ -97,8 +97,7 @@ object BusinessActivities {
         taxMatters = dba.mlrAdvisor flatMap { mlrAdvisor => TaxMatters.conv(mlrAdvisor.mlrAdvisorDetails) },
         transactionRecordTypes = TransactionTypes.convert(dba.auditableRecordsDetails)
       )
-    }
-    businessActivitiesOpt getOrElse BusinessActivities()
-  }
+    } getOrElse BusinessActivities()
 
+  }
 }

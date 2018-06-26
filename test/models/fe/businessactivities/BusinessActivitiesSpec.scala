@@ -161,7 +161,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
         Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("CommercialPackageName"))))
       )
 
-      BusinessActivities.conv(desModel) must be(feModel)
+      BusinessActivities.convertBusinessActivities(desModel) must be(feModel)
     }
 
     "convert des model to frontend successfully when business all don't have data" in {
@@ -170,7 +170,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar with OneAppPerSu
 
       val feModel = BusinessActivities(None,None,None,None,None,None,None,None,None,None,None,None)
 
-      BusinessActivities.conv(desModel) must be(feModel)
+      BusinessActivities.convertBusinessActivities(desModel) must be(feModel)
     }
   }
 
