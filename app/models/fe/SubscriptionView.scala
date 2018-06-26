@@ -66,7 +66,10 @@ object SubscriptionView {
       aboutTheBusinessSection = desView,
       bankDetailsSection = desView.bankAccountDetails,
       aboutYouSection = desView.extraFields.filingIndividual,
-      businessActivitiesSection = BusinessActivities.convertBusinessActivities(desView.businessActivities.all),
+      businessActivitiesSection = BusinessActivities.convertBusinessActivities(
+        desView.businessActivities.all,
+        desView.businessActivities.mlrActivitiesAppliedFor
+      ),
       responsiblePeopleSection = desView.responsiblePersons,
       tcspSection = desView,
       aspSection = desView,

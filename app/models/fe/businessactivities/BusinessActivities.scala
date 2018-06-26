@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivitiesAll, MlrAdvisor}
+import models.des.businessactivities.{BusinessActivitiesAll, MlrActivitiesAppliedFor, MlrAdvisor}
 
 case class BusinessActivities(
                                involvedInOther: Option[InvolvedInOther] = None,
@@ -78,7 +78,7 @@ object BusinessActivities {
       }
   }
 
-  def convertBusinessActivities(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
+  def convertBusinessActivities(desBA: Option[BusinessActivitiesAll], mlrActivities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
 
     desBA.map { dba =>
       BusinessActivities(
@@ -89,7 +89,7 @@ object BusinessActivities {
         transactionRecord = TransactionTypes.convertRecordsKept(dba),
         customersOutsideUK = CustomersOutsideUK.conv(dba),
         ncaRegistered = Some(NCARegistered(dba.nationalCrimeAgencyRegistered)),
-        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA),
+        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA.fold[Option[MlrAdvisor]](None)(_.mlrAdvisor), mlrActivities),
         identifySuspiciousActivity = Some(IdentifySuspiciousActivity(dba.suspiciousActivityGuidance)),
         riskAssessmentPolicy = RiskAssessmentPolicy.conv(dba.formalRiskAssessmentDetails),
         howManyEmployees = HowManyEmployees.conv(dba),
