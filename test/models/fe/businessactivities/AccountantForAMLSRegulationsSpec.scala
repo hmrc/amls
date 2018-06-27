@@ -16,11 +16,18 @@
 
 package models.fe.businessactivities
 
+import generators.supervision.{BusinessActivityGenerators, SupervisionGenerators}
+import models.des.businessactivities.{BusinessActivitiesAll, MlrAdvisor}
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
+import org.mockito.Mockito.when
+import org.scalatest.prop.PropertyChecks
 
-
-class AccountantForAMLSRegulationsSpec extends PlaySpec {
+class AccountantForAMLSRegulationsSpec extends PlaySpec
+  with MockitoSugar
+  with BusinessActivityGenerators
+  with PropertyChecks {
 
   "JSON validation" must {
 
@@ -44,6 +51,42 @@ class AccountantForAMLSRegulationsSpec extends PlaySpec {
     "write the correct value given an NCARegisteredNo" in {
       Json.toJson(AccountantForAMLSRegulations(false)) must
         be(Json.obj("accountantForAMLSRegulations" -> false))
+    }
+  }
+
+  "convertAccountant" must {
+    "return the data if it is supplied" in {
+      forAll(activityGen) { mlrActivities =>
+        val result = AccountantForAMLSRegulations.convertAccountant(Some(MlrAdvisor(doYouHaveMlrAdvisor = true, None)), Some(mlrActivities))
+
+        result must contain(AccountantForAMLSRegulations(true))
+      }
+    }
+
+    "return None if there is no MLR Advisor data" when {
+      "the application is an ASP" in {
+        forAll(activityGen) { mlrActivities =>
+          val ba = mock[BusinessActivitiesAll]
+          when(ba.mlrAdvisor) thenReturn None
+
+          val result = AccountantForAMLSRegulations.convertAccountant(None, Some(mlrActivities.copy(asp = true)))
+
+          result must not be defined
+        }
+      }
+    }
+
+    "return 'No' if there is no MLR Advisor data" when {
+      "the application is not an ASP" in {
+        forAll(activityGen) { mlrActivities =>
+          val ba = mock[BusinessActivitiesAll]
+          when(ba.mlrAdvisor) thenReturn None
+
+          val result = AccountantForAMLSRegulations.convertAccountant(None, Some(mlrActivities.copy(asp = false)))
+
+          result must contain(AccountantForAMLSRegulations(false))
+        }
+      }
     }
   }
 

@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivitiesAll, MlrAdvisor}
+import models.des.businessactivities.{BusinessActivitiesAll, MlrActivitiesAppliedFor, MlrAdvisor}
 
 case class BusinessActivities(
                                involvedInOther: Option[InvolvedInOther] = None,
@@ -78,9 +78,9 @@ object BusinessActivities {
       }
   }
 
-  implicit def conv(desBA: Option[BusinessActivitiesAll]): BusinessActivities = {
+  def convertBusinessActivities(desBA: Option[BusinessActivitiesAll], mlrActivities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
 
-    val businessActivitiesOpt = desBA.map { dba =>
+    desBA.map { dba =>
       BusinessActivities(
         involvedInOther = InvolvedInOther.conv(dba.businessActivityDetails),
         expectedBusinessTurnover = ExpectedBusinessTurnover.conv(dba.businessActivityDetails),
@@ -89,7 +89,7 @@ object BusinessActivities {
         transactionRecord = TransactionTypes.convertRecordsKept(dba),
         customersOutsideUK = CustomersOutsideUK.conv(dba),
         ncaRegistered = Some(NCARegistered(dba.nationalCrimeAgencyRegistered)),
-        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA),
+        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA.fold[Option[MlrAdvisor]](None)(_.mlrAdvisor), mlrActivities),
         identifySuspiciousActivity = Some(IdentifySuspiciousActivity(dba.suspiciousActivityGuidance)),
         riskAssessmentPolicy = RiskAssessmentPolicy.conv(dba.formalRiskAssessmentDetails),
         howManyEmployees = HowManyEmployees.conv(dba),
@@ -97,8 +97,7 @@ object BusinessActivities {
         taxMatters = dba.mlrAdvisor flatMap { mlrAdvisor => TaxMatters.conv(mlrAdvisor.mlrAdvisorDetails) },
         transactionRecordTypes = TransactionTypes.convert(dba.auditableRecordsDetails)
       )
-    }
-    businessActivitiesOpt getOrElse BusinessActivities()
-  }
+    } getOrElse BusinessActivities()
 
+  }
 }

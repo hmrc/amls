@@ -16,17 +16,21 @@
 
 package models.fe.supervision
 
+import generators.supervision.{BusinessActivityGenerators, SupervisionGenerators}
 import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision._
-import org.joda.time.LocalDate
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Gen
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
+import org.scalatest.prop.PropertyChecks
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.Json
 
-class SupervisionSpec extends PlaySpec with MockitoSugar with SupervisionValues with PropertyChecks {
+class SupervisionSpec extends PlaySpec
+  with MockitoSugar
+  with SupervisionValues
+  with PropertyChecks
+  with SupervisionGenerators
+  with BusinessActivityGenerators {
 
   "Supervision" must {
     "convert supervision des to frontend successfully" when {
@@ -76,55 +80,6 @@ trait SupervisionValues {
   val activitiesWithAspTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = true, eab = false, bpsp = false, tditpsp = false)
   val activitiesWithAsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = false, eab = false, bpsp = false, tditpsp = false)
   val activitiesWithTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = false, tcsp = true, eab = false, bpsp = false, tditpsp = false)
-  val activitiesWithSupervision = Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
-
-  val activityGen: Gen[MlrActivitiesAppliedFor] = for {
-    msb <- arbitrary[Boolean]
-    hvd <- arbitrary[Boolean]
-    asp <- arbitrary[Boolean]
-    tcsp <- arbitrary[Boolean]
-    eab <- arbitrary[Boolean]
-    bpsp <- arbitrary[Boolean]
-    tditpsp <- arbitrary[Boolean]
-  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp)
-
-  implicit val arbitraryMlrActivities: Arbitrary[MlrActivitiesAppliedFor] = Arbitrary(activityGen.sample.get)
-  implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(LocalDate.now())
-
-  val supervisorDetailsGen: Gen[SupervisorDetails] = for {
-    name <- arbitrary[String]
-    startDate <- Gen.const(LocalDate.now())
-    endDate <- Gen.const(LocalDate.now())
-    dateChange <- arbitrary[Boolean]
-    reason <- arbitrary[String]
-  } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), Some(dateChange), reason)
-
-  val supervisionDetailsGen: Gen[SupervisionDetails] = for {
-    supervised <- arbitrary[Boolean]
-    supervisor <- supervisorDetailsGen
-  } yield SupervisionDetails(supervised, if (supervised) Some(supervisor) else None)
-
-  val memberOfProfessionalBodyGen: Gen[MemberOfProfessionalBody] = Gen.const(
-    MemberOfProfessionalBody(false, false, false, false, false, false, false, false, false, false, false, false, false, false, None)
-  )
-
-  val professionalBodyGen: Gen[ProfessionalBodyDetails] = for {
-    preWarned <- arbitrary[Boolean]
-    details <- arbitrary[String]
-    professionalBodyMember <- arbitrary[Boolean]
-    member <- Gen.const(ProfessionalBodyDesMember(professionalBodyMember, memberOfProfessionalBodyGen.sample))
-  } yield ProfessionalBodyDetails(preWarned, if (preWarned) Some(details) else None, Some(member))
-
-  val aspOrTcspGen: Gen[AspOrTcsp] = for {
-    details <- supervisionDetailsGen
-    professionalBody <- professionalBodyGen
-  } yield AspOrTcsp(Some(details), Some(professionalBody))
-
-  def withoutAspOrTcsp(model: MlrActivitiesAppliedFor): MlrActivitiesAppliedFor =
-    model.copy(asp = false, tcsp = false)
-
-  implicit val arbitraryAspOrTcsp: Arbitrary[AspOrTcsp] = Arbitrary(aspOrTcspGen)
-
+  val activitiesWithSupervision: Gen[MlrActivitiesAppliedFor] = Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
   val negativeSupervision = Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
-
 }
