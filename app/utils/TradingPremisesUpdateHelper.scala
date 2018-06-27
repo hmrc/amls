@@ -77,20 +77,20 @@ trait TradingPremisesUpdateHelper {
   }
 
   private def updateOwnPremisesStatus(ownDetails: OwnBusinessPremisesDetails, viewTradingPremises: TradingPremises): OwnBusinessPremisesDetails = {
-    viewTradingPremises.ownBusinessPremises.fold(ownDetails) {
-      _.ownBusinessPremisesDetails.fold(ownDetails) {
-        _.find(x => x.lineId.equals(ownDetails.lineId)).fold(ownDetails) { viewOwnDtls =>
-          val updatedStatus = updateOwnPremisesStatus(ownDetails, viewOwnDtls)
-          if (AmlsConfig.release7) {
-            val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, viewOwnDtls)
-            ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-          }
-          else {
-            ownDetails.copy(status = Some(updatedStatus))
-          }
-        }
+    val viewOwnDtls: Option[OwnBusinessPremisesDetails] = viewTradingPremises.ownBusinessPremises flatMap {
+      _.ownBusinessPremisesDetails flatMap {
+        _.find(x => x.lineId.equals(ownDetails.lineId))
       }
     }
+    viewOwnDtls map { bpDetails =>
+      val updatedStatus = updateOwnPremisesStatus(ownDetails, bpDetails)
+      if (AmlsConfig.release7) {
+        val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, bpDetails)
+        ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
+      } else {
+        ownDetails.copy(status = Some(updatedStatus))
+      }
+    } getOrElse ownDetails.copy(status = Some(StatusConstants.Unchanged), dateChangeFlag = Some(false))
   }
 
   private def updateOwnPremisesStatus(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
