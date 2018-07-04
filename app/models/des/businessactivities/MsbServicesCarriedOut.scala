@@ -36,6 +36,7 @@ object MsbServicesCarriedOut {
         case CurrencyExchange => result.copy(ce = true)
         case ChequeCashingNotScrapMetal => result.copy(nonSmdcc = true)
         case ChequeCashingScrapMetal => result.copy(smdcc = true)
+        case ForeignExchange => result.copy(fx = true)
         case _ => result.copy(fx = false)
       }
     )

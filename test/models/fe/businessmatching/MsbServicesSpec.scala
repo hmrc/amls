@@ -26,7 +26,7 @@ class MsbServicesSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val data = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange))
+      val data = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange, ForeignExchange))
       val js = Json.toJson(data)
 
       js.as[MsbServices] mustEqual data
@@ -38,7 +38,7 @@ class MsbServicesSpec extends PlaySpec {
 
     "convert des to frontend successfully for the valid input" in {
       MsbServices.conv(Some(MsbServicesCarriedOut(true, true, true, true, true))) must be(Some(MsbServices(Set(TransmittingMoney,
-        CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))))
+        CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange))))
     }
 
     "convert des to frontend successfully when input is none" in {
