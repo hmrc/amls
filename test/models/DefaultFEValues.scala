@@ -336,8 +336,8 @@ object BusinessMatchingSection {
     None,
     psrPSRNumber)
 
-  val msbServices = Some(MsbServices(Set(TransmittingMoney,
-    CurrencyExchange, ChequeCashingNotScrapMetal,
+  val msbServices = Some(MsbServices(Set(ChequeCashingNotScrapMetal,
+    CurrencyExchange, TransmittingMoney,
     ChequeCashingScrapMetal)))
   val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
 
