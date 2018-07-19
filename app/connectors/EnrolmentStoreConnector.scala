@@ -43,7 +43,7 @@ class EnrolmentStoreConnector @Inject()(
                                                                             headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
-    val url = s"${config.enrolmentStoreUrl}/enrolment-store/enrolments/${enrolmentKey.key}"
+    val url = s"${config.enrolmentStoreUrl}/tax-enrolments/enrolments/${enrolmentKey.key}"
 
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)

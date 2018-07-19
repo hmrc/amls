@@ -56,9 +56,9 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
     val connector = new EnrolmentStoreConnector(http, metrics, config)
     
-    val baseUrl = "http://localhost:7775/enrolment-store-proxy"
+    val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
-    val url = s"$baseUrl/enrolment-store/enrolments/${enrolKey.key}"
+    val url = s"$baseUrl/tax-enrolments/enrolments/${enrolKey.key}"
 
     val knownFacts = KnownFacts(Set(
       KnownFact("Postcode", postcodeGen.sample.get),
