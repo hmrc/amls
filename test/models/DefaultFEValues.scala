@@ -189,7 +189,9 @@ object MsbSection {
     Some(CETransactionsInNext12Months("12345678963")),
     Some(sendTheLargestAmountsOfMoney),
     Some(mostTransactions),
-    Some(whichCurrencies)
+    Some(whichCurrencies),
+    None
+//    Some(FXTransactionsInNext12Months("234234234"))
   )
 
   val completeModel = Some(msb)
@@ -198,11 +200,16 @@ object MsbSection {
     Some(BusinessUseAnIPSPYes("IPSPName1", "IPSPMLRRegNo1")),
     Some(IdentifyLinkedTransactions(true)),
     Some(SendMoneyToOtherCountry(true)),
-    Some(FundsTransfer(true)), Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
-    Some(TransactionsInNext12Months("11111111111")), Some(CETransactionsInNext12Months("11234567890")),
-    Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)), Some(MostTransactions(List("AD", "GB"))),
-    Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")),
-      Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
+    Some(FundsTransfer(true)),
+    Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
+    Some(TransactionsInNext12Months("11111111111")),
+    Some(CETransactionsInNext12Months("11234567890")),
+    Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)),
+    Some(MostTransactions(List("AD", "GB"))),
+    Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
+    None
+//    Some(FXTransactionsInNext12Months("234234234"))
+  ))
 }
 
 object TradingPremisesSection {
