@@ -41,8 +41,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
       Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = None,
         Some(BankMoneySource("BankNames1")),
         Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-      None
-//      Some(FXTransactionsInNext12Months("456456456"))
+      Some(FXTransactionsInNext12Months("456456456"))
     ))
 
     val msbAllDetails: MsbAllDetails = MsbAllDetails(Some("999999"),
@@ -108,7 +107,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         None,
         None,
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -122,7 +121,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         None,
         Some(msbCeDetails),
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -136,7 +135,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         Some(msbMtDetails),
         None,
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -150,7 +149,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         Some(msbMtDetails),
         Some(msbCeDetails),
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -176,8 +175,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
       Some(MostTransactions(List("AD", "GB"))),
       Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")),
         Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-      None
-//      Some(FXTransactionsInNext12Months("456456456"))
+      Some(FXTransactionsInNext12Months("456456456"))
     ))
 
     val msbAllDetails: MsbAllDetails = MsbAllDetails(Some("£50k-£100k"),
@@ -242,7 +240,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         None,
         None,
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -256,7 +254,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         None,
         Some(msbCeDetails),
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -270,7 +268,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         Some(msbMtDetails),
         None,
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -284,7 +282,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
         Some(msbAllDetails),
         Some(msbMtDetails),
         Some(msbCeDetails),
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
@@ -300,7 +298,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
           true, Some("11111111111"), Some(CountriesList(List("GB", "AD"))),
           Some(CountriesList(List("AD", "GB"))), None)),
         Some(msbCeDetails),
-        None
+        Some(msbFxDetails)
       ))
 
       MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = false) must be(convertedModel)

@@ -190,8 +190,7 @@ object MsbSection {
     Some(sendTheLargestAmountsOfMoney),
     Some(mostTransactions),
     Some(whichCurrencies),
-    None
-//    Some(FXTransactionsInNext12Months("234234234"))
+    Some(FXTransactionsInNext12Months("234234234"))
   )
 
   val completeModel = Some(msb)
@@ -207,8 +206,7 @@ object MsbSection {
     Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)),
     Some(MostTransactions(List("AD", "GB"))),
     Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-    None
-//    Some(FXTransactionsInNext12Months("234234234"))
+    Some(FXTransactionsInNext12Months("234234234"))
   ))
 }
 

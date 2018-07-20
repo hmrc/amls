@@ -73,8 +73,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
         Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
         Some(MostTransactions(List("AD", "GB"))),
         Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-        None
-//        Some(FXTransactionsInNext12Months("234234234"))
+        Some(FXTransactionsInNext12Months("234234234"))
       ))
 
       MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModel) must be(convertedMsb)
@@ -148,8 +147,7 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with MoneyServiceBusines
         Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
         Some(MostTransactions(List("AD", "GB"))),
         Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-        None
-//        Some(FXTransactionsInNext12Months("234234234"))
+        Some(FXTransactionsInNext12Months("234234234"))
       ))
 
       val release7SubscriptionViewModel = DesConstants.SubscriptionViewModel.copy(msb = Some(DesConstants.testMsb.copy(
