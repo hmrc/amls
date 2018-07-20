@@ -1147,7 +1147,7 @@ object DesConstants {
       "11234567890",
       Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
-    None
+    Some(MsbFxDetails("234234234"))
   )
 
   val testMsbR6 = MoneyServiceBusiness(
