@@ -27,6 +27,7 @@ object MsbFxDetails {
   implicit val format = Json.format[MsbFxDetails]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbFxDetails]  = {
-    None
+      msb.fxTransactionsInNext12Months flatMap
+              (feModel => Some(MsbFxDetails(feModel.fxTransaction)))
   }
 }
