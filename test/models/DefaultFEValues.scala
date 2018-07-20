@@ -343,7 +343,7 @@ object BusinessMatchingSection {
 
   val msbServices = Some(MsbServices(Set(ChequeCashingNotScrapMetal,
     CurrencyExchange, TransmittingMoney,
-    ChequeCashingScrapMetal)))
+    ChequeCashingScrapMetal, ForeignExchange)))
   val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
 
   val modelForView = BusinessMatching(

@@ -29,5 +29,6 @@ object MsbFxDetails {
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbFxDetails]  = {
       msb.fxTransactionsInNext12Months flatMap
               (feModel => Some(MsbFxDetails(feModel.fxTransaction)))
+
   }
 }

@@ -71,7 +71,6 @@ object MoneyServiceBusiness {
 
   implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness], bm: models.fe.businessmatching.BusinessMatching, amendVariation: Boolean)
   : Option[MoneyServiceBusiness] = {
-
     msbOpt match {
       case Some(msb) if msb != models.fe.moneyservicebusiness.MoneyServiceBusiness(None, None, None, None, None, None, None, None, None, None, None, None) => {
         val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
