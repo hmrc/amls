@@ -63,30 +63,18 @@ object MoneyServiceBusiness {
 
 
   implicit def getMsbAll(msb: Option[DesMoneyServiceBusiness]): Option[MsbAllDetails] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbAllDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbAllDetails)
   }
 
   implicit def getMsbMtDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbMtDetails] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbMtDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbMtDetails)
   }
 
   implicit def getMsbCeDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbCeDetailsR7] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbCeDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbCeDetails)
   }
 
   implicit def getMsbFxDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbFxDetails] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbFxDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbFxDetails)
   }
 }

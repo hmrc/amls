@@ -26,9 +26,6 @@ object FXTransactionsInNext12Months {
     implicit val format = Json.format[FXTransactionsInNext12Months]
 
     implicit def convMsbFx(msbFx: Option[MsbFxDetails]): Option[FXTransactionsInNext12Months] = {
-        msbFx match {
-            case Some(msbDtls) => Some(FXTransactionsInNext12Months(msbDtls.anticipatedNoOfTransactions))
-            case None => None
-        }
+        msbFx flatMap (msbDtls => Some(FXTransactionsInNext12Months(msbDtls.anticipatedNoOfTransactions)))
     }
 }
