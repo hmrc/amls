@@ -144,7 +144,7 @@ object DesConstants {
 
   val testBusinessActivities = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
-    Some(MsbServicesCarriedOut(true, true, true, true, false)),
+    Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
     Some(AspServicesOffered(true, true, true, true, true)),
@@ -1147,7 +1147,7 @@ object DesConstants {
       "11234567890",
       Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
-    None
+    Some(MsbFxDetails("234234234"))
   )
 
   val testMsbR6 = MoneyServiceBusiness(
@@ -1185,7 +1185,7 @@ object DesConstants {
       "11234567890",
       Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
     )),
-    None
+    Some(MsbFxDetails("234234234"))
   )
 
   val testAmendMsb = MoneyServiceBusiness(

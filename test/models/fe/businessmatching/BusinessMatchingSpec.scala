@@ -88,7 +88,7 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
           Some("BusinessAddressLine4"), Some("AA1 1AA"), "GB"), ""),
         BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
           BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
-        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))),
+        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange))),
         Some(TypeOfBusiness("TypeOfBusiness")),
         Some(CompanyRegistrationNumber("12345678")),
         Some(BusinessAppliedForPSRNumberYes("123456")))

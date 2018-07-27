@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MsbAllDetails, MsbCeDetails, MsbCeDetailsR7, MsbMtDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
+import models.des.msb.{MsbAllDetails, MsbCeDetailsR7, MsbFxDetails, MsbMtDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
 import play.api.libs.json._
 
 case class MoneyServiceBusiness(
@@ -30,7 +30,8 @@ case class MoneyServiceBusiness(
                                  ceTransactionsInNext12Months: Option[CETransactionsInNext12Months] = None,
                                  sendTheLargestAmountsOfMoney: Option[SendTheLargestAmountsOfMoney] = None,
                                  mostTransactions: Option[MostTransactions] = None,
-                                 whichCurrencies : Option[WhichCurrencies] = None
+                                 whichCurrencies : Option[WhichCurrencies] = None,
+                                 fxTransactionsInNext12Months: Option[FXTransactionsInNext12Months] = None
                                )
 
 object MoneyServiceBusiness {
@@ -55,29 +56,25 @@ object MoneyServiceBusiness {
       ceTransactionsInNext12Months = getMsbCeDetails(desView.msb),
       sendTheLargestAmountsOfMoney =  getMsbMtDetails(desView.msb),
       mostTransactions = getMsbMtDetails(desView.msb),
-      whichCurrencies = getMsbCeDetails(desView.msb)
+      whichCurrencies = getMsbCeDetails(desView.msb),
+      fxTransactionsInNext12Months = getMsbFxDetails(desView.msb)
     ))
   }
 
 
   implicit def getMsbAll(msb: Option[DesMoneyServiceBusiness]): Option[MsbAllDetails] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbAllDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbAllDetails)
   }
 
   implicit def getMsbMtDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbMtDetails] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbMtDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbMtDetails)
   }
 
   implicit def getMsbCeDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbCeDetailsR7] = {
-    msb match {
-      case Some(msbDtls) => msbDtls.msbCeDetails
-      case None => None
-    }
+    msb flatMap (msbDtls => msbDtls.msbCeDetails)
+  }
+
+  implicit def getMsbFxDetails(msb: Option[DesMoneyServiceBusiness]): Option[MsbFxDetails] = {
+    msb flatMap (msbDtls => msbDtls.msbFxDetails)
   }
 }
