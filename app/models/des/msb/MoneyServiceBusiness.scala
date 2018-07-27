@@ -17,7 +17,7 @@
 package models.des.msb
 
 import config.AmlsConfig
-import models.fe.businessmatching.{CurrencyExchange, MsbService, TransmittingMoney}
+import models.fe.businessmatching.{CurrencyExchange, ForeignExchange, MsbService, TransmittingMoney}
 import play.api.libs.json._
 
 case class MoneyServiceBusiness(msbAllDetails: Option[MsbAllDetails],
@@ -71,9 +71,8 @@ object MoneyServiceBusiness {
 
   implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness], bm: models.fe.businessmatching.BusinessMatching, amendVariation: Boolean)
   : Option[MoneyServiceBusiness] = {
-
     msbOpt match {
-      case Some(msb) if (msb != models.fe.moneyservicebusiness.MoneyServiceBusiness(None, None, None, None, None, None, None, None, None, None, None)) => {
+      case Some(msb) if msb != models.fe.moneyservicebusiness.MoneyServiceBusiness(None, None, None, None, None, None, None, None, None, None, None, None) => {
         val services = bm.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)
         val msbMtDetails: Option[MsbMtDetails] = services.contains(TransmittingMoney) match {
           case true => (msb, bm, amendVariation)
@@ -83,7 +82,11 @@ object MoneyServiceBusiness {
           case true => msb
           case false => None
         }
-        Some(MoneyServiceBusiness(msb, msbMtDetails, msbCeDetails, msb))
+        val msbFxDetails: Option[MsbFxDetails] = services.contains(ForeignExchange) match {
+          case true => msb
+          case false => None
+        }
+        Some(MoneyServiceBusiness(msb, msbMtDetails, msbCeDetails, msbFxDetails))
       }
       case _ => None
     }
