@@ -27,6 +27,7 @@ case object TransmittingMoney extends MsbService
 case object CurrencyExchange extends MsbService
 case object ChequeCashingNotScrapMetal extends MsbService
 case object ChequeCashingScrapMetal extends MsbService
+case object ForeignExchange extends MsbService
 
 case class MsbServices(msbServices : Set[MsbService])
 
@@ -38,6 +39,7 @@ object MsbService {
       case JsString("02") => JsSuccess(CurrencyExchange)
       case JsString("03") => JsSuccess(ChequeCashingNotScrapMetal)
       case JsString("04") => JsSuccess(ChequeCashingScrapMetal)
+      case JsString("05") => JsSuccess(ForeignExchange)
       case _ => JsError(JsPath -> ValidationError("error.invalid"))
     }
 
@@ -46,6 +48,7 @@ object MsbService {
     case CurrencyExchange => JsString("02")
     case ChequeCashingNotScrapMetal => JsString("03")
     case ChequeCashingScrapMetal => JsString("04")
+    case ForeignExchange => JsString("05")
   }
 }
 
@@ -58,7 +61,8 @@ object MsbServices {
     val services = Set(CommonMethods.getSpecificType[MsbService](msb.mt, TransmittingMoney),
       CommonMethods.getSpecificType[MsbService](msb.ce, CurrencyExchange),
       CommonMethods.getSpecificType[MsbService](msb.nonSmdcc, ChequeCashingNotScrapMetal),
-      CommonMethods.getSpecificType[MsbService](msb.smdcc, ChequeCashingScrapMetal)).flatten
+      CommonMethods.getSpecificType[MsbService](msb.smdcc, ChequeCashingScrapMetal),
+      CommonMethods.getSpecificType[MsbService](msb.fx, ForeignExchange)).flatten
     services match {
       case `empty` => None
       case _ => Some(MsbServices(services))

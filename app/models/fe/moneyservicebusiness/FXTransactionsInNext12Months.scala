@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package models.des.msb
+package models.fe.moneyservicebusiness
 
+import models.des.msb.MsbFxDetails
 import play.api.libs.json.Json
 
-case class MsbFxDetails (
-                          anticipatedNoOfTransactions: String
-                        )
+case class FXTransactionsInNext12Months (fxTransaction: String)
 
-object MsbFxDetails {
+object FXTransactionsInNext12Months {
 
-  implicit val format = Json.format[MsbFxDetails]
+    implicit val format = Json.format[FXTransactionsInNext12Months]
 
-  implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbFxDetails]  = {
-      msb.fxTransactionsInNext12Months flatMap
-              (feModel => Some(MsbFxDetails(feModel.fxTransaction)))
-
-  }
+    implicit def convMsbFx(msbFx: Option[MsbFxDetails]): Option[FXTransactionsInNext12Months] = {
+        msbFx flatMap (msbDtls => Some(FXTransactionsInNext12Months(msbDtls.anticipatedNoOfTransactions)))
+    }
 }
