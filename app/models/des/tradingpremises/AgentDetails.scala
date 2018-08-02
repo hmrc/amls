@@ -119,7 +119,7 @@ object AgentDetails {
       },
       agentPremises = tradingPremises,
       startDate,
-      Some(tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange.isDefined),
+      None,
       endDate,
       tradingPremises.status,
       tradingPremises.lineId,
