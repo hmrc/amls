@@ -43,6 +43,6 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
 class AppConfig @Inject()(servicesConfig: iServicesConfig){
 
   lazy val enrolmentStoreUrl = s"${servicesConfig.baseUrl("tax-enrolments")}"
-  def enrolmentStgit checkoutoreToggle = servicesConfig.getConfBool("feature-toggle.enrolment-store", defBool = false)
+  def enrolmentStoreToggle = servicesConfig.getConfBool("feature-toggle.enrolment-store", defBool = false)
 
 }
