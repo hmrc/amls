@@ -70,8 +70,11 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
         Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
-        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))))
+        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
+        Some(MostTransactions(List("AD", "GB"))),
+        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
+        Some(FXTransactionsInNext12Months("234234234"))
+      ))
 
       MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModel) must be(convertedMsb)
 
@@ -87,6 +90,10 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
 
     "evaluate getMsbCeDetails whn input is none" in {
       MoneyServiceBusiness.getMsbCeDetails(None) must be(None)
+    }
+
+    "evaluate getMsbFxDetails whn input is none" in {
+      MoneyServiceBusiness.getMsbFxDetails(None) must be(None)
     }
 
   }
@@ -137,8 +144,10 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with MoneyServiceBusines
         Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
-        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)),Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
+        Some(MostTransactions(List("AD", "GB"))),
+        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
+        Some(FXTransactionsInNext12Months("234234234"))
       ))
 
       val release7SubscriptionViewModel = DesConstants.SubscriptionViewModel.copy(msb = Some(DesConstants.testMsb.copy(
@@ -165,6 +174,10 @@ class MoneyServiceBusinessRelease7Spec extends PlaySpec with MoneyServiceBusines
       MoneyServiceBusiness.getMsbCeDetails(None) must be(None)
     }
 
+    "evaluate getMsbFxDetails whn input is none" in {
+      MoneyServiceBusiness.getMsbFxDetails(None) must be(None)
+    }
+
   }
 }
 
@@ -184,7 +197,8 @@ trait MoneyServiceBusinessTestData {
     sendTheLargestAmountsOfMoney = Some(sendTheLargestAmountsOfMoney),
     mostTransactions = Some(MostTransactions(Seq("GB"))),
     transactionsInNext12Months = Some(TransactionsInNext12Months("12345678963")),
-    ceTransactionsInNext12Months = Some(CETransactionsInNext12Months("12345678963"))
+    ceTransactionsInNext12Months = Some(CETransactionsInNext12Months("12345678963")),
+    fxTransactionsInNext12Months = Some(FXTransactionsInNext12Months("987654321"))
   )
 
   val emptyModel = MoneyServiceBusiness(None)
@@ -203,7 +217,8 @@ trait MoneyServiceBusinessTestData {
       "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
       "mostTransactions" -> Json.obj("mostTransactionsCountries" -> Seq("GB")),
       "sendTheLargestAmountsOfMoney" -> Json.obj("country_1" ->"GB"),
-      "ceTransactionsInNext12Months" -> Json.obj("ceTransaction" -> "12345678963")
+      "ceTransactionsInNext12Months" -> Json.obj("ceTransaction" -> "12345678963"),
+      "fxTransactionsInNext12Months" -> Json.obj("fxTransaction" -> "987654321")
   )
 
   val emptyJson = Json.obj("msbServices" -> Json.arr())
