@@ -61,7 +61,7 @@ object RPExtra {
     RPExtra(
       rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))),
       None,
-      rp.lineId.fold[Option[String]](None)(_ => if(rp.hasChanged) Some(StatusConstants.Updated) else Some(StatusConstants.Unchanged)),
+      rp.lineId.fold[Option[String]](None)(_ => if(rp.hasChanged) rp.status else Some(StatusConstants.Unchanged)),
       None,
       None,
       None,
