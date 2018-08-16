@@ -17,6 +17,7 @@
 package models.des.responsiblepeople
 
 import models.des.StringOrInt
+import models.fe.responsiblepeople.ResponsiblePeople
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 import play.api.test.FakeApplication
@@ -93,6 +94,34 @@ class RPExtraR7Spec extends PlaySpec with OneAppPerSuite{
 
       RPExtra.reads.reads(RPExtra.jsonWrites.writes(extra)) must be(JsSuccess(extra))
     }
+
+    "Should create an correct RPExtra object for deleted Responsible People" in {
+      val rp = ResponsiblePeople(lineId=Some(1),status=Some(StatusConstants.Deleted), hasChanged = true )
+      val rpe = RPExtra.conv(rp)
+      rpe.lineId must be(Some(StringOrInt("1")))
+      rpe.status must be (Some(StatusConstants.Deleted))
+    }
+
+    "Should create an correct RPExtra object for added Responsible People" in {
+      val rp = ResponsiblePeople(lineId=None,status=None, hasChanged = true )
+      val rpe = RPExtra.conv(rp)
+      rpe.status must be (None)
+    }
+
+    "Should create an correct RPExtra object for updated Responsible People" in {
+      val rp = ResponsiblePeople(lineId=Some(1),status=Some(StatusConstants.Updated), hasChanged = true )
+      val rpe = RPExtra.conv(rp)
+      rpe.lineId must be(Some(StringOrInt("1")))
+      rpe.status must be (Some(StatusConstants.Updated))
+    }
+
+    "Should create an correct RPExtra object for unchanged Responsible People" in {
+      val rp = ResponsiblePeople(lineId=Some(1),status=None, hasChanged = false )
+      val rpe = RPExtra.conv(rp)
+      rpe.lineId must be(Some(StringOrInt("1")))
+      rpe.status must be (Some(StatusConstants.Unchanged))
+    }
+
   }
 
 }
