@@ -1785,7 +1785,8 @@ object DesConstants {
         true,
         Some(IdDetail(
           Some(UkResident("BB000000A")),
-          None
+          None,
+          dateOfBirth = Some("2001-01-01")
         )),
         Some("GB"),
         Some("GB")
