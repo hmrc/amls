@@ -38,6 +38,7 @@ case class ResponsiblePeople(
                               experienceTraining: Option[ExperienceTraining] = None,
                               training: Option[Training] = None,
                               hasAlreadyPassedFitAndProper: Option[Boolean] = None,
+                              hasAlreadyPassedApprovalCheck: Option[Boolean] = None,
                               lineId: Option[Int] = None,
                               status: Option[String] = None,
                               hasChanged: Boolean = false
@@ -86,6 +87,7 @@ object ResponsiblePeople {
       desRp,
       desRp,
       passedFitAndProper,
+      hasAlreadyPassedApprovalCheck = None,
       desRp.extra.lineId,
       desRp.extra.status
     )

@@ -119,6 +119,7 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingNo),
         Some(TrainingYes("TrainingDetails")),
         Some(false),
+        hasAlreadyPassedApprovalCheck = None,
         Some(333333)
       ),
 
@@ -141,6 +142,7 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingYes("bbbbbbbbbb")),
         Some(TrainingNo),
         Some(true),
+        hasAlreadyPassedApprovalCheck = None,
         Some(222222)
       )))
 

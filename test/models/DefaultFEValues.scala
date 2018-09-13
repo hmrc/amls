@@ -469,7 +469,9 @@ object ResponsiblePeopleSection {
       Some(ExperienceTrainingNo),
       Some(TrainingYes("TrainingDetails")),
       Some(false),
-      Some(333333)),
+      hasAlreadyPassedApprovalCheck = None,
+      Some(333333)
+    ),
 
     ResponsiblePeople(
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
@@ -488,6 +490,7 @@ object ResponsiblePeopleSection {
       Some(ExperienceTrainingYes("bbbbbbbbbb")),
       Some(TrainingNo),
       Some(true),
+      hasAlreadyPassedApprovalCheck = None,
       Some(222222)
     )))
 }
