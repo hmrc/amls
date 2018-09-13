@@ -29,13 +29,27 @@ object NationalityDetails {
 
   implicit def convert(rp: ResponsiblePeople) : Option[NationalityDetails] = {
     rp.personResidenceType map { residenceType =>
+
       (residenceType.isUKResidence, AmlsConfig.phase2Changes) match {
+          
         case (uk: UKResidence, false) =>
-          NationalityDetails(true, UkResident.convert(uk), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
+          NationalityDetails(true,
+            UkResident.convert(uk),
+            Some(residenceType.countryOfBirth),
+            Some(residenceType.nationality)
+          )
         case (uk: UKResidence, true) =>
-          NationalityDetails(true, UkResident.convert(uk, rp.dateOfBirth), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
+          NationalityDetails(true,
+            UkResident.convert(uk, rp.dateOfBirth),
+            Some(residenceType.countryOfBirth),
+            Some(residenceType.nationality)
+          )
         case (NonUKResidence, _) =>
-          NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
+          NationalityDetails(false,
+            NonUkResident.convert(rp),
+            Some(residenceType.countryOfBirth),
+            Some(residenceType.nationality)
+          )
       }
     }
   }

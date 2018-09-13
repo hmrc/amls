@@ -66,7 +66,7 @@ class ResponsiblePeoplePhase2Spec extends PlaySpec with MockitoSugar with OneApp
     }
 
     "convert des model to frontend model" in {
-      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModel)
+      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModelPhase2)
     }
   }
 }
@@ -100,7 +100,7 @@ trait ResponsiblePeopleValues {
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
     val ukPassport = UKPassportYes("87654321")
 
-    val convertedModel = Some(List(
+    val convertedModel: Option[List[ResponsiblePeople]] = Some(List(
       ResponsiblePeople(
         Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
         Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
@@ -131,7 +131,7 @@ trait ResponsiblePeopleValues {
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
         None,
         None,
-        Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+        None,
         None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -144,6 +144,11 @@ trait ResponsiblePeopleValues {
         Some(true),
         Some(222222)
       )))
+
+    val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
+      responsiblePersonSeq => List(responsiblePersonSeq(0),
+        responsiblePersonSeq(1).copy(dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1)))))
+    }
 
   }
 

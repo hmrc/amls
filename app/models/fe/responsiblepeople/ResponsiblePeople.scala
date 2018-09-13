@@ -59,7 +59,7 @@ object ResponsiblePeople {
     }
   }
 
-  def convertRP(desRp: ResponsiblePersons): ResponsiblePeople = {
+  def convertResponsiblePersonToResponsiblePeople(desRp: ResponsiblePersons): ResponsiblePeople = {
     ResponsiblePeople(
       desRp.nameDetails,
       desRp.nameDetails flatMap { n => n.previousNameDetails },
@@ -85,7 +85,7 @@ object ResponsiblePeople {
   implicit def convert(rp: Option[Seq[ResponsiblePersons]]): Option[Seq[ResponsiblePeople]] = {
     rp match {
       case Some(data) =>
-        Some(data.map(x => convertRP(x)))
+        Some(data.map(x => convertResponsiblePersonToResponsiblePeople(x)))
       case _ => None
     }
   }

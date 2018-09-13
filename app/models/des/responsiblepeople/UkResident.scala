@@ -26,11 +26,21 @@ object UkResident {
   implicit val format = Json.format[UkResident]
 
   implicit def convert(dtls: UKResidence, dob: Option[DateOfBirth] = None) : Option[IdDetail] = {
+
     if (AmlsConfig.phase2Changes) {
+
       val dateOfBirth: Option[String] = dob map { _.dateOfBirth.toString }
-      Some(IdDetail(Some(UkResident(dtls.nino)), None, dateOfBirth = dateOfBirth))
+      Some(IdDetail(
+            Some(UkResident(dtls.nino)),
+            None,
+            dateOfBirth = dateOfBirth
+      ))
     } else {
-      Some(IdDetail(Some(UkResident(dtls.nino)), None))
+
+      Some(IdDetail(
+            Some(UkResident(dtls.nino)),
+            None
+      ))
     }
   }
 }
