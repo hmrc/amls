@@ -149,7 +149,6 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
     }
 
     "Deserialise from json successfully" in {
-
       ResponsiblePersons.jsonReads.reads(jsonExpectedFromWrite) must be (JsSuccess(model))
     }
   }
