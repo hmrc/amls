@@ -2558,4 +2558,5 @@ object DesConstants {
     Some(DesConstants.testAmendResponsiblePersonsTest1),
     DesConstants.newExtraFields
   )
+
 }

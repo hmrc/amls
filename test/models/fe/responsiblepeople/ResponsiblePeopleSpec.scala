@@ -19,13 +19,12 @@ package models.fe.responsiblepeople
 import models.des.DesConstants
 import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
 
-class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with OneAppPerSuite with ResponsiblePeopleValues {
+class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
 
@@ -48,7 +47,7 @@ class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with OneAppPerSui
   }
 }
 
-class ResponsiblePeoplePhase2Spec extends PlaySpec with MockitoSugar with OneAppPerSuite with ResponsiblePeopleValues {
+class ResponsiblePeoplePhase2Spec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
