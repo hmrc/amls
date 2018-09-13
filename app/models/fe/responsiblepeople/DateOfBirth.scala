@@ -16,7 +16,8 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.ResponsiblePersons
+import config.AmlsConfig
+import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
@@ -27,11 +28,29 @@ object DateOfBirth {
   implicit val format = Json.format[DateOfBirth]
 
   implicit def conv(responsiblePeople: ResponsiblePersons): Option[DateOfBirth] = {
-    for {
+//    val result: Option[DateOfBirth] = for {
+//      nd <- responsiblePeople.nationalityDetails
+//      id <- nd.idDetails
+////      non <- id.nonUkResident
+//    } yield if (AmlsConfig.phase2Changes) {
+//      DateOfBirth(LocalDate.parse(non.dateOfBirth))
+//    } else {
+//      id.nonUkResident.map(
+//        nonUkResident => DateOfBirth(LocalDate.parse("1990-02-24"))
+//      )
+//    }
+    val idDetail: IdDetail = (for {
       nd <- responsiblePeople.nationalityDetails
       id <- nd.idDetails
-      non <- id.nonUkResident
-    } yield DateOfBirth(LocalDate.parse(non.dateOfBirth))
+    } yield id).getOrElse(IdDetail())
+
+    val result: Option[DateOfBirth] =
+      (idDetail.nonUkResident.isDefined, idDetail.ukResident.isDefined, AmlsConfig.phase2Changes) match {
+        case (true, false, _) => Some(DateOfBirth(LocalDate.parse(idDetail.nonUkResident.get.dateOfBirth)))
+        case (false, true, true) => Some(DateOfBirth(LocalDate.parse(idDetail.dateOfBirth.get)))
+        case(_, _, _) => None
+      }
+    result
   }
 
 }
