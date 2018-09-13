@@ -18,10 +18,13 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
 import org.joda.time.LocalDate
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.test.FakeApplication
 
-class DateOfBirthSpec extends PlaySpec {
+class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
 
   val date = new LocalDate(1990,2,24)
 
@@ -48,7 +51,7 @@ class DateOfBirthSpec extends PlaySpec {
         ))
     }
 
-    "convert from des ResponsiblePerson to fe DateOfBirth" in {
+    "convert from des ResponsiblePerson to fe DateOfBirth - NonUkResident" in {
 
       val desModel = ResponsiblePersons(
         None,Some(NationalityDetails(
@@ -62,6 +65,77 @@ class DateOfBirthSpec extends PlaySpec {
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990,3,23))))
+    }
+
+    "convert from des ResponsiblePerson to fe DateOfBirth - UkResident" in {
+      val desModel = ResponsiblePersons(
+        None,Some(NationalityDetails(
+          false,
+          Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
+          ,None,None
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+      )
+
+      DateOfBirth.conv(desModel) must be(None)
+    }
+  }
+}
+
+class DateOfBirthPhase2Spec extends PlaySpec with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
+
+  val date = new LocalDate(1990,2,24)
+
+  "DateOfBirth" must {
+
+    "validate JSON successfully" when {
+
+      "given a valid date" in {
+
+        val json = Json.obj(
+          "dateOfBirth" -> "1990-02-24"
+        )
+
+        Json.fromJson[DateOfBirth](json) must
+                be(JsSuccess(DateOfBirth(date), JsPath \ "dateOfBirth"))
+      }
+
+    }
+
+    "write the correct value to JSON" in {
+      Json.toJson(DateOfBirth(date)) must
+              be(Json.obj(
+                "dateOfBirth" -> "1990-02-24"
+              ))
+    }
+
+    "convert from des ResponsiblePerson to fe DateOfBirth - NonUkResident" in {
+
+      val desModel = ResponsiblePersons(
+        None,Some(NationalityDetails(
+          false,
+          Some(IdDetail(
+            nonUkResident = Some(NonUkResident(
+              "1990-03-23",false,None
+            ))
+          )),None,None
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+      )
+
+      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990,3,23))))
+    }
+
+    "convert from des ResponsiblePerson to fe DateOfBirth - UkResident" in {
+      val desModel = ResponsiblePersons(
+        None, Some(NationalityDetails(
+          false,
+          Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
+          , None, None
+        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, RPExtra()
+      )
+
+      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990, 2, 24))))
     }
   }
 }
