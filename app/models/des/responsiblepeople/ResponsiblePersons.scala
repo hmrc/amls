@@ -39,7 +39,9 @@ case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               trainingDetails: Option[String],
                               startDate: Option[String],
                               dateChangeFlag: Option[Boolean] = None,
-                              msbOrTcsp: Option[MsbOrTcsp],
+                              msbOrTcsp: Option[MsbOrTcsp] = None,
+                              passedFitAndProperTest: Option[Boolean] = None,
+                              passedApprovalCheck: Option[Boolean] = None,
                               extra: RPExtra
                              )
 
@@ -67,7 +69,9 @@ object ResponsiblePersons {
         (__ \ "trainingDetails").readNullable[String] and
         (__ \ "startDate").readNullable[String] and
         (__ \ "dateChangeFlag").readNullable[Boolean] and
-        (__ \ "msbOrTcsp").readNullable[MsbOrTcsp]and
+        (__ \ "msbOrTcsp").readNullable[MsbOrTcsp] and
+        (__ \ "passedFitAndProperTest").readNullable[Boolean] and
+        (__ \ "passedApprovalCheck").readNullable[Boolean] and
         __.read[RPExtra]
       ) (ResponsiblePersons.apply _)
   }
@@ -95,13 +99,15 @@ object ResponsiblePersons {
         (__ \ "startDate").writeNullable[String] and
         (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "msbOrTcsp").writeNullable[MsbOrTcsp] and
+        (__ \ "passedFitAndProperTest").writeNullable[Boolean] and
+        (__ \ "passedApprovalCheck").writeNullable[Boolean] and
         __.write[RPExtra]
       ) (unlift(ResponsiblePersons.unapply))
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
     responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
-      RPExtra(None)))
+      extra = RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
@@ -143,6 +149,8 @@ object ResponsiblePersons {
       rp.positions,
       None,
       rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) },
+      passedFitAndProperTest = None,
+      passedApprovalCheck = None,
       rp
     )
   }

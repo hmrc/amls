@@ -1334,7 +1334,7 @@ object DesConstants {
     None,
     Some(false),
     Some(MsbOrTcsp(true)),
-    RPExtra(None, None, Some(StatusConstants.Added))
+    extra = RPExtra(None, None, Some(StatusConstants.Added))
   )
 
   val responsiblePersons3 = ResponsiblePersons(
@@ -1383,7 +1383,7 @@ object DesConstants {
     None,
     Some(false),
     Some(MsbOrTcsp(true)),
-    RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
+    extra = RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
 
   val viewResponsiblePersons2 = ResponsiblePersons(
@@ -1431,7 +1431,7 @@ object DesConstants {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra(None, None, None)
+    extra = RPExtra(None, None, None)
   )
 
   val viewResponsiblePersons3 = ResponsiblePersons(
@@ -1479,7 +1479,7 @@ object DesConstants {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
+    extra = RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
 
   val testResponsiblePersons = Seq(
@@ -1546,7 +1546,7 @@ object DesConstants {
       None,
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
+      extra = RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
     ),
     responsiblePersons2
   )
@@ -1616,7 +1616,7 @@ object DesConstants {
       None,
       Some(false),
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Updated), Some(false), Some("some test result"), Some("2012-12-12"))
+      extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Updated), Some(false), Some("some test result"), Some("2012-12-12"))
     ),
     responsiblePersons2
   )
@@ -1684,7 +1684,7 @@ object DesConstants {
     None,
     Some(false),
     Some(MsbOrTcsp(true)),
-    RPExtra(Some(StringOrInt("333333")), None, None, None, Some("10"), Some("some test result"), Some("2012-12-12"))
+    extra = RPExtra(Some(StringOrInt("333333")), None, None, None, Some("10"), Some("some test result"), Some("2012-12-12"))
   )
 
 
@@ -1766,7 +1766,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
+      extra = RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -1814,7 +1814,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
+      extra = RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
     )
   )
 
@@ -1882,7 +1882,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
+      extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -1929,7 +1929,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
+      extra = RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
   )
 
@@ -1997,7 +1997,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
-      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
+      extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
     ResponsiblePersons(
       Some(NameDetails(
@@ -2044,7 +2044,7 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
+      extra = RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
   )
 
@@ -2253,7 +2253,7 @@ object DesConstants {
     None,
     None,
     Some(MsbOrTcsp(false)),
-    RPExtra(Some(StringOrInt("333333")), Some("2016-09-17T09:30:47Z"), Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
+    extra = RPExtra(Some(StringOrInt("333333")), Some("2016-09-17T09:30:47Z"), Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
   ))
 
   val testAmendBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
@@ -2504,7 +2504,7 @@ object DesConstants {
       None,
       Some(false),
       Some(MsbOrTcsp(true)),
-      RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, Some("10"), Some("some test result"), Some("2012-12-12"))
+      extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, Some("10"), Some("some test result"), Some("2012-12-12"))
     ),
     responsiblePersons3,
     responsiblePersons2

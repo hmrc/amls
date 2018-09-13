@@ -55,6 +55,8 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
       None,
       None,
       Some(MsbOrTcsp(true)),
+      Some(false),
+      Some(true),
       RPExtra(None)
     )
 
@@ -189,6 +191,8 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
       None,
       None,
       Some(MsbOrTcsp(true)),
+      Some(false),
+      Some(true),
       RPExtra(None)
     )
 
@@ -273,9 +277,8 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
       "descOfPrevExperience" -> "Some training",
       "amlAndCounterTerrFinTraining" -> true,
       "trainingDetails" -> "test",
-      "msbOrTcsp" -> Json.obj(
-        "passedFitAndProperTest" -> true
-      )
+      "passedFitAndProperTest" -> false,
+      "passedApprovalCheck" -> true
     )
 
 

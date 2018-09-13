@@ -61,7 +61,7 @@ class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
               "1990-03-23",false,None
             ))
           )),None,None
-        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990,3,23))))
@@ -73,7 +73,7 @@ class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
           false,
           Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
           ,None,None
-        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(None)
@@ -120,7 +120,7 @@ class DateOfBirthPhase2Spec extends PlaySpec with OneAppPerSuite {
               "1990-03-23",false,None
             ))
           )),None,None
-        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990,3,23))))
@@ -132,7 +132,7 @@ class DateOfBirthPhase2Spec extends PlaySpec with OneAppPerSuite {
           false,
           Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
           , None, None
-        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, RPExtra()
+        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990, 2, 24))))

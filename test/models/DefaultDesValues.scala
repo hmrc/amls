@@ -16,24 +16,20 @@
 
 package models
 
-import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
-import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
-import models.des.msb._
-import models.des.supervision._
-import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Asp => TPASp, TradingPremises => DesTradingPremises, _}
-import models.des.aboutthebusiness.{Address => ATBAddress}
-import models.des.aboutthebusiness._
+import models.des.aboutthebusiness.{Address => ATBAddress, _}
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import models.des.asp._
+import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
 import models.des.businessdetails.BusinessDetails
 import models.des.businessdetails.BusinessType.SoleProprietor
-import models.des.responsiblepeople.{SoleProprietor => DesSoleProprietor}
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
-import models.des.responsiblepeople.{Address => RPAddress, _}
-import models.des.tradingpremises.{Asp => TPAsp, _}
-import models.des.asp._
+import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
+import models.des.msb._
+import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => DesSoleProprietor, _}
+import models.des.supervision._
+import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
+import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, _}
 import org.joda.time.LocalDate
-import utils.StatusConstants
 
 object DefaultDesValues {
 
@@ -98,7 +94,7 @@ object DefaultDesValues {
     false,
     Msb(true, true, true, true, false),
     models.des.tradingpremises.Hvd(true),
-    TPASp(false),
+    TPAsp(false),
     Tcsp(true),
     Eab(false),
     Bpsp(false),
@@ -127,7 +123,7 @@ object DefaultDesValues {
   }
 
   val bankDetailsSection = {
-    import des.bankdetails.{AccountNumber, BankAccount, BankDetails, IBANNumber, ukAccount}
+    import des.bankdetails._
     BankDetails("3",
       Some(Seq(BankAccount("Personal account", "Personal", true, ukAccount("112233", "12345678")),
         BankAccount("Business account", "This business's", false, AccountNumber("12345678")),
@@ -170,7 +166,7 @@ object DefaultDesValues {
     Some((new LocalDate()).toString("yyyy-MM-dd")),
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
   ))
 
@@ -193,7 +189,7 @@ object DefaultDesValues {
     Some((new LocalDate()).toString("yyyy-MM-dd")),
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
   ))
 

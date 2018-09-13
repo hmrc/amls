@@ -114,7 +114,7 @@ class AmendVariationServiceSpec extends PlaySpec
     None,
     None,
     None,
-    unchangedExtra
+    extra = unchangedExtra
   )
 
   val amlsRegForHalfYears = amlsRefNoGen.sample.get

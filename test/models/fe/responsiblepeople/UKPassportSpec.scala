@@ -82,7 +82,7 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
             )), None, None
           )
         ),
-        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,RPExtra()
+        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
       )
 
       UKPassport.conv(desModel) must be(Some(UKPassportYes("87654321")))

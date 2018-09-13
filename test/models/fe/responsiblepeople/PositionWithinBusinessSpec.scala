@@ -103,7 +103,7 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
         Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true)))
       ))
 
-      val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,Some(today.toString()),None,None,RPExtra())
+      val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,Some(today.toString()),None,None,extra = RPExtra())
 
       Positions.conv(desModel) must be(Some(Positions(Set(Partner, SoleProprietor, NominatedOfficer, Director, BeneficialOwner, DesignatedMember), Some(today))))
     }
@@ -125,7 +125,7 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
       positions.zip(expectedResults) foreach {
         case (pos, result) =>
           //noinspection ScalaStyle
-          val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,Some(pos),None,false,None,false,None,Some(today.toString()),None,None,RPExtra())
+          val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,Some(pos),None,false,None,false,None,Some(today.toString()),None,None,extra = RPExtra())
           Positions.conv(desModel) mustBe Some(result)
       }
     }
@@ -137,7 +137,7 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
         Some(CorpBodyOrUnInCorpBodyOrLlp(false, false, false))
       ))
 
-      val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,None,None,None,RPExtra())
+      val desModel = ResponsiblePersons(None,None,None,None,None,None,None,None,None,position,None,false,None,false,None,None,None,None,extra = RPExtra())
 
       Positions.conv(desModel) must be(None)
     }
