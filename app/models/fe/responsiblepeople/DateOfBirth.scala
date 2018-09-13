@@ -28,29 +28,17 @@ object DateOfBirth {
   implicit val format = Json.format[DateOfBirth]
 
   implicit def conv(responsiblePeople: ResponsiblePersons): Option[DateOfBirth] = {
-//    val result: Option[DateOfBirth] = for {
-//      nd <- responsiblePeople.nationalityDetails
-//      id <- nd.idDetails
-////      non <- id.nonUkResident
-//    } yield if (AmlsConfig.phase2Changes) {
-//      DateOfBirth(LocalDate.parse(non.dateOfBirth))
-//    } else {
-//      id.nonUkResident.map(
-//        nonUkResident => DateOfBirth(LocalDate.parse("1990-02-24"))
-//      )
-//    }
-    val idDetail: IdDetail = (for {
+    val idDetail: Option[IdDetail] = for {
       nd <- responsiblePeople.nationalityDetails
       id <- nd.idDetails
-    } yield id).getOrElse(IdDetail())
+    } yield id
 
-    val result: Option[DateOfBirth] =
-      (idDetail.nonUkResident.isDefined, idDetail.ukResident.isDefined, AmlsConfig.phase2Changes) match {
-        case (true, false, _) => Some(DateOfBirth(LocalDate.parse(idDetail.nonUkResident.get.dateOfBirth)))
-        case (false, true, true) => Some(DateOfBirth(LocalDate.parse(idDetail.dateOfBirth.get)))
-        case(_, _, _) => None
-      }
-    result
+    idDetail.flatMap(idDetail =>
+        (idDetail.nonUkResident.isDefined, idDetail.ukResident.isDefined, AmlsConfig.phase2Changes) match {
+            case (true, false, _) => idDetail.nonUkResident.map(non => DateOfBirth(LocalDate.parse(non.dateOfBirth)))
+            case (false, true, true) => idDetail.dateOfBirth.map(dob => DateOfBirth(LocalDate.parse(dob)))
+            case (_, _, _) => None
+        })
   }
 
 }
