@@ -143,6 +143,12 @@ object ResponsiblePersons {
       None
     }
 
+    val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      rp.hasAlreadyPassedApprovalCheck
+    } else {
+      None
+    }
+
     ResponsiblePersons(
       NameDetails.from(Some(rp)),
       rp,
@@ -163,7 +169,8 @@ object ResponsiblePersons {
       None,
       msbOrTcsp,
       passedFitAndProperTest,
-      extra = rp
+      passedApprovalCheck,
+      rp
     )
   }
 
