@@ -119,7 +119,7 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingNo),
         Some(TrainingYes("TrainingDetails")),
         Some(false),
-        hasAlreadyPassedApprovalCheck = None,
+        None,
         Some(333333)
       ),
 
@@ -142,13 +142,19 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingYes("bbbbbbbbbb")),
         Some(TrainingNo),
         Some(true),
-        hasAlreadyPassedApprovalCheck = None,
+        None,
         Some(222222)
       )))
 
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
-      responsiblePersonSeq => List(responsiblePersonSeq(0),
-        responsiblePersonSeq(1).copy(dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1)))))
+      responsiblePersonSeq => List(
+        responsiblePersonSeq(0).copy(
+          hasAlreadyPassedApprovalCheck = Some(true)
+        ),
+        responsiblePersonSeq(1).copy(
+          dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+          hasAlreadyPassedApprovalCheck = Some(false)
+        ))
     }
 
   }

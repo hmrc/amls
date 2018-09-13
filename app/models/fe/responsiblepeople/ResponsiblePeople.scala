@@ -68,7 +68,11 @@ object ResponsiblePeople {
       desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
     }
 
-    val passedApproval: Option[Boolean] = desRp.passedApprovalCheck
+    val passedApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      desRp.passedApprovalCheck
+    } else {
+      None
+    }
 
     ResponsiblePeople(
       desRp.nameDetails,
@@ -87,7 +91,7 @@ object ResponsiblePeople {
       desRp,
       desRp,
       passedFitAndProper,
-      hasAlreadyPassedApprovalCheck = None,
+      passedApproval,
       desRp.extra.lineId,
       desRp.extra.status
     )

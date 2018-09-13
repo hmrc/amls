@@ -1766,6 +1766,8 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(false)),
+      passedFitAndProperTest = None,
+      passedApprovalCheck = None,
       extra = RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
     ),
     ResponsiblePersons(
@@ -1814,13 +1816,23 @@ object DesConstants {
       Some(today),
       None,
       Some(MsbOrTcsp(true)),
+      passedFitAndProperTest = None,
+      passedApprovalCheck = None,
       extra = RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
     )
   )
 
   val testResponsiblePersonsForRpPhase2 = Seq(
-    testResponsiblePersonsForRp(0).copy(msbOrTcsp = None, passedFitAndProperTest = Some(false)),
-    testResponsiblePersonsForRp(1).copy(msbOrTcsp = None, passedFitAndProperTest = Some(true))
+    testResponsiblePersonsForRp(0).copy(
+      msbOrTcsp = None,
+      passedFitAndProperTest = Some(false),
+      passedApprovalCheck = Some(true)
+    ),
+    testResponsiblePersonsForRp(1).copy(
+      msbOrTcsp = None,
+      passedFitAndProperTest = Some(true),
+      passedApprovalCheck = Some(false)
+    )
   )
 
   val testResponsiblePersonsForRpAPI6 = Seq(
