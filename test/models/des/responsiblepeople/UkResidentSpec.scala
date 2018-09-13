@@ -26,8 +26,12 @@ class UkResidentSpec extends PlaySpec with OneAppPerSuite {
     implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
 
     "UkResident" should {
-        "convert frontend model to des model for UkResidence" in {
-            UkResident.convert(UKResidence("nino")) must be(Some(IdDetail(Some(UkResident("nino")))))
+        "convert frontend model to des model for UkResidence with DOB" in {
+            UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24)))) must be(Some(IdDetail(Some(UkResident("nino")))))
+        }
+
+        "convert frontend model to des model for UkResidence without DOB" in {
+            UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24)))) must be(Some(IdDetail(Some(UkResident("nino")))))
         }
     }
 
@@ -38,8 +42,12 @@ class UkResidentPhase2Spec extends PlaySpec with OneAppPerSuite {
     implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
     "UkResident" should {
-        "convert frontend model to des model for UkResidence" in {
+        "convert frontend model to des model for UkResidence with DOB" in {
             UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24)))) must be(Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24"))))
+        }
+
+        "convert frontend model to des model for UkResidence without DOB" in {
+            UkResident.convert(UKResidence("nino"), None) must be(Some(IdDetail(Some(UkResident("nino")))))
         }
     }
 
