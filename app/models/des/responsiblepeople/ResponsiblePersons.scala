@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import config.AmlsConfig
 import models.des.StatusProvider
 import models.fe
 import models.fe.responsiblepeople.TimeAtAddress._
@@ -130,6 +131,18 @@ object ResponsiblePersons {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
+    val msbOrTcsp: Option[MsbOrTcsp] = if (AmlsConfig.phase2Changes) {
+      None
+    } else {
+      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
+    }
+
+    val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      rp.hasAlreadyPassedFitAndProper
+    } else {
+      None
+    }
+
     ResponsiblePersons(
       NameDetails.from(Some(rp)),
       rp,
@@ -148,10 +161,9 @@ object ResponsiblePersons {
       trainingDesc,
       rp.positions,
       None,
-      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) },
-      passedFitAndProperTest = None,
-      passedApprovalCheck = None,
-      rp
+      msbOrTcsp,
+      passedFitAndProperTest,
+      extra = rp
     )
   }
 
