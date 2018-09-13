@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import config.AmlsConfig
 import models.fe.responsiblepeople.{DateOfBirth, UKResidence}
 import play.api.libs.json.Json
 
@@ -26,15 +25,10 @@ object UkResident {
   implicit val format = Json.format[UkResident]
 
   implicit def convert(dtls: UKResidence, dob: Option[DateOfBirth] = None) : Option[IdDetail] = {
-      val dateOfBirth: Option[String] = if (AmlsConfig.phase2Changes) {
-          dob map { _.dateOfBirth.toString }
-      } else {
-          None
-      }
       Some(IdDetail(
           Some(UkResident(dtls.nino)),
           None,
-          dateOfBirth = dateOfBirth
+          dateOfBirth = dob map { _.dateOfBirth.toString }
       ))
   }
 }
