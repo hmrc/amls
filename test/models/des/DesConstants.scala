@@ -1818,6 +1818,11 @@ object DesConstants {
     )
   )
 
+  val testResponsiblePersonsForRpPhase2 = Seq(
+    testResponsiblePersonsForRp(0).copy(msbOrTcsp = None, passedFitAndProperTest = Some(false)),
+    testResponsiblePersonsForRp(1).copy(msbOrTcsp = None, passedFitAndProperTest = Some(true))
+  )
+
   val testResponsiblePersonsForRpAPI6 = Seq(
     ResponsiblePersons(
       Some(NameDetails(

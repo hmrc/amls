@@ -65,7 +65,7 @@ class ResponsiblePeoplePhase2Spec extends PlaySpec with OneAppPerSuite with Resp
     }
 
     "convert des model to frontend model" in {
-      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModelPhase2)
+      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRpPhase2)) must be(DefaultValues.convertedModelPhase2)
     }
   }
 }

@@ -16,6 +16,7 @@
 
 package models.fe.responsiblepeople
 
+import config.AmlsConfig
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
@@ -60,6 +61,14 @@ object ResponsiblePeople {
   }
 
   def convertResponsiblePersonToResponsiblePeople(desRp: ResponsiblePersons): ResponsiblePeople = {
+    val passedFitAndProper: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      desRp.passedFitAndProperTest
+    } else {
+      desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
+    }
+
+    val passedApproval: Option[Boolean] = desRp.passedApprovalCheck
+
     ResponsiblePeople(
       desRp.nameDetails,
       desRp.nameDetails flatMap { n => n.previousNameDetails },
@@ -76,7 +85,7 @@ object ResponsiblePeople {
       desRp.regDetails,
       desRp,
       desRp,
-      desRp.msbOrTcsp.map(x => x.passedFitAndProperTest),
+      passedFitAndProper,
       desRp.extra.lineId,
       desRp.extra.status
     )
