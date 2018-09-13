@@ -221,7 +221,8 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
         "idDetails" -> Json.obj(
           "ukResident" -> Json.obj(
             "nino" -> "nino"
-          )
+          ),
+          "dateOfBirth" -> "1990-02-24"
         ),
         "countryOfBirth" -> "GB",
         "nationality" -> "GB"
