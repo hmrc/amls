@@ -16,6 +16,9 @@
 
 package models.des.responsiblepeople
 
+import models.fe.businesscustomer.{Address, ReviewDetails}
+import models.fe.businessmatching.{BusinessActivities, BusinessMatching, BusinessType}
+import models.fe.responsiblepeople.ResponsiblePeople
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsSuccess, Json}
 import play.api.test.FakeApplication
@@ -36,6 +39,24 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
     None, None))
 
   "ResponsiblePersons" should {
+    val responsiblePeople = ResponsiblePeople()
+    val businessMatching = BusinessMatching(
+      activities = BusinessActivities(Set.empty),
+      reviewDetails = ReviewDetails(
+        "",
+        BusinessType.SoleProprietor,
+        models.fe.businesscustomer.Address(
+          line_1 = "",
+          line_2 = "",
+          line_3 = None,
+          line_4 = None,
+          postcode = None,
+          country = ""
+        ),
+        ""
+      )
+    )
+
     val model = ResponsiblePersons(
       nameDtls,
       nationalDtls,
@@ -169,6 +190,12 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
 
     "Deserialise from phase2 json successfully" in {
       ResponsiblePersons.jsonReads.reads(jsonExpectedFromWritePhase2) must be (JsSuccess(modelPhase2))
+    }
+
+    "convert FE model to DES model for phase 1" in {
+      val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(responsiblePeople, businessMatching)
+
+      responsiblePerson must be (model)
     }
   }
 }
