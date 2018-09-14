@@ -427,22 +427,22 @@ object ResponsiblePeopleSection {
   private val nonUKPassport = NonUKPassportYes("87654321")
 
   val model = Some(Seq(ResponsiblePeople(
-    Some(personName),
-    Some(previousName),
-    Some(nameDateOfChange),
-    otherNames,
-    Some(personResidenceType),
-    Some(ukPassport),
-    Some(nonUKPassport),
-    None,
-    Some(contactDetails),
-    Some(addressHistory),
-    Some(positions),
-    Some(saRegistered),
-    Some(vatRegistered),
-    Some(experienceTraining),
-    Some(training),
-    Some(true)
+    personName                    = Some(personName),
+    legalName                     = Some(previousName),
+    legalNameChangeDate           = Some(nameDateOfChange),
+    knownBy                       = otherNames,
+    personResidenceType           = Some(personResidenceType),
+    ukPassport                    = Some(ukPassport),
+    nonUKPassport                 = Some(nonUKPassport),
+    dateOfBirth                   = None,
+    contactDetails                = Some(contactDetails),
+    addressHistory                = Some(addressHistory),
+    positions                     = Some(positions),
+    saRegistered                  = Some(saRegistered),
+    vatRegistered                 = Some(vatRegistered),
+    experienceTraining            = Some(experienceTraining),
+    training                      = Some(training),
+    hasAlreadyPassedFitAndProper  = Some(true)
   )))
 
   val modelForView = Some(List(
