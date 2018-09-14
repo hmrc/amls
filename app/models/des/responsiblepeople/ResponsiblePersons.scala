@@ -138,13 +138,13 @@ object ResponsiblePersons {
     }
 
     val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      rp.hasAlreadyPassedFitAndProper
+      rp.hasAlreadyPassedFitAndProper orElse Some(false)
     } else {
       None
     }
 
     val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      rp.hasAlreadyPassedApprovalCheck
+      rp.hasAlreadyPassedApprovalCheck orElse Some(false)
     } else {
       None
     }
