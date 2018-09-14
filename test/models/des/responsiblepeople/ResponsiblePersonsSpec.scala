@@ -16,9 +16,8 @@
 
 package models.des.responsiblepeople
 
-import models.des.responsiblepeople.RPValues.model
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
-import models.{BusinessMatchingSection, ResponsiblePeopleSection}
+import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSection}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
@@ -59,21 +58,14 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
-  val modelPhase2 = model.copy(
-    msbOrTcsp = None,
-    passedFitAndProperTest = Some(false),
-    passedApprovalCheck = Some(true),
-    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
-  )
-
   "ResponsiblePersonsPhase2" should {
 
     "Serialise to phase2 json successfully" in {
-      ResponsiblePersons.jsonWrites.writes(modelPhase2) must be(RPValues.jsonExpectedFromWritePhase2)
+      ResponsiblePersons.jsonWrites.writes(RPValues.modelPhase2) must be(RPValues.jsonExpectedFromWritePhase2)
     }
 
     "Deserialise from phase2 json successfully" in {
-      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be (JsSuccess(modelPhase2))
+      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be (JsSuccess(RPValues.modelPhase2))
     }
 
     "convert FE model to DES model for phase 2" in {
@@ -90,7 +82,7 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
         BusinessMatchingSection.emptyModel
       )
 
-      responsiblePersonPhase2 must be (modelPhase2)
+      responsiblePersonPhase2 must be (RPValues.modelPhase2)
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
@@ -131,37 +123,13 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
 object RPValues {
 
-  private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
-  private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
-  private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
-  private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
-  private val additionalDesAddress = Some(AddressUnderThreeYears(Address("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
-  private val extraAdditional = Some(AddressUnderThreeYears(Address("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
-  private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
-  private val positionInBusiness = Some(PositionInBusiness(Some(SoleProprietor(true, true, Some(false))),
-    None, None))
+  val model = DefaultDesValues.ResponsiblePersonsSectionForRelease7.get.head.copy(startDate = None)
 
-  val model = ResponsiblePersons(
-    nameDtls,
-    nationalDtls,
-    contactDtls,
-    currentDesAddress,
-    Some("0-6 months"),
-    additionalDesAddress,
-    Some("7-12 months"),
-    extraAdditional,
-    Some("1-3 years"),
-    positionInBusiness,
-    regDtls,
-    true,
-    Some("Some training"),
-    true,
-    Some("test"),
-    None,
-    None,
-    Some(MsbOrTcsp(true)),
-    extra = RPExtra(None)
+  val modelPhase2 = model.copy(
+    msbOrTcsp = None,
+    passedFitAndProperTest = Some(false),
+    passedApprovalCheck = Some(true),
+    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
 
   val jsonExpectedFromWrite = Json.obj(
