@@ -16,10 +16,11 @@
 
 package models.des.responsiblepeople
 
+import models.ResponsiblePeopleSection
 import models.fe.businesscustomer.ReviewDetails
 import models.fe.businessmatching.{BusinessActivities, BusinessMatching, BusinessType}
 import models.fe.responsiblepeople.TimeAtAddress._
-import models.fe.responsiblepeople.{SoleProprietor, _}
+import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsSuccess, Json}
@@ -41,17 +42,16 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
 
     "convert FE model to DES model" in {
 
-      val respPeople = models.ResponsiblePeopleSection.model.get.head.copy(
+      val respPeople = ResponsiblePeopleSection.model.get.head.copy(
         dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
-        positions = Some(Positions(Set(models.fe.responsiblepeople.SoleProprietor, models.fe.responsiblepeople.NominatedOfficer), None))
+        positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None))
       )
 
       val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeople,
         RPValues.businessMatching
       )
-
-      val blha = RPValues.model
+      
       responsiblePerson must be (RPValues.model)
     }
   }
