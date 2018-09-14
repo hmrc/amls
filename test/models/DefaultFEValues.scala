@@ -341,6 +341,23 @@ object BusinessMatchingSection {
     None,
     psrPSRNumber)
 
+  val emptyModel = BusinessMatching(
+    activities = BusinessActivities(Set.empty),
+    reviewDetails = ReviewDetails(
+      "",
+      BusinessType.SoleProprietor,
+      models.fe.businesscustomer.Address(
+        line_1 = "",
+        line_2 = "",
+        line_3 = None,
+        line_4 = None,
+        postcode = None,
+        country = ""
+      ),
+      ""
+    )
+  )
+
   val msbServices = Some(MsbServices(Set(ChequeCashingNotScrapMetal,
     CurrencyExchange, TransmittingMoney,
     ChequeCashingScrapMetal, ForeignExchange)))

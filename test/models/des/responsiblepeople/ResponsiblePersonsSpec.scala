@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.ResponsiblePeopleSection
+import models.{BusinessMatchingSection, ResponsiblePeopleSection}
 import models.fe.businesscustomer.ReviewDetails
 import models.fe.businessmatching.{BusinessActivities, BusinessMatching, BusinessType}
 import models.fe.responsiblepeople.TimeAtAddress._
@@ -49,7 +49,7 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
 
       val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeople,
-        RPValues.businessMatching
+        BusinessMatchingSection.emptyModel
       )
 
       responsiblePerson must be (RPValues.model)
@@ -82,9 +82,9 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        RPValues.businessMatching
+        BusinessMatchingSection.emptyModel
       )
-      val l = RPValues.modelPhase2
+
       responsiblePersonPhase2 must be (RPValues.modelPhase2)
     }
 
@@ -99,7 +99,7 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        RPValues.businessMatching
+        BusinessMatchingSection.emptyModel
       )
 
       responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
@@ -116,7 +116,7 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        RPValues.businessMatching
+        BusinessMatchingSection.emptyModel
       )
 
       responsiblePersonPhase2.passedApprovalCheck must be (Some(false))
@@ -136,55 +136,6 @@ object RPValues {
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
   private val positionInBusiness = Some(PositionInBusiness(Some(SoleProprietor(true, true, Some(false))),
     None, None))
-
-  val responsiblePeople = ResponsiblePeople(
-    Some(models.fe.responsiblepeople.PersonName("name", Some("some"), "surname")),
-    Some(PreviousName(true, Some("fname"), Some("mname"), Some("lname"))),
-    Some(LocalDate.parse("1990-02-24")),
-    Some(KnownBy(true, Some("Doc"))),
-    Some(PersonResidenceType(UKResidence("nino"), "GB", "GB")),
-    None,
-    None,
-    None,
-    Some(ContactDetails("07000001122", "test@test.com")),
-    Some(ResponsiblePersonAddressHistory(
-      Some(ResponsiblePersonCurrentAddress(PersonAddressUK("ccLine 1", "ccLine 2", None, None, "AA1 1AA"), ZeroToFiveMonths, None)),
-      Some(ResponsiblePersonAddress(PersonAddressUK("Line 1", "Line 2", None, None, "BB1 1BB"),SixToElevenMonths)),
-      Some(ResponsiblePersonAddress(PersonAddressUK("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "CC1 1CC"), OneToThreeYears)))
-    ),
-    Some(Positions(Set(models.fe.responsiblepeople.NominatedOfficer, models.fe.responsiblepeople.SoleProprietor), None)),
-    Some(SaRegisteredYes("0123456789")),
-    Some(VATRegisteredNo),
-    Some(ExperienceTrainingYes("Some training")),
-    Some(TrainingYes("test")),
-    Some(true),
-    None,
-    None,
-    None,
-    false
-  )
-
-  val businessMatching = BusinessMatching(
-    activities = BusinessActivities(Set.empty),
-    reviewDetails = ReviewDetails(
-      "",
-      BusinessType.SoleProprietor,
-      models.fe.businesscustomer.Address(
-        line_1 = "",
-        line_2 = "",
-        line_3 = None,
-        line_4 = None,
-        postcode = None,
-        country = ""
-      ),
-      ""
-    )
-  )
-
-  val responsiblePeoplePhase2 = responsiblePeople.copy(
-    hasAlreadyPassedFitAndProper = Some(false),
-    hasAlreadyPassedApprovalCheck = Some(true)
-  )
 
   val model = ResponsiblePersons(
     nameDtls,
