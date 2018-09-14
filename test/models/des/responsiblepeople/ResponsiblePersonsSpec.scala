@@ -23,7 +23,7 @@ import models.fe.responsiblepeople.TimeAtAddress._
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsBoolean, JsSuccess, Json}
+import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
 import play.api.test.FakeApplication
 
 class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
@@ -51,7 +51,7 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
         respPeople,
         RPValues.businessMatching
       )
-      
+
       responsiblePerson must be (RPValues.model)
     }
   }
@@ -72,17 +72,33 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
     }
 
     "convert FE model to DES model for phase 2" in {
-      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
-        RPValues.responsiblePeoplePhase2,
-        RPValues.businessMatching
+
+      val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
+        dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
+        positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
+        hasAlreadyPassedFitAndProper = Some(false),
+        hasAlreadyPassedApprovalCheck = Some(true)
       )
 
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        respPeoplePhase2,
+        RPValues.businessMatching
+      )
+      val l = RPValues.modelPhase2
       responsiblePersonPhase2 must be (RPValues.modelPhase2)
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
+
+      val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
+        dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
+        positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
+        hasAlreadyPassedFitAndProper = None,
+        hasAlreadyPassedApprovalCheck = Some(true)
+      )
+
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
-        RPValues.responsiblePeoplePhase2.copy(hasAlreadyPassedFitAndProper = None),
+        respPeoplePhase2,
         RPValues.businessMatching
       )
 
@@ -90,8 +106,16 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - Approval should return Some(false)" in {
+
+      val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
+        dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
+        positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
+        hasAlreadyPassedFitAndProper = Some(false),
+        hasAlreadyPassedApprovalCheck = None
+      )
+
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
-        RPValues.responsiblePeoplePhase2.copy(hasAlreadyPassedApprovalCheck = None),
+        respPeoplePhase2,
         RPValues.businessMatching
       )
 
@@ -187,7 +211,8 @@ object RPValues {
   val modelPhase2 = model.copy(
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),
-    passedApprovalCheck = Some(true)
+    passedApprovalCheck = Some(true),
+    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
 
   val jsonExpectedFromWrite = Json.obj(
@@ -276,7 +301,21 @@ object RPValues {
     )
   )
 
+  val ukResident = Json.obj(
+    "nino" -> "nino"
+  )
+  val idDetails = Json.obj()
+    .+("ukResident", ukResident)
+    .+("dateOfBirth", JsString("1990-02-24"))
+  val nationalityDetails = Json.obj()
+    .+("areYouUkResident", JsBoolean(true))
+    .+("idDetails", idDetails)
+    .+("countryOfBirth", JsString("GB"))
+    .+("nationality", JsString("GB"))
+
   val jsonExpectedFromWritePhase2 = jsonExpectedFromWrite
+    .-("nationalityDetails")
+    .+("nationalityDetails", nationalityDetails)
     .-("msbOrTcsp")
     .+("passedFitAndProperTest", JsBoolean(false))
     .+("passedApprovalCheck", JsBoolean(true))
