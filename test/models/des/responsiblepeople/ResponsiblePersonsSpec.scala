@@ -62,8 +62,7 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
     }
 
     "convert FE model to DES model for phase 2" in {
-      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(RPValues.responsiblePeople, RPValues.businessMatching)
-
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(RPValues.responsiblePeoplePhase2, RPValues.businessMatching)
       responsiblePersonPhase2 must be (RPValues.modelPhase2)
     }
   }
@@ -108,7 +107,7 @@ object RPValues {
     None,
     false
   )
-  
+
   val businessMatching = BusinessMatching(
     activities = BusinessActivities(Set.empty),
     reviewDetails = ReviewDetails(
@@ -124,6 +123,11 @@ object RPValues {
       ),
       ""
     )
+  )
+
+  val responsiblePeoplePhase2 = responsiblePeople.copy(
+    hasAlreadyPassedFitAndProper = Some(false),
+    hasAlreadyPassedApprovalCheck = Some(true)
   )
 
   val model = ResponsiblePersons(
