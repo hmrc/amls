@@ -40,7 +40,10 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
     }
 
     "convert FE model to DES model" in {
-      val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(RPValues.responsiblePeople, RPValues.businessMatching)
+      val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        RPValues.responsiblePeople,
+        RPValues.businessMatching
+      )
 
       responsiblePerson must be (RPValues.model)
     }
@@ -62,8 +65,30 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
     }
 
     "convert FE model to DES model for phase 2" in {
-      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(RPValues.responsiblePeoplePhase2, RPValues.businessMatching)
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        RPValues.responsiblePeoplePhase2,
+        RPValues.businessMatching
+      )
+
       responsiblePersonPhase2 must be (RPValues.modelPhase2)
+    }
+
+    "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        RPValues.responsiblePeoplePhase2.copy(hasAlreadyPassedFitAndProper = None),
+        RPValues.businessMatching
+      )
+
+      responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
+    }
+
+    "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - Approval should return Some(false)" in {
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        RPValues.responsiblePeoplePhase2.copy(hasAlreadyPassedApprovalCheck = None),
+        RPValues.businessMatching
+      )
+
+      responsiblePersonPhase2.passedApprovalCheck must be (Some(false))
     }
   }
 }
