@@ -34,10 +34,10 @@ object DateOfBirth {
     } yield id
 
     idDetail.flatMap(idDetail =>
-        (idDetail.nonUkResident map(_.dateOfBirth), AmlsConfig.phase2Changes) match {
-          case (Some(str), _) => Some(DateOfBirth(LocalDate.parse(str)))
-          case (_, true) => idDetail.dateOfBirth.map(ukDOB => DateOfBirth(LocalDate.parse(ukDOB)))
-          case (_, false) => None
+        idDetail.nonUkResident map(_.dateOfBirth) match {
+          case Some(str) => Some(DateOfBirth(LocalDate.parse(str)))
+          case _ if AmlsConfig.phase2Changes => idDetail.dateOfBirth.map(ukDOB => DateOfBirth(LocalDate.parse(ukDOB)))
+          case _ => None
       }
     )
   }
