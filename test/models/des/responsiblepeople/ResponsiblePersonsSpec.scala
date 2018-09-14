@@ -18,7 +18,9 @@ package models.des.responsiblepeople
 
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.{BusinessActivities, BusinessMatching, BusinessType}
-import models.fe.responsiblepeople.ResponsiblePeople
+import models.fe.responsiblepeople.TimeAtAddress._
+import models.fe.responsiblepeople._
+import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsSuccess, Json}
 import play.api.test.FakeApplication
@@ -35,11 +37,36 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
   private val additionalDesAddress = Some(AddressUnderThreeYears(Address("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
   private val extraAdditional = Some(AddressUnderThreeYears(Address("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
-  private val positionInBusiness = Some(PositionInBusiness(Some(SoleProprietor(true, true)),
+  private val positionInBusiness = Some(PositionInBusiness(Some(SoleProprietor(true, true, Some(false))),
     None, None))
 
   "ResponsiblePersons" should {
-    val responsiblePeople = ResponsiblePeople()
+    val responsiblePeople = ResponsiblePeople(
+      Some(models.fe.responsiblepeople.PersonName("name", Some("some"), "surname")),
+      Some(PreviousName(true, Some("fname"), Some("mname"), Some("lname"))),
+      Some(LocalDate.parse("1990-02-24")),
+      Some(KnownBy(true, Some("Doc"))),
+      Some(PersonResidenceType(UKResidence("nino"), "GB", "GB")),
+      None,
+      None,
+      None,
+      Some(ContactDetails("07000001122", "test@test.com")),
+      Some(ResponsiblePersonAddressHistory(
+        Some(ResponsiblePersonCurrentAddress(PersonAddressUK("ccLine 1", "ccLine 2", None, None, "AA1 1AA"), ZeroToFiveMonths, None)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("Line 1", "Line 2", None, None, "BB1 1BB"),SixToElevenMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "CC1 1CC"), OneToThreeYears)))
+      ),
+      Some(Positions(Set(models.fe.responsiblepeople.NominatedOfficer, models.fe.responsiblepeople.SoleProprietor), None)),
+      Some(SaRegisteredYes("0123456789")),
+      Some(VATRegisteredNo),
+      Some(ExperienceTrainingYes("Some training")),
+      Some(TrainingYes("test")),
+      Some(true),
+      None,
+      None,
+      None,
+      false
+    )
     val businessMatching = BusinessMatching(
       activities = BusinessActivities(Set.empty),
       reviewDetails = ReviewDetails(
@@ -154,7 +181,8 @@ class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
       "positionInBusiness" -> Json.obj(
         "soleProprietor" -> Json.obj(
           "soleProprietor" -> true,
-          "nominatedOfficer" -> true
+          "nominatedOfficer" -> true,
+          "other" -> false
         )),
       "regDetails" -> Json.obj(
         "vatRegistered" -> false,
