@@ -138,12 +138,16 @@ object ResponsiblePersons {
     }
 
     val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
+      // This is a hack so that the schema validation passes and acceptance tests can run
       rp.hasAlreadyPassedFitAndProper orElse Some(false)
     } else {
       None
     }
 
     val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
+      // This is a hack so that the schema validation passes and acceptance tests can run
       rp.hasAlreadyPassedApprovalCheck orElse Some(false)
     } else {
       None
