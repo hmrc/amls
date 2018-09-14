@@ -113,7 +113,7 @@ object ResponsiblePersons {
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
       case Some(data) =>
-        Some(data.map(x => convertRP(x, bm)))
+        Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm)))
       case _ => None
     }
   }
@@ -127,7 +127,7 @@ object ResponsiblePersons {
     }
   }
 
-  implicit def convertRP(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching): ResponsiblePersons = {
+  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching): ResponsiblePersons = {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
