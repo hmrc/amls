@@ -16,11 +16,9 @@
 
 package models.des.responsiblepeople
 
-import models.{BusinessMatchingSection, ResponsiblePeopleSection}
-import models.fe.businesscustomer.ReviewDetails
-import models.fe.businessmatching.{BusinessActivities, BusinessMatching, BusinessType}
-import models.fe.responsiblepeople.TimeAtAddress._
+import models.des.responsiblepeople.RPValues.model
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
+import models.{BusinessMatchingSection, ResponsiblePeopleSection}
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
@@ -61,14 +59,21 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
+  val modelPhase2 = model.copy(
+    msbOrTcsp = None,
+    passedFitAndProperTest = Some(false),
+    passedApprovalCheck = Some(true),
+    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
+  )
+
   "ResponsiblePersonsPhase2" should {
 
     "Serialise to phase2 json successfully" in {
-      ResponsiblePersons.jsonWrites.writes(RPValues.modelPhase2) must be(RPValues.jsonExpectedFromWritePhase2)
+      ResponsiblePersons.jsonWrites.writes(modelPhase2) must be(RPValues.jsonExpectedFromWritePhase2)
     }
 
     "Deserialise from phase2 json successfully" in {
-      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be (JsSuccess(RPValues.modelPhase2))
+      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be (JsSuccess(modelPhase2))
     }
 
     "convert FE model to DES model for phase 2" in {
@@ -85,7 +90,7 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
         BusinessMatchingSection.emptyModel
       )
 
-      responsiblePersonPhase2 must be (RPValues.modelPhase2)
+      responsiblePersonPhase2 must be (modelPhase2)
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
@@ -157,13 +162,6 @@ object RPValues {
     None,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(None)
-  )
-
-  val modelPhase2 = model.copy(
-    msbOrTcsp = None,
-    passedFitAndProperTest = Some(false),
-    passedApprovalCheck = Some(true),
-    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
 
   val jsonExpectedFromWrite = Json.obj(
