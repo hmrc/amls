@@ -16,6 +16,7 @@
 
 package models.fe.responsiblepeople
 
+import config.AmlsConfig
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
@@ -37,6 +38,7 @@ case class ResponsiblePeople(
                               experienceTraining: Option[ExperienceTraining] = None,
                               training: Option[Training] = None,
                               hasAlreadyPassedFitAndProper: Option[Boolean] = None,
+                              hasAlreadyPassedApprovalCheck: Option[Boolean] = None,
                               lineId: Option[Int] = None,
                               status: Option[String] = None,
                               hasChanged: Boolean = false
@@ -59,7 +61,19 @@ object ResponsiblePeople {
     }
   }
 
-  def convertRP(desRp: ResponsiblePersons): ResponsiblePeople = {
+  def convertResponsiblePersonToResponsiblePeople(desRp: ResponsiblePersons): ResponsiblePeople = {
+    val passedFitAndProper: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      desRp.passedFitAndProperTest
+    } else {
+      desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
+    }
+
+    val passedApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      desRp.passedApprovalCheck
+    } else {
+      None
+    }
+
     ResponsiblePeople(
       desRp.nameDetails,
       desRp.nameDetails flatMap { n => n.previousNameDetails },
@@ -76,7 +90,8 @@ object ResponsiblePeople {
       desRp.regDetails,
       desRp,
       desRp,
-      desRp.msbOrTcsp.map(x => x.passedFitAndProperTest),
+      passedFitAndProper,
+      passedApproval,
       desRp.extra.lineId,
       desRp.extra.status
     )
@@ -85,7 +100,7 @@ object ResponsiblePeople {
   implicit def convert(rp: Option[Seq[ResponsiblePersons]]): Option[Seq[ResponsiblePeople]] = {
     rp match {
       case Some(data) =>
-        Some(data.map(x => convertRP(x)))
+        Some(data.map(x => convertResponsiblePersonToResponsiblePeople(x)))
       case _ => None
     }
   }

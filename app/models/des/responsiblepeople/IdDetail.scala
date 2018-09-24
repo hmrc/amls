@@ -19,7 +19,8 @@ package models.des.responsiblepeople
 import play.api.libs.json.Json
 
 case class IdDetail( ukResident: Option[UkResident] = None,
-                     nonUkResident: Option[NonUkResident] = None
+                     nonUkResident: Option[NonUkResident] = None,
+                     dateOfBirth: Option[String] = None
                    )
 
 object IdDetail {

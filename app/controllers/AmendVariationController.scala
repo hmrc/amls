@@ -52,7 +52,10 @@ trait AmendVariationController extends BaseController {
     )
 
 
-  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, requestType: RequestType)(implicit request: Request[JsValue]) = {
+  def update(amlsRegistrationNumber: String,
+             messageType: AmlsMessageType,
+             requestType: RequestType)(implicit request: Request[JsValue]) = {
+    
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>

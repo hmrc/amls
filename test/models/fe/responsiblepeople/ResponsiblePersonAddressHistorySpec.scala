@@ -233,7 +233,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
 
   val responsiblePersonsCurrent = ResponsiblePersons(
@@ -259,7 +259,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
 
   val responsiblePersonsAdditional = ResponsiblePersons(
@@ -285,7 +285,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
 
   val responsiblePersonsExtra = ResponsiblePersons(
@@ -311,7 +311,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
 
   val responsiblePersonsNone = ResponsiblePersons(
@@ -337,7 +337,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     None,
     None,
     Some(MsbOrTcsp(true)),
-    RPExtra()
+    extra = RPExtra()
   )
 
   val DefaultAddressHistory = ResponsiblePersonAddressHistory(

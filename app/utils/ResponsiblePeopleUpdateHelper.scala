@@ -74,13 +74,19 @@ trait ResponsiblePeopleUpdateHelper {
   }
 
   private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
-                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]): Seq[ResponsiblePersons] = {
+                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]
+                                 ): Seq[ResponsiblePersons] = {
+
     (viewResponsiblePerson, desResponsiblePerson) match {
+
       case (Some(rp), Some(desRp)) => {
+
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
         val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
         val rpWithAddedStatus = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+
         if (AmlsConfig.release7) {
+
           val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
             nds =>
               nds.copy(previousNameDetails = nds.previousNameDetails map {

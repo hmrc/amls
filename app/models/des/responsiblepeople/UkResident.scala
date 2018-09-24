@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.UKResidence
+import models.fe.responsiblepeople.{DateOfBirth, UKResidence}
 import play.api.libs.json.Json
 
 case class UkResident(nino: String)
@@ -24,7 +24,11 @@ case class UkResident(nino: String)
 object UkResident {
   implicit val format = Json.format[UkResident]
 
-  implicit def convert(dtls: UKResidence) : Option[IdDetail] = {
-    Some(IdDetail(Some(UkResident(dtls.nino)), None))
+  implicit def convert(dtls: UKResidence, dob: Option[DateOfBirth] = None) : Option[IdDetail] = {
+      Some(IdDetail(
+          Some(UkResident(dtls.nino)),
+          None,
+          dateOfBirth = dob map { _.dateOfBirth.toString }
+      ))
   }
 }

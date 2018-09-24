@@ -150,7 +150,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           } thenReturn true
 
           when(request.responsiblePersons).thenReturn(Some(Seq(ResponsiblePersons(
-            None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, RPExtra(None, None, None, None, None, None, None))
+            None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, extra = RPExtra(None, None, None, None, None, None, None))
           )))
 
           when(request.tradingPremises).thenReturn(mock[TradingPremises])

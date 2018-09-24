@@ -21,11 +21,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.config.inject.{ServicesConfig => iServicesConfig}
 
-trait AmlsConfig {
-  def release7: Boolean
-}
-
-object AmlsConfig extends AmlsConfig with ServicesConfig {
+object AmlsConfig extends ServicesConfig {
 
   private def loadConfig(key: String) =
     getConfString(key, throw new Exception(s"Config missing key: $key"))
@@ -34,7 +30,8 @@ object AmlsConfig extends AmlsConfig with ServicesConfig {
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
 
-  override def release7 = getConfBool("feature-toggle.release7", defBool = false)
+  def release7 = getConfBool("feature-toggle.release7", defBool = false)
+  def phase2Changes = getConfBool("feature-toggle.phase-2-changes", defBool = false)
 
   lazy val payAPIUrl = baseUrl("pay-api")
 

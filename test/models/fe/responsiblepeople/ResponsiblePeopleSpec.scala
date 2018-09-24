@@ -19,13 +19,14 @@ package models.fe.responsiblepeople
 import models.des.DesConstants
 import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import utils.StatusConstants
+import play.api.test.FakeApplication
 
 
-class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with ResponsiblePeopleValues {
+class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
 
   "ResponsiblePeople" must {
 
@@ -42,6 +43,29 @@ class ResponsiblePeopleSpec extends PlaySpec with MockitoSugar with ResponsibleP
 
     "convert des model to frontend model" in {
       ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModel)
+    }
+  }
+}
+
+class ResponsiblePeoplePhase2Spec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
+
+  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
+
+  "ResponsiblePeople" must {
+
+    "validate complete json" must {
+
+      "serialise as expected" in {
+        Json.toJson(CompleteResponsiblePeople) must be(CompleteJson)
+      }
+
+      "deserialise as expected" in {
+        CompleteJson.as[ResponsiblePeople] must be(CompleteResponsiblePeople)
+      }
+    }
+
+    "convert des model to frontend model" in {
+      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRpPhase2)) must be(DefaultValues.convertedModelPhase2)
     }
   }
 }
@@ -75,7 +99,7 @@ trait ResponsiblePeopleValues {
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
     val ukPassport = UKPassportYes("87654321")
 
-    val convertedModel = Some(List(
+    val convertedModel: Option[List[ResponsiblePeople]] = Some(List(
       ResponsiblePeople(
         Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
         Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
@@ -95,6 +119,7 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingNo),
         Some(TrainingYes("TrainingDetails")),
         Some(false),
+        None,
         Some(333333)
       ),
 
@@ -104,7 +129,10 @@ trait ResponsiblePeopleValues {
         Some(new LocalDate(1967, 8, 13)),
         Some(KnownBy(true, Some("bbbbbbbbbbb"))),
         Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        None, None, None, None,
+        None,
+        None,
+        None,
+        None,
         Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
@@ -114,8 +142,20 @@ trait ResponsiblePeopleValues {
         Some(ExperienceTrainingYes("bbbbbbbbbb")),
         Some(TrainingNo),
         Some(true),
+        None,
         Some(222222)
       )))
+
+    val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
+      responsiblePersonSeq => List(
+        responsiblePersonSeq(0).copy(
+          hasAlreadyPassedApprovalCheck = Some(true)
+        ),
+        responsiblePersonSeq(1).copy(
+          dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+          hasAlreadyPassedApprovalCheck = Some(false)
+        ))
+    }
 
   }
 

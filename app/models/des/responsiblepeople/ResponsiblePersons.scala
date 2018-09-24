@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import config.AmlsConfig
 import models.des.StatusProvider
 import models.fe
 import models.fe.responsiblepeople.TimeAtAddress._
@@ -39,7 +40,9 @@ case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               trainingDetails: Option[String],
                               startDate: Option[String],
                               dateChangeFlag: Option[Boolean] = None,
-                              msbOrTcsp: Option[MsbOrTcsp],
+                              msbOrTcsp: Option[MsbOrTcsp] = None,
+                              passedFitAndProperTest: Option[Boolean] = None,
+                              passedApprovalCheck: Option[Boolean] = None,
                               extra: RPExtra
                              )
 
@@ -67,7 +70,9 @@ object ResponsiblePersons {
         (__ \ "trainingDetails").readNullable[String] and
         (__ \ "startDate").readNullable[String] and
         (__ \ "dateChangeFlag").readNullable[Boolean] and
-        (__ \ "msbOrTcsp").readNullable[MsbOrTcsp]and
+        (__ \ "msbOrTcsp").readNullable[MsbOrTcsp] and
+        (__ \ "passedFitAndProperTest").readNullable[Boolean] and
+        (__ \ "passedApprovalCheck").readNullable[Boolean] and
         __.read[RPExtra]
       ) (ResponsiblePersons.apply _)
   }
@@ -95,18 +100,20 @@ object ResponsiblePersons {
         (__ \ "startDate").writeNullable[String] and
         (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "msbOrTcsp").writeNullable[MsbOrTcsp] and
+        (__ \ "passedFitAndProperTest").writeNullable[Boolean] and
+        (__ \ "passedApprovalCheck").writeNullable[Boolean] and
         __.write[RPExtra]
       ) (unlift(ResponsiblePersons.unapply))
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
     responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
-      RPExtra(None)))
+      extra = RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
       case Some(data) =>
-        Some(data.map(x => convertRP(x, bm)))
+        Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm)))
       case _ => None
     }
   }
@@ -120,9 +127,31 @@ object ResponsiblePersons {
     }
   }
 
-  implicit def convertRP(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching): ResponsiblePersons = {
+  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching): ResponsiblePersons = {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
+
+    val msbOrTcsp: Option[MsbOrTcsp] = if (AmlsConfig.phase2Changes) {
+      None
+    } else {
+      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
+    }
+
+    val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
+      // This is a hack so that the schema validation passes and acceptance tests can run
+      rp.hasAlreadyPassedFitAndProper orElse Some(false)
+    } else {
+      None
+    }
+
+    val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
+      // This is a hack so that the schema validation passes and acceptance tests can run
+      rp.hasAlreadyPassedApprovalCheck orElse Some(false)
+    } else {
+      None
+    }
 
     ResponsiblePersons(
       NameDetails.from(Some(rp)),
@@ -142,7 +171,9 @@ object ResponsiblePersons {
       trainingDesc,
       rp.positions,
       None,
-      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) },
+      msbOrTcsp,
+      passedFitAndProperTest,
+      passedApprovalCheck,
       rp
     )
   }

@@ -341,6 +341,23 @@ object BusinessMatchingSection {
     None,
     psrPSRNumber)
 
+  val emptyModel = BusinessMatching(
+    activities = BusinessActivities(Set.empty),
+    reviewDetails = ReviewDetails(
+      "",
+      BusinessType.SoleProprietor,
+      models.fe.businesscustomer.Address(
+        line_1 = "",
+        line_2 = "",
+        line_3 = None,
+        line_4 = None,
+        postcode = None,
+        country = ""
+      ),
+      ""
+    )
+  )
+
   val msbServices = Some(MsbServices(Set(ChequeCashingNotScrapMetal,
     CurrencyExchange, TransmittingMoney,
     ChequeCashingScrapMetal, ForeignExchange)))
@@ -427,22 +444,22 @@ object ResponsiblePeopleSection {
   private val nonUKPassport = NonUKPassportYes("87654321")
 
   val model = Some(Seq(ResponsiblePeople(
-    Some(personName),
-    Some(previousName),
-    Some(nameDateOfChange),
-    otherNames,
-    Some(personResidenceType),
-    Some(ukPassport),
-    Some(nonUKPassport),
-    None,
-    Some(contactDetails),
-    Some(addressHistory),
-    Some(positions),
-    Some(saRegistered),
-    Some(vatRegistered),
-    Some(experienceTraining),
-    Some(training),
-    Some(true)
+    personName                    = Some(personName),
+    legalName                     = Some(previousName),
+    legalNameChangeDate           = Some(nameDateOfChange),
+    knownBy                       = otherNames,
+    personResidenceType           = Some(personResidenceType),
+    ukPassport                    = Some(ukPassport),
+    nonUKPassport                 = Some(nonUKPassport),
+    dateOfBirth                   = None,
+    contactDetails                = Some(contactDetails),
+    addressHistory                = Some(addressHistory),
+    positions                     = Some(positions),
+    saRegistered                  = Some(saRegistered),
+    vatRegistered                 = Some(vatRegistered),
+    experienceTraining            = Some(experienceTraining),
+    training                      = Some(training),
+    hasAlreadyPassedFitAndProper  = Some(true)
   )))
 
   val modelForView = Some(List(
@@ -469,7 +486,9 @@ object ResponsiblePeopleSection {
       Some(ExperienceTrainingNo),
       Some(TrainingYes("TrainingDetails")),
       Some(false),
-      Some(333333)),
+      hasAlreadyPassedApprovalCheck = None,
+      Some(333333)
+    ),
 
     ResponsiblePeople(
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
@@ -488,6 +507,7 @@ object ResponsiblePeopleSection {
       Some(ExperienceTrainingYes("bbbbbbbbbb")),
       Some(TrainingNo),
       Some(true),
+      hasAlreadyPassedApprovalCheck = None,
       Some(222222)
     )))
 }
