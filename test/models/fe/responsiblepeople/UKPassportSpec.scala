@@ -63,7 +63,7 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
         ))
     }
 
-    "convert from ResponsiblePersons to UKPassport" in {
+    "convert from ResponsiblePersons to UKPassport- passportHeld true" in {
 
       val desModel = ResponsiblePersons(
         None,
@@ -76,7 +76,7 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
                   "",
                   true,
                   Some(
-                    PassportDetail(true, PassportNum(Some("87654321")))
+                    PassportDetail(ukPassport = true, PassportNum(Some("87654321")))
                   )
                 ))
             )), None, None
@@ -86,6 +86,30 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
       )
 
       UKPassport.conv(desModel) must be(Some(UKPassportYes("87654321")))
+
+    }
+
+    "convert from ResponsiblePersons to UKPassport- passportHeld false" in {
+
+      val desModel = ResponsiblePersons(
+        None,
+        Some(
+          NationalityDetails(
+            false,
+            Some(IdDetail(
+              nonUkResident = Some(
+                NonUkResident(
+                  "",
+                  false,
+                  None
+                ))
+            )), None, None
+          )
+        ),
+        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+      )
+
+      UKPassport.conv(desModel) must be(Some(UKPassportNo))
 
     }
   }
