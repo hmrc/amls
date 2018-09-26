@@ -49,11 +49,11 @@ object UKPassport {
       passport <- non.passportDetails
     } yield passport
 
-    val thing: UKPassport = passportDetail.map(passport => {
+    val ukPassport: UKPassport = passportDetail.map(passport => {
       UKPassportYes(passport.passportNumber.ukPassportNumber.getOrElse(""))
     }).getOrElse(UKPassportNo)
 
-    Some(thing)
+    Some(ukPassport)
   }
 
 }
