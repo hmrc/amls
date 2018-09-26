@@ -47,13 +47,12 @@ object NonUKPassport {
       non <- id.nonUkResident
       passport <- non.passportDetails
     } yield passport
-    val thing2: NonUKPassport = if (passportDetail.isDefined) {
-      NonUKPassportYes(passportDetail.get.passportNumber.nonUkPassportNumber.getOrElse(""))
-    } else {
-      NoPassport
-    }
 
-    Some(thing2)
+    val thing: NonUKPassport = passportDetail.map(passport => {
+      NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse(""))
+    }).getOrElse(NoPassport)
+
+    Some(thing)
   }
 
 }

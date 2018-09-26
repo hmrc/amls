@@ -49,13 +49,11 @@ object UKPassport {
       passport <- non.passportDetails
     } yield passport
 
-    val thing2: UKPassport = if (passportDetail.isDefined) {
-      UKPassportYes(passportDetail.get.passportNumber.ukPassportNumber.getOrElse(""))
-    } else {
-      UKPassportNo
-    }
+    val thing: UKPassport = passportDetail.map(passport => {
+      UKPassportYes(passport.passportNumber.ukPassportNumber.getOrElse(""))
+    }).getOrElse(UKPassportNo)
 
-    Some(thing2)
+    Some(thing)
   }
 
 }
