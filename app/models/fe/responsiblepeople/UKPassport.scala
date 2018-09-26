@@ -42,15 +42,15 @@ object UKPassport {
   }
 
   implicit def conv(responsiblePersons: ResponsiblePersons): Option[UKPassport] = {
-    val blah: Option[PassportDetail] = for {
+    val passportDetail: Option[PassportDetail] = for {
       nd <- responsiblePersons.nationalityDetails
       id <- nd.idDetails
       non <- id.nonUkResident
       passport <- non.passportDetails
     } yield passport
 
-    val thing2: UKPassport = if (blah.isDefined) {
-      UKPassportYes(blah.get.passportNumber.ukPassportNumber.getOrElse(""))
+    val thing2: UKPassport = if (passportDetail.isDefined) {
+      UKPassportYes(passportDetail.get.passportNumber.ukPassportNumber.getOrElse(""))
     } else {
       UKPassportNo
     }
