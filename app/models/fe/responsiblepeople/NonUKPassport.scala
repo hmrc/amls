@@ -41,19 +41,20 @@ object NonUKPassport {
   }
 
   implicit def conv(responsiblePersons: ResponsiblePersons): Option[NonUKPassport] = {
-    for {
+    val passportDetail: Option[PassportDetail] = for {
       nd <- responsiblePersons.nationalityDetails
       id <- nd.idDetails
       non <- id.nonUkResident
-      nonUKPassport <- non.passportDetails flatMap { passport =>
-        if(!passport.ukPassport) {
-          Some(NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse("")))
-        } else {
-          None
-        }
+      passport <- non.passportDetails
+    } yield passport
+
+    val nonUkPassport: NonUKPassport = passportDetail.map(passport => {
+      passport.passportNumber.nonUkPassportNumber match {
+        case Some(number) => NonUKPassportYes(number)
+        case _ => NoPassport
       }
-    } yield nonUKPassport
+    }).getOrElse(NoPassport)
 
+    Some(nonUkPassport)
   }
-
 }
