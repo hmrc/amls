@@ -49,7 +49,8 @@ object NonUKPassport {
     } yield passport
 
     val nonUkPassport: NonUKPassport = passportDetail.map(passport => {
-      NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse(""))
+      passport.passportNumber.nonUkPassportNumber.map(passportNumber =>
+        NonUKPassportYes(passportNumber)).getOrElse(NoPassport)
     }).getOrElse(NoPassport)
 
     Some(nonUkPassport)

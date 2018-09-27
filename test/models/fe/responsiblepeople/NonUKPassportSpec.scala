@@ -63,55 +63,94 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
         ))
     }
 
-    "convert from ResponsiblePersons to NonUKPassport- passportHeld true" in {
+    "convert from ResponsiblePersons to NonUKPassport - when field passportHeld is true" in {
 
       val desModel = ResponsiblePersons(
-        None,
-        Some(
+        nameDetails = None,
+        nationalityDetails = Some(
           NationalityDetails(
             false,
             Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  "",
-                  true,
-                  Some(
+                  dateOfBirth = "",
+                  passportHeld = true,
+                  passportDetails = Some(
                     PassportDetail(false, PassportNum(
                       nonUkPassportNumber = Some("87654321")
                     ))
                   )
                 ))
-            )), None, None
+            )),
+            countryOfBirth = None,
+            nationality = None
           )
         ),
-        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+        contactCommDetails = None,
+        currentAddressDetails = None,
+        timeAtCurrentAddress = None,
+        addressUnderThreeYears = None,
+        timeAtAddressUnderThreeYears = None,
+        addressUnderOneYear = None,
+        timeAtAddressUnderOneYear = None,
+        positionInBusiness = None,
+        regDetails = None,
+        previousExperience = false,
+        descOfPrevExperience = None,
+        amlAndCounterTerrFinTraining = false,
+        trainingDetails = None,
+        startDate = None,
+        dateChangeFlag = None,
+        msbOrTcsp = None,
+        extra = RPExtra()
       )
 
-      NonUKPassport.conv(desModel) must be(Some(NonUKPassportYes("87654321")))
+      val expectedPassport = Some(NonUKPassportYes("87654321"))
+
+      NonUKPassport.conv(desModel) must be(expectedPassport)
 
     }
 
-    "convert from ResponsiblePersons to NonUKPassport- passportHeld false" in {
+    "convert from ResponsiblePersons to NonUKPassport - when field passportHeld false" in {
 
       val desModel = ResponsiblePersons(
-        None,
-        Some(
+        nameDetails = None,
+        nationalityDetails = Some(
           NationalityDetails(
-            false,
-            Some(IdDetail(
+            areYouUkResident = false,
+            idDetails = Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  "",
-                  false,
-                  None
+                  dateOfBirth = "",
+                  passportHeld = false,
+                  passportDetails = None
                 ))
-            )), None, None
+            )),
+            countryOfBirth = None,
+            nationality = None
           )
         ),
-        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+        contactCommDetails = None,
+        currentAddressDetails = None,
+        timeAtCurrentAddress = None,
+        addressUnderThreeYears = None,
+        timeAtAddressUnderThreeYears = None,
+        addressUnderOneYear = None,
+        timeAtAddressUnderOneYear = None,
+        positionInBusiness = None,
+        regDetails = None,
+        previousExperience = false,
+        descOfPrevExperience = None,
+        amlAndCounterTerrFinTraining = false,
+        trainingDetails = None,
+        startDate = None,
+        dateChangeFlag = None,
+        msbOrTcsp = None,
+        extra = RPExtra()
       )
 
-      NonUKPassport.conv(desModel) must be(Some(NoPassport))
+      val expectedPassport = Some(NoPassport)
+      NonUKPassport.conv(desModel) must be(expectedPassport)
 
     }
   }
