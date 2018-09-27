@@ -50,7 +50,8 @@ object UKPassport {
     } yield passport
 
     val ukPassport: UKPassport = passportDetail.map(passport => {
-      UKPassportYes(passport.passportNumber.ukPassportNumber.getOrElse(""))
+      passport.passportNumber.ukPassportNumber.map(passportNumber =>
+        UKPassportYes(passportNumber)).getOrElse(UKPassportNo)
     }).getOrElse(UKPassportNo)
 
     Some(ukPassport)
