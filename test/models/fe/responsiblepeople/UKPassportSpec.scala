@@ -66,23 +66,41 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
     "convert from ResponsiblePersons to UKPassport- when field passportDetails is Some with passport number Some" in {
 
       val desModel = ResponsiblePersons(
-        None,
-        Some(
+        nameDetails = None,
+        nationalityDetails = Some(
           NationalityDetails(
-            false,
-            Some(IdDetail(
+            areYouUkResident = false,
+            idDetails = Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  "",
-                  true,
-                  Some(
+                  dateOfBirth = "",
+                  passportHeld = true,
+                  passportDetails = Some(
                     PassportDetail(ukPassport = true, PassportNum(Some("87654321")))
                   )
                 ))
-            )), None, None
+            )),
+            countryOfBirth = None,
+            nationality = None
           )
         ),
-        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+        contactCommDetails = None,
+        currentAddressDetails = None,
+        timeAtCurrentAddress = None,
+        addressUnderThreeYears = None,
+        timeAtAddressUnderThreeYears = None,
+        addressUnderOneYear = None,
+        timeAtAddressUnderOneYear = None,
+        positionInBusiness = None,
+        regDetails = None,
+        previousExperience = false,
+        descOfPrevExperience = None,
+        amlAndCounterTerrFinTraining = false,
+        trainingDetails = None,
+        startDate = None,
+        dateChangeFlag = None,
+        msbOrTcsp = None,
+        extra = RPExtra()
       )
 
       UKPassport.conv(desModel) must be(Some(UKPassportYes("87654321")))
