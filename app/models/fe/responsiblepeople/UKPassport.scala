@@ -56,7 +56,11 @@ object UKPassport {
       }
     }).getOrElse(UKPassportNo)
 
-    Some(ukPassport)
+    if (responsiblePersons.nationalityDetails.exists(a => a.areYouUkResident)) {
+      None
+    } else {
+      Some(ukPassport)
+    }
   }
 
 }

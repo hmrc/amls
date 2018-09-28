@@ -54,7 +54,11 @@ object NonUKPassport {
         case _ => NoPassport
       }
     }).getOrElse(NoPassport)
-
-    Some(nonUkPassport)
+    
+    if (responsiblePersons.nationalityDetails.exists(a => a.areYouUkResident)) {
+      None
+    } else {
+      Some(nonUkPassport)
+    }
   }
 }
