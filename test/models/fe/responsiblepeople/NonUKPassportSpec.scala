@@ -200,6 +200,48 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
       NonUKPassport.conv(desModel) must be(expectedPassport)
 
     }
+
+    "convert from ResponsiblePersons to NonUKPassport - when uk resident" in {
+
+      val desModel = ResponsiblePersons(
+        nameDetails = None,
+        nationalityDetails = Some(
+          NationalityDetails(
+            areYouUkResident = true,
+            idDetails = Some(IdDetail(
+              nonUkResident = Some(
+                NonUkResident(
+                  dateOfBirth = "",
+                  passportHeld = false,
+                  passportDetails = None
+                ))
+            )),
+            countryOfBirth = None,
+            nationality = None
+          )
+        ),
+        contactCommDetails = None,
+        currentAddressDetails = None,
+        timeAtCurrentAddress = None,
+        addressUnderThreeYears = None,
+        timeAtAddressUnderThreeYears = None,
+        addressUnderOneYear = None,
+        timeAtAddressUnderOneYear = None,
+        positionInBusiness = None,
+        regDetails = None,
+        previousExperience = false,
+        descOfPrevExperience = None,
+        amlAndCounterTerrFinTraining = false,
+        trainingDetails = None,
+        startDate = None,
+        dateChangeFlag = None,
+        msbOrTcsp = None,
+        extra = RPExtra()
+      )
+      
+      NonUKPassport.conv(desModel) must be(None)
+
+    }
   }
 
 }
