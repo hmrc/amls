@@ -45,7 +45,10 @@ object SubscriptionResponse {
         desResponse.fpFeeRate,
         desResponse.premiseFee,
         desResponse.premiseFeeRate,
-        desResponse.totalFees)
+        desResponse.totalFees,
+        desResponse.approvalNumbers,
+        desResponse.approvalFeeRate,
+        desResponse.approvalCheckFee)
       )
     )
   }
