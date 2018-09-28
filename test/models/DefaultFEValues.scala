@@ -496,8 +496,8 @@ object ResponsiblePeopleSection {
       Some(new LocalDate(1967, 8, 13)),
       Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      ukPassport = Some(UKPassportNo),
-      nonUKPassport = Some(NoPassport),
+      ukPassport = None,
+      nonUKPassport = None,
       dateOfBirth = None,
       contactDetails = None,
       addressHistory = Some(ResponsiblePersonAddressHistory(

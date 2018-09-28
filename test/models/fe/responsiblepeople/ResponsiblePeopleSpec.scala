@@ -42,9 +42,7 @@ class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with Responsibl
     }
 
     "convert des model to frontend model" in {
-      val blha = ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp))
-      val thsdfs = DefaultValues.convertedModel
-      blha must be(thsdfs)
+      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModel)
     }
   }
 }
@@ -131,8 +129,8 @@ trait ResponsiblePeopleValues {
         legalNameChangeDate = Some(new LocalDate(1967, 8, 13)),
         knownBy = Some(KnownBy(true, Some("bbbbbbbbbbb"))),
         personResidenceType = Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        ukPassport = Some(UKPassportNo),
-        nonUKPassport = Some(NoPassport),
+        ukPassport = None,
+        nonUKPassport = None,
         dateOfBirth = None,
         contactDetails = None,
         addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
