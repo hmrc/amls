@@ -470,7 +470,7 @@ object ResponsiblePeopleSection {
       Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
-      None,
+      Some(NoPassport),
       Some(DateOfBirth(new LocalDate(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
@@ -496,19 +496,22 @@ object ResponsiblePeopleSection {
       Some(new LocalDate(1967, 8, 13)),
       Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      None, None, None, None,
-      Some(ResponsiblePersonAddressHistory(
+      ukPassport = None,
+      nonUKPassport = None,
+      dateOfBirth = None,
+      contactDetails = None,
+      addressHistory = Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
-      Some(SaRegisteredYes("1111111111")),
-      Some(VATRegisteredYes("111111111")),
-      Some(ExperienceTrainingYes("bbbbbbbbbb")),
-      Some(TrainingNo),
-      Some(true),
+      positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      saRegistered = Some(SaRegisteredYes("1111111111")),
+      vatRegistered = Some(VATRegisteredYes("111111111")),
+      experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
+      training = Some(TrainingNo),
+      hasAlreadyPassedFitAndProper = Some(true),
       hasAlreadyPassedApprovalCheck = None,
-      Some(222222)
+      lineId = Some(222222)
     )))
 }
 
