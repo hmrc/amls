@@ -184,6 +184,7 @@ class SubscriptionService @Inject()(
       }
     }
 
+    //TODO:
     feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
       case Some(fees) => SubscriptionResponse("",
         amlsRegNo,
