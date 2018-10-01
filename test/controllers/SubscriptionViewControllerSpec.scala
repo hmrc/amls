@@ -46,7 +46,12 @@ class SubscriptionViewControllerSpec
     with OneAppPerSuite
     with AmlsReferenceNumberGenerator{
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+        "microservice.services.feature-toggle.release7" -> false,
+        "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   object SubscriptionViewController extends SubscriptionViewController {
     override val connector = mock[ViewDESConnector]
@@ -124,7 +129,12 @@ class SubscriptionViewControllerSpecRelease7
     with IterateeHelpers
     with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   object SubscriptionViewController extends SubscriptionViewController {
     override val connector = mock[ViewDESConnector]
