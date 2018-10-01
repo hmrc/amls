@@ -34,7 +34,7 @@ object DateOfBirth {
     } yield id
 
     /**
-      * TODO: This code isn't correct as if the non-uk resident does not have a date of birth, and for some reason it precviously have a uk one, then it will default back to the
+      * TODO: This code isn't correct as if the non-uk resident does not have a date of birth, and for some reason it previously have a uk one, then it will default back to the
       * new one, we will need to write a new test for this.
       */
 
