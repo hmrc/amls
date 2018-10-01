@@ -178,7 +178,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
 
           val subscriptionResponse = SubscriptionResponse(
-            "", amlsRegistrationNumber, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000)), previouslySubmitted = true
+            "", amlsRegistrationNumber, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000,
+                 Some(10), Some(BigDecimal(20)), Some(BigDecimal(30)))), previouslySubmitted = true
           )
 
           when {
@@ -207,7 +208,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           when{
             connector.feeResponseRepository.findLatestByAmlsReference(any())
-          } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000, Some("PaymentRef"), None, Some(100), Some(100.0), Some(100.0), new DateTime())))
+          } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000,
+            Some("PaymentRef"), None, Some(10), Some(BigDecimal(20)), Some(BigDecimal(30)), new DateTime())))
 
           when(request.responsiblePersons).thenReturn(None)
           when(request.tradingPremises).thenReturn(mock[TradingPremises])
