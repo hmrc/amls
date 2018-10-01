@@ -184,7 +184,6 @@ class SubscriptionService @Inject()(
       }
     }
 
-    //TODO:
     feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
       case Some(fees) => SubscriptionResponse("",
         amlsRegNo,
@@ -192,7 +191,7 @@ class SubscriptionService @Inject()(
         responsiblePersonsPassedFitAndProperCount,
         tradingPremisesCount,
         Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)), previouslySubmitted = true)
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalNumbers, fees.approvalFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
 
       case None => SubscriptionResponse("",
         amlsRegNo,

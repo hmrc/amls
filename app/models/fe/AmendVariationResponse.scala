@@ -75,7 +75,6 @@ object AmendVariationResponse {
       des.premiseHYNumber.getOrElse(0) + des.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
     }
 
-    //TODO:
     AmendVariationResponse(
       processingDate = des.processingDate,
       etmpFormBundleNumber = des.etmpFormBundleNumber,
