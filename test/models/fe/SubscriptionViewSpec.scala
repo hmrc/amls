@@ -28,7 +28,12 @@ import play.api.test.FakeApplication
 
 class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> false,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {
@@ -100,7 +105,12 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
 
 class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None){
     x => x.agentDetails match {

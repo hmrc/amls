@@ -29,7 +29,12 @@ import utils.AckRefGenerator
 
 class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> false,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
@@ -232,7 +237,12 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
 class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite {
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+  override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
