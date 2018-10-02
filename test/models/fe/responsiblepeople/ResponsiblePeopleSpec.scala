@@ -98,6 +98,9 @@ trait ResponsiblePeopleValues {
     val experienceTraining = ExperienceTrainingYes("Some training")
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
     val ukPassport = UKPassportYes("87654321")
+    val approvalFlags = ApprovalFlags(Some(false), Some(true))
+
+
 
     val convertedModel: Option[List[ResponsiblePeople]] = Some(List(
       ResponsiblePeople(
@@ -149,11 +152,11 @@ trait ResponsiblePeopleValues {
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
       responsiblePersonSeq => List(
         responsiblePersonSeq(0).copy(
-          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
+          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
         ),
         responsiblePersonSeq(1).copy(
           dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
+          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false))
         ))
     }
 
@@ -181,6 +184,7 @@ trait ResponsiblePeopleValues {
     val positions = Positions(Set(Director, SoleProprietor), Some(new LocalDate()))
     val experienceTraining = ExperienceTrainingNo
     val training = TrainingNo
+
   }
 
   val CompleteResponsiblePeople = ResponsiblePeople(
@@ -198,7 +202,8 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.saRegistered),
     Some(DefaultValues.vatRegistered),
     Some(DefaultValues.experienceTraining),
-    Some(DefaultValues.training)
+    Some(DefaultValues.training),
+    DefaultValues.approvalFlags
   )
 
   val CompleteJson = Json.obj(
@@ -228,6 +233,10 @@ trait ResponsiblePeopleValues {
     ),
     "dateOfBirth" -> Json.obj(
       "dateOfBirth" -> "2001-01-01"
+    ),
+    "approvalFlags"  -> Json.obj(
+      "hasAlreadyPassedFitAndProper" -> false,
+      "hasAlreadyPaidApprovalCheck" -> true
     ),
     "contactDetails" -> Json.obj(
       "phoneNumber" -> "07000001122",
