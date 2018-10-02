@@ -32,7 +32,12 @@ import utils.AckRefGenerator
 
 class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> false,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
@@ -610,7 +615,12 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
 
 class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.feature-toggle.phase-2-changes" -> false
+    )
+  )
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
