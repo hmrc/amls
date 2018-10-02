@@ -149,11 +149,11 @@ trait ResponsiblePeopleValues {
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
       responsiblePersonSeq => List(
         responsiblePersonSeq(0).copy(
-          hasAlreadyPassedApprovalCheck = Some(true)
+          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
         ),
         responsiblePersonSeq(1).copy(
           dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-          hasAlreadyPassedApprovalCheck = Some(false)
+          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
         ))
     }
 

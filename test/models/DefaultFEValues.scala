@@ -459,7 +459,7 @@ object ResponsiblePeopleSection {
     vatRegistered                 = Some(vatRegistered),
     experienceTraining            = Some(experienceTraining),
     training                      = Some(training),
-    hasAlreadyPassedFitAndProper  = Some(true)
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(true), hasAlreadyPaidApprovalCheck = Some(true))
   )))
 
   val modelForView = Some(List(
@@ -485,8 +485,7 @@ object ResponsiblePeopleSection {
       Some(VATRegisteredYes("123456789")),
       Some(ExperienceTrainingNo),
       Some(TrainingYes("TrainingDetails")),
-      Some(false),
-      hasAlreadyPassedApprovalCheck = None,
+      ApprovalFlags(Some(false), hasAlreadyPaidApprovalCheck = None),
       Some(333333)
     ),
 
