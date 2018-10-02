@@ -134,19 +134,19 @@ object ResponsiblePersons {
     val msbOrTcsp: Option[MsbOrTcsp] = if (AmlsConfig.phase2Changes) {
       None
     } else {
-      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
+      rp.approvalFlags.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
     }
 
     val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
       // TODO: When toggle is removed then this can be made non optional
-      rp.hasAlreadyPassedFitAndProper orElse Some(false)
+      rp.approvalFlags.hasAlreadyPassedFitAndProper orElse Some(false)
     } else {
       None
     }
 
     val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
       // TODO: When toggle is removed then this can be made non optional
-      rp.hasAlreadyPassedApprovalCheck orElse Some(false)
+      rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
     } else {
       None
     }

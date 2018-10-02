@@ -86,9 +86,9 @@ object SubscriptionView {
 
         case Some(rpSeq) =>
           Some(rpSeq.map {
-            rp => rp.hasAlreadyPassedFitAndProper match {
+            rp => rp.approvalFlags.hasAlreadyPassedFitAndProper match {
               case Some(a) => rp
-              case None => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+              case None => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
             }
           })
       })

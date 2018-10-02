@@ -118,8 +118,7 @@ trait ResponsiblePeopleValues {
         Some(VATRegisteredYes("123456789")),
         Some(ExperienceTrainingNo),
         Some(TrainingYes("TrainingDetails")),
-        Some(false),
-        None,
+        ApprovalFlags(Some(false), None),
         Some(333333)
       ),
 
@@ -141,19 +140,18 @@ trait ResponsiblePeopleValues {
         Some(VATRegisteredYes("111111111")),
         Some(ExperienceTrainingYes("bbbbbbbbbb")),
         Some(TrainingNo),
-        Some(true),
-        None,
+        ApprovalFlags(Some(true), None),
         Some(222222)
       )))
 
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
       responsiblePersonSeq => List(
         responsiblePersonSeq(0).copy(
-          hasAlreadyPassedApprovalCheck = Some(true)
+          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
         ),
         responsiblePersonSeq(1).copy(
           dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-          hasAlreadyPassedApprovalCheck = Some(false)
+          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPaidApprovalCheck = Some(true))
         ))
     }
 

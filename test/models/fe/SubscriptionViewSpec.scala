@@ -36,7 +36,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
   )
 
   "SubscriptionView" must {
-    "deserialise the subscription json" when {
+    "deserialise the subscription json if phase 2 toggle is off" when {
       "given valid json" in {
 
         val json = Json.toJson(GetSuccessModel)
@@ -61,7 +61,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
           responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
             case None => None
             case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
             })
           }
         ))
@@ -77,7 +77,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
           responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
             case None => None
             case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
             })
           }
         ,businessMatchingSection = SubscriptionViewModel.convertedViewModel.businessMatchingSection.copy(activities = BusinessActivities(Set(MoneyServiceBusiness)))))
@@ -134,7 +134,7 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
     ))))
 
   "SubscriptionView" must {
-    "deserialise the subscription json" when {
+    "deserialise the subscription json when phase 2 toggle is off" when {
       "given valid json" in {
 
         val json = Json.toJson(GetSuccessModel)
@@ -159,7 +159,7 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
           responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
             case None => None
             case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
             })
           }
         ))
@@ -178,7 +178,7 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
             responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
               case None => None
               case Some(rpSeq) => Some(rpSeq.map {
-                rp => rp.copy(hasAlreadyPassedFitAndProper = Some(false))
+                rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
               })
             }
             ,businessMatchingSection = SubscriptionViewModel.convertedViewModel.businessMatchingSection.copy(
