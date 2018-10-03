@@ -132,13 +132,13 @@ class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite{
 
       "convert des model correctly to include fit and proper answer" in {
 
-        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
           rp => rp.copy(msbOrTcsp = None)
         }))) must be(SubscriptionViewModel.convertedViewModelPhase2.copy(
           responsiblePeopleSection = SubscriptionViewModel.convertedViewModelPhase2.responsiblePeopleSection match {
             case None => None
             case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
+              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true)))
             })
           }
         ))
@@ -146,7 +146,7 @@ class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite{
 
       "convert des model correctly to include fit and proper answer when only msb" in {
 
-        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
           rp => rp.copy(msbOrTcsp = None)
         }), businessActivities = DesConstants.testBusinessActivities.copy(
           mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false))))) must be(
@@ -154,7 +154,7 @@ class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite{
             responsiblePeopleSection = SubscriptionViewModel.convertedViewModelPhase2.responsiblePeopleSection match {
               case None => None
               case Some(rpSeq) => Some(rpSeq.map {
-                rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
+                rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true)))
               })
             }
             ,businessMatchingSection = SubscriptionViewModel.convertedViewModelPhase2.businessMatchingSection.copy(activities = BusinessActivities(Set(MoneyServiceBusiness)))))
@@ -272,7 +272,7 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
     tradingPremisesSection = TradingPremisesSection.model,
     bankDetailsSection = BankDetailsSection.model,
     aboutYouSection = AboutYouSection.model,
-    businessActivitiesSection = BusinessActivitiesSection.model,
+    businessActivitiesSection = BusinessActivitiesSection.m1odel,
     responsiblePeopleSection = ResponsiblePeopleSection.model,
     tcspSection = ASPTCSPSection.TcspSection,
     aspSection = ASPTCSPSection.AspSection,
@@ -333,7 +333,7 @@ class SubscriptionViewSpecRelease7Phase2 extends PlaySpec with OneAppPerSuite {
 
       "convert des model correctly to include fit and proper answer" in {
 
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
           rp => rp.copy(msbOrTcsp = None)
         }))) must be(SubscriptionViewModel.convertedViewModelPhase2.copy(
           responsiblePeopleSection = SubscriptionViewModel.convertedViewModelPhase2.responsiblePeopleSection match {
@@ -347,7 +347,7 @@ class SubscriptionViewSpecRelease7Phase2 extends PlaySpec with OneAppPerSuite {
 
       "convert des model correctly to include fit and proper answer when only msb" in {
 
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
+        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
           rp => rp.copy(msbOrTcsp = None)
         }), businessActivities = DesConstants.testBusinessActivities.copy(
           mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false)),

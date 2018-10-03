@@ -534,7 +534,7 @@ object ResponsiblePeopleSection {
       Some(VATRegisteredYes("123456789")),
       Some(ExperienceTrainingNo),
       Some(TrainingYes("TrainingDetails")),
-      ApprovalFlags(Some(false), hasAlreadyPaidApprovalCheck = None),
+      ApprovalFlags(Some(false), hasAlreadyPaidApprovalCheck = Some(true)),
       Some(333333)
     ),
 
@@ -556,7 +556,7 @@ object ResponsiblePeopleSection {
       Some(VATRegisteredYes("111111111")),
       Some(ExperienceTrainingYes("bbbbbbbbbb")),
       Some(TrainingNo),
-      ApprovalFlags(Some(true), hasAlreadyPaidApprovalCheck = None),
+      ApprovalFlags(Some(true), hasAlreadyPaidApprovalCheck = Some(false)),
       Some(222222)
     )))
 }
