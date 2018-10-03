@@ -1823,17 +1823,125 @@ object DesConstants {
   )
 
   val testResponsiblePersonsForRpPhase2 = Seq(
-    testResponsiblePersonsForRp(0).copy(
-      msbOrTcsp = None,
+    ResponsiblePersons(
+      Some(NameDetails(
+        PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
+        Some(OthrNamesOrAliasesDetails(
+          true,
+          Some(List("Aliases1"))
+        )),
+        Some(PreviousNameDetails(
+          true,
+          Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+          Some("2001-01-01")
+        ))
+      )),
+      Some(NationalityDetails(
+        false,
+        Some(IdDetail(
+          None,
+          Some(NonUkResident(
+            "2001-01-01",
+            true,
+            Some(PassportDetail(
+              true,
+              PassportNum(Some("AA1111111"), None)
+            ))
+          ))
+        )),
+        Some("AA"),
+        Some("AA")
+      )),
+      None,
+      Some(CurrentAddress(
+        AddressWithChangeDate(
+          "CurrentAddressLine1",
+          "CurrentAddressLine2",
+          Some("CurrentAddressLine3"),
+          Some("CurrentAddressLine4"),
+          "GB",
+          Some("AA1 1AA")
+        )
+      )),
+      Some("3+ years"),
+      None,
+      None,
+      None,
+      None,
+      Some(PositionInBusiness(
+        Some(SoleProprietor(true, true)),
+        None,
+        None
+      )),
+      Some(RegDetails(
+        true,
+        Some("123456789"),
+        true,
+        Some("1234567890")
+      )),
+      false,
+      None,
+      true,
+      Some("TrainingDetails"),
+      Some(today),
+      None,
+      Some(MsbOrTcsp(false)),
       passedFitAndProperTest = Some(false),
-      passedApprovalCheck = Some(true)
+      passedApprovalCheck = None,
+      extra = RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
     ),
-    testResponsiblePersonsForRp(1).copy(
-      msbOrTcsp = None,
+    ResponsiblePersons(
+      Some(NameDetails(
+        PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
+        Some(OthrNamesOrAliasesDetails(
+          true,
+          Some(List("bbbbbbbbbbb"))
+        )),
+        Some(PreviousNameDetails(
+          true,
+          Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+          Some("1967-08-13")
+        ))
+      )),
+      Some(NationalityDetails(
+        true,
+        Some(IdDetail(
+          Some(UkResident("BB000000A")),
+          None,
+          dateOfBirth = Some("2001-01-01")
+        )),
+        Some("GB"),
+        Some("GB")
+      )),
+      None,
+      Some(CurrentAddress(
+        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+      )),
+      Some("0-6 months"),
+      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some("0-6 months"),
+      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some("7-12 months"),
+      Some(PositionInBusiness(
+        Some(SoleProprietor(true, true)),
+        None,
+        None
+      )),
+      Some(RegDetails(true, Some("111111111"), true, Some("1111111111"))
+      ),
+      true,
+      Some("bbbbbbbbbb"),
+      false,
+      None,
+      Some(today),
+      None,
+      Some(MsbOrTcsp(true)),
       passedFitAndProperTest = Some(true),
-      passedApprovalCheck = Some(false)
+      passedApprovalCheck = None,
+      extra = RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
     )
   )
+
 
   val testResponsiblePersonsForRpAPI6 = Seq(
     ResponsiblePersons(
@@ -2171,6 +2279,29 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRp),
+    DesConstants.extraFields
+  )
+
+
+  val SubscriptionViewModelForRpPhase2 = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivities,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersonsForRpPhase2),
     DesConstants.extraFields
   )
 
