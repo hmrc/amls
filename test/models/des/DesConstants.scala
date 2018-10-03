@@ -1887,7 +1887,7 @@ object DesConstants {
       None,
       Some(MsbOrTcsp(false)),
       passedFitAndProperTest = Some(false),
-      passedApprovalCheck = None,
+      passedApprovalCheck = Some(true),
       extra = RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
     ),
     ResponsiblePersons(
@@ -1937,7 +1937,7 @@ object DesConstants {
       None,
       Some(MsbOrTcsp(true)),
       passedFitAndProperTest = Some(true),
-      passedApprovalCheck = None,
+      passedApprovalCheck = Some(false),
       extra = RPExtra(Some(StringOrInt(222222)), None, None, None, None, None)
     )
   )
