@@ -44,7 +44,6 @@ trait SubscriptionViewController extends BaseController {
   def view(accountType: String, ref: String, amlsRegistrationNumber: String) =
     Action.async {
       implicit request =>
-        println("phase 2 changes - " + AmlsConfig.phase2Changes)
         Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
           case Some(_) =>
