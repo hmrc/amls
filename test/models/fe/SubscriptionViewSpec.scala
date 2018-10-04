@@ -131,9 +131,7 @@ class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite{
       }
 
       "convert des model correctly to include fit and proper answer" in {
-        var view = DesConstants.SubscriptionViewModelForRpPhase2
-        val toBeView = SubscriptionViewModel.convertedViewModelPhase2
-         SubscriptionView.convert(view) must be(toBeView)
+         SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2) must be(SubscriptionViewModel.convertedViewModelPhase2)
       }
     }
   }
@@ -290,55 +288,18 @@ class SubscriptionViewSpecRelease7Phase2 extends PlaySpec with OneAppPerSuite {
       ))))
 
   "SubscriptionView" must {
-    "deserialise the subscription json when phase 2 toggle is off" when {
+    "deserialise the subscription json when phase 2 toggle is on" when {
       "given valid json" in {
 
         val json = Json.toJson(GetSuccessModel)
 
         val subscriptionViewModel = GetSuccessModel
-
         json.as[SubscriptionView] must be(subscriptionViewModel)
-
         Json.toJson(GetSuccessModel) must be(json)
       }
 
       "convert des model to frontend model" in {
-
         SubscriptionView.convert(release7SubscriptionViewModel) must be(SubscriptionViewModel.convertedViewModelPhase2)
-      }
-
-      "convert des model correctly to include fit and proper answer" in {
-
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }))) must be(SubscriptionViewModel.convertedViewModelPhase2.copy(
-          responsiblePeopleSection = SubscriptionViewModel.convertedViewModelPhase2.responsiblePeopleSection match {
-            case None => None
-            case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-            })
-          }
-        ))
-      }
-
-      "convert des model correctly to include fit and proper answer when only msb" in {
-
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRpPhase2.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }), businessActivities = DesConstants.testBusinessActivities.copy(
-          mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false)),
-          all = Some(DesConstants.testBusinessActivitiesAll.copy(
-            businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-          )) ))) must be(
-          SubscriptionViewModel.convertedViewModelPhase2.copy(
-            responsiblePeopleSection = SubscriptionViewModel.convertedViewModelPhase2.responsiblePeopleSection match {
-              case None => None
-              case Some(rpSeq) => Some(rpSeq.map {
-                rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-              })
-            }
-            ,businessMatchingSection = SubscriptionViewModel.convertedViewModelPhase2.businessMatchingSection.copy(
-              activities = BusinessActivities(Set(MoneyServiceBusiness)))))
       }
     }
   }
