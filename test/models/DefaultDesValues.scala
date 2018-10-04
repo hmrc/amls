@@ -29,6 +29,7 @@ import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => Des
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, _}
+import models.fe.responsiblepeople.ApprovalFlags
 import org.joda.time.LocalDate
 
 object DefaultDesValues {
@@ -135,6 +136,7 @@ object DefaultDesValues {
   private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
     Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
+  private val nationalDtlsPhase2 = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1970-01-01"))), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
   private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
   private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
@@ -170,6 +172,30 @@ object DefaultDesValues {
   )
   ))
 
+  val ResponsiblePersonsSectionPhase2 = Some(Seq(ResponsiblePersons(
+    nameDtls,
+    nationalDtlsPhase2,
+    contactDtls,
+    currentDesAddress,
+    Some("0-6 months"),
+    additionalDesAddress,
+    Some("7-12 months"),
+    extraAdditional,
+    Some("1-3 years"),
+    positionInBusiness,
+    regDtls,
+    true,
+    Some("Some training"),
+    true,
+    Some("test"),
+    Some((new LocalDate()).toString("yyyy-MM-dd")),
+    None,
+    None,
+    Some(false),
+    Some(true),
+    extra = RPExtra()
+  )
+  ))
   val ResponsiblePersonsSectionForRelease7 = Some(Seq(ResponsiblePersons(
     nameDtls,
     nationalDtls,

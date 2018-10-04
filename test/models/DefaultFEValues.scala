@@ -462,6 +462,25 @@ object ResponsiblePeopleSection {
     approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(true), hasAlreadyPaidApprovalCheck = Some(true))
   )))
 
+  val modelPhase2 = Some(Seq(ResponsiblePeople(
+    personName                    = Some(personName),
+    legalName                     = Some(previousName),
+    legalNameChangeDate           = Some(nameDateOfChange),
+    knownBy                       = otherNames,
+    personResidenceType           = Some(personResidenceType),
+    ukPassport                    = Some(ukPassport),
+    nonUKPassport                 = Some(nonUKPassport),
+    dateOfBirth                   = Some(DateOfBirth(new LocalDate(1970,1,1))),
+    contactDetails                = Some(contactDetails),
+    addressHistory                = Some(addressHistory),
+    positions                     = Some(positions),
+    saRegistered                  = Some(saRegistered),
+    vatRegistered                 = Some(vatRegistered),
+    experienceTraining            = Some(experienceTraining),
+    training                      = Some(training),
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
+  )))
+
   val modelForView = Some(List(
     ResponsiblePeople(
       Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
