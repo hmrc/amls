@@ -1885,7 +1885,7 @@ object DesConstants {
       Some("TrainingDetails"),
       Some(today),
       None,
-      Some(MsbOrTcsp(false)),
+      None,
       passedFitAndProperTest = Some(false),
       passedApprovalCheck = Some(true),
       extra = RPExtra(Some(StringOrInt(333333)), None, None, None, None, None)
