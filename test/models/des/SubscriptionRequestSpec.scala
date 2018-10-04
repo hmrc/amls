@@ -613,6 +613,71 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
 
 }
 
+class SubscriptionRequestSpecPhase2 extends PlaySpec with MockitoSugar with OneAppPerSuite {
+
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> false,
+      "microservice.services.feature-toggle.phase-2-changes" -> true
+    )
+  )
+
+  implicit val ackref = new AckRefGenerator {
+    override def ackRef: String = "1234"
+  }
+
+  "SubscriptionRequest" must {
+    "convert correctly" in {
+
+      val desSubscriptionReq =
+        des.SubscriptionRequest(
+          acknowledgementReference = ackref.ackRef,
+          businessDetails = DefaultDesValues.BusinessCustomerDetails,
+          businessActivities = DefaultDesValues.BusinessActivitiesSection,
+          eabAll = DefaultDesValues.EabAllDetails,
+          eabResdEstAgncy = DefaultDesValues.EabResd,
+          businessContactDetails = DefaultDesValues.AboutTheBusinessSection,
+          businessReferencesAll = DefaultDesValues.PrevRegMLR,
+          businessReferencesAllButSp = DefaultDesValues.VatALlBuySp,
+          businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
+          tradingPremises = DefaultDesValues.TradingPremisesSection,
+          bankAccountDetails = DefaultDesValues.bankDetailsSection,
+          msb = DefaultDesValues.msbSectionR6,
+          hvd = DefaultDesValues.hvdSection,
+          filingIndividual = DefaultDesValues.filingIndividual,
+          tcspAll = DefaultDesValues.tcspAllSection,
+          tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
+          responsiblePersons = DefaultDesValues.ResponsiblePersonsSectionPhase2,
+          asp = DefaultDesValues.AspSection,
+          aspOrTcsp = DefaultDesValues.AspOrTcspSection,
+          declaration = Declaration(true)
+        )
+
+      val feSubscriptionReq = {
+        import models.fe.SubscriptionRequest
+        SubscriptionRequest(
+          businessMatchingSection = BusinessMatchingSection.model,
+          eabSection = EabSection.model,
+          aboutTheBusinessSection = AboutTheBusinessSection.model,
+          tradingPremisesSection = TradingPremisesSection.model,
+          bankDetailsSection = BankDetailsSection.model,
+          aboutYouSection = AboutYouSection.model,
+          businessActivitiesSection = BusinessActivitiesSection.model,
+          responsiblePeopleSection = ResponsiblePeopleSection.modelPhase2,
+          tcspSection = ASPTCSPSection.TcspSection,
+          aspSection = ASPTCSPSection.AspSection,
+          msbSection = MsbSection.completeModel,
+          hvdSection = HvdSection.completeModel,
+          supervisionSection = SupervisionSection.completeModel
+        )
+      }
+
+      implicit val requestType = RequestType.Subscription
+      des.SubscriptionRequest.convert(feSubscriptionReq) must be(desSubscriptionReq)
+    }
+  }
+}
+
 class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(
