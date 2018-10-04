@@ -218,6 +218,30 @@ object DefaultDesValues {
     extra = RPExtra()
   )
   ))
+  val ResponsiblePersonsSectionForRelease7Phase2 = Some(Seq(ResponsiblePersons(
+    nameDtls,
+    nationalDtlsPhase2,
+    contactDtls,
+    currentDesAddress,
+    Some("0-6 months"),
+    additionalDesAddress,
+    Some("7-12 months"),
+    extraAdditional,
+    Some("1-3 years"),
+    positionInBusinessForRelease7,
+    regDtls,
+    true,
+    Some("Some training"),
+    true,
+    Some("test"),
+    Some((new LocalDate()).toString("yyyy-MM-dd")),
+    None,
+    None,
+    Some(false),
+    Some(true),
+    extra = RPExtra()
+  )
+  ))
 
   val AspSection =  Some(Asp(true, None))
 
