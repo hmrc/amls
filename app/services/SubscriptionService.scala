@@ -50,7 +50,12 @@ class SubscriptionService @Inject()(
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
-    SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+    if(AmlsConfig.phase2Changes) {
+      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
+    }
+    else {
+      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+    }
   }
 
   private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")

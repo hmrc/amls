@@ -1,19 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Digital to ETMP Create Subscription Request AMLS(04AY)",
-  "description": "Digital to ETMP Create Subscription Request AMLS (04AY) - v4.0",
-  "type": "object",
-  "properties": {
-    "acknowledgementReference": {
-      "type": "string",
-      "pattern": "^\\S{32}$"
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "title":"Digital to ETMP Create Subscription Request AMLS(04AY)",
+  "description":"Digital to ETMP Create Subscription Request AMLS (04AY) - v4.0",
+  "type":"object",
+  "properties":{
+    "acknowledgementReference":{
+      "type":"string",
+      "pattern":"^\\S{32}$"
     },
-    "businessDetails": {
-      "type": "object",
-      "properties": {
-        "typeOfLegalEntity": {
-          "type": "string",
-          "enum": [
+    "businessDetails":{
+      "type":"object",
+      "properties":{
+        "typeOfLegalEntity":{
+          "type":"string",
+          "enum":[
             "Sole Proprietor",
             "Limited Liability Partnership",
             "Partnership",
@@ -21,179 +21,179 @@
             "Unincorporated Body"
           ]
         },
-        "corpAndBodyLlps": {
-          "type": "object",
-          "properties": {
-            "companyName": {
-              "$ref": "#/definitions/companyNameType"
+        "corpAndBodyLlps":{
+          "type":"object",
+          "properties":{
+            "companyName":{
+              "$ref":"#/definitions/companyNameType"
             },
-            "companyRegNo": {
-              "type": "string",
-              "pattern": "^[A-Z0-9]{8}$"
+            "companyRegNo":{
+              "type":"string",
+              "pattern":"^[A-Z0-9]{8}$"
             },
-            "incorporationDate": {
-              "$ref": "#/definitions/dateString"
+            "incorporationDate":{
+              "$ref":"#/definitions/dateString"
             },
-            "incorporationCountry": {
-              "$ref": "#/definitions/countryCodes"
+            "incorporationCountry":{
+              "$ref":"#/definitions/countryCodes"
             }
           },
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "unincorpBody": {
-          "type": "object",
-          "properties": {
-            "companyName": {
-              "$ref": "#/definitions/companyNameType"
+        "unincorpBody":{
+          "type":"object",
+          "properties":{
+            "companyName":{
+              "$ref":"#/definitions/companyNameType"
             },
-            "typeOfBusiness": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
+            "typeOfBusiness":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
             }
           },
-          "additionalProperties": false
+          "additionalProperties":false
         }
       },
-      "required": [
+      "required":[
         "typeOfLegalEntity"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "businessContactDetails": {
-      "type": "object",
-      "properties": {
-        "businessAddress": {
-          "$ref": "#/definitions/address"
+    "businessContactDetails":{
+      "type":"object",
+      "properties":{
+        "businessAddress":{
+          "$ref":"#/definitions/address"
         },
-        "altCorrespondenceAddress": {
-          "type": "boolean"
+        "altCorrespondenceAddress":{
+          "type":"boolean"
         },
-        "alternativeAddress": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+        "alternativeAddress":{
+          "type":"object",
+          "properties":{
+            "name":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
             },
-            "tradingName": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
+            "tradingName":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
             },
-            "address": {
-              "$ref": "#/definitions/address"
+            "address":{
+              "$ref":"#/definitions/address"
             }
           },
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "businessTelNo": {
-          "$ref": "#/definitions/telephoneNoType"
+        "businessTelNo":{
+          "$ref":"#/definitions/telephoneNoType"
         },
-        "mobileContactNo": {
-          "$ref": "#/definitions/telephoneNoType"
+        "mobileContactNo":{
+          "$ref":"#/definitions/telephoneNoType"
         },
-        "businessEmail": {
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 100,
-          "format": "email"
+        "businessEmail":{
+          "type":"string",
+          "minLength":3,
+          "maxLength":100,
+          "format":"email"
         },
-        "businessWebAddr": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,100}$"
+        "businessWebAddr":{
+          "type":"string",
+          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,100}$"
         }
       },
-      "required": [
+      "required":[
         "businessAddress",
         "altCorrespondenceAddress",
         "businessEmail"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "businessReferencesAll": {
-      "type": "object",
-      "properties": {
-        "amlsRegistered": {
-          "type": "boolean"
+    "businessReferencesAll":{
+      "type":"object",
+      "properties":{
+        "amlsRegistered":{
+          "type":"boolean"
         },
-        "mlrRegNumber8Long": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9]{1,8}$"
+        "mlrRegNumber8Long":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9]{1,8}$"
         },
-        "prevRegForMlr": {
-          "type": "boolean"
+        "prevRegForMlr":{
+          "type":"boolean"
         },
-        "prevMlrRegNumber": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9]{1,15}$"
+        "prevMlrRegNumber":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9]{1,15}$"
         }
       },
-      "required": [
+      "required":[
         "amlsRegistered",
         "prevRegForMlr"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "businessReferencesAllButSp": {
-      "type": "object",
-      "properties": {
-        "vatRegistered": {
-          "type": "boolean"
+    "businessReferencesAllButSp":{
+      "type":"object",
+      "properties":{
+        "vatRegistered":{
+          "type":"boolean"
         },
-        "vrnNumber": {
-          "type": "string",
-          "pattern": "^[0-9]{9}$"
+        "vrnNumber":{
+          "type":"string",
+          "pattern":"^[0-9]{9}$"
         }
       },
-      "required": [
+      "required":[
         "vatRegistered"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "businessReferencesCbUbLlp": {
-      "type": "object",
-      "properties": {
-        "cotaxRegistered": {
-          "type": "boolean"
+    "businessReferencesCbUbLlp":{
+      "type":"object",
+      "properties":{
+        "cotaxRegistered":{
+          "type":"boolean"
         },
-        "ctutr": {
-          "type": "string",
-          "pattern": "^[0-9]{10}$"
+        "ctutr":{
+          "type":"string",
+          "pattern":"^[0-9]{10}$"
         }
       },
-      "required": [
+      "required":[
         "cotaxRegistered"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "businessActivities": {
-      "type": "object",
-      "properties": {
-        "mlrActivitiesAppliedFor": {
-          "type": "object",
-          "properties": {
-            "msb": {
-              "type": "boolean"
+    "businessActivities":{
+      "type":"object",
+      "properties":{
+        "mlrActivitiesAppliedFor":{
+          "type":"object",
+          "properties":{
+            "msb":{
+              "type":"boolean"
             },
-            "hvd": {
-              "type": "boolean"
+            "hvd":{
+              "type":"boolean"
             },
-            "asp": {
-              "type": "boolean"
+            "asp":{
+              "type":"boolean"
             },
-            "tcsp": {
-              "type": "boolean"
+            "tcsp":{
+              "type":"boolean"
             },
-            "eab": {
-              "type": "boolean"
+            "eab":{
+              "type":"boolean"
             },
-            "bpsp": {
-              "type": "boolean"
+            "bpsp":{
+              "type":"boolean"
             },
-            "tditpsp": {
-              "type": "boolean"
+            "tditpsp":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "msb",
             "hvd",
             "asp",
@@ -202,76 +202,76 @@
             "bpsp",
             "tditpsp"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "msbServicesCarriedOut": {
-          "$ref": "#/definitions/msb"
+        "msbServicesCarriedOut":{
+          "$ref":"#/definitions/msb"
         },
-        "hvdGoodsSold": {
-          "type": "object",
-          "properties": {
-            "alcohol": {
-              "type": "boolean"
+        "hvdGoodsSold":{
+          "type":"object",
+          "properties":{
+            "alcohol":{
+              "type":"boolean"
             },
-            "tobacco": {
-              "type": "boolean"
+            "tobacco":{
+              "type":"boolean"
             },
-            "antiques": {
-              "type": "boolean"
+            "antiques":{
+              "type":"boolean"
             },
-            "cars": {
-              "type": "boolean"
+            "cars":{
+              "type":"boolean"
             },
-            "otherMotorVehicles": {
-              "type": "boolean"
+            "otherMotorVehicles":{
+              "type":"boolean"
             },
-            "caravans": {
-              "type": "boolean"
+            "caravans":{
+              "type":"boolean"
             },
-            "jewellery": {
-              "type": "boolean"
+            "jewellery":{
+              "type":"boolean"
             },
-            "gold": {
-              "type": "boolean"
+            "gold":{
+              "type":"boolean"
             },
-            "scrapMetals": {
-              "type": "boolean"
+            "scrapMetals":{
+              "type":"boolean"
             },
-            "mobilePhones": {
-              "type": "boolean"
+            "mobilePhones":{
+              "type":"boolean"
             },
-            "clothing": {
-              "type": "boolean"
+            "clothing":{
+              "type":"boolean"
             },
-            "other": {
-              "type": "boolean"
+            "other":{
+              "type":"boolean"
             },
-            "specifyOther": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+            "specifyOther":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             },
-            "howGoodsAreSold": {
-              "type": "object",
-              "properties": {
-                "retail": {
-                  "type": "boolean"
+            "howGoodsAreSold":{
+              "type":"object",
+              "properties":{
+                "retail":{
+                  "type":"boolean"
                 },
-                "wholesale": {
-                  "type": "boolean"
+                "wholesale":{
+                  "type":"boolean"
                 },
-                "auction": {
-                  "type": "boolean"
+                "auction":{
+                  "type":"boolean"
                 }
               },
-              "required": [
+              "required":[
                 "retail",
                 "wholesale",
                 "auction"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           },
-          "required": [
+          "required":[
             "alcohol",
             "tobacco",
             "antiques",
@@ -285,109 +285,109 @@
             "clothing",
             "other"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "hvdAlcoholTobacco": {
-          "type": "object",
-          "properties": {
-            "dutySuspExAtGoods": {
-              "type": "boolean"
+        "hvdAlcoholTobacco":{
+          "type":"object",
+          "properties":{
+            "dutySuspExAtGoods":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "dutySuspExAtGoods"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "aspServicesOffered": {
-          "type": "object",
-          "properties": {
-            "accountant": {
-              "type": "boolean"
+        "aspServicesOffered":{
+          "type":"object",
+          "properties":{
+            "accountant":{
+              "type":"boolean"
             },
-            "payrollServiceProvider": {
-              "type": "boolean"
+            "payrollServiceProvider":{
+              "type":"boolean"
             },
-            "bookKeeper": {
-              "type": "boolean"
+            "bookKeeper":{
+              "type":"boolean"
             },
-            "auditor": {
-              "type": "boolean"
+            "auditor":{
+              "type":"boolean"
             },
-            "financialOrTaxAdvisor": {
-              "type": "boolean"
+            "financialOrTaxAdvisor":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "accountant",
             "payrollServiceProvider",
             "bookKeeper",
             "auditor",
             "financialOrTaxAdvisor"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "tcspServicesOffered": {
-          "type": "object",
-          "properties": {
-            "nomineeShareholders": {
-              "type": "boolean"
+        "tcspServicesOffered":{
+          "type":"object",
+          "properties":{
+            "nomineeShareholders":{
+              "type":"boolean"
             },
-            "trusteeProvider": {
-              "type": "boolean"
+            "trusteeProvider":{
+              "type":"boolean"
             },
-            "regOffBusinessAddrVirtualOff": {
-              "type": "boolean"
+            "regOffBusinessAddrVirtualOff":{
+              "type":"boolean"
             },
-            "compDirSecPartnerProvider": {
-              "type": "boolean"
+            "compDirSecPartnerProvider":{
+              "type":"boolean"
             },
-            "trustOrCompFormAgent": {
-              "type": "boolean"
+            "trustOrCompFormAgent":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "nomineeShareholders",
             "trusteeProvider",
             "regOffBusinessAddrVirtualOff",
             "compDirSecPartnerProvider",
             "trustOrCompFormAgent"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "tcspServicesforRegOffBusinessAddrVirtualOff": {
-          "type": "object",
-          "properties": {
-            "callHandling": {
-              "type": "boolean"
+        "tcspServicesforRegOffBusinessAddrVirtualOff":{
+          "type":"object",
+          "properties":{
+            "callHandling":{
+              "type":"boolean"
             },
-            "emailHandling": {
-              "type": "boolean"
+            "emailHandling":{
+              "type":"boolean"
             },
-            "emailServer": {
-              "type": "boolean"
+            "emailServer":{
+              "type":"boolean"
             },
-            "selfCollectMailboxes": {
-              "type": "boolean"
+            "selfCollectMailboxes":{
+              "type":"boolean"
             },
-            "mailForwarding": {
-              "type": "boolean"
+            "mailForwarding":{
+              "type":"boolean"
             },
-            "receptionist": {
-              "type": "boolean"
+            "receptionist":{
+              "type":"boolean"
             },
-            "conferenceRooms": {
-              "type": "boolean"
+            "conferenceRooms":{
+              "type":"boolean"
             },
-            "other": {
-              "type": "boolean"
+            "other":{
+              "type":"boolean"
             },
-            "specifyOther": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+            "specifyOther":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
           },
-          "required": [
+          "required":[
             "callHandling",
             "emailHandling",
             "emailServer",
@@ -397,40 +397,40 @@
             "conferenceRooms",
             "other"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "eabServicesCarriedOut": {
-          "type": "object",
-          "properties": {
-            "residentialEstateAgency": {
-              "type": "boolean"
+        "eabServicesCarriedOut":{
+          "type":"object",
+          "properties":{
+            "residentialEstateAgency":{
+              "type":"boolean"
             },
-            "commercialEstateAgency": {
-              "type": "boolean"
+            "commercialEstateAgency":{
+              "type":"boolean"
             },
-            "auctioneer": {
-              "type": "boolean"
+            "auctioneer":{
+              "type":"boolean"
             },
-            "relocationAgent": {
-              "type": "boolean"
+            "relocationAgent":{
+              "type":"boolean"
             },
-            "businessTransferAgent": {
-              "type": "boolean"
+            "businessTransferAgent":{
+              "type":"boolean"
             },
-            "assetManagementCompany": {
-              "type": "boolean"
+            "assetManagementCompany":{
+              "type":"boolean"
             },
-            "landManagementAgent": {
-              "type": "boolean"
+            "landManagementAgent":{
+              "type":"boolean"
             },
-            "developmentCompany": {
-              "type": "boolean"
+            "developmentCompany":{
+              "type":"boolean"
             },
-            "socialHousingProvider": {
-              "type": "boolean"
+            "socialHousingProvider":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "residentialEstateAgency",
             "commercialEstateAgency",
             "auctioneer",
@@ -441,321 +441,321 @@
             "developmentCompany",
             "socialHousingProvider"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "all": {
-          "type": "object",
-          "properties": {
-            "activitiesCommenceDate": {
-              "$ref": "#/definitions/dateString"
+        "all":{
+          "type":"object",
+          "properties":{
+            "activitiesCommenceDate":{
+              "$ref":"#/definitions/dateString"
             },
-            "businessActivityDetails": {
-              "oneOf": [
+            "businessActivityDetails":{
+              "oneOf":[
                 {
-                  "type": "object",
-                  "properties": {
-                    "actvtsBusRegForOnlyActvtsCarOut": {
-                      "type": "boolean",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "actvtsBusRegForOnlyActvtsCarOut":{
+                      "type":"boolean",
+                      "enum":[
                         true
                       ]
                     },
-                    "respActvtsBusRegForOnlyActvtsCarOut": {
-                      "type": "object",
-                      "properties": {
-                        "mlrActivityTurnover": {
-                          "$ref": "#/definitions/turnOverType"
+                    "respActvtsBusRegForOnlyActvtsCarOut":{
+                      "type":"object",
+                      "properties":{
+                        "mlrActivityTurnover":{
+                          "$ref":"#/definitions/turnOverType"
                         }
                       },
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "required": [
+                  "required":[
                     "actvtsBusRegForOnlyActvtsCarOut"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "actvtsBusRegForOnlyActvtsCarOut": {
-                      "type": "boolean",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "actvtsBusRegForOnlyActvtsCarOut":{
+                      "type":"boolean",
+                      "enum":[
                         false
                       ]
                     },
-                    "respActvtsBusRegForOnlyActvtsCarOut": {
-                      "type": "object",
-                      "properties": {
-                        "otherBusActivitiesCarriedOut": {
-                          "type": "object",
-                          "properties": {
-                            "otherBusinessActivities": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                    "respActvtsBusRegForOnlyActvtsCarOut":{
+                      "type":"object",
+                      "properties":{
+                        "otherBusActivitiesCarriedOut":{
+                          "type":"object",
+                          "properties":{
+                            "otherBusinessActivities":{
+                              "type":"string",
+                              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                             },
-                            "anticipatedTotBusinessTurnover": {
-                              "$ref": "#/definitions/turnOverType"
+                            "anticipatedTotBusinessTurnover":{
+                              "$ref":"#/definitions/turnOverType"
                             },
-                            "mlrActivityTurnover": {
-                              "$ref": "#/definitions/turnOverType"
+                            "mlrActivityTurnover":{
+                              "$ref":"#/definitions/turnOverType"
                             }
                           },
-                          "additionalProperties": false
+                          "additionalProperties":false
                         }
                       },
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "required": [
+                  "required":[
                     "actvtsBusRegForOnlyActvtsCarOut"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               ]
             },
-            "franchiseDetails": {
-              "type": "object",
-              "properties": {
-                "isBusinessAFranchise": {
-                  "type": "boolean"
+            "franchiseDetails":{
+              "type":"object",
+              "properties":{
+                "isBusinessAFranchise":{
+                  "type":"boolean"
                 },
-                "franchiserName": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                "franchiserName":{
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                   },
-                  "additionalItems": false
+                  "additionalItems":false
                 }
               },
-              "required": [
+              "required":[
                 "isBusinessAFranchise"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
-            "noOfEmployees": {
-              "type": "string",
-              "pattern": "^\\d{0,11}$"
+            "noOfEmployees":{
+              "type":"string",
+              "pattern":"^\\d{0,11}$"
             },
-            "noOfEmployeesForMlr": {
-              "type": "string",
-              "pattern": "^\\d{0,11}$"
+            "noOfEmployeesForMlr":{
+              "type":"string",
+              "pattern":"^\\d{0,11}$"
             },
-            "nonUkResidentCustDetails": {
-              "type": "object",
-              "properties": {
-                "nonUkResidentCustomers": {
-                  "type": "boolean"
+            "nonUkResidentCustDetails":{
+              "type":"object",
+              "properties":{
+                "nonUkResidentCustomers":{
+                  "type":"boolean"
                 },
-                "whichCountries": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/countryCodes"
+                "whichCountries":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/definitions/countryCodes"
                   },
-                  "additionalItems": false
+                  "additionalItems":false
                 }
               },
-              "required": [
+              "required":[
                 "nonUkResidentCustomers"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
-            "auditableRecordsDetails": {
-              "oneOf": [
+            "auditableRecordsDetails":{
+              "oneOf":[
                 {
-                  "type": "object",
-                  "properties": {
-                    "detailedRecordsKept": {
-                      "type": "string",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "detailedRecordsKept":{
+                      "type":"string",
+                      "enum":[
                         "No"
                       ]
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties":false
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "detailedRecordsKept": {
-                      "type": "string",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "detailedRecordsKept":{
+                      "type":"string",
+                      "enum":[
                         "Yes",
                         "Some"
                       ]
                     },
-                    "transactionRecordingMethod": {
-                      "type": "object",
-                      "properties": {
-                        "manual": {
-                          "type": "boolean"
+                    "transactionRecordingMethod":{
+                      "type":"object",
+                      "properties":{
+                        "manual":{
+                          "type":"boolean"
                         },
-                        "spreadsheet": {
-                          "type": "boolean"
+                        "spreadsheet":{
+                          "type":"boolean"
                         },
-                        "commercialPackage": {
-                          "type": "boolean"
+                        "commercialPackage":{
+                          "type":"boolean"
                         },
-                        "commercialPackageName": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
+                        "commercialPackageName":{
+                          "type":"string",
+                          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
                         }
                       },
-                      "required": [
+                      "required":[
                         "manual",
                         "spreadsheet",
                         "commercialPackage"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               ]
             },
-            "suspiciousActivityGuidance": {
-              "type": "boolean"
+            "suspiciousActivityGuidance":{
+              "type":"boolean"
             },
-            "nationalCrimeAgencyRegistered": {
-              "type": "boolean"
+            "nationalCrimeAgencyRegistered":{
+              "type":"boolean"
             },
-            "formalRiskAssessmentDetails": {
-              "oneOf": [
+            "formalRiskAssessmentDetails":{
+              "oneOf":[
                 {
-                  "type": "object",
-                  "properties": {
-                    "formalRiskAssessment": {
-                      "type": "boolean",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "formalRiskAssessment":{
+                      "type":"boolean",
+                      "enum":[
                         true
                       ]
                     },
-                    "riskAssessmentFormat": {
-                      "type": "object",
-                      "properties": {
-                        "electronicFormat": {
-                          "type": "boolean"
+                    "riskAssessmentFormat":{
+                      "type":"object",
+                      "properties":{
+                        "electronicFormat":{
+                          "type":"boolean"
                         },
-                        "manualFormat": {
-                          "type": "boolean"
+                        "manualFormat":{
+                          "type":"boolean"
                         }
                       },
-                      "required": [
+                      "required":[
                         "electronicFormat",
                         "manualFormat"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "required": [
+                  "required":[
                     "formalRiskAssessment"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "formalRiskAssessment": {
-                      "type": "boolean",
-                      "enum": [
+                  "type":"object",
+                  "properties":{
+                    "formalRiskAssessment":{
+                      "type":"boolean",
+                      "enum":[
                         false
                       ]
                     }
                   },
-                  "required": [
+                  "required":[
                     "formalRiskAssessment"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               ]
             },
-            "mlrAdvisor": {
-              "type": "object",
-              "properties": {
-                "doYouHaveMlrAdvisor": {
-                  "type": "boolean"
+            "mlrAdvisor":{
+              "type":"object",
+              "properties":{
+                "doYouHaveMlrAdvisor":{
+                  "type":"boolean"
                 },
-                "mlrAdvisorDetails": {
-                  "oneOf": [
+                "mlrAdvisorDetails":{
+                  "oneOf":[
                     {
-                      "type": "object",
-                      "properties": {
-                        "advisorNameAddress": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                      "type":"object",
+                      "properties":{
+                        "advisorNameAddress":{
+                          "type":"object",
+                          "properties":{
+                            "name":{
+                              "type":"string",
+                              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                             },
-                            "tradingName": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
+                            "tradingName":{
+                              "type":"string",
+                              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
                             },
-                            "address": {
-                              "$ref": "#/definitions/address"
+                            "address":{
+                              "$ref":"#/definitions/address"
                             }
                           },
-                          "additionalProperties": false
+                          "additionalProperties":false
                         },
-                        "agentDealsWithHmrc": {
-                          "type": "boolean",
-                          "enum": [
+                        "agentDealsWithHmrc":{
+                          "type":"boolean",
+                          "enum":[
                             true
                           ]
                         },
-                        "hmrcAgentRefNo": {
-                          "type": "string",
-                          "pattern": "^[A-Za-z0-9]{1,11}$"
+                        "hmrcAgentRefNo":{
+                          "type":"string",
+                          "pattern":"^[A-Za-z0-9]{1,11}$"
                         }
                       },
-                      "required": [
+                      "required":[
                         "agentDealsWithHmrc"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     },
                     {
-                      "type": "object",
-                      "properties": {
-                        "advisorNameAddress": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                      "type":"object",
+                      "properties":{
+                        "advisorNameAddress":{
+                          "type":"object",
+                          "properties":{
+                            "name":{
+                              "type":"string",
+                              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                             },
-                            "tradingName": {
-                              "type": "string",
-                              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
+                            "tradingName":{
+                              "type":"string",
+                              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
                             },
-                            "address": {
-                              "$ref": "#/definitions/address"
+                            "address":{
+                              "$ref":"#/definitions/address"
                             }
                           },
-                          "additionalProperties": false
+                          "additionalProperties":false
                         },
-                        "agentDealsWithHmrc": {
-                          "type": "boolean",
-                          "enum": [
+                        "agentDealsWithHmrc":{
+                          "type":"boolean",
+                          "enum":[
                             false
                           ]
                         }
                       },
-                      "required": [
+                      "required":[
                         "agentDealsWithHmrc"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   ]
                 }
               },
-              "required": [
+              "required":[
                 "doYouHaveMlrAdvisor"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           },
-          "required": [
+          "required":[
             "nonUkResidentCustDetails",
             "suspiciousActivityGuidance",
             "nationalCrimeAgencyRegistered",
@@ -763,51 +763,51 @@
             "formalRiskAssessmentDetails",
             "franchiseDetails"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         }
       },
-      "additionalProperties": false,
-      "required": [
+      "additionalProperties":false,
+      "required":[
         "mlrActivitiesAppliedFor",
         "all"
       ]
     },
-    "tradingPremises": {
-      "type": "object",
-      "properties": {
-        "ownBusinessPremises": {
-          "type": "object",
-          "properties": {
-            "ownBusinessPremises": {
-              "type": "boolean"
+    "tradingPremises":{
+      "type":"object",
+      "properties":{
+        "ownBusinessPremises":{
+          "type":"object",
+          "properties":{
+            "ownBusinessPremises":{
+              "type":"boolean"
             },
-            "ownBusinessPremisesDetails": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/premiseDetails"
+            "ownBusinessPremisesDetails":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/premiseDetails"
               },
-              "additionalItems": false
+              "additionalItems":false
             }
           },
-          "required": [
+          "required":[
             "ownBusinessPremises"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "agentBusinessPremises": {
-          "type": "object",
-          "properties": {
-            "agentBusinessPremises": {
-              "type": "boolean"
+        "agentBusinessPremises":{
+          "type":"object",
+          "properties":{
+            "agentBusinessPremises":{
+              "type":"boolean"
             },
-            "agentDetails": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "agentLegalEntity": {
-                    "type": "string",
-                    "enum": [
+            "agentDetails":{
+              "type":"array",
+              "items":{
+                "type":"object",
+                "properties":{
+                  "agentLegalEntity":{
+                    "type":"string",
+                    "enum":[
                       "Sole Proprietor",
                       "Limited Liability Partnership",
                       "Partnership",
@@ -815,703 +815,703 @@
                       "Unincorporated Body"
                     ]
                   },
-                  "companyRegNo": {
-                    "type": "string",
-                    "pattern": "^[A-Z0-9]{8}$"
+                  "companyRegNo":{
+                    "type":"string",
+                    "pattern":"^[A-Z0-9]{8}$"
                   },
-                  "dateOfBirth": {
-                    "$ref": "#/definitions/dateString"
+                  "dateOfBirth":{
+                    "$ref":"#/definitions/dateString"
                   },
-                  "agentLegalEntityName": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                  "agentLegalEntityName":{
+                    "type":"string",
+                    "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                   },
-                  "agentPremises": {
-                    "$ref": "#/definitions/premiseDetails"
+                  "agentPremises":{
+                    "$ref":"#/definitions/premiseDetails"
                   }
                 },
-                "additionalProperties": false
+                "additionalProperties":false
               },
-              "additionalItems": false
+              "additionalItems":false
             }
           },
-          "required": [
+          "required":[
             "agentBusinessPremises"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         }
       },
-      "required": [
+      "required":[
         "agentBusinessPremises",
         "ownBusinessPremises"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "bankAccountDetails": {
-      "type": "object",
-      "properties": {
-        "noOfMlrBankAccounts": {
-          "type": "string",
-          "pattern": "^\\d{0,2}$"
+    "bankAccountDetails":{
+      "type":"object",
+      "properties":{
+        "noOfMlrBankAccounts":{
+          "type":"string",
+          "pattern":"^\\d{0,2}$"
         },
-        "bankAccounts": {
-          "type": "array",
-          "items": {
-            "oneOf": [
+        "bankAccounts":{
+          "type":"array",
+          "items":{
+            "oneOf":[
               {
-                "type": "object",
-                "properties": {
-                  "accountName": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
+                "type":"object",
+                "properties":{
+                  "accountName":{
+                    "type":"string",
+                    "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
                   },
-                  "accountType": {
-                    "type": "string",
-                    "enum": [
+                  "accountType":{
+                    "type":"string",
+                    "enum":[
                       "This business's",
                       "Personal",
                       "Another business's"
                     ]
                   },
-                  "doYouHaveUkBankAccount": {
-                    "type": "boolean",
-                    "enum": [
+                  "doYouHaveUkBankAccount":{
+                    "type":"boolean",
+                    "enum":[
                       true
                     ]
                   },
-                  "bankAccountDetails": {
-                    "type": "object",
-                    "properties": {
-                      "ukAccount": {
-                        "type": "object",
-                        "properties": {
-                          "sortCode": {
-                            "type": "string",
-                            "pattern": "^\\d{6}$"
+                  "bankAccountDetails":{
+                    "type":"object",
+                    "properties":{
+                      "ukAccount":{
+                        "type":"object",
+                        "properties":{
+                          "sortCode":{
+                            "type":"string",
+                            "pattern":"^\\d{6}$"
                           },
-                          "accountNumber": {
-                            "type": "string",
-                            "pattern": "^\\d{8}$"
+                          "accountNumber":{
+                            "type":"string",
+                            "pattern":"^\\d{8}$"
                           }
                         },
-                        "additionalProperties": false
+                        "additionalProperties":false
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties":false
                   }
                 },
-                "required": [
+                "required":[
                   "doYouHaveUkBankAccount"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               },
               {
-                "type": "object",
-                "properties": {
-                  "accountName": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
+                "type":"object",
+                "properties":{
+                  "accountName":{
+                    "type":"string",
+                    "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
                   },
-                  "accountType": {
-                    "type": "string",
-                    "enum": [
+                  "accountType":{
+                    "type":"string",
+                    "enum":[
                       "This business's",
                       "Personal",
                       "Another business's"
                     ]
                   },
-                  "doYouHaveUkBankAccount": {
-                    "type": "boolean",
-                    "enum": [
+                  "doYouHaveUkBankAccount":{
+                    "type":"boolean",
+                    "enum":[
                       false
                     ]
                   },
-                  "bankAccountDetails": {
-                    "type": "object",
-                    "properties": {
-                      "nonUkAccount": {
-                        "oneOf": [
+                  "bankAccountDetails":{
+                    "type":"object",
+                    "properties":{
+                      "nonUkAccount":{
+                        "oneOf":[
                           {
-                            "type": "object",
-                            "properties": {
-                              "accountHasIban": {
-                                "type": "boolean",
-                                "enum": [
+                            "type":"object",
+                            "properties":{
+                              "accountHasIban":{
+                                "type":"boolean",
+                                "enum":[
                                   true
                                 ]
                               },
-                              "accountNumber": {
-                                "type": "object",
-                                "properties": {
-                                  "iban": {
-                                    "type": "string",
-                                    "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,34}$"
+                              "accountNumber":{
+                                "type":"object",
+                                "properties":{
+                                  "iban":{
+                                    "type":"string",
+                                    "pattern":"^[0-9a-zA-Z \u2010\u002d]{1,34}$"
                                   }
                                 },
-                                "additionalProperties": false
+                                "additionalProperties":false
                               }
                             },
-                            "additionalProperties": false
+                            "additionalProperties":false
                           },
                           {
-                            "type": "object",
-                            "properties": {
-                              "accountHasIban": {
-                                "type": "boolean",
-                                "enum": [
+                            "type":"object",
+                            "properties":{
+                              "accountHasIban":{
+                                "type":"boolean",
+                                "enum":[
                                   false
                                 ]
                               },
-                              "accountNumber": {
-                                "type": "object",
-                                "properties": {
-                                  "bankAccountNumber": {
-                                    "type": "string",
-                                    "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,40}$"
+                              "accountNumber":{
+                                "type":"object",
+                                "properties":{
+                                  "bankAccountNumber":{
+                                    "type":"string",
+                                    "pattern":"^[0-9a-zA-Z \u2010\u002d]{1,40}$"
                                   }
                                 },
-                                "additionalProperties": false
+                                "additionalProperties":false
                               }
                             },
-                            "additionalProperties": false
+                            "additionalProperties":false
                           }
                         ]
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties":false
                   }
                 },
-                "additionalProperties": false
+                "additionalProperties":false
               }
             ]
           },
-          "additionalItems": false
+          "additionalItems":false
         }
       },
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "msb": {
-      "type": "object",
-      "properties": {
-        "msbAllDetails": {
-          "oneOf": [
+    "msb":{
+      "type":"object",
+      "properties":{
+        "msbAllDetails":{
+          "oneOf":[
             {
-              "type": "object",
-              "properties": {
-                "anticipatedTotThrputNxt12Mths": {
-                  "$ref": "#/definitions/turnOverType"
+              "type":"object",
+              "properties":{
+                "anticipatedTotThrputNxt12Mths":{
+                  "$ref":"#/definitions/turnOverType"
                 },
-                "otherCntryBranchesOrAgents": {
-                  "type": "boolean",
-                  "enum": [
+                "otherCntryBranchesOrAgents":{
+                  "type":"boolean",
+                  "enum":[
                     true
                   ]
                 },
-                "countriesList": {
-                  "type": "object",
-                  "properties": {
-                    "listOfCountries": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/countryCodes"
+                "countriesList":{
+                  "type":"object",
+                  "properties":{
+                    "listOfCountries":{
+                      "type":"array",
+                      "items":{
+                        "$ref":"#/definitions/countryCodes"
                       },
-                      "additionalItems": false
+                      "additionalItems":false
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties":false
                 },
-                "sysLinkedTransIdentification": {
-                  "type": "boolean"
+                "sysLinkedTransIdentification":{
+                  "type":"boolean"
                 }
               },
-              "required": [
+              "required":[
                 "otherCntryBranchesOrAgents",
                 "sysLinkedTransIdentification"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
             {
-              "type": "object",
-              "properties": {
-                "anticipatedTotThrputNxt12Mths": {
-                  "$ref": "#/definitions/turnOverType"
+              "type":"object",
+              "properties":{
+                "anticipatedTotThrputNxt12Mths":{
+                  "$ref":"#/definitions/turnOverType"
                 },
-                "otherCntryBranchesOrAgents": {
-                  "type": "boolean",
-                  "enum": [
+                "otherCntryBranchesOrAgents":{
+                  "type":"boolean",
+                  "enum":[
                     false
                   ]
                 },
-                "sysLinkedTransIdentification": {
-                  "type": "boolean"
+                "sysLinkedTransIdentification":{
+                  "type":"boolean"
                 }
               },
-              "required": [
+              "required":[
                 "otherCntryBranchesOrAgents",
                 "sysLinkedTransIdentification"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           ]
         },
-        "msbMtDetails": {
-          "type": "object",
-          "properties": {
-            "applyForFcapsrRegNo": {
-              "type": "boolean"
+        "msbMtDetails":{
+          "type":"object",
+          "properties":{
+            "applyForFcapsrRegNo":{
+              "type":"boolean"
             },
-            "fcapsrRefNo": {
-              "type": "string",
-              "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,6}$"
+            "fcapsrRefNo":{
+              "type":"string",
+              "pattern":"^[0-9a-zA-Z \u2010\u002d]{1,6}$"
             },
-            "ipspServicesDetails": {
-              "type": "object",
-              "properties": {
-                "ipspServicesUsed": {
-                  "type": "boolean"
+            "ipspServicesDetails":{
+              "type":"object",
+              "properties":{
+                "ipspServicesUsed":{
+                  "type":"boolean"
                 },
-                "ipspDetails": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "ipspName": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                "ipspDetails":{
+                  "type":"array",
+                  "items":{
+                    "type":"object",
+                    "properties":{
+                      "ipspName":{
+                        "type":"string",
+                        "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                       },
-                      "ipspMlrRegNo": {
-                        "type": "string",
-                        "pattern": "^[A-Za-z0-9]{1,15}$"
+                      "ipspMlrRegNo":{
+                        "type":"string",
+                        "pattern":"^[A-Za-z0-9]{1,15}$"
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties":false
                   },
-                  "additionalItems": false
+                  "additionalItems":false
                 }
               },
-              "required": [
+              "required":[
                 "ipspServicesUsed"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
-            "informalFundsTransferSystem": {
-              "type": "boolean"
+            "informalFundsTransferSystem":{
+              "type":"boolean"
             },
-            "noOfMoneyTrnsfrTransNxt12Mnths": {
-              "type": "string",
-              "pattern": "^\\d{0,11}$"
+            "noOfMoneyTrnsfrTransNxt12Mnths":{
+              "type":"string",
+              "pattern":"^\\d{0,11}$"
             },
-            "countriesLrgstMoneyAmtSentTo": {
-              "type": "object",
-              "properties": {
-                "listOfCountries": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/countryCodes"
+            "countriesLrgstMoneyAmtSentTo":{
+              "type":"object",
+              "properties":{
+                "listOfCountries":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/definitions/countryCodes"
                   },
-                  "additionalItems": false
+                  "additionalItems":false
                 }
               },
-              "additionalProperties": false
+              "additionalProperties":false
             },
-            "countriesLrgstTranscsSentTo": {
-              "type": "object",
-              "properties": {
-                "listOfCountries": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/countryCodes"
+            "countriesLrgstTranscsSentTo":{
+              "type":"object",
+              "properties":{
+                "listOfCountries":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/definitions/countryCodes"
                   },
-                  "additionalItems": false
+                  "additionalItems":false
                 }
               },
-              "additionalProperties": false
+              "additionalProperties":false
             }
           },
-          "required": [
+          "required":[
             "applyForFcapsrRegNo",
             "ipspServicesDetails",
             "informalFundsTransferSystem"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "msbCeDetails": {
-          "oneOf": [
+        "msbCeDetails":{
+          "oneOf":[
             {
-              "type": "object",
-              "properties": {
-                "dealInPhysCurrencies": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "dealInPhysCurrencies":{
+                  "type":"boolean",
+                  "enum":[
                     true
                   ]
                 },
-                "currencySources": {
-                  "type": "object",
-                  "properties": {
-                    "bankDetails": {
-                      "type": "object",
-                      "properties": {
-                        "banks": {
-                          "type": "boolean"
+                "currencySources":{
+                  "type":"object",
+                  "properties":{
+                    "bankDetails":{
+                      "type":"object",
+                      "properties":{
+                        "banks":{
+                          "type":"boolean"
                         },
-                        "bankNames": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                        "bankNames":{
+                          "type":"array",
+                          "items":{
+                            "type":"string",
+                            "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                           },
-                          "additionalItems": false
+                          "additionalItems":false
                         }
                       },
-                      "required": [
+                      "required":[
                         "banks"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     },
-                    "currencyWholesalerDetails": {
-                      "type": "object",
-                      "properties": {
-                        "currencyWholesalers": {
-                          "type": "boolean"
+                    "currencyWholesalerDetails":{
+                      "type":"object",
+                      "properties":{
+                        "currencyWholesalers":{
+                          "type":"boolean"
                         },
-                        "currencyWholesalersNames": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                        "currencyWholesalersNames":{
+                          "type":"array",
+                          "items":{
+                            "type":"string",
+                            "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                           },
-                          "additionalItems": false
+                          "additionalItems":false
                         }
                       },
-                      "required": [
+                      "required":[
                         "currencyWholesalers"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     },
-                    "reSellCurrTakenIn": {
-                      "type": "boolean"
+                    "reSellCurrTakenIn":{
+                      "type":"boolean"
                     }
                   },
-                  "required": [
+                  "required":[
                     "reSellCurrTakenIn",
                     "bankDetails",
                     "currencyWholesalerDetails"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 },
-                "antNoOfTransNxt12Mnths": {
-                  "type": "string",
-                  "pattern": "^[0-9]{0,11}$"
+                "antNoOfTransNxt12Mnths":{
+                  "type":"string",
+                  "pattern":"^[0-9]{0,11}$"
                 },
-                "currSupplyToCust": {
-                  "type": "object",
-                  "properties": {
-                    "currency": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "pattern": "^[A-Z]{1,3}$"
+                "currSupplyToCust":{
+                  "type":"object",
+                  "properties":{
+                    "currency":{
+                      "type":"array",
+                      "items":{
+                        "type":"string",
+                        "pattern":"^[A-Z]{1,3}$"
                       },
-                      "additionalItems": false
+                      "additionalItems":false
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               },
-              "required": [
+              "required":[
                 "dealInPhysCurrencies",
                 "currencySources"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
             {
-              "type": "object",
-              "properties": {
-                "dealInPhysCurrencies": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "dealInPhysCurrencies":{
+                  "type":"boolean",
+                  "enum":[
                     false
                   ]
                 },
-                "antNoOfTransNxt12Mnths": {
-                  "type": "string",
-                  "pattern": "^[0-9]{0,11}$"
+                "antNoOfTransNxt12Mnths":{
+                  "type":"string",
+                  "pattern":"^[0-9]{0,11}$"
                 },
-                "currSupplyToCust": {
-                  "type": "object",
-                  "properties": {
-                    "currency": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "pattern": "^[A-Z]{1,3}$"
+                "currSupplyToCust":{
+                  "type":"object",
+                  "properties":{
+                    "currency":{
+                      "type":"array",
+                      "items":{
+                        "type":"string",
+                        "pattern":"^[A-Z]{1,3}$"
                       },
-                      "additionalItems": false
+                      "additionalItems":false
                     }
                   },
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               },
-              "required": [
+              "required":[
                 "dealInPhysCurrencies"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           ]
         },
-        "msbFxDetails": {
-          "type": "object",
-          "properties": {
-            "anticipatedNoOfTransactions": {
-              "type": "string",
-              "pattern": "^\\d{0,11}$"
+        "msbFxDetails":{
+          "type":"object",
+          "properties":{
+            "anticipatedNoOfTransactions":{
+              "type":"string",
+              "pattern":"^\\d{0,11}$"
             }
           },
-          "additionalProperties": false
+          "additionalProperties":false
         }
       },
-      "required": [
+      "required":[
         "msbAllDetails"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "hvd": {
-      "type": "object",
-      "properties": {
-        "cashPaymentsAccptOvrThrshld": {
-          "type": "boolean"
+    "hvd":{
+      "type":"object",
+      "properties":{
+        "cashPaymentsAccptOvrThrshld":{
+          "type":"boolean"
         },
-        "dateOfTheFirst": {
-          "$ref": "#/definitions/dateString"
+        "dateOfTheFirst":{
+          "$ref":"#/definitions/dateString"
         },
-        "sysAutoIdOfLinkedCashPymts": {
-          "type": "boolean"
+        "sysAutoIdOfLinkedCashPymts":{
+          "type":"boolean"
         },
-        "hvPercentageTurnover": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 100
+        "hvPercentageTurnover":{
+          "type":"integer",
+          "minimum":0,
+          "maximum":100
         },
-        "hvdFromUnseenCustDetails": {
-          "oneOf": [
+        "hvdFromUnseenCustDetails":{
+          "oneOf":[
             {
-              "type": "object",
-              "properties": {
-                "hvdFromUnseenCustomers": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "hvdFromUnseenCustomers":{
+                  "type":"boolean",
+                  "enum":[
                     true
                   ]
                 },
-                "receiptMethods": {
-                  "oneOf": [
+                "receiptMethods":{
+                  "oneOf":[
                     {
-                      "type": "object",
-                      "properties": {
-                        "receiptMethodViaCourier": {
-                          "type": "boolean"
+                      "type":"object",
+                      "properties":{
+                        "receiptMethodViaCourier":{
+                          "type":"boolean"
                         },
-                        "receiptMethodDirectBankAct": {
-                          "type": "boolean"
+                        "receiptMethodDirectBankAct":{
+                          "type":"boolean"
                         },
-                        "receiptMethodOther": {
-                          "type": "boolean",
-                          "enum": [
+                        "receiptMethodOther":{
+                          "type":"boolean",
+                          "enum":[
                             true
                           ]
                         },
-                        "specifyOther": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                        "specifyOther":{
+                          "type":"string",
+                          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
-                      "required": [
+                      "required":[
                         "receiptMethodViaCourier",
                         "receiptMethodDirectBankAct",
                         "receiptMethodOther"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     },
                     {
-                      "type": "object",
-                      "properties": {
-                        "receiptMethodViaCourier": {
-                          "type": "boolean"
+                      "type":"object",
+                      "properties":{
+                        "receiptMethodViaCourier":{
+                          "type":"boolean"
                         },
-                        "receiptMethodDirectBankAct": {
-                          "type": "boolean"
+                        "receiptMethodDirectBankAct":{
+                          "type":"boolean"
                         },
-                        "receiptMethodOther": {
-                          "type": "boolean",
-                          "enum": [
+                        "receiptMethodOther":{
+                          "type":"boolean",
+                          "enum":[
                             false
                           ]
                         }
                       },
-                      "required": [
+                      "required":[
                         "receiptMethodViaCourier",
                         "receiptMethodDirectBankAct",
                         "receiptMethodOther"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   ]
                 }
               },
-              "required": [
+              "required":[
                 "hvdFromUnseenCustomers"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
             {
-              "type": "object",
-              "properties": {
-                "hvdFromUnseenCustomers": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "hvdFromUnseenCustomers":{
+                  "type":"boolean",
+                  "enum":[
                     false
                   ]
                 }
               },
-              "required": [
+              "required":[
                 "hvdFromUnseenCustomers"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           ]
         }
       },
-      "required": [
+      "required":[
         "cashPaymentsAccptOvrThrshld",
         "sysAutoIdOfLinkedCashPymts",
         "hvdFromUnseenCustDetails"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "asp": {
-      "type": "object",
-      "properties": {
-        "regHmrcAgtRegSchTax": {
-          "type": "boolean"
+    "asp":{
+      "type":"object",
+      "properties":{
+        "regHmrcAgtRegSchTax":{
+          "type":"boolean"
         },
-        "hmrcAgentRegNo": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9]{1,11}$"
+        "hmrcAgentRegNo":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9]{1,11}$"
         }
       },
-      "required": [
+      "required":[
         "regHmrcAgtRegSchTax"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "aspOrTcsp": {
-      "type": "object",
-      "properties": {
-        "supervisionDetails": {
-          "type": "object",
-          "properties": {
-            "prevSupervisedByMlsRegs": {
-              "type": "boolean"
+    "aspOrTcsp":{
+      "type":"object",
+      "properties":{
+        "supervisionDetails":{
+          "type":"object",
+          "properties":{
+            "prevSupervisedByMlsRegs":{
+              "type":"boolean"
             },
-            "supervisorDetails": {
-              "type": "object",
-              "properties": {
-                "nameOfLastSupervisor": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+            "supervisorDetails":{
+              "type":"object",
+              "properties":{
+                "nameOfLastSupervisor":{
+                  "type":"string",
+                  "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                 },
-                "supervisionStartDate": {
-                  "$ref": "#/definitions/dateString"
+                "supervisionStartDate":{
+                  "$ref":"#/definitions/dateString"
                 },
-                "supervisionEndDate": {
-                  "$ref": "#/definitions/dateString"
+                "supervisionEndDate":{
+                  "$ref":"#/definitions/dateString"
                 },
-                "supervisionEndingReason": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                "supervisionEndingReason":{
+                  "type":"string",
+                  "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 }
               },
-              "additionalProperties": false
+              "additionalProperties":false
             }
           },
-          "required": [
+          "required":[
             "prevSupervisedByMlsRegs"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "professionalBodyDetails": {
-          "oneOf": [
+        "professionalBodyDetails":{
+          "oneOf":[
             {
-              "type": "object",
-              "properties": {
-                "prevWarnedWRegToAspActivities": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "prevWarnedWRegToAspActivities":{
+                  "type":"boolean",
+                  "enum":[
                     true
                   ]
                 },
-                "detailsIfFinedWarned": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                "detailsIfFinedWarned":{
+                  "type":"string",
+                  "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 },
-                "professionalBody": {
-                  "type": "object",
-                  "properties": {
-                    "professionalBodyMember": {
-                      "type": "boolean"
+                "professionalBody":{
+                  "type":"object",
+                  "properties":{
+                    "professionalBodyMember":{
+                      "type":"boolean"
                     },
-                    "professionalBodyDetails": {
-                      "type": "object",
-                      "properties": {
-                        "associationofAccountingTechnicians": {
-                          "type": "boolean"
+                    "professionalBodyDetails":{
+                      "type":"object",
+                      "properties":{
+                        "associationofAccountingTechnicians":{
+                          "type":"boolean"
                         },
-                        "associationofCharteredCertifiedAccountants": {
-                          "type": "boolean"
+                        "associationofCharteredCertifiedAccountants":{
+                          "type":"boolean"
                         },
-                        "associationofInternationalAccountants": {
-                          "type": "boolean"
+                        "associationofInternationalAccountants":{
+                          "type":"boolean"
                         },
-                        "associationofTaxationTechnicians": {
-                          "type": "boolean"
+                        "associationofTaxationTechnicians":{
+                          "type":"boolean"
                         },
-                        "charteredInstituteofManagementAccountants": {
-                          "type": "boolean"
+                        "charteredInstituteofManagementAccountants":{
+                          "type":"boolean"
                         },
-                        "charteredInstituteofTaxation": {
-                          "type": "boolean"
+                        "charteredInstituteofTaxation":{
+                          "type":"boolean"
                         },
-                        "instituteofCertifiedBookkeepers": {
-                          "type": "boolean"
+                        "instituteofCertifiedBookkeepers":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsinIreland": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsinIreland":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsinScotland": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsinScotland":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsofEnglandandWales": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsofEnglandandWales":{
+                          "type":"boolean"
                         },
-                        "instituteofFinancialAccountants": {
-                          "type": "boolean"
+                        "instituteofFinancialAccountants":{
+                          "type":"boolean"
                         },
-                        "internationalAssociationofBookKeepers": {
-                          "type": "boolean"
+                        "internationalAssociationofBookKeepers":{
+                          "type":"boolean"
                         },
-                        "lawSociety": {
-                          "type": "boolean"
+                        "lawSociety":{
+                          "type":"boolean"
                         },
-                        "other": {
-                          "type": "boolean"
+                        "other":{
+                          "type":"boolean"
                         },
-                        "specifyOther": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                        "specifyOther":{
+                          "type":"string",
+                          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
-                      "required": [
+                      "required":[
                         "associationofAccountingTechnicians",
                         "associationofCharteredCertifiedAccountants",
                         "associationofInternationalAccountants",
@@ -1527,88 +1527,88 @@
                         "lawSociety",
                         "other"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "required": [
+                  "required":[
                     "professionalBodyMember"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               },
-              "required": [
+              "required":[
                 "prevWarnedWRegToAspActivities",
                 "professionalBody",
                 "detailsIfFinedWarned"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             },
             {
-              "type": "object",
-              "properties": {
-                "prevWarnedWRegToAspActivities": {
-                  "type": "boolean",
-                  "enum": [
+              "type":"object",
+              "properties":{
+                "prevWarnedWRegToAspActivities":{
+                  "type":"boolean",
+                  "enum":[
                     false
                   ]
                 },
-                "professionalBody": {
-                  "type": "object",
-                  "properties": {
-                    "professionalBodyMember": {
-                      "type": "boolean"
+                "professionalBody":{
+                  "type":"object",
+                  "properties":{
+                    "professionalBodyMember":{
+                      "type":"boolean"
                     },
-                    "professionalBodyDetails": {
-                      "type": "object",
-                      "properties": {
-                        "associationofAccountingTechnicians": {
-                          "type": "boolean"
+                    "professionalBodyDetails":{
+                      "type":"object",
+                      "properties":{
+                        "associationofAccountingTechnicians":{
+                          "type":"boolean"
                         },
-                        "associationofCharteredCertifiedAccountants": {
-                          "type": "boolean"
+                        "associationofCharteredCertifiedAccountants":{
+                          "type":"boolean"
                         },
-                        "associationofInternationalAccountants": {
-                          "type": "boolean"
+                        "associationofInternationalAccountants":{
+                          "type":"boolean"
                         },
-                        "associationofTaxationTechnicians": {
-                          "type": "boolean"
+                        "associationofTaxationTechnicians":{
+                          "type":"boolean"
                         },
-                        "charteredInstituteofManagementAccountants": {
-                          "type": "boolean"
+                        "charteredInstituteofManagementAccountants":{
+                          "type":"boolean"
                         },
-                        "charteredInstituteofTaxation": {
-                          "type": "boolean"
+                        "charteredInstituteofTaxation":{
+                          "type":"boolean"
                         },
-                        "instituteofCertifiedBookkeepers": {
-                          "type": "boolean"
+                        "instituteofCertifiedBookkeepers":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsinIreland": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsinIreland":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsinScotland": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsinScotland":{
+                          "type":"boolean"
                         },
-                        "instituteofCharteredAccountantsofEnglandandWales": {
-                          "type": "boolean"
+                        "instituteofCharteredAccountantsofEnglandandWales":{
+                          "type":"boolean"
                         },
-                        "instituteofFinancialAccountants": {
-                          "type": "boolean"
+                        "instituteofFinancialAccountants":{
+                          "type":"boolean"
                         },
-                        "internationalAssociationofBookKeepers": {
-                          "type": "boolean"
+                        "internationalAssociationofBookKeepers":{
+                          "type":"boolean"
                         },
-                        "lawSociety": {
-                          "type": "boolean"
+                        "lawSociety":{
+                          "type":"boolean"
                         },
-                        "other": {
-                          "type": "boolean"
+                        "other":{
+                          "type":"boolean"
                         },
-                        "specifyOther": {
-                          "type": "string",
-                          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                        "specifyOther":{
+                          "type":"string",
+                          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
-                      "required": [
+                      "required":[
                         "associationofAccountingTechnicians",
                         "associationofCharteredCertifiedAccountants",
                         "associationofInternationalAccountants",
@@ -1624,584 +1624,584 @@
                         "lawSociety",
                         "other"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties":false
                     }
                   },
-                  "required": [
+                  "required":[
                     "professionalBodyMember"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties":false
                 }
               },
-              "required": [
+              "required":[
                 "prevWarnedWRegToAspActivities",
                 "professionalBody"
               ],
-              "additionalProperties": false
+              "additionalProperties":false
             }
           ]
         }
       },
-      "required": [
+      "required":[
         "professionalBodyDetails",
         "supervisionDetails"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "tcspAll": {
-      "oneOf": [
+    "tcspAll":{
+      "oneOf":[
         {
-          "type": "object",
-          "properties": {
-            "anotherTcspServiceProvider": {
-              "type": "boolean",
-              "enum": [
+          "type":"object",
+          "properties":{
+            "anotherTcspServiceProvider":{
+              "type":"boolean",
+              "enum":[
                 true
               ]
             },
-            "tcspMlrRef": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9]{1,15}$"
+            "tcspMlrRef":{
+              "type":"string",
+              "pattern":"^[A-Za-z0-9]{1,15}$"
             }
           },
-          "required": [
+          "required":[
             "anotherTcspServiceProvider"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
         {
-          "type": "object",
-          "properties": {
-            "anotherTcspServiceProvider": {
-              "type": "boolean",
-              "enum": [
+          "type":"object",
+          "properties":{
+            "anotherTcspServiceProvider":{
+              "type":"boolean",
+              "enum":[
                 false
               ]
             }
           },
-          "required": [
+          "required":[
             "anotherTcspServiceProvider"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         }
       ]
     },
-    "tcspTrustCompFormationAgt": {
-      "type": "object",
-      "properties": {
-        "onlyOffTheShelfCompsSold": {
-          "type": "boolean"
+    "tcspTrustCompFormationAgt":{
+      "type":"object",
+      "properties":{
+        "onlyOffTheShelfCompsSold":{
+          "type":"boolean"
         },
-        "complexCorpStructureCreation": {
-          "type": "boolean"
+        "complexCorpStructureCreation":{
+          "type":"boolean"
         }
       },
-      "required": [
+      "required":[
         "onlyOffTheShelfCompsSold",
         "complexCorpStructureCreation"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "eabAll": {
-      "type": "object",
-      "properties": {
-        "estateAgencyActProhibition": {
-          "type": "boolean"
+    "eabAll":{
+      "type":"object",
+      "properties":{
+        "estateAgencyActProhibition":{
+          "type":"boolean"
         },
-        "estAgncActProhibProvideDetails": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+        "estAgncActProhibProvideDetails":{
+          "type":"string",
+          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         },
-        "prevWarnedWRegToEstateAgencyActivities": {
-          "type": "boolean"
+        "prevWarnedWRegToEstateAgencyActivities":{
+          "type":"boolean"
         },
-        "prevWarnWRegProvideDetails": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+        "prevWarnWRegProvideDetails":{
+          "type":"string",
+          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         }
       },
-      "required": [
+      "required":[
         "estateAgencyActProhibition",
         "prevWarnedWRegToEstateAgencyActivities"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "eabResdEstAgncy": {
-      "type": "object",
-      "properties": {
-        "regWithRedressScheme": {
-          "type": "boolean"
+    "eabResdEstAgncy":{
+      "type":"object",
+      "properties":{
+        "regWithRedressScheme":{
+          "type":"boolean"
         },
-        "whichRedressScheme": {
-          "type": "string",
-          "enum": [
+        "whichRedressScheme":{
+          "type":"string",
+          "enum":[
             "The Property Ombudsman Limited",
             "Ombudsman Services",
             "Property Redress Scheme",
             "Other"
           ]
         },
-        "specifyOther": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+        "specifyOther":{
+          "type":"string",
+          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         }
       },
-      "required": [
+      "required":[
         "regWithRedressScheme"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "responsiblePersons": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "nameDetails": {
-            "type": "object",
-            "properties": {
-              "personName": {
-                "$ref": "#/definitions/name"
+    "responsiblePersons":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "properties":{
+          "nameDetails":{
+            "type":"object",
+            "properties":{
+              "personName":{
+                "$ref":"#/definitions/name"
               },
-              "othrNamesOrAliasesDetails": {
-                "type": "object",
-                "properties": {
-                  "otherNamesOrAliases": {
-                    "type": "boolean"
+              "othrNamesOrAliasesDetails":{
+                "type":"object",
+                "properties":{
+                  "otherNamesOrAliases":{
+                    "type":"boolean"
                   },
-                  "aliases": {
-                    "type": "array",
-                    "maxItems": 3,
-                    "items": {
-                      "type": "string",
-                      "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                  "aliases":{
+                    "type":"array",
+                    "maxItems":3,
+                    "items":{
+                      "type":"string",
+                      "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                     }
                   }
                 },
-                "required": [
+                "required":[
                   "otherNamesOrAliases"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               },
-              "previousNameDetails": {
-                "type": "object",
-                "properties": {
-                  "nameEverChanged": {
-                    "type": "boolean"
+              "previousNameDetails":{
+                "type":"object",
+                "properties":{
+                  "nameEverChanged":{
+                    "type":"boolean"
                   },
-                  "previousName": {
-                    "$ref": "#/definitions/name"
+                  "previousName":{
+                    "$ref":"#/definitions/name"
                   },
-                  "dateOfChange": {
-                    "$ref": "#/definitions/dateString"
+                  "dateOfChange":{
+                    "$ref":"#/definitions/dateString"
                   }
                 },
-                "required": [
+                "required":[
                   "nameEverChanged"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               }
             },
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "nationalityDetails": {
-            "oneOf": [
+          "nationalityDetails":{
+            "oneOf":[
               {
-                "type": "object",
-                "properties": {
-                  "areYouUkResident": {
-                    "type": "boolean",
-                    "enum": [
+                "type":"object",
+                "properties":{
+                  "areYouUkResident":{
+                    "type":"boolean",
+                    "enum":[
                       true
                     ]
                   },
-                  "idDetails": {
-                    "type": "object",
-                    "properties": {
-                      "ukResident": {
-                        "type": "object",
-                        "properties": {
-                          "nino": {
-                            "type": "string",
-                            "pattern": "^[A-Z]{2}[0-9]{6}[A-Z]$"
+                  "idDetails":{
+                    "type":"object",
+                    "properties":{
+                      "ukResident":{
+                        "type":"object",
+                        "properties":{
+                          "nino":{
+                            "type":"string",
+                            "pattern":"^[A-Z]{2}[0-9]{6}[A-Z]$"
                           }
                         },
-                        "additionalProperties": false
+                        "additionalProperties":false
                       },
-                      "dateOfBirth": {
-                        "$ref": "#/definitions/dateString"
+                      "dateOfBirth":{
+                        "$ref":"#/definitions/dateString"
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties":false
                   },
-                  "countryOfBirth": {
-                    "$ref": "#/definitions/countryCodes"
+                  "countryOfBirth":{
+                    "$ref":"#/definitions/countryCodes"
                   },
-                  "nationality": {
-                    "$ref": "#/definitions/countryCodes"
+                  "nationality":{
+                    "$ref":"#/definitions/countryCodes"
                   }
                 },
-                "required": [
+                "required":[
                   "areYouUkResident"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               },
               {
-                "type": "object",
-                "properties": {
-                  "areYouUkResident": {
-                    "type": "boolean",
-                    "enum": [
+                "type":"object",
+                "properties":{
+                  "areYouUkResident":{
+                    "type":"boolean",
+                    "enum":[
                       false
                     ]
                   },
-                  "idDetails": {
-                    "type": "object",
-                    "properties": {
-                      "nonUkResident": {
-                        "oneOf": [
+                  "idDetails":{
+                    "type":"object",
+                    "properties":{
+                      "nonUkResident":{
+                        "oneOf":[
                           {
-                            "type": "object",
-                            "properties": {
-                              "dateOfBirth": {
-                                "$ref": "#/definitions/dateString"
+                            "type":"object",
+                            "properties":{
+                              "dateOfBirth":{
+                                "$ref":"#/definitions/dateString"
                               },
-                              "passportHeld": {
-                                "type": "boolean",
-                                "enum": [
+                              "passportHeld":{
+                                "type":"boolean",
+                                "enum":[
                                   true
                                 ]
                               },
-                              "passportDetails": {
-                                "oneOf": [
+                              "passportDetails":{
+                                "oneOf":[
                                   {
-                                    "type": "object",
-                                    "properties": {
-                                      "ukPassport": {
-                                        "type": "boolean",
-                                        "enum": [
+                                    "type":"object",
+                                    "properties":{
+                                      "ukPassport":{
+                                        "type":"boolean",
+                                        "enum":[
                                           true
                                         ]
                                       },
-                                      "passportNumber": {
-                                        "type": "object",
-                                        "properties": {
-                                          "ukPassportNumber": {
-                                            "type": "string",
-                                            "pattern": "^[A-Za-z0-9]{1,9}$"
+                                      "passportNumber":{
+                                        "type":"object",
+                                        "properties":{
+                                          "ukPassportNumber":{
+                                            "type":"string",
+                                            "pattern":"^[A-Za-z0-9]{1,9}$"
                                           }
                                         },
-                                        "additionalProperties": false
+                                        "additionalProperties":false
                                       }
                                     },
-                                    "required": [
+                                    "required":[
                                       "ukPassport"
                                     ],
-                                    "additionalProperties": false
+                                    "additionalProperties":false
                                   },
                                   {
-                                    "type": "object",
-                                    "properties": {
-                                      "ukPassport": {
-                                        "type": "boolean",
-                                        "enum": [
+                                    "type":"object",
+                                    "properties":{
+                                      "ukPassport":{
+                                        "type":"boolean",
+                                        "enum":[
                                           false
                                         ]
                                       },
-                                      "passportNumber": {
-                                        "type": "object",
-                                        "properties": {
-                                          "nonUkPassportNumber": {
-                                            "type": "string",
-                                            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
+                                      "passportNumber":{
+                                        "type":"object",
+                                        "properties":{
+                                          "nonUkPassportNumber":{
+                                            "type":"string",
+                                            "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,40}$"
                                           }
                                         },
-                                        "additionalProperties": false
+                                        "additionalProperties":false
                                       }
                                     },
-                                    "required": [
+                                    "required":[
                                       "ukPassport"
                                     ],
-                                    "additionalProperties": false
+                                    "additionalProperties":false
                                   }
                                 ]
                               }
                             },
-                            "required": [
+                            "required":[
                               "passportHeld"
                             ],
-                            "additionalProperties": false
+                            "additionalProperties":false
                           },
                           {
-                            "type": "object",
-                            "properties": {
-                              "dateOfBirth": {
-                                "$ref": "#/definitions/dateString"
+                            "type":"object",
+                            "properties":{
+                              "dateOfBirth":{
+                                "$ref":"#/definitions/dateString"
                               },
-                              "passportHeld": {
-                                "type": "boolean",
-                                "enum": [
+                              "passportHeld":{
+                                "type":"boolean",
+                                "enum":[
                                   false
                                 ]
                               }
                             },
-                            "required": [
+                            "required":[
                               "passportHeld"
                             ],
-                            "additionalProperties": false
+                            "additionalProperties":false
                           }
                         ]
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties":false
                   },
-                  "countryOfBirth": {
-                    "$ref": "#/definitions/countryCodes"
+                  "countryOfBirth":{
+                    "$ref":"#/definitions/countryCodes"
                   },
-                  "nationality": {
-                    "$ref": "#/definitions/countryCodes"
+                  "nationality":{
+                    "$ref":"#/definitions/countryCodes"
                   }
                 },
-                "required": [
+                "required":[
                   "areYouUkResident"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               }
             ]
           },
-          "contactCommDetails": {
-            "type": "object",
-            "properties": {
-              "contactEmailAddress": {
-                "type": "string",
-                "minLength": 3,
-                "maxLength": 100,
-                "format": "email"
+          "contactCommDetails":{
+            "type":"object",
+            "properties":{
+              "contactEmailAddress":{
+                "type":"string",
+                "minLength":3,
+                "maxLength":100,
+                "format":"email"
               },
-              "primaryTeleNo": {
-                "$ref": "#/definitions/telephoneNoType"
+              "primaryTeleNo":{
+                "$ref":"#/definitions/telephoneNoType"
               },
-              "secondaryTeleNo": {
-                "$ref": "#/definitions/telephoneNoType"
+              "secondaryTeleNo":{
+                "$ref":"#/definitions/telephoneNoType"
               }
             },
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "currentAddressDetails": {
-            "type": "object",
-            "properties": {
-              "address": {
-                "$ref": "#/definitions/address"
+          "currentAddressDetails":{
+            "type":"object",
+            "properties":{
+              "address":{
+                "$ref":"#/definitions/address"
               }
             },
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "timeAtCurrentAddress": {
-            "type": "string",
-            "enum": [
+          "timeAtCurrentAddress":{
+            "type":"string",
+            "enum":[
               "0-6 months",
               "7-12 months",
               "1-3 years",
               "3+ years"
             ]
           },
-          "addressUnderThreeYears": {
-            "type": "object",
-            "properties": {
-              "address": {
-                "$ref": "#/definitions/address"
+          "addressUnderThreeYears":{
+            "type":"object",
+            "properties":{
+              "address":{
+                "$ref":"#/definitions/address"
               }
             },
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "timeAtAddressUnderThreeYears": {
-            "type": "string",
-            "enum": [
+          "timeAtAddressUnderThreeYears":{
+            "type":"string",
+            "enum":[
               "0-6 months",
               "7-12 months",
               "1-3 years",
               "3+ years"
             ]
           },
-          "addressUnderOneYear": {
-            "type": "object",
-            "properties": {
-              "address": {
-                "$ref": "#/definitions/address"
+          "addressUnderOneYear":{
+            "type":"object",
+            "properties":{
+              "address":{
+                "$ref":"#/definitions/address"
               }
             },
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "timeAtAddressUnderOneYear": {
-            "type": "string",
-            "enum": [
+          "timeAtAddressUnderOneYear":{
+            "type":"string",
+            "enum":[
               "0-6 months",
               "7-12 months",
               "1-3 years",
               "3+ years"
             ]
           },
-          "positionInBusiness": {
-            "oneOf": [
+          "positionInBusiness":{
+            "oneOf":[
               {
-                "type": "object",
-                "properties": {
-                  "soleProprietor": {
-                    "type": "object",
-                    "properties": {
-                      "soleProprietor": {
-                        "type": "boolean"
+                "type":"object",
+                "properties":{
+                  "soleProprietor":{
+                    "type":"object",
+                    "properties":{
+                      "soleProprietor":{
+                        "type":"boolean"
                       },
-                      "nominatedOfficer": {
-                        "type": "boolean"
+                      "nominatedOfficer":{
+                        "type":"boolean"
                       },
-                      "other": {
-                        "type": "boolean"
+                      "other":{
+                        "type":"boolean"
                       },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      "otherDetails":{
+                        "type":"string",
+                        "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
-                    "required": [
+                    "required":[
                       "soleProprietor",
                       "nominatedOfficer",
                       "other"
                     ],
-                    "additionalProperties": false
+                    "additionalProperties":false
                   }
                 },
-                "required": [
+                "required":[
                   "soleProprietor"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               },
               {
-                "type": "object",
-                "properties": {
-                  "partnership": {
-                    "type": "object",
-                    "properties": {
-                      "partner": {
-                        "type": "boolean"
+                "type":"object",
+                "properties":{
+                  "partnership":{
+                    "type":"object",
+                    "properties":{
+                      "partner":{
+                        "type":"boolean"
                       },
-                      "nominatedOfficer": {
-                        "type": "boolean"
+                      "nominatedOfficer":{
+                        "type":"boolean"
                       },
-                      "other": {
-                        "type": "boolean"
+                      "other":{
+                        "type":"boolean"
                       },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      "otherDetails":{
+                        "type":"string",
+                        "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
-                    "required": [
+                    "required":[
                       "partner",
                       "nominatedOfficer",
                       "other"
                     ],
-                    "additionalProperties": false
+                    "additionalProperties":false
                   }
                 },
-                "required": [
+                "required":[
                   "partnership"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               },
               {
-                "type": "object",
-                "properties": {
-                  "corpBodyOrUnInCorpBodyOrLlp": {
-                    "type": "object",
-                    "properties": {
-                      "director": {
-                        "type": "boolean"
+                "type":"object",
+                "properties":{
+                  "corpBodyOrUnInCorpBodyOrLlp":{
+                    "type":"object",
+                    "properties":{
+                      "director":{
+                        "type":"boolean"
                       },
-                      "beneficialOwner": {
-                        "type": "boolean"
+                      "beneficialOwner":{
+                        "type":"boolean"
                       },
-                      "nominatedOfficer": {
-                        "type": "boolean"
+                      "nominatedOfficer":{
+                        "type":"boolean"
                       },
-                      "designatedMember": {
-                        "type": "boolean"
+                      "designatedMember":{
+                        "type":"boolean"
                       },
-                      "other": {
-                        "type": "boolean"
+                      "other":{
+                        "type":"boolean"
                       },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      "otherDetails":{
+                        "type":"string",
+                        "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                       }
                     },
-                    "required": [
+                    "required":[
                       "director",
                       "beneficialOwner",
                       "nominatedOfficer",
                       "other",
                       "designatedMember"
                     ],
-                    "additionalProperties": false
+                    "additionalProperties":false
                   }
                 },
-                "required": [
+                "required":[
                   "corpBodyOrUnInCorpBodyOrLlp"
                 ],
-                "additionalProperties": false
+                "additionalProperties":false
               }
             ]
           },
-          "regDetails": {
-            "type": "object",
-            "properties": {
-              "vatRegistered": {
-                "type": "boolean"
+          "regDetails":{
+            "type":"object",
+            "properties":{
+              "vatRegistered":{
+                "type":"boolean"
               },
-              "vrnNumber": {
-                "type": "string",
-                "pattern": "^[0-9]{9}$"
+              "vrnNumber":{
+                "type":"string",
+                "pattern":"^[0-9]{9}$"
               },
-              "saRegistered": {
-                "type": "boolean"
+              "saRegistered":{
+                "type":"boolean"
               },
-              "saUtr": {
-                "type": "string",
-                "pattern": "^[0-9]{10}$"
+              "saUtr":{
+                "type":"string",
+                "pattern":"^[0-9]{10}$"
               }
             },
-            "required": [
+            "required":[
               "vatRegistered",
               "saRegistered"
             ],
-            "additionalProperties": false
+            "additionalProperties":false
           },
-          "previousExperience": {
-            "type": "boolean"
+          "previousExperience":{
+            "type":"boolean"
           },
-          "descOfPrevExperience": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+          "descOfPrevExperience":{
+            "type":"string",
+            "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
-          "amlAndCounterTerrFinTraining": {
-            "type": "boolean"
+          "amlAndCounterTerrFinTraining":{
+            "type":"boolean"
           },
-          "trainingDetails": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+          "trainingDetails":{
+            "type":"string",
+            "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
-          "startDate": {
-            "$ref": "#/definitions/dateString"
+          "startDate":{
+            "$ref":"#/definitions/dateString"
           },
-          "passedFitAndProperTest": {
-            "description": "Has this person already passed the Fit and Proper Test?",
-            "type": "boolean"
+          "passedFitAndProperTest":{
+            "description":"Has this person already passed the Fit and Proper Test?",
+            "type":"boolean"
           },
-          "passedApprovalCheck": {
-            "description": "Has this person already passed the Approval Check?",
-            "type": "boolean"
+          "passedApprovalCheck":{
+            "description":"Has this person already passed the Approval Check?",
+            "type":"boolean"
           }
         },
-        "required": [
+        "required":[
           "previousExperience",
           "amlAndCounterTerrFinTraining",
           "positionInBusiness",
@@ -2209,77 +2209,77 @@
           "passedFitAndProperTest",
           "passedApprovalCheck"
         ],
-        "additionalProperties": false
+        "additionalProperties":false
       },
-      "additionalItems": false
+      "additionalItems":false
     },
-    "payment": {
-      "type": "object",
-      "properties": {
-        "paymentMethod": {
-          "type": "string",
-          "enum": [
+    "payment":{
+      "type":"object",
+      "properties":{
+        "paymentMethod":{
+          "type":"string",
+          "enum":[
             "Electronically",
             "Cheque"
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "declaration": {
-      "type": "object",
-      "properties": {
-        "declarationFlag": {
-          "type": "boolean"
+    "declaration":{
+      "type":"object",
+      "properties":{
+        "declarationFlag":{
+          "type":"boolean"
         }
       },
-      "required": [
+      "required":[
         "declarationFlag"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "filingIndividual": {
-      "type": "object",
-      "properties": {
-        "individualDetails": {
-          "$ref": "#/definitions/name"
+    "filingIndividual":{
+      "type":"object",
+      "properties":{
+        "individualDetails":{
+          "$ref":"#/definitions/name"
         },
-        "employedWithinBusiness": {
-          "type": "boolean"
+        "employedWithinBusiness":{
+          "type":"boolean"
         },
-        "roleWithinBusiness": {
-          "type": "object",
-          "properties": {
-            "beneficialShareholder": {
-              "type": "boolean"
+        "roleWithinBusiness":{
+          "type":"object",
+          "properties":{
+            "beneficialShareholder":{
+              "type":"boolean"
             },
-            "director": {
-              "type": "boolean"
+            "director":{
+              "type":"boolean"
             },
-            "partner": {
-              "type": "boolean"
+            "partner":{
+              "type":"boolean"
             },
-            "internalAccountant": {
-              "type": "boolean"
+            "internalAccountant":{
+              "type":"boolean"
             },
-            "soleProprietor": {
-              "type": "boolean"
+            "soleProprietor":{
+              "type":"boolean"
             },
-            "nominatedOfficer": {
-              "type": "boolean"
+            "nominatedOfficer":{
+              "type":"boolean"
             },
-            "designatedMember": {
-              "type": "boolean"
+            "designatedMember":{
+              "type":"boolean"
             },
-            "other": {
-              "type": "boolean"
+            "other":{
+              "type":"boolean"
             },
-            "specifyOtherRoleInBusiness": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+            "specifyOtherRoleInBusiness":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
           },
-          "required": [
+          "required":[
             "beneficialShareholder",
             "director",
             "partner",
@@ -2289,38 +2289,38 @@
             "designatedMember",
             "other"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "roleForTheBusiness": {
-          "type": "object",
-          "properties": {
-            "externalAccountant": {
-              "type": "boolean"
+        "roleForTheBusiness":{
+          "type":"object",
+          "properties":{
+            "externalAccountant":{
+              "type":"boolean"
             },
-            "other": {
-              "type": "boolean"
+            "other":{
+              "type":"boolean"
             },
-            "specifyOtherRoleForBusiness": {
-              "type": "string",
-              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+            "specifyOtherRoleForBusiness":{
+              "type":"string",
+              "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
           },
-          "required": [
+          "required":[
             "externalAccountant",
             "other"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         }
       },
-      "required": [
+      "required":[
         "employedWithinBusiness",
         "roleWithinBusiness",
         "roleForTheBusiness"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     }
   },
-  "required": [
+  "required":[
     "acknowledgementReference",
     "businessDetails",
     "businessContactDetails",
@@ -2331,46 +2331,46 @@
     "declaration",
     "filingIndividual"
   ],
-  "additionalProperties": false,
-  "definitions": {
-    "dateString": {
-      "type": "string",
-      "pattern": "^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|1[0-9]|2[0-9]|30)|(19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$",
-      "description": "YYYY-MM-DD"
+  "additionalProperties":false,
+  "definitions":{
+    "dateString":{
+      "type":"string",
+      "pattern":"^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|1[0-9]|2[0-9]|30)|(19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$",
+      "description":"YYYY-MM-DD"
     },
-    "address": {
-      "type": "object",
-      "properties": {
-        "addressLine1": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
+    "address":{
+      "type":"object",
+      "properties":{
+        "addressLine1":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "addressLine2": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
+        "addressLine2":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "addressLine3": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
+        "addressLine3":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "addressLine4": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
+        "addressLine4":{
+          "type":"string",
+          "pattern":"^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "country": {
-          "$ref": "#/definitions/countryCodes"
+        "country":{
+          "$ref":"#/definitions/countryCodes"
         },
-        "postcode": {
-          "type": "string",
-          "maxLength": 10,
-          "pattern": "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
+        "postcode":{
+          "type":"string",
+          "maxLength":10,
+          "pattern":"^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
         }
       },
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "countryCodes": {
-      "type": "string",
-      "enum": [
+    "countryCodes":{
+      "type":"string",
+      "enum":[
         "AD",
         "AE",
         "AF",
@@ -2628,152 +2628,152 @@
         "ZW"
       ]
     },
-    "msb": {
-      "type": "object",
-      "properties": {
-        "mt": {
-          "type": "boolean"
+    "msb":{
+      "type":"object",
+      "properties":{
+        "mt":{
+          "type":"boolean"
         },
-        "ce": {
-          "type": "boolean"
+        "ce":{
+          "type":"boolean"
         },
-        "smdcc": {
-          "type": "boolean"
+        "smdcc":{
+          "type":"boolean"
         },
-        "nonSmdcc": {
-          "type": "boolean"
+        "nonSmdcc":{
+          "type":"boolean"
         },
-        "fx": {
-          "type": "boolean"
+        "fx":{
+          "type":"boolean"
         }
       },
-      "required": [
+      "required":[
         "mt",
         "ce",
         "smdcc",
         "nonSmdcc",
         "fx"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "name": {
-      "type": "object",
-      "properties": {
-        "firstName": {
-          "type": "string",
-          "pattern": "^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
+    "name":{
+      "type":"object",
+      "properties":{
+        "firstName":{
+          "type":"string",
+          "pattern":"^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "middleName": {
-          "type": "string",
-          "pattern": "^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
+        "middleName":{
+          "type":"string",
+          "pattern":"^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
         },
-        "lastName": {
-          "type": "string",
-          "pattern": "^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
+        "lastName":{
+          "type":"string",
+          "pattern":"^[a-zA-Z\u00C0-\u00FF '‘’\u2014\u2013\u2010\u002d]{1,35}$"
         }
       },
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "premiseDetails": {
-      "type": "object",
-      "properties": {
-        "tradingName": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
+    "premiseDetails":{
+      "type":"object",
+      "properties":{
+        "tradingName":{
+          "type":"string",
+          "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
         },
-        "businessAddress": {
-          "$ref": "#/definitions/address"
+        "businessAddress":{
+          "$ref":"#/definitions/address"
         },
-        "residential": {
-          "type": "boolean"
+        "residential":{
+          "type":"boolean"
         },
-        "msb": {
-          "$ref": "#/definitions/msb"
+        "msb":{
+          "$ref":"#/definitions/msb"
         },
-        "hvd": {
-          "type": "object",
-          "properties": {
-            "hvd": {
-              "type": "boolean"
+        "hvd":{
+          "type":"object",
+          "properties":{
+            "hvd":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "hvd"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "asp": {
-          "type": "object",
-          "properties": {
-            "asp": {
-              "type": "boolean"
+        "asp":{
+          "type":"object",
+          "properties":{
+            "asp":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "asp"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "tcsp": {
-          "type": "object",
-          "properties": {
-            "tcsp": {
-              "type": "boolean"
+        "tcsp":{
+          "type":"object",
+          "properties":{
+            "tcsp":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "tcsp"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "eab": {
-          "type": "object",
-          "properties": {
-            "eab": {
-              "type": "boolean"
+        "eab":{
+          "type":"object",
+          "properties":{
+            "eab":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "eab"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "bpsp": {
-          "type": "object",
-          "properties": {
-            "bpsp": {
-              "type": "boolean"
+        "bpsp":{
+          "type":"object",
+          "properties":{
+            "bpsp":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "bpsp"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "tditpsp": {
-          "type": "object",
-          "properties": {
-            "tditpsp": {
-              "type": "boolean"
+        "tditpsp":{
+          "type":"object",
+          "properties":{
+            "tditpsp":{
+              "type":"boolean"
             }
           },
-          "required": [
+          "required":[
             "tditpsp"
           ],
-          "additionalProperties": false
+          "additionalProperties":false
         },
-        "startDate": {
-          "$ref": "#/definitions/dateString"
+        "startDate":{
+          "$ref":"#/definitions/dateString"
         }
       },
-      "required": [
+      "required":[
         "residential"
       ],
-      "additionalProperties": false
+      "additionalProperties":false
     },
-    "turnOverType": {
-      "type": "string",
-      "enum": [
+    "turnOverType":{
+      "type":"string",
+      "enum":[
         "£0-£15k",
         "£15k-50k",
         "£50k-£100k",
@@ -2783,13 +2783,13 @@
         "£10m+"
       ]
     },
-    "companyNameType": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]£€¥\\u005C\u2014\u2013\u2010\u002d]{1,140}$"
+    "companyNameType":{
+      "type":"string",
+      "pattern":"^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]£€¥\\u005C\u2014\u2013\u2010\u002d]{1,140}$"
     },
-    "telephoneNoType": {
-      "type": "string",
-      "pattern": "^[0-9 ()+\u2010\u002d]{1,24}$"
+    "telephoneNoType":{
+      "type":"string",
+      "pattern":"^[0-9 ()+\u2010\u002d]{1,24}$"
     }
   }
 }
