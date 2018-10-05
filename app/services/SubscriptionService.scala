@@ -53,7 +53,7 @@ class SubscriptionService @Inject()(
     SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
   }
 
-  private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
+  private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
   private lazy val lines = scala.io.Source.fromInputStream(stream).getLines
   protected[SubscriptionService] lazy val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
