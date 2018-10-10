@@ -54,7 +54,8 @@ object NonUkResident {
               None,
               rp.dateOfBirth map { dob =>
                 NonUkResident(dob.dateOfBirth.toString, false, None)
-              })
+              }
+            )
           }
         }
       }

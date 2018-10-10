@@ -24,7 +24,12 @@ case class SubscriptionFees(paymentReference: String,
                             fpFeeRate: Option[BigDecimal] = None,
                             premiseFee: BigDecimal,
                             premiseFeeRate: Option[BigDecimal] = None,
-                            totalFees: BigDecimal)
+                            totalFees: BigDecimal,
+                            approvalNumbers: Option[Int] = None,
+                            approvalFeeRate: Option[BigDecimal] = None,
+                            approvalCheckFee: Option[BigDecimal] = None
+                           )
+
 
 object SubscriptionFees {
   implicit val format = Json.format[SubscriptionFees]

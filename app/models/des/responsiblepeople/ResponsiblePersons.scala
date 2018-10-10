@@ -134,21 +134,19 @@ object ResponsiblePersons {
     val msbOrTcsp: Option[MsbOrTcsp] = if (AmlsConfig.phase2Changes) {
       None
     } else {
-      rp.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
+      rp.approvalFlags.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
     }
 
     val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
-      // This is a hack so that the schema validation passes and acceptance tests can run
-      rp.hasAlreadyPassedFitAndProper orElse Some(false)
+      // TODO: When toggle is removed then this can be made non optional
+      rp.approvalFlags.hasAlreadyPassedFitAndProper orElse Some(false)
     } else {
       None
     }
 
     val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      // TODO: When amls-frontend changes have been made to send boolean to amls, remove orElse Some(false)
-      // This is a hack so that the schema validation passes and acceptance tests can run
-      rp.hasAlreadyPassedApprovalCheck orElse Some(false)
+      // TODO: When toggle is removed then this can be made non optional
+      rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
     } else {
       None
     }

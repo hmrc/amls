@@ -37,8 +37,7 @@ case class ResponsiblePeople(
                               vatRegistered: Option[VATRegistered] = None,
                               experienceTraining: Option[ExperienceTraining] = None,
                               training: Option[Training] = None,
-                              hasAlreadyPassedFitAndProper: Option[Boolean] = None,
-                              hasAlreadyPassedApprovalCheck: Option[Boolean] = None,
+                              approvalFlags: ApprovalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper = None, hasAlreadyPaidApprovalCheck = None),
                               lineId: Option[Int] = None,
                               status: Option[String] = None,
                               hasChanged: Boolean = false
@@ -68,32 +67,31 @@ object ResponsiblePeople {
       desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
     }
 
-    val passedApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+    val paidApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
       desRp.passedApprovalCheck
     } else {
       None
     }
 
     ResponsiblePeople(
-      desRp.nameDetails,
-      desRp.nameDetails flatMap { n => n.previousNameDetails },
-      legalNameChangeDate(desRp.nameDetails) orElse None,
-      desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
-      desRp.nationalityDetails,
-      desRp,
-      desRp,
-      desRp,
-      desRp.contactCommDetails,
-      desRp,
-      desRp,
-      desRp.regDetails,
-      desRp.regDetails,
-      desRp,
-      desRp,
-      passedFitAndProper,
-      passedApproval,
-      desRp.extra.lineId,
-      desRp.extra.status
+      personName = desRp.nameDetails,
+      legalName = desRp.nameDetails flatMap { n => n.previousNameDetails },
+      legalNameChangeDate = legalNameChangeDate(desRp.nameDetails) orElse None,
+      knownBy = desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
+      personResidenceType = desRp.nationalityDetails,
+      ukPassport = desRp,
+      nonUKPassport = desRp,
+      dateOfBirth = desRp,
+      contactDetails = desRp.contactCommDetails,
+      addressHistory = desRp,
+      positions = desRp,
+      saRegistered = desRp.regDetails,
+      vatRegistered = desRp.regDetails,
+      experienceTraining = desRp,
+      training = desRp,
+      approvalFlags = ApprovalFlags(passedFitAndProper, paidApproval),
+      lineId = desRp.extra.lineId,
+      status = desRp.extra.status
     )
   }
 

@@ -23,7 +23,7 @@ import play.api.libs.json.{JsSuccess, Json}
 class AmendVariationResponseSpec extends PlaySpec {
 
   val response = AmendVariationResponse("pdate", "12345", Some(115.0), None, Some(125.0), Some(125.0), None, None, None, None,
-    None, None, None, Some(0), Some(240.0), Some("ref"), None)
+    None, None, None, Some(0), Some(240.0), Some("ref"), None, Some(100), Some(100.0), Some(100.0))
 
   "AmendVariationResponse" must {
 
@@ -44,10 +44,13 @@ class AmendVariationResponseSpec extends PlaySpec {
   "addedResponsiblePeopleFitAndProper" : 1,
   "addedFullYearTradingPremises" : 0,
   "halfYearlyTradingPremises" : 0,
-  "zeroRatedTradingPremises" : 0
+  "zeroRatedTradingPremises" : 0,
+  "approvalNumbers" : 100,
+  "approvalFeeRate" : 100.0,
+  "approvalCheckFee" : 100.0
 }"""
 
-      AmendVariationResponse.format.reads(Json.parse(json)) must be(JsSuccess(response))
+      AmendVariationResponse.format.reads(Json.parse(json)) must be (JsSuccess(response))
 
     }
 
@@ -66,7 +69,10 @@ class AmendVariationResponseSpec extends PlaySpec {
   "addedResponsiblePeopleFitAndProper" : 0,
   "addedFullYearTradingPremises" : 0,
   "halfYearlyTradingPremises" : 0,
-  "zeroRatedTradingPremises" : 0
+  "zeroRatedTradingPremises" : 0,
+  "approvalNumbers" : 100,
+  "approvalFeeRate" : 100.0,
+  "approvalCheckFee" : 100.0
 }"""
 
       AmendVariationResponse.format.reads(Json.parse(json)) must be(JsSuccess(response.copy(fpFee = None)))
