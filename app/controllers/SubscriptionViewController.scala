@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.AmlsConfig
 import connectors.{DESConnector, ViewDESConnector}
 import exceptions.HttpStatusException
 import models.fe.SubscriptionView

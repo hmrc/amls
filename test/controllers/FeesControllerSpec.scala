@@ -53,7 +53,7 @@ class FeesControllerSpec extends PlaySpec
     val request = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")
 
-    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None, Some(100), Some(100.0), Some(100.0),
+    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None,
       new DateTime(2017,12,1,1,3,DateTimeZone.UTC))
 
     "GET" must {

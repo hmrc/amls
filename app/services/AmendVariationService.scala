@@ -20,7 +20,7 @@ import java.io.InputStream
 
 import audit.{AmendVariationValidationFailedEvent, SubscriptionValidationFailedEvent}
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
+import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors._
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
@@ -54,9 +54,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] val auditConnector: AuditConnector
 
-  val phase2Changes: Boolean = false
-
-  val stream: InputStream = getClass.getResourceAsStream (if (phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
+  val stream: InputStream = getClass.getResourceAsStream("/resources/API6_Request.json")
   val lines = scala.io.Source.fromInputStream(stream).getLines
   val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
@@ -197,6 +195,4 @@ object AmendVariationService extends AmendVariationService {
 
   override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
     AmendVariationResponse.convert(request, isRenewalWindow, des)
-
-  override val phase2Changes = AmlsConfig.phase2Changes
 }

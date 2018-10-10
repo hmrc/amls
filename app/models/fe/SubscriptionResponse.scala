@@ -33,6 +33,7 @@ object SubscriptionResponse {
   implicit val format = Json.format[SubscriptionResponse]
 
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
+
     SubscriptionResponse(desResponse.etmpFormBundleNumber,
       desResponse.amlsRefNo,
       desResponse.fpNumbers.getOrElse(0),
@@ -44,10 +45,7 @@ object SubscriptionResponse {
         desResponse.fpFeeRate,
         desResponse.premiseFee,
         desResponse.premiseFeeRate,
-        desResponse.totalFees,
-        desResponse.approvalNumbers,
-        desResponse.approvalFeeRate,
-        desResponse.approvalCheckFee)
+        desResponse.totalFees)
       )
     )
   }

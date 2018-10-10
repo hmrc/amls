@@ -73,7 +73,8 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
       val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
         dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
         positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
-        approvalFlags = ApprovalFlags(Some(false), Some(true))
+        hasAlreadyPassedFitAndProper = Some(false),
+        hasAlreadyPassedApprovalCheck = Some(true)
       )
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
@@ -89,7 +90,8 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
       val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
         dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
         positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
-        approvalFlags = ApprovalFlags(None, Some(true))
+        hasAlreadyPassedFitAndProper = None,
+        hasAlreadyPassedApprovalCheck = Some(true)
       )
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
@@ -105,12 +107,11 @@ class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
       val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
         dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
         positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None)),
-        approvalFlags = ApprovalFlags(Some(false), None)
+        hasAlreadyPassedFitAndProper = Some(false),
+        hasAlreadyPassedApprovalCheck = None
       )
 
-      val responsiblePersonPhase2 =
-
-          ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+      val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
         BusinessMatchingSection.emptyModel
       )

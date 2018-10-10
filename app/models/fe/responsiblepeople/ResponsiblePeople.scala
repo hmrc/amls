@@ -37,7 +37,8 @@ case class ResponsiblePeople(
                               vatRegistered: Option[VATRegistered] = None,
                               experienceTraining: Option[ExperienceTraining] = None,
                               training: Option[Training] = None,
-                              approvalFlags: ApprovalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper = None, hasAlreadyPaidApprovalCheck = None),
+                              hasAlreadyPassedFitAndProper: Option[Boolean] = None,
+                              hasAlreadyPassedApprovalCheck: Option[Boolean] = None,
                               lineId: Option[Int] = None,
                               status: Option[String] = None,
                               hasChanged: Boolean = false
@@ -67,7 +68,7 @@ object ResponsiblePeople {
       desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
     }
 
-    val paidApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+    val passedApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
       desRp.passedApprovalCheck
     } else {
       None
@@ -89,7 +90,8 @@ object ResponsiblePeople {
       desRp.regDetails,
       desRp,
       desRp,
-      ApprovalFlags(passedFitAndProper, paidApproval),
+      passedFitAndProper,
+      passedApproval,
       desRp.extra.lineId,
       desRp.extra.status
     )

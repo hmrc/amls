@@ -35,10 +35,7 @@ case class AmendVariationResponse(
                                    premiseFee: Option[BigDecimal],
                                    totalFees: Option[BigDecimal],
                                    paymentReference: Option[String],
-                                   difference: Option[BigDecimal],
-                                   approvalNumbers: Option[Int] = None,
-                                   approvalFeeRate: Option[BigDecimal] = None,
-                                   approvalCheckFee: Option[BigDecimal] = None
+                                   difference: Option[BigDecimal]
                                  )
 
 object AmendVariationResponse {

@@ -153,11 +153,6 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
       val etmpFormBundleNumber = "082000004607"
       val processingDate = "2017-07-18T09:49:25Z"
 
-      val testApprovalNumbers = Some(10)
-      val testApprovalFeeRate = Some(BigDecimal(20))
-      val testApprovalCheckFee = Some(BigDecimal(30))
-
-
       AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
@@ -175,11 +170,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         registrationFee = None,
         premiseFYTotal = None,
         premiseHYNumber = None,
-        premiseHYTotal = None,
-        approvalNumbers = testApprovalNumbers,
-        approvalFeeRate = testApprovalFeeRate,
-        approvalCheckFee = testApprovalCheckFee
-
+        premiseHYTotal = None
       )) mustBe AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
@@ -193,11 +184,8 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         difference = Some(difference),
         addedResponsiblePeople = 1,
         addedFullYearTradingPremises = 3,
-        addedResponsiblePeopleFitAndProper = 1,
-        approvalNumbers = testApprovalNumbers,
-        approvalFeeRate = testApprovalFeeRate,
-        approvalCheckFee = testApprovalCheckFee
-       )
+        addedResponsiblePeopleFitAndProper = 1
+      )
     }
   }
 

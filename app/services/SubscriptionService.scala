@@ -17,11 +17,11 @@
 package services
 
 import java.io.InputStream
-
 import javax.inject.Inject
+
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
+import config.{AppConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
 import models.des.SubscriptionRequest
@@ -50,15 +50,10 @@ class SubscriptionService @Inject()(
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
-    if(AmlsConfig.phase2Changes) {
-      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
-    }
-    else {
-      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
-    }
+    SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
   }
 
-  private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
+  private lazy val stream: InputStream = getClass.getResourceAsStream("/resources/API4_Request.json")
   private lazy val lines = scala.io.Source.fromInputStream(stream).getLines
   protected[SubscriptionService] lazy val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
@@ -196,7 +191,7 @@ class SubscriptionService @Inject()(
         responsiblePersonsPassedFitAndProperCount,
         tradingPremisesCount,
         Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalNumbers, fees.approvalFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees)), previouslySubmitted = true)
 
       case None => SubscriptionResponse("",
         amlsRegNo,

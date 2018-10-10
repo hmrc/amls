@@ -98,63 +98,62 @@ trait ResponsiblePeopleValues {
     val experienceTraining = ExperienceTrainingYes("Some training")
     val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
     val ukPassport = UKPassportYes("87654321")
-    val approvalFlags = ApprovalFlags(Some(false), Some(true))
-
-
 
     val convertedModel: Option[List[ResponsiblePeople]] = Some(List(
       ResponsiblePeople(
-        Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
-        Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-        Some(new LocalDate(2001, 1, 1)),
-        Some(KnownBy(true, Some("Aliases1"))),
-        Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
-        Some(UKPassportYes("AA1111111")),
-        None,
-        Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-        None,
-        Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
+        personName = Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+        legalName = Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+        legalNameChangeDate = Some(new LocalDate(2001, 1, 1)),
+        knownBy = Some(KnownBy(true, Some("Aliases1"))),
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
+        ukPassport = Some(UKPassportYes("AA1111111")),
+        nonUKPassport = Some(NoPassport),
+        dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+        contactDetails = None,
+        addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
           ThreeYearsPlus)), None, None)),
-        Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
-        Some(SaRegisteredYes("1234567890")),
-        Some(VATRegisteredYes("123456789")),
-        Some(ExperienceTrainingNo),
-        Some(TrainingYes("TrainingDetails")),
-        ApprovalFlags(Some(false), None),
-        Some(333333)
+        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+        saRegistered = Some(SaRegisteredYes("1234567890")),
+        vatRegistered = Some(VATRegisteredYes("123456789")),
+        experienceTraining = Some(ExperienceTrainingNo),
+        training = Some(TrainingYes("TrainingDetails")),
+        hasAlreadyPassedFitAndProper = Some(false),
+        hasAlreadyPassedApprovalCheck = None,
+        lineId = Some(333333)
       ),
 
       ResponsiblePeople(
-        Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
-        Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-        Some(new LocalDate(1967, 8, 13)),
-        Some(KnownBy(true, Some("bbbbbbbbbbb"))),
-        Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-        None,
-        None,
-        None,
-        None,
-        Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
+        personName = Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
+        legalName = Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+        legalNameChangeDate = Some(new LocalDate(1967, 8, 13)),
+        knownBy = Some(KnownBy(true, Some("bbbbbbbbbbb"))),
+        personResidenceType = Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
+        ukPassport = None,
+        nonUKPassport = None,
+        dateOfBirth = None,
+        contactDetails = None,
+        addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-        Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))), Some(SaRegisteredYes("1111111111")),
-        Some(VATRegisteredYes("111111111")),
-        Some(ExperienceTrainingYes("bbbbbbbbbb")),
-        Some(TrainingNo),
-        ApprovalFlags(Some(true), None),
-        Some(222222)
+        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))), saRegistered = Some(SaRegisteredYes("1111111111")),
+        vatRegistered = Some(VATRegisteredYes("111111111")),
+        experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
+        training = Some(TrainingNo),
+        hasAlreadyPassedFitAndProper = Some(true),
+        hasAlreadyPassedApprovalCheck = None,
+        lineId = Some(222222)
       )))
 
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
       responsiblePersonSeq => List(
         responsiblePersonSeq(0).copy(
-          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
+          hasAlreadyPassedApprovalCheck = Some(true)
         ),
         responsiblePersonSeq(1).copy(
           dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false))
+          hasAlreadyPassedApprovalCheck = Some(false)
         ))
     }
 
@@ -182,7 +181,6 @@ trait ResponsiblePeopleValues {
     val positions = Positions(Set(Director, SoleProprietor), Some(new LocalDate()))
     val experienceTraining = ExperienceTrainingNo
     val training = TrainingNo
-
   }
 
   val CompleteResponsiblePeople = ResponsiblePeople(
@@ -200,8 +198,7 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.saRegistered),
     Some(DefaultValues.vatRegistered),
     Some(DefaultValues.experienceTraining),
-    Some(DefaultValues.training),
-    DefaultValues.approvalFlags
+    Some(DefaultValues.training)
   )
 
   val CompleteJson = Json.obj(
@@ -231,10 +228,6 @@ trait ResponsiblePeopleValues {
     ),
     "dateOfBirth" -> Json.obj(
       "dateOfBirth" -> "2001-01-01"
-    ),
-    "approvalFlags"  -> Json.obj(
-      "hasAlreadyPassedFitAndProper" -> false,
-      "hasAlreadyPaidApprovalCheck" -> true
     ),
     "contactDetails" -> Json.obj(
       "phoneNumber" -> "07000001122",
