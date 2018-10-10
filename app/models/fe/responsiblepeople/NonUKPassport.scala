@@ -45,15 +45,19 @@ object NonUKPassport {
       nd <- responsiblePersons.nationalityDetails
       id <- nd.idDetails
       non <- id.nonUkResident
-      nonUKPassport <- non.passportDetails flatMap { passport =>
-        if(!passport.ukPassport) {
-          Some(NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse("")))
-        } else {
-          None
+      passport <- non.passportHeld match {
+        case true => {
+          non.passportDetails flatMap { passport =>
+            if(!passport.ukPassport) {
+              Some(NonUKPassportYes(passport.passportNumber.nonUkPassportNumber.getOrElse("")))
+            } else {
+              None
+            }
+          }
         }
+        case false => Some(NoPassport)
       }
-    } yield nonUKPassport
-
+    } yield passport
   }
 
 }

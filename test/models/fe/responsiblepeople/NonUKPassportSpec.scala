@@ -20,7 +20,7 @@ import models.des.responsiblepeople._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json._
 
 class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
 
@@ -63,28 +63,112 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
         ))
     }
 
-    "convert from ResponsiblePersons to NonUKPassport" in {
+    "convert incoming Des Responsible Person to NoUKPassport when responsible person passportHeld field is false" in {
+      val personWithNoUkPassport =
+        """{
+            "lineId": "000004",
+            "nameDetails": {
+              "personName": {
+                "firstName": "harry",
+                "lastName": "kancharla"
+              }
+            },
+            "nationalityDetails": {
+              "areYouUkResident": false,
+              "idDetails": {
+              "nonUkResident": {
+                "dateOfBirth": "2004-04-04",
+                "passportHeld": false
+              }
+            },
+            "countryOfBirth": "AX",
+            "nationality": "IE"
+            },
+            "contactCommDetails": {
+              "contactEmailAddress": "test10@api4.com",
+              "primaryTeleNo": "0923489765"
+            },
+            "currentAddressDetails": {
+              "address": {
+                "addressLine1": "add1",
+                "addressLine2": "add1",
+                "addressLine3": "add1",
+                "addressLine4": "add1",
+                "country": "GB",
+                "postcode": "de4 5rf"
+              }
+            },
+            "timeAtCurrentAddress": "3+ years",
+            "positionInBusiness": {
+              "partnership": {
+                "partner": true,
+                "nominatedOfficer": true,
+                "other": false
+              }
+            },
+            "regDetails": {
+              "vatRegistered": false,
+              "saRegistered": false
+            },
+            "previousExperience": false,
+            "amlAndCounterTerrFinTraining": true,
+            "trainingDetails": "TEST10",
+            "startDate": "2004-04-04",
+            "passedFitAndProperTest": false,
+            "passedApprovalCheck": false
+          }""".stripMargin
+
+      Json.fromJson[ResponsiblePersons](Json.parse(personWithNoUkPassport)).map(x =>
+        NonUKPassport.conv(x) must be(Some(NoPassport))
+      )
+    }
+
+    "convert incoming des ResponsiblePerson to NonUKPassportYes" in {
 
       val desModel = ResponsiblePersons(
-        None,
-        Some(
+        nameDetails = None,
+        nationalityDetails = Some(
           NationalityDetails(
-            false,
-            Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  "",
-                  true,
-                  Some(
-                    PassportDetail(false, PassportNum(
-                      nonUkPassportNumber = Some("87654321")
-                    ))
+            areYouUkResident = false,
+            idDetails = Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    dateOfBirth = "",
+                    passportHeld = true,
+                    passportDetails = Some(
+                      PassportDetail(
+                        false,
+                        PassportNum(
+                          nonUkPassportNumber = Some("87654321")
+                        )
+                      )
+                    )
                   )
-                ))
-            )), None, None
+                )
+              )
+            ),
+            countryOfBirth = None,
+            nationality = None
           )
         ),
-        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+        contactCommDetails = None,
+        currentAddressDetails = None,
+        timeAtCurrentAddress = None,
+        addressUnderThreeYears = None,
+        timeAtAddressUnderThreeYears = None,
+        addressUnderOneYear = None,
+        timeAtAddressUnderOneYear = None,
+        positionInBusiness = None,
+        regDetails = None,
+        previousExperience = false,
+        descOfPrevExperience = None,
+        amlAndCounterTerrFinTraining = false,
+        trainingDetails = None,
+        startDate = None,
+        dateChangeFlag = None,
+        msbOrTcsp = None,
+        extra = RPExtra()
       )
 
       NonUKPassport.conv(desModel) must be(Some(NonUKPassportYes("87654321")))

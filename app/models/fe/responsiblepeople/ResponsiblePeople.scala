@@ -74,24 +74,24 @@ object ResponsiblePeople {
     }
 
     ResponsiblePeople(
-      desRp.nameDetails,
-      desRp.nameDetails flatMap { n => n.previousNameDetails },
-      legalNameChangeDate(desRp.nameDetails) orElse None,
-      desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
-      desRp.nationalityDetails,
-      desRp,
-      desRp,
-      desRp,
-      desRp.contactCommDetails,
-      desRp,
-      desRp,
-      desRp.regDetails,
-      desRp.regDetails,
-      desRp,
-      desRp,
-      ApprovalFlags(passedFitAndProper, paidApproval),
-      desRp.extra.lineId,
-      desRp.extra.status
+      personName = desRp.nameDetails,
+      legalName = desRp.nameDetails flatMap { n => n.previousNameDetails },
+      legalNameChangeDate = legalNameChangeDate(desRp.nameDetails) orElse None,
+      knownBy = desRp.nameDetails flatMap { n => n.othrNamesOrAliasesDetails },
+      personResidenceType = desRp.nationalityDetails,
+      ukPassport = desRp,
+      nonUKPassport = desRp,
+      dateOfBirth = desRp,
+      contactDetails = desRp.contactCommDetails,
+      addressHistory = desRp,
+      positions = desRp,
+      saRegistered = desRp.regDetails,
+      vatRegistered = desRp.regDetails,
+      experienceTraining = desRp,
+      training = desRp,
+      approvalFlags = ApprovalFlags(passedFitAndProper, paidApproval),
+      lineId = desRp.extra.lineId,
+      status = desRp.extra.status
     )
   }
 
