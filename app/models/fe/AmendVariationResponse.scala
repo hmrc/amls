@@ -34,7 +34,10 @@ case class AmendVariationResponse(
                                    addedResponsiblePeopleFitAndProper: Int = 0,
                                    addedFullYearTradingPremises: Int = 0,
                                    halfYearlyTradingPremises: Int = 0,
-                                   zeroRatedTradingPremises: Int = 0
+                                   zeroRatedTradingPremises: Int = 0,
+                                   approvalNumbers: Option[Int] = None,
+                                   approvalFeeRate: Option[BigDecimal] = None,
+                                   approvalCheckFee: Option[BigDecimal] = None
                                  )
 
 object AmendVariationResponse {
@@ -87,7 +90,10 @@ object AmendVariationResponse {
       addedResponsiblePeopleFitAndProper = des.fpNumbersNotCharged.getOrElse(0),
       addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
       halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
-      zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated
+      zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
+      approvalNumbers = Some(des.approvalNumbers.getOrElse(0)),
+      approvalFeeRate = Some(des.approvalFeeRate.getOrElse(0)),
+      approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
     )
 
   }

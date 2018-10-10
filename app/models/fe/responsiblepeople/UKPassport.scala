@@ -42,24 +42,15 @@ object UKPassport {
   }
 
   implicit def conv(responsiblePersons: ResponsiblePersons): Option[UKPassport] = {
-    val passportDetail: Option[PassportDetail] = for {
+    for {
       nd <- responsiblePersons.nationalityDetails
       id <- nd.idDetails
       non <- id.nonUkResident
       passport <- non.passportDetails
-    } yield passport
-
-    val ukPassport = passportDetail.map(passport => {
-      passport.passportNumber.ukPassportNumber match {
-        case Some(number) => UKPassportYes(number)
-        case _ => UKPassportNo
-      }
-    }).getOrElse(UKPassportNo)
-
-    if (responsiblePersons.nationalityDetails.exists(a => a.areYouUkResident)) {
-      None
+    } yield if(passport.ukPassport) {
+      UKPassportYes(passport.passportNumber.ukPassportNumber.getOrElse(""))
     } else {
-      Some(ukPassport)
+      UKPassportNo
     }
   }
 

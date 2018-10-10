@@ -459,7 +459,26 @@ object ResponsiblePeopleSection {
     vatRegistered                 = Some(vatRegistered),
     experienceTraining            = Some(experienceTraining),
     training                      = Some(training),
-    hasAlreadyPassedFitAndProper  = Some(true)
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(true), hasAlreadyPaidApprovalCheck = Some(true))
+  )))
+
+  val modelPhase2 = Some(Seq(ResponsiblePeople(
+    personName                    = Some(personName),
+    legalName                     = Some(previousName),
+    legalNameChangeDate           = Some(nameDateOfChange),
+    knownBy                       = otherNames,
+    personResidenceType           = Some(personResidenceType),
+    ukPassport                    = Some(ukPassport),
+    nonUKPassport                 = Some(nonUKPassport),
+    dateOfBirth                   = Some(DateOfBirth(new LocalDate(1970,1,1))),
+    contactDetails                = Some(contactDetails),
+    addressHistory                = Some(addressHistory),
+    positions                     = Some(positions),
+    saRegistered                  = Some(saRegistered),
+    vatRegistered                 = Some(vatRegistered),
+    experienceTraining            = Some(experienceTraining),
+    training                      = Some(training),
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
   )))
 
   val modelForView = Some(List(
@@ -470,7 +489,7 @@ object ResponsiblePeopleSection {
       Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
-      Some(NoPassport),
+      None,
       Some(DateOfBirth(new LocalDate(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
@@ -485,8 +504,7 @@ object ResponsiblePeopleSection {
       Some(VATRegisteredYes("123456789")),
       Some(ExperienceTrainingNo),
       Some(TrainingYes("TrainingDetails")),
-      Some(false),
-      hasAlreadyPassedApprovalCheck = None,
+      ApprovalFlags(Some(false), hasAlreadyPaidApprovalCheck = None),
       Some(333333)
     ),
 
@@ -496,22 +514,69 @@ object ResponsiblePeopleSection {
       Some(new LocalDate(1967, 8, 13)),
       Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
-      ukPassport = None,
-      nonUKPassport = None,
-      dateOfBirth = None,
-      contactDetails = None,
-      addressHistory = Some(ResponsiblePersonAddressHistory(
+      None, None,
+      None,
+      None,
+      Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-      positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
-      saRegistered = Some(SaRegisteredYes("1111111111")),
-      vatRegistered = Some(VATRegisteredYes("111111111")),
-      experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
-      training = Some(TrainingNo),
-      hasAlreadyPassedFitAndProper = Some(true),
-      hasAlreadyPassedApprovalCheck = None,
-      lineId = Some(222222)
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(SaRegisteredYes("1111111111")),
+      Some(VATRegisteredYes("111111111")),
+      Some(ExperienceTrainingYes("bbbbbbbbbb")),
+      Some(TrainingNo),
+      ApprovalFlags(Some(true), hasAlreadyPaidApprovalCheck = None),
+      Some(222222)
+    )))
+
+  val modelForViewPhase2 = Some(List(
+    ResponsiblePeople(
+      Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
+      Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
+      Some(new LocalDate(2001, 1, 1)),
+      Some(KnownBy(true, Some("Aliases1"))),
+      Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
+      Some(UKPassportYes("AA1111111")),
+      None,
+      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+      None,
+      Some(ResponsiblePersonAddressHistory(
+        Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
+          "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
+          ThreeYearsPlus)),
+        None,
+        None
+      )),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(SaRegisteredYes("1234567890")),
+      Some(VATRegisteredYes("123456789")),
+      Some(ExperienceTrainingNo),
+      Some(TrainingYes("TrainingDetails")),
+      ApprovalFlags(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true)),
+      Some(333333)
+    ),
+
+    ResponsiblePeople(
+      Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
+      Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
+      Some(new LocalDate(1967, 8, 13)),
+      Some(KnownBy(true, Some("bbbbbbbbbbb"))),
+      Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
+      None, None,
+      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+      None,
+      Some(ResponsiblePersonAddressHistory(
+        Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+        Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(SaRegisteredYes("1111111111")),
+      Some(VATRegisteredYes("111111111")),
+      Some(ExperienceTrainingYes("bbbbbbbbbb")),
+      Some(TrainingNo),
+      ApprovalFlags(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false)),
+      Some(222222)
     )))
 }
 
@@ -560,6 +625,24 @@ object SubscriptionViewModel {
     AboutYouSection.modelforView,
     BusinessActivitiesSection.modelForView,
     ResponsiblePeopleSection.modelForView,
+    ASPTCSPSection.TcspModelForView,
+    ASPTCSPSection.AspModelForView,
+    MsbSection.modelForView,
+    HvdSection.modelForView,
+    SupervisionSection.modelForView
+  )
+
+
+  val convertedViewModelPhase2 = SubscriptionView(
+    "111111",
+    BusinessMatchingSection.modelForView,
+    EabSection.modelForView,
+    TradingPremisesSection.modelForView,
+    AboutTheBusinessSection.modelForView,
+    BankDetailsSection.modelForView,
+    AboutYouSection.modelforView,
+    BusinessActivitiesSection.modelForView,
+    ResponsiblePeopleSection.modelForViewPhase2,
     ASPTCSPSection.TcspModelForView,
     ASPTCSPSection.AspModelForView,
     MsbSection.modelForView,

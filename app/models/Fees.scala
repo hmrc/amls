@@ -58,6 +58,9 @@ case class Fees(responseType: ResponseType,
                 totalFees: BigDecimal = 0,
                 paymentReference: Option[String],
                 difference: Option[BigDecimal],
+                approvalNumbers: Option[Int] = None,
+                approvalFeeRate: Option[BigDecimal] = None,
+                approvalCheckFee: Option[BigDecimal] = None,
                 createdAt: DateTime)
 
 object Fees {
@@ -71,6 +74,9 @@ object Fees {
         feesResponse.totalFees,
         Some(feesResponse.paymentReference),
         None,
+        feesResponse.approvalNumbers,
+        feesResponse.approvalFeeRate,
+        feesResponse.approvalCheckFee,
         DateTime.now(DateTimeZone.UTC))
     }
   }
@@ -84,6 +90,9 @@ object Fees {
       amendVariationResponse.totalFees.getOrElse(0),
       amendVariationResponse.paymentReference,
       amendVariationResponse.difference,
+      amendVariationResponse.approvalNumbers,
+      amendVariationResponse.approvalFeeRate,
+      amendVariationResponse.approvalCheckFee,
       DateTime.now(DateTimeZone.UTC))
   }
 

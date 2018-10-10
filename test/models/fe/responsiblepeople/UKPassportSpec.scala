@@ -63,131 +63,32 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
         ))
     }
 
-    val basicDesModel = ResponsiblePersons(
-      nameDetails = None,
-      nationalityDetails = Some(
-        NationalityDetails(
-          areYouUkResident = false,
-          idDetails = Some(IdDetail(
-            nonUkResident = Some(
-              NonUkResident(
-                dateOfBirth = "",
-                passportHeld = true,
-                passportDetails = Some(
-                  PassportDetail(ukPassport = true, PassportNum(Some("87654321")))
-                )
-              ))
-          )),
-          countryOfBirth = None,
-          nationality = None
-        )
-      ),
-      contactCommDetails = None,
-      currentAddressDetails = None,
-      timeAtCurrentAddress = None,
-      addressUnderThreeYears = None,
-      timeAtAddressUnderThreeYears = None,
-      addressUnderOneYear = None,
-      timeAtAddressUnderOneYear = None,
-      positionInBusiness = None,
-      regDetails = None,
-      previousExperience = false,
-      descOfPrevExperience = None,
-      amlAndCounterTerrFinTraining = false,
-      trainingDetails = None,
-      startDate = None,
-      dateChangeFlag = None,
-      msbOrTcsp = None,
-      extra = RPExtra()
-    )
+    "convert from ResponsiblePersons to UKPassport" in {
 
-    "convert from ResponsiblePersons to UKPassport- when field passportDetails is Some with passport number Some" in {
-      val desModel = basicDesModel.copy(
-        nationalityDetails = Some(
+      val desModel = ResponsiblePersons(
+        None,
+        Some(
           NationalityDetails(
-            areYouUkResident = false,
-            idDetails = Some(IdDetail(
+            false,
+            Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  dateOfBirth = "",
-                  passportHeld = true,
-                  passportDetails = Some(
-                    PassportDetail(ukPassport = true, PassportNum(Some("87654321")))
+                  "",
+                  true,
+                  Some(
+                    PassportDetail(true, PassportNum(Some("87654321")))
                   )
                 ))
-            )),
-            countryOfBirth = None,
-            nationality = None
+            )), None, None
           )
-        )
+        ),
+        None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
       )
 
       UKPassport.conv(desModel) must be(Some(UKPassportYes("87654321")))
-    }
 
-    "convert from ResponsiblePersons to UKPassport- when field passportDetails is Some with passport number None" in {
-      val desModel = basicDesModel.copy(
-        nationalityDetails = Some(
-          NationalityDetails(
-            areYouUkResident = false,
-            idDetails = Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = "",
-                  passportHeld = true,
-                  passportDetails = Some(
-                    PassportDetail(ukPassport = true, PassportNum(None))
-                  )
-                ))
-            )), countryOfBirth = None, nationality = None
-          )
-        )
-      )
-
-      UKPassport.conv(desModel) must be(Some(UKPassportNo))
-    }
-
-    "convert from ResponsiblePersons to UKPassport- when field passportDetails None" in {
-      val desModel = basicDesModel.copy(
-        nationalityDetails = Some(
-          NationalityDetails(
-            areYouUkResident = false,
-            idDetails = Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = "",
-                  passportHeld = false,
-                  passportDetails = None
-                ))
-            )), countryOfBirth = None,
-            nationality = None
-          )
-        )
-      )
-
-      UKPassport.conv(desModel) must be(Some(UKPassportNo))
-    }
-
-    "convert from ResponsiblePersons to UKPassport- when uk resident" in {
-      val desModel = basicDesModel.copy(
-        nameDetails = None,
-        nationalityDetails = Some(
-          NationalityDetails(
-            areYouUkResident = true,
-            idDetails = Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = "",
-                  passportHeld = false,
-                  passportDetails = None
-                ))
-            )), countryOfBirth = None,
-            nationality = None
-          )
-        )
-      )
-
-      UKPassport.conv(desModel) must be(None)
     }
   }
+
+
 }
