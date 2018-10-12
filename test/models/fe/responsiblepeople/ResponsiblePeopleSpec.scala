@@ -121,8 +121,7 @@ trait ResponsiblePeopleValues {
         vatRegistered = Some(VATRegisteredYes("123456789")),
         experienceTraining = Some(ExperienceTrainingNo),
         training = Some(TrainingYes("TrainingDetails")),
-        hasAlreadyPassedFitAndProper = Some(false),
-        hasAlreadyPassedApprovalCheck = None,
+        approvalFlags = ApprovalFlags(Some(false), None),
         lineId = Some(333333)
       ),
 
@@ -144,8 +143,7 @@ trait ResponsiblePeopleValues {
         vatRegistered = Some(VATRegisteredYes("111111111")),
         experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
         training = Some(TrainingNo),
-        hasAlreadyPassedFitAndProper = Some(true),
-        hasAlreadyPassedApprovalCheck = None,
+        approvalFlags = ApprovalFlags(Some(true), None),
         lineId = Some(222222)
       )))
 

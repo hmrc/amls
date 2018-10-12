@@ -527,8 +527,7 @@ object ResponsiblePeopleSection {
       vatRegistered = Some(VATRegisteredYes("111111111")),
       experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
       training = Some(TrainingNo),
-      hasAlreadyPassedFitAndProper = Some(true),
-      hasAlreadyPassedApprovalCheck = None,
+      approvalFlags = ApprovalFlags(Some(true), hasAlreadyPaidApprovalCheck = None),
       lineId = Some(222222)
     )))
 
@@ -540,7 +539,7 @@ object ResponsiblePeopleSection {
       Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
-      None,
+      Some(NoPassport),
       Some(DateOfBirth(new LocalDate(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
