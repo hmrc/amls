@@ -68,7 +68,10 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     Some(100.0),
     300.0,
     550.0,
-    "XA353523452345"
+    "XA353523452345",
+    approvalNumbers = Some(100),
+    approvalFeeRate = Some(100.0),
+    approvalCheckFee = Some(100.0)
   )
 
   val businessAddressPostcode = "TEST POSTCODE"
@@ -175,7 +178,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
 
           val subscriptionResponse = SubscriptionResponse(
-            "", amlsRegistrationNumber, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000)), previouslySubmitted = true
+            "", amlsRegistrationNumber, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000,
+                 Some(10), Some(BigDecimal(20)), Some(BigDecimal(30)))), previouslySubmitted = true
           )
 
           when {
@@ -204,7 +208,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           when{
             connector.feeResponseRepository.findLatestByAmlsReference(any())
-          } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000, Some("PaymentRef"), None, new DateTime())))
+          } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000,
+            Some("PaymentRef"), None, Some(10), Some(BigDecimal(20)), Some(BigDecimal(30)), new DateTime())))
 
           when(request.responsiblePersons).thenReturn(None)
           when(request.tradingPremises).thenReturn(mock[TradingPremises])

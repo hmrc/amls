@@ -32,12 +32,15 @@ class SubscriptionResponseSpec extends PlaySpec {
         Some(100.0),
         300.0,
         550.0,
-        "XA353523452345"
+        "XA353523452345",
+        approvalNumbers = Some(100),
+        approvalFeeRate = Some(100.0),
+        approvalCheckFee = Some(100.0)
       )
 
       SubscriptionResponse.format.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
         ("registrationFee", JsNumber(150)), ("fpFee", JsNumber(100)), ("premiseFee", JsNumber(300)), ("totalFees", JsNumber(550)),
-        ("paymentReference", JsString("XA353523452345")))))
+        ("paymentReference", JsString("XA353523452345")), ("approvalNumbers", JsNumber(100)), ("approvalFeeRate", JsNumber(100.0)), ("approvalCheckFee", JsNumber(100.0)))))
 
     }
 
@@ -50,12 +53,15 @@ class SubscriptionResponseSpec extends PlaySpec {
         Some(100.0),
         300.0,
         550.0,
-        "XA353523452345"
+        "XA353523452345",
+        approvalNumbers = Some(100),
+        approvalFeeRate = Some(100.0),
+        approvalCheckFee = Some(100.0)
       )
 
       SubscriptionResponse.format.writes(response) must be(JsObject(Seq(("etmpFormBundleNumber", JsString("111111")), ("amlsRefNo", JsString("XAML00000567890")),
          ("fpFee", JsNumber(100)), ("premiseFee", JsNumber(300)), ("totalFees", JsNumber(550)),
-        ("paymentReference", JsString("XA353523452345")))))
+        ("paymentReference", JsString("XA353523452345")), ("approvalNumbers", JsNumber(100)), ("approvalFeeRate", JsNumber(100.0)), ("approvalCheckFee", JsNumber(100.0)))))
 
     }
   }

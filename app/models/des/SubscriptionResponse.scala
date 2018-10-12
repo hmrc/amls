@@ -30,7 +30,10 @@ case class SubscriptionResponse(
                                  fpFeeRate: Option[BigDecimal] = None,
                                  fpNumbersNotCharged: Option[Int] = None,
                                  premiseFYNumber: Option[Int] = None,
-                                 premiseFeeRate: Option[BigDecimal] = None
+                                 premiseFeeRate: Option[BigDecimal] = None,
+                                 approvalNumbers: Option[Int] = None,
+                                 approvalFeeRate: Option[BigDecimal] = None,
+                                 approvalCheckFee: Option[BigDecimal] = None
                                )
 
 object SubscriptionResponse {

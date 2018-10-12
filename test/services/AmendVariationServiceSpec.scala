@@ -66,9 +66,10 @@ class AmendVariationServiceSpec extends PlaySpec
     override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
     override private[services] val auditConnector = mock[AuditConnector]
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
-
     override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: models.des.AmendVariationResponse) = feAmendVariationResponse
+    override val phase2Changes = false
   }
+
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -87,7 +88,10 @@ class AmendVariationServiceSpec extends PlaySpec
     Some(870458d),
     Some(2172427.38),
     Some("string"),
-    Some(3456.12)
+    Some(3456.12),
+    Some(100),
+    Some(100.0),
+    Some(100.0)
   )
 
   val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false)
@@ -123,7 +127,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   "AmendVariationService" must {
 
-    when{
+    when {
       successValidate.isSuccess
     } thenReturn true
 
