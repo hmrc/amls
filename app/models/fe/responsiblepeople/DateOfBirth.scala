@@ -33,8 +33,6 @@ object DateOfBirth {
       id <- nd.idDetails
     } yield id
 
-    println("ACHI idDetail : " + idDetail)
-
     val nonUkDob = idDetail.flatMap(idDetail =>
       idDetail.nonUkResident.flatMap(nonUkRes =>
         nonUkRes.dateOfBirth
@@ -45,13 +43,12 @@ object DateOfBirth {
       idDetail.dateOfBirth
     )
 
-    println("ACHI uk : " + ukDob)
-    println("ACHI non uk: " + nonUkDob)
-
-    nonUkDob match {
-      case Some(x) => Some(DateOfBirth(LocalDate.parse(x.toString)))
-      case _ if AmlsConfig.phase2Changes => Some(DateOfBirth(LocalDate.parse(ukDob.toString)))
-      case _ => None
+    if(!ukDob.isEmpty && AmlsConfig.phase2Changes) {
+      Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))
+    } else if (!nonUkDob.isEmpty) {
+      Some(DateOfBirth(LocalDate.parse(nonUkDob.getOrElse(""))))
+    } else {
+      None
     }
   }
 }
