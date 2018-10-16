@@ -28,7 +28,7 @@ case class SubscriptionResponse(
                                  paymentReference: String,
                                  fpNumbers: Option[Int] = None,
                                  fpFeeRate: Option[BigDecimal] = None,
-                                 fpNumbersNotCharged: Option[Int] = None,
+                                 responsiblePersonNotCharged: Option[Int] = None,
                                  premiseFYNumber: Option[Int] = None,
                                  premiseFeeRate: Option[BigDecimal] = None,
                                  approvalNumbers: Option[Int] = None,

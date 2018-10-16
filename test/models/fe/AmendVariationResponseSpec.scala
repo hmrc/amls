@@ -164,7 +164,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         fpNumbers = Some(1),
         fpFeeRate = Some(fpFeeRate),
         fpFee = Some(fpFee),
-        fpNumbersNotCharged = Some(1),
+        responsiblePersonNotCharged = Some(1),
         premiseFYNumber = Some(3),
         premiseFYFeeRate = Some(premiseFYFeeRate),
         premiseHYFeeRate = Some(premiseHYFeeRate),
@@ -194,6 +194,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         addedResponsiblePeople = 1,
         addedFullYearTradingPremises = 3,
         addedResponsiblePeopleFitAndProper = 1,
+        addedResponsiblePeopleApprovalCheck = 1,
         approvalNumbers = testApprovalNumbers,
         approvalFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee

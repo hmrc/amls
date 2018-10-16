@@ -25,7 +25,7 @@ case class AmendVariationResponse(
                                    fpNumbers: Option[Int],
                                    fpFeeRate: Option[BigDecimal],
                                    fpFee: Option[BigDecimal],
-                                   fpNumbersNotCharged: Option[Int],
+                                   responsiblePersonNotCharged: Option[Int],
                                    premiseFYNumber: Option[Int],
                                    premiseFYFeeRate: Option[BigDecimal],
                                    premiseFYTotal: Option[BigDecimal],

@@ -36,7 +36,7 @@ object SubscriptionResponse {
     SubscriptionResponse(desResponse.etmpFormBundleNumber,
       desResponse.amlsRefNo,
       desResponse.fpNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0) - desResponse.fpNumbersNotCharged.getOrElse(0),
+      desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
       desResponse.premiseFYNumber.getOrElse(0),
       Some(SubscriptionFees(desResponse.paymentReference,
         desResponse.registrationFee.getOrElse(0),
