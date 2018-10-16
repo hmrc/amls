@@ -30,7 +30,7 @@ class ResidenceTypeSpec extends PlaySpec {
         Some(IdDetail(
           None,
           Some(NonUkResident(
-            "2001-01-01",
+            Some("2001-01-01"),
             true,
             Some(PassportDetail(
               true,

@@ -58,7 +58,7 @@ class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
           false,
           Some(IdDetail(
             nonUkResident = Some(NonUkResident(
-              "1990-03-23",false,None
+              Some("1990-03-23"),false,None
             ))
           )),None,None
         )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
@@ -117,7 +117,7 @@ class DateOfBirthPhase2Spec extends PlaySpec with OneAppPerSuite {
           false,
           Some(IdDetail(
             nonUkResident = Some(NonUkResident(
-              "1990-03-23",false,None
+              Some("1990-03-23"),false,None
             ))
           )),None,None
         )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
