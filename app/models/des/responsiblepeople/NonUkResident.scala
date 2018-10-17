@@ -32,12 +32,10 @@ object NonUkResident {
       rp.ukPassport flatMap {
         case UKPassportYes(num) => rt.isUKResidence match {
           case NonUKResidence =>
-            //rp.dateOfBirth map { dob =>
-              Some(IdDetail(
-                None,
-                Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
-              ))
-            //}
+            Some(IdDetail(
+              None,
+              Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
+            ))
         }
         case _ => None
       } getOrElse {
@@ -45,17 +43,13 @@ object NonUkResident {
           case (Some(NonUKPassportYes(num)), NonUKResidence) => {
             IdDetail(
               None,
-              //rp.dateOfBirth map { dob =>
-                Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true,
-                  Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
-              //})
+              Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true,
+                Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
           }
           case (Some(NoPassport) | None, NonUKResidence) => {
             IdDetail(
               None,
-              //rp.dateOfBirth map { dob =>
               Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, false, None)))
-              //})
           }
         }
       }

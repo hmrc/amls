@@ -44,6 +44,16 @@ class NonUkResidentSpec extends PlaySpec {
         true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
     }
 
+    "convert frontend model to des model for NonUKPassport with no DOB" in {
+      val rp = ResponsiblePeople(
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
+        nonUKPassport = Some(NonUKPassportYes("1234612124646")),
+        dateOfBirth = None
+      )
+      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(None,
+        true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
+    }
+
     "convert frontend model to des model for NoPassport" when {
       "nonUkPassport is NoPassport" in {
         val rp = ResponsiblePeople(
