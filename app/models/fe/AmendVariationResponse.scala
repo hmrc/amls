@@ -37,7 +37,7 @@ case class AmendVariationResponse(
                                    halfYearlyTradingPremises: Int = 0,
                                    zeroRatedTradingPremises: Int = 0,
                                    approvalNumbers: Option[Int] = None,
-                                   approvalFeeRate: Option[BigDecimal] = None,
+                                   approvalCheckFeeRate: Option[BigDecimal] = None,
                                    approvalCheckFee: Option[BigDecimal] = None
                                  )
 
@@ -94,7 +94,7 @@ object AmendVariationResponse {
       halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
       zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
       approvalNumbers = Some(des.approvalNumbers.getOrElse(0)),
-      approvalFeeRate = Some(des.approvalFeeRate.getOrElse(0)),
+      approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
       approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
     )
 

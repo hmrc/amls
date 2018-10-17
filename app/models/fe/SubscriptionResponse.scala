@@ -49,7 +49,7 @@ object SubscriptionResponse {
         desResponse.premiseFee,
         desResponse.premiseFeeRate,
         desResponse.totalFees,
-        desResponse.approvalFeeRate,
+        desResponse.approvalCheckFeeRate,
         desResponse.approvalCheckFee)
       )
     )

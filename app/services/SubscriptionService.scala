@@ -184,7 +184,6 @@ class SubscriptionService @Inject()(
       request.responsiblePersons.fold(0) { rp =>
         rp.count(_.msbOrTcsp.fold(false) {
           _.passedFitAndProperTest
-
         })
       }
     }
@@ -208,7 +207,7 @@ class SubscriptionService @Inject()(
         responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
         Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalCheckFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
 
       case None => SubscriptionResponse("",
         amlsRegNo,
@@ -220,7 +219,6 @@ class SubscriptionService @Inject()(
         None,
         previouslySubmitted = true)
     }
-
   }
 
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)

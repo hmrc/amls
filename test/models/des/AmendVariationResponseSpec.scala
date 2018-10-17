@@ -46,7 +46,7 @@ class AmendVariationResponseSpec extends PlaySpec {
   "halfYearlyTradingPremises" : 0,
   "zeroRatedTradingPremises" : 0,
   "approvalNumbers" : 100,
-  "approvalFeeRate" : 100.0,
+  "approvalCheckFeeRate" : 100.0,
   "approvalCheckFee" : 100.0
 }"""
 
@@ -71,7 +71,7 @@ class AmendVariationResponseSpec extends PlaySpec {
   "halfYearlyTradingPremises" : 0,
   "zeroRatedTradingPremises" : 0,
   "approvalNumbers" : 100,
-  "approvalFeeRate" : 100.0,
+  "approvalCheckFeeRate" : 100.0,
   "approvalCheckFee" : 100.0
 }"""
 

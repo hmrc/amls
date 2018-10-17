@@ -16,7 +16,7 @@
 
 package models.des
 
-import models.des
+import models.{des, fe}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNumber, JsObject, JsString}
 
@@ -35,11 +35,11 @@ class SubscriptionResponseSpec extends PlaySpec {
         "XA353523452345",
         responsiblePersonNotCharged = Some(1),
         approvalNumbers = Some(100),
-        approvalFeeRate = Some(100.0),
+        approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
 
-      SubscriptionResponse.format.writes(response) must be(JsObject(Seq(
+      des.SubscriptionResponse.format.writes(response) must be(JsObject(Seq(
         ("etmpFormBundleNumber", JsString("111111")),
         ("amlsRefNo", JsString("XAML00000567890")),
         ("registrationFee", JsNumber(150)),
@@ -49,7 +49,7 @@ class SubscriptionResponseSpec extends PlaySpec {
         ("paymentReference", JsString("XA353523452345")),
         ("responsiblePersonNotCharged", JsNumber(1)),
         ("approvalNumbers", JsNumber(100)),
-        ("approvalFeeRate", JsNumber(100.0)),
+        ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
 
     }
@@ -66,11 +66,11 @@ class SubscriptionResponseSpec extends PlaySpec {
         "XA353523452345",
         responsiblePersonNotCharged = Some(1),
         approvalNumbers = Some(100),
-        approvalFeeRate = Some(100.0),
+        approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
 
-      SubscriptionResponse.format.writes(response) must be(JsObject(Seq(
+      des.SubscriptionResponse.format.writes(response) must be(JsObject(Seq(
         ("etmpFormBundleNumber", JsString("111111")),
         ("amlsRefNo", JsString("XAML00000567890")),
         ("fpFee", JsNumber(100)),
@@ -79,8 +79,58 @@ class SubscriptionResponseSpec extends PlaySpec {
         ("paymentReference", JsString("XA353523452345")),
         ("responsiblePersonNotCharged", JsNumber(1)),
         ("approvalNumbers", JsNumber(100)),
-        ("approvalFeeRate", JsNumber(100.0)),
+        ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
+    }
+
+    "provide correct number of fit and proper responsible people to be charged" in {
+
+      val response = des.SubscriptionResponse(
+        etmpFormBundleNumber = "111111",
+        amlsRefNo = "XAML00000567890",
+        registrationFee = Some(150.00),
+        fpFee = Some(100.0),
+        premiseFee = 300.0,
+        totalFees = 550.0,
+        paymentReference = "XA353523452345",
+        fpNumbers = Some(5),
+        fpFeeRate = Some(40.0),
+        responsiblePersonNotCharged = Some(2),
+        approvalNumbers = Some(0),
+        approvalCheckFeeRate = Some(100.0),
+        approvalCheckFee = Some(100.0)
+      )
+
+      val feResponse = fe.SubscriptionResponse.convert(response)
+
+      feResponse.addedResponsiblePeopleFitAndProper mustBe 3
+      feResponse.addedResponsiblePeopleApprovalCheck mustBe 0
+
+    }
+
+    "provide correct number of responsible people who need to pay approval check" in {
+
+      val response = des.SubscriptionResponse(
+        etmpFormBundleNumber = "111111",
+        amlsRefNo = "XAML00000567890",
+        registrationFee = Some(150.00),
+        fpFee = Some(100.0),
+        premiseFee = 300.0,
+        totalFees = 550.0,
+        paymentReference = "XA353523452345",
+        fpNumbers = Some(0),
+        fpFeeRate = Some(40.0),
+        responsiblePersonNotCharged = Some(2),
+        approvalNumbers = Some(5),
+        approvalCheckFeeRate = Some(100.0),
+        approvalCheckFee = Some(100.0)
+      )
+
+      val feResponse = fe.SubscriptionResponse.convert(response)
+
+      feResponse.addedResponsiblePeopleApprovalCheck mustBe 3
+      feResponse.addedResponsiblePeopleFitAndProper mustBe 0
+
     }
   }
 

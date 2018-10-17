@@ -18,23 +18,22 @@ package services
 
 import java.io.InputStream
 
-import audit.{AmendVariationValidationFailedEvent, SubscriptionValidationFailedEvent}
+import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
+import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors._
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
-import org.joda.time.LocalDate
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
@@ -131,6 +130,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       }, valid = identity)
       
       Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber : Error Paths : ${errors}")
+      Logger.warn(s"[][][][][][][][][] responsible people from request ${request.responsiblePersons.toString}")
     } else {
       Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }

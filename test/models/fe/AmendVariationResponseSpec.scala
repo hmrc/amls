@@ -177,7 +177,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         premiseHYNumber = None,
         premiseHYTotal = None,
         approvalNumbers = testApprovalNumbers,
-        approvalFeeRate = testApprovalFeeRate,
+        approvalCheckFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee
 
       )) mustBe AmendVariationResponse(
@@ -196,7 +196,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         addedResponsiblePeopleFitAndProper = 1,
         addedResponsiblePeopleApprovalCheck = 1,
         approvalNumbers = testApprovalNumbers,
-        approvalFeeRate = testApprovalFeeRate,
+        approvalCheckFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee
        )
     }

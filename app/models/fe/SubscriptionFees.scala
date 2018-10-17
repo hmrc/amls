@@ -25,7 +25,7 @@ case class SubscriptionFees(paymentReference: String,
                             premiseFee: BigDecimal,
                             premiseFeeRate: Option[BigDecimal] = None,
                             totalFees: BigDecimal,
-                            approvalFeeRate: Option[BigDecimal] = None,
+                            approvalCheckFeeRate: Option[BigDecimal] = None,
                             approvalCheckFee: Option[BigDecimal] = None
                            )
 

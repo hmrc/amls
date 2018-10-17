@@ -32,7 +32,7 @@ case class SubscriptionResponse(
                                  premiseFYNumber: Option[Int] = None,
                                  premiseFeeRate: Option[BigDecimal] = None,
                                  approvalNumbers: Option[Int] = None,
-                                 approvalFeeRate: Option[BigDecimal] = None,
+                                 approvalCheckFeeRate: Option[BigDecimal] = None,
                                  approvalCheckFee: Option[BigDecimal] = None
                                )
 
