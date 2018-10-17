@@ -189,7 +189,7 @@ class SubscriptionService @Inject()(
       }
     }
 
-    def responsiblePersonsACCount = {
+    def responsiblePersonsACcount = {
       request.responsiblePersons.fold(0) { rp => rp.size }
     }
 
@@ -204,7 +204,7 @@ class SubscriptionService @Inject()(
         amlsRegNo,
         responsiblePersonsFPCount,
         responsiblePersonsPassedFitAndProperCount,
-        responsiblePersonsACCount,
+        responsiblePersonsACcount,
         responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
         Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
@@ -214,7 +214,7 @@ class SubscriptionService @Inject()(
         amlsRegNo,
         responsiblePersonsFPCount,
         responsiblePersonsPassedFitAndProperCount,
-        responsiblePersonsACCount,
+        responsiblePersonsACcount,
         responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
         None,

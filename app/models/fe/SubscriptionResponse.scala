@@ -38,9 +38,9 @@ object SubscriptionResponse {
     SubscriptionResponse(desResponse.etmpFormBundleNumber,
       desResponse.amlsRefNo,
       desResponse.fpNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
+      calculateAddedFPresponsiblePeople(desResponse),
       desResponse.approvalNumbers.getOrElse(0),
-      desResponse.approvalNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
+      calculateAddedACresponsiblePeople(desResponse),
       desResponse.premiseFYNumber.getOrElse(0),
       Some(SubscriptionFees(desResponse.paymentReference,
         desResponse.registrationFee.getOrElse(0),
@@ -55,4 +55,21 @@ object SubscriptionResponse {
     )
   }
 
+  private def calculateAddedFPresponsiblePeople(desResponse: DesSubscriptionResponse) = {
+    if (desResponse.fpNumbers.getOrElse(0)>0) {
+    desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0)
+    }
+    else {
+      0
+    }
+  }
+
+  private def calculateAddedACresponsiblePeople(desResponse: DesSubscriptionResponse) = {
+    if (desResponse.approvalNumbers.getOrElse(0)>0) {
+      desResponse.approvalNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0)
+    }
+    else {
+      0
+    }
+  }
 }
