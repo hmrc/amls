@@ -191,7 +191,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         totalFees = totalFees,
         paymentReference = Some(paymentReference),
         difference = Some(difference),
-        addedResponsiblePeople = 1,
+        responsiblePeopleFitAndProper = 1,
         addedFullYearTradingPremises = 3,
         addedResponsiblePeopleFitAndProper = 1,
         addedResponsiblePeopleApprovalCheck = 1,

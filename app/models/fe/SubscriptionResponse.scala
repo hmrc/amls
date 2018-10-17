@@ -16,14 +16,16 @@
 
 package models.fe
 
-import play.api.libs.json._
 import models.des.{SubscriptionResponse => DesSubscriptionResponse}
+import play.api.libs.json._
 
 case class SubscriptionResponse(
                                  etmpFormBundleNumber: String,
                                  amlsRefNo: String,
-                                 addedResponsiblePeople: Int = 0,
+                                 responsiblePeopleFitAndProper: Int = 0,
                                  addedResponsiblePeopleFitAndProper: Int = 0,
+                                 responsiblePeopleApprovalCheck: Int = 0,
+                                 addedResponsiblePeopleApprovalCheck: Int = 0,
                                  premiseFYNumber: Int = 0,
                                  subscriptionFees: Option[SubscriptionFees],
                                  previouslySubmitted: Boolean = false
@@ -37,6 +39,8 @@ object SubscriptionResponse {
       desResponse.amlsRefNo,
       desResponse.fpNumbers.getOrElse(0),
       desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
+      desResponse.approvalNumbers.getOrElse(0),
+      desResponse.approvalNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
       desResponse.premiseFYNumber.getOrElse(0),
       Some(SubscriptionFees(desResponse.paymentReference,
         desResponse.registrationFee.getOrElse(0),
@@ -45,7 +49,6 @@ object SubscriptionResponse {
         desResponse.premiseFee,
         desResponse.premiseFeeRate,
         desResponse.totalFees,
-        desResponse.approvalNumbers,
         desResponse.approvalFeeRate,
         desResponse.approvalCheckFee)
       )

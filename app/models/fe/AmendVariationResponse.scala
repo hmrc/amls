@@ -16,8 +16,8 @@
 
 package models.fe
 
-import play.api.libs.json.Json
 import models.des.{AmendVariationRequest, StatusProvider, AmendVariationResponse => DesAmendVariationResponse}
+import play.api.libs.json.Json
 
 case class AmendVariationResponse(
                                    processingDate: String,
@@ -30,7 +30,7 @@ case class AmendVariationResponse(
                                    totalFees: BigDecimal,
                                    paymentReference: Option[String],
                                    difference: Option[BigDecimal],
-                                   addedResponsiblePeople: Int = 0,
+                                   responsiblePeopleFitAndProper: Int = 0,
                                    addedResponsiblePeopleFitAndProper: Int = 0,
                                    addedResponsiblePeopleApprovalCheck: Int = 0,
                                    addedFullYearTradingPremises: Int = 0,
@@ -87,7 +87,7 @@ object AmendVariationResponse {
       totalFees = des.totalFees.getOrElse(0),
       paymentReference = des.paymentReference,
       difference = des.difference,
-      addedResponsiblePeople = des.fpNumbers.getOrElse(0),
+      responsiblePeopleFitAndProper = des.fpNumbers.getOrElse(0),
       addedResponsiblePeopleFitAndProper = des.responsiblePersonNotCharged.getOrElse(0),
       addedResponsiblePeopleApprovalCheck = des.responsiblePersonNotCharged.getOrElse(0),
       addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
