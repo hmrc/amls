@@ -47,7 +47,7 @@ class NationalityDetailsSpec extends PlaySpec with OneAppPerSuite {
                 dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
             )
             NationalityDetails.convert(rp) must be(Some(NationalityDetails(false,
-                Some(IdDetail(nonUkResident = Some(NonUkResident("1990-02-24", true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),
+                Some(IdDetail(nonUkResident = Some(NonUkResident(Some("1990-02-24"), true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),
                 rp.personResidenceType map { _.countryOfBirth },
                 rp.personResidenceType map { _.nationality })))
         }
@@ -81,7 +81,7 @@ class NationalityDetailsPhase2Spec extends PlaySpec with OneAppPerSuite {
                 dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
             )
             NationalityDetails.convert(rp) must be(Some(NationalityDetails(false,
-                Some(IdDetail(nonUkResident = Some(NonUkResident("1990-02-24", true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),
+                Some(IdDetail(nonUkResident = Some(NonUkResident(Some("1990-02-24"), true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),
                 rp.personResidenceType map { _.countryOfBirth },
                 rp.personResidenceType map { _.nationality })))
         }
