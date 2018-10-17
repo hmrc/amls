@@ -34,7 +34,8 @@ object NonUkResident {
           case NonUKResidence =>
             Some(IdDetail(
               None,
-              Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true, Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
+              Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true,
+                Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
             ))
         }
         case _ => None
