@@ -93,7 +93,7 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
             Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  dateOfBirth = "",
+                  dateOfBirth = Some(""),
                   passportHeld = true,
                   passportDetails = Some(
                     PassportDetail(ukPassport = false, PassportNum(
@@ -120,7 +120,7 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
             Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  dateOfBirth = "",
+                  dateOfBirth = Some(""),
                   passportHeld = true,
                   passportDetails = Some(
                     PassportDetail(false, PassportNum(
@@ -147,7 +147,7 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
             idDetails = Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  dateOfBirth = "",
+                  dateOfBirth = Some(""),
                   passportHeld = false,
                   passportDetails = None
                 ))
@@ -170,7 +170,7 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
             idDetails = Some(IdDetail(
               nonUkResident = Some(
                 NonUkResident(
-                  dateOfBirth = "",
+                  dateOfBirth = Some(""),
                   passportHeld = false,
                   passportDetails = None
                 ))

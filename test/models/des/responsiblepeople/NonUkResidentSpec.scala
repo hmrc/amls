@@ -30,7 +30,7 @@ class NonUkResidentSpec extends PlaySpec {
         ukPassport = Some(UKPassportYes("AA111111A")),
         dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
       )
-      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident("1990-02-24",
+      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
         true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))))
     }
 
@@ -40,7 +40,17 @@ class NonUkResidentSpec extends PlaySpec {
         nonUKPassport = Some(NonUKPassportYes("1234612124646")),
         dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
       )
-      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident("1990-02-24",
+      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
+        true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
+    }
+
+    "convert frontend model to des model for NonUKPassport with no DOB" in {
+      val rp = ResponsiblePeople(
+        personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
+        nonUKPassport = Some(NonUKPassportYes("1234612124646")),
+        dateOfBirth = None
+      )
+      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(None,
         true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
     }
 
@@ -52,7 +62,7 @@ class NonUkResidentSpec extends PlaySpec {
           dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
         )
 
-        NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident("1990-02-24", false, None)))))
+        NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"), false, None)))))
       }
 
       "nonUkPassport is None" in {
@@ -62,7 +72,7 @@ class NonUkResidentSpec extends PlaySpec {
           dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
         )
 
-        NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident("1990-02-24", false, None)))))
+        NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"), false, None)))))
       }
     }
   }

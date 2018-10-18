@@ -33,18 +33,22 @@ object DateOfBirth {
       id <- nd.idDetails
     } yield id
 
-    /**
-      * TODO: This code isn't correct as if the non-uk resident does not have a date of birth, and for some reason it previously have a uk one, then it will default back to the
-      * new one, we will need to write a new test for this.
-      */
-
-    idDetail.flatMap(idDetail =>
-        idDetail.nonUkResident map(_.dateOfBirth) match {
-          case Some(str) => Some(DateOfBirth(LocalDate.parse(str)))
-          case _ if AmlsConfig.phase2Changes => idDetail.dateOfBirth.map(ukDOB => DateOfBirth(LocalDate.parse(ukDOB)))
-          case _ => None
-      }
+    val nonUkDob = idDetail.flatMap(idDetail =>
+      idDetail.nonUkResident.flatMap(nonUkRes =>
+        nonUkRes.dateOfBirth
+      )
     )
-  }
 
+    val ukDob = idDetail.flatMap(idDetail =>
+      idDetail.dateOfBirth
+    )
+
+    if(!ukDob.isEmpty && AmlsConfig.phase2Changes) {
+      Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))
+    } else if (!nonUkDob.isEmpty) {
+      Some(DateOfBirth(LocalDate.parse(nonUkDob.getOrElse(""))))
+    } else {
+      None
+    }
+  }
 }
