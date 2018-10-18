@@ -103,7 +103,7 @@ class SubscriptionResponseSpec extends PlaySpec {
 
       val feResponse = fe.SubscriptionResponse.convert(response)
 
-      feResponse.addedResponsiblePeopleFitAndProper mustBe 3
+      feResponse.addedResponsiblePeopleFitAndProper mustBe 5
       feResponse.addedResponsiblePeopleApprovalCheck mustBe 0
 
     }
@@ -128,7 +128,7 @@ class SubscriptionResponseSpec extends PlaySpec {
 
       val feResponse = fe.SubscriptionResponse.convert(response)
 
-      feResponse.addedResponsiblePeopleApprovalCheck mustBe 3
+      feResponse.addedResponsiblePeopleApprovalCheck mustBe 5
       feResponse.addedResponsiblePeopleFitAndProper mustBe 0
 
     }
