@@ -24,7 +24,6 @@ case class SubscriptionResponse(
                                  amlsRefNo: String,
                                  addedResponsiblePeople: Int = 0,
                                  addedResponsiblePeopleFitAndProper: Int = 0,
-                                 responsiblePeopleApprovalCheck: Int = 0,
                                  addedResponsiblePeopleApprovalCheck: Int = 0,
                                  premiseFYNumber: Int = 0,
                                  subscriptionFees: Option[SubscriptionFees],
@@ -37,10 +36,9 @@ object SubscriptionResponse {
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
     SubscriptionResponse(desResponse.etmpFormBundleNumber,
       desResponse.amlsRefNo,
+      desResponse.fpNumbers.getOrElse(0) + desResponse.approvalNumbers.getOrElse(0),
       desResponse.fpNumbers.getOrElse(0),
-      calculateAddedFPresponsiblePeople(desResponse),
       desResponse.approvalNumbers.getOrElse(0),
-      calculateAddedACresponsiblePeople(desResponse),
       desResponse.premiseFYNumber.getOrElse(0),
       Some(SubscriptionFees(desResponse.paymentReference,
         desResponse.registrationFee.getOrElse(0),
@@ -53,23 +51,5 @@ object SubscriptionResponse {
         desResponse.approvalCheckFee)
       )
     )
-  }
-
-  private def calculateAddedFPresponsiblePeople(desResponse: DesSubscriptionResponse) = {
-    if (desResponse.fpNumbers.getOrElse(0)>0) {
-    desResponse.fpNumbers.getOrElse(0)
-    }
-    else {
-      0
-    }
-  }
-
-  private def calculateAddedACresponsiblePeople(desResponse: DesSubscriptionResponse) = {
-    if (desResponse.approvalNumbers.getOrElse(0)>0) {
-      desResponse.approvalNumbers.getOrElse(0)
-    }
-    else {
-      0
-    }
   }
 }
