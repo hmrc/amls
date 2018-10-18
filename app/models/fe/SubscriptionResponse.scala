@@ -22,7 +22,7 @@ import play.api.libs.json._
 case class SubscriptionResponse(
                                  etmpFormBundleNumber: String,
                                  amlsRefNo: String,
-                                 responsiblePeopleFitAndProper: Int = 0,
+                                 addedResponsiblePeople: Int = 0,
                                  addedResponsiblePeopleFitAndProper: Int = 0,
                                  responsiblePeopleApprovalCheck: Int = 0,
                                  addedResponsiblePeopleApprovalCheck: Int = 0,
