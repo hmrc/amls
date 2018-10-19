@@ -16,6 +16,7 @@
 
 package models.fe
 
+import config.AmlsConfig
 import models.des.{SubscriptionResponse => DesSubscriptionResponse}
 import play.api.libs.json._
 
@@ -34,22 +35,42 @@ object SubscriptionResponse {
   implicit val format = Json.format[SubscriptionResponse]
 
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
-    SubscriptionResponse(desResponse.etmpFormBundleNumber,
-      desResponse.amlsRefNo,
-      desResponse.fpNumbers.getOrElse(0) + desResponse.approvalNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0),
-      desResponse.approvalNumbers.getOrElse(0),
-      desResponse.premiseFYNumber.getOrElse(0),
-      Some(SubscriptionFees(desResponse.paymentReference,
-        desResponse.registrationFee.getOrElse(0),
-        desResponse.fpFee,
-        desResponse.fpFeeRate,
-        desResponse.premiseFee,
-        desResponse.premiseFeeRate,
-        desResponse.totalFees,
-        desResponse.approvalCheckFeeRate,
-        desResponse.approvalCheckFee)
+    if (AmlsConfig.phase2Changes) {
+      SubscriptionResponse(desResponse.etmpFormBundleNumber,
+        desResponse.amlsRefNo,
+        desResponse.fpNumbers.getOrElse(0) + desResponse.approvalNumbers.getOrElse(0),
+        desResponse.fpNumbers.getOrElse(0),
+        desResponse.approvalNumbers.getOrElse(0),
+        desResponse.premiseFYNumber.getOrElse(0),
+        Some(SubscriptionFees(desResponse.paymentReference,
+          desResponse.registrationFee.getOrElse(0),
+          desResponse.fpFee,
+          desResponse.fpFeeRate,
+          desResponse.premiseFee,
+          desResponse.premiseFeeRate,
+          desResponse.totalFees,
+          desResponse.approvalCheckFeeRate,
+          desResponse.approvalCheckFee)
+        )
       )
-    )
+    } else {
+      SubscriptionResponse(desResponse.etmpFormBundleNumber,
+        desResponse.amlsRefNo,
+        desResponse.fpNumbers.getOrElse(0),
+        desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
+        desResponse.approvalNumbers.getOrElse(0),
+        desResponse.premiseFYNumber.getOrElse(0),
+        Some(SubscriptionFees(desResponse.paymentReference,
+          desResponse.registrationFee.getOrElse(0),
+          desResponse.fpFee,
+          desResponse.fpFeeRate,
+          desResponse.premiseFee,
+          desResponse.premiseFeeRate,
+          desResponse.totalFees,
+          desResponse.approvalCheckFeeRate,
+          desResponse.approvalCheckFee)
+        )
+      )
+    }
   }
 }
