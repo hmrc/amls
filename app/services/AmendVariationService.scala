@@ -130,7 +130,6 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       }, valid = identity)
       
       Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber : Error Paths : ${errors}")
-      Logger.warn(s"[][][][][][][][][] responsible people from request ${request.responsiblePersons.toString}")
     } else {
       Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }

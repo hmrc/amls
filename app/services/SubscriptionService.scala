@@ -176,7 +176,7 @@ class SubscriptionService @Inject()(
         } yield ownBusinessPremisesDetails.size).getOrElse(0)
     }
 
-    def responsiblePersonsFPCount = {
+    def responsiblePersonsCount = {
       request.responsiblePersons.fold(0) { rp => rp.size }
     }
 
@@ -197,7 +197,7 @@ class SubscriptionService @Inject()(
     feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
       case Some(fees) => SubscriptionResponse("",
         amlsRegNo,
-        responsiblePersonsFPCount,
+        responsiblePersonsCount,
         responsiblePersonsPassedFitAndProperCount,
         responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
@@ -206,7 +206,7 @@ class SubscriptionService @Inject()(
 
       case None => SubscriptionResponse("",
         amlsRegNo,
-        responsiblePersonsFPCount,
+        responsiblePersonsCount,
         responsiblePersonsPassedFitAndProperCount,
         responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
