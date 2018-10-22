@@ -31,7 +31,7 @@ case class SubscriptionResponse(
                                  responsiblePersonNotCharged: Option[Int] = None,
                                  premiseFYNumber: Option[Int] = None,
                                  premiseFeeRate: Option[BigDecimal] = None,
-                                 approvalNumbers: Option[Int] = None,
+                                 approvalCheckNumbers: Option[Int] = None,
                                  approvalCheckFeeRate: Option[BigDecimal] = None,
                                  approvalCheckFee: Option[BigDecimal] = None
                                )

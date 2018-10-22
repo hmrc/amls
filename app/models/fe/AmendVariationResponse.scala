@@ -37,7 +37,7 @@ case class AmendVariationResponse(
                                    addedFullYearTradingPremises: Int = 0,
                                    halfYearlyTradingPremises: Int = 0,
                                    zeroRatedTradingPremises: Int = 0,
-                                   approvalNumbers: Option[Int] = None,
+                                   approvalCheckNumbers: Option[Int] = None,
                                    approvalCheckFeeRate: Option[BigDecimal] = None,
                                    approvalCheckFee: Option[BigDecimal] = None
                                  )
@@ -89,13 +89,13 @@ object AmendVariationResponse {
         totalFees = des.totalFees.getOrElse(0),
         paymentReference = des.paymentReference,
         difference = des.difference,
-        addedResponsiblePeople = des.fpNumbers.getOrElse(0) + des.approvalNumbers.getOrElse(0),
+        addedResponsiblePeople = des.fpNumbers.getOrElse(0) + des.approvalCheckNumbers.getOrElse(0),
         addedResponsiblePeopleFitAndProper = des.fpNumbers.getOrElse(0),
-        addedResponsiblePeopleApprovalCheck = des.approvalNumbers.getOrElse(0),
+        addedResponsiblePeopleApprovalCheck = des.approvalCheckNumbers.getOrElse(0),
         addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
         halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
         zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
-        approvalNumbers = Some(des.approvalNumbers.getOrElse(0)),
+        approvalCheckNumbers = Some(des.approvalCheckNumbers.getOrElse(0)),
         approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
         approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
       )
@@ -116,7 +116,7 @@ object AmendVariationResponse {
         addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
         halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
         zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
-        approvalNumbers = Some(des.approvalNumbers.getOrElse(0)),
+        approvalCheckNumbers = Some(des.approvalCheckNumbers.getOrElse(0)),
         approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
         approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
       )

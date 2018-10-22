@@ -36,7 +36,7 @@ case class AmendVariationResponse(
                                    totalFees: Option[BigDecimal],
                                    paymentReference: Option[String],
                                    difference: Option[BigDecimal],
-                                   approvalNumbers: Option[Int] = None,
+                                   approvalCheckNumbers: Option[Int] = None,
                                    approvalCheckFeeRate: Option[BigDecimal] = None,
                                    approvalCheckFee: Option[BigDecimal] = None
                                  )

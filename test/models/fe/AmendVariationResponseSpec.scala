@@ -156,7 +156,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
       val etmpFormBundleNumber = "082000004607"
       val processingDate = "2017-07-18T09:49:25Z"
 
-      val testApprovalNumbers = Some(10)
+      val testapprovalCheckNumbers = Some(10)
       val testApprovalFeeRate = Some(BigDecimal(20))
       val testApprovalCheckFee = Some(BigDecimal(30))
 
@@ -179,7 +179,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         premiseFYTotal = None,
         premiseHYNumber = None,
         premiseHYTotal = None,
-        approvalNumbers = testApprovalNumbers,
+        approvalCheckNumbers = testapprovalCheckNumbers,
         approvalCheckFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee
 
@@ -197,7 +197,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
         addedResponsiblePeople = 1,
         addedFullYearTradingPremises = 3,
         addedResponsiblePeopleFitAndProper = 1,
-        approvalNumbers = testApprovalNumbers,
+        approvalCheckNumbers = testapprovalCheckNumbers,
         approvalCheckFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee
       )
@@ -338,7 +338,7 @@ class AmendVariationResponsePhase2Spec extends PlaySpec with OneAppPerSuite with
         val etmpFormBundleNumber = "082000004607"
         val processingDate = "2017-07-18T09:49:25Z"
 
-        val testApprovalNumbers = Some(10)
+        val testapprovalCheckNumbers = Some(10)
         val testApprovalFeeRate = Some(BigDecimal(20))
         val testApprovalCheckFee = Some(BigDecimal(30))
 
@@ -361,7 +361,7 @@ class AmendVariationResponsePhase2Spec extends PlaySpec with OneAppPerSuite with
           premiseFYTotal = None,
           premiseHYNumber = None,
           premiseHYTotal = None,
-          approvalNumbers = testApprovalNumbers,
+          approvalCheckNumbers = testapprovalCheckNumbers,
           approvalCheckFeeRate = testApprovalFeeRate,
           approvalCheckFee = testApprovalCheckFee
 
@@ -380,7 +380,7 @@ class AmendVariationResponsePhase2Spec extends PlaySpec with OneAppPerSuite with
           addedFullYearTradingPremises = 3,
           addedResponsiblePeopleFitAndProper = 1,
           addedResponsiblePeopleApprovalCheck = 10,
-          approvalNumbers = testApprovalNumbers,
+          approvalCheckNumbers = testapprovalCheckNumbers,
           approvalCheckFeeRate = testApprovalFeeRate,
           approvalCheckFee = testApprovalCheckFee
          )

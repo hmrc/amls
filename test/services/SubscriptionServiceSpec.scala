@@ -68,7 +68,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     300.0,
     550.0,
     "XA353523452345",
-    approvalNumbers = Some(100),
+    approvalCheckNumbers = Some(100),
     approvalCheckFeeRate = Some(100.0),
     approvalCheckFee = Some(100.0)
   )

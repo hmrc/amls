@@ -36,7 +36,7 @@ class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
         300.0,
         550.0,
         "XA353523452345",
-        approvalNumbers = Some(100),
+        approvalCheckNumbers = Some(100),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
@@ -49,7 +49,7 @@ class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
         ("premiseFee", JsNumber(300)),
         ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")),
-        ("approvalNumbers", JsNumber(100)),
+        ("approvalCheckNumbers", JsNumber(100)),
         ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
     }
@@ -64,7 +64,7 @@ class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
         300.0,
         550.0,
         "XA353523452345",
-        approvalNumbers = Some(100),
+        approvalCheckNumbers = Some(100),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
@@ -76,7 +76,7 @@ class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
         ("premiseFee", JsNumber(300)),
         ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")),
-        ("approvalNumbers", JsNumber(100)),
+        ("approvalCheckNumbers", JsNumber(100)),
         ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
     }
@@ -99,7 +99,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         550.0,
         "XA353523452345",
         responsiblePersonNotCharged = Some(1),
-        approvalNumbers = Some(100),
+        approvalCheckNumbers = Some(100),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
@@ -113,7 +113,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")),
         ("responsiblePersonNotCharged", JsNumber(1)),
-        ("approvalNumbers", JsNumber(100)),
+        ("approvalCheckNumbers", JsNumber(100)),
         ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
 
@@ -130,7 +130,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         550.0,
         "XA353523452345",
         responsiblePersonNotCharged = Some(1),
-        approvalNumbers = Some(100),
+        approvalCheckNumbers = Some(100),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
@@ -143,7 +143,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         ("totalFees", JsNumber(550)),
         ("paymentReference", JsString("XA353523452345")),
         ("responsiblePersonNotCharged", JsNumber(1)),
-        ("approvalNumbers", JsNumber(100)),
+        ("approvalCheckNumbers", JsNumber(100)),
         ("approvalCheckFeeRate", JsNumber(100.0)),
         ("approvalCheckFee", JsNumber(100.0)))))
     }
@@ -161,7 +161,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         fpNumbers = Some(5),
         fpFeeRate = Some(40.0),
         responsiblePersonNotCharged = Some(2),
-        approvalNumbers = Some(0),
+        approvalCheckNumbers = Some(0),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
@@ -186,7 +186,7 @@ class SubscriptionResponsePhase2Spec extends PlaySpec with OneAppPerSuite {
         fpNumbers = Some(0),
         fpFeeRate = Some(40.0),
         responsiblePersonNotCharged = Some(2),
-        approvalNumbers = Some(5),
+        approvalCheckNumbers = Some(5),
         approvalCheckFeeRate = Some(100.0),
         approvalCheckFee = Some(100.0)
       )
