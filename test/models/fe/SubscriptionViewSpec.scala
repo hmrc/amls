@@ -52,36 +52,6 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite{
 
         SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp) must be(SubscriptionViewModel.convertedViewModel)
       }
-
-      "convert des model correctly to include fit and proper answer" in {
-
-        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }))) must be(SubscriptionViewModel.convertedViewModel.copy(
-          responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
-            case None => None
-            case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-            })
-          }
-        ))
-      }
-
-      "convert des model correctly to include fit and proper answer when only msb" in {
-
-        SubscriptionView.convert(DesConstants.SubscriptionViewModelForRp.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }), businessActivities = DesConstants.testBusinessActivities.copy(
-          mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false))))) must be(
-          SubscriptionViewModel.convertedViewModel.copy(
-          responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
-            case None => None
-            case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-            })
-          }
-        ,businessMatchingSection = SubscriptionViewModel.convertedViewModel.businessMatchingSection.copy(activities = BusinessActivities(Set(MoneyServiceBusiness)))))
-      }
     }
   }
 
@@ -128,10 +98,6 @@ class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite{
       "convert des model to frontend model" in {
 
         SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2) must be(SubscriptionViewModel.convertedViewModelPhase2)
-      }
-
-      "convert des model correctly to include fit and proper answer" in {
-         SubscriptionView.convert(DesConstants.SubscriptionViewModelForRpPhase2) must be(SubscriptionViewModel.convertedViewModelPhase2)
       }
     }
   }
@@ -200,40 +166,6 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
       "convert des model to frontend model" in {
 
         SubscriptionView.convert(release7SubscriptionViewModel) must be(SubscriptionViewModel.convertedViewModel)
-      }
-
-      "convert des model correctly to include fit and proper answer" in {
-
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }))) must be(SubscriptionViewModel.convertedViewModel.copy(
-          responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
-            case None => None
-            case Some(rpSeq) => Some(rpSeq.map {
-              rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-            })
-          }
-        ))
-      }
-
-      "convert des model correctly to include fit and proper answer when only msb" in {
-
-        SubscriptionView.convert(release7SubscriptionViewModel.copy(responsiblePersons = Some(DesConstants.testResponsiblePersonsForRp.map {
-          rp => rp.copy(msbOrTcsp = None)
-        }), businessActivities = DesConstants.testBusinessActivities.copy(
-          mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, false, false, false, false, false, false)),
-          all = Some(DesConstants.testBusinessActivitiesAll.copy(
-            businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-          )) ))) must be(
-          SubscriptionViewModel.convertedViewModel.copy(
-            responsiblePeopleSection = SubscriptionViewModel.convertedViewModel.responsiblePeopleSection match {
-              case None => None
-              case Some(rpSeq) => Some(rpSeq.map {
-                rp => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-              })
-            }
-            ,businessMatchingSection = SubscriptionViewModel.convertedViewModel.businessMatchingSection.copy(
-              activities = BusinessActivities(Set(MoneyServiceBusiness)))))
       }
     }
   }
