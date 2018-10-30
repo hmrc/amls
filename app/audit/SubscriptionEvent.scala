@@ -129,6 +129,7 @@ object AmendVariationValidationFailedEvent {
    reqW: Writes[AmendVariationRequest]
   ) = {
     ExtendedDataEvent(
+      // NOTE: Use auditSource and auditType when searching splunk for failures.
       auditSource = AppName.appName,
       auditType = "amendVariationValidationFailedEvent",
       tags = hc.toAuditTags("Amendment", "N/A"),
