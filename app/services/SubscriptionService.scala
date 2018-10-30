@@ -145,10 +145,10 @@ class SubscriptionService @Inject()(
           )
         }
 
+        Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : resultObjects : $resultObjects")
         auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, resultObjects))
       }, valid = identity)
 
-      Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId : Error Paths : $errors")
     } else {
       Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
