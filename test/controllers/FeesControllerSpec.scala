@@ -16,18 +16,14 @@
 
 package controllers
 
-import java.lang.RuntimeException
-
-import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.{Fees, SubscriptionResponseType}
-import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import org.joda.time.{DateTime, DateTimeZone}
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -53,7 +49,7 @@ class FeesControllerSpec extends PlaySpec
     val request = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")
 
-    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None, Some(100), Some(100.0), Some(100.0),
+    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None, Some(100), Some(100.0),
       new DateTime(2017,12,1,1,3,DateTimeZone.UTC))
 
     "GET" must {

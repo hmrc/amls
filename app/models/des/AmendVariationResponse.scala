@@ -25,7 +25,7 @@ case class AmendVariationResponse(
                                    fpNumbers: Option[Int],
                                    fpFeeRate: Option[BigDecimal],
                                    fpFee: Option[BigDecimal],
-                                   fpNumbersNotCharged: Option[Int],
+                                   responsiblePersonNotCharged: Option[Int],
                                    premiseFYNumber: Option[Int],
                                    premiseFYFeeRate: Option[BigDecimal],
                                    premiseFYTotal: Option[BigDecimal],
@@ -36,8 +36,8 @@ case class AmendVariationResponse(
                                    totalFees: Option[BigDecimal],
                                    paymentReference: Option[String],
                                    difference: Option[BigDecimal],
-                                   approvalNumbers: Option[Int] = None,
-                                   approvalFeeRate: Option[BigDecimal] = None,
+                                   approvalCheckNumbers: Option[Int] = None,
+                                   approvalCheckFeeRate: Option[BigDecimal] = None,
                                    approvalCheckFee: Option[BigDecimal] = None
                                  )
 

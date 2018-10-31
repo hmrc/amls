@@ -18,15 +18,15 @@ package services
 
 import java.io.InputStream
 
-import javax.inject.Inject
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
+import javax.inject.Inject
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
-import models.fe.{SubscriptionErrorResponse, SubscriptionFees, SubscriptionResponse}
+import models.fe.{SubscriptionFees, SubscriptionResponse}
 import models.{Fees, KnownFact, KnownFactsForService}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
@@ -184,8 +184,13 @@ class SubscriptionService @Inject()(
       request.responsiblePersons.fold(0) { rp =>
         rp.count(_.msbOrTcsp.fold(false) {
           _.passedFitAndProperTest
-
         })
+      }
+    }
+
+    def responsiblePersonsPaidApprovalCheckCount = {
+      request.responsiblePersons.fold(0) { rp =>
+        rp.count(_.passedApprovalCheck.contains(true))
       }
     }
 
@@ -194,19 +199,20 @@ class SubscriptionService @Inject()(
         amlsRegNo,
         responsiblePersonsCount,
         responsiblePersonsPassedFitAndProperCount,
+        responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
         Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalNumbers, fees.approvalFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
+          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalCheckFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
 
       case None => SubscriptionResponse("",
         amlsRegNo,
         responsiblePersonsCount,
         responsiblePersonsPassedFitAndProperCount,
+        responsiblePersonsPaidApprovalCheckCount,
         tradingPremisesCount,
         None,
         previouslySubmitted = true)
     }
-
   }
 
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
