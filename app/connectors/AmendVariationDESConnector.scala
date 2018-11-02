@@ -16,15 +16,16 @@
 
 package connectors
 
-import audit.AmendmentEvent
+import audit.{AmendmentEvent, AmendmentEventFailed}
 import exceptions.HttpStatusException
 import metrics.API6
 import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
+
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HeaderNames, HttpPut, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPut, HttpReads, HttpResponse}
 
 trait AmendVariationDESConnector extends DESConnector {
 
@@ -54,25 +55,30 @@ trait AmendVariationDESConnector extends DESConnector {
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
-        auditConnector.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        auditConnector.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API6)
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
-        Future.failed(HttpStatusException(s, Option(r.body)))
+        val httpEx = HttpStatusException(s, Option(r.body))
+        auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
+        Future.failed(httpEx)
     } recoverWith {
       case e: HttpStatusException =>
         Logger.warn(s"$prefix - Failure: Exception", e)
+        auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, e))
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API6)
         Logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
+        val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
+        auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
+        Future.failed(httpEx)
     }
   }
 

@@ -16,6 +16,7 @@
 
 package audit
 
+import exceptions.{HttpExceptionBody, HttpStatusException}
 import models.des._
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -48,7 +49,7 @@ object SubscriptionEvent {
 
 object SubscriptionFailedEvent {
   def apply
-  (safeId: String, request: SubscriptionRequest)
+  (safeId: String, request: SubscriptionRequest, ex: HttpStatusException)
   (implicit
    hc: HeaderCarrier,
    reqW: Writes[SubscriptionRequest],
@@ -61,6 +62,7 @@ object SubscriptionFailedEvent {
       detail = Json.toJson(request).as[JsObject]
         ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
         ++ JsObject(Map("safeId" -> JsString(safeId)))
+        ++ JsObject(Map("reason" -> JsString(ex.body.getOrElse("No body found"))))
     )
   }
 }
@@ -117,6 +119,35 @@ object AmendmentEvent {
       tags = hc.toAuditTags("Amendment", "N/A"),
       detail = requiredInfo.as[JsObject]
         ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+    )
+  }
+}
+
+object AmendmentEventFailed {
+  def apply
+  (amlsRegistrationNumber: String, request: AmendVariationRequest, ex: HttpStatusException)
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest],
+   resW: Writes[SubscriptionResponse]
+  ): ExtendedDataEvent = {
+
+    val inputAuditType = request.amlsMessageType match {
+      case "Amendment" => "amendmentFailed"
+      case "Variation" => "variationFailed"
+      case "Renewal"  => "renewalFailed"
+      case "Renewal Amendment" => "renewalAmendmentfailed"
+      case _ => throw new Exception("Amls Message type is missing")
+    }
+
+    ExtendedDataEvent(
+      auditSource = AppName.appName,
+      auditType = inputAuditType,
+      tags = hc.toAuditTags("Amendment", "N/A"),
+      detail = Json.toJson(request).as[JsObject]
+        ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
+        ++ JsObject(Map("amlsRegistrationNumber" -> JsString(amlsRegistrationNumber)))
+        ++ JsObject(Map("reason" -> JsString(ex.body.getOrElse("No body found"))))
     )
   }
 }

@@ -54,29 +54,30 @@ trait SubscribeDESConnector extends DESConnector {
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
-        auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Logger.debug(s"$prefix - Success response")
         Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API4)
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure response: $s")
         Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
-        Future.failed(HttpStatusException(s, Option(r.body)))
+        val httpEx = HttpStatusException(s, Option(r.body))
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
+        Future.failed(httpEx)
     } recoverWith {
       case e: HttpStatusException =>
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API4)
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data))
         Logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
+        val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
+        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
+        Future.failed(httpEx)
     }
   }
-
 }
