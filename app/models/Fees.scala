@@ -20,7 +20,6 @@ import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
 import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
@@ -58,8 +57,7 @@ case class Fees(responseType: ResponseType,
                 totalFees: BigDecimal = 0,
                 paymentReference: Option[String],
                 difference: Option[BigDecimal],
-                approvalNumbers: Option[Int] = None,
-                approvalFeeRate: Option[BigDecimal] = None,
+                approvalCheckFeeRate: Option[BigDecimal] = None,
                 approvalCheckFee: Option[BigDecimal] = None,
                 createdAt: DateTime)
 
@@ -74,8 +72,7 @@ object Fees {
         feesResponse.totalFees,
         Some(feesResponse.paymentReference),
         None,
-        feesResponse.approvalNumbers,
-        feesResponse.approvalFeeRate,
+        feesResponse.approvalCheckFeeRate,
         feesResponse.approvalCheckFee,
         DateTime.now(DateTimeZone.UTC))
     }
@@ -90,8 +87,7 @@ object Fees {
       amendVariationResponse.totalFees.getOrElse(0),
       amendVariationResponse.paymentReference,
       amendVariationResponse.difference,
-      amendVariationResponse.approvalNumbers,
-      amendVariationResponse.approvalFeeRate,
+      amendVariationResponse.approvalCheckFeeRate,
       amendVariationResponse.approvalCheckFee,
       DateTime.now(DateTimeZone.UTC))
   }

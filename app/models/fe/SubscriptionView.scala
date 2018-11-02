@@ -58,7 +58,7 @@ object SubscriptionView {
   final type Incoming = models.des.SubscriptionView
 
   implicit def convert(desView: Incoming): SubscriptionView = {
-    val view = SubscriptionView(
+    SubscriptionView(
       etmpFormBundleNumber = desView.etmpFormBundleNumber,
       businessMatchingSection = desView,
       eabSection = desView,
@@ -75,26 +75,8 @@ object SubscriptionView {
       aspSection = desView,
       msbSection = desView,
       hvdSection = desView,
-      supervisionSection = Supervision.convertFrom(desView.aspOrTcsp, desView.businessActivities.mlrActivitiesAppliedFor)
+      supervisionSection = Supervision.convertFrom(desView.aspOrTcsp,
+        desView.businessActivities.mlrActivitiesAppliedFor)
     )
-
-    val isMsbOrTcsp = (activity: BusinessActivity) => activity == MSBActivity || activity == TrustAndCompanyServices
-
-    if (view.businessMatchingSection.activities.businessActivities.exists(isMsbOrTcsp)) {
-      view.copy(responsiblePeopleSection = view.responsiblePeopleSection match {
-        case None => None
-
-        case Some(rpSeq) =>
-          Some(rpSeq.map {
-            rp => rp.approvalFlags.hasAlreadyPassedFitAndProper match {
-              case Some(a) => rp
-              case None => rp.copy(approvalFlags = rp.approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false)))
-            }
-          })
-      })
-
-    } else {
-      view
-    }
   }
 }
