@@ -16,6 +16,13 @@
 
 package exceptions
 
+import uk.gov.hmrc.play.config.AppName
+
 case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
+
   lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
+
+  override def getMessage: String = {
+    s"[${AppName.appName}][HttpStatusException][status] - API call failed with http response code: $status"
+  }
 }
