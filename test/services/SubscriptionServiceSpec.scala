@@ -174,8 +174,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
-         // val subscriptionResponse = SubscriptionResponse("", amlsRegistrationNumber, 1, 0, 0, 0, None, previouslySubmitted = true)
-
+        
           reset(connector.ggConnector)
 
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " " + amlsRegistrationNumber)).toString
