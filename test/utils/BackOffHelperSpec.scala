@@ -16,31 +16,44 @@
 
 package utils
 
+import akka.actor.ActorSystem
+import exceptions.HttpStatusException
 import models.des.DesConstants
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent.{PatienceConfiguration, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.time.{Minute, Second, Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
+import play.api.test.Helpers._
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.concurrent.Future
 
 
-class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite{
 
   override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
 
-  val backOffHelper= new BackOffHelper {}
+  val backOffHelper= new BackOffHelper {
+
+  }
 
   "BackOffHelper" must {
 
     "return a successful Future" in {
       val successfulFunction = () => Future.successful("A successful future")
 
-      whenReady(backOffHelper.expBackOffHelper(1, backOffHelper.INITIAL_WAIT_MS, successfulFunction)) {
+      whenReady(backOffHelper.expBackOffHelper(successfulFunction)) {
         result => result mustEqual("A successful future")
+      }
+    }
+
+    "retry on a 503 HTTP exception " in {
+      val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
+      whenReady(backOffHelper.expBackOffHelper(failedFunction).failed, timeout(Span(5, Seconds))) {
+        case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
     }
   }
