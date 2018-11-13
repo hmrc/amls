@@ -33,7 +33,7 @@ trait BackOffHelper  {
 
   @Inject() private var as: ActorSystem = _
 
-  def expBackOffHelper[T] ( f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
+  def doWithBackoff[T](f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
     expBackOffHelper(1, INITIAL_WAIT_MS, f)
   }
 

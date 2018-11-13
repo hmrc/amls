@@ -25,15 +25,20 @@ import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import utils.BackOffHelper
 
 
-trait ViewDESConnector extends DESConnector {
+trait ViewDESConnector extends DESConnector with BackOffHelper {
 
   private[connectors] def httpGet: HttpGet
 
-
   def view(amlsRegistrationNumber: String)
+  (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
+    doWithBackoff(() => viewFunction(amlsRegistrationNumber))
+  }
+
+  private def viewFunction(amlsRegistrationNumber: String)
           (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]

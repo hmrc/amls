@@ -17,7 +17,6 @@
 package connectors
 
 import javax.inject.Inject
-
 import audit.KnownFactsEvent
 import config.{AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
@@ -29,7 +28,7 @@ import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
-import utils.HttpResponseHelper
+import utils.{BackOffHelper, HttpResponseHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,9 +36,15 @@ import scala.concurrent.Future
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePut,
                                          val metrics: Metrics,
-                                         config: AppConfig) extends HttpResponseHelper {
+                                         config: AppConfig) extends HttpResponseHelper with BackOffHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
+                                                                            headerCarrier: HeaderCarrier,
+                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
+    doWithBackoff(() => addKnownFactsFunction(enrolmentKey, knownFacts))
+  }
+
+  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
@@ -79,8 +84,5 @@ class EnrolmentStoreConnector @Inject()(
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
-
   }
-
-
 }

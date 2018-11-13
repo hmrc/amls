@@ -41,14 +41,14 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
     "return a successful Future" in {
       val successfulFunction = () => Future.successful("A successful future")
 
-      whenReady(backOffHelper.expBackOffHelper(successfulFunction)) {
+      whenReady(backOffHelper.doWithBackoff(successfulFunction)) {
         result => result mustEqual "A successful future"
       }
     }
 
     "retry on a 503 HTTP exception " in {
       val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
-      whenReady(backOffHelper.expBackOffHelper(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
+      whenReady(backOffHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
     }
@@ -67,7 +67,8 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
           Future.successful("A successful future")
         }
       }
-      whenReady(backOffHelper.expBackOffHelper(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
+
+      whenReady(backOffHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
         result =>  {
           result mustEqual "A successful future"
           counter must be >= NUMBER_OF_RETRIES

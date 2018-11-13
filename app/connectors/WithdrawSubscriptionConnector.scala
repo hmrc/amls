@@ -26,11 +26,21 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import utils.BackOffHelper
 
-trait WithdrawSubscriptionConnector extends DESConnector {
+trait WithdrawSubscriptionConnector extends DESConnector with BackOffHelper {
+
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
+                                                                                    wr1: Writes[WithdrawSubscriptionRequest],
+                                                                                    wr2: Writes[WithdrawSubscriptionResponse],
+                                                                                    hc: HeaderCarrier
+  ): Future[WithdrawSubscriptionResponse] = {
+    doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
+  }
+
+  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
                                                                                     wr2: Writes[WithdrawSubscriptionResponse],
                                                                                     hc: HeaderCarrier

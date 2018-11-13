@@ -41,7 +41,7 @@ trait AmendVariationDESConnector extends DESConnector with BackOffHelper {
    wr2: Writes[des.AmendVariationResponse],
    hc: HeaderCarrier
   ): Future[des.AmendVariationResponse] = {
-    expBackOffHelper(() => amendFunction(amlsRegistrationNumber, data))
+    doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
   }
 
   private def amendFunction
