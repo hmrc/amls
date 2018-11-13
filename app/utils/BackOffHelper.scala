@@ -1,21 +1,39 @@
+/*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package utils
 
 import akka.actor.ActorSystem
 import akka.pattern.Patterns.after
+import config.AmlsConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import play.Play
 import play.api.Logger
 import play.api.libs.concurrent.Akka
+import sun.misc.ObjectInputFilter.Config
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 trait BackOffHelper {
 
-  val MAX_ATTEMPTS: Int = 10
-  val INITIAL_WAIT_MS: Int = 10
-  val WAIT_FACTOR: Float= 1.5f
+  lazy val MAX_ATTEMPTS: Int = AmlsConfig.maxAttempts
+  lazy val INITIAL_WAIT_MS: Int = AmlsConfig.initialWaitMs
+  lazy val WAIT_FACTOR: Float= AmlsConfig.waitFactor
 
   //@Inject() private var as: ActorSystem = _
 

@@ -16,29 +16,23 @@
 
 package utils
 
-import akka.actor.ActorSystem
 import exceptions.HttpStatusException
-import models.des.DesConstants
-import org.scalatest.concurrent.{PatienceConfiguration, ScalaFutures}
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.time.{Minute, Second, Seconds, Span}
+import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
 class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite{
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
-
-  val backOffHelper= new BackOffHelper {
-
-  }
+  override lazy val app = FakeApplication()
+  val backOffHelper= new BackOffHelper {}
+  val TIMEOUT = 5
 
   "BackOffHelper" must {
 
@@ -46,14 +40,36 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
       val successfulFunction = () => Future.successful("A successful future")
 
       whenReady(backOffHelper.expBackOffHelper(successfulFunction)) {
-        result => result mustEqual("A successful future")
+        result => result mustEqual "A successful future"
       }
     }
 
     "retry on a 503 HTTP exception " in {
       val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
-      whenReady(backOffHelper.expBackOffHelper(failedFunction).failed, timeout(Span(5, Seconds))) {
+      whenReady(backOffHelper.expBackOffHelper(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
+      }
+    }
+
+    "show that it pass after it fails" in {
+
+      val NUMBER_OF_RETRIES = 5
+      var counter = 0
+
+      val failThenSuccessFunc = () => {
+        if(counter < NUMBER_OF_RETRIES) {
+          counter = counter + 1
+          Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
+        }
+        else {
+          Future.successful("A successful future")
+        }
+      }
+      whenReady(backOffHelper.expBackOffHelper(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
+        result =>  {
+          result mustEqual "A successful future"
+          counter must be >= NUMBER_OF_RETRIES
+        }
       }
     }
   }
