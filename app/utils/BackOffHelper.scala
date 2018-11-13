@@ -25,12 +25,13 @@ import play.api.Logger
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class BackOffHelper @Inject()(as: ActorSystem) {
+trait BackOffHelper  {
 
   lazy val MAX_ATTEMPTS: Int = AmlsConfig.maxAttempts
   lazy val INITIAL_WAIT_MS: Int = AmlsConfig.initialWaitMs
   lazy val WAIT_FACTOR: Float= AmlsConfig.waitFactor
+
+  @Inject() private var as: ActorSystem = _
 
   def expBackOffHelper[T] ( f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
     expBackOffHelper(1, INITIAL_WAIT_MS, f)
