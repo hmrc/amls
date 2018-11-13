@@ -230,8 +230,6 @@ class SubscribeDESConnectorSpec extends PlaySpec
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
           capturedEvent.detail mustEqual subscriptionEvent.detail
-        case _ =>
-          true mustEqual false
       }
     }
   }
