@@ -43,7 +43,7 @@ trait BackOffHelper  {
 
     f.apply().recoverWith {
       case e: HttpStatusException =>
-        if ( e.status == 503 && currentAttempt < MAX_ATTEMPTS) {
+        if ( e.status >= 500 && e.status < 600 && currentAttempt < MAX_ATTEMPTS) {
           val wait = Math.ceil(currentWait * WAIT_FACTOR).toInt
           Logger.warn(s"Failure, retrying after $wait ms")
           after(wait.milliseconds, as.scheduler, ec, Future.successful(1)).flatMap { _ =>
