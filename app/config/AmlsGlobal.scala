@@ -16,10 +16,14 @@
 
 package config
 
-import play.api.mvc.EssentialFilter
-import play.api.{Application, Configuration}
+import exceptions.HttpStatusException
+import play.api.libs.json.Json
+import play.api.mvc.{EssentialFilter, RequestHeader, Result, Results}
+import play.api.{Application, Configuration, Logger}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.microservice.bootstrap.DefaultMicroserviceGlobal
+import uk.gov.hmrc.play.microservice.bootstrap.{DefaultMicroserviceGlobal, ErrorResponse}
+
+import scala.concurrent.Future
 
 object AmlsGlobal extends DefaultMicroserviceGlobal with RunMode {
   override lazy  val auditConnector = MicroserviceAuditConnector
@@ -31,4 +35,17 @@ object AmlsGlobal extends DefaultMicroserviceGlobal with RunMode {
   override lazy  val microserviceAuditFilter = MicroserviceAuditFilter
 
   override def authFilter: Option[EssentialFilter]  = Some(MicroserviceAuthFilter)
+
+  override def onError(request: RequestHeader, ex: Throwable): Future[Result] = {
+    ex match {
+      case e: HttpStatusException =>
+        val message = s"! Internal server error, for (${request.method}) [${request.uri}] -> "
+        Logger.error(message, ex)
+
+        val response = ErrorResponse(e.status, e.getMessage)
+        Future.successful(new Results.Status(e.status)(Json.toJson(response)))
+      case _ =>
+        super.onError(request, ex)
+    }
+  }
 }
