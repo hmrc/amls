@@ -204,6 +204,34 @@ class SubscribeDESConnectorSpec extends PlaySpec
           capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
+
+    "return a failed future (BAD_REQUEST)" in new Fixture {
+
+      val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
+
+      val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+      when {
+        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+      } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
+
+      when {
+        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+      } thenReturn Future.successful(auditResult)
+
+      whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
+        case HttpStatusException(status, body) =>
+          status mustEqual BAD_REQUEST
+          body mustEqual Some("error message")
+          val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
+          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent = captor.getValue
+          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+          capturedEvent.auditType mustEqual subscriptionEvent.auditType
+          capturedEvent.detail mustEqual subscriptionEvent.detail
+      }
+    }
   }
 
   def testRequest = Json.parse(

@@ -172,9 +172,12 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
         "returns duplicate response with amlsregno and there are stored fees" in new TestFixture {
 
+          val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
+          val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
+        
           reset(connector.ggConnector)
 
-          val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + amlsRegistrationNumber)).toString
+          val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " " + amlsRegistrationNumber)).toString
 
           val subscriptionResponse = SubscriptionResponse(
             "", amlsRegistrationNumber, 0, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000,
@@ -215,11 +218,13 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
           when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
-          whenReady(connector.subscribe(safeId, request)) {
-            result =>
-              result mustEqual subscriptionResponse
-              verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
+          val ex: DuplicateSubscriptionException = intercept[DuplicateSubscriptionException] {
+            await(connector.subscribe(safeId, request))
           }
+
+          ex.amlsRegNumber mustBe amlsRegistrationNumber
+          ex.message mustBe errorMessage
+          ex.cause mustBe HttpStatusException(BAD_REQUEST, Some(exceptionBody))
         }
 
       }

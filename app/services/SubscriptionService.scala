@@ -71,15 +71,10 @@ class SubscriptionService @Inject()(
             .findFirstIn(body.reason)
             .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
             amlsRegNo => {
-              Logger.warn(s"[SubscriptionService] - Reconstructing Subscription Response after Duplicate error for $amlsRegNo")
-              constructedSubscriptionResponse(amlsRegNo, request)(ec) flatMap {
-                case response if response.subscriptionFees.isDefined => Future.successful(response)
-                case _ =>
-                  Logger.warn(s"[SubscriptionService] - Reconstructed Subscription Response contains no fees for $amlsRegNo; failing..")
+                  Logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
                   failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
             }
-          }
         case body =>
           failResponse(ex, body)
       }
@@ -161,58 +156,6 @@ class SubscriptionService @Inject()(
     }
 
     Future.failed(ex)
-  }
-
-  private def constructedSubscriptionResponse(amlsRegNo: String, request: SubscriptionRequest)(implicit ec: ExecutionContext) = {
-
-    def tradingPremisesCount = {
-      (for {
-        agentPremises <- request.tradingPremises.agentBusinessPremises
-        agentPremisesDetails <- agentPremises.agentDetails
-      } yield agentPremisesDetails.size).getOrElse(0) +
-        (for {
-          ownPremises <- request.tradingPremises.ownBusinessPremises
-          ownBusinessPremisesDetails <- ownPremises.ownBusinessPremisesDetails
-        } yield ownBusinessPremisesDetails.size).getOrElse(0)
-    }
-
-    def responsiblePersonsCount = {
-      request.responsiblePersons.fold(0) { rp => rp.size }
-    }
-
-    def responsiblePersonsPassedFitAndProperCount = {
-      request.responsiblePersons.fold(0) { rp =>
-        rp.count(_.msbOrTcsp.fold(false) {
-          _.passedFitAndProperTest
-        })
-      }
-    }
-
-    def responsiblePersonsPaidApprovalCheckCount = {
-      request.responsiblePersons.fold(0) { rp =>
-        rp.count(_.passedApprovalCheck.contains(true))
-      }
-    }
-
-    feeResponseRepository.findLatestByAmlsReference(amlsRegNo) map {
-      case Some(fees) => SubscriptionResponse("",
-        amlsRegNo,
-        responsiblePersonsCount,
-        responsiblePersonsPassedFitAndProperCount,
-        responsiblePersonsPaidApprovalCheckCount,
-        tradingPremisesCount,
-        Some(SubscriptionFees(fees.paymentReference.getOrElse(""),
-          fees.registrationFee, fees.fpFee, None, fees.premiseFee, None, fees.totalFees, fees.approvalCheckFeeRate, fees.approvalCheckFee)), previouslySubmitted = true)
-
-      case None => SubscriptionResponse("",
-        amlsRegNo,
-        responsiblePersonsCount,
-        responsiblePersonsPassedFitAndProperCount,
-        responsiblePersonsPaidApprovalCheckCount,
-        tradingPremisesCount,
-        None,
-        previouslySubmitted = true)
-    }
   }
 
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
