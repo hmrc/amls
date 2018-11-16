@@ -25,15 +25,16 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Play
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeApplication
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
-
+  implicit override lazy val app = FakeApplication()
   val TIMEOUT = 5
-  implicit val as: ActorSystem = ActorSystem()
+  implicit val as: ActorSystem = app.actorSystem
   val backOffHelper = new BackOffHelper()
 
   "BackOffHelper" must {

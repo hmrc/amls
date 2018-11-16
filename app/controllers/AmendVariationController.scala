@@ -33,9 +33,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(val service: AmendVariationService, implicit val as: ActorSystem) extends BaseController {
-
-//  private[controllers] def service: AmendVariationService
+class AmendVariationController @Inject()(
+                                          val service: AmendVariationService,
+                                          implicit val as: ActorSystem,
+                                          implicit val backOffHelper: BackOffHelper
+                                        ) extends BaseController {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
@@ -69,7 +71,6 @@ class AmendVariationController @Inject()(val service: AmendVariationService, imp
             implicit val requestType = RequestType.Amendment
             service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
-                implicit val backOffHelper = new BackOffHelper()
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
                   response =>
                     Ok(Json.toJson(response))
