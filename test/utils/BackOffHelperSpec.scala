@@ -33,9 +33,8 @@ import scala.concurrent.Future
 
 class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
   implicit override lazy val app = FakeApplication()
+  val backOffHelper = new BackOffHelper(as = app.actorSystem)
   val TIMEOUT = 5
-  implicit val as: ActorSystem = app.actorSystem
-  val backOffHelper = new BackOffHelper()
 
   "BackOffHelper" must {
 

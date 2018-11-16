@@ -35,7 +35,6 @@ import scala.concurrent.Future
 @Singleton
 class AmendVariationController @Inject()(
                                           val service: AmendVariationService,
-                                          implicit val as: ActorSystem,
                                           implicit val backOffHelper: BackOffHelper
                                         ) extends BaseController {
 
@@ -97,7 +96,6 @@ class AmendVariationController @Inject()(
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         implicit val as: ActorSystem = ActorSystem()
-        implicit val backOffHelper = new BackOffHelper()
         update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 

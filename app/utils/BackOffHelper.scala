@@ -26,7 +26,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class BackOffHelper()(implicit val as: ActorSystem)  {
+class BackOffHelper @Inject()(val as: ActorSystem)  {
 
   lazy val MAX_ATTEMPTS: Int = AmlsConfig.maxAttempts
   lazy val INITIAL_WAIT_MS: Int = AmlsConfig.initialWaitMs

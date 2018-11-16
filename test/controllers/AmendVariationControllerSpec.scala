@@ -55,7 +55,6 @@ class AmendVariationControllerSpec extends PlaySpec
   implicit override lazy val app = FakeApplication()
   val Controller = new AmendVariationController(
     service = mock[AmendVariationService],
-    as = app.actorSystem,
     backOffHelper = mock[BackOffHelper]
   )
 

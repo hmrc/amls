@@ -51,8 +51,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
     with AmlsReferenceNumberGenerator {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-  implicit val as: ActorSystem = app.actorSystem
-  implicit val backOffHelper: BackOffHelper = new BackOffHelper()
+  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
   trait Fixture {
 
     object testDESConnector extends AmendVariationDESConnector {
