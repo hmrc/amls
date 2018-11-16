@@ -59,13 +59,6 @@ class AmendVariationControllerSpec extends PlaySpec
     backOffHelper = mock[BackOffHelper]
   )
 
-  trait Fixture {
-//    object Controller extends AmendVariationController {
-//      override val service = mock[AmendVariationService]
-//    }
-
-  }
-
   implicit val hc = HeaderCarrier()
 
   val body = fe.SubscriptionRequest(
