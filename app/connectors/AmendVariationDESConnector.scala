@@ -29,7 +29,7 @@ import utils.BackOffHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationDESConnector extends DESConnector with BackOffHelper {
+trait AmendVariationDESConnector extends DESConnector {
 
   private[connectors] def httpPut: HttpPut
 
@@ -39,9 +39,10 @@ trait AmendVariationDESConnector extends DESConnector with BackOffHelper {
    ec: ExecutionContext,
    wr1: Writes[des.AmendVariationRequest],
    wr2: Writes[des.AmendVariationResponse],
-   hc: HeaderCarrier
+   hc: HeaderCarrier,
+   backOffHelper: BackOffHelper
   ): Future[des.AmendVariationResponse] = {
-    doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
+    backOffHelper.doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
   }
 
   private def amendFunction

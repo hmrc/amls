@@ -29,16 +29,16 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 import utils.BackOffHelper
 
 
-trait ViewDESConnector extends DESConnector with BackOffHelper {
+trait ViewDESConnector extends DESConnector {
 
   private[connectors] def httpGet: HttpGet
 
-  def view(amlsRegistrationNumber: String)
-  (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
-    doWithBackoff(() => viewFunction(amlsRegistrationNumber))
-  }
+//  def view(amlsRegistrationNumber: String)
+//  (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
+//    viewFunction(amlsRegistrationNumber)
+//  }
 
-  private def viewFunction(amlsRegistrationNumber: String)
+  def view(amlsRegistrationNumber: String)
           (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]

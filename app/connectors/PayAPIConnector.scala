@@ -30,14 +30,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
-trait PayAPIConnector extends HttpResponseHelper with ServicesConfig with BackOffHelper {
+trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
 
   private[connectors] def httpGet: HttpGet
   private[connectors] val paymentUrl: String
   private[connectors] val metrics: Metrics
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
-    doWithBackoff(() => getPaymentFunction(paymentId))
+    getPaymentFunction(paymentId)
   }
 
   private def getPaymentFunction(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {

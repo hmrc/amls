@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse}
 import utils.BackOffHelper
 
-trait SubscribeDESConnector extends DESConnector with BackOffHelper {
+trait SubscribeDESConnector extends DESConnector {
 
   private[connectors] def httpPost: HttpPost
 
@@ -40,7 +40,7 @@ trait SubscribeDESConnector extends DESConnector with BackOffHelper {
    wr2: Writes[des.SubscriptionResponse],
    hc: HeaderCarrier
   ): Future[des.SubscriptionResponse] = {
-    doWithBackoff(() => subscribeFunction(safeId, data))
+    subscribeFunction(safeId, data)
   }
 
   private def subscribeFunction

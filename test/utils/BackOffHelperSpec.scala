@@ -16,11 +16,13 @@
 
 package utils
 
+import akka.actor.ActorSystem
 import exceptions.HttpStatusException
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.Play
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
@@ -28,13 +30,11 @@ import play.api.test.Helpers._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
 
-  override lazy val app = new GuiceApplicationBuilder()
-    .bindings(bind[BackOffHelper].to[BackOffHelperInstance])
-    .build()
-  val backOffHelper = app.injector.instanceOf( classOf[BackOffHelper])
   val TIMEOUT = 5
+  implicit val as: ActorSystem = ActorSystem()
+  val backOffHelper = new BackOffHelper()
 
   "BackOffHelper" must {
 
@@ -77,7 +77,3 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
     }
   }
 }
-
-private  class BackOffHelperInstance extends BackOffHelper {
-}
-

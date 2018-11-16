@@ -36,6 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.BackOffHelper
 
 class AmendVariationServiceSpec extends PlaySpec
   with OneAppPerSuite
@@ -155,15 +156,15 @@ class AmendVariationServiceSpec extends PlaySpec
       } thenReturn tradingPremises
 
       when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any())
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
+        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when{
         TestAmendVariationService.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)) {
+      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)(hc, global, backOffHelper = mock[BackOffHelper])) {
         result =>
           result mustEqual feAmendVariationResponse
       }

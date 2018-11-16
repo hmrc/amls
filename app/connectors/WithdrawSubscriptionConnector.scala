@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.BackOffHelper
 
-trait WithdrawSubscriptionConnector extends DESConnector with BackOffHelper {
+trait WithdrawSubscriptionConnector extends DESConnector {
 
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
@@ -37,7 +37,7 @@ trait WithdrawSubscriptionConnector extends DESConnector with BackOffHelper {
                                                                                     wr2: Writes[WithdrawSubscriptionResponse],
                                                                                     hc: HeaderCarrier
   ): Future[WithdrawSubscriptionResponse] = {
-    doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
+    withdrawalFunction(amlsRegistrationNumber, data)
   }
 
   private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,

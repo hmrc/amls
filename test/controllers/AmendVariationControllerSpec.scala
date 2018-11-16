@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.actor.ActorSystem
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.{AmendVariationRequest, DesConstants}
@@ -33,9 +34,10 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.mvc.{Request, Result}
-import play.api.test.FakeRequest
+import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers._
 import services.AmendVariationService
 import utils.IterateeHelpers
@@ -51,11 +53,13 @@ class AmendVariationControllerSpec extends PlaySpec
   with IterateeHelpers
   with OneAppPerSuite {
 
-  trait Fixture {
+  implicit override lazy val app = FakeApplication()
+  val Controller = new AmendVariationController(service = mock[AmendVariationService], as = app.actorSystem)
 
-    object Controller extends AmendVariationController {
-      override val service = mock[AmendVariationService]
-    }
+  trait Fixture {
+//    object Controller extends AmendVariationController {
+//      override val service = mock[AmendVariationService]
+//    }
 
   }
 
@@ -137,7 +141,7 @@ class AmendVariationControllerSpec extends PlaySpec
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
+          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.successful(feResponse)
 
         val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(postRequest)
@@ -154,7 +158,7 @@ class AmendVariationControllerSpec extends PlaySpec
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
+          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
         whenReady(Controller.amend("test", "OrgRef", amlsRegistrationNumber)(postRequest).failed) {
@@ -199,7 +203,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
       "call through to the service with an Amendment messageType" in new Fixture {
 
-        when(Controller.service.update(any(), any())(any(), any()))
+        when(Controller.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
         val mockRequest = mock[AmendVariationRequest]
@@ -210,7 +214,7 @@ class AmendVariationControllerSpec extends PlaySpec
         private val resultF = Controller.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())
+          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Amendment")
         }
       }
@@ -235,7 +239,7 @@ class AmendVariationControllerSpec extends PlaySpec
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
+          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.successful(feResponse)
 
         val result = Controller.variation("test", "orgRef", amlsRegistrationNumber)(postRequest)
@@ -252,7 +256,7 @@ class AmendVariationControllerSpec extends PlaySpec
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any())
+          Controller.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
         whenReady(Controller.variation("test", "OrgRef", amlsRegistrationNumber)(postRequest).failed) {
@@ -296,7 +300,7 @@ class AmendVariationControllerSpec extends PlaySpec
       }
 
       "call through to the service with an Variation messageType" in new Fixture {
-        when(Controller.service.update(any(), any())(any(), any()))
+        when(Controller.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
         val mockRequest = mock[AmendVariationRequest]
@@ -307,14 +311,14 @@ class AmendVariationControllerSpec extends PlaySpec
         private val resultF = Controller.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())
+          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Variation")
         }
       }
 
 
       "call through to the service with an Renewal messageType" in new Fixture {
-        when(Controller.service.update(any(), any())(any(), any()))
+        when(Controller.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
         val mockRequest = mock[AmendVariationRequest]
@@ -325,13 +329,13 @@ class AmendVariationControllerSpec extends PlaySpec
         private val resultF = Controller.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())
+          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal")
         }
       }
 
       "call through to the service with an Renewal Amendment messageType" in new Fixture {
-        when(Controller.service.update(any(), any())(any(), any()))
+        when(Controller.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
         val mockRequest = mock[AmendVariationRequest]
@@ -342,7 +346,7 @@ class AmendVariationControllerSpec extends PlaySpec
         private val resultF = Controller.renewalAmendment("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any())
+          verify(Controller.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal Amendment")
         }
       }

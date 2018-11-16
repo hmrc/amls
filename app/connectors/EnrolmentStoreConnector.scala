@@ -36,12 +36,12 @@ import scala.concurrent.Future
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePut,
                                          val metrics: Metrics,
-                                         config: AppConfig) extends HttpResponseHelper with BackOffHelper {
+                                         config: AppConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
-    doWithBackoff(() => addKnownFactsFunction(enrolmentKey, knownFacts))
+    addKnownFactsFunction(enrolmentKey, knownFacts)
   }
 
   private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit

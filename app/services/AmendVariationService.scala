@@ -30,7 +30,7 @@ import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.{DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
+import utils.{BackOffHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -106,7 +106,8 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   (amlsRegistrationNumber: String, request: AmendVariationRequest)
   (implicit
    hc: HeaderCarrier,
-   ec: ExecutionContext
+   ec: ExecutionContext,
+   backOffHelper: BackOffHelper
   ): Future[AmendVariationResponse] = {
 
     val result = validateResult(request)

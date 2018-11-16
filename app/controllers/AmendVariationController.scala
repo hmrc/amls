@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.actor.ActorSystem
 import exceptions.HttpStatusException
 import models.des.{RequestType, _}
 import models.fe
@@ -26,12 +27,15 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.BackOffHelper
+import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.Future
 
-trait AmendVariationController extends BaseController {
+@Singleton
+class AmendVariationController @Inject()(val service: AmendVariationService, implicit val as: ActorSystem) extends BaseController {
 
-  private[controllers] def service: AmendVariationService
+//  private[controllers] def service: AmendVariationService
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
@@ -65,6 +69,7 @@ trait AmendVariationController extends BaseController {
             implicit val requestType = RequestType.Amendment
             service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
+                implicit val backOffHelper = new BackOffHelper()
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
                   response =>
                     Ok(Json.toJson(response))
@@ -90,6 +95,8 @@ trait AmendVariationController extends BaseController {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        implicit val as: ActorSystem = ActorSystem()
+        implicit val backOffHelper = new BackOffHelper()
         update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 
@@ -118,8 +125,8 @@ trait AmendVariationController extends BaseController {
     }
 }
 
-object AmendVariationController extends AmendVariationController {
-  // $COVERAGE-OFF$
-  override private[controllers] val service = AmendVariationService
-}
+//object AmendVariationController extends AmendVariationController {
+//  // $COVERAGE-OFF$
+//  override private[controllers] val service = AmendVariationService
+//}
 

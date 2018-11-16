@@ -30,14 +30,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.BackOffHelper
 
-trait DeregisterSubscriptionConnector extends DESConnector with BackOffHelper {
+trait DeregisterSubscriptionConnector extends DESConnector {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                           wr1: Writes[DeregisterSubscriptionRequest],
                                                                                           wr2: Writes[DeregisterSubscriptionResponse],
                                                                                           hc: HeaderCarrier
   ): Future[DeregisterSubscriptionResponse] = {
-    doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data) )
+    deregistrationFunction(amlsRegistrationNumber, data)
   }
 
   private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,

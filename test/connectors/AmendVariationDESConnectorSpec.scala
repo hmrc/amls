@@ -16,6 +16,7 @@
 
 package connectors
 
+import akka.actor.ActorSystem
 import audit.{AmendmentEventFailed, MockAudit}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
@@ -40,6 +41,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.BackOffHelper
 
 class AmendVariationDESConnectorSpec extends PlaySpec
     with MockitoSugar
@@ -49,7 +51,8 @@ class AmendVariationDESConnectorSpec extends PlaySpec
     with AmlsReferenceNumberGenerator {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
+  implicit val as: ActorSystem = app.actorSystem
+  implicit val backOffHelper: BackOffHelper = new BackOffHelper()
   trait Fixture {
 
     object testDESConnector extends AmendVariationDESConnector {
@@ -209,7 +212,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          verify(testDESConnector.auditConnector, times(10)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
