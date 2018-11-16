@@ -120,7 +120,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
   "AmendvariationController" when {
     "amend is called" must {
-      "return a `BadRequest` response when the AmlsRegistrationNumber is invalid" in new Fixture {
+      "return a `BadRequest` response when the AmlsRegistrationNumber is invalid" in {
 
         val result = Controller.amend("test", "test", "test")(postRequest)
         val failure = Json.obj("errors" -> Seq("Invalid AmlsRegistrationNumber"))
