@@ -20,23 +20,31 @@ import audit.MockAudit
 import config.AmlsConfig
 import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
-import org.mockito.Mockito._
 import org.mockito.Matchers.{eq => eqTo, _}
-import org.scalatest.{BeforeAndAfter, MustMatchers}
+import org.mockito.Mockito._
 import org.scalatest.concurrent._
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.{BeforeAndAfter, MustMatchers}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import play.api.test.Helpers._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.BackOffHelper
 
-class RegistrationDetailsDesConnectorSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar with BeforeAndAfter with OneAppPerSuite {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class RegistrationDetailsDesConnectorSpec extends PlaySpec
+  with MustMatchers
+  with ScalaFutures
+  with MockitoSugar
+  with BeforeAndAfter
+  with OneAppPerSuite {
 
   val mockHttpGet = mock[HttpGet]
+
+  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
 
   val connector = new RegistrationDetailsDesConnector {
     override private[connectors] def baseUrl = "baseUrl"

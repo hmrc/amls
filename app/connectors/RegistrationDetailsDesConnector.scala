@@ -20,11 +20,21 @@ import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import utils.BackOffHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RegistrationDetailsDesConnector extends DESConnector  {
-  def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
+    def getRegistrationDetails(safeId: String)(
+      implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      backOffHelper: BackOffHelper
+    ): Future[RegistrationDetails] = {
+      backOffHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
+    }
+
+    private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
 
     httpGet.GET[HttpResponse](url)(implicitly, desHeaderCarrier, ec) map {

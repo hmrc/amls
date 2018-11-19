@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.{MockAudit, SubscriptionEvent, SubscriptionFailedEvent}
+import audit.{MockAudit, SubscriptionFailedEvent}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -32,13 +32,13 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.audit.HandlerResult
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.BackOffHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.BackOffHelper
 
 class SubscribeDESConnectorSpec extends PlaySpec
   with MockitoSugar

@@ -17,15 +17,20 @@
 package controllers
 
 import connectors.{DESConnector, RegistrationDetailsDesConnector}
+import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.BackOffHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait RegistrationDetailsController extends BaseController {
-  private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector
+@Singleton
+class RegistrationDetailsController @Inject()(
+                                              val registrationDetailsConnector: RegistrationDetailsDesConnector,
+                                               implicit val backOffHelper: BackOffHelper
+                                             ) extends BaseController {
 
   def get(accountType: String, ref: String, safeId: String) = Action.async {
     implicit request =>
@@ -33,8 +38,4 @@ trait RegistrationDetailsController extends BaseController {
         Ok(Json.toJson(RegistrationDetails.convert(details)))
       }
   }
-}
-
-object RegistrationDetailsController extends RegistrationDetailsController {
-  private[controllers] lazy val registrationDetailsConnector = DESConnector
 }
