@@ -16,7 +16,6 @@
 
 package controllers
 
-import akka.actor.ActorSystem
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.{AmendVariationRequest, DesConstants}
@@ -41,7 +40,6 @@ import play.api.test.{FakeApplication, FakeRequest}
 import services.AmendVariationService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{BackOffHelper, IterateeHelpers}
-
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends PlaySpec
@@ -132,7 +130,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any())(any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -149,7 +147,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any())(any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -203,7 +201,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
 
         val resultF = Controller.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
@@ -230,7 +228,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any())(any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -247,7 +245,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val viewModel = DesConstants.SubscriptionViewModelForRp
 
-        when(Controller.service.compareAndUpdate(any(), any())(any()))
+        when(Controller.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
@@ -300,7 +298,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
 
         val resultF = Controller.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
@@ -318,7 +316,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
 
         val resultF = Controller.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
@@ -335,7 +333,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
         val mockRequest = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
-        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any()))
+        when(Controller.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
 
         val resultF = Controller.renewalAmendment("AccountType", "Ref", "XTML00000565656")(postRequest)

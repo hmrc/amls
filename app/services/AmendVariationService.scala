@@ -17,7 +17,6 @@
 package services
 
 import java.io.InputStream
-
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.{AmlsConfig, MicroserviceAuditConnector}
@@ -31,7 +30,6 @@ import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{BackOffHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -78,7 +76,10 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     }
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(implicit hc: HeaderCarrier): Future[AmendVariationRequest] = {
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
+    implicit hc: HeaderCarrier,
+    backOffHelper: BackOffHelper
+  ): Future[AmendVariationRequest] = {
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
 
       val updatedRequest = updateRequest(desRequest, viewResponse)

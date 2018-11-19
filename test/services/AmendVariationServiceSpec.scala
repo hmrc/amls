@@ -31,7 +31,6 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesRepository
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
@@ -179,7 +178,7 @@ class AmendVariationServiceSpec extends PlaySpec
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(viewModel)
 
       val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
@@ -188,7 +187,9 @@ class AmendVariationServiceSpec extends PlaySpec
         )
       )
 
-      whenReady(TestAmendVariationService.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)) {
+      whenReady(TestAmendVariationService.compareAndUpdate(
+        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, backOffHelper = mock[BackOffHelper])
+      ) {
         updatedRequest =>
           updatedRequest must be(testRequest)
       }

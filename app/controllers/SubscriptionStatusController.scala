@@ -25,7 +25,6 @@ import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.BackOffHelper
-
 import scala.concurrent.Future
 
 @Singleton

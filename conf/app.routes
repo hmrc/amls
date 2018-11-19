@@ -7,7 +7,7 @@ POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/renewal     
 POST        /subscription/:accountType/:ref/:amlsRegistrationNumber/renewalAmendment        @controllers.AmendVariationController.renewalAmendment(accountType:String, ref:String, amlsRegistrationNumber: String)
 
 GET         /subscription/:accountType/:ref/:amlsRegistrationNumber/status                  @controllers.SubscriptionStatusController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
-GET         /subscription/:accountType/:ref/:amlsRegistrationNumber                         controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
+GET         /subscription/:accountType/:ref/:amlsRegistrationNumber                         @controllers.SubscriptionViewController.view(accountType:String, ref:String, amlsRegistrationNumber: String)
 
 GET         /payment/:accountType/:ref/:amlsRegistrationNumber                              controllers.FeeResponseController.get(accountType:String, ref:String, amlsRegistrationNumber: String)
 POST        /payment/:accountType/:ref/:amlsRegistrationNumber/:safeId                      @controllers.PaymentController.savePayment(accountType:String, ref:String, amlsRegistrationNumber: String, safeId: String)
