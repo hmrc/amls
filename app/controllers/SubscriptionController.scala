@@ -28,7 +28,7 @@ package controllers
  import play.api.mvc.Action
  import services.SubscriptionService
  import uk.gov.hmrc.play.microservice.controller.BaseController
- import utils.BackOffHelper
+ import utils.ApiRetryHelper
 
  import scala.concurrent.Future
  import scala.util.matching.Regex
@@ -36,7 +36,7 @@ package controllers
 @Singleton
 class SubscriptionController @Inject()(
                                         val subscriptionService: SubscriptionService,
-                                        implicit val backOffHelper: BackOffHelper
+                                        implicit val apiRetryHelper: ApiRetryHelper
                                       ) extends BaseController {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r

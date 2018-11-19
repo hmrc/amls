@@ -24,7 +24,7 @@ import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ViewDESConnector extends DESConnector {
@@ -34,9 +34,9 @@ trait ViewDESConnector extends DESConnector {
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,
       hc: HeaderCarrier,
-      backOffHelper: BackOffHelper
+      apiRetryHelper: ApiRetryHelper
     ): Future[SubscriptionView] = {
-      backOffHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
+      apiRetryHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
     }
 
   private def viewFunction(amlsRegistrationNumber: String)

@@ -24,7 +24,7 @@ import play.api.{Logger, Play}
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.play.config.ServicesConfig
-import utils.{BackOffHelper, HttpResponseHelper}
+import utils.{ApiRetryHelper, HttpResponseHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

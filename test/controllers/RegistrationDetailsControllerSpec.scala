@@ -31,13 +31,13 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
 
   implicit val hc = HeaderCarrier()
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val controller = new RegistrationDetailsController{
     override val registrationDetailsConnector = mock[RegistrationDetailsDesConnector]
   }

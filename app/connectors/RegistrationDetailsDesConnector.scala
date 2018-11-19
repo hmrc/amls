@@ -20,7 +20,7 @@ import config.AmlsConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,9 +29,9 @@ trait RegistrationDetailsDesConnector extends DESConnector  {
       implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      backOffHelper: BackOffHelper
+      apiRetryHelper: ApiRetryHelper
     ): Future[RegistrationDetails] = {
-      backOffHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
+      apiRetryHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
     }
 
     private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {

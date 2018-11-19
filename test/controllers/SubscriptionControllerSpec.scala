@@ -36,7 +36,7 @@ import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
-import utils.{BackOffHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, IterateeHelpers}
 
 import scala.concurrent.Future
 
@@ -51,7 +51,7 @@ class SubscriptionControllerSpec
 
   val controller = new SubscriptionController (
     subscriptionService = mock[SubscriptionService],
-    backOffHelper = mock[BackOffHelper]
+    apiRetryHelper = mock[ApiRetryHelper]
   )
 
   "SubscriptionController" must {

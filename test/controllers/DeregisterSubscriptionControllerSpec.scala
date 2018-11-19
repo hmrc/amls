@@ -28,7 +28,7 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers.{contentAsJson, _}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.Future
 
@@ -38,13 +38,13 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec
   with AmlsReferenceNumberGenerator
   with OneAppPerSuite
 {
-  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
     lazy val mockDeregConnector: DeregisterSubscriptionConnector = mock[DeregisterSubscriptionConnector]
     val deregisterSubscriptionController = new DeregisterSubscriptionController(
       deregisterSubscriptionConnector = mockDeregConnector,
-      backOffHelper = mock[BackOffHelper]
+      apiRetryHelper = mock[ApiRetryHelper]
     )
   }
 

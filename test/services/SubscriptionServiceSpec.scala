@@ -37,7 +37,7 @@ import play.api.test.Helpers._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -127,7 +127,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
             connector.config.enrolmentStoreToggle
           } thenReturn true
 
-          whenReady(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper])) {
+          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
             result =>
               result mustEqual SubscriptionResponse.convert(response)
               verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), eqTo(knownFacts))(any(), any())
@@ -161,7 +161,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
           val ex: DuplicateSubscriptionException = intercept[DuplicateSubscriptionException] {
-            await(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper]))
+            await(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper]))
           }
 
           ex.amlsRegNumber mustBe amlsRegistrationNumber
@@ -175,7 +175,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
-        
+
           reset(connector.ggConnector)
 
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " " + amlsRegistrationNumber)).toString
@@ -220,7 +220,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           when(request.tradingPremises.agentBusinessPremises).thenReturn(None)
 
           val ex: DuplicateSubscriptionException = intercept[DuplicateSubscriptionException] {
-            await(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper]))
+            await(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper]))
           }
 
           ex.amlsRegNumber mustBe amlsRegistrationNumber
@@ -244,7 +244,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
 
-          whenReady(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper]).failed) {
+          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper]).failed) {
             case ex@HttpStatusException(status, _) =>
               status mustEqual BAD_REQUEST
               ex.jsonBody.get.reason must equal(duplicateSubscriptionMessage)
@@ -260,7 +260,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, None))
 
-          whenReady(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper]).failed) {
+          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper]).failed) {
             case ex@HttpStatusException(status, _) =>
               status mustEqual BAD_REQUEST
               ex.jsonBody must equal(None)
@@ -277,7 +277,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
         } thenReturn Future.failed(HttpStatusException(BAD_GATEWAY, None))
 
-        whenReady(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper]).failed) {
+        whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper]).failed) {
           case ex@HttpStatusException(status, body) =>
             status mustEqual BAD_GATEWAY
             ex.jsonBody must equal(None)
@@ -325,7 +325,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
             connector.config.enrolmentStoreToggle
           } thenReturn false
 
-          whenReady(connector.subscribe(safeId, request)(hc, global, backOffHelper = mock[BackOffHelper])) {
+          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
             result =>
               result mustEqual SubscriptionResponse.convert(response)
               verify(connector.ggConnector, times(1)).addKnownFacts(eqTo(knownFacts))(any(), any())

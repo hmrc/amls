@@ -26,7 +26,7 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 trait WithdrawSubscriptionConnector extends DESConnector {
 
@@ -35,9 +35,9 @@ trait WithdrawSubscriptionConnector extends DESConnector {
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
                                                                                     wr2: Writes[WithdrawSubscriptionResponse],
                                                                                     hc: HeaderCarrier,
-                                                                                    backOffHelper: BackOffHelper
+                                                                                    apiRetryHelper: ApiRetryHelper
   ): Future[WithdrawSubscriptionResponse] = {
-    backOffHelper.doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
+    apiRetryHelper.doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
   }
 
   private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,

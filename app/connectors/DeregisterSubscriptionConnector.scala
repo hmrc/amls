@@ -28,7 +28,7 @@ import play.api.libs.json.{JsSuccess, Json, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
@@ -38,9 +38,9 @@ trait DeregisterSubscriptionConnector extends DESConnector {
                     wr1: Writes[DeregisterSubscriptionRequest],
                     wr2: Writes[DeregisterSubscriptionResponse],
                     hc: HeaderCarrier,
-                    backOffHelper: BackOffHelper
+                    apiRetryHelper: ApiRetryHelper
   ): Future[DeregisterSubscriptionResponse] = {
-    backOffHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
+    apiRetryHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
   }
 
   private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,

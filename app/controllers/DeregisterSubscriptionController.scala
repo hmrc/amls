@@ -22,14 +22,14 @@ import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.{BackOffHelper, ControllerHelper}
+import utils.{ApiRetryHelper, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeregisterSubscriptionController @Inject()(
                                                   deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
-                                                  implicit val backOffHelper: BackOffHelper
+                                                  implicit val apiRetryHelper: ApiRetryHelper
                                                 ) extends BaseController with ControllerHelper {
 
   def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {

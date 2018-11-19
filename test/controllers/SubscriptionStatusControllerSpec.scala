@@ -29,7 +29,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{BackOffHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
 class SubscriptionStatusControllerSpec
@@ -40,7 +40,7 @@ class SubscriptionStatusControllerSpec
     with IterateeHelpers
     with AmlsReferenceNumberGenerator{
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller: SubscriptionStatusController = new SubscriptionStatusController {
     override val connector = mock[SubscriptionStatusDESConnector]
   }

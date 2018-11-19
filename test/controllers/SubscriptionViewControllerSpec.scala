@@ -32,7 +32,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeApplication, FakeRequest}
-import utils.{BackOffHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
 class SubscriptionViewControllerSpec
@@ -51,7 +51,7 @@ class SubscriptionViewControllerSpec
     )
   )
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller: SubscriptionViewController = new SubscriptionViewController {
     override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
@@ -136,7 +136,7 @@ class SubscriptionViewControllerSpecPhase2
     )
   )
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller: SubscriptionViewController = new SubscriptionViewController{
     override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
@@ -219,7 +219,7 @@ class SubscriptionViewControllerSpecRelease7
     )
   )
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller: SubscriptionViewController = new SubscriptionViewController{
     override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
@@ -334,7 +334,7 @@ class SubscriptionViewControllerSpecRelease7Phase2
     )
   )
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller: SubscriptionViewController = new SubscriptionViewController{
     override val connector: ViewDESConnector = mock[ViewDESConnector]
   }

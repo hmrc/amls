@@ -22,13 +22,13 @@ import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class RegistrationDetailsController @Inject()(
-                                               implicit val backOffHelper: BackOffHelper
+                                               implicit val apiRetryHelper: ApiRetryHelper
                                              ) extends BaseController {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = DESConnector

@@ -39,7 +39,7 @@ import play.api.test.Helpers._
 import play.api.test.{FakeApplication, FakeRequest}
 import services.AmendVariationService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{BackOffHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends PlaySpec
@@ -50,7 +50,7 @@ class AmendVariationControllerSpec extends PlaySpec
   with IterateeHelpers
     with OneAppPerSuite {
 
-  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val Controller = new AmendVariationController{
     override val service: AmendVariationService = mock[AmendVariationService]
   }

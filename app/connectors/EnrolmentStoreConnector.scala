@@ -28,7 +28,7 @@ import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
-import utils.{BackOffHelper, HttpResponseHelper}
+import utils.{ApiRetryHelper, HttpResponseHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

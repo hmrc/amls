@@ -35,7 +35,7 @@ import uk.gov.hmrc.audit.HandlerResult
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +47,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
   with OneAppPerSuite
   with AmlsReferenceNumberGenerator{
 
-  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
 

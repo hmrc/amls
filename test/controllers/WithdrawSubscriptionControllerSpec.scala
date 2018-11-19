@@ -28,7 +28,7 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.Future
 
@@ -38,7 +38,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
     val controller = new WithdrawSubscriptionController(
       desConnector,
-      backOffHelper = mock[BackOffHelper]
+      apiRetryHelper = mock[ApiRetryHelper]
     )
   }
 

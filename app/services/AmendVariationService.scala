@@ -29,7 +29,7 @@ import play.api.libs.json.{JsResult, JsValue, Json}
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.{BackOffHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
+import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -78,7 +78,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
-    backOffHelper: BackOffHelper
+    apiRetryHelper: ApiRetryHelper
   ): Future[AmendVariationRequest] = {
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
 
@@ -108,7 +108,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
   (implicit
    hc: HeaderCarrier,
    ec: ExecutionContext,
-   backOffHelper: BackOffHelper
+   apiRetryHelper: ApiRetryHelper
   ): Future[AmendVariationResponse] = {
 
     val result = validateResult(request)

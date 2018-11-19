@@ -24,14 +24,14 @@ import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class SubscriptionViewController @Inject()(
-  implicit val backOffHelper: BackOffHelper
+  implicit val apiRetryHelper: ApiRetryHelper
 ) extends BaseController {
 
   private[controllers] def connector: ViewDESConnector = DESConnector

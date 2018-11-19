@@ -30,7 +30,7 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +44,7 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
 
   val mockHttpGet = mock[HttpGet]
 
-  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   val connector = new RegistrationDetailsDesConnector {
     override private[connectors] def baseUrl = "baseUrl"

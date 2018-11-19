@@ -27,14 +27,14 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.Future
 
 @Singleton
 class AmendVariationController @Inject()(
-                                          implicit val backOffHelper: BackOffHelper
+                                          implicit val apiRetryHelper: ApiRetryHelper
                                         ) extends BaseController {
 
   private[controllers] def service: AmendVariationService = AmendVariationService

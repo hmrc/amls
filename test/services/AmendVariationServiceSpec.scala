@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 class AmendVariationServiceSpec extends PlaySpec
   with OneAppPerSuite
@@ -163,7 +163,7 @@ class AmendVariationServiceSpec extends PlaySpec
         TestAmendVariationService.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)(hc, global, backOffHelper = mock[BackOffHelper])) {
+      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
         result =>
           result mustEqual feAmendVariationResponse
       }
@@ -188,7 +188,7 @@ class AmendVariationServiceSpec extends PlaySpec
       )
 
       whenReady(TestAmendVariationService.compareAndUpdate(
-        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, backOffHelper = mock[BackOffHelper])
+        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
       ) {
         updatedRequest =>
           updatedRequest must be(testRequest)

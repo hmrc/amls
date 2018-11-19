@@ -36,7 +36,7 @@ import uk.gov.hmrc.audit.HandlerResult
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,7 +49,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
     with AmlsReferenceNumberGenerator {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   trait Fixture {
 
     object testDESConnector extends AmendVariationDESConnector {
