@@ -32,12 +32,15 @@ import utils.BackOffHelper
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
-  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                          wr1: Writes[DeregisterSubscriptionRequest],
-                                                                                          wr2: Writes[DeregisterSubscriptionResponse],
-                                                                                          hc: HeaderCarrier
+  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
+                    (
+                    implicit ec: ExecutionContext,
+                    wr1: Writes[DeregisterSubscriptionRequest],
+                    wr2: Writes[DeregisterSubscriptionResponse],
+                    hc: HeaderCarrier,
+                    backOffHelper: BackOffHelper
   ): Future[DeregisterSubscriptionResponse] = {
-    deregistrationFunction(amlsRegistrationNumber, data)
+    backOffHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
   }
 
   private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
