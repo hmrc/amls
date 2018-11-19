@@ -16,6 +16,9 @@
 
 package utils
 
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+
 import exceptions.HttpStatusException
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
@@ -30,11 +33,21 @@ import scala.concurrent.Future
 
 class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
+  private val MAX_ATTEMPTS:Int = 10
+  private val INITIAL_WAIT:Int = 10
+  private val WAIT_FACTOR:Float = 1.5F
+
   override lazy val app = new GuiceApplicationBuilder()
+    .configure(Map(
+      "microservice.services.exponential-backoff.max-attempts" -> MAX_ATTEMPTS,
+      "microservice.services.exponential-backoff.initial-wait-ms" -> INITIAL_WAIT,
+      "microservice.services.exponential-backoff.wait-factor" -> WAIT_FACTOR ))
     .bindings(bind[BackOffHelper].to[BackOffHelperInstance])
     .build()
   val backOffHelper = app.injector.instanceOf( classOf[BackOffHelper])
   val TIMEOUT = 5
+
+
 
   "BackOffHelper" must {
 
@@ -51,6 +64,28 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
       whenReady(backOffHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
+    }
+
+    "back off exponentially" in {
+      def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
+        if(iteration >= MAX_ATTEMPTS) {
+          expectedTime + currentWait
+        } else {
+          val nextWait:Int = Math.ceil(currentWait * WAIT_FACTOR).toInt
+          getMinimumExpectedDuration(iteration + 1, expectedTime + currentWait, nextWait)
+        }
+      }
+
+      val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
+      val startTime = LocalDateTime.now
+
+      whenReady(backOffHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
+        case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
+      }
+
+      val endTime = LocalDateTime.now
+      val expectedTime = getMinimumExpectedDuration(1, INITIAL_WAIT, INITIAL_WAIT)
+      ChronoUnit.MILLIS.between(startTime, endTime) must be >= expectedTime
     }
 
     "show that it pass after it fails" in {
