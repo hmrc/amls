@@ -50,7 +50,7 @@ class AmendVariationControllerSpec extends PlaySpec
   with IntegrationPatience
   with AmlsReferenceNumberGenerator
   with IterateeHelpers
-  with OneAppPerSuite {
+    with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication()
   val Controller = new AmendVariationController(

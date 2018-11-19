@@ -133,7 +133,7 @@ class AmendVariationServiceSpec extends PlaySpec
     } thenReturn true
 
     when {
-      TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
+      TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
     } thenReturn Future.successful(statusResponse)
 
     val premises: Option[AgentBusinessPremises] = Some(mock[AgentBusinessPremises])

@@ -34,8 +34,13 @@ trait SubscriptionStatusDESConnector extends DESConnector {
   private[connectors] def httpGet: HttpGet
 
   def status(amlsRegistrationNumber: String)
-            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
-    statusFunction(amlsRegistrationNumber)
+  (
+    implicit ec: ExecutionContext,
+    wr: Writes[ReadStatusResponse],
+    hc: HeaderCarrier,
+    backOffHelper: BackOffHelper
+  ): Future[ReadStatusResponse] = {
+    backOffHelper.doWithBackoff(() => statusFunction(amlsRegistrationNumber))
   }
 
   private def statusFunction(amlsRegistrationNumber: String)
