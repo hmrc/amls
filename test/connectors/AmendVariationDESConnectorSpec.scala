@@ -16,7 +16,6 @@
 
 package connectors
 
-import akka.actor.ActorSystem
 import audit.{AmendmentEventFailed, MockAudit}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
@@ -34,14 +33,13 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
 import uk.gov.hmrc.audit.HandlerResult
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.BackOffHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse}
-import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.BackOffHelper
 
 class AmendVariationDESConnectorSpec extends PlaySpec
     with MockitoSugar

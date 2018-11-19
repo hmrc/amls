@@ -38,6 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.BackOffHelper
 
 class SubscribeDESConnectorSpec extends PlaySpec
   with MockitoSugar
@@ -45,6 +46,8 @@ class SubscribeDESConnectorSpec extends PlaySpec
   with IntegrationPatience
   with OneAppPerSuite
   with AmlsReferenceNumberGenerator{
+
+  implicit val backOffHelper: BackOffHelper = new BackOffHelper(as = app.actorSystem)
 
   trait Fixture {
 
@@ -197,7 +200,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          verify(testDESConnector.auditConnector, times(10)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType

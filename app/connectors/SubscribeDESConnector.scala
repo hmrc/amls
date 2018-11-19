@@ -38,9 +38,10 @@ trait SubscribeDESConnector extends DESConnector {
    ec: ExecutionContext,
    wr1: Writes[des.SubscriptionRequest],
    wr2: Writes[des.SubscriptionResponse],
-   hc: HeaderCarrier
+   hc: HeaderCarrier,
+   backOffHelper: BackOffHelper
   ): Future[des.SubscriptionResponse] = {
-    subscribeFunction(safeId, data)
+    backOffHelper.doWithBackoff(() => subscribeFunction(safeId, data))
   }
 
   private def subscribeFunction

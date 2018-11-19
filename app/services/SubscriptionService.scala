@@ -34,6 +34,7 @@ import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.BackOffHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -89,7 +90,8 @@ class SubscriptionService @Inject()(
   (safeId: String, request: SubscriptionRequest)
   (implicit
    hc: HeaderCarrier,
-   ec: ExecutionContext
+   ec: ExecutionContext,
+   backOffHelper: BackOffHelper
   ): Future[SubscriptionResponse] = {
 
     validateRequest(safeId, request)

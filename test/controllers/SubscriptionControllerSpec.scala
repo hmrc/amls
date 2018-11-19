@@ -18,13 +18,13 @@ package controllers
 
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
-import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.fe.aboutthebusiness._
 import models.fe.bankdetails._
+import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
-import models.fe.businessactivities.BusinessActivities
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
+import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.{des, fe}
 import org.joda.time.LocalDate
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -36,9 +36,8 @@ import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
-import utils.IterateeHelpers
+import utils.{BackOffHelper, IterateeHelpers}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubscriptionControllerSpec
@@ -51,7 +50,8 @@ class SubscriptionControllerSpec
     with AmlsReferenceNumberGenerator {
 
   val controller = new SubscriptionController (
-    subscriptionService = mock[SubscriptionService]
+    subscriptionService = mock[SubscriptionService],
+    backOffHelper = mock[BackOffHelper]
   )
 
   "SubscriptionController" must {
@@ -118,7 +118,7 @@ class SubscriptionControllerSpec
       )
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
       } thenReturn Future.successful(SubscriptionResponse.convert(response))
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
@@ -130,7 +130,7 @@ class SubscriptionControllerSpec
     "return an invalid response when the service fails" in {
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady(controller.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
@@ -178,7 +178,7 @@ class SubscriptionControllerSpec
       val errorBody = Json.obj("reason" -> reason).toString
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(DuplicateSubscriptionException(HttpStatusException(BAD_REQUEST, Some(reason)), amlsRegistrationNumber, reason))
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
@@ -191,7 +191,7 @@ class SubscriptionControllerSpec
       val errorBody = "This isn't json"
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any())
+        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
 
       whenReady(controller.subscribe("test", "orgRef", safeId)(postRequest).failed) {
