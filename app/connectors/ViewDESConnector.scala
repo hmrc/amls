@@ -31,11 +31,18 @@ trait ViewDESConnector extends DESConnector {
 
   private[connectors] def httpGet: HttpGet
 
-  def view(amlsRegistrationNumber: String)
+    def view(amlsRegistrationNumber: String)(
+      implicit ec: ExecutionContext,
+      hc: HeaderCarrier,
+      backOffHelper: BackOffHelper
+    ): Future[SubscriptionView] = {
+      backOffHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
+    }
+
+  private def viewFunction(amlsRegistrationNumber: String)
           (
             implicit ec: ExecutionContext,
-            hc: HeaderCarrier,
-            backOffHelper: BackOffHelper
+            hc: HeaderCarrier
           ): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]
