@@ -34,9 +34,10 @@ import scala.concurrent.Future
 
 @Singleton
 class AmendVariationController @Inject()(
-                                          val service: AmendVariationService,
                                           implicit val backOffHelper: BackOffHelper
                                         ) extends BaseController {
+
+  private[controllers] def service: AmendVariationService = AmendVariationService
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 

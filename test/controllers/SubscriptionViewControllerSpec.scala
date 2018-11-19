@@ -50,10 +50,11 @@ class SubscriptionViewControllerSpec
         "microservice.services.feature-toggle.phase-2-changes" -> false
     )
   )
-  val Controller: SubscriptionViewController = new SubscriptionViewController(
-    connector = mock[ViewDESConnector],
-    backOffHelper = mock[BackOffHelper]
-  )
+
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController {
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")
@@ -135,10 +136,10 @@ class SubscriptionViewControllerSpecPhase2
     )
   )
 
-  val Controller: SubscriptionViewController = new SubscriptionViewController(
-    connector = mock[ViewDESConnector],
-    backOffHelper = mock[BackOffHelper]
-  )
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")
@@ -218,10 +219,10 @@ class SubscriptionViewControllerSpecRelease7
     )
   )
 
-  val Controller: SubscriptionViewController = new SubscriptionViewController(
-    connector = mock[ViewDESConnector],
-    backOffHelper = mock[BackOffHelper]
-  )
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
@@ -332,10 +333,11 @@ class SubscriptionViewControllerSpecRelease7Phase2
       "microservice.services.feature-toggle.phase-2-changes" -> true
     )
   )
-  val Controller: SubscriptionViewController = new SubscriptionViewController(
-    connector = mock[ViewDESConnector],
-    backOffHelper = mock[BackOffHelper]
-  )
+
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>

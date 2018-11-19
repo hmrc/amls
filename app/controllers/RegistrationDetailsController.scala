@@ -28,9 +28,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class RegistrationDetailsController @Inject()(
-                                              val registrationDetailsConnector: RegistrationDetailsDesConnector,
                                                implicit val backOffHelper: BackOffHelper
                                              ) extends BaseController {
+
+  private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = DESConnector
 
   def get(accountType: String, ref: String, safeId: String) = Action.async {
     implicit request =>

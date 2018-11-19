@@ -50,11 +50,10 @@ class AmendVariationControllerSpec extends PlaySpec
   with IterateeHelpers
     with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication()
-  val Controller = new AmendVariationController(
-    service = mock[AmendVariationService],
-    backOffHelper = mock[BackOffHelper]
-  )
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller = new AmendVariationController{
+    override val service: AmendVariationService = mock[AmendVariationService]
+  }
 
   implicit val hc = HeaderCarrier()
 

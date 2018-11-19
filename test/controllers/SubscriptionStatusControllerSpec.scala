@@ -40,10 +40,10 @@ class SubscriptionStatusControllerSpec
     with IterateeHelpers
     with AmlsReferenceNumberGenerator{
 
-  val Controller: SubscriptionStatusController = new SubscriptionStatusController(
-    connector = mock[SubscriptionStatusDESConnector],
-    backOffHelper = mock[BackOffHelper]
-  )
+  implicit val backOffHelper: BackOffHelper = mock[BackOffHelper]
+  val Controller: SubscriptionStatusController = new SubscriptionStatusController {
+    override val connector = mock[SubscriptionStatusDESConnector]
+  }
 
   val request = FakeRequest()
     .withHeaders(CONTENT_TYPE -> "application/json")

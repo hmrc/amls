@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.SubscriptionStatusDESConnector
+import connectors.{DESConnector, SubscriptionStatusDESConnector}
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
@@ -29,9 +29,10 @@ import scala.concurrent.Future
 
 @Singleton
 class SubscriptionStatusController @Inject()(
-                                              val connector: SubscriptionStatusDESConnector,
                                               implicit val backOffHelper: BackOffHelper
                                             ) extends BaseController {
+
+  private[controllers] def connector: SubscriptionStatusDESConnector = DESConnector
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionStatusController][get]"
