@@ -28,6 +28,7 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.BackOffHelper
 
 import scala.concurrent.Future
 
@@ -35,7 +36,10 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
 
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
-    val controller = new WithdrawSubscriptionController(desConnector)
+    val controller = new WithdrawSubscriptionController(
+      desConnector,
+      backOffHelper = mock[BackOffHelper]
+    )
   }
 
   val success = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
@@ -56,7 +60,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
   "WithdrawSubscriptionController" must {
 
     "successfully return success response on valid request" in new Fixture {
-      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any()))
+      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any(), any()))
         .thenReturn(Future.successful(success))
 
       private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest)
@@ -82,7 +86,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
 
 
     "return failed response on exception" in new Fixture {
-      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any()))
+      when(desConnector.withdrawal(any(), any())(any(), any(), any(), any(), any()))
         .thenReturn(Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message"))))
 
       whenReady(controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest).failed) {
