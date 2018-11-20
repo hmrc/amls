@@ -16,13 +16,15 @@
 
 package utils
 
-import akka.actor.ActorSystem
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+
 import exceptions.HttpStatusException
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Play
+import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeApplication
@@ -31,8 +33,18 @@ import play.api.test.Helpers._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  with OneAppPerSuite {
-  implicit override lazy val app = FakeApplication()
+class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+
+  private val MAX_ATTEMPTS:Int = 10
+  private val INITIAL_WAIT:Int = 10
+  private val WAIT_FACTOR:Float = 1.5F
+
+  override lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(Map(
+      "microservice.services.exponential-backoff.max-attempts" -> MAX_ATTEMPTS,
+      "microservice.services.exponential-backoff.initial-wait-ms" -> INITIAL_WAIT,
+      "microservice.services.exponential-backoff.wait-factor" -> WAIT_FACTOR ))
+    .build()
   val apiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   val TIMEOUT = 5
 
@@ -51,6 +63,28 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures  w
       whenReady(apiRetryHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
+    }
+
+    "back off exponentially" in {
+      def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
+        if(iteration >= MAX_ATTEMPTS) {
+          expectedTime + currentWait
+        } else {
+          val nextWait:Int = Math.ceil(currentWait * WAIT_FACTOR).toInt
+          getMinimumExpectedDuration(iteration + 1, expectedTime + currentWait, nextWait)
+        }
+      }
+
+      val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
+      val startTime = LocalDateTime.now
+
+      whenReady(apiRetryHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
+        case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
+      }
+
+      val endTime = LocalDateTime.now
+      val expectedTime = getMinimumExpectedDuration(1, INITIAL_WAIT, INITIAL_WAIT)
+      ChronoUnit.MILLIS.between(startTime, endTime) must be >= expectedTime
     }
 
     "show that it pass after it fails" in {
