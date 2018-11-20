@@ -125,8 +125,3 @@ class AmendVariationController @Inject()(
     }
 }
 
-//object AmendVariationController extends AmendVariationController {
-//  // $COVERAGE-OFF$
-//  override private[controllers] val service = AmendVariationService
-//}
-
