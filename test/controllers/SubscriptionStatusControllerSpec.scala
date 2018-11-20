@@ -29,8 +29,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.IterateeHelpers
-
+import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
 class SubscriptionStatusControllerSpec
@@ -41,7 +40,8 @@ class SubscriptionStatusControllerSpec
     with IterateeHelpers
     with AmlsReferenceNumberGenerator{
 
-  object SubscriptionStatusController extends SubscriptionStatusController {
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val Controller: SubscriptionStatusController = new SubscriptionStatusController {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 
@@ -52,7 +52,7 @@ class SubscriptionStatusControllerSpec
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = SubscriptionStatusController.get("test", "test", "test")(request)
+      val result = Controller.get("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
       status(result) must be(BAD_REQUEST)
@@ -65,10 +65,10 @@ class SubscriptionStatusControllerSpec
         None, None, None, None, false)
 
       when {
-        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        Controller.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      val result = SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request)
+      val result = Controller.get("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(response))
@@ -76,10 +76,10 @@ class SubscriptionStatusControllerSpec
 
     "return an invalid response when the service fails" in {
       when {
-        SubscriptionStatusController.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        Controller.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady (SubscriptionStatusController.get("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady (Controller.get("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

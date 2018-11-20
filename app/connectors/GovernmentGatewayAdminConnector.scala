@@ -28,12 +28,12 @@ import play.api.{Logger, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import utils.{BackOffHelper, HttpResponseHelper}
+import utils.{ApiRetryHelper, HttpResponseHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait GovernmentGatewayAdminConnector extends HttpResponseHelper with BackOffHelper {
+trait GovernmentGatewayAdminConnector extends HttpResponseHelper{
 
   private[connectors] def serviceURL: String
   private[connectors] def http: CorePost with CoreGet with CorePut
@@ -48,7 +48,7 @@ trait GovernmentGatewayAdminConnector extends HttpResponseHelper with BackOffHel
    headerCarrier: HeaderCarrier,
    writes: Writes[KnownFactsForService]
   ): Future[HttpResponse] = {
-    doWithBackoff(() => addKnownFactsFunction(knownFacts))
+    addKnownFactsFunction(knownFacts)
   }
 
   private def addKnownFactsFunction

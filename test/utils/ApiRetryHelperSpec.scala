@@ -24,44 +24,43 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeApplication
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
   private val MAX_ATTEMPTS:Int = 10
   private val INITIAL_WAIT:Int = 10
   private val WAIT_FACTOR:Float = 1.5F
 
-  override lazy val app = new GuiceApplicationBuilder()
+  override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Map(
       "microservice.services.exponential-backoff.max-attempts" -> MAX_ATTEMPTS,
       "microservice.services.exponential-backoff.initial-wait-ms" -> INITIAL_WAIT,
       "microservice.services.exponential-backoff.wait-factor" -> WAIT_FACTOR ))
-    .bindings(bind[BackOffHelper].to[BackOffHelperInstance])
     .build()
-  val backOffHelper = app.injector.instanceOf( classOf[BackOffHelper])
+  val apiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   val TIMEOUT = 5
 
-
-
-  "BackOffHelper" must {
+  "ApiRetryHelper" must {
 
     "return a successful Future" in {
       val successfulFunction = () => Future.successful("A successful future")
 
-      whenReady(backOffHelper.doWithBackoff(successfulFunction)) {
+      whenReady(apiRetryHelper.doWithBackoff(successfulFunction)) {
         result => result mustEqual "A successful future"
       }
     }
 
     "retry on a 503 HTTP exception " in {
       val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
-      whenReady(backOffHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
+      whenReady(apiRetryHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
     }
@@ -79,7 +78,7 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
       val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
       val startTime = LocalDateTime.now
 
-      whenReady(backOffHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
+      whenReady(apiRetryHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
 
@@ -103,7 +102,7 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
         }
       }
 
-      whenReady(backOffHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
+      whenReady(apiRetryHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
         result =>  {
           result mustEqual "A successful future"
           counter must be >= NUMBER_OF_RETRIES
@@ -112,7 +111,3 @@ class BackOffHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wit
     }
   }
 }
-
-private  class BackOffHelperInstance extends BackOffHelper {
-}
-

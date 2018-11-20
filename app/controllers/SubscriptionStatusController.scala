@@ -18,18 +18,21 @@ package controllers
 
 import connectors.{DESConnector, SubscriptionStatusDESConnector}
 import exceptions.HttpStatusException
-import org.joda.time.LocalDate
+import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-
+import utils.ApiRetryHelper
 import scala.concurrent.Future
 
-trait SubscriptionStatusController extends BaseController {
+@Singleton
+class SubscriptionStatusController @Inject()(
+                                              implicit val apiRetryHelper: ApiRetryHelper
+                                            ) extends BaseController {
 
-  private[controllers] def connector: SubscriptionStatusDESConnector
+  private[controllers] def connector: SubscriptionStatusDESConnector = DESConnector
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionStatusController][get]"
@@ -60,9 +63,4 @@ trait SubscriptionStatusController extends BaseController {
             }
         }
     }
-}
-
-object SubscriptionStatusController extends SubscriptionStatusController {
-  // $COVERAGE-OFF$
-  override private[controllers] val connector = DESConnector
 }

@@ -28,7 +28,7 @@ import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
-import utils.{BackOffHelper, HttpResponseHelper}
+import utils.{ApiRetryHelper, HttpResponseHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,12 +36,12 @@ import scala.concurrent.Future
 class EnrolmentStoreConnector @Inject()(
                                          val http: CorePut,
                                          val metrics: Metrics,
-                                         config: AppConfig) extends HttpResponseHelper with BackOffHelper {
+                                         config: AppConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
-    doWithBackoff(() => addKnownFactsFunction(enrolmentKey, knownFacts))
+    addKnownFactsFunction(enrolmentKey, knownFacts)
   }
 
   private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit

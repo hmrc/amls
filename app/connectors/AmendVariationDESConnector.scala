@@ -25,11 +25,11 @@ import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPut, HttpReads, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationDESConnector extends DESConnector with BackOffHelper {
+trait AmendVariationDESConnector extends DESConnector {
 
   private[connectors] def httpPut: HttpPut
 
@@ -39,9 +39,10 @@ trait AmendVariationDESConnector extends DESConnector with BackOffHelper {
    ec: ExecutionContext,
    wr1: Writes[des.AmendVariationRequest],
    wr2: Writes[des.AmendVariationResponse],
-   hc: HeaderCarrier
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
   ): Future[des.AmendVariationResponse] = {
-    doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
+    apiRetryHelper.doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
   }
 
   private def amendFunction

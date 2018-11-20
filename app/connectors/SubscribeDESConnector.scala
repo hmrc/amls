@@ -26,9 +26,9 @@ import play.api.libs.json.{JsSuccess, Json, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse}
-import utils.BackOffHelper
+import utils.ApiRetryHelper
 
-trait SubscribeDESConnector extends DESConnector with BackOffHelper {
+trait SubscribeDESConnector extends DESConnector {
 
   private[connectors] def httpPost: HttpPost
 
@@ -38,9 +38,10 @@ trait SubscribeDESConnector extends DESConnector with BackOffHelper {
    ec: ExecutionContext,
    wr1: Writes[des.SubscriptionRequest],
    wr2: Writes[des.SubscriptionResponse],
-   hc: HeaderCarrier
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
   ): Future[des.SubscriptionResponse] = {
-    doWithBackoff(() => subscribeFunction(safeId, data))
+    apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
   }
 
   private def subscribeFunction

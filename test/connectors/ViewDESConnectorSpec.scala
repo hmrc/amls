@@ -22,31 +22,28 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.{API5, Metrics}
 import models.des._
-import models.des.aboutthebusiness.{Address => AboutTheBusinessAddress}
-import models.des.asp.{Asp => AspModel}
-import models.des.hvd.{Hvd => HvdModel}
-import models.des.responsiblepeople.{Address => ResponsiblePeopleAddress}
-import models.des.tradingpremises.{Address => TradingPremisesAddress}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
+import utils.ApiRetryHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class ViewDESConnectorSpec
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
-    with OneServerPerSuite
+    with OneAppPerSuite
     with AmlsReferenceNumberGenerator {
+
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
 

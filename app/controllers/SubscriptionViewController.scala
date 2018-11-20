@@ -16,22 +16,25 @@
 
 package controllers
 
-import config.AmlsConfig
 import connectors.{DESConnector, ViewDESConnector}
 import exceptions.HttpStatusException
+import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+@Singleton
+class SubscriptionViewController @Inject()(
+  implicit val apiRetryHelper: ApiRetryHelper
+) extends BaseController {
 
-trait SubscriptionViewController extends BaseController {
-
-  private[controllers] def connector: ViewDESConnector
+  private[controllers] def connector: ViewDESConnector = DESConnector
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionViewController][get]"
@@ -67,9 +70,4 @@ trait SubscriptionViewController extends BaseController {
             }
         }
     }
-}
-
-object SubscriptionViewController extends SubscriptionViewController {
-  // $COVERAGE-OFF$
-  override private[controllers] val connector = DESConnector
 }

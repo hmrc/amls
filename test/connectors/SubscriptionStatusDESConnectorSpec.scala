@@ -28,21 +28,21 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
+import utils.ApiRetryHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class SubscriptionStatusDESConnectorSpec
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
-    with OneServerPerSuite
+    with OneAppPerSuite
     with BeforeAndAfterAll
     with AmlsReferenceNumberGenerator {
 
@@ -53,6 +53,8 @@ class SubscriptionStatusDESConnectorSpec
   override def afterAll: Unit = {
     DateTimeUtils.setCurrentMillisSystem()
   }
+
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
 
