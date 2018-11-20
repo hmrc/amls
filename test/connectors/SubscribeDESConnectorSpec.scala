@@ -31,6 +31,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 import uk.gov.hmrc.audit.HandlerResult
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
@@ -47,6 +48,12 @@ class SubscribeDESConnectorSpec extends PlaySpec
   with OneAppPerSuite
   with AmlsReferenceNumberGenerator{
 
+
+  val MAX_RETRIES = 10
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.exponential-backoff.max-attempts" -> MAX_RETRIES ))
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
@@ -200,7 +207,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(10)).sendExtendedEvent(any())(any(), any())
+          verify(testDESConnector.auditConnector, times(MAX_RETRIES)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
