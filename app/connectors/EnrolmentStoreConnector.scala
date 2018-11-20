@@ -16,10 +16,10 @@
 
 package connectors
 
-import javax.inject.Inject
 import audit.KnownFactsEvent
 import config.{AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
@@ -28,7 +28,7 @@ import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.AppName
-import utils.{ApiRetryHelper, HttpResponseHelper}
+import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
