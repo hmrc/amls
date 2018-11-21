@@ -25,9 +25,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Application
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeApplication
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,15 +33,15 @@ import scala.concurrent.Future
 
 class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
-  private val MAX_ATTEMPTS:Int = 10
-  private val INITIAL_WAIT:Int = 10
-  private val WAIT_FACTOR:Float = 1.5F
+  private val MaxAttempts: Int = 10
+  private val InitialWait: Int = 10
+  private val WaitFactor: Float = 1.5F
 
   override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Map(
-      "microservice.services.exponential-backoff.max-attempts" -> MAX_ATTEMPTS,
-      "microservice.services.exponential-backoff.initial-wait-ms" -> INITIAL_WAIT,
-      "microservice.services.exponential-backoff.wait-factor" -> WAIT_FACTOR ))
+      "microservice.services.exponential-backoff.max-attempts" -> MaxAttempts,
+      "microservice.services.exponential-backoff.initial-wait-ms" -> InitialWait,
+      "microservice.services.exponential-backoff.wait-factor" -> WaitFactor ))
     .build()
   val apiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   val TIMEOUT = 5
@@ -67,10 +65,10 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
     "back off exponentially" in {
       def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
-        if(iteration >= MAX_ATTEMPTS) {
+        if(iteration >= MaxAttempts) {
           expectedTime + currentWait
         } else {
-          val nextWait:Int = Math.ceil(currentWait * WAIT_FACTOR).toInt
+          val nextWait:Int = Math.ceil(currentWait * WaitFactor).toInt
           getMinimumExpectedDuration(iteration + 1, expectedTime + currentWait, nextWait)
         }
       }
@@ -83,17 +81,17 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       }
 
       val endTime = LocalDateTime.now
-      val expectedTime = getMinimumExpectedDuration(1, INITIAL_WAIT, INITIAL_WAIT)
+      val expectedTime = getMinimumExpectedDuration(1, InitialWait, InitialWait)
       ChronoUnit.MILLIS.between(startTime, endTime) must be >= expectedTime
     }
 
     "show that it pass after it fails" in {
 
-      val NUMBER_OF_RETRIES = 5
+      val NumberOfRetries = 5
       var counter = 0
 
       val failThenSuccessFunc = () => {
-        if(counter < NUMBER_OF_RETRIES) {
+        if(counter < NumberOfRetries) {
           counter = counter + 1
           Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
         }
@@ -105,7 +103,7 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       whenReady(apiRetryHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
         result =>  {
           result mustEqual "A successful future"
-          counter must be >= NUMBER_OF_RETRIES
+          counter must be >= NumberOfRetries
         }
       }
     }

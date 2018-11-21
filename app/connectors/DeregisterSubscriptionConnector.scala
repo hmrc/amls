@@ -32,13 +32,12 @@ import utils.ApiRetryHelper
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
-  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
-                    (
-                    implicit ec: ExecutionContext,
-                    wr1: Writes[DeregisterSubscriptionRequest],
-                    wr2: Writes[DeregisterSubscriptionResponse],
-                    hc: HeaderCarrier,
-                    apiRetryHelper: ApiRetryHelper
+  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
+    implicit ec: ExecutionContext,
+    wr1: Writes[DeregisterSubscriptionRequest],
+    wr2: Writes[DeregisterSubscriptionResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
   ): Future[DeregisterSubscriptionResponse] = {
     apiRetryHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
   }

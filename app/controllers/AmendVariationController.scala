@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.actor.ActorSystem
 import exceptions.HttpStatusException
+import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
@@ -28,7 +28,6 @@ import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.ApiRetryHelper
-import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.Future
 
@@ -96,7 +95,6 @@ class AmendVariationController @Inject()(
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        implicit val as: ActorSystem = ActorSystem()
         update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 

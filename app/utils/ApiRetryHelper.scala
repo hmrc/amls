@@ -28,12 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ApiRetryHelper @Inject()(val as: ActorSystem)  {
 
-  lazy val MAX_ATTEMPTS: Int = AmlsConfig.maxAttempts
-  lazy val INITIAL_WAIT_MS: Int = AmlsConfig.initialWaitMs
-  lazy val WAIT_FACTOR: Float= AmlsConfig.waitFactor
+  lazy val MaxAttempts: Int = AmlsConfig.maxAttempts
+  lazy val InitialWaitInMS: Int = AmlsConfig.initialWaitMs
+  lazy val WaitFactor: Float= AmlsConfig.waitFactor
 
   def doWithBackoff[T](f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
-    expBackOffHelper(1, INITIAL_WAIT_MS, f)
+    expBackOffHelper(1, InitialWaitInMS, f)
   }
 
   private def expBackOffHelper[T] (currentAttempt: Int,
@@ -42,8 +42,8 @@ class ApiRetryHelper @Inject()(val as: ActorSystem)  {
 
     f.apply().recoverWith {
       case e: HttpStatusException =>
-        if ( e.status >= 500 && e.status < 600 && currentAttempt < MAX_ATTEMPTS) {
-          val wait = Math.ceil(currentWait * WAIT_FACTOR).toInt
+        if ( e.status >= 500 && e.status < 600 && currentAttempt < MaxAttempts) {
+          val wait = Math.ceil(currentWait * WaitFactor).toInt
           Logger.warn(s"Failure, retrying after $wait ms")
           after(wait.milliseconds, as.scheduler, ec, Future.successful(1)).flatMap { _ =>
             expBackOffHelper(currentAttempt + 1, wait.toInt, f)

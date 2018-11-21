@@ -30,7 +30,6 @@ import utils.ApiRetryHelper
 
 trait WithdrawSubscriptionConnector extends DESConnector {
 
-
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
                                                                                     wr2: Writes[WithdrawSubscriptionResponse],
@@ -40,10 +39,11 @@ trait WithdrawSubscriptionConnector extends DESConnector {
     apiRetryHelper.doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
   }
 
-  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                    wr1: Writes[WithdrawSubscriptionRequest],
-                                                                                    wr2: Writes[WithdrawSubscriptionResponse],
-                                                                                    hc: HeaderCarrier
+  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(
+    implicit ec: ExecutionContext,
+    wr1: Writes[WithdrawSubscriptionRequest],
+    wr2: Writes[WithdrawSubscriptionResponse],
+    hc: HeaderCarrier
   ): Future[WithdrawSubscriptionResponse] = {
     val prefix = "[DESConnector][withdrawal]"
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]
