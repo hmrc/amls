@@ -26,13 +26,24 @@ import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 
 trait SubscriptionStatusDESConnector extends DESConnector {
 
   private[connectors] def httpGet: HttpGet
 
   def status(amlsRegistrationNumber: String)
+  (
+    implicit ec: ExecutionContext,
+    wr: Writes[ReadStatusResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[ReadStatusResponse] = {
+    apiRetryHelper.doWithBackoff(() => statusFunction(amlsRegistrationNumber))
+  }
+
+  private def statusFunction(amlsRegistrationNumber: String)
             (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
 
     val prefix = "[DESConnector][readstatus]"

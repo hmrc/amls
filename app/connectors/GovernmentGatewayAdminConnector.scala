@@ -33,7 +33,7 @@ import utils.HttpResponseHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait GovernmentGatewayAdminConnector extends HttpResponseHelper {
+trait GovernmentGatewayAdminConnector extends HttpResponseHelper{
 
   private[connectors] def serviceURL: String
   private[connectors] def http: CorePost with CoreGet with CorePut
@@ -43,6 +43,15 @@ trait GovernmentGatewayAdminConnector extends HttpResponseHelper {
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
   def addKnownFacts
+  (knownFacts: KnownFactsForService)
+  (implicit
+   headerCarrier: HeaderCarrier,
+   writes: Writes[KnownFactsForService]
+  ): Future[HttpResponse] = {
+    addKnownFactsFunction(knownFacts)
+  }
+
+  private def addKnownFactsFunction
   (knownFacts: KnownFactsForService)
   (implicit
    headerCarrier: HeaderCarrier,

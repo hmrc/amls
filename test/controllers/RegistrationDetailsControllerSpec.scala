@@ -31,13 +31,15 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.ApiRetryHelper
 
 class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
 
   implicit val hc = HeaderCarrier()
 
-  val controller = new RegistrationDetailsController {
-    override private[controllers] val registrationDetailsConnector = mock[RegistrationDetailsDesConnector]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val controller = new RegistrationDetailsController{
+    override val registrationDetailsConnector = mock[RegistrationDetailsDesConnector]
   }
 
   "The RegistrationDetailsController" must {
@@ -48,14 +50,14 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
       val feDetails = RegistrationDetails("Test Company", isIndividual = false)
 
       when {
-        controller.registrationDetailsConnector.getRegistrationDetails(eqTo(safeId))(any(), any())
+        controller.registrationDetailsConnector.getRegistrationDetails(eqTo(safeId))(any(), any(), any())
       } thenReturn Future.successful(desDetails)
 
       val response = controller.get("account", "ref", safeId)(FakeRequest())
 
       status(response) mustBe OK
       contentAsJson(response) mustBe Json.toJson(feDetails)
-      verify(controller.registrationDetailsConnector).getRegistrationDetails(eqTo(safeId))(any(), any())
+      verify(controller.registrationDetailsConnector).getRegistrationDetails(eqTo(safeId))(any(), any(), any())
     }
   }
 

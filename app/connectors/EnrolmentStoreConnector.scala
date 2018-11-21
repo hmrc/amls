@@ -16,11 +16,10 @@
 
 package connectors
 
-import javax.inject.Inject
-
 import audit.KnownFactsEvent
 import config.{AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
@@ -40,6 +39,12 @@ class EnrolmentStoreConnector @Inject()(
                                          config: AppConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
+                                                                            headerCarrier: HeaderCarrier,
+                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
+    addKnownFactsFunction(enrolmentKey, knownFacts)
+  }
+
+  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
@@ -79,8 +84,5 @@ class EnrolmentStoreConnector @Inject()(
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
-
   }
-
-
 }

@@ -17,6 +17,7 @@
 package controllers
 
 import exceptions.HttpStatusException
+import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
@@ -26,12 +27,16 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
+import utils.ApiRetryHelper
 
 import scala.concurrent.Future
 
-trait AmendVariationController extends BaseController {
+@Singleton
+class AmendVariationController @Inject()(
+                                          implicit val apiRetryHelper: ApiRetryHelper
+                                        ) extends BaseController {
 
-  private[controllers] def service: AmendVariationService
+  private[controllers] def service: AmendVariationService = AmendVariationService
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
@@ -116,10 +121,5 @@ trait AmendVariationController extends BaseController {
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, RenewalAmendment, RequestType.RenewalAmendment)
     }
-}
-
-object AmendVariationController extends AmendVariationController {
-  // $COVERAGE-OFF$
-  override private[controllers] val service = AmendVariationService
 }
 

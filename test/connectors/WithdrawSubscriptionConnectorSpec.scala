@@ -26,21 +26,24 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import org.scalatest.time.{Millis, Seconds, Span}
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
-class WithdrawSubscriptionConnectorSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneServerPerSuite {
+class WithdrawSubscriptionConnectorSpec extends PlaySpec
+  with MockitoSugar
+  with ScalaFutures
+  with OneAppPerSuite {
 
-  implicit val defaultPatience =
-
-    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
     object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector {

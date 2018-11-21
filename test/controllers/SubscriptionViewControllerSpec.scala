@@ -19,22 +19,20 @@ package controllers
 import connectors.ViewDESConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import models.{SubscriptionViewModel, des}
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
 import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
-import models.fe.tradingpremises.BusinessActivity.MoneyServiceBusiness
+import models.{SubscriptionViewModel, des}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers._
-import utils.IterateeHelpers
-
+import play.api.test.{FakeApplication, FakeRequest}
+import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
 class SubscriptionViewControllerSpec
@@ -53,8 +51,9 @@ class SubscriptionViewControllerSpec
     )
   )
 
-  object SubscriptionViewController extends SubscriptionViewController {
-    override val connector = mock[ViewDESConnector]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController {
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
 
   val request = FakeRequest()
@@ -64,7 +63,7 @@ class SubscriptionViewControllerSpec
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = SubscriptionViewController.view("test", "test", "test")(request)
+      val result = Controller.view("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
       status(result) must be(BAD_REQUEST)
@@ -75,10 +74,10 @@ class SubscriptionViewControllerSpec
       val response = DesConstants.SubscriptionViewModelForRp
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      val result = SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request)
+      val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModel))
@@ -86,10 +85,10 @@ class SubscriptionViewControllerSpec
 
     "return an invalid response when the service fails" in {
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -137,8 +136,9 @@ class SubscriptionViewControllerSpecPhase2
     )
   )
 
-  object SubscriptionViewControllerPhase2 extends SubscriptionViewController {
-    override val connector = mock[ViewDESConnector]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
 
   val request = FakeRequest()
@@ -148,7 +148,7 @@ class SubscriptionViewControllerSpecPhase2
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = SubscriptionViewControllerPhase2.view("test", "test", "test")(request)
+      val result = Controller.view("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
       status(result) must be(BAD_REQUEST)
@@ -159,10 +159,10 @@ class SubscriptionViewControllerSpecPhase2
       val response = DesConstants.SubscriptionViewModelForRpPhase2
 
       when {
-        SubscriptionViewControllerPhase2.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      val result = SubscriptionViewControllerPhase2.view("test", "test", amlsRegistrationNumber)(request)
+      val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModelPhase2))
@@ -170,10 +170,10 @@ class SubscriptionViewControllerSpecPhase2
 
     "return an invalid response when the service fails" in {
       when {
-        SubscriptionViewControllerPhase2.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(SubscriptionViewControllerPhase2.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -219,8 +219,9 @@ class SubscriptionViewControllerSpecRelease7
     )
   )
 
-  object SubscriptionViewController extends SubscriptionViewController {
-    override val connector = mock[ViewDESConnector]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
@@ -260,7 +261,7 @@ class SubscriptionViewControllerSpecRelease7
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = SubscriptionViewController.view("test", "test", "test")(request)
+      val result = Controller.view("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
       status(result) must be(BAD_REQUEST)
@@ -270,10 +271,10 @@ class SubscriptionViewControllerSpecRelease7
     "return a valid response when the amls registration number is valid" in {
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(release7SubscriptionViewModel)
 
-      val result = SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request)
+      val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModel))
@@ -283,10 +284,10 @@ class SubscriptionViewControllerSpecRelease7
     "return an invalid response when the service fails" in {
 
       when {
-        SubscriptionViewController.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(SubscriptionViewController.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
@@ -333,8 +334,9 @@ class SubscriptionViewControllerSpecRelease7Phase2
     )
   )
 
-  object SubscriptionViewControllerPhase2 extends SubscriptionViewController {
-    override val connector = mock[ViewDESConnector]
+  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
   }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
@@ -374,7 +376,7 @@ class SubscriptionViewControllerSpecRelease7Phase2
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = SubscriptionViewControllerPhase2.view("test", "test", "test")(request)
+      val result = Controller.view("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
       status(result) must be(BAD_REQUEST)
@@ -384,10 +386,10 @@ class SubscriptionViewControllerSpecRelease7Phase2
     "return a valid response when the amls registration number is valid" in {
 
       when {
-        SubscriptionViewControllerPhase2.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(release7SubscriptionViewModelPhase2)
 
-      val result = SubscriptionViewControllerPhase2.view("test", "test", amlsRegistrationNumber)(request)
+      val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 
       status(result) must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModelPhase2))
@@ -397,10 +399,10 @@ class SubscriptionViewControllerSpecRelease7Phase2
     "return an invalid response when the service fails" in {
 
       when {
-        SubscriptionViewControllerPhase2.connector.view(eqTo(amlsRegistrationNumber))(any(), any())
+        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(SubscriptionViewControllerPhase2.view("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

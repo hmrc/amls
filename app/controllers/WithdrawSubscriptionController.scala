@@ -16,20 +16,23 @@
 
 package controllers
 
-import javax.inject.Inject
-
+import javax.inject.{Inject, Singleton}
 import connectors.WithdrawSubscriptionConnector
 import models.des.WithdrawSubscriptionRequest
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ControllerHelper
+import utils.{ApiRetryHelper, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector) extends BaseController with ControllerHelper {
+@Singleton
+class WithdrawSubscriptionController @Inject()(
+                                                connector: WithdrawSubscriptionConnector,
+                                                implicit val apiRetryHelper: ApiRetryHelper
+                                              ) extends BaseController with ControllerHelper {
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
     implicit request =>

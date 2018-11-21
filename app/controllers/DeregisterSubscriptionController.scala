@@ -16,21 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import connectors.DeregisterSubscriptionConnector
+import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ControllerHelper
+import utils.{ApiRetryHelper, ControllerHelper}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class DeregisterSubscriptionController @Inject()(
-                                                  deregisterSubscriptionConnector: DeregisterSubscriptionConnector
+                                                  deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
+                                                  implicit val apiRetryHelper: ApiRetryHelper
                                                 ) extends BaseController with ControllerHelper {
 
   def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {

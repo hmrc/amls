@@ -27,11 +27,22 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 
 trait DeregisterSubscriptionConnector extends DESConnector {
 
-  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
+  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
+    implicit ec: ExecutionContext,
+    wr1: Writes[DeregisterSubscriptionRequest],
+    wr2: Writes[DeregisterSubscriptionResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[DeregisterSubscriptionResponse] = {
+    apiRetryHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
+  }
+
+  private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                           wr1: Writes[DeregisterSubscriptionRequest],
                                                                                           wr2: Writes[DeregisterSubscriptionResponse],
                                                                                           hc: HeaderCarrier

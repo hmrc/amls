@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.{MockAudit, SubscriptionEvent, SubscriptionFailedEvent}
+import audit.{MockAudit, SubscriptionFailedEvent}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -31,13 +31,15 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.test.FakeApplication
 import uk.gov.hmrc.audit.HandlerResult
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 
 class SubscribeDESConnectorSpec extends PlaySpec
   with MockitoSugar
@@ -45,6 +47,14 @@ class SubscribeDESConnectorSpec extends PlaySpec
   with IntegrationPatience
   with OneAppPerSuite
   with AmlsReferenceNumberGenerator{
+
+
+  val maxRetries = 10
+  implicit override lazy val app = FakeApplication(
+    additionalConfiguration = Map(
+      "microservice.services.feature-toggle.release7" -> true,
+      "microservice.services.exponential-backoff.max-attempts" -> maxRetries ))
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
 
@@ -197,7 +207,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          verify(testDESConnector.auditConnector, times(maxRetries)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType

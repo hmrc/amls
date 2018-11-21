@@ -33,6 +33,11 @@ object AmlsConfig extends ServicesConfig {
   def release7 = getConfBool("feature-toggle.release7", defBool = false)
   def phase2Changes = getConfBool("feature-toggle.phase-2-changes", defBool = false)
 
+  // exponential back off configuration
+  def maxAttempts = getConfInt("exponential-backoff.max-attempts", defInt = 10)
+  def initialWaitMs = getConfInt("exponential-backoff.initial-wait-ms", defInt = 10)
+  def waitFactor = getConfString("exponential-backoff.wait-factor", defString = "1.5").toFloat
+
   lazy val payAPIUrl = baseUrl("pay-api")
 
 }

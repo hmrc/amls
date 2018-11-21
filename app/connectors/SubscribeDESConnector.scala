@@ -23,14 +23,28 @@ import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
+
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 
 trait SubscribeDESConnector extends DESConnector {
 
   private[connectors] def httpPost: HttpPost
 
   def subscribe
+  (safeId: String, data: des.SubscriptionRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.SubscriptionRequest],
+   wr2: Writes[des.SubscriptionResponse],
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
+  ): Future[des.SubscriptionResponse] = {
+    apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
+  }
+
+  private def subscribeFunction
   (safeId: String, data: des.SubscriptionRequest)
   (implicit
    ec: ExecutionContext,

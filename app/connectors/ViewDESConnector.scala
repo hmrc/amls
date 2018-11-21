@@ -22,19 +22,28 @@ import metrics.API5
 import models.des.SubscriptionView
 import play.api.Logger
 import play.api.http.Status._
-import play.api.libs.json.{JsError, JsSuccess, Json}
-
+import play.api.libs.json.{JsError, JsSuccess}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpReads, HttpResponse }
-
 
 trait ViewDESConnector extends DESConnector {
 
   private[connectors] def httpGet: HttpGet
 
+    def view(amlsRegistrationNumber: String)(
+      implicit ec: ExecutionContext,
+      hc: HeaderCarrier,
+      apiRetryHelper: ApiRetryHelper
+    ): Future[SubscriptionView] = {
+      apiRetryHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
+    }
 
-  def view(amlsRegistrationNumber: String)
-          (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
+  private def viewFunction(amlsRegistrationNumber: String)
+          (
+            implicit ec: ExecutionContext,
+            hc: HeaderCarrier
+          ): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]
     val timer = metrics.timer(API5)

@@ -18,20 +18,34 @@ package connectors
 
 import audit.{AmendmentEvent, AmendmentEventFailed}
 import exceptions.HttpStatusException
+import javax.inject._
 import metrics.API6
 import models.des
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpPut, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPut, HttpReads, HttpResponse}
 
 trait AmendVariationDESConnector extends DESConnector {
 
   private[connectors] def httpPut: HttpPut
 
   def amend
+  (amlsRegistrationNumber: String, data: des.AmendVariationRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.AmendVariationRequest],
+   wr2: Writes[des.AmendVariationResponse],
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
+  ): Future[des.AmendVariationResponse] = {
+    apiRetryHelper.doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
+  }
+
+  private def amendFunction
   (amlsRegistrationNumber: String, data: des.AmendVariationRequest)
   (implicit
    ec: ExecutionContext,
@@ -81,5 +95,4 @@ trait AmendVariationDESConnector extends DESConnector {
         Future.failed(httpEx)
     }
   }
-
 }

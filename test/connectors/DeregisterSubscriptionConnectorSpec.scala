@@ -23,24 +23,33 @@ import generators.AmlsReferenceNumberGenerator
 import metrics.{API10, Metrics}
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatest.time.{Seconds, Span}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import play.api.test.FakeApplication
+import uk.gov.hmrc.audit.HandlerResult
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse }
 
 class DeregisterSubscriptionConnectorSpec extends PlaySpec
   with MockitoSugar
   with ScalaFutures
-  with OneServerPerSuite
+  with OneAppPerSuite
   with AmlsReferenceNumberGenerator {
+
+  implicit override lazy val app: FakeApplication = FakeApplication()
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
     object deregisterSubscriptionConnector extends DeregisterSubscriptionConnector {
@@ -112,20 +121,18 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
     }
 
     "return failed response on exception" in new Fixture {
-      val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseString = Some("message")
-      )
 
       when {
         deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
+      whenReady(
+        deregisterSubscriptionConnector.deregistration(
+          amlsRegistrationNumber,
+          testRequest
+        ).failed, timeout(Span(2, Seconds))
+      ) {
         case HttpStatusException(status, body) =>
           status must be(INTERNAL_SERVER_ERROR)
           body must be(Some("message"))
