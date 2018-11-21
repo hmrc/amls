@@ -48,11 +48,11 @@ class AmendVariationDESConnectorSpec extends PlaySpec
     with OneAppPerSuite
     with AmlsReferenceNumberGenerator {
 
-  val MaxRetries = 10
+  val maxRetries = 10
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
       "microservice.services.feature-toggle.release7" -> true,
-      "microservice.services.exponential-backoff.max-attempts" -> MaxRetries ))
+      "microservice.services.exponential-backoff.max-attempts" -> maxRetries ))
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   trait Fixture {
 
@@ -213,7 +213,7 @@ class AmendVariationDESConnectorSpec extends PlaySpec
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(MaxRetries)).sendExtendedEvent(any())(any(), any())
+          verify(testDESConnector.auditConnector, times(maxRetries)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
