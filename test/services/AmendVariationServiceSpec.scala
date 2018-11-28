@@ -67,7 +67,6 @@ class AmendVariationServiceSpec extends PlaySpec
     override private[services] val auditConnector = mock[AuditConnector]
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
     override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: models.des.AmendVariationResponse) = feAmendVariationResponse
-    override val phase2Changes = false
   }
 
 

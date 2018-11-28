@@ -51,12 +51,6 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
 
   private[services] val auditConnector: AuditConnector
 
-  val phase2Changes: Boolean = false
-
-  val stream: InputStream = getClass.getResourceAsStream (if (phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
-  val lines = scala.io.Source.fromInputStream(stream).getLines
-  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
 
@@ -193,11 +187,19 @@ object AmendVariationService extends AmendVariationService {
   override private[services] val viewDesConnector: ViewDESConnector = DESConnector
   override private[services] val auditConnector = MicroserviceAuditConnector
 
-  override private[services] def validateResult(request: AmendVariationRequest) =
-    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+  val stream: InputStream = getClass.getResourceAsStream (if (AmlsConfig.phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
+  val lines = scala.io.Source.fromInputStream(stream).getLines
+  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
+  override private[services] def validateResult(request: AmendVariationRequest) = {
+    if(AmlsConfig.phase2Changes) {
+      validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
+    }
+    else {
+      validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
+    }
+  }
 
   override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
     AmendVariationResponse.convert(request, isRenewalWindow, des)
-
-  override val phase2Changes = AmlsConfig.phase2Changes
 }
