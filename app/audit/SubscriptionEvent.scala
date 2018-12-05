@@ -109,7 +109,8 @@ object AmendmentEvent {
       response.paymentReference,
       request.acknowledgementReference,
       request.businessDetails.typeOfLegalEntity,
-      request.changeIndicators
+      request.changeIndicators,
+      request
     )
     val requiredInfo = Json.toJson(auditModel)
 
