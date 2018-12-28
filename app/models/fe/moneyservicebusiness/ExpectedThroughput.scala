@@ -66,17 +66,6 @@ object ExpectedThroughput {
   }
 
   def convThroughput(msbAll: String): ExpectedThroughput = {
-    if (!AmlsConfig.release7) {
-      msbAll match {
-        case "99999" => First
-        case "499999" => Second
-        case "999999" => Third
-        case "20000000" => Fourth
-        case "100000000" => Fifth
-        case "1000000000" => Sixth
-        case "10000000000" => Seventh
-      }
-    }else {
       msbAll match {
         case "£0-£15k" => First
         case "£15k-50k" => Second
@@ -86,6 +75,5 @@ object ExpectedThroughput {
         case "£1m-10m" => Sixth
         case "£10m+" => Seventh
       }
-    }
   }
 }

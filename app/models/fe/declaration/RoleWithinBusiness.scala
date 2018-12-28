@@ -135,12 +135,7 @@ object RoleWithinBusiness {
         withinTheBusiness <- withinTheBusinessO
         forTheBusiness <- forTheBusinessO
       } yield {
-
-        if (AmlsConfig.release7) {
-          withinTheBusiness ++ forTheBusiness
-        } else {
-          if (aboutYou.employedWithinBusiness) withinTheBusiness else forTheBusiness
-        }
+        withinTheBusiness ++ forTheBusiness
       }
 
     roleTypesWithinBusiness.map(RoleWithinBusiness(_)).getOrElse(RoleWithinBusiness(Set.empty))

@@ -141,7 +141,7 @@ object AmendVariationRequest {
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
      gen: AckRefGenerator,
-     conv: (Incoming, Boolean) => BusinessActivities,
+     conv: Incoming => BusinessActivities,
      conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
      prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
      vatABConv : fe.aboutthebusiness.AboutTheBusiness => Option[VATRegistration],
@@ -167,7 +167,7 @@ object AmendVariationRequest {
       businessReferencesAll = data.aboutTheBusinessSection,
       businessReferencesAllButSp = data.aboutTheBusinessSection,
       businessReferencesCbUbLlp = data.aboutTheBusinessSection,
-      businessActivities = conv(data, AmlsConfig.release7),
+      businessActivities = conv(data),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection, true),

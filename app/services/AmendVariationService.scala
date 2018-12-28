@@ -60,14 +60,12 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       updateWithTradingPremises,
       updateWithResponsiblePeople
     )
-    if (AmlsConfig.release7) {
-      val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
-        updateWithSupervisorDateOfChangeFlag,
-        updateWithBusinessActivitiesDateOfChangeFlag)
-      transforms ++ release7Transforms
-    } else {
-      transforms
-    }
+
+    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
+      updateWithSupervisorDateOfChangeFlag,
+      updateWithBusinessActivitiesDateOfChangeFlag)
+    transforms ++ release7Transforms
+
   }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(

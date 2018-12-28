@@ -60,16 +60,11 @@ object MsbCeDetailsR7 {
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetailsR7] = {
 
-    val dealInPhysCurrencies =
-      AmlsConfig.release7 match {
-        case true =>
-          // Infer the value of dealInPhysCurrencies if it was not supplied
-          msb.whichCurrencies.fold[Option[Boolean]](Some(false))(wc => wc.usesForeignCurrencies match {
+    val dealInPhysCurrencies = msb.whichCurrencies.fold[Option[Boolean]](Some(false))(wc => wc.usesForeignCurrencies match {
             case None => Some(wc.bankMoneySource.isDefined || wc.customerMoneySource || wc.wholesalerMoneySource.isDefined)
             case x => x
           })
-        case false => None
-      }
+
 
     Some(MsbCeDetailsR7(dealInPhysCurrencies, if(dealInPhysCurrencies.isEmpty || dealInPhysCurrencies.get) {
       msb

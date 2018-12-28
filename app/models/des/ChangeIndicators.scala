@@ -39,10 +39,6 @@ object ChangeIndicators {
 
   implicit def format = {
 
-    if(!AmlsConfig.release7){
-      Json.format[ChangeIndicators]
-    }
-    else {
       import play.api.libs.functional.syntax._
       import play.api.libs.json.Reads._
       import play.api.libs.json._
@@ -80,5 +76,4 @@ object ChangeIndicators {
 
       Format(jsonReads,jsonWrites)
     }
-  }
 }
