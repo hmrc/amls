@@ -85,44 +85,6 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
             "agentDealsWithHmrc"->true))))
     }
 
-    "convert frontend model to des model successfully" in {
-
-      val model = Some(BusinessActivitiesAll(
-        Some("2000-11-11"),
-        Some("1990-02-24"),
-        None,
-        BusinessActivityDetails(true,Some(ExpectedAMLSTurnover(Some("99999"),None))),
-        Some(FranchiseDetails(true,Some(List("FranchiserName1")))),
-        Some("12345678901"),
-        Some("11223344556"),
-        NonUkResidentCustDetails(true,Some(List("AD", "GB"))),
-        AuditableRecordsDetails("Yes",Some(TransactionRecordingMethod(true,true,true, Some("CommercialPackageName")))),
-        true,
-        true,
-        Some(FormalRiskAssessmentDetails(true,Some(RiskAssessmentFormat(true,true)))),
-        Some(MlrAdvisor(
-          true,
-          Some(
-            MlrAdvisorDetails(
-              Some(
-                AdvisorNameAddress(
-                  "Name",
-                  Some("TradingName"),
-                  Address("AdvisorAddressLine1",
-                    "AdvisorAddressLine2",
-                    Some("AdvisorAddressLine3"),
-                    Some("AdvisorAddressLine4"),
-                    "GB",
-                    Some("AA1 1AA"),
-                    None))),
-              true,
-              None)
-          )))))
-
-      BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
-        BusinessActivitiesSection.modelForView, Some("2000-11-11")) must be(model)
-
-    }
 
     "successfully return earliest date comparing with asp, eab and hvd dates" in {
 
