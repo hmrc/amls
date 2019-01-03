@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -276,7 +276,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
 }
 
-class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
+class AmendVariationRequestSpecPhase2 extends PlaySpec with OneAppPerSuite {
 
   override lazy val app = FakeApplication(
     additionalConfiguration = Map(
