@@ -23,9 +23,7 @@ import play.api.libs.json.{JsSuccess, Json}
 import play.api.test.FakeApplication
 import utils.StatusConstants
 
-class RPExtraR7Spec extends PlaySpec with OneAppPerSuite{
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class RPExtraSpec extends PlaySpec with OneAppPerSuite{
 
   "RPExtra" should {
     "serialise Json successfully" in {

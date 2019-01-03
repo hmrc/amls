@@ -25,8 +25,6 @@ import play.api.test.FakeApplication
 
 class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
   val testResponsiblePeopleUpdateHelper = new ResponsiblePeopleUpdateHelper {}
 
   "ResponsiblePeopleUpdateHelper" must {
@@ -190,6 +188,5 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
       }
     }
   }
-
 }
 

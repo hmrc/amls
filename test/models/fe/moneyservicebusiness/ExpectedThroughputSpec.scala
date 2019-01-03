@@ -23,9 +23,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
 import play.api.test.FakeApplication
 
-class ExpectedThroughputRelease7Spec extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class ExpectedThroughputSpec extends PlaySpec with OneAppPerSuite {
 
   "ExpectedThroughput" should {
 

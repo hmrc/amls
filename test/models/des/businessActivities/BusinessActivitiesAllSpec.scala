@@ -29,8 +29,6 @@ import play.api.test.FakeApplication
 
 class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication()
-
   "All Business Activities" should {
     "be serialisable from business activities" in{
 

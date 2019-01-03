@@ -35,7 +35,7 @@ import play.api.test.{FakeApplication, FakeRequest}
 import utils.{ApiRetryHelper, IterateeHelpers}
 import scala.concurrent.Future
 
-class SubscriptionViewControllerSpecRelease7
+class SubscriptionViewControllerSpec
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
@@ -149,7 +149,7 @@ class SubscriptionViewControllerSpecRelease7
   )
 }
 
-class SubscriptionViewControllerSpecRelease7Phase2
+class SubscriptionViewControllerSpecPhase2
   extends PlaySpec
     with MockitoSugar
     with ScalaFutures
@@ -177,7 +177,7 @@ class SubscriptionViewControllerSpecRelease7Phase2
       }
   }
 
-  val release7SubscriptionViewModelPhase2 = DesConstants.SubscriptionViewModelForRpPhase2.copy(
+  val subscriptionViewModelPhase2 = DesConstants.SubscriptionViewModelForRpPhase2.copy(
     businessActivities = DesConstants.testBusinessActivities.copy(
       all = Some(DesConstants.testBusinessActivitiesAll.copy(
         businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
@@ -216,7 +216,7 @@ class SubscriptionViewControllerSpecRelease7Phase2
 
       when {
         Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-      } thenReturn Future.successful(release7SubscriptionViewModelPhase2)
+      } thenReturn Future.successful(subscriptionViewModelPhase2)
 
       val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 

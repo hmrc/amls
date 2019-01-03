@@ -23,9 +23,7 @@ import org.scalatestplus.play.OneAppPerSuite
 import play.api.libs.json._
 import play.api.test.FakeApplication
 
-class YourTradingPremisesRelease7Spec extends WordSpec with MustMatchers with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
 
   "YourTradingPremises" must {
 

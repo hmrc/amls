@@ -27,7 +27,7 @@ import play.api.libs.json.{JsSuccess, JsUndefined, Json}
 import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
-class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite {
+class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
   override lazy val app = FakeApplication(
     additionalConfiguration = Map(
@@ -276,7 +276,7 @@ class AmendVariationRequestSpecWithRelease7 extends PlaySpec with OneAppPerSuite
 
 }
 
-class AmendVariationRequestSpecWithRelease7Phase2 extends PlaySpec with OneAppPerSuite {
+class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
   override lazy val app = FakeApplication(
     additionalConfiguration = Map(

@@ -26,11 +26,10 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
-class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
+class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
-      "microservice.services.feature-toggle.release7" -> true,
       "microservice.services.feature-toggle.phase-2-changes" -> false
     )
   )
@@ -92,14 +91,12 @@ class SubscriptionViewSpecRelease7 extends PlaySpec with OneAppPerSuite {
     hvdSection = HvdSection.completeModel,
     supervisionSection = SupervisionSection.completeModel
   )
-
 }
 
-class SubscriptionViewSpecRelease7Phase2 extends PlaySpec with OneAppPerSuite {
+class SubscriptionViewSpecPhase2 extends PlaySpec with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
-      "microservice.services.feature-toggle.release7" -> true,
       "microservice.services.feature-toggle.phase-2-changes" -> true
     )
   )
@@ -158,6 +155,5 @@ class SubscriptionViewSpecRelease7Phase2 extends PlaySpec with OneAppPerSuite {
     hvdSection = HvdSection.completeModel,
     supervisionSection = SupervisionSection.completeModel
   )
-
 }
 

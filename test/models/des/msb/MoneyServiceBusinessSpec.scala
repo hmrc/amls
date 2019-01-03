@@ -23,9 +23,8 @@ import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FEMoneyServiceBus
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
-class MoneyServiceBusinessRelease7Spec extends PlaySpec with OneAppPerSuite {
+class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MoneyServiceBusiness" should {
 

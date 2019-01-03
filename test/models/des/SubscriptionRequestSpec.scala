@@ -30,11 +30,10 @@ import play.api.libs.json._
 import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
-class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
-      "microservice.services.feature-toggle.release7" -> true,
       "microservice.services.feature-toggle.phase-2-changes" -> false
     )
   )
@@ -755,11 +754,10 @@ class SubscriptionRequestSpecRelease7 extends PlaySpec with MockitoSugar with On
 
 }
 
-class SubscriptionRequestSpecRelease7Phase2 extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class SubscriptionRequestSpecPhase2 extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
-      "microservice.services.feature-toggle.release7" -> true,
       "microservice.services.feature-toggle.phase-2-changes" -> true
     )
   )

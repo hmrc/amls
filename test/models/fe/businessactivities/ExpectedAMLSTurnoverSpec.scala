@@ -24,9 +24,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
 import play.api.test.FakeApplication
 
-class ExpectedAMLSTurnoverSpecWithRelease7 extends PlaySpec with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class ExpectedAMLSTurnoverSpec extends PlaySpec with OneAppPerSuite {
 
   "ExpectedAMLSTurnover" should {
 

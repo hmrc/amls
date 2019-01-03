@@ -24,8 +24,6 @@ import play.api.test.FakeApplication
 
 class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
   "MsbMtDetails" should {
 
     val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))

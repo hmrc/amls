@@ -25,9 +25,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
-class PositionInBusinessRelease7Spec extends PlaySpec with MockitoSugar with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   val today = new LocalDate()
 

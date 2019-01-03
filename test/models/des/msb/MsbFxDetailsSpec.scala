@@ -23,8 +23,6 @@ import play.api.test.FakeApplication
 
 class MsbFxDetailsSpec extends PlaySpec with OneAppPerSuite {
 
-  override lazy val app = FakeApplication()
-
   "MsbFxDetails" should {
 
     "convert from fe model" in {

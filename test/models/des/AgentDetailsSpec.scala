@@ -22,9 +22,7 @@ import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
-class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication()
+class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
 
   "AgentDetails" must {
     "convert frontend Trading premises into backend model in Amendment flow" in {

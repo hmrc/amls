@@ -20,9 +20,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
-class ChangeIndicatorsR7Spec extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
 
   "ChangeIndicators" must {
     "serialize correctly" in {
