@@ -23,8 +23,6 @@ import play.api.test.FakeApplication
 
 class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
   "WhichCurrencies" must {
 
     "round trip through Json correctly" in {

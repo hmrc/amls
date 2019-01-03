@@ -23,8 +23,6 @@ import play.api.test.FakeApplication
 
 class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
   "MsbCeDetails" should {
 
     "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {

@@ -24,44 +24,6 @@ import play.api.test.FakeApplication
 
 class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-  "AgentDetails" must {
-    "convert frontend Trading premises into backend model in Amendment flow" in {
-      implicit val requestType = RequestType.Amendment
-
-      val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
-        Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
-      )
-      AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
-          Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
-    }
-
-    "convert frontend Trading premises into backend model in Subscription flow" in {
-      implicit val requestType = RequestType.Subscription
-
-      val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
-        Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name",None,Some("1970-01-01"))), None, None,
-        WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
-      )
-      AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
-        AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
-          Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Some("2008-01-01"),None),None,None,None,None))
-    }
-  }
-
-}
-
-class AgentDetailsSpecRelease7 extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
-
   "AgentDetails" must {
     "convert frontend Trading premises into backend model in Amendment flow" in {
       implicit val requestType = RequestType.Amendment

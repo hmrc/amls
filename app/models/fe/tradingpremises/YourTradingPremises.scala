@@ -58,10 +58,7 @@ object YourTradingPremises {
   implicit def conv(agentDetails: AgentDetails): YourTradingPremises = {
     val agentPremises = agentDetails.agentPremises
 
-    val startDate = AmlsConfig.release7 match {
-      case true => agentDetails.startDate
-      case false => agentPremises.startDate
-    }
+    val startDate = agentDetails.startDate
 
     YourTradingPremises(agentPremises.tradingName,
       agentPremises.businessAddress,

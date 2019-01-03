@@ -54,7 +54,7 @@ object MsbMtDetails {
       msb.transactionsInNext12Months.fold[Option[String]](None)(x => Some(x.txnAmount)),
       largetAmount,
       largestTransaction,
-      config.AmlsConfig.release7 & amendVariation match {
+      amendVariation match {
         case true => Some(false)
         case _ => None
       }

@@ -74,8 +74,8 @@ object AgentPremises {
   implicit def convert(tradingPremises: models.fe.tradingpremises.TradingPremises)(implicit requestType: RequestType): AgentPremises = {
     val ytp = tradingPremises.yourTradingPremises
 
-    val startDate = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => None
+    val startDate = requestType match {
+      case RequestType.Amendment => None
       case _ => Some(ytp.startDate.toString)
     }
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities

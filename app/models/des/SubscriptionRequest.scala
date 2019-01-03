@@ -62,79 +62,14 @@ object SubscriptionRequest {
   final type Outgoing = SubscriptionRequest
   final type Incoming = fe.SubscriptionRequest
 
-  implicit def format = if (AmlsConfig.release7) {
+  implicit def format =
     Json.format[SubscriptionRequest]
-  } else {
-    val reads: Reads[SubscriptionRequest] = {
-      import play.api.libs.functional.syntax._
-      import play.api.libs.json.Reads._
-      import play.api.libs.json._
 
-      (
-        (__ \ "acknowledgementReference").read[String] and
-          (__ \ "businessDetails").read[BusinessDetails] and
-          (__ \ "businessContactDetails").read[BusinessContactDetails] and
-          (__ \ "businessReferencesAll").readNullable[PreviouslyRegisteredMLR] and
-          (__ \ "businessReferencesAllButSp").readNullable[VATRegistration] and
-          (__ \ "businessReferencesCbUbLlp").readNullable[CorporationTaxRegisteredCbUbLlp] and
-          (__ \ "businessActivities").read[BusinessActivities] and
-          (__ \ "tradingPremises").read[TradingPremises] and
-          (__ \ "bankAccountDetails").read[BankDetails] and
-          (__ \ "msb").readNullable[MoneyServiceBusiness] and
-          (__ \ "hvd").readNullable[Hvd] and
-          (__ \ "asp").readNullable[Asp] and
-          (__ \ "aspOrTcsp").readNullable[AspOrTcsp] and
-          (__ \ "tcspAll").readNullable[TcspAll] and
-          (__ \ "tcspTrustCompFormationAgt").readNullable[TcspTrustCompFormationAgt] and
-          (__ \ "eabAll").readNullable[EabAll] and
-          (__ \ "eabResdEstAgncy").readNullable[EabResdEstAgncy] and
-          (__ \ "responsiblePersons").readNullable[Seq[ResponsiblePersons]] and
-          (__ \ "filingIndividual").read[Aboutyou].map{x:Aboutyou => AboutYouRelease7.convertToRelease7(x)} and
-          (__ \ "declaration").read[Declaration]
-        ) (SubscriptionRequest.apply _)
-    }
-
-    val aboutYouWrites = new Writes[AboutYouRelease7] {
-      override def writes(o: AboutYouRelease7): JsValue = {
-        Aboutyou.format.writes(Aboutyou.convertFromRelease7(o))
-      }
-    }
-
-    val writes: Writes[SubscriptionRequest] = {
-      import play.api.libs.functional.syntax._
-      import play.api.libs.json._
-
-      (
-        (__ \ "acknowledgementReference").write[String] and
-          (__ \ "businessDetails").write[BusinessDetails] and
-          (__ \ "businessContactDetails").write[BusinessContactDetails] and
-          (__ \ "businessReferencesAll").writeNullable[PreviouslyRegisteredMLR] and
-          (__ \ "businessReferencesAllButSp").writeNullable[VATRegistration] and
-          (__ \ "businessReferencesCbUbLlp").writeNullable[CorporationTaxRegisteredCbUbLlp] and
-          (__ \ "businessActivities").write[BusinessActivities] and
-          (__ \ "tradingPremises").write[TradingPremises] and
-          (__ \ "bankAccountDetails").write[BankDetails] and
-          (__ \ "msb").writeNullable[MoneyServiceBusiness] and
-          (__ \ "hvd").writeNullable[Hvd] and
-          (__ \ "asp").writeNullable[Asp] and
-          (__ \ "aspOrTcsp").writeNullable[AspOrTcsp] and
-          (__ \ "tcspAll").writeNullable[TcspAll] and
-          (__ \ "tcspTrustCompFormationAgt").writeNullable[TcspTrustCompFormationAgt] and
-          (__ \ "eabAll").writeNullable[EabAll] and
-          (__ \ "eabResdEstAgncy").writeNullable[EabResdEstAgncy] and
-          (__ \ "responsiblePersons").writeNullable[Seq[ResponsiblePersons]] and
-          (__ \ "filingIndividual").write(aboutYouWrites) and
-          (__ \ "declaration").write[Declaration]
-        ) (unlift(SubscriptionRequest.unapply _))
-    }
-
-    Format(reads, writes)
-  }
 
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
      gen: AckRefGenerator,
-     conv: (Incoming, Boolean) => BusinessActivities,
+     conv: Incoming => BusinessActivities,
      conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
      prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
      vatABConv : fe.aboutthebusiness.AboutTheBusiness => Option[VATRegistration],
@@ -157,7 +92,7 @@ object SubscriptionRequest {
       businessReferencesAll = data.aboutTheBusinessSection,
       businessReferencesAllButSp = data.aboutTheBusinessSection,
       businessReferencesCbUbLlp = data.aboutTheBusinessSection,
-      businessActivities = conv(data, false),
+      businessActivities = conv(data),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection, false),

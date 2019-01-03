@@ -23,9 +23,7 @@ import play.api.libs.json.{JsSuccess, Json}
 import play.api.test.FakeApplication
 import utils.StatusConstants
 
-class RPExtraR7Spec extends PlaySpec with OneAppPerSuite{
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
+class RPExtraSpec extends PlaySpec with OneAppPerSuite{
 
   "RPExtra" should {
     "serialise Json successfully" in {
@@ -122,82 +120,6 @@ class RPExtraR7Spec extends PlaySpec with OneAppPerSuite{
       rpe.status must be (Some(StatusConstants.Unchanged))
     }
 
-  }
-
-}
-
-class RPExtraSpec extends PlaySpec with OneAppPerSuite{
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-
-  "RPExtra" should {
-    "serialise Json successfully" in {
-      val extra = RPExtra(Some(StringOrInt(112233)),Some("1990-2-2"),
-        Some(StatusConstants.Deleted),
-        Some(true),
-        None,
-        Some("Passed"),
-        Some("2001-3-3"))
-
-      val json = Json.obj("lineId" ->112233,
-        "endDate" ->"1990-2-2",
-        "status" ->"Deleted",
-        "retestFlag" ->true,
-        "testResult" ->"Passed",
-        "testDate" ->"2001-3-3")
-
-      RPExtra.reads.reads(json) must be(JsSuccess(extra))
-    }
-
-    "serialise Json successfully1" in {
-      val json = Json.obj(
-        "endDate" ->"1990-2-2",
-        "status" ->"Deleted",
-        "retestFlag" ->true,
-        "testResult" ->"Passed",
-        "testDate" ->"2001-3-3")
-
-      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,Some("1990-2-2"),Some("Deleted"),Some(true),None,Some("Passed"),Some("2001-3-3"))))
-    }
-
-    "serialise Json successfully2" in {
-      val json = Json.obj(
-        "status" ->"Deleted")
-
-      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,None,Some("Deleted"),None,None,None)))
-    }
-
-    "Deserialise Json successfully1" in {
-      val json = Json.obj(
-        "status" ->"Deleted")
-
-      RPExtra.jsonWrites.writes(RPExtra(None,None,Some("Deleted"),None,None,None)) must be(json)
-    }
-
-    "Deserialise Json successfully2" in {
-
-      val json = Json.obj()
-
-      RPExtra.jsonWrites.writes(RPExtra(None,None,None,None,None,None)) must be(json)
-    }
-
-    "successfully format" in {
-      val extra = RPExtra(Some(StringOrInt(112233)),Some("1990-2-2"),
-        Some(StatusConstants.Deleted),
-        Some(true),
-        None,
-        Some("Passed"),
-        Some("2001-3-3"))
-
-      RPExtra.reads.reads(RPExtra.jsonWrites.writes(extra)) must be(JsSuccess(extra))
-    }
-
-    "successfully format2" in {
-      val extra = RPExtra(None)
-
-      RPExtra.reads.reads(RPExtra.jsonWrites.writes(extra)) must be(JsSuccess(extra))
-    }
   }
 
 }

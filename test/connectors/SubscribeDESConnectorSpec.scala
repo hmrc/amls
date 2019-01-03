@@ -52,7 +52,6 @@ class SubscribeDESConnectorSpec extends PlaySpec
   val maxRetries = 10
   implicit override lazy val app = FakeApplication(
     additionalConfiguration = Map(
-      "microservice.services.feature-toggle.release7" -> true,
       "microservice.services.exponential-backoff.max-attempts" -> maxRetries ))
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 

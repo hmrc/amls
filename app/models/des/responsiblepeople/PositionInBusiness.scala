@@ -67,9 +67,9 @@ object PositionInBusiness {
       other
       ) = getPositionAsflags(positions)
 
-    val assignOther = if (AmlsConfig.release7) Some(other) else None
-    val otherVal = positions.positions.collectFirst { case Other(v) if AmlsConfig.release7 => v }
-    val r7DesignatedMember = if (AmlsConfig.release7) Some(designatedMember) else None
+    val assignOther = Some(other)
+    val otherVal = positions.positions.collectFirst { case Other(v) => v }
+    val r7DesignatedMember = Some(designatedMember)
 
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(
