@@ -22,4 +22,4 @@ addSbtPlugin("org.brianmckenna" % "sbt-wartremover" % "0.11")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "0.13.0")
 
-
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
