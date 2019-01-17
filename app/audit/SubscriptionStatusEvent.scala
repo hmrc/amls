@@ -18,10 +18,10 @@ package audit
 
 import models.des.{ReadStatusResponse, SubscriptionRequest, SubscriptionResponse}
 import play.api.libs.json.{Json, Writes}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.config.AppName
-import uk.gov.hmrc.http.HeaderCarrier
+import utils.AuditHelper
 
 object SubscriptionStatusEvent {
   def apply
@@ -32,7 +32,7 @@ object SubscriptionStatusEvent {
    resW: Writes[SubscriptionResponse]
   ): DataEvent =
     DataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "OutboundCall",
       tags = hc.toAuditTags("Subscription Status", "N/A"),
       detail = hc.toAuditDetails() ++ Map(

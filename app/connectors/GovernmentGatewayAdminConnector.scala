@@ -27,8 +27,8 @@ import play.api.libs.json.{Json, Writes}
 import play.api.{Logger, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.model.Audit
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import utils.HttpResponseHelper
+import uk.gov.hmrc.play.config.ServicesConfig
+import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -96,5 +96,5 @@ object GovernmentGatewayAdminConnector extends GovernmentGatewayAdminConnector w
   override private[connectors] val http:CorePost with CoreGet with CorePut = WSHttp
   override private[connectors] lazy val serviceURL = baseUrl("government-gateway-admin")
   override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
-  override private[connectors] lazy val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
+  override private[connectors] lazy val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
 }
