@@ -16,15 +16,15 @@
 
 package connectors
 
-
 import audit.KnownFactsEvent
 import config.{MicroserviceAuditConnector, WSHttp}
 import exceptions.HttpStatusException
 import metrics.{GGAdmin, Metrics}
 import models.KnownFactsForService
+import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
-import play.api.{Logger, Play}
+import play.api.{Configuration, Logger, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -97,4 +97,8 @@ object GovernmentGatewayAdminConnector extends GovernmentGatewayAdminConnector w
   override private[connectors] lazy val serviceURL = baseUrl("government-gateway-admin")
   override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
   override private[connectors] lazy val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

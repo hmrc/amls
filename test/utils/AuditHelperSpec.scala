@@ -16,27 +16,16 @@
 
 package utils
 
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-
-import exceptions.HttpStatusException
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class AuditHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
   "AuditHelper" must {
 
     "return amls as the appName" in {
-      AuditHelper.appName must be "amls"
+      AuditHelper.appName must be("amls")
     }
   }
 }
