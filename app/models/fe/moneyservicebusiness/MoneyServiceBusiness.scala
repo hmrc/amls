@@ -45,20 +45,38 @@ object MoneyServiceBusiness {
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[MoneyServiceBusiness] = {
-    Some(MoneyServiceBusiness(
-      throughput = getMsbAll(desView.msb),
-      businessUseAnIPSP = getMsbMtDetails(desView.msb),
-      identifyLinkedTransactions = getMsbAll(desView.msb),
-      sendMoneyToOtherCountry = getMsbMtDetails(desView.msb),
-      fundsTransfer = getMsbMtDetails(desView.msb),
-      branchesOrAgents = getMsbAll(desView.msb),
-      transactionsInNext12Months = getMsbMtDetails(desView.msb),
-      ceTransactionsInNext12Months = getMsbCeDetails(desView.msb),
-      sendTheLargestAmountsOfMoney =  getMsbMtDetails(desView.msb),
-      mostTransactions = getMsbMtDetails(desView.msb),
-      whichCurrencies = getMsbCeDetails(desView.msb),
-      fxTransactionsInNext12Months = getMsbFxDetails(desView.msb)
-    ))
+//    Some(MoneyServiceBusiness(
+//      throughput = getMsbAll(desView.msb),
+//      businessUseAnIPSP = getMsbMtDetails(desView.msb),
+//      identifyLinkedTransactions = getMsbAll(desView.msb),
+//      sendMoneyToOtherCountry = getMsbMtDetails(desView.msb),
+//      fundsTransfer = getMsbMtDetails(desView.msb),
+//      branchesOrAgents = getMsbAll(desView.msb),
+//      transactionsInNext12Months = getMsbMtDetails(desView.msb),
+//      ceTransactionsInNext12Months = getMsbCeDetails(desView.msb),
+//      sendTheLargestAmountsOfMoney =  getMsbMtDetails(desView.msb),
+//      mostTransactions = getMsbMtDetails(desView.msb),
+//      whichCurrencies = getMsbCeDetails(desView.msb),
+//      fxTransactionsInNext12Months = getMsbFxDetails(desView.msb)
+//    ))
+
+    desView.msb match {
+      case Some(msb) =>  Some(MoneyServiceBusiness(
+        throughput = getMsbAll(desView.msb),
+        businessUseAnIPSP = getMsbMtDetails(desView.msb),
+        identifyLinkedTransactions = getMsbAll(desView.msb),
+        sendMoneyToOtherCountry = getMsbMtDetails(desView.msb),
+        fundsTransfer = getMsbMtDetails(desView.msb),
+        branchesOrAgents = getMsbAll(desView.msb),
+        transactionsInNext12Months = getMsbMtDetails(desView.msb),
+        ceTransactionsInNext12Months = getMsbCeDetails(desView.msb),
+        sendTheLargestAmountsOfMoney =  getMsbMtDetails(desView.msb),
+        mostTransactions = getMsbMtDetails(desView.msb),
+        whichCurrencies = getMsbCeDetails(desView.msb),
+        fxTransactionsInNext12Months = getMsbFxDetails(desView.msb)
+      ))
+      case None => None
+    }
   }
 
 

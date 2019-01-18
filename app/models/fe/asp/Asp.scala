@@ -46,6 +46,7 @@ object Asp {
       case (Some(asp),_) => Some(Asp(view.businessActivities, view.asp))
       case (None,Some(aspActivities)) => Some(Asp(view.businessActivities, Some(OtherBusinessTaxMattersNo)))
       case (None,None) => None
+      case _ => None
     }
   }
 }
