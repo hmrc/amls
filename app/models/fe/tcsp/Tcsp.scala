@@ -47,6 +47,7 @@ object Tcsp {
       case (Some(tcspAll), _) => Some(Tcsp(view, view.businessActivities, view))
       case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view.businessActivities, view))
       case (None, None) => None
+      case _ => None
     }
   }
 }

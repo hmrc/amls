@@ -154,6 +154,54 @@ object DesConstants {
     Some(testBusinessActivitiesAll)
   )
 
+  val testBusinessActivitiesNoTcsp = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    None, //Some(TcspServicesOffered(true, true, true, true, true)),
+    None, //Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAll)
+  )
+
+  val testBusinessActivitiesNoAsp = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    None, //Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, true)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAll)
+  )
+
+  val testBusinessActivitiesNoEab = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, true)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    None, //Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAll)
+  )
+
+  val testBusinessActivitiesNoMsb = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    None, //Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, true)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAll)
+  )
+
   val testBusinessActivitiesWithDateChangeFlag = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
@@ -2500,6 +2548,93 @@ object DesConstants {
     DesConstants.extraFields
   )
 
+  val SubscriptionViewModelNoTcsp = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoTcsp,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    None, //Some(DesConstants.testAspOrTcsp),
+    None, //Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
+  val SubscriptionViewModelNoAsp = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoAsp,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    None, //Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
+  val SubscriptionViewModelNoEab = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoEab,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    None, //Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
+  val SubscriptionViewModelNoMsb = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoMsb,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    None, //Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
 
   val SubscriptionViewModelForRp = SubscriptionView(
     etmpFormBundleNumber = "111111",

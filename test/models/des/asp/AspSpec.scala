@@ -16,7 +16,8 @@
 
 package models.des.asp
 
-import models.fe.asp.{Asp => FEAsp,_}
+import models.des.DesConstants
+import models.fe.asp.{Asp => FEAsp, _}
 import org.scalatestplus.play.PlaySpec
 
 class AspSpec extends PlaySpec {
@@ -41,6 +42,11 @@ class AspSpec extends PlaySpec {
         Some(otherBusinessTax)
       )
       Asp.conv(Some(model)) must be(Some(Asp(false, None)))
+    }
+
+    "converting the des subscription where no asp must yield None" in {
+      Asp.conv(DesConstants.SubscriptionViewModelNoAsp) must
+        be(None)
     }
   }
 }
