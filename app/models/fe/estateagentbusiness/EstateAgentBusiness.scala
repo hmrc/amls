@@ -49,10 +49,6 @@ object EstateAgentBusiness {
     }
 
   implicit def conv(view: models.des.SubscriptionView): Option[EstateAgentBusiness] = {
-
-    //Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut,
-    //view.eabResdEstAgncy, view, view))
-
     view.eabResdEstAgncy match {
       case Some(eab) => Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut,
         view.eabResdEstAgncy, view, view))
