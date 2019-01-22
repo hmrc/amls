@@ -20,12 +20,11 @@ import config.{AmlsConfig, MicroserviceAuditConnector, WSHttp}
 import metrics.Metrics
 import play.api.Play
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
-import uk.gov.hmrc.play.config.AppName
-import utils.HttpResponseHelper
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
-import uk.gov.hmrc.http.logging.Authorization
+import utils._
 
 trait DESConnector extends HttpResponseHelper {
 
@@ -76,7 +75,7 @@ object DESConnector extends SubscribeDESConnector
   override private[connectors] lazy val httpPut: HttpPut = WSHttp
   override private[connectors] lazy val httpGet: HttpGet = WSHttp
   override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
-  override private[connectors] lazy val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
+  override private[connectors] lazy val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
   override private[connectors] lazy val fullUrl: String = s"$baseUrl/$requestUrl"
   override private[connectors] lazy val auditConnector: AuditConnector = MicroserviceAuditConnector
 }

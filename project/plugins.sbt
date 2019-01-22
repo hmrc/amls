@@ -8,7 +8,7 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "1.15.0")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "0.8.5")
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.19")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-settings" % "3.8.0")
 
@@ -22,4 +22,4 @@ addSbtPlugin("org.brianmckenna" % "sbt-wartremover" % "0.11")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "0.13.0")
 
-
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")

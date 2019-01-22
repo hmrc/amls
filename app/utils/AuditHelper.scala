@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package exceptions
+package utils
 
-import utils._
-
-case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
-
-  lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
-
-  override def getMessage: String = {
-    s"[${AuditHelper.appName}][HttpStatusException][status] - API call failed with http response code: $status"
+object AuditHelper {
+  def appName = {
+    "amls"
   }
 }
