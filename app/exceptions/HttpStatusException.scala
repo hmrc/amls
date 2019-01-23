@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package exceptions
 
-import uk.gov.hmrc.play.config.AppName
+import utils._
 
 case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
 
   lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
 
   override def getMessage: String = {
-    s"[${AppName.appName}][HttpStatusException][status] - API call failed with http response code: $status"
+    s"[${AuditHelper.appName}][HttpStatusException][status] - API call failed with http response code: $status"
   }
 }

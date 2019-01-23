@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,19 +54,17 @@ object BusinessActivitiesAll{
     dateLst.map(x => DateTime.parse(x)).sorted(ord).headOption.map(_.toString("yyyy-MM-dd"))
   }
 
-  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest, amendVariation: Boolean): Option[BusinessActivitiesAll] = {
+  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
       convert(
         feModel.aboutTheBusinessSection,
         feModel.businessActivitiesSection,
-        getEarliestDate(feModel),
-        amendVariation
+        getEarliestDate(feModel)
       )
   }
 
   def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
               activities: models.fe.businessactivities.BusinessActivities,
-              dateOfChange: Option[String],
-              amendVariation:Boolean): Option[BusinessActivitiesAll] = {
+              dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
 
     Some(BusinessActivitiesAll(
       dateOfChange,

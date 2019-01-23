@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
 class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MsbMtDetails" should {
 
@@ -267,47 +265,3 @@ class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
     }
   }
 }
-
- class MsbMtDetailsPreRelease7Spec extends PlaySpec with OneAppPerSuite {
-   override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-   val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-   val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
-   val BusinessActivitiesModel = BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
-   val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
-
-   "convert to frontend MSB model to correct Msb Des model" in {
-     val msbMtDetails = MsbMtDetails(true,Some("123456"),
-       IpspServicesDetails(false, None),
-       true,
-       Some("12345678963"), None, None, None)
-
-     val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
-     val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
-
-     val businessUseAnIPSP = BusinessUseAnIPSPNo
-     val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-
-     val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "EUR"),
-       usesForeignCurrencies = Some(true),
-       Some(BankMoneySource("Bank names")),
-       Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
-
-     val mostTransactions = MostTransactions(Seq("LA", "LV"))
-
-     val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
-       Some(ExpectedThroughput.Second),
-       Some(businessUseAnIPSP),
-       Some(IdentifyLinkedTransactions(true)),
-       Some(SendMoneyToOtherCountry(false)),
-       Some(FundsTransfer(true)),
-       Some(BranchesOrAgents(true, Some(Seq("GB")))),
-       Some(TransactionsInNext12Months("12345678963")),
-       Some(CETransactionsInNext12Months("12345678963")),
-       Some(sendTheLargestAmountsOfMoney),
-       Some(mostTransactions),
-       Some(whichCurrencies)
-     )
-     MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
-   }
- }

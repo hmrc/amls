@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 package config
 
-import javax.inject.Inject
-
+import play.api.{Configuration, Play}
+import play.api.Mode.Mode
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.config.inject.{ServicesConfig => iServicesConfig}
 
 object AmlsConfig extends ServicesConfig {
 
@@ -30,7 +29,6 @@ object AmlsConfig extends ServicesConfig {
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
 
-  def release7 = getConfBool("feature-toggle.release7", defBool = false)
   def phase2Changes = getConfBool("feature-toggle.phase-2-changes", defBool = false)
 
   // exponential back off configuration
@@ -40,11 +38,17 @@ object AmlsConfig extends ServicesConfig {
 
   lazy val payAPIUrl = baseUrl("pay-api")
 
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
-class AppConfig @Inject()(servicesConfig: iServicesConfig){
+class AppConfig extends ServicesConfig {
 
-  lazy val enrolmentStoreUrl = s"${servicesConfig.baseUrl("tax-enrolments")}"
-  def enrolmentStoreToggle = servicesConfig.getConfBool("feature-toggle.enrolment-store", defBool = false)
+  lazy val enrolmentStoreUrl = s"${baseUrl("tax-enrolments")}"
+  def enrolmentStoreToggle = getConfBool("feature-toggle.enrolment-store", defBool = false)
 
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

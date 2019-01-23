@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,54 +140,6 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
 
 
       result.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
-
-    }
-  }
-}
-
-class TradingPremisesUpdateHelperPreRelease7Spec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-  val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
-
-  "TradingPremisesUpdateHelper" must {
-
-    "not set date change flags" in {
-      val viewModel = DesConstants.SubscriptionViewStatusTP
-
-      val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
-        businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
-          all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-            dateChangeFlag = None
-          ))
-        ),
-        aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
-          supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-            supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
-              dateChangeFlag = None
-            ))
-          ))
-        )
-        ),
-        tradingPremises = DesConstants.amendStatusAmendVariationTP.tradingPremises.copy(ownBusinessPremises =
-          DesConstants.amendStatusDesVariationRequestTP.tradingPremises.ownBusinessPremises map {
-            obp => obp.copy(ownBusinessPremisesDetails = obp.ownBusinessPremisesDetails map {
-              obpds => Seq(obpds.head.copy(dateChangeFlag = None, startDate = "1970-01-01", status = Some("Updated")))
-            })
-          }))
-
-
-      val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(DesConstants.amendStatusDesVariationRequestTP.copy(tradingPremises =
-        DesConstants.amendStatusDesVariationRequestTP.tradingPremises.copy(ownBusinessPremises =
-          DesConstants.amendStatusDesVariationRequestTP.tradingPremises.ownBusinessPremises map {
-            obp => obp.copy(ownBusinessPremisesDetails = obp.ownBusinessPremisesDetails map {
-              obpds => Seq(obpds.head.copy(startDate = "1970-01-01"))
-            })
-          }))
-        , viewModel)
-
-      result.tradingPremises must be(testRequest.tradingPremises)
 
     }
   }

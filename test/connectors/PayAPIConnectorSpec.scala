@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
 import metrics.{Metrics, PayAPI}
@@ -26,13 +25,14 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.Mode.Mode
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.ws.WSHttp
+import play.api.{Configuration, Play}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PayApiGenerator with IntegrationPatience {
 
@@ -48,6 +48,10 @@ class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSu
       override private[connectors] val httpGet: HttpGet = mockHttp
       override private[connectors] val paymentUrl = "url"
       override private[connectors] val metrics = mock[Metrics]
+
+      override protected def mode: Mode = Play.current.mode
+
+      override protected def runModeConfiguration: Configuration = Play.current.configuration
     }
 
     val testPaymentId = testPayment._id

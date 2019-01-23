@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,27 +50,23 @@ trait ResponsiblePeopleUpdateHelper {
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
     val updatedStatusRp = desResponsiblePeople.copy(extra = statusExtraField)
+    updatedStatusRp.copy(nameDetails = updatedStatusRp.nameDetails map {
+      nd =>
+        nd.copy(previousNameDetails = nd.previousNameDetails map {
+          pnd =>
+            pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+              for {
+                nameDetails <- viewRp.nameDetails
+                previousNameDetails <- nameDetails.previousNameDetails
+                prevDateOfChange <- previousNameDetails.dateOfChange
+              } yield prevDateOfChange
+            }))
+        })
+    },
+      dateChangeFlag = Some(updatedStatusRp.startDate !=
+        viewRp.startDate
+      ))
 
-    if (AmlsConfig.release7) {
-      updatedStatusRp.copy(nameDetails = updatedStatusRp.nameDetails map {
-        nd =>
-          nd.copy(previousNameDetails = nd.previousNameDetails map {
-            pnd =>
-              pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
-                for {
-                  nameDetails <- viewRp.nameDetails
-                  previousNameDetails <- nameDetails.previousNameDetails
-                  prevDateOfChange <- previousNameDetails.dateOfChange
-                } yield prevDateOfChange
-              }))
-          })
-      },
-        dateChangeFlag = Some(updatedStatusRp.startDate !=
-          viewRp.startDate
-        ))
-    } else {
-      updatedStatusRp
-    }
   }
 
   private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
@@ -84,20 +80,13 @@ trait ResponsiblePeopleUpdateHelper {
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
         val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
         val rpWithAddedStatus = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
-
-        if (AmlsConfig.release7) {
-
-          val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
-            nds =>
-              nds.copy(previousNameDetails = nds.previousNameDetails map {
-                pnd => pnd.copy(dateChangeFlag = Some(false))
-              })
-          }, dateChangeFlag = Some(false)))
-          rpWithLineIds ++ rpWithDateChangeFlags
-        } else {
-          rpWithLineIds ++ rpWithAddedStatus
-        }
-
+        val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
+          nds =>
+            nds.copy(previousNameDetails = nds.previousNameDetails map {
+              pnd => pnd.copy(dateChangeFlag = Some(false))
+            })
+        }, dateChangeFlag = Some(false)))
+        rpWithLineIds ++ rpWithDateChangeFlags
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }

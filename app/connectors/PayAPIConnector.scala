@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,10 @@ import config.{AmlsConfig, WSHttp}
 import exceptions.HttpStatusException
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
+import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
-import play.api.{Logger, Play}
+import play.api.{Configuration, Logger, Play}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils.HttpResponseHelper
@@ -85,4 +86,8 @@ object PayAPIConnector extends PayAPIConnector {
   override private[connectors] lazy val httpGet: HttpGet = WSHttp
   override private[connectors] lazy val paymentUrl = AmlsConfig.payAPIUrl
   override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

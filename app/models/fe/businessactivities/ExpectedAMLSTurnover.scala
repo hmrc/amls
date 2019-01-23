@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,19 +81,7 @@ object ExpectedAMLSTurnover {
   }
 
   def convertAMLSTurnover(to: Option[String]): Option[ExpectedAMLSTurnover] = {
-    if (!AmlsConfig.release7) {
-      to match {
-        case Some("14999") => Some(First)
-        case Some("49999") => Some(Second)
-        case Some("99999") => Some(Third)
-        case Some("249999") => Some(Fourth)
-        case Some("999999") => Some(Fifth)
-        case Some("10000000") => Some(Sixth)
-        case Some("100000000") => Some(Seventh)
-        case _ => None
-      }
-    } else {
-      to match {
+    to match {
         case Some("£0-£15k") => Some(First)
         case Some("£15k-50k") => Some(Second)
         case Some("£50k-£100k") => Some(Third)
@@ -104,5 +92,4 @@ object ExpectedAMLSTurnover {
         case _ => None
       }
     }
-  }
 }

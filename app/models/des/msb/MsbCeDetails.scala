@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,19 +51,13 @@ object MsbCeDetails {
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetails] = {
 
-    AmlsConfig.release7 match {
-      case true =>
+      // Infer the value of dealInPhysCurrencies if it was not supplied
+      val dealInPhysCurrencies = msb.whichCurrencies.fold[Option[Boolean]](Some(false))(wc => wc.usesForeignCurrencies match {
+        case None => Some(wc.bankMoneySource.isDefined || wc.customerMoneySource || wc.wholesalerMoneySource.isDefined)
+        case x => x
+      })
 
-        // Infer the value of dealInPhysCurrencies if it was not supplied
-        val dealInPhysCurrencies = msb.whichCurrencies.fold[Option[Boolean]](Some(false))(wc => wc.usesForeignCurrencies match {
-          case None => Some(wc.bankMoneySource.isDefined || wc.customerMoneySource || wc.wholesalerMoneySource.isDefined)
-          case x => x
-        })
-
-        Some(MsbCeDetails(msb, dealInPhysCurrencies))
-      case _ => Some(MsbCeDetails(msb))
-    }
-
+      Some(MsbCeDetails(msb, dealInPhysCurrencies))
   }
 
   implicit def convertFromNewModel(msbceDetailsR7: MsbCeDetailsR7): MsbCeDetails = {

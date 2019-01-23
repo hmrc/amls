@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,14 +91,12 @@ object AgentDetails {
 
   implicit def convert(tradingPremises: FETradingPremises)(implicit requestType: RequestType): AgentDetails = {
 
-    def assignCompanyRegNo = if (AmlsConfig.release7) {
+    def assignCompanyRegNo =
       tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber)
-    } else {
-      None
-    }
 
-    val (startDate, endDate) = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => (Some(tradingPremises.yourTradingPremises.startDate.toString),
+
+    val (startDate, endDate) = requestType match {
+      case RequestType.Amendment => (Some(tradingPremises.yourTradingPremises.startDate.toString),
         tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
       case _ => (None, None)
     }

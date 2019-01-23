@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,105 +26,6 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
 class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-  val today = new LocalDate()
-
-  "PositionInBusiness" must {
-
-    "convert frontend model to des model successfully for SoleProprietor" in {
-
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.SoleProprietor, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
-        Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("AA1 1AA"), "AD"), ""),
-        BusinessActivities(Set(HighValueDealing)),
-        None, None)
-
-      val desModel = Some(PositionInBusiness(
-        Some(DesSoleProprietor(true, true)),
-        None,
-        None
-      ))
-
-      val positions = Some(Positions(Set(Partner, FESoleProprietor, NominatedOfficer, Director, BeneficialOwner), Some(today)))
-
-      PositionInBusiness.conv(positions, bm) must be(desModel)
-    }
-
-    "convert frontend model to des model successfully for LimitedCompany" in {
-
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
-        Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("AA1 1AA"), "AD"), ""),
-        BusinessActivities(Set(HighValueDealing)),
-        None, None)
-
-      val desModel = Some(PositionInBusiness(
-        None,
-        None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true))
-      ))
-
-      val positions = Some(Positions(Set(Director, NominatedOfficer, BeneficialOwner), Some(today)))
-
-      PositionInBusiness.conv(positions, bm) must be(desModel)
-    }
-
-    "convert frontend model to des model  successfully for Partnership" in {
-
-      val bm = BusinessMatching( ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
-        Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("AA1 1AA"), "AD"), ""),
-        BusinessActivities(Set(HighValueDealing)),
-        None, None)
-
-      val desModel = Some(PositionInBusiness(
-        None,
-        Some(Partnership(true, true)),
-        None
-      ))
-
-      val positions = Some(Positions(Set(Partner, NominatedOfficer),Some(today)))
-
-      PositionInBusiness.conv(positions, bm) must be(desModel)
-    }
-
-
-    "convert frontend model to des model successfully when user has no data selected" in {
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
-        Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("AA1 1AA"), "AD"), ""),
-        BusinessActivities(Set(HighValueDealing)),
-        None, None)
-
-      val desModel = Some(PositionInBusiness(
-        None,
-        Some(Partnership()),
-        None
-      ))
-
-      val positions = Some(Positions(Set.empty, Some(today)))
-
-      PositionInBusiness.conv(positions, bm) must be(desModel)
-    }
-
-    "convert des model to frontend model successfully when input is none" in {
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
-        Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
-        Some("AA1 1AA"), "AD"), ""),
-        BusinessActivities(Set(HighValueDealing)),
-        None, None)
-      PositionInBusiness.conv(None, bm) must be(None)
-    }
-  }
-
-}
-
-
-class PositionInBusinessRelease7Spec extends PlaySpec with MockitoSugar with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   val today = new LocalDate()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,41 +31,9 @@ case class ExtraFields(declaration: Declaration,
 
 object ExtraFields {
 
-  implicit def format = if (AmlsConfig.release7) {
+  implicit def format =
     Json.format[ExtraFields]
-  } else {
-    val reads: Reads[ExtraFields] = {
-      import play.api.libs.functional.syntax._
-      import play.api.libs.json.Reads._
-      import play.api.libs.json._
 
-      (
-        (__ \ "declaration").read[Declaration] and
-          (__ \ "filingIndividual").read[Aboutyou].map{x:Aboutyou => AboutYouRelease7.convertToRelease7(x)} and
-          (__ \ "etmpFields").readNullable[EtmpFields]
-        ) (ExtraFields.apply _)
-    }
-
-    val aboutYouWrites = new Writes[AboutYouRelease7] {
-      override def writes(o: AboutYouRelease7): JsValue = {
-        Aboutyou.format.writes(Aboutyou.convertFromRelease7(o))
-      }
-    }
-
-    val writes: Writes[ExtraFields] = {
-      import play.api.libs.functional.syntax._
-      import play.api.libs.json._
-
-      (
-
-          (__ \ "declaration").write[Declaration] and
-            (__ \ "filingIndividual").write(aboutYouWrites) and
-          (__ \ "etmpFields").writeNullable[EtmpFields]
-        ) (unlift(ExtraFields.unapply _))
-    }
-
-    Format(reads, writes)
-  }
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {
     ExtraFields(Declaration(true), AboutYouRelease7.convert(person), None)

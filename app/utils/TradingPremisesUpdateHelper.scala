@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,9 @@ trait TradingPremisesUpdateHelper {
     }
 
     val updatedAgentStatus = agentWithLineIds.map(agentDtls => updateAgentStatus(agentDtls, viewTradingPremises))
-    val updatedAgentStatusWithoutLineId = if (AmlsConfig.release7) {
+    val updatedAgentStatusWithoutLineId =
       agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
-    } else {
-      agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
-    }
+
     val addAgentList = updatedAgentStatus ++ updatedAgentStatusWithoutLineId
 
     desTradingPremises.agentBusinessPremises.map {
@@ -64,11 +62,8 @@ trait TradingPremisesUpdateHelper {
     }
 
     val updatedOwnStatus = ownWithLineIds.map(own => updateOwnPremisesStatus(own, viewTradingPremises))
-    val updatedOwnStatusWithoutLineId = if (AmlsConfig.release7) {
+    val updatedOwnStatusWithoutLineId =
       ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
-    } else {
-      ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added)))
-    }
     val addOwnList = updatedOwnStatus ++ updatedOwnStatusWithoutLineId
 
     desTradingPremises.ownBusinessPremises.map {
@@ -84,12 +79,8 @@ trait TradingPremisesUpdateHelper {
     }
     viewOwnDtls map { bpDetails =>
       val updatedStatus = updateOwnPremisesStatus(ownDetails, bpDetails)
-      if (AmlsConfig.release7) {
-        val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, bpDetails)
-        ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-      } else {
-        ownDetails.copy(status = Some(updatedStatus))
-      }
+      val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, bpDetails)
+      ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
     } getOrElse ownDetails.copy(status = Some(StatusConstants.Unchanged), dateChangeFlag = Some(false))
   }
 
@@ -116,12 +107,8 @@ trait TradingPremisesUpdateHelper {
       _.agentDetails.fold(agentDetails) {
         _.find(x => x.lineId.equals(agentDetails.lineId)).fold(agentDetails) { viewAgent =>
           val updatedStatus = updateAgentDetailsStatus(agentDetails, viewAgent)
-          if (AmlsConfig.release7) {
-            val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDetails, viewAgent)
-            agentDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-          } else {
-            agentDetails.copy(status = Some(updatedStatus))
-          }
+          val startDateChangeFlag = updateAgentDetailsDateOfChangeFlag(agentDetails, viewAgent)
+          agentDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,8 @@ object AgentPremises {
   implicit def convert(tradingPremises: models.fe.tradingpremises.TradingPremises)(implicit requestType: RequestType): AgentPremises = {
     val ytp = tradingPremises.yourTradingPremises
 
-    val startDate = (AmlsConfig.release7, requestType) match {
-      case (true, RequestType.Amendment) => None
+    val startDate = requestType match {
+      case RequestType.Amendment => None
       case _ => Some(ytp.startDate.toString)
     }
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities

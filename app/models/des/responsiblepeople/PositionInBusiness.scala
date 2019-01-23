@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,9 +67,9 @@ object PositionInBusiness {
       other
       ) = getPositionAsflags(positions)
 
-    val assignOther = if (AmlsConfig.release7) Some(other) else None
-    val otherVal = positions.positions.collectFirst { case Other(v) if AmlsConfig.release7 => v }
-    val r7DesignatedMember = if (AmlsConfig.release7) Some(designatedMember) else None
+    val assignOther = Some(other)
+    val otherVal = positions.positions.collectFirst { case Other(v) => v }
+    val r7DesignatedMember = Some(designatedMember)
 
     bm.reviewDetails.businessType match {
       case BusinessType.SoleProprietor => Some(PositionInBusiness(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,6 @@ object ChangeIndicators {
 
   implicit def format = {
 
-    if(!AmlsConfig.release7){
-      Json.format[ChangeIndicators]
-    }
-    else {
       import play.api.libs.functional.syntax._
       import play.api.libs.json.Reads._
       import play.api.libs.json._
@@ -80,5 +76,4 @@ object ChangeIndicators {
 
       Format(jsonReads,jsonWrites)
     }
-  }
 }

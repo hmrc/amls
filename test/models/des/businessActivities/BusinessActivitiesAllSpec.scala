@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,6 @@ import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
 class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
 
   "All Business Activities" should {
     "be serialisable from business activities" in{
@@ -67,62 +65,24 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
         "franchiseDetails"->
           Json.obj("isBusinessAFranchise"->true,
             "franchiserName"->Json.arr("Name1","Name2")),
-         "noOfEmployees"->"10",
-         "noOfEmployeesForMlr"->"5",
-         "nonUkResidentCustDetails"->Json.obj("nonUkResidentCustomers"->false),
-         "auditableRecordsDetails"->Json.obj("detailedRecordsKept"->"Yes",
-            "transactionRecordingMethod"->Json.obj("manual"->true,"spreadsheet"->false,"commercialPackage"->false)),
-         "suspiciousActivityGuidance"->true,
-         "nationalCrimeAgencyRegistered"->true,
-         "formalRiskAssessmentDetails"->Json.obj("formalRiskAssessment"->true,
-            "riskAssessmentFormat"->Json.obj("electronicFormat"->true,"manualFormat"->false)),
-         "mlrAdvisor"->Json.obj("doYouHaveMlrAdvisor"->true,
-              "mlrAdvisorDetails"->Json.obj(
-                "advisorNameAddress"->Json.obj("name"->"Name",
-                   "tradingName"->"TradingName",
-                   "address"->Json.obj("addressLine1"->"Line1","addressLine2"->"Line2",
-                        "addressLine3"->"Line3","addressLine4"->"Line4","country"->"GB")),
-                "agentDealsWithHmrc"->true))))
+        "noOfEmployees"->"10",
+        "noOfEmployeesForMlr"->"5",
+        "nonUkResidentCustDetails"->Json.obj("nonUkResidentCustomers"->false),
+        "auditableRecordsDetails"->Json.obj("detailedRecordsKept"->"Yes",
+          "transactionRecordingMethod"->Json.obj("manual"->true,"spreadsheet"->false,"commercialPackage"->false)),
+        "suspiciousActivityGuidance"->true,
+        "nationalCrimeAgencyRegistered"->true,
+        "formalRiskAssessmentDetails"->Json.obj("formalRiskAssessment"->true,
+          "riskAssessmentFormat"->Json.obj("electronicFormat"->true,"manualFormat"->false)),
+        "mlrAdvisor"->Json.obj("doYouHaveMlrAdvisor"->true,
+          "mlrAdvisorDetails"->Json.obj(
+            "advisorNameAddress"->Json.obj("name"->"Name",
+              "tradingName"->"TradingName",
+              "address"->Json.obj("addressLine1"->"Line1","addressLine2"->"Line2",
+                "addressLine3"->"Line3","addressLine4"->"Line4","country"->"GB")),
+            "agentDealsWithHmrc"->true))))
     }
 
-    "convert frontend model to des model successfully" in {
-
-      val model = Some(BusinessActivitiesAll(
-        Some("2000-11-11"),
-        Some("1990-02-24"),
-        None,
-        BusinessActivityDetails(true,Some(ExpectedAMLSTurnover(Some("99999"),None))),
-        Some(FranchiseDetails(true,Some(List("FranchiserName1")))),
-        Some("12345678901"),
-        Some("11223344556"),
-        NonUkResidentCustDetails(true,Some(List("AD", "GB"))),
-        AuditableRecordsDetails("Yes",Some(TransactionRecordingMethod(true,true,true, Some("CommercialPackageName")))),
-        true,
-        true,
-        Some(FormalRiskAssessmentDetails(true,Some(RiskAssessmentFormat(true,true)))),
-        Some(MlrAdvisor(
-          true,
-          Some(
-            MlrAdvisorDetails(
-              Some(
-                AdvisorNameAddress(
-                  "Name",
-                  Some("TradingName"),
-                  Address("AdvisorAddressLine1",
-                    "AdvisorAddressLine2",
-                    Some("AdvisorAddressLine3"),
-                    Some("AdvisorAddressLine4"),
-                    "GB",
-                    Some("AA1 1AA"),
-                    None))),
-              true,
-              None)
-          )))))
-
-      BusinessActivitiesAll.convert(AboutTheBusinessSection.model,
-        BusinessActivitiesSection.modelForView, Some("2000-11-11"), true) must be(model)
-
-    }
 
     "successfully return earliest date comparing with asp, eab and hvd dates" in {
 

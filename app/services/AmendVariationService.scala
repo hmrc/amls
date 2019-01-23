@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,14 +60,12 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       updateWithTradingPremises,
       updateWithResponsiblePeople
     )
-    if (AmlsConfig.release7) {
-      val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
-        updateWithSupervisorDateOfChangeFlag,
-        updateWithBusinessActivitiesDateOfChangeFlag)
-      transforms ++ release7Transforms
-    } else {
-      transforms
-    }
+
+    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
+      updateWithSupervisorDateOfChangeFlag,
+      updateWithBusinessActivitiesDateOfChangeFlag)
+    transforms ++ release7Transforms
+
   }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(

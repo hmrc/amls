@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,12 +135,7 @@ object RoleWithinBusiness {
         withinTheBusiness <- withinTheBusinessO
         forTheBusiness <- forTheBusinessO
       } yield {
-
-        if (AmlsConfig.release7) {
-          withinTheBusiness ++ forTheBusiness
-        } else {
-          if (aboutYou.employedWithinBusiness) withinTheBusiness else forTheBusiness
-        }
+        withinTheBusiness ++ forTheBusiness
       }
 
     roleTypesWithinBusiness.map(RoleWithinBusiness(_)).getOrElse(RoleWithinBusiness(Set.empty))

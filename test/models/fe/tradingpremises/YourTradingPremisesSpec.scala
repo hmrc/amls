@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,84 +24,6 @@ import play.api.libs.json._
 import play.api.test.FakeApplication
 
 class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-  "YourTradingPremises" must {
-
-    val json = Json.obj(
-      "tradingName" -> "foo",
-      "addressLine1" -> "1",
-      "addressLine2" -> "2",
-      "postcode" -> "asdfasdf",
-      "isResidential" -> true,
-      "startDate" -> new LocalDate(1990, 2, 24),
-      "addressDateOfChange" -> new LocalDate("2010-02-01"),
-      "tradingNameChangeDate" -> new LocalDate("2012-03-01")
-    )
-
-    val model = YourTradingPremises(
-      "foo",
-      Address(
-        "1",
-        "2",
-        None,
-        None,
-        "asdfasdf",
-        dateOfChange = Some("2010-02-01")
-      ),
-      new LocalDate(1990, 2, 24),
-      true,
-      Some("2012-03-01")
-    )
-
-    "Correctly serialise from json" in {
-
-      implicitly[Reads[YourTradingPremises]].reads(json) must
-        be(JsSuccess(model))
-    }
-
-    "Correctly write form model to json" in {
-
-      implicitly[Writes[YourTradingPremises]].writes(model) must
-        be(json)
-    }
-
-    "convert des model to frontend model" in {
-
-      val agentPremises = AgentPremises("TradingName",
-        TradingPremisesAddress("AddressLine1",
-          "AddressLine2",
-          Some("AddressLine3"),
-          Some("AddressLine4"),
-          "AD",
-          Some("AA1 1AA")
-        ),
-        true,
-        Msb(true, false, true, true, true),
-        Hvd(true),
-        Asp(false),
-        Tcsp(true),
-        Eab(false),
-        Bpsp(true),
-        Tditpsp(false),
-        Some("2001-01-01")
-      )
-      val agentDetail = AgentDetails("", None,None,None,agentPremises, None)
-
-      val feModel = YourTradingPremises("TradingName",
-        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
-        new LocalDate(2001, 1, 1), true)
-
-      YourTradingPremises.conv(agentDetail) must be(feModel)
-
-    }
-  }
-}
-
-class YourTradingPremisesRelease7Spec extends WordSpec with MustMatchers with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "YourTradingPremises" must {
 

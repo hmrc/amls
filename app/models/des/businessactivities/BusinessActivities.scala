@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ case class BusinessActivities(
 object BusinessActivities {
   implicit val format = Json.format[BusinessActivities]
 
-  implicit def conv(feModel: fe.SubscriptionRequest, amendVariation: Boolean = false): BusinessActivities = {
+  implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
 
     BusinessActivities(
       feModel.businessMatchingSection,
@@ -44,7 +44,7 @@ object BusinessActivities {
       feModel.tcspSection,
       feModel.tcspSection,
       feModel.eabSection,
-      BusinessActivitiesAll.convtoActivitiesALL(feModel, amendVariation)
+      BusinessActivitiesAll.convtoActivitiesALL(feModel)
     )
   }
 }

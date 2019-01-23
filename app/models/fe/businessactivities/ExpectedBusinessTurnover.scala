@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,18 +71,7 @@ object ExpectedBusinessTurnover {
   }
 
   implicit def convertTurnover(to: String): Option[ExpectedBusinessTurnover] = {
-    if (!AmlsConfig.release7) {
-      to match {
-        case "14999" => Some(First)
-        case "49999" => Some(Second)
-        case "99999" => Some(Third)
-        case "249999" => Some(Fourth)
-        case "999999" => Some(Fifth)
-        case "10000000" => Some(Sixth)
-        case "100000000" => Some(Seventh)
-        case  _ => None
-      }
-    } else {
+
       to match {
         case "£0-£15k" => Some(First)
         case "£15k-50k" => Some(Second)
@@ -94,5 +83,4 @@ object ExpectedBusinessTurnover {
         case  _ => None
       }
     }
-  }
 }

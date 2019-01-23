@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,10 +58,7 @@ object YourTradingPremises {
   implicit def conv(agentDetails: AgentDetails): YourTradingPremises = {
     val agentPremises = agentDetails.agentPremises
 
-    val startDate = AmlsConfig.release7 match {
-      case true => agentDetails.startDate
-      case false => agentPremises.startDate
-    }
+    val startDate = agentDetails.startDate
 
     YourTradingPremises(agentPremises.tradingName,
       agentPremises.businessAddress,

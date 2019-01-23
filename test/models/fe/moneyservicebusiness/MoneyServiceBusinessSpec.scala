@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,82 +25,6 @@ import play.api.libs.json.Json
 import play.api.test.FakeApplication
 
 class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> false))
-
-  "MoneyServiceBusiness" should {
-
-    "have an implicit conversion from Option which" when {
-
-      "called with None" should {
-
-        "return a default version of MoneyServiceBusiness" in {
-
-          val res: MoneyServiceBusiness = None
-          res must be(emptyModel)
-        }
-      }
-
-      "called with a concrete value" should {
-        "return the value passed in extracted from the option" in {
-          val res: MoneyServiceBusiness = Some(completeModel)
-          res must be(completeModel)
-        }
-      }
-    }
-
-    "Serialise to expected Json" when {
-      "model is complete" in {
-        Json.toJson(completeModel) must be(completeJson)
-      }
-    }
-
-    "Deserialise from Json as expected" when {
-      "model is complete" in {
-        completeJson.as[MoneyServiceBusiness] must be(completeModel)
-      }
-    }
-
-    "convert des msb to frontend msb model" in {
-
-      val convertedMsb = Some(MoneyServiceBusiness(
-        Some(Third),Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
-        Some(IdentifyLinkedTransactions(true)),
-        Some(SendMoneyToOtherCountry(true)),Some(FundsTransfer(true)),
-        Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
-        Some(TransactionsInNext12Months("11111111111")),
-        Some(CETransactionsInNext12Months("11234567890")),
-        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
-        Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-        Some(FXTransactionsInNext12Months("234234234"))
-      ))
-
-      MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModel) must be(convertedMsb)
-
-    }
-
-    "evaluate getMsbAll whn input is none" in {
-      MoneyServiceBusiness.getMsbAll(None) must be(None)
-    }
-
-    "evaluate getMsbMtDetails whn input is none" in {
-      MoneyServiceBusiness.getMsbMtDetails(None) must be(None)
-    }
-
-    "evaluate getMsbCeDetails whn input is none" in {
-      MoneyServiceBusiness.getMsbCeDetails(None) must be(None)
-    }
-
-    "evaluate getMsbFxDetails whn input is none" in {
-      MoneyServiceBusiness.getMsbFxDetails(None) must be(None)
-    }
-
-  }
-}
-class MoneyServiceBusinessRelease7Spec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   "MoneyServiceBusiness" should {
 

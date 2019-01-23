@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 package config
 
 import exceptions.HttpStatusException
+import play.api.Mode.Mode
 import play.api.libs.json.Json
 import play.api.mvc.{EssentialFilter, RequestHeader, Result, Results}
-import play.api.{Application, Configuration, Logger}
+import play.api.{Application, Configuration, Logger, Play}
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.microservice.bootstrap.{DefaultMicroserviceGlobal, ErrorResponse}
 
@@ -48,4 +49,8 @@ object AmlsGlobal extends DefaultMicroserviceGlobal with RunMode {
         super.onError(request, ex)
     }
   }
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

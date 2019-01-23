@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 
 class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
-
-  override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.release7" -> true))
 
   val testResponsiblePeopleUpdateHelper = new ResponsiblePeopleUpdateHelper {}
 
@@ -190,6 +188,5 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
       }
     }
   }
-
 }
 
