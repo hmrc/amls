@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package exceptions
+package utils
 
-import utils._
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
+class AuditHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
-  lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
+  "AuditHelper" must {
 
-  override def getMessage: String = {
-    s"[${AuditHelper.appName}][HttpStatusException][status] - API call failed with http response code: $status"
+    "return amls as the appName" in {
+      AuditHelper.appName must be("amls")
+    }
   }
 }

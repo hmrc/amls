@@ -17,7 +17,8 @@
 package config
 
 import com.typesafe.config.Config
-import play.api.Play
+import play.api.Mode.Mode
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.HttpAuditing
@@ -40,13 +41,36 @@ trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost wi
 
 }
 
-object WSHttp extends WSHttp
+object WSHttp extends WSHttp {
+
+  override protected def configuration: Option[Config] = Some(Play.current.configuration.underlying)
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
+}
 
 object MicroserviceAuditConnector extends AuditConnector with RunMode {
+
   override lazy val auditingConfig = LoadAuditingConfig("auditing")
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
 object MicroserviceAuthConnector extends AuthConnector with ServicesConfig with WSHttp {
+
+  override protected def configuration: Option[Config] = Some(Play.current.configuration.underlying)
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
+
   override val authBaseUrl = baseUrl("auth")
 }
 
@@ -61,6 +85,8 @@ object AuthParamsControllerConfiguration extends AuthParamsControllerConfig {
 object MicroserviceAuditFilter extends AuditFilter with AppName with MicroserviceFilterSupport {
   override val auditConnector = MicroserviceAuditConnector
   override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
 }
 
 object MicroserviceLoggingFilter extends LoggingFilter with MicroserviceFilterSupport{

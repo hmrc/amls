@@ -27,8 +27,7 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.model.Audit
-import uk.gov.hmrc.play.config.AppName
-import utils.HttpResponseHelper
+import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -53,7 +52,7 @@ class EnrolmentStoreConnector @Inject()(
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)
 
-    val audit: Audit = new Audit(AppName.appName, MicroserviceAuditConnector)
+    val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 

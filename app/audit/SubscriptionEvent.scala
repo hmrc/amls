@@ -16,14 +16,13 @@
 
 package audit
 
-import exceptions.{HttpExceptionBody, HttpStatusException}
+import exceptions.HttpStatusException
 import models.des._
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
-import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
-import uk.gov.hmrc.play.audit.AuditExtensions._
-import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.AuditExtensions._
+import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
+import utils._
 
 object SubscriptionEvent {
   def apply
@@ -34,7 +33,7 @@ object SubscriptionEvent {
    resW: Writes[SubscriptionResponse]
   ): ExtendedDataEvent = {
     ExtendedDataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "applicationSubmitted",
       tags = hc.toAuditTags("Subscription", "N/A"),
       detail = Json.toJson(request).as[JsObject]
@@ -56,7 +55,7 @@ object SubscriptionFailedEvent {
    resW: Writes[SubscriptionResponse]
   ): ExtendedDataEvent = {
     ExtendedDataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "applicationSubmissionFailed",
       tags = hc.toAuditTags("Subscription", "N/A"),
       detail = Json.toJson(request).as[JsObject]
@@ -76,7 +75,7 @@ object SubscriptionValidationFailedEvent {
    resW: Writes[SubscriptionResponse]
   ): ExtendedDataEvent = {
     ExtendedDataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "applicationSubmissionFailedValidation",
       tags = hc.toAuditTags("Subscription", "N/A"),
       detail = Json.obj(
@@ -115,7 +114,7 @@ object AmendmentEvent {
     val requiredInfo = Json.toJson(auditModel)
 
     ExtendedDataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = inputAuditType,
       tags = hc.toAuditTags("Amendment", "N/A"),
       detail = requiredInfo.as[JsObject]
@@ -142,7 +141,7 @@ object AmendmentEventFailed {
     }
 
     ExtendedDataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = inputAuditType,
       tags = hc.toAuditTags("Amendment", "N/A"),
       detail = Json.toJson(request).as[JsObject]
@@ -162,7 +161,7 @@ object AmendVariationValidationFailedEvent {
   ) = {
     ExtendedDataEvent(
       // NOTE: Use auditSource and auditType when searching splunk for failures.
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "amendVariationValidationFailedEvent",
       tags = hc.toAuditTags("Amendment", "N/A"),
       detail = Json.toJson(hc.toAuditDetails()).as[JsObject] ++
@@ -181,7 +180,7 @@ object WithdrawSubscriptionEvent {
   (implicit
    hc: HeaderCarrier): DataEvent =
     DataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "OutboundCall",
       tags = hc.toAuditTags("WithdrawSubscription", "N/A"),
       detail = hc.toAuditDetails() ++ Map(
@@ -197,7 +196,7 @@ object DeregisterSubscriptionEvent {
   (implicit
    hc: HeaderCarrier): DataEvent =
     DataEvent(
-      auditSource = AppName.appName,
+      auditSource = AuditHelper.appName,
       auditType = "OutboundCall",
       tags = hc.toAuditTags("DeregisterSubscription", "N/A"),
       detail = hc.toAuditDetails() ++ Map(
