@@ -88,6 +88,16 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       Logger.debug(s"[AmendVariationService][compareAndUpdate] ASPOrTCSP - viewResponse.aspOrTcsp: ${viewResponse.aspOrTcsp}")
       Logger.debug(s"[AmendVariationService][compareAndUpdate] ASPOrTCSP - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
 
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - viewResponse.msb: ${viewResponse.msb}")
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - desRequest.msb: ${desRequest.msb}")
+
+      val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] RP - viewResponse.responsiblePersons: ${viewResponse.responsiblePersons}")
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] RP - desRequest.responsiblePersons: ${desRPs}")
+
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] TP - viewResponse.tradingPremises: ${viewResponse.tradingPremises}")
+      Logger.debug(s"[AmendVariationService][compareAndUpdate] TP - desRequest.tradingPremises: ${desRequest.tradingPremises}")
+
       updatedRequest.setChangeIndicator(ChangeIndicators(
         !viewResponse.businessDetails.equals(desRequest.businessDetails),
         !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
@@ -96,7 +106,6 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         !viewResponse.businessActivities.equals(desRequest.businessActivities),
         !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
 
-
         !viewResponse.msb.equals(desRequest.msb),
         !viewResponse.hvd.equals(desRequest.hvd),
         !viewResponse.asp.equals(desRequest.asp),
@@ -104,7 +113,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         isTcspChanged(desRequest, viewResponse),
         isEABChanged(desRequest, viewResponse),
 
-        !viewResponse.responsiblePersons.equals(updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons),
+        !viewResponse.responsiblePersons.equals(desRPs),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
     }
