@@ -160,8 +160,8 @@ object DesConstants {
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
     Some(AspServicesOffered(true, true, true, true, true)),
-    None, //Some(TcspServicesOffered(true, true, true, true, true)),
-    None, //Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    None,
+    None,
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
     Some(testBusinessActivitiesAll)
   )
@@ -171,7 +171,7 @@ object DesConstants {
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
-    None, //Some(AspServicesOffered(true, true, true, true, true)),
+    None,
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
@@ -186,13 +186,13 @@ object DesConstants {
     Some(AspServicesOffered(true, true, true, true, true)),
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
-    None, //Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    None,
     Some(testBusinessActivitiesAll)
   )
 
   val testBusinessActivitiesNoMsb = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
-    None, //Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    None,
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
     Some(AspServicesOffered(true, true, true, true, true)),
@@ -2561,8 +2561,8 @@ object DesConstants {
     Some(DesConstants.testMsb),
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
-    None, //Some(DesConstants.testAspOrTcsp),
-    None, //Some(DesConstants.testTcspAll),
+    None,
+    None,
     Some(DesConstants.testTcspTrustCompFormationAgt),
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
@@ -2582,7 +2582,7 @@ object DesConstants {
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),
     Some(DesConstants.testHvd),
-    None, //Some(DesConstants.testAsp),
+    None,
     Some(DesConstants.testAspOrTcsp),
     Some(DesConstants.testTcspAll),
     Some(DesConstants.testTcspTrustCompFormationAgt),
@@ -2609,7 +2609,7 @@ object DesConstants {
     Some(DesConstants.testTcspAll),
     Some(DesConstants.testTcspTrustCompFormationAgt),
     Some(DesConstants.testEabAll),
-    None, //Some(DesConstants.testEabResdEstAgncy),
+    None,
     Some(DesConstants.testResponsiblePersons),
     DesConstants.extraFields
   )
@@ -2624,7 +2624,7 @@ object DesConstants {
     DesConstants.testBusinessActivitiesNoMsb,
     DesConstants.testTradingPremisesAPI5,
     DesConstants.testBankDetails,
-    None, //Some(DesConstants.testMsb),
+    None,
     Some(DesConstants.testHvd),
     Some(DesConstants.testAsp),
     Some(DesConstants.testAspOrTcsp),

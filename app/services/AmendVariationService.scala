@@ -105,14 +105,12 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         !viewResponse.businessActivities.equals(desRequest.businessActivities),
         !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-
         !viewResponse.msb.equals(desRequest.msb),
         !viewResponse.hvd.equals(desRequest.hvd),
         !viewResponse.asp.equals(desRequest.asp),
         !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
         isTcspChanged(desRequest, viewResponse),
         isEABChanged(desRequest, viewResponse),
-
         !viewResponse.responsiblePersons.equals(desRPs),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
