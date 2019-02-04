@@ -120,7 +120,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
           )
         }
 
-        Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber : resultObjects : ${resultObjects}")
+        Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
         auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
       }, valid = identity)
 
