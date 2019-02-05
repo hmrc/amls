@@ -66,8 +66,8 @@ class VATRegisteredSpec extends PlaySpec with MockitoSugar {
       VATRegistered.conv(desModel) must be(Some(VATRegisteredNo))
     }
 
-    "convert model from des to frontend and return None when input is none" in {
-      VATRegistered.conv(None) must be(None)
+    "convert model from des to frontend and return VATRegisteredNo when input is none" in {
+      VATRegistered.conv(None) must be(Some(VATRegisteredNo))
     }
   }
 
