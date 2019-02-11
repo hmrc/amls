@@ -17,6 +17,7 @@
 package models.des.bankaccountdetails
 
 import models.des.bankdetails._
+import models.fe.bankdetails.{BankDetails, NonUKIBANNumber, PersonalAccount}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -191,6 +192,21 @@ class BankAccountViewSpec extends PlaySpec {
       )
 
       viewBankDetails.equals(amendBankDetails) must be(false)
+    }
+
+    "caps the number of bank accounts to 99" in {
+      var accounts: Seq[models.fe.bankdetails.BankDetails] = Seq()
+
+      for (i <- 0 until 110){
+        accounts = accounts:+ BankDetails(PersonalAccount, s"AccountName$i", NonUKIBANNumber("87654321"))
+      }
+
+      val amendBankDetails = BankDetailsView(
+        Some("99"),
+        Some(accounts)
+      )
+
+      BankDetailsView.convert(accounts) must be (Some(amendBankDetails))
     }
   }
 }
