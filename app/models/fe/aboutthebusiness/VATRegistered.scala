@@ -48,7 +48,7 @@ object VATRegistered {
         case true => Some(VATRegisteredYes(data.vrnNumber.getOrElse("")))
         case false => Some(VATRegisteredNo)
       }
-      case _ => None
+      case _ => Some(VATRegisteredNo)
     }
   }
 }
