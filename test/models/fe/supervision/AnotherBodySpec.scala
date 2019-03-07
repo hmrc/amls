@@ -16,7 +16,7 @@
 
 package models.fe.supervision
 
-import models.des.supervision.{SupervisorDetails, SupervisionDetails}
+import models.des.supervision.{SupervisionDetails, SupervisorDetails}
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -42,9 +42,9 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         val expectedJson = Json.obj(
           "anotherBody" -> true,
           "supervisorName" -> "Name",
-          "startDate" -> "1990-02-24",
-          "endDate" -> "1998-02-24",
-          "endingReason" -> "Reason"
+          "startDate" -> Json.obj("startDate" -> "1990-02-24"),
+          "endDate" -> Json.obj("endDate" -> "1998-02-24"),
+          "endingReason" -> Json.obj("endingReason" -> "Reason")
         )
 
         Json.toJson(input) must be(expectedJson)
@@ -61,9 +61,9 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         val input = Json.obj(
           "anotherBody" -> true,
           "supervisorName" -> "Name",
-          "startDate" -> "1990-02-24",
-          "endDate" -> "1998-02-24",
-          "endingReason" -> "Reason"
+          "startDate" -> Json.obj("startDate" -> "1990-02-24"),
+          "endDate" -> Json.obj("endDate" -> "1998-02-24"),
+          "endingReason" -> Json.obj("endingReason" -> "Reason")
         )
 
         val start = new LocalDate(1990, 2, 24) //scalastyle:off magic.number

@@ -44,9 +44,9 @@ object AnotherBody {
       case true =>
         (
           (__ \ "supervisorName").read[String] ~
-            (__ \ "startDate").read[LocalDate] ~
-            (__ \ "endDate").read[LocalDate] ~
-            (__ \ "endingReason").read[String]) (AnotherBodyYes.apply _) map identity[AnotherBody]
+            (__ \ "startDate" \ "startDate").read[LocalDate] ~
+            (__ \ "endDate" \ "endDate").read[LocalDate] ~
+            (__ \ "endingReason" \ "endingReason").read[String]) (AnotherBodyYes.apply _) map identity[AnotherBody]
 
       case false => AnotherBodyNo
     }
@@ -56,9 +56,9 @@ object AnotherBody {
     case a : AnotherBodyYes => Json.obj(
       "anotherBody" -> true,
       "supervisorName" -> a.supervisorName,
-      "startDate" -> a.startDate,
-      "endDate" -> a.endDate,
-      "endingReason" -> a.endingReason
+      "startDate" -> Json.obj("startDate" -> a.startDate),
+      "endDate" -> Json.obj("endDate" -> a.endDate),
+      "endingReason" -> Json.obj("endingReason" -> a.endingReason)
     )
     case AnotherBodyNo => Json.obj("anotherBody" -> false)
   }
