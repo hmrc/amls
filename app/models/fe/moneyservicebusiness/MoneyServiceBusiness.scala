@@ -60,7 +60,7 @@ object MoneyServiceBusiness {
         whichCurrencies = getMsbCeDetails(desView.msb),
         fxTransactionsInNext12Months = getMsbFxDetails(desView.msb)
       ))
-      case None => None
+      case _ => None
     }
   }
 
