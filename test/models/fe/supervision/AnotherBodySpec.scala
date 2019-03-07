@@ -42,9 +42,9 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         val expectedJson = Json.obj(
           "anotherBody" -> true,
           "supervisorName" -> "Name",
-          "startDate" -> Json.obj("startDate" -> "1990-02-24"),
-          "endDate" -> Json.obj("endDate" -> "1998-02-24"),
-          "endingReason" -> Json.obj("endingReason" -> "Reason")
+          "startDate" -> Json.obj("supervisionStartDate" -> "1990-02-24"),
+          "endDate" -> Json.obj("supervisionEndDate" -> "1998-02-24"),
+          "endingReason" -> Json.obj("supervisionEndingReason" -> "Reason")
         )
 
         Json.toJson(input) must be(expectedJson)
@@ -61,9 +61,9 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         val input = Json.obj(
           "anotherBody" -> true,
           "supervisorName" -> "Name",
-          "startDate" -> Json.obj("startDate" -> "1990-02-24"),
-          "endDate" -> Json.obj("endDate" -> "1998-02-24"),
-          "endingReason" -> Json.obj("endingReason" -> "Reason")
+          "startDate" -> Json.obj("supervisionStartDate" -> "1990-02-24"),
+          "endDate" -> Json.obj("supervisionEndDate" -> "1998-02-24"),
+          "endingReason" -> Json.obj("supervisionEndingReason" -> "Reason")
         )
 
         val start = new LocalDate(1990, 2, 24) //scalastyle:off magic.number
