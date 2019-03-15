@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness._
+import models.fe.businessdetails._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -41,19 +41,19 @@ class PreviouslyRegisteredSpec extends PlaySpec{
       }
 
       "convert front end model to PreviouslyRegisteredMLRYes8" in {
-        val from = AboutTheBusiness(PreviouslyRegisteredYes("12345678"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+        val from = BusinessDetails(PreviouslyRegisteredYes("12345678"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(true, Some("12345678"), false, None)))
       }
 
       "convert front end model to PreviouslyRegisteredMLR15" in {
-        val from = AboutTheBusiness(PreviouslyRegisteredYes("123456789123456"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+        val from = BusinessDetails(PreviouslyRegisteredYes("123456789123456"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456"))))
       }
 
       "convert front end model to PreviouslyRegisteredNo" in {
-        val from = AboutTheBusiness(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+        val from = BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(false,None,false,None)))
       }

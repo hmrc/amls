@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
-import org.scalatestplus.play.PlaySpec
+import models.des.businessactivities.BusinessActivitiesAll
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
-class ContactingYouSpec extends PlaySpec {
-  "Contacting You Details" must {
+case class ActivityStartDate (startDate: LocalDate)
 
-    val completeJson = Json.obj(
-      "phoneNumber" -> "1234567890",
-      "email" -> "test@test.com"
-    )
+object ActivityStartDate {
 
-    val completeModel = ContactingYou("1234567890", "test@test.com")
+  implicit val format =  Json.format[ActivityStartDate]
 
+  implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] = {
 
-    "serialize as expected" in {
-      Json.toJson(completeModel) must be(completeJson)
-    }
-
-    "deserialize as expected" in {
-     completeJson.as[ContactingYou] must be(completeModel)
+    activitiesAll match {
+      case Some(data) => data.activitiesCommenceDate match {
+        case Some(validDate) => Some(ActivityStartDate(LocalDate.parse(validDate)))
+        case _ => None
+      }
+      case _ => None
     }
   }
 }

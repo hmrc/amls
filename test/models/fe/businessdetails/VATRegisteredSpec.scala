@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
 import models.des.aboutthebusiness.VATRegistration
 import org.scalatest.mock.MockitoSugar

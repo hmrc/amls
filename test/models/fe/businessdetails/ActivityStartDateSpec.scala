@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._

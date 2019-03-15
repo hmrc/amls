@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
 import models.des.DesConstants
 import org.joda.time.LocalDate
@@ -22,7 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNull, Json}
 
-class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
+class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
   val previouslyRegistered = PreviouslyRegisteredYes("12345678")
 
@@ -47,7 +47,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
     Some("address 4"),
     "BB1 1BB")
 
-  "AboutTheBusiness" must {
+  "BusinessDetails" must {
     val completeJson = Json.obj(
       "previouslyRegistered" -> Json.obj("previouslyRegistered" -> true,
       "prevMLRRegNo" -> "12345678"),
@@ -79,7 +79,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
       )
 
 
-    val completeModel = AboutTheBusiness(
+    val completeModel = BusinessDetails(
       previouslyRegistered = PreviouslyRegisteredYes("12345678"),
       activityStartDate = Some(activityStartDate),
       vatRegistered = Some(regForVAT),
@@ -96,13 +96,13 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
     }
 
     "Deserialise as expected" in {
-      completeJson.as[AboutTheBusiness] must
+      completeJson.as[BusinessDetails] must
         be(completeModel)
     }
 
     "Convert des model to frontend model" in {
 
-      val atb = AboutTheBusiness(
+      val atb = BusinessDetails(
         previouslyRegistered = PreviouslyRegisteredNo,
         activityStartDate = Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         vatRegistered = Some(VATRegisteredYes("123456789")),
@@ -116,7 +116,7 @@ class AboutTheBusinessSpec extends PlaySpec with MockitoSugar {
           Some("AlternativeAddressLine4"),"AA1 1AA"))
       )
 
-      AboutTheBusiness.conv(DesConstants.SubscriptionViewModel) must be(atb)
+      BusinessDetails.conv(DesConstants.SubscriptionViewModel) must be(atb)
 
     }
   }

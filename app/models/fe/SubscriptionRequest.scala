@@ -26,7 +26,7 @@ import models.fe.responsiblepeople.ResponsiblePeople
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
-import models.fe.aboutthebusiness.AboutTheBusiness
+import models.fe.businessdetails.BusinessDetails
 import models.fe.bankdetails.BankDetails
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import play.api.libs.json.Json
@@ -35,7 +35,7 @@ case class SubscriptionRequest(
                                 businessMatchingSection: BusinessMatching,
                                 eabSection: Option[EstateAgentBusiness],
                                 tradingPremisesSection: Option[Seq[TradingPremises]],
-                                aboutTheBusinessSection: AboutTheBusiness,
+                                aboutTheBusinessSection: BusinessDetails,
                                 bankDetailsSection: Seq[BankDetails],
                                 aboutYouSection: AddPerson,
                                 businessActivitiesSection: BusinessActivities,

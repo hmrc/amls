@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness.{NonUKCorrespondenceAddress, UKCorrespondenceAddress, CorrespondenceAddress}
+import models.fe.businessdetails.{NonUKCorrespondenceAddress, UKCorrespondenceAddress, CorrespondenceAddress}
 import play.api.libs.json.Json
 
 case class AlternativeAddress(name : String,

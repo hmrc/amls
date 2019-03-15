@@ -21,7 +21,7 @@ import models.des.aboutthebusiness.Address
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
 import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
-import models.fe.aboutthebusiness.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
+import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import models.fe.businessactivities.ExpectedBusinessTurnover
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
@@ -149,7 +149,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
   "SubscriptionRequestSpec" must {
     "convert correctly" in {
 
-      val aboutTheBusinessModel = AboutTheBusiness(
+      val aboutTheBusinessModel = BusinessDetails(
         PreviouslyRegisteredYes("12345678"),
         Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         Some(VATRegisteredYes("123456789")),
@@ -250,7 +250,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     }
   }
 
-  val aboutTheBusinessModel = AboutTheBusiness(PreviouslyRegisteredYes("12345678"),
+  val aboutTheBusinessModel = BusinessDetails(PreviouslyRegisteredYes("12345678"),
     Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
@@ -769,7 +769,7 @@ class SubscriptionRequestSpecPhase2 extends PlaySpec with MockitoSugar with OneA
   "SubscriptionRequestSpec" must {
     "convert correctly" in {
 
-      val aboutTheBusinessModel = AboutTheBusiness(
+      val aboutTheBusinessModel = BusinessDetails(
         PreviouslyRegisteredYes("12345678"),
         Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         Some(VATRegisteredYes("123456789")),

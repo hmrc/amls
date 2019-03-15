@@ -140,23 +140,23 @@ object AmendVariationRequest {
 
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
-     gen: AckRefGenerator,
-     conv: Incoming => BusinessActivities,
-     conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
-     prevRegMLR : fe.aboutthebusiness.AboutTheBusiness => Option[PreviouslyRegisteredMLR],
-     vatABConv : fe.aboutthebusiness.AboutTheBusiness => Option[VATRegistration],
-     contactABConv : fe.aboutthebusiness.AboutTheBusiness => BusinessContactDetails,
-     conv4 : Seq[fe.bankdetails.BankDetails] => Option[BankDetailsView],
-     tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
-     aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
-     aspConv : Option[fe.asp.Asp] => Option[Asp],
-     tcspAllConv: fe.tcsp.Tcsp => TcspAll,
-     tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
-     responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
-     msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
-     hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
-     messageType : AmlsMessageType,
-     requestType: RequestType
+                                       gen: AckRefGenerator,
+                                       conv: Incoming => BusinessActivities,
+                                       conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
+                                       prevRegMLR : fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
+                                       vatABConv : fe.businessdetails.BusinessDetails => Option[VATRegistration],
+                                       contactABConv : fe.businessdetails.BusinessDetails => BusinessContactDetails,
+                                       conv4 : Seq[fe.bankdetails.BankDetails] => Option[BankDetailsView],
+                                       tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
+                                       aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
+                                       aspConv : Option[fe.asp.Asp] => Option[Asp],
+                                       tcspAllConv: fe.tcsp.Tcsp => TcspAll,
+                                       tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
+                                       responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
+                                       msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
+                                       hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
+                                       messageType : AmlsMessageType,
+                                       requestType: RequestType
   ): Outgoing =
     AmendVariationRequest(
       acknowledgementReference = gen.ackRef,

@@ -18,7 +18,7 @@ package controllers
 
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
-import models.fe.aboutthebusiness._
+import models.fe.businessdetails._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
@@ -75,7 +75,7 @@ class SubscriptionControllerSpec
         ),
       eabSection = None,
       tradingPremisesSection = None,
-      aboutTheBusinessSection = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
+      aboutTheBusinessSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
         Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"), altCorrespondenceAddress = false),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
       aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),

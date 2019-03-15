@@ -16,7 +16,7 @@
 
 package models.fe
 
-import models.fe.aboutthebusiness.AboutTheBusiness
+import models.fe.businessdetails.BusinessDetails
 import models.fe.asp.Asp
 import models.fe.bankdetails.BankDetails
 import models.fe.businessactivities.BusinessActivities
@@ -37,7 +37,7 @@ case class SubscriptionView(
                              businessMatchingSection: BusinessMatching,
                              eabSection: Option[EstateAgentBusiness],
                              tradingPremisesSection: Option[Seq[TradingPremises]],
-                             aboutTheBusinessSection: AboutTheBusiness,
+                             aboutTheBusinessSection: BusinessDetails,
                              bankDetailsSection: Seq[BankDetails],
                              aboutYouSection: AddPerson,
                              businessActivitiesSection: BusinessActivities,

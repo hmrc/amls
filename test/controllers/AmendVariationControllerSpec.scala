@@ -20,7 +20,7 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.{AmendVariationRequest, DesConstants}
 import models.fe
-import models.fe.aboutthebusiness._
+import models.fe.businessdetails._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
@@ -74,7 +74,7 @@ class AmendVariationControllerSpec extends PlaySpec
       ),
     eabSection = None,
     tradingPremisesSection = None,
-    aboutTheBusinessSection = AboutTheBusiness(
+    aboutTheBusinessSection = BusinessDetails(
       PreviouslyRegisteredNo,
       Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
       Some(VATRegisteredNo),

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
 import models.des.SubscriptionView
 
-case class AboutTheBusiness(
+case class BusinessDetails(
                              previouslyRegistered: PreviouslyRegistered,
                              activityStartDate: Option[ActivityStartDate] = None,
                              vatRegistered: Option[VATRegistered] = None,
@@ -29,16 +29,16 @@ case class AboutTheBusiness(
                              correspondenceAddress: Option[CorrespondenceAddress] = None
                            )
 
-object AboutTheBusiness {
+object BusinessDetails {
 
   import play.api.libs.json._
 
-  implicit val format =  Json.format[AboutTheBusiness]
+  implicit val format =  Json.format[BusinessDetails]
 
-  implicit def conv(view: SubscriptionView): AboutTheBusiness = {
+  implicit def conv(view: SubscriptionView): BusinessDetails = {
     val bcDetails = view.businessContactDetails
     val previouslyRegistered = view.businessReferencesAll
-    AboutTheBusiness(previouslyRegistered,
+    BusinessDetails(previouslyRegistered,
       view.businessActivities.all,
       view.businessReferencesAllButSp,
       view.businessReferencesCbUbLlp,

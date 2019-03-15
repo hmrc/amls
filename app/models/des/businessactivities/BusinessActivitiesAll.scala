@@ -18,7 +18,7 @@ package models.des.businessactivities
 
 import models.fe
 import models.fe.SubscriptionRequest
-import models.fe.aboutthebusiness.ActivityStartDate
+import models.fe.businessdetails.ActivityStartDate
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormatter
 import play.api.libs.json.Json
@@ -62,7 +62,7 @@ object BusinessActivitiesAll{
       )
   }
 
-  def convert(atb:models.fe.aboutthebusiness.AboutTheBusiness,
+  def convert(atb:models.fe.businessdetails.BusinessDetails,
               activities: models.fe.businessactivities.BusinessActivities,
               dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
 
