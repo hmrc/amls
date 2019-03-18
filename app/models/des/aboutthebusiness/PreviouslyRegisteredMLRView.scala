@@ -27,8 +27,8 @@ case class PreviouslyRegisteredMLRView(amlsRegistered:Boolean,
 object PreviouslyRegisteredMLRView{
   implicit val format = Json.format[PreviouslyRegisteredMLRView]
 
-  implicit def convert(aboutTheBusiness:BusinessDetails):Option[PreviouslyRegisteredMLRView] ={
-    aboutTheBusiness.previouslyRegistered match{
+  implicit def convert(businessDetails:BusinessDetails):Option[PreviouslyRegisteredMLRView] ={
+    businessDetails.previouslyRegistered match{
       case x:PreviouslyRegisteredYes if(x.value.length == 15)=> Some(PreviouslyRegisteredMLRView(false, None, true, Some(x.value)))
       case x:PreviouslyRegisteredYes if(x.value.length == 8) => Some(PreviouslyRegisteredMLRView(true, Some(x.value), false, None))
       case PreviouslyRegisteredNo => Some(PreviouslyRegisteredMLRView(false, None, false, None))

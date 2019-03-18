@@ -29,13 +29,13 @@ case class BusinessContactDetails (businessAddress: Address,
 object BusinessContactDetails {
   implicit val format = Json.format[BusinessContactDetails]
 
-  implicit def convert(aboutTheBusiness: BusinessDetails) : BusinessContactDetails = {
+  implicit def convert(businessDetails: BusinessDetails) : BusinessContactDetails = {
     BusinessContactDetails(
-      businessAddress = aboutTheBusiness.registeredOffice,
-      altCorrespondenceAddress = aboutTheBusiness.altCorrespondenceAddress,
-      alternativeAddress = aboutTheBusiness.correspondenceAddress,
-      businessTelNo = aboutTheBusiness.contactingYou.phoneNumber,
-        businessEmail = aboutTheBusiness.contactingYou.email
+      businessAddress = businessDetails.registeredOffice,
+      altCorrespondenceAddress = businessDetails.altCorrespondenceAddress,
+      alternativeAddress = businessDetails.correspondenceAddress,
+      businessTelNo = businessDetails.contactingYou.phoneNumber,
+        businessEmail = businessDetails.contactingYou.email
     )
   }
 }

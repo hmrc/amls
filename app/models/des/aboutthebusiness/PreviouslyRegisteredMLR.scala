@@ -28,8 +28,8 @@ case class PreviouslyRegisteredMLR(amlsRegistered:Boolean,
 object PreviouslyRegisteredMLR{
   implicit val format = Json.format[PreviouslyRegisteredMLR]
 
-  implicit def convert(aboutTheBusiness:BusinessDetails):Option[PreviouslyRegisteredMLR] ={
-    aboutTheBusiness.previouslyRegistered match{
+  implicit def convert(businessDetails:BusinessDetails):Option[PreviouslyRegisteredMLR] ={
+    businessDetails.previouslyRegistered match{
       case x:PreviouslyRegisteredYes if(x.value.length == 15)=> Some(PreviouslyRegisteredMLR(false, None, true, Some(x.value)))
       case x:PreviouslyRegisteredYes if(x.value.length == 8) => Some(PreviouslyRegisteredMLR(true, Some(x.value), false, None))
       case PreviouslyRegisteredNo => Some(PreviouslyRegisteredMLR(false, None, false, None))

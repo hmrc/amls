@@ -25,7 +25,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
 
     "convert correctly for corporate tax Yes" in {
       val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
-      val aboutTheBusiness  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
         None,
         None,
         Some(regForCorpTax),
@@ -35,12 +35,12 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         false,
         None
       )
-      CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890"))))
+      CorporationTaxRegisteredCbUbLlp.conv(businessDetails) must be(Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890"))))
     }
 
     "convert correctly for corporate tax No" in {
       val regForCorpTax = CorporationTaxRegisteredNo
-      val aboutTheBusiness  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
         None,
         None,
         Some(regForCorpTax),
@@ -50,11 +50,11 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         false,
         None
       )
-      CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(Some(CorporationTaxRegisteredCbUbLlp(false, None)))
+      CorporationTaxRegisteredCbUbLlp.conv(businessDetails) must be(Some(CorporationTaxRegisteredCbUbLlp(false, None)))
     }
 
     "convert correctly for corporate tax model is none" in {
-      val aboutTheBusiness  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes("12345678"),
         None,
         None,
         None,
@@ -64,7 +64,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         false,
         None
       )
-      CorporationTaxRegisteredCbUbLlp.conv(aboutTheBusiness) must be(None)
+      CorporationTaxRegisteredCbUbLlp.conv(businessDetails) must be(None)
     }
   }
 }
