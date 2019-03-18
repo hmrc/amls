@@ -56,7 +56,7 @@ object BusinessActivitiesAll{
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
       convert(
-        feModel.aboutTheBusinessSection,
+        feModel.businessDetailsSection,
         feModel.businessActivitiesSection,
         getEarliestDate(feModel)
       )

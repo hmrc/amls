@@ -149,7 +149,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
   "SubscriptionRequestSpec" must {
     "convert correctly" in {
 
-      val aboutTheBusinessModel = BusinessDetails(
+      val businessDetailsModel = BusinessDetails(
         PreviouslyRegisteredYes("12345678"),
         Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         Some(VATRegisteredYes("123456789")),
@@ -220,7 +220,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
         SubscriptionRequest(
           businessMatchingSection = BusinessMatchingSection.model,
           eabSection = EabSection.model,
-          aboutTheBusinessSection = aboutTheBusinessModel,
+          businessDetailsSection = businessDetailsModel,
           tradingPremisesSection = TradingPremisesSection.model,
           bankDetailsSection = BankDetailsSection.model,
           aboutYouSection = AboutYouSection.model,
@@ -250,7 +250,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     }
   }
 
-  val aboutTheBusinessModel = BusinessDetails(PreviouslyRegisteredYes("12345678"),
+  val businessDetailsModel = BusinessDetails(PreviouslyRegisteredYes("12345678"),
     Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
@@ -308,7 +308,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     SubscriptionRequest(
       businessMatchingSection = BusinessMatchingSection.model,
       eabSection = EabSection.model,
-      aboutTheBusinessSection = aboutTheBusinessModel,
+      businessDetailsSection = businessDetailsModel,
       tradingPremisesSection = TradingPremisesSection.model,
       bankDetailsSection = BankDetailsSection.model,
       aboutYouSection = AboutYouSection.model,
@@ -769,7 +769,7 @@ class SubscriptionRequestSpecPhase2 extends PlaySpec with MockitoSugar with OneA
   "SubscriptionRequestSpec" must {
     "convert correctly" in {
 
-      val aboutTheBusinessModel = BusinessDetails(
+      val businessDetailsModel = BusinessDetails(
         PreviouslyRegisteredYes("12345678"),
         Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         Some(VATRegisteredYes("123456789")),
@@ -840,7 +840,7 @@ class SubscriptionRequestSpecPhase2 extends PlaySpec with MockitoSugar with OneA
         SubscriptionRequest(
           businessMatchingSection = BusinessMatchingSection.model,
           eabSection = EabSection.model,
-          aboutTheBusinessSection = aboutTheBusinessModel,
+          businessDetailsSection = businessDetailsModel,
           tradingPremisesSection = TradingPremisesSection.model,
           bankDetailsSection = BankDetailsSection.model,
           aboutYouSection = AboutYouSection.model,

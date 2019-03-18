@@ -35,7 +35,7 @@ case class SubscriptionRequest(
                                 businessMatchingSection: BusinessMatching,
                                 eabSection: Option[EstateAgentBusiness],
                                 tradingPremisesSection: Option[Seq[TradingPremises]],
-                                aboutTheBusinessSection: BusinessDetails,
+                                businessDetailsSection: BusinessDetails,
                                 bankDetailsSection: Seq[BankDetails],
                                 aboutYouSection: AddPerson,
                                 businessActivitiesSection: BusinessActivities,

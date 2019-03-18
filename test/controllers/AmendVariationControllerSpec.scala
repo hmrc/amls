@@ -74,7 +74,7 @@ class AmendVariationControllerSpec extends PlaySpec
       ),
     eabSection = None,
     tradingPremisesSection = None,
-    aboutTheBusinessSection = BusinessDetails(
+    businessDetailsSection = BusinessDetails(
       PreviouslyRegisteredNo,
       Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
       Some(VATRegisteredNo),
@@ -165,10 +165,6 @@ class AmendVariationControllerSpec extends PlaySpec
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.aboutTheBusinessSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
               "path" -> "obj.aboutYouSection",
               "error" -> "error.path.missing"
             ),
@@ -178,6 +174,10 @@ class AmendVariationControllerSpec extends PlaySpec
             ),
             Json.obj(
               "path" -> "obj.businessMatchingSection",
+              "error" -> "error.path.missing"
+            ),
+            Json.obj(
+              "path" -> "obj.businessDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
@@ -263,10 +263,6 @@ class AmendVariationControllerSpec extends PlaySpec
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.aboutTheBusinessSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
               "path" -> "obj.aboutYouSection",
               "error" -> "error.path.missing"
             ),
@@ -276,6 +272,10 @@ class AmendVariationControllerSpec extends PlaySpec
             ),
             Json.obj(
               "path" -> "obj.businessMatchingSection",
+              "error" -> "error.path.missing"
+            ),
+            Json.obj(
+              "path" -> "obj.businessDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(

@@ -37,7 +37,7 @@ case class SubscriptionView(
                              businessMatchingSection: BusinessMatching,
                              eabSection: Option[EstateAgentBusiness],
                              tradingPremisesSection: Option[Seq[TradingPremises]],
-                             aboutTheBusinessSection: BusinessDetails,
+                             businessDetailsSection: BusinessDetails,
                              bankDetailsSection: Seq[BankDetails],
                              aboutYouSection: AddPerson,
                              businessActivitiesSection: BusinessActivities,
@@ -63,7 +63,7 @@ object SubscriptionView {
       businessMatchingSection = desView,
       eabSection = desView,
       tradingPremisesSection = desView.tradingPremises,
-      aboutTheBusinessSection = desView,
+      businessDetailsSection = desView,
       bankDetailsSection = desView.bankAccountDetails,
       aboutYouSection = desView.extraFields.filingIndividual,
       businessActivitiesSection = BusinessActivities.convertBusinessActivities(

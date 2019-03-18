@@ -75,7 +75,7 @@ class SubscriptionControllerSpec
         ),
       eabSection = None,
       tradingPremisesSection = None,
-      aboutTheBusinessSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
+      businessDetailsSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
         Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"), altCorrespondenceAddress = false),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
       aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),
@@ -145,10 +145,6 @@ class SubscriptionControllerSpec
       val response = Json.obj(
         "errors" -> Seq(
           Json.obj(
-            "path" -> "obj.aboutTheBusinessSection",
-            "error" -> "error.path.missing"
-          ),
-          Json.obj(
             "path" -> "obj.aboutYouSection",
             "error" -> "error.path.missing"
           ),
@@ -158,6 +154,10 @@ class SubscriptionControllerSpec
           ),
           Json.obj(
             "path" -> "obj.businessMatchingSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.businessDetailsSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
