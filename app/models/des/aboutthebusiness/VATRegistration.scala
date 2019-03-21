@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness.{AboutTheBusiness, VATRegisteredNo, VATRegisteredYes}
+import models.fe.businessdetails.{BusinessDetails, VATRegisteredNo, VATRegisteredYes}
 import play.api.libs.json._
 
 case class VATRegistration(vatRegistered: Boolean, vrnNumber : Option[String])
@@ -25,9 +25,9 @@ object VATRegistration {
 
   implicit val format = Json.format[VATRegistration]
 
-  implicit def convert(aboutTheBusiness: AboutTheBusiness): Option[VATRegistration] = {
+  implicit def convert(businessDetails: BusinessDetails): Option[VATRegistration] = {
 
-    aboutTheBusiness.vatRegistered match {
+    businessDetails.vatRegistered match {
       case Some(VATRegisteredYes(value)) => Some(VATRegistration(true, Some(value)))
       case Some(VATRegisteredNo) => Some(VATRegistration(false, None))
       case _ => None

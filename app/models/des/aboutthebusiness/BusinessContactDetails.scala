@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness._
+import models.fe.businessdetails._
 import play.api.libs.json.Json
 
 case class BusinessContactDetails (businessAddress: Address,
@@ -29,13 +29,13 @@ case class BusinessContactDetails (businessAddress: Address,
 object BusinessContactDetails {
   implicit val format = Json.format[BusinessContactDetails]
 
-  implicit def convert(aboutTheBusiness: AboutTheBusiness) : BusinessContactDetails = {
+  implicit def convert(businessDetails: BusinessDetails) : BusinessContactDetails = {
     BusinessContactDetails(
-      businessAddress = aboutTheBusiness.registeredOffice,
-      altCorrespondenceAddress = aboutTheBusiness.altCorrespondenceAddress,
-      alternativeAddress = aboutTheBusiness.correspondenceAddress,
-      businessTelNo = aboutTheBusiness.contactingYou.phoneNumber,
-        businessEmail = aboutTheBusiness.contactingYou.email
+      businessAddress = businessDetails.registeredOffice,
+      altCorrespondenceAddress = businessDetails.altCorrespondenceAddress,
+      alternativeAddress = businessDetails.correspondenceAddress,
+      businessTelNo = businessDetails.contactingYou.phoneNumber,
+        businessEmail = businessDetails.contactingYou.email
     )
   }
 }
