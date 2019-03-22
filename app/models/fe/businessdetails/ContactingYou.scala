@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
-import models.des.businessactivities.BusinessActivitiesAll
-import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
-case class ActivityStartDate (startDate: LocalDate)
+case class ContactingYou(
+                          phoneNumber: String,
+                          email: String
+                        )
 
-object ActivityStartDate {
+object ContactingYou {
 
-  implicit val format =  Json.format[ActivityStartDate]
-
-  implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] = {
-
-    activitiesAll match {
-      case Some(data) => data.activitiesCommenceDate match {
-        case Some(validDate) => Some(ActivityStartDate(LocalDate.parse(validDate)))
-        case _ => None
-      }
-      case _ => None
-    }
-  }
+  implicit val formats = Json.format[ContactingYou]
 }

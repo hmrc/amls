@@ -16,7 +16,7 @@
 
 package models.fe
 
-import models.fe.aboutthebusiness.AboutTheBusiness
+import models.fe.businessdetails.BusinessDetails
 import models.fe.asp.Asp
 import models.fe.bankdetails.BankDetails
 import models.fe.businessactivities.BusinessActivities
@@ -37,7 +37,7 @@ case class SubscriptionView(
                              businessMatchingSection: BusinessMatching,
                              eabSection: Option[EstateAgentBusiness],
                              tradingPremisesSection: Option[Seq[TradingPremises]],
-                             aboutTheBusinessSection: AboutTheBusiness,
+                             businessDetailsSection: BusinessDetails,
                              bankDetailsSection: Seq[BankDetails],
                              aboutYouSection: AddPerson,
                              businessActivitiesSection: BusinessActivities,
@@ -63,7 +63,7 @@ object SubscriptionView {
       businessMatchingSection = desView,
       eabSection = desView,
       tradingPremisesSection = desView.tradingPremises,
-      aboutTheBusinessSection = desView,
+      businessDetailsSection = desView,
       bankDetailsSection = desView.bankAccountDetails,
       aboutYouSection = desView.extraFields.filingIndividual,
       businessActivitiesSection = BusinessActivities.convertBusinessActivities(

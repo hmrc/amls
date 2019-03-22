@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness.{CorrespondenceAddress, RegisteredOfficeNonUK, RegisteredOfficeUK, UKCorrespondenceAddress}
+import models.fe.businessdetails.{CorrespondenceAddress, RegisteredOfficeNonUK, RegisteredOfficeUK, UKCorrespondenceAddress}
 import org.scalatestplus.play.PlaySpec
 
 

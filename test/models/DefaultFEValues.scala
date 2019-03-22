@@ -375,11 +375,11 @@ object BusinessMatchingSection {
 
 object AboutTheBusinessSection {
 
-  import models.fe.aboutthebusiness._
+  import models.fe.businessdetails._
 
   private val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
   // scalastyle:off magic.number
-  val model = AboutTheBusiness(PreviouslyRegisteredYes("12345678"),
+  val model = BusinessDetails(PreviouslyRegisteredYes("12345678"),
     Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
     Some(VATRegisteredYes("123456789")),
     Some(regForCorpTax),
@@ -391,7 +391,7 @@ object AboutTheBusinessSection {
       Some("Street"), Some("city"), "EE1 1EE"))
   )
 
-  val modelForView = AboutTheBusiness(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+  val modelForView = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567891")),
     ContactingYou("07000111222", "BusinessEmail"),

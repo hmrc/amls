@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness.{CorporationTaxRegisteredNo, CorporationTaxRegisteredYes, CorporationTaxRegistered}
+import models.fe.businessdetails.{CorporationTaxRegisteredNo, CorporationTaxRegisteredYes, CorporationTaxRegistered}
 import play.api.libs.json.Json
 
 case class CorporationTaxRegisteredCbUbLlp (cotaxRegistered: Boolean, ctutr: Option[String])
@@ -25,7 +25,7 @@ object CorporationTaxRegisteredCbUbLlp {
 
   implicit val format =  Json.format[CorporationTaxRegisteredCbUbLlp]
 
-  implicit def conv(atb: models.fe.aboutthebusiness.AboutTheBusiness): Option[CorporationTaxRegisteredCbUbLlp]  = {
+  implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp]  = {
 
     atb.corporationTaxRegistered match {
       case Some(data) => data

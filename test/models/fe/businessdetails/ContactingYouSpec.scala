@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-package models.fe.aboutthebusiness
+package models.fe.businessdetails
 
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-case class ContactingYou(
-                          phoneNumber: String,
-                          email: String
-                        )
+class ContactingYouSpec extends PlaySpec {
+  "Contacting You Details" must {
 
-object ContactingYou {
+    val completeJson = Json.obj(
+      "phoneNumber" -> "1234567890",
+      "email" -> "test@test.com"
+    )
 
-  implicit val formats = Json.format[ContactingYou]
+    val completeModel = ContactingYou("1234567890", "test@test.com")
+
+
+    "serialize as expected" in {
+      Json.toJson(completeModel) must be(completeJson)
+    }
+
+    "deserialize as expected" in {
+     completeJson.as[ContactingYou] must be(completeModel)
+    }
+  }
 }

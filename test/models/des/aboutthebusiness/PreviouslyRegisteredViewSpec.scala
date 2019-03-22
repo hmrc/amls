@@ -16,7 +16,7 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.aboutthebusiness._
+import models.fe.businessdetails._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
