@@ -16,12 +16,9 @@
 
 package models.des.msb
 
-import config.AmlsConfig
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{Writes, _}
 
-
-case class MsbCeDetailsR7(dealInPhysCurrencies: Option[Boolean] = None, currencySources: Option[CurrencySourcesR7],
+case class MsbCeDetailsR7(dealInPhysCurrencies: Option[Boolean] = None,
+                          currencySources: Option[CurrencySourcesR7],
                           antNoOfTransNxt12Mnths: String,
                           currSupplyToCust: Option[CurrSupplyToCust]) {
 

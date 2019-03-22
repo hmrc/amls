@@ -16,17 +16,19 @@
 
 package models.fe.moneyservicebusiness
 
-import play.api.libs.json._
-
 case class BankMoneySource(bankNames : String)
 
 case object BankMoneySource {
 
   implicit val jsonReads: Reads[Option[BankMoneySource]] = {
-    (__ \ "bankMoneySource").readNullable[String] flatMap {
-      case Some("Yes") => (__ \ "bankNames").read[String].map(names => Some(BankMoneySource(names)))
-      case _ => Reads(_ => JsSuccess(None))
-    }
+
+    ((__ \ "moneySources" \ 'bankMoneySource).readNullable[String].orElse(Reads.pure(None)) and
+      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None)))((bankMoney: Option[String], names: Option[String])=>{
+      (bankMoney, names) match {
+        case (Some(_), Some(n)) => Some(BankMoneySource(n))
+        case _ => None
+      }
+    })
   }
 
   implicit val jsonWrites = Writes[Option[BankMoneySource]] {
@@ -41,10 +43,13 @@ case class WholesalerMoneySource(wholesalerNames : String)
 object WholesalerMoneySource {
 
   implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
-    (__ \ "wholesalerMoneySource").readNullable[String] flatMap {
-      case Some("Yes") => (__ \ "wholesalerNames").read[String].map(names => Some(WholesalerMoneySource(names)))
-      case _ => Reads(_ => JsSuccess(None))
-    }
+    ((__ \ "moneySources" \ 'wholesalerMoneySource).readNullable[String].orElse(Reads.pure(None)) and
+      (__ \ "moneySources" \ 'wholesalerNames).readNullable[String].orElse(Reads.pure(None))) ((wholesalerMoney: Option[String], names: Option[String]) => {
+      (wholesalerMoney, names) match {
+        case (Some(_), Some(n)) => Some(WholesalerMoneySource(n))
+        case _ => None
+      }
+    })
   }
 
   implicit val jsonWrites = Writes[Option[WholesalerMoneySource]] {
