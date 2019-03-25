@@ -28,7 +28,7 @@ case object BankMoneySource {
     import play.api.libs.functional.syntax._
 
     ((__ \ "moneySources" \ 'bankMoneySource).readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None)))((bankMoney: Option[String], names: Option[String])=>{
+      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None)))((bankMoney: Option[String], names: Option[String]) => {
       (bankMoney, names) match {
         case (Some(_), Some(n)) => Some(BankMoneySource(n))
         case _ => None
@@ -37,8 +37,8 @@ case object BankMoneySource {
   }
 
   implicit val jsonWrites = Writes[Option[BankMoneySource]] {
-      case Some(bankNames) =>  Json.obj("bankMoneySource" -> "Yes", "bankNames" -> bankNames.bankNames)
-      case _ =>  Json.obj()
+    case Some(bankNames) => Json.obj("bankMoneySource" -> "Yes", "bankNames" -> bankNames.bankNames)
+    case _ => Json.obj()
   }
 
 }

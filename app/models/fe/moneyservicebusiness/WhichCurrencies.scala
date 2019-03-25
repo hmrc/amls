@@ -47,13 +47,14 @@ object WhichCurrencies {
       case true => Json.obj("customerMoneySource" -> "Yes")
       case false => Json.obj()
     }
+
+    val moneySources = BankMoneySource.jsonWrites.writes(w.bankMoneySource).as[JsObject] ++
+      WholesalerMoneySource.jsonWrites.writes(w.wholesalerMoneySource).as[JsObject] ++
+      customerMoneySource
+
     Json.obj("currencies" -> w.currencies) ++
       Json.obj("usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> w.usesForeignCurrencies)) ++
-      Json.obj("moneySources" -> BankMoneySource.jsonWrites.writes(w.bankMoneySource).as[JsObject]) ++
-      Json.obj("moneySources" -> WholesalerMoneySource.jsonWrites.writes(w.wholesalerMoneySource).as[JsObject]) ++
-      Json.obj("moneySources" -> customerMoneySource)
-
-
+      Json.obj("moneySources" -> moneySources)
   }
 
   implicit def convMsbCe(msbCe: Option[MsbCeDetailsR7]): Option[WhichCurrencies] = {
