@@ -16,11 +16,16 @@
 
 package models.fe.moneyservicebusiness
 
+import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json._
+
+
 case class BankMoneySource(bankNames : String)
 
 case object BankMoneySource {
 
   implicit val jsonReads: Reads[Option[BankMoneySource]] = {
+    import play.api.libs.functional.syntax._
 
     ((__ \ "moneySources" \ 'bankMoneySource).readNullable[String].orElse(Reads.pure(None)) and
       (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None)))((bankMoney: Option[String], names: Option[String])=>{
@@ -41,6 +46,7 @@ case object BankMoneySource {
 case class WholesalerMoneySource(wholesalerNames : String)
 
 object WholesalerMoneySource {
+  import play.api.libs.functional.syntax._
 
   implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
     ((__ \ "moneySources" \ 'wholesalerMoneySource).readNullable[String].orElse(Reads.pure(None)) and

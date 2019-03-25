@@ -17,6 +17,8 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetailsR7}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class WhichCurrencies(currencies: Seq[String],
                            usesForeignCurrencies: Option[Boolean],
@@ -78,11 +80,9 @@ object WhichCurrencies {
             cs.bankDetails,
             cs.currencyWholesalerDetails,
             cs.reSellCurrTakenIn))
-          case None => val wc = Some(WhichCurrencies(msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
+          case None => Some(WhichCurrencies(msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
             msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
             None, None, false))
-            println("XXXXXXXXXXXXXXXXX" + wc)
-            wc
         }
 
       case None => None

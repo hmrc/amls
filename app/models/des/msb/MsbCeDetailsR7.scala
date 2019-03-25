@@ -16,6 +16,9 @@
 
 package models.des.msb
 
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+
 
 case class MsbCeDetailsR7(dealInPhysCurrencies: Option[Boolean] = None,
                           currencySources: Option[CurrencySourcesR7],
