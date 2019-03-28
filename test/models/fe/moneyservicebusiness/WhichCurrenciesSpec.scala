@@ -17,18 +17,61 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb._
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json._
-import play.api.test.FakeApplication
+import play.api.libs.json.{JsSuccess, Json}
 
-class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite {
+class WhichCurrenciesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar{
 
   "WhichCurrencies" must {
 
+    "serialize WhichCurrencies as expected" in {
+      val input = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = Some(true),
+        Some(BankMoneySource("Bank names")),
+        Some(WholesalerMoneySource("wholesaler names")),
+        true)
+
+      val expectedJson = Json.obj(
+        "currencies" -> Seq("USD", "MNO", "PQR"),
+          "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
+      "moneySources" -> Json.obj(
+        "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
+        "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
+        "customerMoneySource" -> "Yes"))
+
+      Json.toJson(input) must be(expectedJson)
+    }
+
+    "deserialize WhichCurrencies as expected" in {
+      val json = Json.obj(
+        "currencies" -> Seq("USD", "MNO", "PQR"),
+        "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
+        "moneySources" -> Json.obj(
+          "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
+          "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
+          "customerMoneySource" -> "Yes"))
+
+      val expected = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = Some(true),
+        Some(BankMoneySource("Bank names")),
+        Some(WholesalerMoneySource("wholesaler names")),
+        true)
+
+      Json.fromJson[WhichCurrencies](json) must be(JsSuccess(expected))
+    }
+
     "round trip through Json correctly" in {
 
-      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), true)
-      Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
+      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+        usesForeignCurrencies = Some(true),
+        Some(BankMoneySource("Bank names")),
+        Some(WholesalerMoneySource("wholesaler names")),
+        true)
+
+      val json = Json.toJson(model)
+
+      Json.fromJson[WhichCurrencies](json) mustBe JsSuccess(model)
     }
 
     "round trip through Json correctly" when {
