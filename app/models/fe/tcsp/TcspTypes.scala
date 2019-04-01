@@ -31,7 +31,7 @@ sealed trait ServiceProvider {
       case TrusteeProvider => "02"
       case RegisteredOfficeEtc => "03"
       case CompanyDirectorEtc => "04"
-      case CompanyFormationAgent(_, _) => "05"
+      case CompanyFormationAgent => "05"
     }
 }
 
@@ -39,24 +39,11 @@ case object NomineeShareholdersProvider extends ServiceProvider
 case object TrusteeProvider extends ServiceProvider
 case object RegisteredOfficeEtc extends ServiceProvider
 case object CompanyDirectorEtc extends ServiceProvider
-case class CompanyFormationAgent (
-                                onlyOffTheShelfCompsSold:Boolean,
-                                complexCorpStructureCreation: Boolean
-                              ) extends ServiceProvider
+case object CompanyFormationAgent extends ServiceProvider
 
 object TcspTypes {
 
-  def convCompanyFormationAgent(trustOrCompFormAgent: Boolean, tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt]): Option[ServiceProvider] =
-    trustOrCompFormAgent match{
-      case false => None
-      case true => tcspTrustCompFormationAgt match{
-        case Some(trust) => Some(CompanyFormationAgent(trust.onlyOffTheShelfCompsSold, trust.complexCorpStructureCreation))
-        case None => None
-      }
-    }
-
   implicit val jsonReads: Reads[TcspTypes] = {
-    import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
     import play.api.libs.json._
     (__ \ "serviceProviders").read[Set[String]].flatMap { x: Set[String] =>
@@ -65,9 +52,7 @@ object TcspTypes {
         case "02" => Reads(_ => JsSuccess(TrusteeProvider)) map identity[ServiceProvider]
         case "03" => Reads(_ => JsSuccess(RegisteredOfficeEtc)) map identity[ServiceProvider]
         case "04" => Reads(_ => JsSuccess(CompanyDirectorEtc)) map identity[ServiceProvider]
-        case "05" =>
-          ((__ \ "onlyOffTheShelfCompsSold").read[Boolean] and
-            (__ \ "complexCorpStructureCreation").read[Boolean])(CompanyFormationAgent.apply _) map identity[ServiceProvider]
+        case "05" => Reads(_ => JsSuccess(CompanyFormationAgent)) map identity[ServiceProvider]
         case _ =>
           Reads(_ => JsError((JsPath \ "serviceProviders") -> ValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ServiceProvider]]](
@@ -90,9 +75,6 @@ object TcspTypes {
           _.value
         }).toSeq
       ) ++ services.foldLeft[JsObject](Json.obj()) {
-        case (m, CompanyFormationAgent(sold, creation)) =>
-          m ++ Json.obj("onlyOffTheShelfCompsSold" -> sold,
-            "complexCorpStructureCreation" -> creation)
         case (m, _) =>
           m
       }
@@ -105,7 +87,7 @@ object TcspTypes {
         CommonMethods.getSpecificType(svcsProviders.trusteeProvider, TrusteeProvider),
         CommonMethods.getSpecificType(svcsProviders.regOffBusinessAddrVirtualOff, RegisteredOfficeEtc),
         CommonMethods.getSpecificType(svcsProviders.compDirSecPartnerProvider, CompanyDirectorEtc),
-        convCompanyFormationAgent(svcsProviders.trustOrCompFormAgent, view.tcspTrustCompFormationAgt)
+        CommonMethods.getSpecificType(svcsProviders.trustOrCompFormAgent, CompanyFormationAgent)
       ).flatten)
       case None => None
     }
