@@ -86,6 +86,11 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
 
     }
 
+    "converting the des subscription where no msb must yield None" in {
+      MoneyServiceBusiness.conv(DesConstants.SubscriptionViewModelNoMsb) must
+        be(None)
+    }
+
     "evaluate getMsbAll whn input is none" in {
       MoneyServiceBusiness.getMsbAll(None) must be(None)
     }

@@ -65,6 +65,11 @@ class EstateAgentBusinessSpec extends PlaySpec with MockitoSugar {
         )))
     }
 
+    "converting the des subscription where no eab must yield None" in {
+      EstateAgentBusiness.conv(DesConstants.SubscriptionViewModelNoEab) must
+        be(None)
+    }
+
   }
 
 }
