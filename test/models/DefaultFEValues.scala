@@ -33,11 +33,13 @@ object ASPTCSPSection {
     TrusteeProvider,
     CompanyDirectorEtc,
     RegisteredOfficeEtc,
-    CompanyFormationAgent(true, true)))
+    CompanyFormationAgent))
   private val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes("12345678")
 
   val TcspSection = Some(Tcsp(
     Some(DefaultCompanyServiceProviders),
+    Some(OnlyOffTheShelfCompsSoldYes),
+    Some(ComplexCorpStructureCreationYes),
     Some(DefaultProvidedServices),
     Some(DefaultServicesOfAnotherTCSP))
   )
@@ -46,8 +48,16 @@ object ASPTCSPSection {
   val aspServices = ServicesOfBusiness(Set(Accountancy, Auditing, FinancialOrTaxAdvice))
 
   val AspSection = Some(Asp(Some(aspServices), Some(aspOtherBusinessTax)))
-  val TcspModelForView = Some(Tcsp(Some(TcspTypes(Set(CompanyDirectorEtc,
-    NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(true, true)))),
+
+  val TcspModelForView = Some(Tcsp(
+    Some(TcspTypes(
+      Set(CompanyDirectorEtc,
+        NomineeShareholdersProvider,
+        TrusteeProvider,
+        RegisteredOfficeEtc,
+        CompanyFormationAgent))),
+    Some(OnlyOffTheShelfCompsSoldYes),
+    Some(ComplexCorpStructureCreationYes),
     Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
       PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
   val AspModelForView = Some(Asp(Some(ServicesOfBusiness(Set(Auditing,

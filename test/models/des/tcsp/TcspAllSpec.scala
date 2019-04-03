@@ -29,6 +29,8 @@ class TcspAllSpec extends PlaySpec {
       val TcspSection = Some(Tcsp(
         None,
         None,
+        None,
+        None,
         Some(servicesOfAnother))
       )
       val tcspAllSection  = TcspAll(true,Some("12345678"))
@@ -42,6 +44,8 @@ class TcspAllSpec extends PlaySpec {
       val TcspSection = Some(Tcsp(
         None,
         None,
+        None,
+        None,
         Some(servicesOfAnother))
       )
       val tcspAllSection  = TcspAll(false, None)
@@ -53,6 +57,8 @@ class TcspAllSpec extends PlaySpec {
       val servicesOfAnother = ServicesOfAnotherTCSPYes("12345678")
 
       val TcspSection = Some(Tcsp(
+        None,
+        None,
         None,
         None,
         None)

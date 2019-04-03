@@ -33,7 +33,7 @@ trait TcspValues {
     val DefaultCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
       TrusteeProvider,
       CompanyDirectorEtc,
-      CompanyFormationAgent(offTheShelf, complexStructure)))
+      CompanyFormationAgent))
     val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes("12345678")
 
   }
@@ -45,15 +45,19 @@ trait TcspValues {
 
     val NewProvidedServices = ProvidedServices(Set(EmailHandling))
     val NewCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
-      CompanyFormationAgent(offTheShelf, complexStructure)))
+      CompanyFormationAgent))
     val NewServicesOfAnotherTCSP = ServicesOfAnotherTCSPNo
 
   }
 
   val completeJson = Json.obj(
     "tcspTypes" -> Json.obj(
-      "serviceProviders" -> Seq("01", "02", "04", "05"),
-      "onlyOffTheShelfCompsSold" -> true,
+      "serviceProviders" -> Seq("01", "02", "04", "05")
+    ),
+    "onlyOffTheShelfCompsSold" -> Json.obj(
+      "onlyOffTheShelfCompsSold" -> true
+    ),
+    "complexCorpStructureCreation" -> Json.obj(
       "complexCorpStructureCreation" -> false
     ),
     "providedServices" -> Json.obj(
@@ -68,6 +72,8 @@ trait TcspValues {
 
   val completeModel = Tcsp(
     Some(DefaultValues.DefaultCompanyServiceProviders),
+    Some(OnlyOffTheShelfCompsSoldYes),
+    Some(ComplexCorpStructureCreationNo),
     Some(DefaultValues.DefaultProvidedServices),
     Some(DefaultValues.DefaultServicesOfAnotherTCSP)
   )
@@ -161,7 +167,9 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
     Tcsp.conv(DesConstants.SubscriptionViewModel) must
       be(
         Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(true,true)))),
+          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
+          Some(OnlyOffTheShelfCompsSoldYes),
+          Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
@@ -192,7 +200,9 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
     Tcsp.conv(SubscriptionViewModel) must
       be(
         Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(true,false)))),
+          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
+          Some(OnlyOffTheShelfCompsSoldYes),
+          Some(ComplexCorpStructureCreationNo),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
@@ -223,7 +233,9 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
     Tcsp.conv(SubscriptionViewModel) must
       be(
         Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent(false,true)))),
+          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
+          Some(OnlyOffTheShelfCompsSoldNo),
+          Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }

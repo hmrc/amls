@@ -28,10 +28,12 @@ class TcspTrustCompFormationAgtSpec extends PlaySpec {
         TrusteeProvider,
         CompanyDirectorEtc,
         RegisteredOfficeEtc,
-        CompanyFormationAgent(true, true)))
+        CompanyFormationAgent))
 
       val TcspSection = Some(Tcsp(
         Some(DefaultCompanyServiceProviders),
+        Some(OnlyOffTheShelfCompsSoldYes),
+        Some(ComplexCorpStructureCreationYes),
         None,
         None)
       )
@@ -41,6 +43,8 @@ class TcspTrustCompFormationAgtSpec extends PlaySpec {
 
     "convert frontend model to Des when frontend model is none" in {
       val TcspSection = Some(Tcsp(
+        None,
+        None,
         None,
         None,
         None)
