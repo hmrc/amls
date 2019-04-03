@@ -174,6 +174,11 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
 
+  "converting the des subscription where no tcsp must yield None" in {
+    Tcsp.conv(DesConstants.SubscriptionViewModelNoTcsp) must
+      be(None)
+  }
+
   "converting the des subscription model must yield a frontend TCSP model (CompanyFormationAgent variation 1)" in {
     val testTcspTrustCompFormationAgt = TcspTrustCompFormationAgt(true, false)
     val SubscriptionViewModel = SubscriptionView(

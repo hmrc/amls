@@ -24,12 +24,13 @@ case class EstateAgentBusiness(
                               )
 
 object EstateAgentBusiness {
+
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
   implicit val reads: Reads[EstateAgentBusiness] = (
     __.read(Reads.optionNoError[Services]) and
-    __.read(Reads.optionNoError[RedressScheme]) and
+      __.read(Reads.optionNoError[RedressScheme]) and
       __.read(Reads.optionNoError[ProfessionalBody]) and
       __.read(Reads.optionNoError[PenalisedUnderEstateAgentsAct])
     ) (EstateAgentBusiness.apply _)
@@ -48,9 +49,13 @@ object EstateAgentBusiness {
     }
 
   implicit def conv(view: models.des.SubscriptionView): Option[EstateAgentBusiness] = {
-
-      Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut,
-        view.eabResdEstAgncy, view, view))
-
+    (view.eabResdEstAgncy, view.businessActivities.eabServicesCarriedOut) match {
+      case (Some(eabResdEstAgncy), _) =>
+        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view))
+      case (None, Some(eabServicesCarriedOut)) =>
+        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view))
+      case (None, None) => None
+      case _ => None
+    }
   }
 }
