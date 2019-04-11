@@ -46,7 +46,7 @@ object TcspServicesOffered {
       case TrusteeProvider => result.copy(trusteeProvider = true)
       case RegisteredOfficeEtc => result.copy(regOffBusinessAddrVirtualOff = true)
       case CompanyDirectorEtc => result.copy(compDirSecPartnerProvider = true)
-      case CompanyFormationAgent(_, _) => result.copy(trustOrCompFormAgent = true)
+      case CompanyFormationAgent => result.copy(trustOrCompFormAgent = true)
     })
     Some(tcspServicesOffered)
   }

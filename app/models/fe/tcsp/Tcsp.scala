@@ -19,11 +19,19 @@ package models.fe.tcsp
 import models.des.SubscriptionView
 
 case class Tcsp (tcspTypes: Option[TcspTypes] = None,
+                 onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
+                 complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
                  providedServices: Option[ProvidedServices] = None,
                  servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None) {
 
   def tcspTypes(trust: TcspTypes): Tcsp =
     this.copy(tcspTypes = Some(trust))
+
+  def onlyOffTheShelfCompsSold(x: OnlyOffTheShelfCompsSold): Tcsp =
+    this.copy(onlyOffTheShelfCompsSold = Some(x))
+
+  def complexCorpStructureCreation(x: ComplexCorpStructureCreation): Tcsp =
+    this.copy(complexCorpStructureCreation = Some(x))
 
   def providedServices(ps: ProvidedServices): Tcsp =
     this.copy(providedServices = Some(ps))
@@ -44,8 +52,8 @@ object Tcsp {
 
   implicit def conv(view: SubscriptionView): Option[Tcsp] = {
     (view.tcspAll, view.businessActivities.tcspServicesOffered) match {
-      case (Some(tcspAll), _) => Some(Tcsp(view, view.businessActivities, view))
-      case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view.businessActivities, view))
+      case (Some(tcspAll), _) => Some(Tcsp(view, view, view, view.businessActivities, view))
+      case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view, view, view.businessActivities, view))
       case (None, None) => None
       case _ => None
     }

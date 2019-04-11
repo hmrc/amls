@@ -16,7 +16,7 @@
 
 package models.des.tcsp
 
-import models.fe.tcsp.{TcspTypes, CompanyFormationAgent, Tcsp}
+import models.fe.tcsp._
 import play.api.libs.json.Json
 
 case class TcspTrustCompFormationAgt (onlyOffTheShelfCompsSold: Boolean = false,
@@ -28,19 +28,16 @@ object TcspTrustCompFormationAgt {
 
   implicit def conv(tcsp: Tcsp): TcspTrustCompFormationAgt = {
 
-    tcsp.tcspTypes match {
-      case Some(data) => data
-      case _ => TcspTrustCompFormationAgt(false, false)
+    val offTheShelf = tcsp.onlyOffTheShelfCompsSold match {
+      case Some(OnlyOffTheShelfCompsSoldYes) => true
+      case _ => false
     }
-  }
 
-  implicit def conv1(tcspTypes: TcspTypes): TcspTrustCompFormationAgt = {
-    val (offTheShelf, corpStructure) = tcspTypes.serviceProviders.foldLeft[(Boolean, Boolean)](false, false) { (x, y) =>
-      y match {
-        case CompanyFormationAgent(shelf, corp) => (shelf, corp)
-        case _ => x
-      }
+    val corpStructure = tcsp.complexCorpStructureCreation match {
+      case Some(ComplexCorpStructureCreationYes) => true
+      case _ => false
     }
+
     TcspTrustCompFormationAgt(offTheShelf, corpStructure)
   }
 }

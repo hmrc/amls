@@ -24,15 +24,13 @@ class TcspTypesSpec extends PlaySpec {
 
   "TrustOrCompanyServiceProviders" must {
 
-    val Services = TcspTypes(Set(NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyDirectorEtc, CompanyFormationAgent(true, false)))
+    val Services = TcspTypes(Set(NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyDirectorEtc, CompanyFormationAgent))
 
     "Json Validation" must {
 
       "successfully validate given values with option CompanyDirectorEtc" in {
         val json =  Json.obj(
-          "serviceProviders" -> Seq("01","02","03","04", "05"),
-          "onlyOffTheShelfCompsSold" -> true,
-          "complexCorpStructureCreation" -> false
+          "serviceProviders" -> Seq("01","02","03","04", "05")
         )
 
         Json.fromJson[TcspTypes](json) must
