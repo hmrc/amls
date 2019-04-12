@@ -11,7 +11,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val microserviceBootstrapVersion = "9.1.0"
+  private val microserviceBootstrapVersion = "10.6.0"
   private val playUrlBindersVersion = "2.1.0"
   private val domainVersion = "5.2.0"
   private val playReactivemongoVersion = "6.2.0"
@@ -32,10 +32,9 @@ private object AppDependencies {
     lazy val test : Seq[ModuleID] = ???
   }
 
-  private val scalatestVersion = "3.0.4"
+  private val scalatestVersion = "3.0.5"
   private val scalatestPlusPlayVersion = "2.0.1"
   private val pegdownVersion = "1.6.0"
-  private val hmrctestVersion = "2.4.0"
   private val scalacheckVersion = "1.13.4"
 
   object Test {
@@ -44,7 +43,6 @@ private object AppDependencies {
         "org.scalatest" %% "scalatest" % scalatestVersion % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
-        "uk.gov.hmrc" %% "hmrctest" % hmrctestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.mockito" % "mockito-core" % "1.9.5" % scope
@@ -61,7 +59,6 @@ private object AppDependencies {
         "org.scalatest" %% "scalatest" % scalatestVersion % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "uk.gov.hmrc" %% "hmrctest" % hmrctestVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.mockito" % "mockito-core" % "1.9.5" % scope
       )

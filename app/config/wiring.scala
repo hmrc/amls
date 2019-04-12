@@ -16,6 +16,7 @@
 
 package config
 
+import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
@@ -50,6 +51,8 @@ object WSHttp extends WSHttp {
   override protected def mode: Mode = Play.current.mode
 
   override protected def runModeConfiguration: Configuration = Play.current.configuration
+
+  override protected def actorSystem: ActorSystem = Play.current.actorSystem
 }
 
 object MicroserviceAuditConnector extends AuditConnector with RunMode {
@@ -72,6 +75,8 @@ object MicroserviceAuthConnector extends AuthConnector with ServicesConfig with 
   override protected def runModeConfiguration: Configuration = Play.current.configuration
 
   override val authBaseUrl = baseUrl("auth")
+
+  override protected def actorSystem: ActorSystem = Play.current.actorSystem
 }
 
 object ControllerConfiguration extends ControllerConfig {
