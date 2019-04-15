@@ -1,1 +1,1 @@
- + [AMLS-4775](https://jira.tools.tax.service.gov.uk/browse/AMLS-4775) - 'Specify play http parser max memory buffer in line with DES limit'
+ + [AMLS-4775] - 'Specify play http parser max memory buffer in line with DES limit'
