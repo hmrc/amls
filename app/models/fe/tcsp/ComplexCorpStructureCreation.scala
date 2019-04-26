@@ -39,9 +39,11 @@ object ComplexCorpStructureCreation {
   }
 
   implicit def conv(view: SubscriptionView): Option[ComplexCorpStructureCreation] = {
-    view.tcspTrustCompFormationAgt.map(b =>b.complexCorpStructureCreation) match {
-      case Some(true) => Some(ComplexCorpStructureCreationYes)
-      case Some(false) => Some(ComplexCorpStructureCreationNo)
+    val isTcsp = view.businessActivities.tcspServicesOffered.isDefined
+
+    (isTcsp, view.tcspTrustCompFormationAgt.map(b =>b.complexCorpStructureCreation)) match {
+      case (true, Some(true)) => Some(ComplexCorpStructureCreationYes)
+      case (true, _) => Some(ComplexCorpStructureCreationNo)
       case _ => None
     }
   }

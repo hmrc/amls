@@ -63,6 +63,16 @@ class OnlyOffTheShelfCompsSoldSpec extends PlaySpec with MustMatchers {
         OnlyOffTheShelfCompsSold.conv(DesConstants.SubscriptionViewModel) must
           be(Some(OnlyOffTheShelfCompsSoldYes))
       }
+
+      "converting the des subscription model with no formation agent must yield a frontend TCSP model" in {
+        OnlyOffTheShelfCompsSold.conv(DesConstants.SubscriptionViewModelNoFormationAgent) must
+          be(Some(OnlyOffTheShelfCompsSoldNo))
+      }
+
+      "converting the des subscription model with notcsb services must yield a frontend TCSP model" in {
+        OnlyOffTheShelfCompsSold.conv(DesConstants.SubscriptionViewModelNoFormationAgentNoTcspServices) must
+          be(None)
+      }
     }
   }
 }
