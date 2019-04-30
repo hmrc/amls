@@ -2548,6 +2548,50 @@ object DesConstants {
     DesConstants.extraFields
   )
 
+  val SubscriptionViewModelNoFormationAgent = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivities,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    None,
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
+  val SubscriptionViewModelNoFormationAgentNoTcspServices = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoTcsp,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    None,
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
   val SubscriptionViewModelNoTcsp = SubscriptionView(
     etmpFormBundleNumber = "111111",
     DesConstants.testBusinessDetails,
