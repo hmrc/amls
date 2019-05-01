@@ -40,11 +40,12 @@ object OnlyOffTheShelfCompsSold {
   }
 
   implicit def conv(view: SubscriptionView): Option[OnlyOffTheShelfCompsSold] = {
-    val isTcsp = view.businessActivities.tcspServicesOffered.isDefined
-
-    (isTcsp, view.tcspTrustCompFormationAgt.map(b =>b.onlyOffTheShelfCompsSold)) match {
-      case (true, Some(true)) => Some(OnlyOffTheShelfCompsSoldYes)
-      case (true, _) => Some(OnlyOffTheShelfCompsSoldNo)
+    view.businessActivities.tcspServicesOffered.map(b => b.trustOrCompFormAgent) match {
+      case Some(true) =>
+        (view.tcspTrustCompFormationAgt.map(b =>b.onlyOffTheShelfCompsSold)) match {
+          case Some(true) => Some(OnlyOffTheShelfCompsSoldYes)
+          case _ => Some(OnlyOffTheShelfCompsSoldNo)
+        }
       case _ => None
     }
   }
