@@ -53,6 +53,11 @@ class ComplexCorpStructureCreationSpec extends PlaySpec with MustMatchers {
           be(Some(ComplexCorpStructureCreationNo))
       }
 
+      "converting the des subscription model with no formation agent service offered must yield a frontend TCSP model" in {
+        ComplexCorpStructureCreation.conv(DesConstants.SubscriptionViewModelNoFormationAgentSvc) must
+          be(None)
+      }
+
       "converting the des subscription model with no tcsp services must yield a frontend TCSP model" in {
         ComplexCorpStructureCreation.conv(DesConstants.SubscriptionViewModelNoFormationAgentNoTcspServices) must
           be(None)

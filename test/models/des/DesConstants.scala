@@ -154,6 +154,18 @@ object DesConstants {
     Some(testBusinessActivitiesAll)
   )
 
+  val testBusinessActivitiesNoFormationAgent = BusinessActivities(
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MsbServicesCarriedOut(true, true, true, true, true)),
+    Some(testHvdGoodsSold),
+    Some(HvdAlcoholTobacco(true)),
+    Some(AspServicesOffered(true, true, true, true, true)),
+    Some(TcspServicesOffered(true, true, true, true, false)),
+    Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
+    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(testBusinessActivitiesAll)
+  )
+
   val testBusinessActivitiesNoTcsp = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
@@ -2534,6 +2546,28 @@ object DesConstants {
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),
     DesConstants.testBusinessActivities,
+    DesConstants.testTradingPremisesAPI5,
+    DesConstants.testBankDetails,
+    Some(DesConstants.testMsb),
+    Some(DesConstants.testHvd),
+    Some(DesConstants.testAsp),
+    Some(DesConstants.testAspOrTcsp),
+    Some(DesConstants.testTcspAll),
+    Some(DesConstants.testTcspTrustCompFormationAgt),
+    Some(DesConstants.testEabAll),
+    Some(DesConstants.testEabResdEstAgncy),
+    Some(DesConstants.testResponsiblePersons),
+    DesConstants.extraFields
+  )
+
+  val SubscriptionViewModelNoFormationAgentSvc = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    DesConstants.testBusinessActivitiesNoFormationAgent,
     DesConstants.testTradingPremisesAPI5,
     DesConstants.testBankDetails,
     Some(DesConstants.testMsb),
