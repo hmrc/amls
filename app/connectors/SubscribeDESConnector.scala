@@ -18,19 +18,18 @@ package connectors
 
 import audit.{SubscriptionEvent, SubscriptionFailedEvent}
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.API4
 import models.des
-import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-
-import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames, HttpPost, HttpReads, HttpResponse}
+import play.api.{Application, Logger}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 
-trait SubscribeDESConnector extends DESConnector {
+import scala.concurrent.{ExecutionContext, Future}
 
-  private[connectors] def httpPost: HttpPost
+class SubscribeDESConnector @Inject()(app: Application) extends DESConnector(app) {
 
   def subscribe
   (safeId: String, data: des.SubscriptionRequest)

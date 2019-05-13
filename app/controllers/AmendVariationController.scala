@@ -33,10 +33,11 @@ import scala.concurrent.Future
 
 @Singleton
 class AmendVariationController @Inject()(
-                                          implicit val apiRetryHelper: ApiRetryHelper
-                                        ) extends BaseController {
+  implicit val apiRetryHelper: ApiRetryHelper,
+  avs: AmendVariationService
+) extends BaseController {
 
-  private[controllers] def service: AmendVariationService = AmendVariationService
+  private[controllers] def service: AmendVariationService = avs
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 

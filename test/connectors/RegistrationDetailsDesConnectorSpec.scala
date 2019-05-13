@@ -23,7 +23,7 @@ import models.des.registrationdetails.{Organisation, Partnership, RegistrationDe
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter, MustMatchers}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
@@ -46,16 +46,16 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
 
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
-  val connector = new RegistrationDetailsDesConnector {
-    override private[connectors] def baseUrl = "baseUrl"
-    override private[connectors] def env = "ist0"
-    override private[connectors] def token = "token"
-    override private[connectors] def httpPost = mock[HttpPost]
-    override private[connectors] def httpGet = mockHttpGet
-    override private[connectors] def metrics = mock[Metrics]
-    override private[connectors] def audit = MockAudit
-    override private[connectors] def auditConnector = mock[AuditConnector]
-    override private[connectors] def fullUrl = s"$baseUrl/$requestUrl"
+  val connector = new RegistrationDetailsDesConnector(app) {
+    override private[connectors] val baseUrl = "baseUrl"
+    override private[connectors] val env = "ist0"
+    override private[connectors] val token = "token"
+    override private[connectors] val httpPost = mock[HttpPost]
+    override private[connectors] val httpGet = mockHttpGet
+    override private[connectors] val metrics = mock[Metrics]
+    override private[connectors] val audit = MockAudit
+    override private[connectors] val auditConnector = mock[AuditConnector]
+    override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
   }
 
   implicit val headerCarrier = HeaderCarrier()
