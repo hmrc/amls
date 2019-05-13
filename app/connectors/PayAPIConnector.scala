@@ -16,14 +16,15 @@
 
 package connectors
 
-import config.{AmlsConfig, WSHttp}
+import config.AmlsConfig
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
 import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
-import play.api.{Configuration, Logger, Play}
+import play.api.{Application, Configuration, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils.HttpResponseHelper
@@ -31,11 +32,13 @@ import utils.HttpResponseHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
+class PayAPIConnector @Inject()(app: Application) extends HttpResponseHelper with ServicesConfig {
 
-  private[connectors] def httpGet: HttpGet
-  private[connectors] val paymentUrl: String
-  private[connectors] val metrics: Metrics
+  private[connectors] val httpGet: HttpGet = app.injector.instanceOf[HttpGet]
+  private[connectors] val paymentUrl = AmlsConfig.payAPIUrl
+  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
+  override protected def mode: Mode = app.mode
+  override protected def runModeConfiguration: Configuration = app.configuration
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
     getPaymentFunction(paymentId)
@@ -80,14 +83,4 @@ trait PayAPIConnector extends HttpResponseHelper with ServicesConfig {
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }
-}
-
-object PayAPIConnector extends PayAPIConnector {
-  override private[connectors] lazy val httpGet: HttpGet = WSHttp
-  override private[connectors] lazy val paymentUrl = AmlsConfig.payAPIUrl
-  override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
