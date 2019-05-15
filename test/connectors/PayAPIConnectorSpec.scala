@@ -17,10 +17,8 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.WSHttp
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
-import javax.inject.Inject
 import metrics.{Metrics, PayAPI}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -34,8 +32,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec @Inject()(wsHttp: WSHttp)
-  extends PlaySpec
+class PayAPIConnectorSpec extends PlaySpec
   with OneServerPerSuite
   with MockitoSugar
   with ScalaFutures

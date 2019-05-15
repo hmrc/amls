@@ -38,22 +38,23 @@ import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionService @Inject()(
-  desConn: SubscribeDESConnector,
-  ggConn: GovernmentGatewayAdminConnector,
-  esc: EnrolmentStoreConnector,
-  ac: MicroserviceAuditConnector,
-  appConfig: AppConfig) {
-
-  val desConnector = desConn
-  val ggConnector = ggConn
-  val enrolmentStoreConnector = esc
-  val auditConnector = ac
-  val config = appConfig
+  private[services] val desConnector: SubscribeDESConnector,
+  private[services] val ggConnector: GovernmentGatewayAdminConnector,
+  private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
+  private[services] val auditConnector: MicroserviceAuditConnector,
+  private[services] val config: AppConfig) {
 
   private[services] val feeResponseRepository: FeesRepository = FeesRepository()
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
+
+    // $COVERAGE-OFF$
+
+    val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
+    val lines = scala.io.Source.fromInputStream(stream).getLines
+    val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+
     if(AmlsConfig.phase2Changes) {
       SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
     }
@@ -62,9 +63,6 @@ class SubscriptionService @Inject()(
     }
   }
 
-  private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
-  private lazy val lines = scala.io.Source.fromInputStream(stream).getLines
-  protected[SubscriptionService] lazy val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
   private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest)
                                                (implicit ec: ExecutionContext): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
