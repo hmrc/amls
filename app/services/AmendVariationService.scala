@@ -36,21 +36,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationService @Inject()(
-  avc: AmendVariationDESConnector,
-  ssc: SubscriptionStatusDESConnector,
-  vc: ViewDESConnector,
-  mac: MicroserviceAuditConnector) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+  private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+  private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
+  private[services] val viewDesConnector: ViewDESConnector,
+  private[services] val auditConnector: MicroserviceAuditConnector)
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
   private[services] lazy val feeResponseRepository = FeesRepository()
-  private[services] val amendVariationDesConnector = avc
-  private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = ssc
-  private[services] val viewDesConnector: ViewDESConnector = vc
-  private[services] val auditConnector = mac
   private[services] val validator: SchemaValidator = new SchemaValidator()
-
-
-
-
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -129,6 +122,9 @@ class AmendVariationService @Inject()(
     val result = validateResult(request)
 
     if (!result.isSuccess) {
+
+      // $COVERAGE-OFF$
+
       val errors = result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
@@ -142,11 +138,9 @@ class AmendVariationService @Inject()(
             "messages" -> messages.map(_.messages)
           )
         }
-
         Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
         auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
       }, valid = identity)
-
     } else {
       Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
@@ -172,9 +166,7 @@ class AmendVariationService @Inject()(
         }
       }
     }
-
     update(desRequest, updates)
-
   }
 
   private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
@@ -210,7 +202,7 @@ class AmendVariationService @Inject()(
   }
 
    private[services] def validateResult(request: AmendVariationRequest) = {
-
+     // $COVERAGE-OFF$
      val stream: InputStream = getClass.getResourceAsStream (
        if (AmlsConfig.phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
      val lines = scala.io.Source.fromInputStream(stream).getLines
@@ -226,6 +218,4 @@ class AmendVariationService @Inject()(
 
   private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
     AmendVariationResponse.convert(request, isRenewalWindow, des)
-
-
 }
