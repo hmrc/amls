@@ -18,19 +18,17 @@ package connectors
 
 import audit.WithdrawSubscriptionEvent
 import exceptions.HttpStatusException
-import javax.inject.Inject
 import metrics.API8
 import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse}
+import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
+import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class WithdrawSubscriptionConnector  @Inject()(app: Application) extends DESConnector(app) {
+trait WithdrawSubscriptionConnector extends DESConnector {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],

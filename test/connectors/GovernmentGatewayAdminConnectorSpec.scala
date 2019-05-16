@@ -25,7 +25,7 @@ import models.{KnownFact, KnownFactsForService}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
 
@@ -40,7 +40,7 @@ class GovernmentGatewayAdminConnectorSpec extends PlaySpec
 
   trait Fixture {
 
-    object GGAdminConnector extends GovernmentGatewayAdminConnector(app) {
+    object GGAdminConnector extends GovernmentGatewayAdminConnector {
       override private[connectors] val serviceURL = "url"
       override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit

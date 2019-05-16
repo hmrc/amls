@@ -20,17 +20,16 @@ import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des
-import org.joda.time.LocalDateTime
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.{ApiRetryHelper, IterateeHelpers}
-
 import scala.concurrent.Future
 
 class SubscriptionStatusControllerSpec
@@ -39,14 +38,10 @@ class SubscriptionStatusControllerSpec
     with ScalaFutures
     with IntegrationPatience
     with IterateeHelpers
-    with AmlsReferenceNumberGenerator
-    with OneAppPerSuite {
+    with AmlsReferenceNumberGenerator{
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-
-  val ssConn = new SubscriptionStatusDESConnector(app)
-
-  val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn) {
+  val Controller: SubscriptionStatusController = new SubscriptionStatusController {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 

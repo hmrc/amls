@@ -27,25 +27,15 @@ import uk.gov.hmrc.play.microservice.bootstrap.{DefaultMicroserviceGlobal, Error
 import scala.concurrent.Future
 
 object AmlsGlobal extends DefaultMicroserviceGlobal with RunMode {
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-
-  private lazy val controllerConfig = new ControllerConfiguration(Play.current)
-
-  override lazy val auditConnector = new MicroserviceAuditConnector(Play.current)
-
-  override lazy val loggingFilter = new MicroserviceLoggingFilter(controllerConfig)
-
-  override lazy val microserviceAuditFilter = new MicroserviceAuditFilter(Play.current, auditConnector, controllerConfig)
-
-  lazy val mac = new MicroserviceAuthConnector(Play.current, auditConnector)
+  override lazy  val auditConnector = MicroserviceAuditConnector
 
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig("microservice.metrics")
 
-  override def authFilter: Option[EssentialFilter]  = Some(new MicroserviceAuthFilter(
-    new AuthParamsControllerConfiguration(controllerConfig), mac, controllerConfig))
+  override lazy  val loggingFilter = MicroserviceLoggingFilter
+
+  override lazy  val microserviceAuditFilter = MicroserviceAuditFilter
+
+  override def authFilter: Option[EssentialFilter]  = Some(MicroserviceAuthFilter)
 
   override def onError(request: RequestHeader, ex: Throwable): Future[Result] = {
     ex match {
@@ -59,4 +49,8 @@ object AmlsGlobal extends DefaultMicroserviceGlobal with RunMode {
         super.onError(request, ex)
     }
   }
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

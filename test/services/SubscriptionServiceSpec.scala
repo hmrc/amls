@@ -16,7 +16,7 @@
 
 package services
 
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.AppConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
@@ -30,12 +30,11 @@ import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import services.SubscriptionService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
@@ -49,13 +48,14 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
   class MockSubscriptionService extends SubscriptionService(
-    mock[SubscribeDESConnector],
-    mock[GovernmentGatewayAdminConnector],
-    mock[EnrolmentStoreConnector],
-    mock[MicroserviceAuditConnector],
-    mock[AppConfig]
+    desConnector = mock[SubscribeDESConnector],
+    ggConnector = mock[GovernmentGatewayAdminConnector],
+    enrolmentStoreConnector = mock[EnrolmentStoreConnector],
+    auditConnector = mock[AuditConnector],
+    config = mock[AppConfig]
   ) {
     override private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = successValidate
+
     override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
   }
 

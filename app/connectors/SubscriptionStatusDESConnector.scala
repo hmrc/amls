@@ -18,19 +18,20 @@ package connectors
 
 import audit.SubscriptionStatusEvent
 import exceptions.HttpStatusException
-import javax.inject.Inject
 import metrics.API9
 import models.des
 import models.des.ReadStatusResponse
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import utils.ApiRetryHelper
 
-class SubscriptionStatusDESConnector @Inject()(app: Application) extends DESConnector(app) {
+trait SubscriptionStatusDESConnector extends DESConnector {
+
+  private[connectors] def httpGet: HttpGet
 
   def status(amlsRegistrationNumber: String)
   (
@@ -79,5 +80,7 @@ class SubscriptionStatusDESConnector @Inject()(app: Application) extends DESConn
         Logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
+
   }
+
 }

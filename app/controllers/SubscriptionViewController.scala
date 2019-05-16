@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.ViewDESConnector
+import connectors.{DESConnector, ViewDESConnector}
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
@@ -30,10 +30,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionViewController @Inject()(vdc: ViewDESConnector)
-  (implicit val apiRetryHelper: ApiRetryHelper) extends BaseController {
+class SubscriptionViewController @Inject()(
+  implicit val apiRetryHelper: ApiRetryHelper
+) extends BaseController {
 
-  private[controllers] def connector: ViewDESConnector = vdc
+  private[controllers] def connector: ViewDESConnector = DESConnector
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionViewController][get]"
