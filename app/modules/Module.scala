@@ -16,26 +16,18 @@
 
 package modules
 
-import javax.inject.Singleton
-
 import com.google.inject.{AbstractModule, Provides}
-import config.{MicroserviceAuditConnector, WSHttp}
-import connectors._
+import config.WSHttp
+import javax.inject.Singleton
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
-import uk.gov.hmrc.http.{CorePost, CorePut}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.http.{CorePost, CorePut, HttpGet}
 
 class Module extends AbstractModule {
   override def configure() = {
-    bind(classOf[DeregisterSubscriptionConnector]).toInstance(DESConnector)
-    bind(classOf[WithdrawSubscriptionConnector]).toInstance(DESConnector)
-    bind(classOf[PayAPIConnector]).toInstance(PayAPIConnector)
-    bind(classOf[GovernmentGatewayAdminConnector]).toInstance(GovernmentGatewayAdminConnector)
-    bind(classOf[SubscribeDESConnector]).toInstance(DESConnector)
-    bind(classOf[CorePost]).toInstance(WSHttp)
-    bind(classOf[CorePut]).toInstance(WSHttp)
-    bind(classOf[AuditConnector]).toInstance(MicroserviceAuditConnector)
+    bind(classOf[HttpGet]).to(classOf[WSHttp])
+    bind(classOf[CorePost]).to(classOf[WSHttp])
+    bind(classOf[CorePut]).to(classOf[WSHttp])
   }
 
   @Provides

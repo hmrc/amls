@@ -47,7 +47,7 @@ class ViewDESConnectorSpec
 
   trait Fixture {
 
-    object testDESConnector extends ViewDESConnector {
+    object testDESConnector extends ViewDESConnector(app) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -56,7 +56,7 @@ class ViewDESConnectorSpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] def auditConnector = mock[AuditConnector]
+      override private[connectors] val auditConnector = mock[AuditConnector]
 
     }
 

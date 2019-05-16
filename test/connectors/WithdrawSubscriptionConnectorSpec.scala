@@ -25,7 +25,7 @@ import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse, Wi
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
@@ -46,7 +46,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-    object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector {
+    object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector(app) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -55,7 +55,7 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      override private[connectors] def auditConnector = mock[AuditConnector]
+      override private[connectors] val auditConnector = mock[AuditConnector]
 
     }
 

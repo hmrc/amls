@@ -38,9 +38,9 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
   implicit val hc = HeaderCarrier()
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val controller = new RegistrationDetailsController{
-    override val registrationDetailsConnector = mock[RegistrationDetailsDesConnector]
-  }
+  implicit val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
+
+  val controller = new RegistrationDetailsController(rddc, apiRetryHelper){  }
 
   "The RegistrationDetailsController" must {
     "use the Des connector to retrieve registration details" in {

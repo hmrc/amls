@@ -27,7 +27,7 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -58,7 +58,7 @@ class SubscriptionStatusDESConnectorSpec
 
   trait Fixture {
 
-    object testDESConnector extends SubscriptionStatusDESConnector {
+    object testDESConnector extends SubscriptionStatusDESConnector(app) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -67,7 +67,7 @@ class SubscriptionStatusDESConnectorSpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] def auditConnector = mock[AuditConnector]
+      override private[connectors] val auditConnector = mock[AuditConnector]
 
     }
     implicit val hc = HeaderCarrier()

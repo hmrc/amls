@@ -21,17 +21,15 @@ import exceptions.HttpStatusException
 import javax.inject._
 import metrics.API6
 import models.des
-import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpPut, HttpReads, HttpResponse}
+import play.api.{Application, Logger}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationDESConnector extends DESConnector {
-
-  private[connectors] def httpPut: HttpPut
+class AmendVariationDESConnector @Inject()(app: Application) extends DESConnector(app) {
 
   def amend
   (amlsRegistrationNumber: String, data: des.AmendVariationRequest)

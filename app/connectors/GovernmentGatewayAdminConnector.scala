@@ -19,12 +19,13 @@ package connectors
 import audit.KnownFactsEvent
 import config.{MicroserviceAuditConnector, WSHttp}
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
 import models.KnownFactsForService
 import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
-import play.api.{Configuration, Logger, Play}
+import play.api.{Application, Configuration, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -33,12 +34,18 @@ import utils._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait GovernmentGatewayAdminConnector extends HttpResponseHelper{
+class GovernmentGatewayAdminConnector @Inject()(app: Application) extends ServicesConfig with HttpResponseHelper {
 
-  private[connectors] def serviceURL: String
-  private[connectors] def http: CorePost with CoreGet with CorePut
-  private[connectors] def metrics: Metrics
-  private[connectors] def audit: Audit
+  private[connectors] val serviceURL = baseUrl("government-gateway-admin")
+  private[connectors] val wsHttp: WSHttp = app.injector.instanceOf(classOf[WSHttp])
+  private[connectors] val mac: MicroserviceAuditConnector = app.injector.instanceOf(classOf[MicroserviceAuditConnector])
+
+  private[connectors] val http: CorePost with CoreGet with CorePut = wsHttp
+  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
+  private[connectors] val audit: Audit = new Audit(AuditHelper.appName, mac)
+  protected def mode: Mode = app.mode
+
+  override protected def runModeConfiguration: Configuration = app.configuration
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
@@ -89,16 +96,4 @@ trait GovernmentGatewayAdminConnector extends HttpResponseHelper{
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }
-}
-
-object GovernmentGatewayAdminConnector extends GovernmentGatewayAdminConnector with ServicesConfig {
-  // $COVERAGE-OFF$
-  override private[connectors] val http:CorePost with CoreGet with CorePut = WSHttp
-  override private[connectors] lazy val serviceURL = baseUrl("government-gateway-admin")
-  override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
-  override private[connectors] lazy val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
