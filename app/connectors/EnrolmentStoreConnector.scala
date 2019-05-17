@@ -33,11 +33,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class EnrolmentStoreConnector @Inject()(
-  val http: CorePut,
-  val metrics: Metrics,
-  mac: MicroserviceAuditConnector,
-  config: AppConfig
-) extends HttpResponseHelper {
+                                         val http: CorePut,
+                                         val metrics: Metrics,
+                                         config: AppConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
@@ -54,7 +52,7 @@ class EnrolmentStoreConnector @Inject()(
     val prefix = "[EnrolmentStore][Enrolments]"
     val timer = metrics.timer(EnrolmentStoreKnownFacts)
 
-    val audit: Audit = new Audit(AuditHelper.appName, mac)
+    val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 

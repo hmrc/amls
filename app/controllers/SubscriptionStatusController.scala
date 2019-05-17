@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.SubscriptionStatusDESConnector
+import connectors.{DESConnector, SubscriptionStatusDESConnector}
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
@@ -25,14 +25,14 @@ import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.ApiRetryHelper
-
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector)
-  ( implicit val apiRetryHelper: ApiRetryHelper) extends BaseController {
+class SubscriptionStatusController @Inject()(
+                                              implicit val apiRetryHelper: ApiRetryHelper
+                                            ) extends BaseController {
 
-  private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
+  private[controllers] def connector: SubscriptionStatusDESConnector = DESConnector
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionStatusController][get]"

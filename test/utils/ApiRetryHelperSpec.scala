@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit
 
 import exceptions.HttpStatusException
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.mock.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Application

@@ -26,35 +26,31 @@ import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatus
 import javax.inject.Inject
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
-import models.fe.SubscriptionResponse
+import models.fe.{SubscriptionFees, SubscriptionResponse}
 import models.{Fees, KnownFact, KnownFactsForService}
 import play.api.Logger
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionService @Inject()(
-  private[services] val desConnector: SubscribeDESConnector,
-  private[services] val ggConnector: GovernmentGatewayAdminConnector,
-  private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
-  private[services] val auditConnector: MicroserviceAuditConnector,
-  private[services] val config: AppConfig) {
+                                     private[services] val desConnector: SubscribeDESConnector,
+                                     private[services] val ggConnector: GovernmentGatewayAdminConnector,
+                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
+                                     private[services] val auditConnector: AuditConnector = MicroserviceAuditConnector,
+                                     val config: AppConfig
+                                   ) {
 
   private[services] val feeResponseRepository: FeesRepository = FeesRepository()
+
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
-
-    // $COVERAGE-OFF$
-
-    val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
-    val lines = scala.io.Source.fromInputStream(stream).getLines
-    val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
     if(AmlsConfig.phase2Changes) {
       SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
     }
@@ -63,6 +59,9 @@ class SubscriptionService @Inject()(
     }
   }
 
+  private lazy val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
+  private lazy val lines = scala.io.Source.fromInputStream(stream).getLines
+  protected[SubscriptionService] lazy val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
   private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest)
                                                (implicit ec: ExecutionContext): PartialFunction[Throwable, Future[SubscriptionResponse]] = {

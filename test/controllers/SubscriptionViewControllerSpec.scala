@@ -18,6 +18,7 @@ package controllers
 
 import connectors.ViewDESConnector
 import exceptions.HttpStatusException
+import generators.AmlsReferenceNumberGenerator
 import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
@@ -26,13 +27,12 @@ import models.{SubscriptionViewModel, des}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeApplication, FakeRequest}
 import utils.{ApiRetryHelper, IterateeHelpers}
-
 import scala.concurrent.Future
 
 class SubscriptionViewControllerSpec
@@ -50,7 +50,9 @@ class SubscriptionViewControllerSpec
   )
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val Controller: SubscriptionViewController = new SubscriptionViewController (mock[ViewDESConnector])
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
@@ -162,7 +164,9 @@ class SubscriptionViewControllerSpecPhase2
   )
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector])
+  val Controller: SubscriptionViewController = new SubscriptionViewController{
+    override val connector: ViewDESConnector = mock[ViewDESConnector]
+  }
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>

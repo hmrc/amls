@@ -27,7 +27,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -57,7 +57,7 @@ class SubscribeDESConnectorSpec extends PlaySpec
 
   trait Fixture {
 
-    object testDESConnector extends SubscribeDESConnector(app) {
+    object testDESConnector extends SubscribeDESConnector {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"

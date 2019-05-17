@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.RegistrationDetailsDesConnector
+import connectors.{DESConnector, RegistrationDetailsDesConnector}
 import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
@@ -28,11 +28,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class RegistrationDetailsController @Inject()(
-  connector: RegistrationDetailsDesConnector,
-  implicit val apiRetryHelper: ApiRetryHelper
-) extends BaseController {
+                                               implicit val apiRetryHelper: ApiRetryHelper
+                                             ) extends BaseController {
 
-  private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
+  private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = DESConnector
 
   def get(accountType: String, ref: String, safeId: String) = Action.async {
     implicit request =>

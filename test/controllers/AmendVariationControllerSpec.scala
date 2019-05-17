@@ -20,10 +20,10 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.{AmendVariationRequest, DesConstants}
 import models.fe
+import models.fe.businessdetails._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
-import models.fe.businessdetails._
 import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import org.joda.time.LocalDate
@@ -35,12 +35,11 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.mvc.Result
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.{FakeApplication, FakeRequest}
 import services.AmendVariationService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ApiRetryHelper, IterateeHelpers}
-
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends PlaySpec
@@ -52,10 +51,8 @@ class AmendVariationControllerSpec extends PlaySpec
     with OneAppPerSuite {
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  implicit val avs: AmendVariationService = mock[AmendVariationService]
-
   val Controller = new AmendVariationController{
-
+    override val service: AmendVariationService = mock[AmendVariationService]
   }
 
   implicit val hc = HeaderCarrier()
