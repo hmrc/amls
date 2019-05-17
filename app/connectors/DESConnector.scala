@@ -17,7 +17,7 @@
 package connectors
 
 import config.{AmlsConfig, MicroserviceAuditConnector, WSHttp}
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import metrics.Metrics
 import play.api.Application
 import play.mvc.Http.HeaderNames
@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
+@Singleton
 class DESConnector @Inject()(app: Application)
   extends HttpResponseHelper {
 

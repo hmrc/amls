@@ -18,7 +18,7 @@ package connectors
 
 import audit.WithdrawSubscriptionEvent
 import exceptions.HttpStatusException
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import metrics.API8
 import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse}
@@ -30,6 +30,7 @@ import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class WithdrawSubscriptionConnector  @Inject()(app: Application) extends DESConnector(app) {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,

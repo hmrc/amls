@@ -18,7 +18,7 @@ package config
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.Mode.Mode
 import play.api.{Application, Configuration}
 import uk.gov.hmrc.http._
@@ -37,6 +37,7 @@ trait Hooks extends HttpHooks with HttpAuditing {
   override val hooks = Seq.empty
 }
 
+@Singleton
 class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
   extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
       with Hooks with HttpPatch with WSPatch with AppName with RunMode {
@@ -54,6 +55,7 @@ class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
   override lazy val auditConnector: AuditConnector = auditConn
 }
 
+@Singleton
 class MicroserviceAuditConnector @Inject()(app: Application) extends AuditConnector with RunMode {
 
   override lazy val auditingConfig = LoadAuditingConfig("auditing")
@@ -63,6 +65,7 @@ class MicroserviceAuditConnector @Inject()(app: Application) extends AuditConnec
   override protected def runModeConfiguration: Configuration = app.configuration
 }
 
+@Singleton
 class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAuditConnector)
   extends  WSHttp(app, ac) with AuthConnector with ServicesConfig {
 
@@ -79,14 +82,17 @@ class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAudi
   override protected def actorSystem: ActorSystem = app.actorSystem
 }
 
+@Singleton
 class ControllerConfiguration @Inject()(app: Application) extends ControllerConfig {
   override lazy val controllerConfigs: Config = app.configuration.underlying.getConfig("controllers")
 }
 
+@Singleton
 class AuthParamsControllerConfiguration @Inject()(config: ControllerConfiguration) extends AuthParamsControllerConfig {
   lazy val controllerConfigs = config.controllerConfigs
 }
 
+@Singleton
 class  MicroserviceAuditFilter @Inject()(
   app: Application,
   ac: MicroserviceAuditConnector,
@@ -99,10 +105,12 @@ class  MicroserviceAuditFilter @Inject()(
   override protected def appNameConfiguration: Configuration = app.configuration
 }
 
+@Singleton
 class MicroserviceLoggingFilter @Inject()(config: ControllerConfiguration)  extends LoggingFilter with MicroserviceFilterSupport{
   override def controllerNeedsLogging(controllerName: String) = config.paramsForController(controllerName).needsLogging
 }
 
+@Singleton
 class MicroserviceAuthFilter @Inject()(
   apcc: AuthParamsControllerConfiguration,
   mac: MicroserviceAuthConnector,

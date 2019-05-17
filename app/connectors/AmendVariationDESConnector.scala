@@ -29,6 +29,7 @@ import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendVariationDESConnector @Inject()(app: Application) extends DESConnector(app) {
 
   def amend

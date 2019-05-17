@@ -18,7 +18,7 @@ package connectors
 
 import audit.SubscriptionViewEvent
 import exceptions.HttpStatusException
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import metrics.API5
 import models.des.SubscriptionView
 import play.api.http.Status._
@@ -29,6 +29,7 @@ import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class ViewDESConnector  @Inject()(app: Application) extends DESConnector(app) {
 
     def view(amlsRegistrationNumber: String)(

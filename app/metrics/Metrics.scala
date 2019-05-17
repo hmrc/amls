@@ -16,11 +16,11 @@
 
 package metrics
 
-import javax.inject.Inject
-
+import javax.inject.{Inject, Singleton}
 import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
 
+@Singleton
 class Metrics @Inject()(
                        metrics: com.kenshoo.play.metrics.Metrics
                        ) {

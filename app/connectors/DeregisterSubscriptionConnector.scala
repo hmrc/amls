@@ -27,9 +27,11 @@ import play.api.libs.json.{JsSuccess, Json, Writes}
 import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
+import javax.inject.Singleton
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class DeregisterSubscriptionConnector @Inject()(app: Application) extends DESConnector(app) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
