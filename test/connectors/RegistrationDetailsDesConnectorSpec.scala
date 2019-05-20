@@ -46,26 +46,29 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
 
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
-  val connector = new RegistrationDetailsDesConnector(app) {
-    override private[connectors] val baseUrl = "baseUrl"
-    override private[connectors] val env = "ist0"
-    override private[connectors] val token = "token"
-    override private[connectors] val httpPost = mock[HttpPost]
-    override private[connectors] val httpGet = mockHttpGet
-    override private[connectors] val metrics = mock[Metrics]
-    override private[connectors] val audit = MockAudit
-    override private[connectors] val auditConnector = mock[AuditConnector]
-    override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
-  }
+  trait Fixture {
+    val connector = new RegistrationDetailsDesConnector(app) {
+      override private[connectors] val baseUrl = "baseUrl"
+      override private[connectors] val env = "ist0"
+      override private[connectors] val token = "token"
+      override private[connectors] val httpPost = mock[HttpPost]
+      override private[connectors] val httpGet = mockHttpGet
+      override private[connectors] val metrics = mock[Metrics]
+      override private[connectors] val audit = MockAudit
+      override private[connectors] val auditConnector = mock[AuditConnector]
+      override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
+    }
 
-  implicit val headerCarrier = HeaderCarrier()
+    implicit val headerCarrier = HeaderCarrier()
+
+  }
 
   before {
     reset(mockHttpGet)
   }
 
   "The RegistrationDetailsDesConnector" must {
-    "get the registration details" in {
+    "get the registration details" in new Fixture {
 
       val safeId = "SAFEID"
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
