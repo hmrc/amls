@@ -44,9 +44,9 @@ class SubscriptionStatusControllerSpec
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
 
-  val ssConn = new SubscriptionStatusDESConnector(app)
+  lazy val ssConn = new SubscriptionStatusDESConnector(app)
 
-  val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn) {
+  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn) {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 
