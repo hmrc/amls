@@ -23,35 +23,32 @@ import metrics.{Metrics, PayAPI}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.Mode.Mode
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures with PayApiGenerator with IntegrationPatience {
+class PayAPIConnectorSpec extends PlaySpec
+  with OneServerPerSuite
+  with MockitoSugar
+  with ScalaFutures
+  with PayApiGenerator
+  with IntegrationPatience {
 
   trait Fixture {
 
     val mockHttp = mock[HttpGet]
-
     val testPayment = payApiPaymentGen.sample.get
-
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
-    object testConnector extends PayAPIConnector {
+    object testConnector extends PayAPIConnector(app) {
       override private[connectors] val httpGet: HttpGet = mockHttp
       override private[connectors] val paymentUrl = "url"
       override private[connectors] val metrics = mock[Metrics]
-
-      override protected def mode: Mode = Play.current.mode
-
-      override protected def runModeConfiguration: Configuration = Play.current.configuration
     }
 
     val testPaymentId = testPayment._id

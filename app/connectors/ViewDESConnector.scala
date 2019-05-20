@@ -18,18 +18,19 @@ package connectors
 
 import audit.SubscriptionViewEvent
 import exceptions.HttpStatusException
+import javax.inject.{Inject, Singleton}
 import metrics.API5
 import models.des.SubscriptionView
-import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import play.api.{Application, Logger}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
+
 import scala.concurrent.{ExecutionContext, Future}
 
-trait ViewDESConnector extends DESConnector {
-
-  private[connectors] def httpGet: HttpGet
+@Singleton
+class ViewDESConnector  @Inject()(app: Application) extends DESConnector(app) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,

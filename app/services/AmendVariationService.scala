@@ -17,39 +17,33 @@
 package services
 
 import java.io.InputStream
+
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors._
+import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
 import play.api.Logger
-import play.api.libs.json.{JsResult, JsValue, Json}
+import play.api.libs.json.Json
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+class AmendVariationService @Inject()(
+  private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+  private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
+  private[services] val viewDesConnector: ViewDESConnector,
+  private[services] val auditConnector: MicroserviceAuditConnector)
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
-  private[services] def amendVariationDesConnector: AmendVariationDESConnector
-
-  private[services] def viewStatusDesConnector: SubscriptionStatusDESConnector
-
-  private[services] def feeResponseRepository: FeesRepository
-
-  private[services] def viewDesConnector: ViewDESConnector
-
+  private[services] lazy val feeResponseRepository = FeesRepository()
   private[services] val validator: SchemaValidator = new SchemaValidator()
-
-  private[services] def validateResult(request: AmendVariationRequest): JsResult[JsValue]
-
-  private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse): AmendVariationResponse
-
-  private[services] val auditConnector: AuditConnector
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
@@ -128,6 +122,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
     val result = validateResult(request)
 
     if (!result.isSuccess) {
+
+      // $COVERAGE-OFF$
+
       val errors = result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
@@ -141,11 +138,9 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
             "messages" -> messages.map(_.messages)
           )
         }
-
         Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
         auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
       }, valid = identity)
-
     } else {
       Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
@@ -171,9 +166,7 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
         }
       }
     }
-
     update(desRequest, updates)
-
   }
 
   private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
@@ -208,21 +201,13 @@ trait AmendVariationService extends ResponsiblePeopleUpdateHelper with TradingPr
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-}
+   private[services] def validateResult(request: AmendVariationRequest) = {
+     // $COVERAGE-OFF$
+     val stream: InputStream = getClass.getResourceAsStream (
+       if (AmlsConfig.phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
+     val lines = scala.io.Source.fromInputStream(stream).getLines
+     val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
-object AmendVariationService extends AmendVariationService {
-  // $COVERAGE-OFF$
-  override private[services] val feeResponseRepository = FeesRepository()
-  override private[services] val amendVariationDesConnector = DESConnector
-  override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = DESConnector
-  override private[services] val viewDesConnector: ViewDESConnector = DESConnector
-  override private[services] val auditConnector = MicroserviceAuditConnector
-
-  val stream: InputStream = getClass.getResourceAsStream (if (AmlsConfig.phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
-  val lines = scala.io.Source.fromInputStream(stream).getLines
-  val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
-  override private[services] def validateResult(request: AmendVariationRequest) = {
     if(AmlsConfig.phase2Changes) {
       validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
     }
@@ -231,6 +216,6 @@ object AmendVariationService extends AmendVariationService {
     }
   }
 
-  override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
+  private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
     AmendVariationResponse.convert(request, isRenewalWindow, des)
 }

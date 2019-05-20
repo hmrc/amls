@@ -16,6 +16,7 @@
 
 package services
 
+import config.MicroserviceAuditConnector
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des
@@ -27,15 +28,15 @@ import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
-import repositories.FeesRepository
+import repositories.FeesMongoRepository
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.ApiRetryHelper
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
 
 class AmendVariationServiceSpec extends PlaySpec
   with OneAppPerSuite
@@ -59,15 +60,25 @@ class AmendVariationServiceSpec extends PlaySpec
     None
   )
 
-  object TestAmendVariationService extends AmendVariationService {
-    override private[services] val amendVariationDesConnector = mock[AmendVariationDESConnector]
-    override private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector = mock[SubscriptionStatusDESConnector]
-    override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
-    override private[services] val viewDesConnector: ViewDESConnector = mock[ViewDESConnector]
-    override private[services] val auditConnector = mock[AuditConnector]
+  val feeRepo: FeesMongoRepository = mock[FeesMongoRepository]
+
+  class TestAmendVariationService extends AmendVariationService(
+    mock[AmendVariationDESConnector],
+    mock[SubscriptionStatusDESConnector],
+    mock[ViewDESConnector],
+    mock[MicroserviceAuditConnector]
+  ) {
+    override private[services] lazy val feeResponseRepository: FeesMongoRepository = feeRepo
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
-    override private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: models.des.AmendVariationResponse) = feAmendVariationResponse
+    override private[services] def amendVariationResponse(
+      request: AmendVariationRequest,
+      isRenewalWindow: Boolean,
+      des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
+
+
+
+  val avs = new TestAmendVariationService
 
 
   val response = des.AmendVariationResponse(
@@ -126,12 +137,13 @@ class AmendVariationServiceSpec extends PlaySpec
 
   "AmendVariationService" must {
 
+
     when {
       successValidate.isSuccess
     } thenReturn true
 
     when {
-      TestAmendVariationService.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
+      avs.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
     } thenReturn Future.successful(statusResponse)
 
     val premises: Option[AgentBusinessPremises] = Some(mock[AgentBusinessPremises])
@@ -154,22 +166,22 @@ class AmendVariationServiceSpec extends PlaySpec
       } thenReturn tradingPremises
 
       when {
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
-        TestAmendVariationService.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
+        avs.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
+        avs.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when{
-        TestAmendVariationService.feeResponseRepository.insert(any())
+        avs.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 
-      whenReady(TestAmendVariationService.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
+      whenReady(avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
         result =>
           result mustEqual feAmendVariationResponse
       }
     }
 
     "evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
-      TestAmendVariationService.isBusinessReferenceChanged(DesConstants.AmendVariationRequestModel, DesConstants.SubscriptionViewModelForRp) must be(false)
+      avs.isBusinessReferenceChanged(DesConstants.AmendVariationRequestModel, DesConstants.SubscriptionViewModelForRp) must be(false)
     }
 
     "compare and update api6 request with api5 1" in {
@@ -177,7 +189,7 @@ class AmendVariationServiceSpec extends PlaySpec
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       when {
-        TestAmendVariationService.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(viewModel)
 
       val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
@@ -186,7 +198,7 @@ class AmendVariationServiceSpec extends PlaySpec
         )
       )
 
-      whenReady(TestAmendVariationService.compareAndUpdate(
+      whenReady(avs.compareAndUpdate(
         DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
       ) {
         updatedRequest =>

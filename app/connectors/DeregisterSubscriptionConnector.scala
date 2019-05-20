@@ -17,20 +17,22 @@
 package connectors
 
 import audit.DeregisterSubscriptionEvent
-import com.google.inject.ImplementedBy
 import exceptions.HttpStatusException
+import javax.inject.Inject
 import metrics.API10
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse}
-import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-
-import scala.concurrent.{ExecutionContext, Future}
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
+import javax.inject.Singleton
 
-trait DeregisterSubscriptionConnector extends DESConnector {
+import scala.concurrent.{ExecutionContext, Future}
+
+@Singleton
+class DeregisterSubscriptionConnector @Inject()(app: Application) extends DESConnector(app) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
     implicit ec: ExecutionContext,

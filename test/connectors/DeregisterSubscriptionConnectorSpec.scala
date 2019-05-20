@@ -23,20 +23,17 @@ import generators.AmlsReferenceNumberGenerator
 import metrics.{API10, Metrics}
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
-import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import play.api.test.FakeApplication
-import uk.gov.hmrc.audit.HandlerResult
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -52,7 +49,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
 
   trait Fixture {
-    object deregisterSubscriptionConnector extends DeregisterSubscriptionConnector {
+    object deregisterSubscriptionConnector extends DeregisterSubscriptionConnector(app) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -61,7 +58,7 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      override private[connectors] def auditConnector = mock[AuditConnector]
+      override private[connectors] val auditConnector = mock[AuditConnector]
 
     }
     val mockTimer = mock[Timer.Context]

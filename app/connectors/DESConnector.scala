@@ -17,8 +17,9 @@
 package connectors
 
 import config.{AmlsConfig, MicroserviceAuditConnector, WSHttp}
+import javax.inject.{Inject, Singleton}
 import metrics.Metrics
-import play.api.Play
+import play.api.Application
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
@@ -26,27 +27,23 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
-trait DESConnector extends HttpResponseHelper {
+@Singleton
+class DESConnector @Inject()(app: Application)
+  extends HttpResponseHelper {
 
-  private[connectors] def baseUrl: String
+  private[connectors] val baseUrl: String = AmlsConfig.desUrl
+  private[connectors] val token: String = s"Bearer ${AmlsConfig.desToken}"
+  private[connectors] val env: String = AmlsConfig.desEnv
+  private[connectors] val wsHttp:WSHttp = app.injector.instanceOf(classOf[WSHttp])
+  private[connectors] val httpPost: HttpPost = wsHttp
+  private[connectors] val httpPut: HttpPut = wsHttp
+  private[connectors] val httpGet: HttpGet = wsHttp
+  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
+  private[connectors] val requestUrl = "anti-money-laundering/subscription"
+  private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+  private[connectors] val auditConnector: AuditConnector = new MicroserviceAuditConnector(app)
+  private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
 
-  private[connectors] def env: String
-
-  private[connectors] def token: String
-
-  private[connectors] def httpPost: HttpPost
-
-  private[connectors] def httpGet: HttpGet
-
-  private[connectors] def metrics: Metrics
-
-  private[connectors] def audit: Audit
-
-  private[connectors] def auditConnector: AuditConnector
-
-  private[connectors] def fullUrl: String
-
-  val requestUrl = "anti-money-laundering/subscription"
 
   protected def desHeaderCarrier(implicit hc: HeaderCarrier) = {
 
@@ -56,26 +53,4 @@ trait DESConnector extends HttpResponseHelper {
       HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
     )
   }
-}
-
-
-object DESConnector extends SubscribeDESConnector
-  with SubscriptionStatusDESConnector
-  with ViewDESConnector
-  with AmendVariationDESConnector
-  with WithdrawSubscriptionConnector
-  with DeregisterSubscriptionConnector
-  with RegistrationDetailsDesConnector {
-
-  // $COVERAGE-OFF$
-  override private[connectors] lazy val baseUrl: String = AmlsConfig.desUrl
-  override private[connectors] lazy val token: String = s"Bearer ${AmlsConfig.desToken}"
-  override private[connectors] lazy val env: String = AmlsConfig.desEnv
-  override private[connectors] lazy val httpPost: HttpPost = WSHttp
-  override private[connectors] lazy val httpPut: HttpPut = WSHttp
-  override private[connectors] lazy val httpGet: HttpGet = WSHttp
-  override private[connectors] lazy val metrics: Metrics = Play.current.injector.instanceOf[Metrics]
-  override private[connectors] lazy val audit: Audit = new Audit(AuditHelper.appName, MicroserviceAuditConnector)
-  override private[connectors] lazy val fullUrl: String = s"$baseUrl/$requestUrl"
-  override private[connectors] lazy val auditConnector: AuditConnector = MicroserviceAuditConnector
 }

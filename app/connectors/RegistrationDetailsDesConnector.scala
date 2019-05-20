@@ -17,14 +17,17 @@
 package connectors
 
 import config.AmlsConfig
+import javax.inject.Inject
 import models.des.registrationdetails.RegistrationDetails
+import play.api.Application
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait RegistrationDetailsDesConnector extends DESConnector  {
+class RegistrationDetailsDesConnector @Inject()(app: Application) extends DESConnector(app) {
+
     def getRegistrationDetails(safeId: String)(
       implicit
       hc: HeaderCarrier,

@@ -18,10 +18,11 @@ package config
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
+import javax.inject.{Inject, Singleton}
 import play.api.Mode.Mode
-import play.api.{Configuration, Play}
-import uk.gov.hmrc.http.hooks.HttpHooks
+import play.api.{Application, Configuration}
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
@@ -34,72 +35,89 @@ import uk.gov.hmrc.play.microservice.filters.{AuditFilter, LoggingFilter, Micros
 
 trait Hooks extends HttpHooks with HttpAuditing {
   override val hooks = Seq.empty
-  override lazy val auditConnector: AuditConnector = MicroserviceAuditConnector
 }
 
-trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
+@Singleton
+class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
+  extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
       with Hooks with HttpPatch with WSPatch with AppName with RunMode {
 
+  override protected def configuration: Option[Config] = Some(app.configuration.underlying)
+
+  override protected def appNameConfiguration: Configuration = app.configuration
+
+  override protected def mode: Mode = app.mode
+
+  override protected def runModeConfiguration: Configuration = app.configuration
+
+  override protected def actorSystem: ActorSystem = app.actorSystem
+
+  override lazy val auditConnector: AuditConnector = auditConn
 }
 
-object WSHttp extends WSHttp {
-
-  override protected def configuration: Option[Config] = Some(Play.current.configuration.underlying)
-
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-
-  override protected def actorSystem: ActorSystem = Play.current.actorSystem
-}
-
-object MicroserviceAuditConnector extends AuditConnector with RunMode {
+@Singleton
+class MicroserviceAuditConnector @Inject()(app: Application) extends AuditConnector with RunMode {
 
   override lazy val auditingConfig = LoadAuditingConfig("auditing")
 
-  override protected def mode: Mode = Play.current.mode
+  override protected def mode: Mode = app.mode
 
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def runModeConfiguration: Configuration = app.configuration
 }
 
-object MicroserviceAuthConnector extends AuthConnector with ServicesConfig with WSHttp {
+@Singleton
+class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAuditConnector)
+  extends  WSHttp(app, ac) with AuthConnector with ServicesConfig {
 
-  override protected def configuration: Option[Config] = Some(Play.current.configuration.underlying)
+  override protected def configuration: Option[Config] = Some(app.configuration.underlying)
 
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def appNameConfiguration: Configuration = app.configuration
 
-  override protected def mode: Mode = Play.current.mode
+  override protected def mode: Mode = app.mode
 
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def runModeConfiguration: Configuration = app.configuration
 
   override val authBaseUrl = baseUrl("auth")
 
-  override protected def actorSystem: ActorSystem = Play.current.actorSystem
+  override protected def actorSystem: ActorSystem = app.actorSystem
 }
 
-object ControllerConfiguration extends ControllerConfig {
-  override lazy val controllerConfigs: Config = Play.current.configuration.underlying.getConfig("controllers")
+@Singleton
+class ControllerConfiguration @Inject()(app: Application) extends ControllerConfig {
+  override lazy val controllerConfigs: Config = app.configuration.underlying.getConfig("controllers")
 }
 
-object AuthParamsControllerConfiguration extends AuthParamsControllerConfig {
-  lazy val controllerConfigs = ControllerConfiguration.controllerConfigs
+@Singleton
+class AuthParamsControllerConfiguration @Inject()(config: ControllerConfiguration) extends AuthParamsControllerConfig {
+  lazy val controllerConfigs = config.controllerConfigs
 }
 
-object MicroserviceAuditFilter extends AuditFilter with AppName with MicroserviceFilterSupport {
-  override val auditConnector = MicroserviceAuditConnector
-  override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
-
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
+@Singleton
+class  MicroserviceAuditFilter @Inject()(
+  app: Application,
+  ac: MicroserviceAuditConnector,
+  cc: ControllerConfiguration
+) extends AuditFilter
+  with AppName
+  with MicroserviceFilterSupport {
+  override val auditConnector = ac
+  override def controllerNeedsAuditing(controllerName: String) = cc.paramsForController(controllerName).needsAuditing
+  override protected def appNameConfiguration: Configuration = app.configuration
 }
 
-object MicroserviceLoggingFilter extends LoggingFilter with MicroserviceFilterSupport{
-  override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
+@Singleton
+class MicroserviceLoggingFilter @Inject()(config: ControllerConfiguration)  extends LoggingFilter with MicroserviceFilterSupport{
+  override def controllerNeedsLogging(controllerName: String) = config.paramsForController(controllerName).needsLogging
 }
 
-object MicroserviceAuthFilter extends AuthorisationFilter with MicroserviceFilterSupport{
-  override val authParamsConfig = AuthParamsControllerConfiguration
-  override val authConnector = MicroserviceAuthConnector
-  override def controllerNeedsAuth(controllerName: String): Boolean = ControllerConfiguration.paramsForController(controllerName).needsAuth
+@Singleton
+class MicroserviceAuthFilter @Inject()(
+  apcc: AuthParamsControllerConfiguration,
+  mac: MicroserviceAuthConnector,
+  cc: ControllerConfiguration
+) extends AuthorisationFilter
+  with MicroserviceFilterSupport {
+  override val authParamsConfig = apcc
+  override val authConnector = mac
+  override def controllerNeedsAuth(controllerName: String): Boolean = cc.paramsForController(controllerName).needsAuth
 }

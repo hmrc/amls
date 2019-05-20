@@ -16,17 +16,17 @@
 
 package metrics
 
-import javax.inject.Inject
-
+import javax.inject.{Inject, Singleton}
 import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
 
+@Singleton
 class Metrics @Inject()(
                        metrics: com.kenshoo.play.metrics.Metrics
                        ) {
   // $COVERAGE-OFF$
-  val registry: MetricRegistry = metrics.defaultRegistry
-  val timers = Map[APITypes, Timer](
+  private val registry: MetricRegistry = metrics.defaultRegistry
+  private val timers = Map[APITypes, Timer](
     API4 -> registry.timer(s"${API4.key}-timer"),
     API5 -> registry.timer(s"${API5.key}-timer"),
     API6 -> registry.timer(s"${API6.key}-timer"),
@@ -38,7 +38,7 @@ class Metrics @Inject()(
     EnrolmentStoreKnownFacts -> registry.timer(s"${EnrolmentStoreKnownFacts.key}-timer")
   )
 
-  val successCounters = Map[APITypes, Counter](
+  private val successCounters = Map[APITypes, Counter](
     API4 -> registry.counter(s"${API4.key}-success"),
     API5 -> registry.counter(s"${API5.key}-success"),
     API6 -> registry.counter(s"${API6.key}-success"),
@@ -50,7 +50,7 @@ class Metrics @Inject()(
     EnrolmentStoreKnownFacts -> registry.counter(s"${EnrolmentStoreKnownFacts.key}-success")
   )
 
-  val failedCounters = Map[APITypes, Counter](
+  private val failedCounters = Map[APITypes, Counter](
     API4 -> registry.counter(s"${API4.key}-failure"),
     API5 -> registry.counter(s"${API5.key}-failure"),
     API6 -> registry.counter(s"${API6.key}-failure"),
