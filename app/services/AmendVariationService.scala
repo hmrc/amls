@@ -109,13 +109,13 @@ class AmendVariationService @Inject()(
       convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-//  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-//    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
-//      viewResponse.businessActivities.mlrActivitiesAppliedFor)
-//    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
-//
-//    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
-//  }
+  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
+      viewResponse.businessActivities.mlrActivitiesAppliedFor)
+    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
+
+    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+  }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
@@ -126,24 +126,22 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
-      updatedRequest.setChangeIndicator(ChangeIndicators(
-        !viewResponse.businessDetails.equals(desRequest.businessDetails),
-        !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
-        isBusinessReferenceChanged(desRequest, viewResponse),
-        !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
-        !viewResponse.businessActivities.equals(desRequest.businessActivities),
-        !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-
-        compareMsb(viewResponse, desRequest),
-        compareHvd(viewResponse, desRequest),
-        compareAsp(viewResponse, desRequest),
-        compareTcsp(viewResponse, desRequest),
-        compareEab(viewResponse, desRequest),
+      updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
+        businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
+        businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
+        businessReferences = isBusinessReferenceChanged(desRequest, viewResponse),
+        tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
+        businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
+        bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
+        msb = compareMsb(viewResponse, desRequest),
+        hvd = compareHvd(viewResponse, desRequest),
+        asp = compareAsp(viewResponse, desRequest),
         //compareAspOrTcsp(viewResponse, desRequest),
-        !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-
-        !viewResponse.responsiblePersons.equals(desRPs),
-        !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
+        aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
+        tcsp = compareTcsp(viewResponse, desRequest),
+        eab = compareEab(viewResponse, desRequest),
+        responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
+        filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
     }
   }
