@@ -28,11 +28,11 @@ import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.asp.Asp
-import models.fe.businessmatching.BusinessMatching
+import models.fe.businessmatching.{BusinessMatching, EstateAgentBusinessService}
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
 import models.fe.supervision.Supervision
-import models.fe.tcsp.{Tcsp}
+import models.fe.tcsp.Tcsp
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
@@ -159,6 +159,8 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
+      // Only covert where we have the sector!
+
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
         businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
@@ -168,13 +170,24 @@ class AmendVariationService @Inject()(
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
         msb = compareMsb(viewResponse, desRequest),
         hvd = compareHvd(viewResponse, desRequest),
+
+
         asp = compareAsp(viewResponse, desRequest),
-        //compareAspOrTcsp(viewResponse, desRequest),
+
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = compareTcsp(viewResponse, desRequest),
-        eab = compareEab(viewResponse, desRequest),
-        //tcsp = isTcspChanged(desRequest, viewResponse),
-        //eab = isEABChanged(desRequest, viewResponse),
+
+        tcsp = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.TrustAndCompanyServices)) {
+          compareTcsp(viewResponse, desRequest)
+        } else {
+          isTcspChanged(desRequest, viewResponse)
+        },
+
+        eab = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.EstateAgentBusinessService)) {
+          compareEab(viewResponse, desRequest)
+        } else {
+          isEABChanged(desRequest, viewResponse)
+        },
+
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
