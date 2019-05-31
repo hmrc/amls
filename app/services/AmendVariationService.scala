@@ -69,7 +69,7 @@ class AmendVariationService @Inject()(
 
   }
 
-  private def compareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
+  private def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
     val api5BM = BusinessMatching.conv(viewResponse)
     val api5Msb = MoneyServiceBusiness.conv(viewResponse)
     val convApi5Msb = models.des.msb.MoneyServiceBusiness.conv(api5Msb, api5BM, amendVariation = true)
@@ -77,21 +77,21 @@ class AmendVariationService @Inject()(
     !convApi5Msb.equals(desRequest.msb)
   }
 
-  private def compareHvd(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+  private def convAndcompareHvd(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Hvd = Hvd.conv(viewResponse)
     val convApi5Hvd = models.des.hvd.Hvd.conv(api5Hvd)
 
     !convApi5Hvd.equals(desRequest.hvd)
   }
 
-  private def compareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+  private def convAndcompareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Asp = Asp.conv(viewResponse)
     val convApi5Asp = models.des.asp.Asp.conv(api5Asp)
 
     !convApi5Asp.equals(desRequest.asp)
   }
 
-  private def compareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+  private def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Tcsp = Tcsp.conv(viewResponse)
     val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
     val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
@@ -106,7 +106,7 @@ class AmendVariationService @Inject()(
       convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
   }
 
-  private def compareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+  private def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Eab = EstateAgentBusiness.conv(viewResponse)
     val convApi5Eab = Some(models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness())))
     val convApi5EabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
@@ -121,13 +121,13 @@ class AmendVariationService @Inject()(
       convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
-      viewResponse.businessActivities.mlrActivitiesAppliedFor)
-    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
-
-    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
-  }
+//  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+//    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
+//      viewResponse.businessActivities.mlrActivitiesAppliedFor)
+//    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
+//
+//    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+//  }
 
   private[services] def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspAll: ${response.tcspAll}")
@@ -159,8 +159,6 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
-      // Only covert where we have the sector!
-
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
         businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
@@ -168,26 +166,32 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = compareMsb(viewResponse, desRequest),
-        hvd = compareHvd(viewResponse, desRequest),
-
-
-        asp = compareAsp(viewResponse, desRequest),
-
+        msb = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.MoneyServiceBusiness)) {
+          convAndcompareMsb(viewResponse, desRequest)
+        } else {
+          !viewResponse.msb.equals(desRequest.msb)
+        },
+        hvd = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.HighValueDealing)) {
+          convAndcompareHvd(viewResponse, desRequest)
+        } else {
+          viewResponse.hvd.equals(desRequest.hvd)
+        },
+        asp = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.AccountancyServices)) {
+          convAndcompareAsp(viewResponse, desRequest)
+        } else {
+          !viewResponse.asp.equals(desRequest.asp)
+        },
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-
         tcsp = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.TrustAndCompanyServices)) {
-          compareTcsp(viewResponse, desRequest)
+          convAndcompareTcsp(viewResponse, desRequest)
         } else {
           isTcspChanged(desRequest, viewResponse)
         },
-
         eab = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.EstateAgentBusinessService)) {
-          compareEab(viewResponse, desRequest)
+          convAndcompareEab(viewResponse, desRequest)
         } else {
           isEABChanged(desRequest, viewResponse)
         },
-
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
