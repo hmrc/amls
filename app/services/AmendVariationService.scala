@@ -27,15 +27,12 @@ import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
-import models.des.msb
-import models.des.tcsp.TcspTrustCompFormationAgt
 import models.fe.asp.Asp
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
 import models.fe.supervision.Supervision
-import models.fe.tcsp.{Tcsp, TcspTypes}
-import models.fe.tradingpremises.BusinessActivity.HighValueDealing
+import models.fe.tcsp.{Tcsp}
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
