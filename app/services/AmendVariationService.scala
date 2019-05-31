@@ -117,6 +117,27 @@ class AmendVariationService @Inject()(
     !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 
+  private[services] def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspAll: ${response.tcspAll}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspTrustCompFormationAgt: ${response.tcspTrustCompFormationAgt}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
+    !(response.tcspAll.equals(desRequest.tcspAll) &&
+      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
+  }
+
+  private[services] def isEABChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabAll: ${response.eabAll}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabResdEstAgncy: ${response.eabResdEstAgncy}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
+
+    !(response.eabAll.equals(desRequest.eabAll) &&
+      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+  }
+
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
     apiRetryHelper: ApiRetryHelper
@@ -138,8 +159,10 @@ class AmendVariationService @Inject()(
         asp = compareAsp(viewResponse, desRequest),
         //compareAspOrTcsp(viewResponse, desRequest),
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = compareTcsp(viewResponse, desRequest),
-        eab = compareEab(viewResponse, desRequest),
+        //tcsp = compareTcsp(viewResponse, desRequest),
+        //eab = compareEab(viewResponse, desRequest),
+        isTcspChanged(desRequest, viewResponse),
+        isEABChanged(desRequest, viewResponse),
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
