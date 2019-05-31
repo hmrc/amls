@@ -96,6 +96,12 @@ class AmendVariationService @Inject()(
     val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
     val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
 
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - convApi5Tcsp: ${convApi5Tcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - convApi5TcspTypest: ${convApi5TcspTypes}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
+
     !(convApi5Tcsp.equals(desRequest.tcspAll) &&
       convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
   }
@@ -104,6 +110,12 @@ class AmendVariationService @Inject()(
     val api5Eab = EstateAgentBusiness.conv(viewResponse)
     val convApi5Eab = Some(models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness())))
     val convApi5EabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - convApi5Eabl: ${convApi5Eab}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - convApi5EabResdEstAgncy: ${convApi5EabResdEstAgncy}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
 
     !(convApi5Eab.equals(desRequest.eabAll) &&
       convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
@@ -159,10 +171,10 @@ class AmendVariationService @Inject()(
         asp = compareAsp(viewResponse, desRequest),
         //compareAspOrTcsp(viewResponse, desRequest),
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        //tcsp = compareTcsp(viewResponse, desRequest),
-        //eab = compareEab(viewResponse, desRequest),
-        isTcspChanged(desRequest, viewResponse),
-        isEABChanged(desRequest, viewResponse),
+        tcsp = compareTcsp(viewResponse, desRequest),
+        eab = compareEab(viewResponse, desRequest),
+        //tcsp = isTcspChanged(desRequest, viewResponse),
+        //eab = isEABChanged(desRequest, viewResponse),
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
