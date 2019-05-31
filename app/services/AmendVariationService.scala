@@ -33,6 +33,7 @@ import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
+import models.fe.tradingpremises.BusinessActivity
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
@@ -109,7 +110,7 @@ class AmendVariationService @Inject()(
   private def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Eab = EstateAgentBusiness.conv(viewResponse)
     val convApi5Eab = Some(models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness())))
-    val convApi5EabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
+    val convApi5EabResdEstAgncy =  models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - convApi5Eabl: ${convApi5Eab}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
@@ -158,6 +159,7 @@ class AmendVariationService @Inject()(
 
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
+      val api5BM = BusinessMatching.conv(viewResponse)
 
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
@@ -166,28 +168,28 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.MoneyServiceBusiness)) {
+        msb = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.MoneyServiceBusiness)) {
           convAndcompareMsb(viewResponse, desRequest)
         } else {
           !viewResponse.msb.equals(desRequest.msb)
         },
-        hvd = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.HighValueDealing)) {
+        hvd = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.HighValueDealing)) {
           convAndcompareHvd(viewResponse, desRequest)
         } else {
           viewResponse.hvd.equals(desRequest.hvd)
         },
-        asp = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.AccountancyServices)) {
+        asp = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.AccountancyServices)) {
           convAndcompareAsp(viewResponse, desRequest)
         } else {
           !viewResponse.asp.equals(desRequest.asp)
         },
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.TrustAndCompanyServices)) {
+        tcsp = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.TrustAndCompanyServices)) {
           convAndcompareTcsp(viewResponse, desRequest)
         } else {
           isTcspChanged(desRequest, viewResponse)
         },
-        eab = if(viewResponse.businessActivities.mlrActivitiesAppliedFor.contains(models.fe.businessmatching.EstateAgentBusinessService)) {
+        eab = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.EstateAgentBusinessService)) {
           convAndcompareEab(viewResponse, desRequest)
         } else {
           isEABChanged(desRequest, viewResponse)
