@@ -24,6 +24,7 @@ import config.{AmlsConfig, MicroserviceAuditConnector}
 import connectors._
 import javax.inject.Inject
 import models.Fees
+import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
@@ -160,6 +161,26 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
       val api5BM = BusinessMatching.conv(viewResponse)
+      val hasMsb = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
+        case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _)) => true
+        case _ => false
+      }
+      val hasHvd = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
+        case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _)) => true
+        case _ => false
+      }
+      val hasAsp = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
+        case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _)) => true
+        case _ => false
+      }
+      val hasTcsp = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
+        case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _)) => true
+        case _ => false
+      }
+      val hasEab = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
+        case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _)) => true
+        case _ => false
+      }
 
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
@@ -168,28 +189,29 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.MoneyServiceBusiness)) {
+        msb = if(hasMsb) {
           convAndcompareMsb(viewResponse, desRequest)
         } else {
           !viewResponse.msb.equals(desRequest.msb)
         },
-        hvd = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.HighValueDealing)) {
+        hvd = if(hasHvd) {
           convAndcompareHvd(viewResponse, desRequest)
         } else {
           viewResponse.hvd.equals(desRequest.hvd)
         },
-        asp = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.AccountancyServices)) {
+        asp = if(hasAsp) {
           convAndcompareAsp(viewResponse, desRequest)
         } else {
           !viewResponse.asp.equals(desRequest.asp)
         },
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.TrustAndCompanyServices)) {
+
+        tcsp = if(hasTcsp) {
           convAndcompareTcsp(viewResponse, desRequest)
         } else {
           isTcspChanged(desRequest, viewResponse)
         },
-        eab = if(api5BM.activities.businessActivities.contains(models.fe.businessmatching.EstateAgentBusinessService)) {
+        eab = if(hasEab) {
           convAndcompareEab(viewResponse, desRequest)
         } else {
           isEABChanged(desRequest, viewResponse)
