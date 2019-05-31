@@ -93,8 +93,8 @@ class AmendVariationService @Inject()(
 
   private def compareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Tcsp = Tcsp.conv(viewResponse)
-    val convApi5Tcsp = models.des.tcsp.TcspAll.conv(api5Tcsp)
-    val convApi5TcspTypes = models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp)
+    val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
+    val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
 
     !(convApi5Tcsp.equals(desRequest.tcspAll) &&
       convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
@@ -102,7 +102,7 @@ class AmendVariationService @Inject()(
 
   private def compareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Eab = EstateAgentBusiness.conv(viewResponse)
-    val convApi5Eab = models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness()))
+    val convApi5Eab = Some(models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness())))
     val convApi5EabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
 
     !(convApi5Eab.equals(desRequest.eabAll) &&
