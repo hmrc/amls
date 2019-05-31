@@ -93,8 +93,8 @@ class AmendVariationService @Inject()(
 
   private def compareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Tcsp = Tcsp.conv(viewResponse)
-    val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
-    val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+    val convApi5Tcsp = models.des.tcsp.TcspAll.conv(api5Tcsp)
+    val convApi5TcspTypes = models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp)
 
     !(convApi5Tcsp.equals(desRequest.tcspAll) &&
       convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
@@ -109,13 +109,13 @@ class AmendVariationService @Inject()(
       convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
-  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
-      viewResponse.businessActivities.mlrActivitiesAppliedFor)
-    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
-
-    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
-  }
+//  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+//    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
+//      viewResponse.businessActivities.mlrActivitiesAppliedFor)
+//    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
+//
+//    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+//  }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
@@ -139,7 +139,8 @@ class AmendVariationService @Inject()(
         compareAsp(viewResponse, desRequest),
         compareTcsp(viewResponse, desRequest),
         compareEab(viewResponse, desRequest),
-        compareAspOrTcsp(viewResponse, desRequest),
+        //compareAspOrTcsp(viewResponse, desRequest),
+        !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
 
         !viewResponse.responsiblePersons.equals(desRPs),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
