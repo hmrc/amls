@@ -20,6 +20,7 @@ import config.MicroserviceAuditConnector
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des
+import models.des.msb.{CountriesList, MsbAllDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}

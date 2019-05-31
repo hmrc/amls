@@ -26,6 +26,16 @@ import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
+import models.fe.moneyservicebusiness.MoneyServiceBusiness
+import models.des.msb
+import models.des.tcsp.TcspTrustCompFormationAgt
+import models.fe.asp.Asp
+import models.fe.businessmatching.BusinessMatching
+import models.fe.estateagentbusiness.EstateAgentBusiness
+import models.fe.hvd.Hvd
+import models.fe.supervision.Supervision
+import models.fe.tcsp.{Tcsp, TcspTypes}
+import models.fe.tradingpremises.BusinessActivity.HighValueDealing
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
@@ -62,6 +72,54 @@ class AmendVariationService @Inject()(
 
   }
 
+  private def compareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
+    val api5BM = BusinessMatching.conv(viewResponse)
+    val api5Msb = MoneyServiceBusiness.conv(viewResponse)
+    val convApi5Msb = models.des.msb.MoneyServiceBusiness.conv(api5Msb, api5BM, amendVariation = true)
+
+    !convApi5Msb.equals(desRequest.msb)
+  }
+
+  private def compareHvd(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Hvd = Hvd.conv(viewResponse)
+    val convApi5Hvd = models.des.hvd.Hvd.conv(api5Hvd)
+
+    !convApi5Hvd.equals(desRequest.hvd)
+  }
+
+  private def compareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Asp = Asp.conv(viewResponse)
+    val convApi5Asp = models.des.asp.Asp.conv(api5Asp)
+
+    !convApi5Asp.equals(desRequest.asp)
+  }
+
+  private def compareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Tcsp = Tcsp.conv(viewResponse)
+    val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
+    val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+
+    !(convApi5Tcsp.equals(desRequest.tcspAll) &&
+      convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
+  }
+
+  private def compareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Eab = EstateAgentBusiness.conv(viewResponse)
+    val convApi5Eab = models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness()))
+    val convApi5EabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
+
+    !(convApi5Eab.equals(desRequest.eabAll) &&
+      convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+  }
+
+  private def compareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Supervision = Supervision.convertFrom(viewResponse.aspOrTcsp,
+      viewResponse.businessActivities.mlrActivitiesAppliedFor)
+    val convApi5AspOrTcsp = models.des.supervision.AspOrTcsp.conv(api5Supervision)
+
+    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+  }
+
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
     apiRetryHelper: ApiRetryHelper
@@ -69,28 +127,7 @@ class AmendVariationService @Inject()(
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
 
       val updatedRequest = updateRequest(desRequest, viewResponse)
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - viewResponse.msb: ${viewResponse.msb}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - desRequest.msb: ${desRequest.msb}")
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] HVD - viewResponse.hvd: ${viewResponse.hvd}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] HVD - desRequest.hvd: ${desRequest.hvd}")
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] ASP - viewResponse.asp: ${viewResponse.asp}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] ASP - desRequest.asp: ${desRequest.asp}")
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] ASPOrTCSP - viewResponse.aspOrTcsp: ${viewResponse.aspOrTcsp}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] ASPOrTCSP - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - viewResponse.msb: ${viewResponse.msb}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] MSB - desRequest.msb: ${desRequest.msb}")
-
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] RP - viewResponse.responsiblePersons: ${viewResponse.responsiblePersons}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] RP - desRequest.responsiblePersons: ${desRPs}")
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] TP - viewResponse.tradingPremises: ${viewResponse.tradingPremises}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] TP - desRequest.tradingPremises: ${desRequest.tradingPremises}")
 
       updatedRequest.setChangeIndicator(ChangeIndicators(
         !viewResponse.businessDetails.equals(desRequest.businessDetails),
@@ -99,12 +136,14 @@ class AmendVariationService @Inject()(
         !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         !viewResponse.businessActivities.equals(desRequest.businessActivities),
         !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        !viewResponse.msb.equals(desRequest.msb),
-        !viewResponse.hvd.equals(desRequest.hvd),
-        !viewResponse.asp.equals(desRequest.asp),
-        !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        isTcspChanged(desRequest, viewResponse),
-        isEABChanged(desRequest, viewResponse),
+
+        compareMsb(viewResponse, desRequest),
+        compareHvd(viewResponse, desRequest),
+        compareAsp(viewResponse, desRequest),
+        compareTcsp(viewResponse, desRequest),
+        compareEab(viewResponse, desRequest),
+        compareAspOrTcsp(viewResponse, desRequest),
+
         !viewResponse.responsiblePersons.equals(desRPs),
         !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
@@ -178,27 +217,6 @@ class AmendVariationService @Inject()(
     !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
       response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
       response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
-  }
-
-  private[services] def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspAll: ${response.tcspAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
-
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspTrustCompFormationAgt: ${response.tcspTrustCompFormationAgt}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
-    !(response.tcspAll.equals(desRequest.tcspAll) &&
-      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
-  }
-
-  private[services] def isEABChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.tcspAll: ${response.tcspAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
-
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabAll: ${response.eabAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
-
-    !(response.eabAll.equals(desRequest.eabAll) &&
-      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
    private[services] def validateResult(request: AmendVariationRequest) = {
