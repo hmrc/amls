@@ -175,6 +175,41 @@ class AmendVariationService @Inject()(
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
+  private def hasMsbSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _)) => true
+      case _ => false
+    }
+  }
+
+  private def hasHvdSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _)) => true
+      case _ => false
+    }
+  }
+
+  private def hasAspSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _)) => true
+      case _ => false
+    }
+  }
+
+  private def hasTcspSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _)) => true
+      case _ => false
+    }
+  }
+
+  private def hasEabSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _)) => true
+      case _ => false
+    }
+  }
+
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
     implicit hc: HeaderCarrier,
     apiRetryHelper: ApiRetryHelper
@@ -184,26 +219,6 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
       val api5BM = BusinessMatching.conv(viewResponse)
-      val hasMsb = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
-        case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _)) => true
-        case _ => false
-      }
-      val hasHvd = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
-        case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _)) => true
-        case _ => false
-      }
-      val hasAsp = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
-        case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _)) => true
-        case _ => false
-      }
-      val hasTcsp = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
-        case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _)) => true
-        case _ => false
-      }
-      val hasEab = viewResponse.businessActivities.mlrActivitiesAppliedFor match {
-        case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _)) => true
-        case _ => false
-      }
 
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
@@ -212,29 +227,28 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = if(hasMsb) {
+        msb = if(hasMsbSector(viewResponse)) {
           convAndcompareMsb(viewResponse, desRequest)
         } else {
           isMsbChanged(viewResponse, desRequest)
         },
-        hvd = if(hasHvd) {
+        hvd = if(hasHvdSector(viewResponse)) {
           convAndcompareHvd(viewResponse, desRequest)
         } else {
           isHvdChanged(viewResponse, desRequest)
         },
-        asp = if(hasAsp) {
+        asp = if(hasAspSector(viewResponse)) {
           convAndcompareAsp(viewResponse, desRequest)
         } else {
           isAspChanged(viewResponse, desRequest)
         },
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-
-        tcsp = if(hasTcsp) {
+        tcsp = if(hasTcspSector(viewResponse)) {
           convAndcompareTcsp(viewResponse, desRequest)
         } else {
           isTcspChanged(desRequest, viewResponse)
         },
-        eab = if(hasEab) {
+        eab = if(hasEabSector(viewResponse)) {
           convAndcompareEab(viewResponse, desRequest)
         } else {
           isEABChanged(desRequest, viewResponse)
