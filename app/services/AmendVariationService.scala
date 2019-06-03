@@ -76,6 +76,9 @@ class AmendVariationService @Inject()(
     val api5Msb = MoneyServiceBusiness.conv(viewResponse)
     val convApi5Msb = models.des.msb.MoneyServiceBusiness.conv(api5Msb, api5BM, amendVariation = true)
 
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - convApi5Msb: ${convApi5Msb}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.eabAll: ${desRequest.msb}")
+
     !convApi5Msb.equals(desRequest.msb)
   }
 
@@ -84,7 +87,7 @@ class AmendVariationService @Inject()(
     val convApi5Hvd = models.des.hvd.Hvd.conv(api5Hvd)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - convApi5Hvd: ${convApi5Hvd}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.eabAll: ${desRequest.hvd}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.hvd: ${desRequest.hvd}")
 
     !convApi5Hvd.equals(desRequest.hvd)
   }
@@ -195,6 +198,9 @@ class AmendVariationService @Inject()(
         msb = if(hasMsb) {
           convAndcompareMsb(viewResponse, desRequest)
         } else {
+          Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - viewResponse.msb: ${viewResponse.msb}")
+          Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.msb: ${desRequest.msb}")
+
           !viewResponse.msb.equals(desRequest.msb)
         },
         hvd = if(hasHvd) {
