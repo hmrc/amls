@@ -64,12 +64,12 @@ trait AmendVariationHelper {
     }
   }
 
-  def hasFormationAgent(response: SubscriptionView) = {
-    response.tcspTrustCompFormationAgt match {
-      case Some(TcspTrustCompFormationAgt(_, _)) => true
-      case _ => false
-    }
-  }
+  //def hasFormationAgent(response: SubscriptionView) = {
+  //  response.tcspTrustCompFormationAgt match {
+  //    case Some(TcspTrustCompFormationAgt(_, _)) => true
+  //    case _ => false
+  //  }
+  //}
 
   def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
     val api5BM = BusinessMatching.conv(viewResponse)
@@ -102,18 +102,18 @@ trait AmendVariationHelper {
     !convApi5Asp.equals(desRequest.asp)
   }
 
-  def formationAgent(viewResponse: SubscriptionView, api5Tcsp: Option[Tcsp]) = {
-    if(hasFormationAgent(viewResponse)) {
-      Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
-    } else {
-      viewResponse.tcspTrustCompFormationAgt
-    }
-  }
+  //def formationAgent(viewResponse: SubscriptionView, api5Tcsp: Option[Tcsp]) = {
+  //  if(hasFormationAgent(viewResponse)) {
+  //    Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+  //  } else {
+  //    viewResponse.tcspTrustCompFormationAgt
+  //  }
+  //}
 
   def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Tcsp = Tcsp.conv(viewResponse)
     val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
-    val convApi5TcspFormationAgt = formationAgent(viewResponse, api5Tcsp)
+    val convApi5TcspFormationAgt = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp)) //formationAgent(viewResponse, api5Tcsp)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5Tcsp: ${convApi5Tcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
