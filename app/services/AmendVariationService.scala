@@ -26,7 +26,6 @@ import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
-import models.fe.businessmatching.BusinessMatching
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
@@ -73,7 +72,6 @@ class AmendVariationService @Inject()(
 
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
-      val api5BM = BusinessMatching.conv(viewResponse)
 
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
@@ -82,32 +80,12 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = if(hasMsbSector(viewResponse)) {
-          convAndcompareMsb(viewResponse, desRequest)
-        } else {
-          isMsbChanged(viewResponse, desRequest)
-        },
-        hvd = if(hasHvdSector(viewResponse)) {
-          convAndcompareHvd(viewResponse, desRequest)
-        } else {
-          isHvdChanged(viewResponse, desRequest)
-        },
-        asp = if(hasAspSector(viewResponse)) {
-          convAndcompareAsp(viewResponse, desRequest)
-        } else {
-          isAspChanged(viewResponse, desRequest)
-        },
+        msb = msbChangedIndicator(viewResponse, desRequest),
+        hvd = hvdChangedIndicator(viewResponse, desRequest),
+        asp = aspChangedIndicator(viewResponse, desRequest),
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = if(hasTcspSector(viewResponse)) {
-          convAndcompareTcsp(viewResponse, desRequest)
-        } else {
-          isTcspChanged(desRequest, viewResponse)
-        },
-        eab = if(hasEabSector(viewResponse)) {
-          convAndcompareEab(viewResponse, desRequest)
-        } else {
-          isEABChanged(desRequest, viewResponse)
-        },
+        tcsp = tcspChangedIndicator(viewResponse, desRequest),
+        eab = eabChangedIndicator(viewResponse, desRequest),
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))

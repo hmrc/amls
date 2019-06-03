@@ -18,6 +18,7 @@ package utils
 
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
+import models.des.tcsp.TcspTrustCompFormationAgt
 import models.fe.asp.Asp
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
@@ -63,6 +64,13 @@ trait AmendVariationHelper {
     }
   }
 
+  def hasFormationAgent(response: SubscriptionView) = {
+    response.tcspTrustCompFormationAgt match {
+      case Some(TcspTrustCompFormationAgt(_, _)) => true
+      case _ => false
+    }
+  }
+
   def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
     val api5BM = BusinessMatching.conv(viewResponse)
     val api5Msb = MoneyServiceBusiness.conv(viewResponse)
@@ -94,19 +102,27 @@ trait AmendVariationHelper {
     !convApi5Asp.equals(desRequest.asp)
   }
 
+  def formationAgent(viewResponse: SubscriptionView, api5Tcsp: Option[Tcsp]) = {
+    if(hasFormationAgent(viewResponse)) {
+      Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+    } else {
+      viewResponse.tcspTrustCompFormationAgt
+    }
+  }
+
   def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val api5Tcsp = Tcsp.conv(viewResponse)
     val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
-    val convApi5TcspTypes = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+    val convApi5TcspFormationAgt = formationAgent(viewResponse, api5Tcsp)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5Tcsp: ${convApi5Tcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5TcspTypest: ${convApi5TcspTypes}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5TcspFormationAgt: ${convApi5TcspFormationAgt}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
 
     !(convApi5Tcsp.equals(desRequest.tcspAll) &&
-      convApi5TcspTypes.equals(desRequest.tcspTrustCompFormationAgt))
+      convApi5TcspFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
   }
 
   def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
@@ -165,5 +181,45 @@ trait AmendVariationHelper {
 
     !(response.eabAll.equals(desRequest.eabAll) &&
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+  }
+
+  def msbChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasMsbSector(response)) {
+      convAndcompareMsb(response, desRequest)
+    } else {
+      isMsbChanged(response, desRequest)
+    }
+  }
+
+  def hvdChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasHvdSector(response)) {
+      convAndcompareHvd(response, desRequest)
+    } else {
+      isHvdChanged(response, desRequest)
+    }
+  }
+
+  def aspChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasAspSector(response)) {
+      convAndcompareAsp(response, desRequest)
+    } else {
+      isAspChanged(response, desRequest)
+    }
+  }
+
+  def tcspChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasTcspSector(response)) {
+      convAndcompareTcsp(response, desRequest)
+    } else {
+      isTcspChanged(desRequest, response)
+    }
+  }
+
+  def eabChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasEabSector(response)) {
+      convAndcompareEab(response, desRequest)
+    } else {
+      isEABChanged(desRequest, response)
+    }
   }
 }
