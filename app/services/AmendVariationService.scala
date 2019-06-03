@@ -83,6 +83,9 @@ class AmendVariationService @Inject()(
     val api5Hvd = Hvd.conv(viewResponse)
     val convApi5Hvd = models.des.hvd.Hvd.conv(api5Hvd)
 
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - convApi5Hvd: ${convApi5Hvd}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.eabAll: ${desRequest.hvd}")
+
     !convApi5Hvd.equals(desRequest.hvd)
   }
 
@@ -197,6 +200,9 @@ class AmendVariationService @Inject()(
         hvd = if(hasHvd) {
           convAndcompareHvd(viewResponse, desRequest)
         } else {
+          Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - viewResponse.hvd: ${viewResponse.hvd}")
+          Logger.debug(s"[AmendVariationService][compareAndUpdate] isHVDChanged - desRequest.eabAll: ${desRequest.hvd}")
+
           viewResponse.hvd.equals(desRequest.hvd)
         },
         asp = if(hasAsp) {
