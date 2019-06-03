@@ -34,7 +34,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.ApiRetryHelper
+import utils.{AmendVariationHelper, ApiRetryHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,7 +67,8 @@ class AmendVariationServiceSpec extends PlaySpec
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
-    mock[MicroserviceAuditConnector]
+    mock[MicroserviceAuditConnector],
+    mock[AmendVariationHelper]
   ) {
     override private[services] lazy val feeResponseRepository: FeesMongoRepository = feeRepo
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate

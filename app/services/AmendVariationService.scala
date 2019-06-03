@@ -39,11 +39,11 @@ class AmendVariationService @Inject()(
   private[services] val amendVariationDesConnector: AmendVariationDESConnector,
   private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
   private[services] val viewDesConnector: ViewDESConnector,
-  private[services] val auditConnector: MicroserviceAuditConnector)
+  private[services] val auditConnector: MicroserviceAuditConnector,
+  private[services] val amendVariationHelper: AmendVariationHelper)
   extends ResponsiblePeopleUpdateHelper
     with TradingPremisesUpdateHelper
-    with DateOfChangeUpdateHelper
-    with AmendVariationHelper {
+    with DateOfChangeUpdateHelper {
 
   private[services] lazy val feeResponseRepository = FeesRepository()
   private[services] val validator: SchemaValidator = new SchemaValidator()
@@ -80,12 +80,12 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = msbChangedIndicator(viewResponse, desRequest),
-        hvd = hvdChangedIndicator(viewResponse, desRequest),
-        asp = aspChangedIndicator(viewResponse, desRequest),
+        msb = amendVariationHelper.msbChangedIndicator(viewResponse, desRequest),
+        hvd = amendVariationHelper.hvdChangedIndicator(viewResponse, desRequest),
+        asp = amendVariationHelper.aspChangedIndicator(viewResponse, desRequest),
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = tcspChangedIndicator(viewResponse, desRequest),
-        eab = eabChangedIndicator(viewResponse, desRequest),
+        tcsp = amendVariationHelper.tcspChangedIndicator(viewResponse, desRequest),
+        eab = amendVariationHelper.eabChangedIndicator(viewResponse, desRequest),
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))
