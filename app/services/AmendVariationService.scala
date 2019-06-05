@@ -20,7 +20,7 @@ import java.io.InputStream
 
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, MicroserviceAuditConnector}
+import config.MicroserviceAuditConnector
 import connectors._
 import javax.inject.Inject
 import models.Fees
@@ -203,17 +203,11 @@ class AmendVariationService @Inject()(
 
    private[services] def validateResult(request: AmendVariationRequest) = {
      // $COVERAGE-OFF$
-     val stream: InputStream = getClass.getResourceAsStream (
-       if (AmlsConfig.phase2Changes) "/resources/api6_schema_release_3.0.0.json" else "/resources/API6_Request.json")
+     val stream: InputStream = getClass.getResourceAsStream ("/resources/api6_schema_release_3.0.0.json")
      val lines = scala.io.Source.fromInputStream(stream).getLines
      val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
-    if(AmlsConfig.phase2Changes) {
       validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
-    }
-    else {
-      validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
-    }
   }
 
   private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
