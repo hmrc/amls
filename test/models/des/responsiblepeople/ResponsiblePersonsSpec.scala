@@ -21,7 +21,6 @@ import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSecti
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
-import play.api.test.FakeApplication
 
 class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
 
