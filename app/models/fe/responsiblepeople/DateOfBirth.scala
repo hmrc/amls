@@ -16,7 +16,6 @@
 
 package models.fe.responsiblepeople
 
-import config.AmlsConfig
 import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
@@ -43,7 +42,7 @@ object DateOfBirth {
       idDetail.dateOfBirth
     )
 
-    if(!ukDob.isEmpty && AmlsConfig.phase2Changes) {
+    if(!ukDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))
     } else if (!nonUkDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(nonUkDob.getOrElse(""))))
