@@ -32,12 +32,6 @@ object NationalityDetails {
 
       (residenceType.isUKResidence, AmlsConfig.phase2Changes) match {
           
-        case (uk: UKResidence, false) =>
-          NationalityDetails(true,
-            UkResident.convert(uk),
-            Some(residenceType.countryOfBirth),
-            Some(residenceType.nationality)
-          )
         case (uk: UKResidence, true) =>
           NationalityDetails(true,
             UkResident.convert(uk, rp.dateOfBirth),
