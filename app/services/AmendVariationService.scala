@@ -26,6 +26,8 @@ import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
+import models.fe.businessmatching.BusinessMatching
+import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
@@ -73,6 +75,10 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
+      val api5BM = BusinessMatching.conv(viewResponse)
+      val api5Msb = MoneyServiceBusiness.conv(viewResponse)
+      val convApi5Msb = models.des.msb.MoneyServiceBusiness.conv(api5Msb, api5BM, amendVariation = true)
+
       updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
         businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
         businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
@@ -80,12 +86,16 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
+
         msb = amendVariationHelper.msbChangedIndicator(viewResponse, desRequest),
         hvd = amendVariationHelper.hvdChangedIndicator(viewResponse, desRequest),
         asp = amendVariationHelper.aspChangedIndicator(viewResponse, desRequest),
+
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
+
         tcsp = amendVariationHelper.tcspChangedIndicator(viewResponse, desRequest),
         eab = amendVariationHelper.eabChangedIndicator(viewResponse, desRequest),
+
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))

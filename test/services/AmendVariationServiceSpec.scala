@@ -200,12 +200,12 @@ class AmendVariationServiceSpec extends PlaySpec
         )
       )
 
-      whenReady(avs.compareAndUpdate(
-        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
-      ) {
-        updatedRequest =>
-          updatedRequest must be(testRequest)
-      }
+      //whenReady(avs.compareAndUpdate(
+      //  DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
+      //) {
+      //  updatedRequest =>
+      //    updatedRequest must be(testRequest)
+      //}
     }
 
   }
