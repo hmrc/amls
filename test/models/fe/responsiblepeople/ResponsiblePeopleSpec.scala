@@ -26,31 +26,6 @@ import play.api.test.FakeApplication
 
 class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
 
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
-
-  "ResponsiblePeople" must {
-
-    "validate complete json" must {
-
-      "serialise as expected" in {
-        Json.toJson(CompleteResponsiblePeople) must be(CompleteJson)
-      }
-
-      "deserialise as expected" in {
-        CompleteJson.as[ResponsiblePeople] must be(CompleteResponsiblePeople)
-      }
-    }
-
-    "convert des model to frontend model" in {
-      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModel)
-    }
-  }
-}
-
-class ResponsiblePeoplePhase2Spec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
-
   "ResponsiblePeople" must {
 
     "validate complete json" must {
