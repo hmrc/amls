@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import config.AmlsConfig
 import models.fe.responsiblepeople.{NonUKResidence, ResponsiblePeople, UKResidence}
 import play.api.libs.json.Json
 
@@ -30,21 +29,15 @@ object NationalityDetails {
   implicit def convert(rp: ResponsiblePeople) : Option[NationalityDetails] = {
     rp.personResidenceType map { residenceType =>
 
-      (residenceType.isUKResidence, AmlsConfig.phase2Changes) match {
+      residenceType.isUKResidence match {
           
-        case (uk: UKResidence, false) =>
-          NationalityDetails(true,
-            UkResident.convert(uk),
-            Some(residenceType.countryOfBirth),
-            Some(residenceType.nationality)
-          )
-        case (uk: UKResidence, true) =>
+        case uk: UKResidence =>
           NationalityDetails(true,
             UkResident.convert(uk, rp.dateOfBirth),
             Some(residenceType.countryOfBirth),
             Some(residenceType.nationality)
           )
-        case (NonUKResidence, _) =>
+        case NonUKResidence =>
           NationalityDetails(false,
             NonUkResident.convert(rp),
             Some(residenceType.countryOfBirth),

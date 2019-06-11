@@ -20,7 +20,7 @@ import java.io.InputStream
 
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AmlsConfig, AppConfig, MicroserviceAuditConnector}
+import config.{AppConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
 import javax.inject.Inject
@@ -51,16 +51,11 @@ class SubscriptionService @Inject()(
 
     // $COVERAGE-OFF$
 
-    val stream: InputStream = getClass.getResourceAsStream(if (AmlsConfig.phase2Changes) "/resources/api4_schema_release_3.0.0.json" else "/resources/API4_Request.json")
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_3.0.0.json")
     val lines = scala.io.Source.fromInputStream(stream).getLines
     val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
-    if(AmlsConfig.phase2Changes) {
-      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
-    }
-    else {
-      SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim.drop(1))).get, Json.toJson(request))
-    }
+    SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
   }
 
 

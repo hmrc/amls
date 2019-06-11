@@ -21,42 +21,8 @@ import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSecti
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
-import play.api.test.FakeApplication
 
 class ResponsiblePersonsSpec extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
-
-  "ResponsiblePersons" should {
-
-    "Serialise to json successfully" in {
-      ResponsiblePersons.jsonWrites.writes(RPValues.model) must be(RPValues.jsonExpectedFromWrite)
-    }
-
-    "Deserialise from json successfully" in {
-      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWrite) must be (JsSuccess(RPValues.model))
-    }
-
-    "convert FE model to DES model" in {
-
-      val respPeople = ResponsiblePeopleSection.model.get.head.copy(
-        dateOfBirth = Some(DateOfBirth(LocalDate.parse("1990-02-24"))),
-        positions = Some(Positions(Set(RPSoleProprietor, NominatedOfficer), None))
-      )
-
-      val responsiblePerson = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
-        respPeople,
-        BusinessMatchingSection.emptyModel
-      )
-
-      responsiblePerson must be (RPValues.model)
-    }
-  }
-}
-
-class ResponsiblePersonsPhase2Spec extends PlaySpec with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
   "ResponsiblePersonsPhase2" should {
 
