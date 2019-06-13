@@ -16,10 +16,11 @@
 
 package repositories
 
+import com.google.inject.{Inject, Provider, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
-import play.modules.reactivemongo.MongoDbConnection
+import play.modules.reactivemongo.{MongoDbConnection, ReactiveMongoComponent}
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
@@ -32,7 +33,14 @@ import scala.concurrent.Future
 
 trait FeesRepository extends Repository[Fees, BSONObjectID] {
   def insert(feeResponse: Fees):Future[Boolean]
-  def findLatestByAmlsReference(amlsReferenceNumber: String):Future[Option[Fees]]
+  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]]
+}
+
+@Singleton
+class FeesRepositoryProvider @Inject() (component: ReactiveMongoComponent) extends Provider[FeesRepository] {
+
+  override def get(): FeesRepository =
+    new FeesMongoRepository()(component.mongoConnector.db)
 }
 
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
@@ -40,8 +48,9 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
-      Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
-          options = BSONDocument("expireAfterSeconds" -> 31536000)))
+
+    Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
+      options = BSONDocument("expireAfterSeconds" -> 31536000)))
   }
 
   override def insert(feeResponse: Fees): Future[Boolean] = {
@@ -62,3 +71,4 @@ object FeesRepository extends MongoDbConnection {
 
   def apply(): FeesMongoRepository = feesRepository
 }
+
