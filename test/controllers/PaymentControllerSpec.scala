@@ -32,6 +32,7 @@ import services.PaymentService
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.{AuthAction, SuccessfulAuthAction}
 
 class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
 
@@ -46,8 +47,11 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val safeId = amlsRefNoGen.sample.get
 
+    val authAction: AuthAction = SuccessfulAuthAction
+
     val testController = new PaymentController(
-      paymentService = testPaymentService
+      paymentService = testPaymentService,
+      authAction = authAction
     )
 
     val accountType = "org"
