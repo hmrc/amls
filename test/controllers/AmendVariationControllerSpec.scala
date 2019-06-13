@@ -53,7 +53,7 @@ class AmendVariationControllerSpec extends PlaySpec
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   implicit val avs: AmendVariationService = mock[AmendVariationService]
-  implicit val authAction: AuthAction = mock[AuthAction]
+  implicit val authAction: AuthAction = SuccessfulAuthAction
 
   val Controller = new AmendVariationController
 
