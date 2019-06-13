@@ -23,7 +23,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.{ApiRetryHelper, ControllerHelper}
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -31,10 +31,11 @@ import scala.concurrent.Future
 @Singleton
 class WithdrawSubscriptionController @Inject()(
                                                 connector: WithdrawSubscriptionConnector,
-                                                implicit val apiRetryHelper: ApiRetryHelper
+                                                implicit val apiRetryHelper: ApiRetryHelper,
+                                                authAction: AuthAction
                                               ) extends BaseController with ControllerHelper {
 
-  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(parse.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
