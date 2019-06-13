@@ -28,7 +28,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{IterateeHelpers}
 
 import scala.concurrent.Future
 

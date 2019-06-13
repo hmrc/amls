@@ -48,6 +48,7 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._
+
     Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
       options = BSONDocument("expireAfterSeconds" -> 31536000)))
   }
