@@ -31,7 +31,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeApplication, FakeRequest}
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -44,7 +44,8 @@ class SubscriptionViewControllerSpec
     with OneAppPerSuite {
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector])
+  implicit val authAction: AuthAction = SuccessfulAuthAction
+  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector], apiRetryHelper, authAction)
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
