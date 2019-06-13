@@ -16,19 +16,21 @@
 
 package controllers
 
+import javax.inject.{Inject, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import repositories.FeesRepository
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
-trait FeeResponseController extends BaseController {
-
-  private[controllers] def repository: FeesRepository
+@Singleton
+class FeeResponseController @Inject()(
+                                       implicit val repository: FeesRepository
+                                     ) extends BaseController {
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     Action.async {
@@ -48,10 +50,4 @@ trait FeeResponseController extends BaseController {
       }
 
     }
-
-}
-
-object FeeResponseController extends FeeResponseController {
-  // $COVERAGE-OFF$
-  override private[controllers] val repository: FeesRepository = FeesRepository()
 }
