@@ -31,7 +31,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
 class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
 
@@ -39,8 +39,9 @@ class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with 
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   implicit val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
+  implicit val authAction: AuthAction = SuccessfulAuthAction
 
-  val controller = new RegistrationDetailsController(rddc, apiRetryHelper){  }
+  val controller = new RegistrationDetailsController(rddc, apiRetryHelper, authAction){  }
 
   "The RegistrationDetailsController" must {
     "use the Des connector to retrieve registration details" in {

@@ -28,7 +28,7 @@ package controllers
  import play.api.mvc.Action
  import services.SubscriptionService
  import uk.gov.hmrc.play.microservice.controller.BaseController
- import utils.ApiRetryHelper
+ import utils.{ApiRetryHelper, AuthAction}
 
  import scala.concurrent.Future
  import scala.util.matching.Regex
@@ -36,7 +36,8 @@ package controllers
 @Singleton
 class SubscriptionController @Inject()(
                                         val subscriptionService: SubscriptionService,
-                                        implicit val apiRetryHelper: ApiRetryHelper
+                                        implicit val apiRetryHelper: ApiRetryHelper,
+                                        authAction: AuthAction
                                       ) extends BaseController {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
@@ -59,7 +60,7 @@ class SubscriptionController @Inject()(
     )
 
   def subscribe(accountType: String, ref: String, safeId: String): Action[JsValue] =
-    Action.async(parse.json) {
+    authAction.async(parse.json) {
       implicit request =>
         Logger.debug(s"$prefix - SafeId: $safeId")
         safeIdRegex.findFirstIn(safeId) match {

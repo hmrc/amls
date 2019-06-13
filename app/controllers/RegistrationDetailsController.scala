@@ -22,19 +22,20 @@ import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class RegistrationDetailsController @Inject()(
   connector: RegistrationDetailsDesConnector,
-  implicit val apiRetryHelper: ApiRetryHelper
+  implicit val apiRetryHelper: ApiRetryHelper,
+  authAction: AuthAction
 ) extends BaseController {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
 
-  def get(accountType: String, ref: String, safeId: String) = Action.async {
+  def get(accountType: String, ref: String, safeId: String) = authAction.async {
     implicit request =>
       registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
         Ok(Json.toJson(RegistrationDetails.convert(details)))
