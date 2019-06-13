@@ -158,11 +158,12 @@ class SubscriptionService @Inject()(
 
   private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
                            (implicit hc: HeaderCarrier, ec: ExecutionContext) = {
-    (if (config.enrolmentStoreToggle) {
+    val blah = (if (config.enrolmentStoreToggle) {
       enrolmentStoreConnector.addKnownFacts(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
     } else {
       ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
-    }) map (_ => response) recover {
+    }) map (_ => response)
+    blah recover {
       case ex => Logger.warn("[AddKnownFactsFailed]", ex)
         response
     }
