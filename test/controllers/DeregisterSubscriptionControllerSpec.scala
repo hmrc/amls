@@ -28,7 +28,7 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers.{contentAsJson, _}
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -39,12 +39,14 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec
   with OneAppPerSuite
 {
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  val authAction: AuthAction = SuccessfulAuthAction
 
   trait Fixture {
     lazy val mockDeregConnector: DeregisterSubscriptionConnector = mock[DeregisterSubscriptionConnector]
     val deregisterSubscriptionController = new DeregisterSubscriptionController(
       deregisterSubscriptionConnector = mockDeregConnector,
-      apiRetryHelper = mock[ApiRetryHelper]
+      apiRetryHelper = mock[ApiRetryHelper],
+      authAction = authAction
     )
   }
 
