@@ -28,7 +28,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import utils.IterateeHelpers
+import utils.{IterateeHelpers}
 
 import scala.concurrent.Future
 
@@ -39,10 +39,8 @@ class FeesControllerSpec extends PlaySpec
   with IterateeHelpers
   with AmlsReferenceNumberGenerator{
 
-
-  object TestFeeResponseController extends FeeResponseController {
-    override private[controllers] val repository: FeesRepository = mock[FeesRepository]
-  }
+  implicit val repository: FeesRepository = mock[FeesRepository]
+  val TestFeeResponseController = new FeeResponseController()
 
   "Fee Response Controller" when {
 
