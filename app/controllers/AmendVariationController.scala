@@ -27,14 +27,15 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.Future
 
 @Singleton
 class AmendVariationController @Inject()(
   implicit val apiRetryHelper: ApiRetryHelper,
-  avs: AmendVariationService
+  avs: AmendVariationService,
+  authAction: AuthAction
 ) extends BaseController {
 
   private[controllers] def service: AmendVariationService = avs
@@ -92,7 +93,7 @@ class AmendVariationController @Inject()(
   }
 
   def amend(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(parse.json) {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -100,7 +101,7 @@ class AmendVariationController @Inject()(
     }
 
   def variation(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(parse.json) {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -108,7 +109,7 @@ class AmendVariationController @Inject()(
     }
 
   def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(parse.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewal]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -116,7 +117,7 @@ class AmendVariationController @Inject()(
     }
 
   def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(parse.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewalAmendment]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")

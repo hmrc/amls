@@ -27,7 +27,8 @@ private object AppDependencies {
     "com.eclipsesource" %% "play-json-schema-validator" % "0.8.8",
     "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10",
-    "uk.gov.hmrc" %% "auth-client" % authVersion
+    "uk.gov.hmrc" %% "auth-client" % authVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % "4.13.0"
   )
 
   trait TestDependencies {

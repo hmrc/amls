@@ -33,9 +33,10 @@
 package utils
 
 import javax.inject.Inject
+import play.api.{Logger}
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions, ConfidenceLevel, AuthConnector}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.http.{HeaderCarrier}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,15 +47,21 @@ class DefaultAuthAction @Inject()(
 
   override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers)
+
+    Logger.debug(s"DefaultAuthAction calling authorised(ConfidenceLevel.L50)")
 
     authorised(ConfidenceLevel.L50) {
+      Logger.debug(s"DefaultAuthAction calling authorised(ConfidenceLevel.L50) - success")
       Future.successful(None)
     }.recover[Option[Result]] {
-      case _: AuthorisationException =>
+      case e : AuthorisationException => {
+        Logger.debug(s"DefaultAuthAction calling authorised(ConfidenceLevel.L50 - fail: " + e)
         Some(Results.Unauthorized)
+      }
     }
   }
 }
 
+@com.google.inject.ImplementedBy(classOf[DefaultAuthAction])
 trait AuthAction extends ActionFilter[Request] with ActionBuilder[Request]

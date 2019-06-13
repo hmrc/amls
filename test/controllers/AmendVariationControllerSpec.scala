@@ -39,7 +39,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -53,10 +53,9 @@ class AmendVariationControllerSpec extends PlaySpec
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   implicit val avs: AmendVariationService = mock[AmendVariationService]
+  implicit val authAction: AuthAction = mock[AuthAction]
 
-  val Controller = new AmendVariationController{
-
-  }
+  val Controller = new AmendVariationController
 
   implicit val hc = HeaderCarrier()
 
