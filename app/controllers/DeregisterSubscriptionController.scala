@@ -20,7 +20,6 @@ import connectors.DeregisterSubscriptionConnector
 import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
-import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 

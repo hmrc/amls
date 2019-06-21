@@ -19,9 +19,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 import connectors.WithdrawSubscriptionConnector
 import models.des.WithdrawSubscriptionRequest
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
-import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 

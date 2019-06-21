@@ -24,7 +24,7 @@ import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.{Action, Request}
+import play.api.mvc.Request
 import services.AmendVariationService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}

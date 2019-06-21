@@ -20,7 +20,6 @@ import connectors.RegistrationDetailsDesConnector
 import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
-import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}
 

@@ -22,7 +22,6 @@ import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.Action
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}
 
