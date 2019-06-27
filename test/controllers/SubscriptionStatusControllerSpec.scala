@@ -29,7 +29,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -45,8 +45,9 @@ class SubscriptionStatusControllerSpec
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
 
   lazy val ssConn = new SubscriptionStatusDESConnector(app)
+  implicit val authAction: AuthAction = SuccessfulAuthAction
 
-  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn) {
+  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, apiRetryHelper, authAction) {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 

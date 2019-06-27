@@ -20,20 +20,21 @@ import javax.inject.{Inject, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.Action
 import repositories.FeesRepository
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import scala.concurrent.ExecutionContext.Implicits.global
+import utils.AuthAction
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class FeeResponseController @Inject()(
-                                       implicit val repository: FeesRepository
+                                       implicit val repository: FeesRepository,
+                                       authAction: AuthAction
                                      ) extends BaseController {
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async {
+    authAction.async {
       implicit request => {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
           case Some(feeResponse) => {

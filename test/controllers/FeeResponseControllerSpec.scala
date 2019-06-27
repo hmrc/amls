@@ -28,11 +28,11 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import utils.{IterateeHelpers}
+import utils.{AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class FeesControllerSpec extends PlaySpec
+class FeeResponseControllerSpec extends PlaySpec
   with MockitoSugar
   with ScalaFutures
   with IntegrationPatience
@@ -40,6 +40,7 @@ class FeesControllerSpec extends PlaySpec
   with AmlsReferenceNumberGenerator{
 
   implicit val repository: FeesRepository = mock[FeesRepository]
+  implicit val authAction: AuthAction = SuccessfulAuthAction
   val TestFeeResponseController = new FeeResponseController()
 
   "Fee Response Controller" when {

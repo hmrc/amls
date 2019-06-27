@@ -36,7 +36,7 @@ import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -49,9 +49,12 @@ class SubscriptionControllerSpec
     with OneAppPerSuite
     with AmlsReferenceNumberGenerator {
 
+  implicit val authAction: AuthAction = SuccessfulAuthAction
+
   val controller = new SubscriptionController (
     subscriptionService = mock[SubscriptionService],
-    apiRetryHelper = mock[ApiRetryHelper]
+    apiRetryHelper = mock[ApiRetryHelper],
+    authAction = authAction
   )
 
   "SubscriptionController" must {
