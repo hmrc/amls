@@ -43,7 +43,8 @@ class BusinessActivitiesSpec extends PlaySpec {
           "tcsp" -> false,
           "eab" -> false,
           "bpsp" -> false,
-          "tditpsp" ->false
+          "tditpsp" ->false,
+          "amp" -> false
         ),
 	  "tcspServicesOffered" -> Json.obj("nomineeShareholders" -> true,
           "trusteeProvider" -> false,
@@ -108,7 +109,8 @@ class BusinessActivitiesSpec extends PlaySpec {
           "tcsp" -> true,
           "eab" -> false,
           "bpsp" -> false,
-          "tditpsp" ->true
+          "tditpsp" ->true,
+          "amp" -> false
         ),
         "hvdGoodsSold" -> Json.obj("alcohol" -> true,
           "tobacco" ->true,

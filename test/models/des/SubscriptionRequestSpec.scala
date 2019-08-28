@@ -21,13 +21,12 @@ import models.des.aboutthebusiness.Address
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
 import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
-import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import models.fe.businessactivities.ExpectedBusinessTurnover
+import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json._
-import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
 class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
@@ -245,7 +244,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       "tcsp": true,
       "eab": true,
       "bpsp": false,
-      "tditpsp": false
+      "tditpsp": false,
+      "amp": false
     },
     "aspServicesOffered": {
       "accountant": true,

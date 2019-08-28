@@ -88,7 +88,8 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
       "tcsp": false,
       "eab": true,
       "bpsp": false,
-      "tditpsp": false
+      "tditpsp": false,
+      "amp": false
     },
     "eabServicesCarriedOut": {
       "residentialEstateAgency": true,

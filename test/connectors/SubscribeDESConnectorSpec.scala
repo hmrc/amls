@@ -276,7 +276,8 @@ class SubscribeDESConnectorSpec extends PlaySpec
       "tcsp": true,
       "eab": true,
       "bpsp": false,
-      "tditpsp": false
+      "tditpsp": false,
+      "amp": false
     },
     "aspServicesOffered": {
       "accountant": true,

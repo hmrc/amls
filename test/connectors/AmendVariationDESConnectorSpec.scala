@@ -310,7 +310,8 @@ class AmendVariationDESConnectorSpec extends PlaySpec
                "tcsp":true,
                "eab":true,
                "bpsp":true,
-               "tditpsp":true
+               "tditpsp":true,
+               "amp":false
             },
             "msbServicesCarriedOut":{
                "mt":true,
