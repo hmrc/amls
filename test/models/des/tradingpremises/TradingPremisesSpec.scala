@@ -23,7 +23,7 @@ import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 

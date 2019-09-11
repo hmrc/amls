@@ -16,11 +16,12 @@
 
 package controllers
 
+import config.ApplicationConfig
 import connectors.DeregisterSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.DeregisterSubscriptionResponse
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -38,7 +39,8 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec
   with AmlsReferenceNumberGenerator
   with OneAppPerSuite
 {
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  val mockAppConfig = mock[ApplicationConfig]
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
   val authAction: AuthAction = SuccessfulAuthAction
 
   trait Fixture {

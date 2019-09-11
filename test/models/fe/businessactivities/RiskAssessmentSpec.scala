@@ -17,7 +17,7 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.{FormalRiskAssessmentDetails, RiskAssessmentFormat}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 

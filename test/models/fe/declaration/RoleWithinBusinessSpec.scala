@@ -17,7 +17,7 @@
 package models.fe.declaration
 
 import models.des.aboutyou.{RoleForTheBusiness, RolesWithinBusiness, IndividualDetails, AboutYouRelease7}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsPath, JsError, JsSuccess, Json}

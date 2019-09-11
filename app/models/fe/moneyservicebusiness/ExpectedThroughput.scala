@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import config.AmlsConfig
+
 import play.api.data.validation.ValidationError
 import models.des.msb.{MsbAllDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
 import play.api.libs.json._

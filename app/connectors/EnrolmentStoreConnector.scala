@@ -17,7 +17,7 @@
 package connectors
 
 import audit.KnownFactsEvent
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.{ApplicationConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
@@ -32,12 +32,10 @@ import utils._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EnrolmentStoreConnector @Inject()(
-  val http: CorePut,
-  val metrics: Metrics,
-  mac: MicroserviceAuditConnector,
-  config: AppConfig
-) extends HttpResponseHelper {
+class EnrolmentStoreConnector @Inject()(val http: CorePut,
+                                        val metrics: Metrics,
+                                        mac: MicroserviceAuditConnector,
+                                        config: ApplicationConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,

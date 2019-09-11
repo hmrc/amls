@@ -16,7 +16,7 @@
 
 package models.fe.declaration
 
-import config.AmlsConfig
+
 import models.des.aboutyou.AboutYouRelease7
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads

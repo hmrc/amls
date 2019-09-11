@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import config.AmlsConfig
+
 import models.des.StatusProvider
 import models.fe
 import models.fe.responsiblepeople.TimeAtAddress._

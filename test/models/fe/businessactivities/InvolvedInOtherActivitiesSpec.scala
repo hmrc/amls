@@ -18,7 +18,7 @@ package models.fe.businessactivities
 
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover, OtherBusinessActivities}
 import models.fe.businessactivities.ExpectedAMLSTurnover.{Sixth, Third}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}

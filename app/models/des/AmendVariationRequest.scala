@@ -18,7 +18,7 @@ package models.des
 
 import java.net.Authenticator.RequestorType
 
-import config.AmlsConfig
+
 import models.des.aboutthebusiness._
 import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 import models.des.asp.Asp

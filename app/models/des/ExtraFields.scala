@@ -16,7 +16,7 @@
 
 package models.des
 
-import config.AmlsConfig
+
 import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 import play.api.libs.json._
 

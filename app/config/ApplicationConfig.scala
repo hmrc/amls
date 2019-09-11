@@ -16,11 +16,13 @@
 
 package config
 
-import play.api.{Configuration, Play}
+import com.google.inject.{Inject, Singleton}
+import play.api.{Configuration, Environment, Play}
 import play.api.Mode.Mode
 import uk.gov.hmrc.play.config.ServicesConfig
 
-object AmlsConfig extends ServicesConfig {
+@Singleton
+class ApplicationConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
 
   private def loadConfig(key: String) =
     getConfString(key, throw new Exception(s"Config missing key: $key"))
@@ -28,6 +30,7 @@ object AmlsConfig extends ServicesConfig {
   lazy val desUrl = baseUrl("des")
   lazy val desToken = loadConfig("des.auth-token")
   lazy val desEnv = loadConfig("des.env")
+  lazy val ggUrl = baseUrl("government-gateway-admin")
 
   // exponential back off configuration
   def maxAttempts = getConfInt("exponential-backoff.max-attempts", defInt = 10)
@@ -36,17 +39,8 @@ object AmlsConfig extends ServicesConfig {
 
   lazy val payAPIUrl = baseUrl("pay-api")
 
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
-
-class AppConfig extends ServicesConfig {
+  override protected def mode: Mode = environment.mode
 
   lazy val enrolmentStoreUrl = s"${baseUrl("tax-enrolments")}"
   def enrolmentStoreToggle = getConfBool("feature-toggle.enrolment-store", defBool = false)
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

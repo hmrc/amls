@@ -17,6 +17,7 @@
 package connectors
 
 import audit.DeregisterSubscriptionEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.API10
@@ -24,7 +25,7 @@ import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
+import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 import javax.inject.Singleton
@@ -32,7 +33,7 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeregisterSubscriptionConnector @Inject()(app: Application) extends DESConnector(app) {
+class DeregisterSubscriptionConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig) extends DESConnector(app, rmc, env, appConfig) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
     implicit ec: ExecutionContext,

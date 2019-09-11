@@ -17,7 +17,7 @@
 package connectors
 
 import audit.KnownFactsEvent
-import config.{MicroserviceAuditConnector, WSHttp}
+import config.{ApplicationConfig, MicroserviceAuditConnector, WSHttp}
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
@@ -25,7 +25,7 @@ import models.KnownFactsForService
 import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
-import play.api.{Application, Configuration, Logger}
+import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -34,18 +34,16 @@ import utils._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class GovernmentGatewayAdminConnector @Inject()(app: Application) extends ServicesConfig with HttpResponseHelper {
+class GovernmentGatewayAdminConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig) extends ServicesConfig with HttpResponseHelper {
 
-  private[connectors] val serviceURL = baseUrl("government-gateway-admin")
+  private[connectors] val serviceURL = applicationConfig.ggUrl
   private[connectors] val wsHttp: WSHttp = app.injector.instanceOf(classOf[WSHttp])
   private[connectors] val mac: MicroserviceAuditConnector = app.injector.instanceOf(classOf[MicroserviceAuditConnector])
 
   private[connectors] val http: CorePost with CoreGet with CorePut = wsHttp
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, mac)
-  protected def mode: Mode = app.mode
-
-  override protected def runModeConfiguration: Configuration = app.configuration
+  protected def mode: Mode = environment.mode
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 

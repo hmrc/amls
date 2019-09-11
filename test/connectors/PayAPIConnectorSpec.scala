@@ -17,6 +17,7 @@
 package connectors
 
 import com.codahale.metrics.Timer
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
 import metrics.{Metrics, PayAPI}
@@ -25,6 +26,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.{Configuration, Environment}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -45,7 +47,12 @@ class PayAPIConnectorSpec extends PlaySpec
     val testPayment = payApiPaymentGen.sample.get
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
-    object testConnector extends PayAPIConnector(app) {
+    val mockRunModeConf = mock[Configuration]
+    val mockEnvironment = mock[Environment]
+    val mockAppConfig = mock[ApplicationConfig]
+
+
+    object testConnector extends PayAPIConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
       override private[connectors] val httpGet: HttpGet = mockHttp
       override private[connectors] val paymentUrl = "url"
       override private[connectors] val metrics = mock[Metrics]

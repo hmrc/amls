@@ -19,7 +19,7 @@ package models.fe
 import models.des._
 import models.des.aboutyou.AboutYouRelease7
 import models.des.tradingpremises._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication;
 

@@ -16,7 +16,7 @@
 
 package models.des.tradingpremises
 
-import config.AmlsConfig
+
 import models.des.RequestType
 import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._

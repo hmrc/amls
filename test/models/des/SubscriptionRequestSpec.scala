@@ -24,7 +24,7 @@ import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.businessactivities.ExpectedBusinessTurnover
 import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json._
 import utils.AckRefGenerator

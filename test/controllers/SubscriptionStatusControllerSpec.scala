@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -26,6 +27,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.{Configuration, Environment}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -44,7 +46,11 @@ class SubscriptionStatusControllerSpec
 
   implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
 
-  lazy val ssConn = new SubscriptionStatusDESConnector(app)
+  val mockRunModeConf = mock[Configuration]
+  val mockEnvironment = mock[Environment]
+  val mockAppConfig = mock[ApplicationConfig]
+
+  lazy val ssConn = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig)
   implicit val authAction: AuthAction = SuccessfulAuthAction
 
   lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, apiRetryHelper, authAction) {

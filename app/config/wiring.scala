@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
 import play.api.Mode.Mode
-import play.api.{Application, Configuration}
+import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.play.audit.http.HttpAuditing
@@ -38,7 +38,7 @@ trait Hooks extends HttpHooks with HttpAuditing {
 }
 
 @Singleton
-class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
+class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector, override val runModeConfiguration: Configuration, environment: Environment)
   extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
       with Hooks with HttpPatch with WSPatch with AppName with RunMode {
 
@@ -46,9 +46,7 @@ class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
 
   override protected def appNameConfiguration: Configuration = app.configuration
 
-  override protected def mode: Mode = app.mode
-
-  override protected def runModeConfiguration: Configuration = app.configuration
+  override protected def mode: Mode = environment.mode
 
   override protected def actorSystem: ActorSystem = app.actorSystem
 
@@ -56,26 +54,22 @@ class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector)
 }
 
 @Singleton
-class MicroserviceAuditConnector @Inject()(app: Application) extends AuditConnector with RunMode {
+class MicroserviceAuditConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment) extends AuditConnector with RunMode {
 
   override lazy val auditingConfig = LoadAuditingConfig("auditing")
 
-  override protected def mode: Mode = app.mode
-
-  override protected def runModeConfiguration: Configuration = app.configuration
+  override protected def mode: Mode = environment.mode
 }
 
 @Singleton
-class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAuditConnector)
-  extends  WSHttp(app, ac) with AuthConnector with ServicesConfig {
+class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAuditConnector, override val runModeConfiguration: Configuration, environment: Environment)
+  extends  WSHttp(app, ac, runModeConfiguration, environment) with AuthConnector with ServicesConfig {
 
   override protected def configuration: Option[Config] = Some(app.configuration.underlying)
 
   override protected def appNameConfiguration: Configuration = app.configuration
 
-  override protected def mode: Mode = app.mode
-
-  override protected def runModeConfiguration: Configuration = app.configuration
+  override protected def mode: Mode = environment.mode
 
   override val authBaseUrl = baseUrl("auth")
 

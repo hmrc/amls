@@ -17,7 +17,7 @@
 package utils
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
 class AuditHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {

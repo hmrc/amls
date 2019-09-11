@@ -17,7 +17,7 @@
 package models.fe.businessmatching
 
 import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
 

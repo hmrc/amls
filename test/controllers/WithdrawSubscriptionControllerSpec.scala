@@ -20,7 +20,7 @@ import connectors.WithdrawSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.mockito.Matchers._
 import org.mockito.Mockito._

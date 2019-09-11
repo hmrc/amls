@@ -16,17 +16,17 @@
 
 package connectors
 
-import config.AmlsConfig
+import config.ApplicationConfig
 import javax.inject.Inject
 import models.des.registrationdetails.RegistrationDetails
-import play.api.Application
 import play.api.http.Status.OK
+import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegistrationDetailsDesConnector @Inject()(app: Application) extends DESConnector(app) {
+class RegistrationDetailsDesConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig) extends DESConnector(app, rmc, env, appConfig) {
 
     def getRegistrationDetails(safeId: String)(
       implicit
@@ -38,7 +38,7 @@ class RegistrationDetailsDesConnector @Inject()(app: Application) extends DESCon
     }
 
     private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
-    val url = s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"
+    val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
 
     httpGet.GET[HttpResponse](url)(implicitly, desHeaderCarrier, ec) map {
       case response if response.status == OK => response.json.as[RegistrationDetails]

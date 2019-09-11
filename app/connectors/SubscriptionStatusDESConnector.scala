@@ -17,6 +17,7 @@
 package connectors
 
 import audit.SubscriptionStatusEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.API9
@@ -24,7 +25,7 @@ import models.des
 import models.des.ReadStatusResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
+import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 import javax.inject.Singleton
@@ -32,7 +33,7 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscriptionStatusDESConnector @Inject()(app: Application) extends DESConnector(app) {
+class SubscriptionStatusDESConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig) extends DESConnector(app, rmc, env, appConfig) {
 
   def status(amlsRegistrationNumber: String)
   (

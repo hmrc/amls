@@ -16,9 +16,8 @@
 
 package models.des
 
-import config.AmlsConfig
 import models.des.aboutthebusiness.{BusinessContactDetails, CorporationTaxRegisteredCbUbLlp, PreviouslyRegisteredMLR, VATRegistration}
-import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
+import models.des.aboutyou.AboutYouRelease7
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetails
 import models.des.businessactivities.BusinessActivities

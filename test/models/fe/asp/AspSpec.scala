@@ -19,7 +19,7 @@ package models.fe.asp
 import models.des.DesConstants
 import models.des.asp.{Asp => DesAsp}
 import models.fe.businessmatching.BusinessActivities
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

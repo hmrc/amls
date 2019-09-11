@@ -18,7 +18,7 @@ package models.fe.tcsp
 
 import models.des.{DesConstants, SubscriptionView}
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

@@ -18,7 +18,7 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{PreviousNameDetails, OthrNamesOrAliasesDetails, PersonName=> DesPersonName, NameDetails}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class PersonNameSpec extends PlaySpec with MockitoSugar {

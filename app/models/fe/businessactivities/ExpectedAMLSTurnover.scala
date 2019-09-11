@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import config.AmlsConfig
+
 import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
 import play.Logger
 import play.api.data.validation.ValidationError

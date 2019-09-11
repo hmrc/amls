@@ -18,6 +18,7 @@ package connectors
 
 import audit.MockAudit
 import com.codahale.metrics.Timer
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.{API9, Metrics}
@@ -29,11 +30,13 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.{Configuration, Environment}
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -54,11 +57,16 @@ class SubscriptionStatusDESConnectorSpec
     DateTimeUtils.setCurrentMillisSystem()
   }
 
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  val mockAppConfig = mock[ApplicationConfig]
+
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
 
   trait Fixture {
 
-    object testDESConnector extends SubscriptionStatusDESConnector(app) {
+    val mockRunModeConf = mock[Configuration]
+    val mockEnvironment = mock[Environment]
+
+    object testDESConnector extends SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"

@@ -26,38 +26,24 @@ import models.des.SubscriptionRequest
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
 import uk.gov.hmrc.audit.HandlerResult
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.ApiRetryHelper
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SubscribeDESConnectorSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with IntegrationPatience
-  with OneAppPerSuite
-  with AmlsReferenceNumberGenerator{
-
-
-  val maxRetries = 10
-  implicit override lazy val app = FakeApplication(
-    additionalConfiguration = Map(
-      "microservice.services.exponential-backoff.max-attempts" -> maxRetries ))
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator{
 
   trait Fixture {
 
-    object testDESConnector extends SubscribeDESConnector(app) {
+
+
+    val testConnector =  new SubscribeDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -84,12 +70,12 @@ class SubscribeDESConnectorSpec extends PlaySpec
       "string"
     )
 
-    val url = s"${testDESConnector.fullUrl}/$safeId"
+    val url = s"${testConnector.fullUrl}/$safeId"
 
     val mockTimer = mock[Timer.Context]
 
     when {
-      testDESConnector.metrics.timer(eqTo(API4))
+      testConnector.metrics.timer(eqTo(API4))
     } thenReturn mockTimer
   }
 
@@ -106,11 +92,11 @@ class SubscribeDESConnectorSpec extends PlaySpec
       )
 
       when {
-        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpPost.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testDESConnector.subscribe(safeId, testRequest)) {
+      whenReady(testConnector.subscribe(safeId, testRequest)) {
         _ mustEqual successModel
       }
     }
@@ -129,20 +115,20 @@ class SubscribeDESConnectorSpec extends PlaySpec
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpPost.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
           body mustEqual None
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
+          verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
@@ -165,20 +151,20 @@ class SubscribeDESConnectorSpec extends PlaySpec
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpPost.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual OK
           body mustEqual Some("message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
+          verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
@@ -193,20 +179,20 @@ class SubscribeDESConnectorSpec extends PlaySpec
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpPost.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       when {
-        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(maxRetries)).sendExtendedEvent(any())(any(), any())
+          verify(testConnector.auditConnector, times(maxRetries)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
@@ -221,20 +207,20 @@ class SubscribeDESConnectorSpec extends PlaySpec
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testDESConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpPost.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
 
       when {
-        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testDESConnector.subscribe(safeId, testRequest).failed) {
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
           body mustEqual Some("error message")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          verify(testConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType

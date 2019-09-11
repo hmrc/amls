@@ -18,7 +18,7 @@ package models.fe.bankdetails
 
 import models.des.DesConstants
 import models.des.bankdetails.BankDetailsView
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class BankDetailsSpec extends PlaySpec with MockitoSugar {

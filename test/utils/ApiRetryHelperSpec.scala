@@ -20,30 +20,14 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 import exceptions.HttpStatusException
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+class ApiRetryHelperSpec extends AmlsBaseSpec {
 
-  private val maxAttempts: Int = 10
-  private val initialWait: Int = 10
-  private val waitFactor: Float = 1.5F
-
-  override lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(Map(
-      "microservice.services.exponential-backoff.max-attempts" -> maxAttempts,
-      "microservice.services.exponential-backoff.initial-wait-ms" -> initialWait,
-      "microservice.services.exponential-backoff.wait-factor" -> waitFactor ))
-    .build()
-  val apiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
   val TIMEOUT = 5
 
   "ApiRetryHelper" must {
@@ -65,7 +49,7 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
     "back off exponentially" in {
       def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
-        if(iteration >= maxAttempts) {
+        if(iteration >= maxRetries) {
           expectedTime + currentWait
         } else {
           val nextWait:Int = Math.ceil(currentWait * waitFactor).toInt
@@ -81,7 +65,7 @@ class ApiRetryHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       }
 
       val endTime = LocalDateTime.now
-      val expectedTime = getMinimumExpectedDuration(1, initialWait, initialWait)
+      val expectedTime = getMinimumExpectedDuration(1, initialWaitMs, initialWaitMs)
       ChronoUnit.MILLIS.between(startTime, endTime) must be >= expectedTime
     }
 

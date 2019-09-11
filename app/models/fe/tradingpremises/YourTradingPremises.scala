@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import config.AmlsConfig
+
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}

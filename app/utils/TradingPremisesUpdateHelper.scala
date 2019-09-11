@@ -16,7 +16,7 @@
 
 package utils
 
-import config.AmlsConfig
+
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.tradingpremises._
 

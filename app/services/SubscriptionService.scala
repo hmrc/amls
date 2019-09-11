@@ -20,7 +20,7 @@ import java.io.InputStream
 
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.{ApplicationConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class SubscriptionService @Inject()(
   private[services] val ggConnector: GovernmentGatewayAdminConnector,
   private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
   private[services] val auditConnector: MicroserviceAuditConnector,
-  private[services] val config: AppConfig) {
+  private[services] val config: ApplicationConfig) {
 
   private[services] val feeResponseRepository: FeesRepository = FeesRepository()
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r

@@ -21,7 +21,7 @@ import models.fe.businesscustomer.{ReviewDetails, Address => BMAddress}
 import models.fe.businessmatching._
 import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 

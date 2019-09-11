@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import config.AmlsConfig
+
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 

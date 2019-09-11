@@ -21,7 +21,7 @@ import models.des.tradingpremises._
 import models.des.{DesConstants, StringOrInt}
 import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.FakeApplication
 

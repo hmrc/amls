@@ -16,7 +16,7 @@
 
 package services
 
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.{ApplicationConfig, MicroserviceAuditConnector}
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
@@ -35,9 +35,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import services.SubscriptionService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,7 +51,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     mock[GovernmentGatewayAdminConnector],
     mock[EnrolmentStoreConnector],
     mock[MicroserviceAuditConnector],
-    mock[AppConfig]
+    mock[ApplicationConfig]
   ) {
     override private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = successValidate
     override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]

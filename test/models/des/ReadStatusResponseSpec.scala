@@ -17,7 +17,7 @@
 package models.des
 
 import org.joda.time.{LocalDate, LocalDateTime}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
 

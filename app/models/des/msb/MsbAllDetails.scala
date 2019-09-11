@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import config.AmlsConfig
+
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
 import play.api.libs.json.Json

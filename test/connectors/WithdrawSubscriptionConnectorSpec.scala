@@ -18,6 +18,7 @@ package connectors
 
 import audit.MockAudit
 import com.codahale.metrics.Timer
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import metrics.{API8, Metrics}
 import models.des
@@ -28,6 +29,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.{Configuration, Environment}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
@@ -42,11 +44,17 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec
   with ScalaFutures
   with OneAppPerSuite {
 
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  val mockAppConfig = mock[ApplicationConfig]
+
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-    object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector(app) {
+
+    val mockRunModeConf = mock[Configuration]
+    val mockEnvironment = mock[Environment]
+
+    object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"

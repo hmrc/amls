@@ -17,20 +17,21 @@
 package connectors
 
 import audit.SubscriptionViewEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import metrics.API5
 import models.des.SubscriptionView
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import play.api.{Application, Logger}
+import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector  @Inject()(app: Application) extends DESConnector(app) {
+class ViewDESConnector  @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig) extends DESConnector(app, rmc, env, appConfig) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,

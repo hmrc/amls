@@ -17,7 +17,7 @@
 package connectors
 
 import audit.MockAudit
-import config.AmlsConfig
+import config.ApplicationConfig
 import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -28,6 +28,7 @@ import org.scalatest.{BeforeAndAfter, MustMatchers}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
@@ -43,11 +44,15 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
   with OneAppPerSuite {
 
   val mockHttpGet = mock[HttpGet]
+  val mockAppConfig = mock[ApplicationConfig]
 
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
 
   trait Fixture {
-    val connector = new RegistrationDetailsDesConnector(app) {
+    val mockRunModeConf = mock[Configuration]
+    val mockEnvironment = mock[Environment]
+
+    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
@@ -74,7 +79,7 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        mockHttpGet.GET[HttpResponse](eqTo(s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
+        mockHttpGet.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
       } thenReturn Future.successful(HttpResponse(OK, Some(Json.toJson(details))))
 
       whenReady (connector.getRegistrationDetails(safeId)) { _ mustBe details }

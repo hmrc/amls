@@ -17,20 +17,21 @@
 package connectors
 
 import audit.{AmendmentEvent, AmendmentEventFailed}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject._
 import metrics.API6
 import models.des
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
+import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendVariationDESConnector @Inject()(app: Application) extends DESConnector(app) {
+class AmendVariationDESConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig) extends DESConnector(app, rmc, env, appConfig) {
 
   def amend
   (amlsRegistrationNumber: String, data: des.AmendVariationRequest)

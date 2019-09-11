@@ -17,7 +17,7 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.{ApplicationConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
@@ -50,7 +50,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     val metrics = mock[Metrics]
     val http = mock[CorePut]
     val authConnector = mock[AuthConnector]
-    val config = mock[AppConfig]
+    val config = mock[ApplicationConfig]
     val mockTimer = mock[Timer.Context]
     val connector = new EnrolmentStoreConnector(http, metrics, mock[MicroserviceAuditConnector], config)
 
