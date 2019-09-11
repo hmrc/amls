@@ -20,17 +20,15 @@ import connectors.RegistrationDetailsDesConnector
 import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class RegistrationDetailsController @Inject()(
-  connector: RegistrationDetailsDesConnector,
-  implicit val apiRetryHelper: ApiRetryHelper,
-  authAction: AuthAction
-) extends BaseController {
+class RegistrationDetailsController @Inject()(connector: RegistrationDetailsDesConnector,
+                                              implicit val apiRetryHelper: ApiRetryHelper,
+                                              authAction: AuthAction) extends BaseController {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
 

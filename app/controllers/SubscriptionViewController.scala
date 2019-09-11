@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global

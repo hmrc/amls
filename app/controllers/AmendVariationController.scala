@@ -26,17 +26,15 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc.Request
 import services.AmendVariationService
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(
-  implicit val apiRetryHelper: ApiRetryHelper,
-  avs: AmendVariationService,
-  authAction: AuthAction
-) extends BaseController {
+class AmendVariationController @Inject()(implicit val apiRetryHelper: ApiRetryHelper,
+                                         avs: AmendVariationService,
+                                         authAction: AuthAction) extends BaseController {
 
   private[controllers] def service: AmendVariationService = avs
 
