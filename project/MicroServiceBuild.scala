@@ -11,7 +11,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val domainVersion = "5.2.0"
+  private val domainVersion = "5.6.0-play-25"
   private val playReactivemongoVersion = "6.2.0"
   private val authVersion = "2.21.0-play-25"
 
