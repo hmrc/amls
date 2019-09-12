@@ -23,11 +23,12 @@ import play.api.http.Status.OK
 import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegistrationDetailsDesConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector) extends DESConnector(app, rmc, env, appConfig, ac) {
+class RegistrationDetailsDesConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
     def getRegistrationDetails(safeId: String)(
       implicit
@@ -41,7 +42,7 @@ class RegistrationDetailsDesConnector @Inject()(app: Application, val rmc: Confi
     private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
 
-    httpGet.GET[HttpResponse](url)(implicitly, desHeaderCarrier, ec) map {
+    httpClient.GET[HttpResponse](url)(implicitly, desHeaderCarrier, ec) map {
       case response if response.status == OK => response.json.as[RegistrationDetails]
       case response => throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
     }

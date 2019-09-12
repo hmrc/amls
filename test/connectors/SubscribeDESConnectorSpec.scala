@@ -45,12 +45,10 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   }
 
   trait Fixture {
-    val testConnector =  new SubscribeDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val testConnector =  new SubscribeDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
@@ -90,7 +88,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       )
 
       when {
-        testConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpClient.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -113,7 +111,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpClient.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -149,7 +147,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpClient.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -177,7 +175,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpClient.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
@@ -205,7 +203,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpPost.POST[des.SubscriptionRequest,
+        testConnector.httpClient.POST[des.SubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
 

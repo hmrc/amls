@@ -31,6 +31,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
 
@@ -43,7 +44,6 @@ class PayAPIConnectorSpec extends PlaySpec
 
   trait Fixture {
 
-    val mockHttp = mock[HttpGet]
     val testPayment = payApiPaymentGen.sample.get
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
@@ -52,8 +52,7 @@ class PayAPIConnectorSpec extends PlaySpec
     val mockAppConfig = mock[ApplicationConfig]
 
 
-    object testConnector extends PayAPIConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
-      override private[connectors] val httpGet: HttpGet = mockHttp
+    object testConnector extends PayAPIConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mock[HttpClient]) {
       override private[connectors] val paymentUrl = "url"
       override private[connectors] val metrics = mock[Metrics]
     }
@@ -80,7 +79,7 @@ class PayAPIConnectorSpec extends PlaySpec
       )
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
@@ -93,7 +92,7 @@ class PayAPIConnectorSpec extends PlaySpec
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {
@@ -106,7 +105,7 @@ class PayAPIConnectorSpec extends PlaySpec
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {

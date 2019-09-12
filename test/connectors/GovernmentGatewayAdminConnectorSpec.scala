@@ -35,11 +35,9 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new GovernmentGatewayAdminConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val testConnector = new GovernmentGatewayAdminConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val serviceURL = "url"
       override private[connectors] val metrics = mock[Metrics]
-
-      override private[connectors] val http = mock[CorePost with CoreGet with CorePut]
     }
 
     val knownFacts = KnownFactsForService(Seq(
@@ -66,7 +64,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       val response = HttpResponse(OK, responseString = Some("message"))
       when {
-        testConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.addKnownFacts(knownFacts)) {
@@ -79,7 +77,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        testConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.addKnownFacts(knownFacts).failed) {
@@ -92,7 +90,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.http.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.addKnownFacts(knownFacts).failed) {

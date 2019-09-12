@@ -33,24 +33,16 @@ import scala.concurrent.Future
 
 class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
 
-  val mockHttpGet = mock[HttpGet]
-
   trait Fixture {
 
-    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
-      override private[connectors] val httpPost = mock[HttpPost]
-      override private[connectors] val httpGet = mockHttpGet
       override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }
-  }
-
-  before {
-    reset(mockHttpGet)
   }
 
   "The RegistrationDetailsDesConnector" must {
@@ -60,12 +52,11 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        mockHttpGet.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
+        connector.httpClient.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
       } thenReturn Future.successful(HttpResponse(OK, Some(Json.toJson(details))))
 
       whenReady (connector.getRegistrationDetails(safeId)) { _ mustBe details }
 
     }
   }
-
 }

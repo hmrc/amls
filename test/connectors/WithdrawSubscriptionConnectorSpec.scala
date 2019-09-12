@@ -44,12 +44,10 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
@@ -81,7 +79,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -100,7 +98,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -121,7 +119,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpPost.POST[des.WithdrawSubscriptionRequest,
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 

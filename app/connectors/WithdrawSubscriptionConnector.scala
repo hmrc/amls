@@ -28,12 +28,13 @@ import play.api.libs.json.{JsSuccess, Json, Writes}
 import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class WithdrawSubscriptionConnector  @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector) extends DESConnector(app, rmc, env, appConfig, ac) {
+class WithdrawSubscriptionConnector  @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
@@ -56,7 +57,7 @@ class WithdrawSubscriptionConnector  @Inject()(app: Application, val rmc: Config
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
-    httpPost.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

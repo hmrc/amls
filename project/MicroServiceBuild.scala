@@ -11,8 +11,6 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val microserviceBootstrapVersion = "10.6.0"
-  private val playUrlBindersVersion = "2.1.0"
   private val domainVersion = "5.2.0"
   private val playReactivemongoVersion = "6.2.0"
   private val authVersion = "2.21.0-play-25"
@@ -21,7 +19,6 @@ private object AppDependencies {
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
     ws,
-    //"uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "org.typelevel" %% "cats" % "0.9.0",
     "com.eclipsesource" %% "play-json-schema-validator" % "0.8.8",

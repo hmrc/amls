@@ -28,8 +28,7 @@ import org.mockito.Mockito._
 import org.scalatest.time.{Seconds, Span}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,12 +38,10 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new DeregisterSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val testConnector = new DeregisterSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
@@ -76,7 +73,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -95,7 +92,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
@@ -109,7 +106,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return failed response on exception" in new Fixture {
 
       when {
-        testConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 

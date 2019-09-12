@@ -41,12 +41,10 @@ import scala.concurrent.Future
 class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   trait Fixture {
-    val testDESConnector = new ViewDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
+    val testDESConnector = new ViewDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
@@ -72,7 +70,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         responseJson = Some(Json.toJson(ViewSuccessModel))
       )
 
-      when(testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any()))
+      when(testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any()))
         .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
@@ -87,7 +85,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         responseHeaders = Map.empty
       )
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -106,7 +104,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -118,7 +116,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {

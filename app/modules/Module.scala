@@ -17,18 +17,16 @@
 package modules
 
 import com.google.inject.{AbstractModule, Provides}
-import config.WSHttp
 import javax.inject.Singleton
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
 import repositories.{FeesRepository, FeesRepositoryProvider}
-import uk.gov.hmrc.http.{CorePost, CorePut, HttpGet}
 
 class Module extends AbstractModule {
   override def configure() = {
-    bind(classOf[HttpGet]).to(classOf[WSHttp])
-    bind(classOf[CorePost]).to(classOf[WSHttp])
-    bind(classOf[CorePut]).to(classOf[WSHttp])
+//    bind(classOf[HttpGet]).to(classOf[WSHttp])
+//    bind(classOf[CorePost]).to(classOf[WSHttp])
+//    bind(classOf[CorePut]).to(classOf[WSHttp])
     bind(classOf[FeesRepository]).toProvider(classOf[FeesRepositoryProvider])
   }
 

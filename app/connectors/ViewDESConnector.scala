@@ -27,12 +27,13 @@ import play.api.libs.json.{JsError, JsSuccess}
 import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector  @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector) extends DESConnector(app, rmc, env, appConfig, ac) {
+class ViewDESConnector  @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,
@@ -54,7 +55,7 @@ class ViewDESConnector  @Inject()(app: Application, val rmc: Configuration, env:
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpGet.GET[HttpResponse](Url)(implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
+    httpClient.GET[HttpResponse](Url)(implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

@@ -17,7 +17,7 @@
 package connectors
 
 import audit.KnownFactsEvent
-import config.{ApplicationConfig, WSHttp}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
@@ -29,18 +29,19 @@ import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class GovernmentGatewayAdminConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig, val auditConnector: AuditConnector) extends ServicesConfig with HttpResponseHelper {
+class GovernmentGatewayAdminConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig, val auditConnector: AuditConnector, val httpClient: HttpClient) extends ServicesConfig with HttpResponseHelper {
 
   private[connectors] val serviceURL = applicationConfig.ggUrl
-  private[connectors] val wsHttp: WSHttp = app.injector.instanceOf(classOf[WSHttp])
+  //private[connectors] val wsHttp: WSHttp = app.injector.instanceOf(classOf[WSHttp])
 
-  private[connectors] val http: CorePost with CoreGet with CorePut = wsHttp
+  //private[connectors] val http: CorePost with CoreGet with CorePut = wsHttp
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
   protected def mode: Mode = environment.mode
@@ -65,7 +66,7 @@ class GovernmentGatewayAdminConnector @Inject()(app: Application, override val r
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
     val timer = metrics.timer(GGAdmin)
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
-    http.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map {
+    httpClient.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

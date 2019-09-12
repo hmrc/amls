@@ -32,6 +32,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,11 +50,10 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     implicit val ec = mock[ExecutionContext]
 
     val metrics = mock[Metrics]
-    val http = mock[CorePut]
     val authConnector = mock[AuthConnector]
     val config = mock[ApplicationConfig]
     val mockTimer = mock[Timer.Context]
-    val connector = new EnrolmentStoreConnector(http, metrics, mock[AuditConnector], config)
+    val connector = new EnrolmentStoreConnector(mock[HttpClient], metrics, mock[AuditConnector], config)
 
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
@@ -75,7 +75,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
     def mockResponse(response: Future[HttpResponse]) =
       when {
-        connector.http.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
+        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
       } thenReturn response
 
   }
@@ -90,7 +90,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.http).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
+          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
         }
       }
 

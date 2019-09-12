@@ -26,15 +26,15 @@ import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PayAPIConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig) extends HttpResponseHelper with ServicesConfig {
+class PayAPIConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig, val httpClient: HttpClient) extends HttpResponseHelper with ServicesConfig {
 
-  private[connectors] val httpGet: HttpGet = app.injector.instanceOf[HttpGet]
   private[connectors] val paymentUrl = applicationConfig.payAPIUrl
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   override protected def mode: Mode = environment.mode
@@ -54,7 +54,7 @@ class PayAPIConnector @Inject()(app: Application, override val runModeConfigurat
 
     Logger.debug(s"$prefix - Request body: $paymentId")
 
-    httpGet.GET[HttpResponse](url) map {
+    httpClient.GET[HttpResponse](url) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

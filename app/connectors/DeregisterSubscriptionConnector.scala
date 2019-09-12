@@ -30,11 +30,12 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import utils.ApiRetryHelper
 import javax.inject.Singleton
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeregisterSubscriptionConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector) extends DESConnector(app, rmc, env, appConfig, ac) {
+class DeregisterSubscriptionConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
     implicit ec: ExecutionContext,
@@ -57,7 +58,7 @@ class DeregisterSubscriptionConnector @Inject()(app: Application, val rmc: Confi
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

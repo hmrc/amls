@@ -24,6 +24,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
@@ -31,6 +32,7 @@ trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with Int
   val mockEnvironment = mock[Environment]
   val mockAppConfig = mock[ApplicationConfig]
   val mockAuditConnector = mock[AuditConnector]
+  val mockHttpClient = mock[HttpClient]
 
   val maxRetries = 10
   val initialWaitMs = 10

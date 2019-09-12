@@ -28,12 +28,13 @@ import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EnrolmentStoreConnector @Inject()(val http: CorePut,
+class EnrolmentStoreConnector @Inject()(val httpClient: HttpClient,
                                         val metrics: Metrics,
                                         mac: AuditConnector,
                                         config: ApplicationConfig) extends HttpResponseHelper {
@@ -57,7 +58,7 @@ class EnrolmentStoreConnector @Inject()(val http: CorePut,
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 
-    http.PUT(url, knownFacts) map { response =>
+    httpClient.PUT(url, knownFacts) map { response =>
       timer.stop()
       Logger.debug(s"$prefix - Base Response: ${response.status}")
       Logger.debug(s"$prefix - Response body: ${response.body}")
