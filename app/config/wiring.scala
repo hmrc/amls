@@ -25,20 +25,15 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
-import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
-import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
-import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode, ServicesConfig}
+import uk.gov.hmrc.play.config.{AppName, RunMode}
 import uk.gov.hmrc.play.http.ws._
-import uk.gov.hmrc.play.microservice.config.LoadAuditingConfig
-import uk.gov.hmrc.play.microservice.filters.{AuditFilter, LoggingFilter, MicroserviceFilterSupport}
 
 trait Hooks extends HttpHooks with HttpAuditing {
   override val hooks = Seq.empty
 }
 
 @Singleton
-class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector, override val runModeConfiguration: Configuration, environment: Environment)
+class WSHttp @Inject()(app: Application, auditConn: AuditConnector, override val runModeConfiguration: Configuration, environment: Environment)
   extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete  with WSDelete
       with Hooks with HttpPatch with WSPatch with AppName with RunMode {
 
@@ -51,67 +46,4 @@ class WSHttp @Inject()(app: Application, auditConn: MicroserviceAuditConnector, 
   override protected def actorSystem: ActorSystem = app.actorSystem
 
   override lazy val auditConnector: AuditConnector = auditConn
-}
-
-@Singleton
-class MicroserviceAuditConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment) extends AuditConnector with RunMode {
-
-  override lazy val auditingConfig = LoadAuditingConfig("auditing")
-
-  override protected def mode: Mode = environment.mode
-}
-
-@Singleton
-class MicroserviceAuthConnector @Inject()(app: Application, ac: MicroserviceAuditConnector, override val runModeConfiguration: Configuration, environment: Environment)
-  extends  WSHttp(app, ac, runModeConfiguration, environment) with AuthConnector with ServicesConfig {
-
-  override protected def configuration: Option[Config] = Some(app.configuration.underlying)
-
-  override protected def appNameConfiguration: Configuration = app.configuration
-
-  override protected def mode: Mode = environment.mode
-
-  override val authBaseUrl = baseUrl("auth")
-
-  override protected def actorSystem: ActorSystem = app.actorSystem
-}
-
-@Singleton
-class ControllerConfiguration @Inject()(app: Application) extends ControllerConfig {
-  override lazy val controllerConfigs: Config = app.configuration.underlying.getConfig("controllers")
-}
-
-@Singleton
-class AuthParamsControllerConfiguration @Inject()(config: ControllerConfiguration) extends AuthParamsControllerConfig {
-  lazy val controllerConfigs = config.controllerConfigs
-}
-
-@Singleton
-class  MicroserviceAuditFilter @Inject()(
-  app: Application,
-  ac: MicroserviceAuditConnector,
-  cc: ControllerConfiguration
-) extends AuditFilter
-  with AppName
-  with MicroserviceFilterSupport {
-  override val auditConnector = ac
-  override def controllerNeedsAuditing(controllerName: String) = cc.paramsForController(controllerName).needsAuditing
-  override protected def appNameConfiguration: Configuration = app.configuration
-}
-
-@Singleton
-class MicroserviceLoggingFilter @Inject()(config: ControllerConfiguration)  extends LoggingFilter with MicroserviceFilterSupport{
-  override def controllerNeedsLogging(controllerName: String) = config.paramsForController(controllerName).needsLogging
-}
-
-@Singleton
-class MicroserviceAuthFilter @Inject()(
-  apcc: AuthParamsControllerConfiguration,
-  mac: MicroserviceAuthConnector,
-  cc: ControllerConfiguration
-) extends AuthorisationFilter
-  with MicroserviceFilterSupport {
-  override val authParamsConfig = apcc
-  override val authConnector = mac
-  override def controllerNeedsAuth(controllerName: String): Boolean = cc.paramsForController(controllerName).needsAuth
 }

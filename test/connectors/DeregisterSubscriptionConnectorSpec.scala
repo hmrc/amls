@@ -39,7 +39,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new DeregisterSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val testConnector = new DeregisterSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -48,7 +48,6 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      override private[connectors] val auditConnector = mock[AuditConnector]
     }
 
     val mockTimer = mock[Timer.Context]

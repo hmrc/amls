@@ -17,7 +17,7 @@
 package connectors
 
 import audit.KnownFactsEvent
-import config.{ApplicationConfig, MicroserviceAuditConnector}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
@@ -26,6 +26,7 @@ import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
@@ -34,7 +35,7 @@ import scala.concurrent.Future
 
 class EnrolmentStoreConnector @Inject()(val http: CorePut,
                                         val metrics: Metrics,
-                                        mac: MicroserviceAuditConnector,
+                                        mac: AuditConnector,
                                         config: ApplicationConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit

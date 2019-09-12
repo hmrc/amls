@@ -24,9 +24,9 @@ import metrics.{GGAdmin, Metrics}
 import models.{KnownFact, KnownFactsForService}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfter
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -35,10 +35,9 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new GovernmentGatewayAdminConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val testConnector = new GovernmentGatewayAdminConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val serviceURL = "url"
       override private[connectors] val metrics = mock[Metrics]
-      override private[connectors] val audit = MockAudit
 
       override private[connectors] val http = mock[CorePost with CoreGet with CorePut]
     }

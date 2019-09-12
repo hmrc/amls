@@ -17,7 +17,7 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.{ApplicationConfig, MicroserviceAuditConnector}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
@@ -29,8 +29,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -52,7 +53,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     val authConnector = mock[AuthConnector]
     val config = mock[ApplicationConfig]
     val mockTimer = mock[Timer.Context]
-    val connector = new EnrolmentStoreConnector(http, metrics, mock[MicroserviceAuditConnector], config)
+    val connector = new EnrolmentStoreConnector(http, metrics, mock[AuditConnector], config)
 
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)

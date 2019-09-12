@@ -20,7 +20,6 @@ import java.io.InputStream
 
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.MicroserviceAuditConnector
 import connectors._
 import javax.inject.Inject
 import models.Fees
@@ -30,17 +29,17 @@ import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationService @Inject()(
-  private[services] val amendVariationDesConnector: AmendVariationDESConnector,
-  private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
-  private[services] val viewDesConnector: ViewDESConnector,
-  private[services] val auditConnector: MicroserviceAuditConnector)
-  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+                                      private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+                                      private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
+                                      private[services] val viewDesConnector: ViewDESConnector,
+                                      private[services] val auditConnector: AuditConnector) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
   private[services] lazy val feeResponseRepository = FeesRepository()
   private[services] val validator: SchemaValidator = new SchemaValidator()

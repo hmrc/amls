@@ -16,7 +16,7 @@
 
 package connectors
 
-import config.{ApplicationConfig, MicroserviceAuditConnector, WSHttp}
+import config.{ApplicationConfig, WSHttp}
 import javax.inject.{Inject, Singleton}
 import metrics.Metrics
 import play.api.{Application, Configuration, Environment}
@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
 @Singleton
-class DESConnector @Inject()(app: Application, val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig)
+class DESConnector @Inject()(app: Application, val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig, val auditConnector: AuditConnector)
   extends HttpResponseHelper {
 
   private[connectors] val baseUrl: String = applicationConfig.desUrl
@@ -41,7 +41,6 @@ class DESConnector @Inject()(app: Application, val runModeConfiguration: Configu
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val requestUrl = "anti-money-laundering/subscription"
   private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-  private[connectors] val auditConnector: AuditConnector = new MicroserviceAuditConnector(app, runModeConfiguration, environment)
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
 
 

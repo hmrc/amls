@@ -31,26 +31,13 @@ import play.api.{Configuration, Environment}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionStatusControllerSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with IterateeHelpers
-    with AmlsReferenceNumberGenerator
-    with OneAppPerSuite {
+class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-
-  val mockRunModeConf = mock[Configuration]
-  val mockEnvironment = mock[Environment]
-  val mockAppConfig = mock[ApplicationConfig]
-
-  lazy val ssConn = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig)
+  lazy val ssConn = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector)
   implicit val authAction: AuthAction = SuccessfulAuthAction
 
   lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, apiRetryHelper, authAction) {

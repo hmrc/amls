@@ -34,27 +34,17 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class WithdrawSubscriptionConnectorSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with OneAppPerSuite {
+class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
-  val mockAppConfig = mock[ApplicationConfig]
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-
-    val mockRunModeConf = mock[Configuration]
-    val mockEnvironment = mock[Environment]
-
-    object withdrawSubscriptionConnector extends WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -63,16 +53,13 @@ class WithdrawSubscriptionConnectorSpec extends PlaySpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      override private[connectors] val auditConnector = mock[AuditConnector]
-
     }
 
     val mockTimer = mock[Timer.Context]
+
     when {
       withdrawSubscriptionConnector.metrics.timer(eqTo(API8))
     } thenReturn mockTimer
-
-    implicit val hc = HeaderCarrier()
 
     val amlsRegistrationNumber = "1121212UUUI"
     val url = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"

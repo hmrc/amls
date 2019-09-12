@@ -33,29 +33,15 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ViewDESConnectorSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with OneAppPerSuite
-    with AmlsReferenceNumberGenerator {
-
-  val mockAppConfig = mock[ApplicationConfig]
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
+class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   trait Fixture {
-
-    val mockRunModeConf = mock[Configuration]
-    val mockEnvironment = mock[Environment]
-
-    object testDESConnector extends ViewDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val testDESConnector = new ViewDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -64,11 +50,7 @@ class ViewDESConnectorSpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] val auditConnector = mock[AuditConnector]
-
     }
-
-    implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
 

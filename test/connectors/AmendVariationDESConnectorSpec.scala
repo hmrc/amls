@@ -26,6 +26,7 @@ import models.des.AmendVariationRequest
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfter
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.audit.HandlerResult
@@ -37,11 +38,15 @@ import utils.AmlsBaseSpec
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
+class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with BeforeAndAfter {
+
+  before {
+    reset(mockAuditConnector)
+  }
 
   trait Fixture {
 
-    val testConnector = new AmendVariationDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val testConnector = new AmendVariationDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -51,7 +56,6 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] val auditConnector = mock[AuditConnector]
     }
 
     val successModel = des.AmendVariationResponse(

@@ -20,7 +20,7 @@ import java.io.InputStream
 
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
-import config.{ApplicationConfig, MicroserviceAuditConnector}
+import config.ApplicationConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
 import javax.inject.Inject
@@ -33,16 +33,17 @@ import play.api.libs.json.{JsResult, JsValue, Json}
 import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionService @Inject()(
-  private[services] val desConnector: SubscribeDESConnector,
-  private[services] val ggConnector: GovernmentGatewayAdminConnector,
-  private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
-  private[services] val auditConnector: MicroserviceAuditConnector,
-  private[services] val config: ApplicationConfig) {
+                                     private[services] val desConnector: SubscribeDESConnector,
+                                     private[services] val ggConnector: GovernmentGatewayAdminConnector,
+                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
+                                     private[services] val auditConnector: AuditConnector,
+                                     private[services] val config: ApplicationConfig) {
 
   private[services] val feeResponseRepository: FeesRepository = FeesRepository()
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r

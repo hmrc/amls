@@ -16,7 +16,6 @@
 
 package services
 
-import config.MicroserviceAuditConnector
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des
@@ -33,6 +32,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -66,7 +66,7 @@ class AmendVariationServiceSpec extends PlaySpec
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
-    mock[MicroserviceAuditConnector]
+    mock[AuditConnector]
   ) {
     override private[services] lazy val feeResponseRepository: FeesMongoRepository = feeRepo
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate

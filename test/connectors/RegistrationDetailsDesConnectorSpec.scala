@@ -17,42 +17,27 @@
 package connectors
 
 import audit.MockAudit
-import config.ApplicationConfig
 import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfter, MustMatchers}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.BeforeAndAfter
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RegistrationDetailsDesConnectorSpec extends PlaySpec
-  with MustMatchers
-  with ScalaFutures
-  with MockitoSugar
-  with BeforeAndAfter
-  with OneAppPerSuite {
+class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
 
   val mockHttpGet = mock[HttpGet]
-  val mockAppConfig = mock[ApplicationConfig]
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
 
   trait Fixture {
-    val mockRunModeConf = mock[Configuration]
-    val mockEnvironment = mock[Environment]
 
-    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
@@ -60,12 +45,8 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
       override private[connectors] val httpGet = mockHttpGet
       override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
-      override private[connectors] val auditConnector = mock[AuditConnector]
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }
-
-    implicit val headerCarrier = HeaderCarrier()
-
   }
 
   before {

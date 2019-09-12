@@ -35,19 +35,12 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SubscriptionStatusDESConnectorSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with OneAppPerSuite
-    with BeforeAndAfterAll
-    with AmlsReferenceNumberGenerator {
+class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfterAll with AmlsReferenceNumberGenerator {
 
   override def beforeAll {
     DateTimeUtils.setCurrentMillisFixed(1000)
@@ -57,16 +50,9 @@ class SubscriptionStatusDESConnectorSpec
     DateTimeUtils.setCurrentMillisSystem()
   }
 
-  val mockAppConfig = mock[ApplicationConfig]
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
-
   trait Fixture {
 
-    val mockRunModeConf = mock[Configuration]
-    val mockEnvironment = mock[Environment]
-
-    object testDESConnector extends SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig) {
+    val testDESConnector = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
@@ -75,10 +61,7 @@ class SubscriptionStatusDESConnectorSpec
       override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] val auditConnector = mock[AuditConnector]
-
     }
-    implicit val hc = HeaderCarrier()
 
     val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved",
       None, None, None, None, false)
