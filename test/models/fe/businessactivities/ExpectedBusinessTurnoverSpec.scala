@@ -79,7 +79,7 @@ class ExpectedBusinessTurnoverSpec extends PlaySpec with OneAppPerSuite {
 
       "throw error for invalid data" in {
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "20")) must
-          be(JsError(JsPath \ "expectedBusinessTurnover", ValidationError("error.invalid")))
+          be(JsError(JsPath \ "expectedBusinessTurnover", JsonValidationError("error.invalid")))
       }
     }
 

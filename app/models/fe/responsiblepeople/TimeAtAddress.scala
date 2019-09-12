@@ -37,7 +37,7 @@ object TimeAtAddress {
         case "03" => Reads(_ => JsSuccess(OneToThreeYears))
         case "04" => Reads(_ => JsSuccess(ThreeYearsPlus))
         case _ =>
-          Reads(_ =>JsError(JsPath \ "timeAtAddress", ValidationError("error.invalid")))
+          Reads(_ =>JsError(JsPath \ "timeAtAddress", JsonValidationError("error.invalid")))
       }
     }
 

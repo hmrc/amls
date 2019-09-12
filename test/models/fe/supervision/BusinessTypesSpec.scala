@@ -50,7 +50,7 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
     "fail when on invalid data" in {
       Json.fromJson[BusinessTypes](Json.obj("businessType" -> Seq("40"))) must
-        be(JsError((JsPath \ "businessType") -> ValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessType") -> JsonValidationError("error.invalid")))
     }
 
   }

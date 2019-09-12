@@ -1,9 +1,10 @@
-import play.routes.compiler.StaticRoutesGenerator
+import play.routes.compiler.{InjectedRoutesGenerator, StaticRoutesGenerator}
 import _root_.wartremover._
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
 import scoverage.ScoverageKeys
+
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 trait MicroService {
@@ -65,8 +66,7 @@ trait MicroService {
     .settings(
       libraryDependencies ++= appDependencies,
       retrieveManaged := true,
-      evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator
+      evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
     )
     .configs(IntegrationTest)
     .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)

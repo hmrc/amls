@@ -46,7 +46,7 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
 
       "fail when on invalid data" in {
         Json.fromJson[WhatDoesYourBusinessDo](Json.obj("activities" -> Seq("40"))) must
-          be(JsError(((JsPath \ "activities") (0) \ "activities") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "activities") (0) \ "activities") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {

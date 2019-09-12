@@ -44,7 +44,7 @@ object BusinessType {
     case JsString("LLP") => JsSuccess(LPrLLP)
     case JsString("Unincorporated Body") => JsSuccess(UnincorporatedBody)
     case _ =>
-      JsError(JsPath -> ValidationError("error.invalid"))
+      JsError(JsPath -> JsonValidationError("error.invalid"))
   }
 
   import models.des.businessdetails.{BusinessType => DesBT}

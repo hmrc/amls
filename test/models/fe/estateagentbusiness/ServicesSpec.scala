@@ -46,7 +46,7 @@ class ServicesSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[Services](Json.obj("services" -> Seq("40"))) must
-          be(JsError(((JsPath \ "services") (0) \ "services") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "services") (0) \ "services") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {

@@ -79,7 +79,7 @@ class ExpectedThroughputSpec extends PlaySpec with OneAppPerSuite {
 
       "throw error for invalid data" in {
         Json.fromJson[ExpectedThroughput](Json.obj("throughput" -> "20")) must
-          be(JsError(JsPath \ "throughput", ValidationError("error.invalid")))
+          be(JsError(JsPath \ "throughput", JsonValidationError("error.invalid")))
       }
     }
 

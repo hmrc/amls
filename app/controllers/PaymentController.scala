@@ -24,7 +24,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.PaymentService
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
 import utils.{AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,7 +32,8 @@ import scala.concurrent.Future
 
 @Singleton
 class PaymentController @Inject()(private[controllers] val paymentService: PaymentService,
-                                  authAction: AuthAction) extends BaseController with ControllerHelper {
+                                  authAction: AuthAction,
+                                  val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
 
   def createBacsPayment(accountType: String, accountRef: String) = authAction.async(parse.json) {
     implicit request =>

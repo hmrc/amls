@@ -52,7 +52,7 @@ object ExpectedAMLSTurnover {
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "expectedAMLSTurnover", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "expectedAMLSTurnover", JsonValidationError("error.invalid")))
     }
   }
 

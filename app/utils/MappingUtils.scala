@@ -17,7 +17,7 @@
 package utils
 
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.json.{JsPath, JsonValidationError, Reads}
 
 import scala.collection.TraversableLike
 
@@ -33,7 +33,7 @@ trait MappingUtils {
     implicit def toReadsSuccess[A, B <: A](b: B): Reads[A] =
       Reads { _ => JsSuccess(b) }
 
-    implicit def toReadsFailure[A](f: ValidationError): Reads[A] =
+    implicit def toReadsFailure[A](f: JsonValidationError): Reads[A] =
       Reads { _ => JsError(f) }
   }
 
@@ -44,7 +44,7 @@ trait MappingUtils {
     import play.api.libs.json.Reads._
 
     def nonEmpty[M](implicit reads: Reads[M], p: M => TraversableLike[_, M]) =
-      filter[M](ValidationError("error.required"))(_.isEmpty)
+      filter[M](JsonValidationError("error.required"))(_.isEmpty)
   }
 
 }

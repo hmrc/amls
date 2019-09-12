@@ -80,7 +80,7 @@ class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       val model = RoleWithinBusiness(Set(BeneficialShareholder))
 
       RoleWithinBusiness.jsonReads.reads(json) must be(
-        JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid"))
+        JsError((JsPath \ "roleWithinBusiness") -> JsonValidationError("error.invalid"))
       )
     }
 

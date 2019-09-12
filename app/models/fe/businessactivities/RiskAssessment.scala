@@ -39,7 +39,7 @@ object RiskAssessmentType {
     Reads {
       case JsString("01") => JsSuccess(PaperBased)
       case JsString("02") => JsSuccess(Digital)
-      case _ => JsError((JsPath \ "riskassessments") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "riskassessments") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonRiskAssessmentWrites =

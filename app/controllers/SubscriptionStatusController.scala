@@ -22,7 +22,8 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import play.api.mvc.ControllerComponents
+import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.Future
@@ -30,7 +31,8 @@ import scala.concurrent.Future
 @Singleton
 class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector,
                                               implicit val apiRetryHelper: ApiRetryHelper,
-                                              authAction: AuthAction) extends BaseController {
+                                              authAction: AuthAction,
+                                              val cc: ControllerComponents) extends BackendController(cc) {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 

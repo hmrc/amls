@@ -41,7 +41,7 @@ object BusinessActivity{
     case JsString("05") => JsSuccess(MoneyServiceBusiness)
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
-    case _ => JsError((JsPath \ "activities") -> ValidationError("error.invalid"))
+    case _ => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
   }
 
   implicit val jsonActivityWrite = Writes[BusinessActivity] {

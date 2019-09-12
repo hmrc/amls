@@ -54,7 +54,7 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[Products](Json.obj("products" -> Seq("40"))) must
-          be(JsError(JsPath \ "products"  -> ValidationError("error.invalid")))
+          be(JsError(JsPath \ "products"  -> JsonValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {

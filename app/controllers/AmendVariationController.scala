@@ -24,9 +24,9 @@ import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.Request
+import play.api.mvc.{BaseController, ControllerComponents, Request}
 import services.AmendVariationService
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.Future
@@ -34,13 +34,14 @@ import scala.concurrent.Future
 @Singleton
 class AmendVariationController @Inject()(implicit val apiRetryHelper: ApiRetryHelper,
                                          avs: AmendVariationService,
-                                         authAction: AuthAction) extends BaseController {
+                                         authAction: AuthAction,
+                                         val cc: ControllerComponents) extends BackendController(cc) {
 
   private[controllers] def service: AmendVariationService = avs
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
+  private def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]): JsObject =
     Json.obj(
       "errors" -> (errors map {
         case (path, error) =>

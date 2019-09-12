@@ -11,13 +11,13 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val domainVersion = "5.6.0-play-25"
-  private val playReactivemongoVersion = "6.2.0"
-  private val authVersion = "2.21.0-play-25"
-
+  private val domainVersion = "5.6.0-play-26"
+  private val playReactivemongoVersion = "7.20.0-play-26"
+  private val authVersion = "2.27.0-play-26"
+  private val joda = "2.6.10"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
+    "uk.gov.hmrc" %% "simple-reactivemongo" % playReactivemongoVersion,
     ws,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "org.typelevel" %% "cats" % "0.9.0",
@@ -25,7 +25,8 @@ private object AppDependencies {
     "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10",
     "uk.gov.hmrc" %% "auth-client" % authVersion,
-    "uk.gov.hmrc" %% "bootstrap-play-25" % "4.13.0"
+    "uk.gov.hmrc" %% "bootstrap-play-26" % "0.45.0",
+    "com.typesafe.play" %% "play-json-joda" % joda
   )
 
   trait TestDependencies {

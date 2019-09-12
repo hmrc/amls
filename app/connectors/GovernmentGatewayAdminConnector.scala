@@ -25,23 +25,23 @@ import models.KnownFactsForService
 import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
-import play.api.{Application, Configuration, Environment, Logger}
+import play.api.{Application, Environment, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
 import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class GovernmentGatewayAdminConnector @Inject()(app: Application, override val runModeConfiguration: Configuration, environment: Environment, applicationConfig: ApplicationConfig, val auditConnector: AuditConnector, val httpClient: HttpClient) extends ServicesConfig with HttpResponseHelper {
+class GovernmentGatewayAdminConnector @Inject()(app: Application,
+                                                environment: Environment,
+                                                applicationConfig: ApplicationConfig,
+                                                val auditConnector: AuditConnector,
+                                                val httpClient: HttpClient) extends HttpResponseHelper {
 
   private[connectors] val serviceURL = applicationConfig.ggUrl
-  //private[connectors] val wsHttp: WSHttp = app.injector.instanceOf(classOf[WSHttp])
-
-  //private[connectors] val http: CorePost with CoreGet with CorePut = wsHttp
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
   protected def mode: Mode = environment.mode

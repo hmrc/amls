@@ -25,9 +25,9 @@ package controllers
  import play.api.data.validation.ValidationError
  import play.api.libs.concurrent.Execution.Implicits._
  import play.api.libs.json._
- import play.api.mvc.Action
+ import play.api.mvc.{Action, ControllerComponents}
  import services.SubscriptionService
- import uk.gov.hmrc.play.bootstrap.controller.BaseController
+ import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
  import utils.{ApiRetryHelper, AuthAction}
 
  import scala.concurrent.Future
@@ -36,12 +36,13 @@ package controllers
 @Singleton
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
                                        implicit val apiRetryHelper: ApiRetryHelper,
-                                       authAction: AuthAction) extends BaseController {
+                                       authAction: AuthAction,
+                                       val cc: ControllerComponents) extends BackendController(cc) {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
 
-  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
+  private def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]): JsObject =
     Json.obj(
       "errors" -> (errors map {
         case (path, error) =>

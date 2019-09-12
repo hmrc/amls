@@ -80,7 +80,7 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with OneAppPerSuite {
 
       "throw error for invalid data" in {
         Json.fromJson[ExpectedAMLSTurnover](Json.obj("expectedAMLSTurnover" -> "20")) must
-          be(JsError(JsPath \ "expectedAMLSTurnover", ValidationError("error.invalid")))
+          be(JsError(JsPath \ "expectedAMLSTurnover", JsonValidationError("error.invalid")))
       }
     }
 

@@ -17,30 +17,34 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
-import play.api.{Configuration, Environment, Play}
-import play.api.Mode.Mode
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.{Configuration, Environment}
+
 
 @Singleton
-class ApplicationConfig @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
+class ApplicationConfig @Inject()(config: Configuration, environment: Environment) {
 
-  private def loadConfig(key: String) =
-    getConfString(key, throw new Exception(s"Config missing key: $key"))
+  private def baseUrl(serviceName: String) = {
+    val protocol = config.getOptional[String](s"microservice.services.protocol").getOrElse("https")
+    val host = config.get[String](s"microservice.services.$serviceName.host")
+    val port = config.get[String](s"microservice.services.$serviceName.port")
+    s"$protocol://$host:$port"
+  }
 
   lazy val desUrl = baseUrl("des")
-  lazy val desToken = loadConfig("des.auth-token")
-  lazy val desEnv = loadConfig("des.env")
+  lazy val desToken = config.get[String]("microservice.services.des.auth-token")
+  lazy val desEnv = config.get[String]("microservice.services.des.env")
   lazy val ggUrl = baseUrl("government-gateway-admin")
 
   // exponential back off configuration
-  def maxAttempts = getConfInt("exponential-backoff.max-attempts", defInt = 10)
-  def initialWaitMs = getConfInt("exponential-backoff.initial-wait-ms", defInt = 10)
-  def waitFactor = getConfString("exponential-backoff.wait-factor", defString = "1.5").toFloat
+  //def maxAttempts = getConfInt("exponential-backoff.max-attempts", defInt = 10)
+  def maxAttempts = config.get[Int]("exponential-backoff.max-attempts")
+  //def initialWaitMs = getConfInt("exponential-backoff.initial-wait-ms", defInt = 10)
+  def initialWaitMs = config.get[Int]("exponential-backoff.initial-wait-ms")
+  //def waitFactor = getConfString("exponential-backoff.wait-factor", defString = "1.5").toFloat
+  def waitFactor = config.get[String]("exponential-backoff.wait-factor").toFloat
 
   lazy val payAPIUrl = baseUrl("pay-api")
 
-  override protected def mode: Mode = environment.mode
-
   lazy val enrolmentStoreUrl = s"${baseUrl("tax-enrolments")}"
-  def enrolmentStoreToggle = getConfBool("feature-toggle.enrolment-store", defBool = false)
+  def enrolmentStoreToggle = config.get[Boolean]("feature-toggle.enrolment-store")
 }

@@ -68,7 +68,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
     "throw error for invalid data" in {
       Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq(JsString("20")))) must
-        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", ValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", JsonValidationError("error.invalid")))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities" in {

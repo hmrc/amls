@@ -35,7 +35,12 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscriptionStatusDESConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class SubscriptionStatusDESConnector @Inject()(app: Application,
+                                               val rmc: Configuration,
+                                               env: Environment,
+                                               appConfig: ApplicationConfig,
+                                               val ac: AuditConnector,
+                                               val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
   def status(amlsRegistrationNumber: String)
   (

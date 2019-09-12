@@ -66,7 +66,7 @@ class PercentageOfCashPaymentOver15000Spec extends PlaySpec {
       }
       "throw error for invalid data" in {
         Json.fromJson[PercentageOfCashPaymentOver15000](Json.obj("percentage" -> "20")) must
-          be(JsError(JsPath \ "percentage", ValidationError("error.invalid")))
+          be(JsError(JsPath \ "percentage", JsonValidationError("error.invalid")))
       }
     }
     "convert to the correct model given a percentageTurnover int" in {

@@ -39,8 +39,6 @@ case class TransactionTypes(types: Set[TransactionType])
 object TransactionTypes {
 
   import play.api.libs.json.Reads._
-  import play.api.libs.functional.syntax._
-  import play.api.data.validation.{ValidationError => VE}
 
   implicit val typesReader = new Reads[Set[TransactionType]] {
     override def reads(json: JsValue) = {
@@ -49,9 +47,9 @@ object TransactionTypes {
       val validValues = Set("01", "02", "03")
 
       (t, n) match {
-        case (None, _) => JsError(__ \ "types" -> VE("error.missing"))
-        case (Some(types), None) if types.contains("03") => JsError(__ \ "software" -> VE("error.missing"))
-        case (Some(types), _) if types.diff(validValues).nonEmpty => JsError(__ \ "types" -> VE("error.invalid"))
+        case (None, _) => JsError(__ \ "types" -> JsonValidationError("error.missing"))
+        case (Some(types), None) if types.contains("03") => JsError(__ \ "software" -> JsonValidationError("error.missing"))
+        case (Some(types), _) if types.diff(validValues).nonEmpty => JsError(__ \ "types" -> JsonValidationError("error.invalid"))
         case (Some(types), maybeName) => JsSuccess(types map {
           case "01" => Paper
           case "02" => DigitalSpreadsheet

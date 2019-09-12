@@ -68,7 +68,7 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
         )
 
         Json.fromJson[RedressScheme](json) must
-          be(JsError((JsPath \ "propertyRedressScheme") -> ValidationError("error.invalid")))
+          be(JsError((JsPath \ "propertyRedressScheme") -> JsonValidationError("error.invalid")))
       }
 
 

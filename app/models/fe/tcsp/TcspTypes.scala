@@ -53,7 +53,7 @@ object TcspTypes {
         case "04" => Reads(_ => JsSuccess(CompanyDirectorEtc)) map identity[ServiceProvider]
         case "05" => Reads(_ => JsSuccess(CompanyFormationAgent)) map identity[ServiceProvider]
         case _ =>
-          Reads(_ => JsError((JsPath \ "serviceProviders") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "serviceProviders") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ServiceProvider]]](
         Reads[Set[ServiceProvider]](_ => JsSuccess(Set.empty))
       ) {
