@@ -21,27 +21,20 @@ import models.{Fees, SubscriptionResponseType}
 import org.joda.time.{DateTime, DateTimeZone}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import utils.{AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class FeeResponseControllerSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with IntegrationPatience
-  with IterateeHelpers
-  with AmlsReferenceNumberGenerator{
+class FeeResponseControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator{
 
   implicit val repository: FeesRepository = mock[FeesRepository]
-  implicit val authAction: AuthAction = SuccessfulAuthAction
-  val TestFeeResponseController = new FeeResponseController()
+  val authAction: AuthAction = SuccessfulAuthAction
+
+  val testFeeResponseController = new FeeResponseController(authAction, mockCC)
 
   "Fee Response Controller" when {
 
@@ -53,8 +46,8 @@ class FeeResponseControllerSpec extends PlaySpec
 
     "GET" must {
       "return valid fee response" in {
-        when(TestFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.successful(Some(validFeeResponse)))
-        val response = TestFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
+        when(testFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.successful(Some(validFeeResponse)))
+        val response = testFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
 
         status(response) must be(OK)
         contentAsJson(response) must be(Json.toJson(validFeeResponse))
@@ -63,8 +56,8 @@ class FeeResponseControllerSpec extends PlaySpec
 
       "return not found when there is no record" in {
 
-        when(TestFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
-        val response = TestFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
+        when(testFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
+        val response = testFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
 
         status(response) must be(NOT_FOUND)
 
@@ -72,8 +65,8 @@ class FeeResponseControllerSpec extends PlaySpec
 
       "return a 500 error when mongo returns exception" in {
 
-        when(TestFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.failed(new RuntimeException))
-        val response = TestFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
+        when(testFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.failed(new RuntimeException))
+        val response = testFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
 
         status(response) must be(INTERNAL_SERVER_ERROR)
 

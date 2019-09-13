@@ -20,7 +20,7 @@ import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDesMemb
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
@@ -45,7 +45,7 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
     "fail when on path is missing" in {
       Json.fromJson[BusinessTypes](Json.obj()) must
-        be(JsError((JsPath \ "businessType") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "businessType") -> JsonValidationError("error.path.missing")))
     }
 
     "fail when on invalid data" in {

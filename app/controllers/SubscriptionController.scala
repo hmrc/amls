@@ -16,18 +16,17 @@
 
 package controllers
 
- import javax.inject.{Inject, Singleton}
  import exceptions.{DuplicateSubscriptionException, HttpStatusException}
+ import javax.inject.{Inject, Singleton}
  import models.des.{RequestType, SubscriptionRequest}
  import models.fe
  import models.fe.SubscriptionErrorResponse
  import play.api.Logger
- import play.api.data.validation.ValidationError
  import play.api.libs.concurrent.Execution.Implicits._
  import play.api.libs.json._
  import play.api.mvc.{Action, ControllerComponents}
  import services.SubscriptionService
- import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
+ import uk.gov.hmrc.play.bootstrap.controller.BackendController
  import utils.{ApiRetryHelper, AuthAction}
 
  import scala.concurrent.Future
@@ -35,9 +34,8 @@ package controllers
 
 @Singleton
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
-                                       implicit val apiRetryHelper: ApiRetryHelper,
                                        authAction: AuthAction,
-                                       val cc: ControllerComponents) extends BackendController(cc) {
+                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"

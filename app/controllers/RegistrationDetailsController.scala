@@ -28,9 +28,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class RegistrationDetailsController @Inject()(connector: RegistrationDetailsDesConnector,
-                                              implicit val apiRetryHelper: ApiRetryHelper,
                                               authAction: AuthAction,
-                                              val cc: ControllerComponents) extends BackendController(cc) {
+                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
 

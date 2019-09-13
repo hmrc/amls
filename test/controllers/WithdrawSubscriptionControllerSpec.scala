@@ -28,19 +28,20 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{ApiRetryHelper, AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with AmlsReferenceNumberGenerator {
+class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  implicit val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction = SuccessfulAuthAction
+
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
     val controller = new WithdrawSubscriptionController(
       desConnector,
-      apiRetryHelper = mock[ApiRetryHelper],
-      authAction = authAction
+      authAction,
+      mockCC
     )
   }
 

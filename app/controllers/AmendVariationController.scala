@@ -21,10 +21,9 @@ import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
-import play.api.data.validation.ValidationError
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.{BaseController, ControllerComponents, Request}
+import play.api.mvc.{ControllerComponents, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
@@ -32,10 +31,9 @@ import utils.{ApiRetryHelper, AuthAction}
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(implicit val apiRetryHelper: ApiRetryHelper,
-                                         avs: AmendVariationService,
+class AmendVariationController @Inject()(avs: AmendVariationService,
                                          authAction: AuthAction,
-                                         val cc: ControllerComponents) extends BackendController(cc) {
+                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def service: AmendVariationService = avs
 

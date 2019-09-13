@@ -19,7 +19,7 @@ package models.fe.tradingpremises
 import models.des.DesConstants
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
   val model = WhatDoesYourBusinessDo(

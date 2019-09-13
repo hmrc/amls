@@ -29,9 +29,9 @@ import scala.concurrent.Future
 
 @Singleton
 class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector,
-                                               implicit val apiRetryHelper: ApiRetryHelper,
                                                authAction: AuthAction,
-                                               val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
+                                               val cc: ControllerComponents)
+                                              (implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with ControllerHelper {
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(parse.json) {
     implicit request =>

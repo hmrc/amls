@@ -21,8 +21,8 @@ import models.fe.businessactivities.ExpectedBusinessTurnover.{Fifth, First, Four
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
-import play.api.test.FakeApplication
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+
 
 class ExpectedBusinessTurnoverSpec extends PlaySpec with OneAppPerSuite {
 

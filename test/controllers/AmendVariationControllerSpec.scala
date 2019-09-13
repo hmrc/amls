@@ -30,34 +30,22 @@ import org.joda.time.LocalDate
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils._
 
 import scala.concurrent.Future
 
-class AmendVariationControllerSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with IntegrationPatience
-  with AmlsReferenceNumberGenerator
-  with IterateeHelpers
-    with OneAppPerSuite {
+class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with IterateeHelpers {
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  implicit val avs: AmendVariationService = mock[AmendVariationService]
-  implicit val authAction: AuthAction = SuccessfulAuthAction
+  override implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val avs: AmendVariationService = mock[AmendVariationService]
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  val Controller = new AmendVariationController
-
-  implicit val hc = HeaderCarrier()
+  val Controller = new AmendVariationController(avs, authAction, mockCC)
 
   val body = fe.SubscriptionRequest(
     businessMatchingSection =

@@ -22,10 +22,9 @@ import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
 import models.KnownFactsForService
-import play.api.Mode.Mode
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
-import play.api.{Application, Environment, Logger}
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
@@ -36,7 +35,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class GovernmentGatewayAdminConnector @Inject()(app: Application,
-                                                environment: Environment,
                                                 applicationConfig: ApplicationConfig,
                                                 val auditConnector: AuditConnector,
                                                 val httpClient: HttpClient) extends HttpResponseHelper {
@@ -44,7 +42,6 @@ class GovernmentGatewayAdminConnector @Inject()(app: Application,
   private[connectors] val serviceURL = applicationConfig.ggUrl
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
-  protected def mode: Mode = environment.mode
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 

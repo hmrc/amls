@@ -19,7 +19,7 @@ package models.fe.businessactivities
 import models.des.businessactivities._
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 import scala.language.postfixOps
 
@@ -32,13 +32,13 @@ class HowManyEmployeesSpec extends PlaySpec {
       "fail to validate when given employeeCountAMLSSupervision is missing" in {
         val json = Json.obj("employeeCount" -> "12345678901")
         Json.fromJson[HowManyEmployees](json) must
-          be(JsError((JsPath \ "employeeCountAMLSSupervision") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "employeeCountAMLSSupervision") -> JsonValidationError("error.path.missing")))
       }
 
       "fail to validate when given employeeCount is missing" in {
         val json = Json.obj("employeeCountAMLSSupervision" -> "12345678901")
         Json.fromJson[HowManyEmployees](json) must
-          be(JsError((JsPath \ "employeeCount") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "employeeCount") -> JsonValidationError("error.path.missing")))
       }
 
       "successfully read the JSON value to create the Model" in {

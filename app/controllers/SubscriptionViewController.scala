@@ -23,7 +23,7 @@ import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -31,9 +31,8 @@ import scala.concurrent.Future
 
 @Singleton
 class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
-                                           implicit val apiRetryHelper: ApiRetryHelper,
                                            authAction: AuthAction,
-                                           val cc: ControllerComponents) extends BackendController(cc) {
+                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def connector: ViewDESConnector = vdc
 

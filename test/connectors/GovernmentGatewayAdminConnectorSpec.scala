@@ -35,7 +35,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new GovernmentGatewayAdminConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val testConnector = new GovernmentGatewayAdminConnector(app, mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val serviceURL = "url"
       override private[connectors] val metrics = mock[Metrics]
     }

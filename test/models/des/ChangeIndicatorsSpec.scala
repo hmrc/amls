@@ -18,7 +18,6 @@ package models.des
 
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
 
 class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
 

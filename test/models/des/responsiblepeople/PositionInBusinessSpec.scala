@@ -23,7 +23,7 @@ import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
 import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
+
 
 class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 

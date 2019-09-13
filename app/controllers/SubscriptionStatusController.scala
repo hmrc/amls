@@ -30,9 +30,8 @@ import scala.concurrent.Future
 
 @Singleton
 class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector,
-                                              implicit val apiRetryHelper: ApiRetryHelper,
                                               authAction: AuthAction,
-                                              val cc: ControllerComponents) extends BackendController(cc) {
+                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 

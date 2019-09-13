@@ -19,7 +19,6 @@ package models.des
 import models.{des, fe}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNumber, JsObject, JsString}
-import play.api.test.FakeApplication
 
 class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
 

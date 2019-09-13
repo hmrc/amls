@@ -32,34 +32,23 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec extends PlaySpec
-  with OneServerPerSuite
-  with MockitoSugar
-  with ScalaFutures
-  with PayApiGenerator
-  with IntegrationPatience {
+class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
 
   trait Fixture {
 
     val testPayment = payApiPaymentGen.sample.get
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
-    val mockRunModeConf = mock[Configuration]
-    val mockEnvironment = mock[Environment]
-    val mockAppConfig = mock[ApplicationConfig]
-
-
-    object testConnector extends PayAPIConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mock[HttpClient]) {
+    val testConnector = new PayAPIConnector(app, mockAppConfig, mockHttpClient) {
       override private[connectors] val paymentUrl = "url"
       override private[connectors] val metrics = mock[Metrics]
     }
 
     val testPaymentId = testPayment._id
-
-    implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
 

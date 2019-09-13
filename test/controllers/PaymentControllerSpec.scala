@@ -32,12 +32,11 @@ import services.PaymentService
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
-class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
+class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
   trait Fixture {
-    implicit val hc = HeaderCarrier()
 
     val testPaymentService = mock[PaymentService]
 
@@ -51,7 +50,8 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val testController = new PaymentController(
       paymentService = testPaymentService,
-      authAction = authAction
+      authAction = authAction,
+      cc = mockCC
     )
 
     val accountType = "org"

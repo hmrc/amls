@@ -19,7 +19,7 @@ package models.fe.hvd
 import models.des.DesConstants
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class PercentageOfCashPaymentOver15000Spec extends PlaySpec {
 

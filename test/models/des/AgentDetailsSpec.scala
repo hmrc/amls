@@ -20,7 +20,6 @@ import models.des.tradingpremises.{AgentDetails, AgentPremises, Asp, Bpsp, Eab, 
 import models.fe.tradingpremises._
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
 
 class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
 

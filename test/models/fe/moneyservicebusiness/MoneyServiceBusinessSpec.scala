@@ -22,7 +22,7 @@ import models.fe.businessmatching.{ChequeCashingNotScrapMetal, MsbServices, Tran
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
+
 
 class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
 

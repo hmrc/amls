@@ -21,7 +21,7 @@ import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsP
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
+
 
 
 class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
@@ -178,6 +178,8 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.training),
     DefaultValues.approvalFlags
   )
+
+  import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
   val CompleteJson = Json.obj(
     "personName" -> Json.obj(

@@ -17,31 +17,25 @@
 package controllers
 
 import connectors.RegistrationDetailsDesConnector
-import models.fe.registrationdetails.RegistrationDetails
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails => DesRegistrationDetails}
+import models.fe.registrationdetails.RegistrationDetails
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.MustMatchers
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
-class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
+class RegistrationDetailsControllerSpec extends AmlsBaseSpec with MustMatchers {
 
-  implicit val hc = HeaderCarrier()
+  override implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  implicit val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
-  implicit val authAction: AuthAction = SuccessfulAuthAction
-
-  val controller = new RegistrationDetailsController(rddc, apiRetryHelper, authAction){  }
+  val controller = new RegistrationDetailsController(rddc, authAction, mockCC)
 
   "The RegistrationDetailsController" must {
     "use the Des connector to retrieve registration details" in {

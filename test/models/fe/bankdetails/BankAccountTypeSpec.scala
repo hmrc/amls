@@ -19,7 +19,7 @@ package models.fe.bankdetails
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class BankAccountTypeSpec extends PlaySpec with MockitoSugar {
 

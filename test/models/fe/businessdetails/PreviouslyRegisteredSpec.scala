@@ -20,7 +20,7 @@ import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
 
@@ -45,7 +45,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("previouslyRegistered" -> true)
 
       Json.fromJson[PreviouslyRegistered](json) must
-        be(JsError((JsPath \ "prevMLRRegNo") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "prevMLRRegNo") -> JsonValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

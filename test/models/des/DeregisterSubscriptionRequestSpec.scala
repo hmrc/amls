@@ -18,7 +18,7 @@ package models.des
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 import DeregistrationReason._
 
 class DeregisterSubscriptionRequestSpec extends PlaySpec {
@@ -126,7 +126,7 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
         )
 
         DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \"deregistrationReason" \"deregistrationReason",
-          List(ValidationError(List("error.invalid"))))))
+          List(JsonValidationError(List("error.invalid"))))))
         )
       }
     }

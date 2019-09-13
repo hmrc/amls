@@ -21,7 +21,6 @@ import models.fe.businessmatching._
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
 import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FEMoneyServiceBusiness, _}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
 
 class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
 

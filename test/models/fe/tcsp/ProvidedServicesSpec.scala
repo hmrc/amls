@@ -19,7 +19,7 @@ package models.fe.tcsp
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class ProvidedServicesSpec extends PlaySpec with MockitoSugar {
 
@@ -67,12 +67,12 @@ class ProvidedServicesSpec extends PlaySpec with MockitoSugar {
 
     "fail when on missing details data" in {
       Json.fromJson[ProvidedServices](Json.obj("transactions" -> Set("08"))) must
-        be(JsError((JsPath \ "services") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "services") -> JsonValidationError("error.path.missing")))
     }
 
     "fail when on missing all data" in {
       Json.fromJson[ProvidedServices](Json.obj()) must
-        be(JsError((JsPath \ "services") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "services") -> JsonValidationError("error.path.missing")))
     }
   }
 }

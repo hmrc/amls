@@ -20,8 +20,8 @@ import models.des.msb.{CountriesList, MsbAllDetails}
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
-import play.api.test.FakeApplication
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+
 
 class ExpectedThroughputSpec extends PlaySpec with OneAppPerSuite {
 

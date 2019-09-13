@@ -16,16 +16,14 @@
 
 package models.des.businessActivities
 
-import models.fe.SubscriptionRequest
 import models._
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
+import models.fe.SubscriptionRequest
 import models.fe.asp._
-import models.fe.businessmatching.BusinessMatching
-import models.fe.estateagentbusiness.{BusinessTransfer, Auction, Services, EstateAgentBusiness}
+import models.fe.estateagentbusiness.{Auction, BusinessTransfer, EstateAgentBusiness, Services}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
 
 class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 

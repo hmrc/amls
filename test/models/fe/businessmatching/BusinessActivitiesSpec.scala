@@ -51,7 +51,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[BusinessActivities](Json.obj("businessActivity" -> "01")) must
-          be(JsError((JsPath \ "businessActivities") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "businessActivities") -> JsonValidationError("error.path.missing")))
       }
     }
 

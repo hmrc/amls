@@ -38,9 +38,9 @@ import scala.concurrent.Future
 class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
 
   lazy val ssConn = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient)
-  implicit val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, apiRetryHelper, authAction) {
+  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, authAction, mockCC) {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 

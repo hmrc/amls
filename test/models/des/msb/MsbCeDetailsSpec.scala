@@ -19,7 +19,7 @@ package models.des.msb
 import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FeMoneyServiceBusiness, _}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
+
 
 class MsbCeDetailsSpec extends PlaySpec with OneAppPerSuite {
 

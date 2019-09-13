@@ -20,7 +20,7 @@ import models.des.responsiblepeople._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class UKPassportSpec  extends PlaySpec with MockitoSugar {
 
@@ -48,7 +48,7 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
       val json = Json.obj("ukPassport" -> true)
 
       Json.fromJson[UKPassport](json) must
-        be(JsError((JsPath \ "ukPassportNumber") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "ukPassportNumber") -> JsonValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

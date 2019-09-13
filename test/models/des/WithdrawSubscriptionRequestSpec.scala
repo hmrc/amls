@@ -18,7 +18,7 @@ package models.des
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 import WithdrawalReason._
 
 class WithdrawSubscriptionRequestSpec extends PlaySpec {
@@ -128,7 +128,7 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
         )
 
         WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \"withdrawalReason" \"withdrawalReason",
-          List(ValidationError(List("error.invalid"))))))
+          List(JsonValidationError(List("error.invalid"))))))
         )
       }
     }

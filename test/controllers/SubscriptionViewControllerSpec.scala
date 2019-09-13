@@ -29,23 +29,17 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.{FakeApplication, FakeRequest}
-import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionViewControllerSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with IterateeHelpers
-    with OneAppPerSuite {
+class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatience with IterateeHelpers {
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  implicit val authAction: AuthAction = SuccessfulAuthAction
-  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector], apiRetryHelper, authAction)
+  val authAction: AuthAction = SuccessfulAuthAction
+
+  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector], authAction, mockCC)
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>

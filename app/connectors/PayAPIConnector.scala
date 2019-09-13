@@ -31,7 +31,7 @@ import utils.HttpResponseHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PayAPIConnector @Inject()(app: Application, environment: Environment, applicationConfig: ApplicationConfig, val httpClient: HttpClient) extends HttpResponseHelper {
+class PayAPIConnector @Inject()(app: Application, applicationConfig: ApplicationConfig, val httpClient: HttpClient) extends HttpResponseHelper {
 
   private[connectors] val paymentUrl = applicationConfig.payAPIUrl
   private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]

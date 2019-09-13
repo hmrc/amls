@@ -18,12 +18,9 @@ package models.des
 
 import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import models.des.aboutyou.{Aboutyou, IndividualDetails}
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsSuccess, JsUndefined, Json}
-import play.api.test.FakeApplication
 import utils.AckRefGenerator
 
 class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
