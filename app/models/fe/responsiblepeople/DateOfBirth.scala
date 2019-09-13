@@ -19,8 +19,8 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
+import play.api.libs.json.JodaReads.DefaultJodaLocalDateReads
 
 case class DateOfBirth(dateOfBirth: LocalDate)
 

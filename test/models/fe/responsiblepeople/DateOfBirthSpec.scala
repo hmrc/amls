@@ -19,26 +19,22 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople._
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsPath, JsString, JsSuccess, Json}
 
 class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
 
   val date = new LocalDate(1990,2,24)
 
   "DateOfBirth" must {
-
-    "validate JSON successfully" when {
-
+    "read JSON successfully" when {
       "given a valid date" in {
 
         val json = Json.obj(
           "dateOfBirth" -> "1990-02-24"
         )
 
-        Json.fromJson[DateOfBirth](json) must
-                be(JsSuccess(DateOfBirth(date), JsPath \ "dateOfBirth"))
+        json.as[DateOfBirth] must be(DateOfBirth(date))
       }
-
     }
 
     "write the correct value to JSON" in {

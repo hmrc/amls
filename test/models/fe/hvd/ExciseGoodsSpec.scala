@@ -25,8 +25,7 @@ class ExciseGoodsSpec extends PlaySpec {
   "ExciseGoods" should {
     "Json Validation" must {
       "successfully read and write json data" in {
-        ExciseGoods.format.reads(ExciseGoods.format.writes(ExciseGoods(true))) must be(JsSuccess(ExciseGoods(true),
-          JsPath \ "exciseGoods"))
+        ExciseGoods.format.reads(ExciseGoods.format.writes(ExciseGoods(true))) must be(JsSuccess(ExciseGoods(true)))
       }
     }
     "convert to None if hvdAlcoholTobacco is None but hvd" in {

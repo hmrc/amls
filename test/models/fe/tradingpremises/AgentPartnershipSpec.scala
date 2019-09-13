@@ -25,7 +25,7 @@ class AgentPartnershipSpec extends PlaySpec {
 
     "Success read and write json" in {
       AgentPartnership.formats.reads(AgentPartnership.formats.writes(AgentPartnership("somename"))) must
-        be(JsSuccess(AgentPartnership("somename"), JsPath \ "agentPartnership"))
+        be(JsSuccess(AgentPartnership("somename")))
     }
 
     "convert when agentLegalEntityName is empty" in {

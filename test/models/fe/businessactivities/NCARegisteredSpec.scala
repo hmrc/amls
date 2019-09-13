@@ -27,13 +27,13 @@ class NCARegisteredSpec extends PlaySpec {
     "successfully validate given an `true` value" in {
       val json = Json.obj("ncaRegistered" -> true)
       Json.fromJson[NCARegistered](json) must
-        be(JsSuccess(NCARegistered(true), JsPath \ "ncaRegistered"))
+        be(JsSuccess(NCARegistered(true)))
     }
 
     "successfully validate given an `false` value" in {
       val json = Json.obj("ncaRegistered" -> false)
       Json.fromJson[NCARegistered](json) must
-        be(JsSuccess(NCARegistered(false), JsPath \ "ncaRegistered"))
+        be(JsSuccess(NCARegistered(false)))
     }
 
     "write the correct value given an NCARegisteredYes" in {

@@ -18,7 +18,6 @@ package models.fe.asp
 
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
@@ -49,9 +48,9 @@ class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
 
       "successfully validate json write" in {
 
-        val json = Json.obj("services" -> Set("01","02","03","04","05"))
-        Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
+        val json = Json.obj("services" -> Seq("04","05","03","02","01"))
 
+        Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
       }
     }
 }
