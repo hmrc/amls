@@ -13,7 +13,7 @@ private object AppDependencies {
 
   private val domainVersion = "5.6.0-play-26"
   private val playReactivemongoVersion = "7.20.0-play-26"
-  private val authVersion = "2.27.0-play-26"
+  private val authVersion = "2.28.0-play-26"
   private val joda = "2.7.3"
 
   val compile = Seq(
