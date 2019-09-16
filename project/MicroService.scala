@@ -1,24 +1,17 @@
-import play.routes.compiler.{InjectedRoutesGenerator, StaticRoutesGenerator}
-import _root_.wartremover._
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
-import scoverage.ScoverageKeys
-
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 trait MicroService {
 
   import uk.gov.hmrc._
-  import DefaultBuildSettings.{defaultSettings, scalaSettings, addTestReportOption}
-  import uk.gov.hmrc.SbtAutoBuildPlugin
+  import DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
+  import TestPhases._
+  import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
-  import play.sbt.routes.RoutesKeys.routesGenerator
-  import uk.gov.hmrc.SbtArtifactory
   import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-
-  import TestPhases._
 
   val appName: String
 

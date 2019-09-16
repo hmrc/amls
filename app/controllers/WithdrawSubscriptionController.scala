@@ -16,12 +16,12 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import connectors.WithdrawSubscriptionConnector
+import javax.inject.{Inject, Singleton}
 import models.des.WithdrawSubscriptionRequest
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
-import uk.gov.hmrc.play.bootstrap.controller.{BackendController, BaseController}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global

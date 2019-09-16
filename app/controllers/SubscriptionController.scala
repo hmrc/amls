@@ -22,13 +22,13 @@ package controllers
  import models.fe
  import models.fe.SubscriptionErrorResponse
  import play.api.Logger
- import play.api.libs.concurrent.Execution.Implicits._
  import play.api.libs.json._
  import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
  import services.SubscriptionService
  import uk.gov.hmrc.play.bootstrap.controller.BackendController
  import utils.{ApiRetryHelper, AuthAction}
 
+import scala.concurrent.ExecutionContext.Implicits.global
  import scala.concurrent.Future
  import scala.util.matching.Regex
 

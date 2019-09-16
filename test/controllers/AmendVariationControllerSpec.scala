@@ -37,7 +37,7 @@ import play.api.test.Helpers._
 import services.AmendVariationService
 import utils._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with IterateeHelpers {
 

@@ -33,12 +33,12 @@ import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector  @Inject()(app: Application,
-                                  val rmc: Configuration,
-                                  env: Environment,
-                                  appConfig: ApplicationConfig,
-                                  val ac: AuditConnector,
-                                  val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class ViewDESConnector @Inject()(app: Application,
+                                 val rmc: Configuration,
+                                 env: Environment,
+                                 appConfig: ApplicationConfig,
+                                 val ac: AuditConnector,
+                                 val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,

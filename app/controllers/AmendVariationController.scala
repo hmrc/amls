@@ -21,13 +21,13 @@ import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton

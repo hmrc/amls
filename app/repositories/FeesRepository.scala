@@ -25,7 +25,7 @@ import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.play.json.ImplicitBSONHandlers._
-import uk.gov.hmrc.mongo.{ReactiveRepository}
+import uk.gov.hmrc.mongo.ReactiveRepository
 import utils.MongoUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global

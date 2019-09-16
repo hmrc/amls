@@ -36,11 +36,8 @@ class ApplicationConfig @Inject()(config: Configuration, environment: Environmen
   lazy val ggUrl = baseUrl("government-gateway-admin")
 
   // exponential back off configuration
-  //def maxAttempts = getConfInt("exponential-backoff.max-attempts", defInt = 10)
   def maxAttempts = config.get[Int]("microservice.services.exponential-backoff.max-attempts")
-  //def initialWaitMs = getConfInt("exponential-backoff.initial-wait-ms", defInt = 10)
   def initialWaitMs = config.get[Int]("microservice.services.exponential-backoff.initial-wait-ms")
-  //def waitFactor = getConfString("exponential-backoff.wait-factor", defString = "1.5").toFloat
   def waitFactor = config.get[String]("microservice.services.exponential-backoff.wait-factor").toFloat
 
   lazy val payAPIUrl = baseUrl("pay-api")

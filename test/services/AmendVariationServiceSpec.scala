@@ -16,7 +16,6 @@
 
 package services
 
-import com.eclipsesource.schema.SchemaValidator
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des

@@ -28,7 +28,12 @@ import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegistrationDetailsDesConnector @Inject()(app: Application, val rmc: Configuration, env: Environment, appConfig: ApplicationConfig, val ac: AuditConnector, val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class RegistrationDetailsDesConnector @Inject()(app: Application,
+                                                val rmc: Configuration,
+                                                env: Environment,
+                                                appConfig: ApplicationConfig,
+                                                val ac: AuditConnector,
+                                                val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
 
     def getRegistrationDetails(safeId: String)(
       implicit
