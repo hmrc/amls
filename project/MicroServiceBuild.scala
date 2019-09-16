@@ -21,11 +21,12 @@ private object AppDependencies {
     ws,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "org.typelevel" %% "cats" % "0.9.0",
-    "com.eclipsesource" %% "play-json-schema-validator" % "0.8.8",
+    "com.eclipsesource" %% "play-json-schema-validator" % "0.9.4",
     "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10",
     "uk.gov.hmrc" %% "auth-client" % authVersion,
     "uk.gov.hmrc" %% "bootstrap-play-26" % "0.45.0",
+    "com.typesafe.play" %% "play-json" % joda,
     "com.typesafe.play" %% "play-json-joda" % joda
   )
 
