@@ -41,6 +41,7 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
       deregisterSubscriptionConnector = mockDeregConnector,
       apiRetryHelper = mock[ApiRetryHelper],
       authAction = authAction,
+      bodyParsers = mockBodyParsers,
       cc = mockCC
     )
   }
@@ -63,7 +64,7 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
 
   private val postRequestWithNoBody = FakeRequest("POST", "/")
     .withHeaders("CONTENT_TYPE" -> "application/json")
-    .withBody[JsValue](JsNull)
+    .withBody[JsValue](Json.parse("{}"))
 
   "DeregisterSubscriptionController" must {
 

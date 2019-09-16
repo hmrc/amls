@@ -23,7 +23,7 @@ import models.fe
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.{ControllerComponents, Request}
+import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
@@ -33,6 +33,7 @@ import scala.concurrent.Future
 @Singleton
 class AmendVariationController @Inject()(avs: AmendVariationService,
                                          authAction: AuthAction,
+                                         bodyParsers: PlayBodyParsers,
                                          val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def service: AmendVariationService = avs
@@ -90,7 +91,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
   }
 
   def amend(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    authAction.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -98,7 +99,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     }
 
   def variation(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    authAction.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -106,7 +107,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     }
 
   def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    authAction.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewal]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -114,7 +115,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     }
 
   def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    authAction.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewalAmendment]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")

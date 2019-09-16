@@ -45,7 +45,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
   val avs: AmendVariationService = mock[AmendVariationService]
   val authAction: AuthAction = SuccessfulAuthAction
 
-  val Controller = new AmendVariationController(avs, authAction, mockCC)
+  val Controller = new AmendVariationController(avs, authAction, mockBodyParsers, mockCC)
 
   val body = fe.SubscriptionRequest(
     businessMatchingSection =
@@ -88,9 +88,9 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
     .withHeaders(CONTENT_TYPE -> "application/json")
     .withBody[JsValue](Json.toJson(body))
 
-  val requestWithEmptyBody = FakeRequest()
+  val requestWithEmptyBody = FakeRequest("POST", "/")
     .withHeaders(CONTENT_TYPE -> "application/json")
-    .withBody[JsValue](JsNull)
+    .withBody[JsValue](Json.parse("{}"))
 
 
   val feResponse = fe.AmendVariationResponse(
@@ -176,7 +176,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
             )
           )
         )
-
         val result = Controller.amend("test", "orgRef", amlsRegistrationNumber)(requestWithEmptyBody)
 
         status(result) mustEqual BAD_REQUEST
@@ -297,7 +296,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
           requestArgument.getValue().amlsMessageType must be("Variation")
         }
       }
-
 
       "call through to the service with an Renewal messageType" in {
         when(Controller.service.update(any(), any())(any(), any(), any()))

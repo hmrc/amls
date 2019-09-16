@@ -16,6 +16,7 @@
 
 package controllers
 
+import akka.stream.Materializer
 import cats.data.OptionT
 import cats.implicits._
 import generators.PaymentGenerator
@@ -26,12 +27,12 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
@@ -51,8 +52,8 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
     val testController = new PaymentController(
       paymentService = testPaymentService,
       authAction = authAction,
-      cc = mockCC
-    )
+      bodyParsers = mockBodyParsers,
+      cc = mockCC)
 
     val accountType = "org"
     val accountRef = "TestOrgRef"

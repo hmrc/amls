@@ -20,15 +20,12 @@ import connectors.WithdrawSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -39,9 +36,10 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
     val controller = new WithdrawSubscriptionController(
-      desConnector,
-      authAction,
-      mockCC
+      connector = desConnector,
+      authAction = authAction,
+      bodyParsers = mockBodyParsers,
+      cc = mockCC
     )
   }
 
@@ -58,7 +56,7 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
 
   private val postRequestWithNoBody = FakeRequest("POST", "/")
     .withHeaders("CONTENT_TYPE" -> "application/json")
-    .withBody[JsValue](JsNull)
+    .withBody[JsValue](Json.parse("{}"))
 
   "WithdrawSubscriptionController" must {
 

@@ -24,7 +24,7 @@ object SuccessfulAuthAction extends AuthAction {
   override protected def filter[A](request: Request[A]): Future[Option[Result]] =
     Future.successful(None)
 
-  override def parser: BodyParser[AnyContent] = Helpers.stubControllerComponents().parsers.defaultBodyParser
+  override def parser: BodyParser[AnyContent] = Helpers.stubControllerComponents().parsers.anyContent
 
   override protected def executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
 }
@@ -33,7 +33,7 @@ object FailedAuthAction extends AuthAction {
   override protected def filter[A](request: Request[A]): Future[Option[Result]] =
     Future.successful(Some(Results.Unauthorized))
 
-  override def parser: BodyParser[AnyContent] = Helpers.stubControllerComponents().parsers.defaultBodyParser
+  override def parser: BodyParser[AnyContent] = Helpers.stubControllerComponents().parsers.anyContent
 
   override protected def executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
 }

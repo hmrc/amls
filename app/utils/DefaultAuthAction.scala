@@ -47,7 +47,7 @@ class DefaultAuthAction @Inject()(
     }
   }
 
-  override def parser: BodyParser[AnyContent] = controllerComponents.parsers.defaultBodyParser
+  override def parser: BodyParser[AnyContent] = controllerComponents.parsers.anyContent
   override protected def executionContext: ExecutionContext = controllerComponents.executionContext
 }
 

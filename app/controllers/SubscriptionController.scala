@@ -24,7 +24,7 @@ package controllers
  import play.api.Logger
  import play.api.libs.concurrent.Execution.Implicits._
  import play.api.libs.json._
- import play.api.mvc.{Action, ControllerComponents}
+ import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
  import services.SubscriptionService
  import uk.gov.hmrc.play.bootstrap.controller.BackendController
  import utils.{ApiRetryHelper, AuthAction}
@@ -35,6 +35,7 @@ package controllers
 @Singleton
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
                                        authAction: AuthAction,
+                                       bodyParsers: PlayBodyParsers,
                                        val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
@@ -57,7 +58,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
     )
 
   def subscribe(accountType: String, ref: String, safeId: String): Action[JsValue] =
-    authAction.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         Logger.debug(s"$prefix - SafeId: $safeId")
         safeIdRegex.findFirstIn(safeId) match {

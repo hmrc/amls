@@ -21,7 +21,7 @@ import org.mockito.Mockito.when
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -35,6 +35,7 @@ trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with Int
   val mockAuditConnector = mock[AuditConnector]
   val mockHttpClient = mock[HttpClient]
   val mockCC = mock[ControllerComponents]
+  val mockBodyParsers = mock[PlayBodyParsers]
 
   val maxRetries = 10
   val initialWaitMs = 10

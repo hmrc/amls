@@ -18,10 +18,10 @@ package controllers
 
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
-import models.fe.businessdetails._
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
+import models.fe.businessdetails._
 import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
@@ -29,14 +29,11 @@ import models.{des, fe}
 import org.joda.time.LocalDate
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
-import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
@@ -47,6 +44,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with IterateeHelpers with 
   val controller = new SubscriptionController (
     subscriptionService = mock[SubscriptionService],
     authAction = authAction,
+    bodyParsers = mockBodyParsers,
     cc = mockCC
   )
 
@@ -90,7 +88,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with IterateeHelpers with 
 
     val requestWithEmptyBody = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")
-      .withBody[JsValue](JsNull)
+      .withBody[JsValue](Json.parse("{}"))
 
     "return a `BadRequest` response when the safeId is invalid" in {
 
