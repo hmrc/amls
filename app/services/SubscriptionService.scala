@@ -43,9 +43,9 @@ class SubscriptionService @Inject()(
                                      private[services] val ggConnector: GovernmentGatewayAdminConnector,
                                      private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                      private[services] val auditConnector: AuditConnector,
-                                     private[services] val config: ApplicationConfig) {
+                                     private[services] val config: ApplicationConfig,
+                                     private[services] val feeResponseRepository: FeesRepository = FeesRepository()) {
 
-  private[services] val feeResponseRepository: FeesRepository = FeesRepository()
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
   private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {

@@ -52,10 +52,10 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     mock[GovernmentGatewayAdminConnector],
     mock[EnrolmentStoreConnector],
     mock[AuditConnector],
-    mock[ApplicationConfig]
+    mock[ApplicationConfig],
+    mock[FeesRepository]
   ) {
     override private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = successValidate
-    override private[services] val feeResponseRepository: FeesRepository = mock[FeesRepository]
   }
 
   val connector = new MockSubscriptionService

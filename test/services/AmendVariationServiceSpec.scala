@@ -16,6 +16,7 @@
 
 package services
 
+import com.eclipsesource.schema.SchemaValidator
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des
@@ -66,9 +67,9 @@ class AmendVariationServiceSpec extends PlaySpec
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
-    mock[AuditConnector]
+    mock[AuditConnector],
+    feeRepo
   ) {
-    override private[services] lazy val feeResponseRepository: FeesMongoRepository = feeRepo
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
     override private[services] def amendVariationResponse(
       request: AmendVariationRequest,
@@ -76,10 +77,7 @@ class AmendVariationServiceSpec extends PlaySpec
       des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
-
-
   val avs = new TestAmendVariationService
-
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",

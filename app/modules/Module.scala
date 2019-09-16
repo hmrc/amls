@@ -24,9 +24,6 @@ import repositories.{FeesRepository, FeesRepositoryProvider}
 
 class Module extends AbstractModule {
   override def configure() = {
-//    bind(classOf[HttpGet]).to(classOf[WSHttp])
-//    bind(classOf[CorePost]).to(classOf[WSHttp])
-//    bind(classOf[CorePut]).to(classOf[WSHttp])
     bind(classOf[FeesRepository]).toProvider(classOf[FeesRepositoryProvider])
   }
 

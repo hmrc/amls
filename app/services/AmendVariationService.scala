@@ -39,10 +39,10 @@ class AmendVariationService @Inject()(
                                       private[services] val amendVariationDesConnector: AmendVariationDESConnector,
                                       private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
                                       private[services] val viewDesConnector: ViewDESConnector,
-                                      private[services] val auditConnector: AuditConnector) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+                                      private[services] val auditConnector: AuditConnector,
+                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository()) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
 
-  private[services] lazy val feeResponseRepository = FeesRepository()
-  private[services] val validator: SchemaValidator = new SchemaValidator()
+  private[services] val validator: SchemaValidator = SchemaValidator()
 
   def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
