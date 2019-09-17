@@ -16,17 +16,14 @@
 
 package models.des.msb
 
-
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
 import play.api.libs.json.Json
 
-case class MsbAllDetails(
-                          anticipatedTotThrputNxt12Mths: Option[String],
-                          otherCntryBranchesOrAgents: Boolean,
-                          countriesList: Option[CountriesList],
-                          sysLinkedTransIdentification: Boolean
-                        )
+case class MsbAllDetails(anticipatedTotThrputNxt12Mths: Option[String],
+                         otherCntryBranchesOrAgents: Boolean,
+                         countriesList: Option[CountriesList],
+                         sysLinkedTransIdentification: Boolean)
 
 object MsbAllDetails {
 

@@ -16,13 +16,10 @@
 
 package models.des
 
-import java.net.Authenticator.RequestorType
-
-
 import models.des.aboutthebusiness._
-import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
+import models.des.aboutyou.AboutYouRelease7
 import models.des.asp.Asp
-import models.des.bankdetails.{BankDetails, BankDetailsView}
+import models.des.bankdetails.BankDetailsView
 import models.des.businessactivities.BusinessActivities
 import models.des.businessdetails.BusinessDetails
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
@@ -31,8 +28,8 @@ import models.des.msb.MoneyServiceBusiness
 import models.des.responsiblepeople.ResponsiblePersons
 import models.des.supervision.AspOrTcsp
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.fe
 import models.des.tradingpremises.TradingPremises
+import models.fe
 import play.api.libs.json._
 import utils.AckRefGenerator
 

@@ -16,7 +16,6 @@
 
 package models.des
 
-
 import play.api.libs.json.{Json, Reads}
 
 case class ChangeIndicators(businessDetails: Boolean = false,

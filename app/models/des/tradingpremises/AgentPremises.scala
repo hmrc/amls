@@ -16,7 +16,6 @@
 
 package models.des.tradingpremises
 
-
 import models.des.RequestType
 import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._

@@ -16,7 +16,6 @@
 
 package utils
 
-
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.tradingpremises._
 
@@ -131,5 +130,4 @@ trait TradingPremisesUpdateHelper {
       case _ => Some(false)
     }
   }
-
 }

@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-
 import models.fe
 import models.fe.businessmatching.BusinessType
 import models.fe.responsiblepeople.{SoleProprietor => FeSoleProprietor, _}

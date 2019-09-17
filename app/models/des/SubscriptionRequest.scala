@@ -64,7 +64,6 @@ object SubscriptionRequest {
   implicit def format =
     Json.format[SubscriptionRequest]
 
-
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,

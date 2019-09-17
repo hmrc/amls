@@ -16,7 +16,6 @@
 
 package models.des.tradingpremises
 
-
 import models.des.RequestType
 import models.des.{StatusProvider, StringOrInt}
 import play.api.libs.functional.syntax._
@@ -38,6 +37,7 @@ case class AgentDetails(
                          removalReason: Option[String] = None,
                          removalReasonOther: Option[String] = None
                        ) {
+
   override def hashCode = 41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
     agentPremises.hashCode + status.hashCode)
 

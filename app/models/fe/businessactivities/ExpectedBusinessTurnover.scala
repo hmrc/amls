@@ -16,7 +16,6 @@
 
 package models.fe.businessactivities
 
-
 import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
