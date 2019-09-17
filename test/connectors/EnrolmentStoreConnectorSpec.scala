@@ -17,43 +17,27 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
-import metrics.{EnrolmentStoreKnownFacts, Metrics}
+import metrics.EnrolmentStoreKnownFacts
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.MustMatchers
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnectorSpec extends PlaySpec
-  with MustMatchers
-  with ScalaFutures
-  with MockitoSugar
-  with AmlsReferenceNumberGenerator
-  with BaseGenerator
-  with OneAppPerSuite {
+class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with AmlsReferenceNumberGenerator with BaseGenerator {
 
   trait Fixture {
 
-    implicit val hc = HeaderCarrier()
     implicit val ec = mock[ExecutionContext]
-
-    val metrics = mock[Metrics]
-    val authConnector = mock[AuthConnector]
-    val config = mock[ApplicationConfig]
     val mockTimer = mock[Timer.Context]
-    val connector = new EnrolmentStoreConnector(mock[HttpClient], metrics, mock[AuditConnector], config)
+
+    val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
 
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
@@ -70,7 +54,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     } thenReturn mockTimer
 
     when {
-      config.enrolmentStoreUrl
+      connector.config.enrolmentStoreUrl
     } thenReturn baseUrl
 
     def mockResponse(response: Future[HttpResponse]) =
