@@ -26,7 +26,6 @@ private object AppDependencies {
     "com.beachape" %% "enumeratum" % "1.5.10",
     "uk.gov.hmrc" %% "auth-client" % authVersion,
     "uk.gov.hmrc" %% "bootstrap-play-26" % "0.45.0",
-    "com.typesafe.play" %% "play-json" % joda,
     "com.typesafe.play" %% "play-json-joda" % joda
   )
 
