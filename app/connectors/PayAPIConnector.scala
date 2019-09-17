@@ -21,9 +21,9 @@ import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.HttpResponseHelper
@@ -31,12 +31,11 @@ import utils.HttpResponseHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PayAPIConnector @Inject()(app: Application,
-                                applicationConfig: ApplicationConfig,
-                                val httpClient: HttpClient) extends HttpResponseHelper {
+class PayAPIConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
+                                private[connectors] val httpClient: HttpClient,
+                                private[connectors] val metrics: Metrics) extends HttpResponseHelper {
 
   private[connectors] val paymentUrl = applicationConfig.payAPIUrl
-  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
     getPaymentFunction(paymentId)

@@ -20,11 +20,11 @@ import audit.SubscriptionViewEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
-import metrics.API5
+import metrics.{API5, Metrics}
 import models.des.SubscriptionView
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -33,12 +33,10 @@ import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector @Inject()(app: Application,
-                                 val rmc: Configuration,
-                                 env: Environment,
-                                 appConfig: ApplicationConfig,
-                                 val ac: AuditConnector,
-                                 val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                 private[connectors] val ac: AuditConnector,
+                                 private[connectors] val httpClient: HttpClient,
+                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,

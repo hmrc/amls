@@ -34,10 +34,10 @@ import utils._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EnrolmentStoreConnector @Inject()(val httpClient: HttpClient,
-                                        val metrics: Metrics,
-                                        mac: AuditConnector,
-                                        config: ApplicationConfig) extends HttpResponseHelper {
+class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: HttpClient,
+                                        private[connectors] val metrics: Metrics,
+                                        private[connectors] val mac: AuditConnector,
+                                        private[connectors] val config: ApplicationConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,

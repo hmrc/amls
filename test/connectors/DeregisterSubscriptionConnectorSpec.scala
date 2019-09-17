@@ -20,7 +20,7 @@ import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API10, Metrics}
+import metrics.API10
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
 import org.mockito.Matchers.{eq => eqTo, _}
@@ -38,11 +38,10 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new DeregisterSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val testConnector = new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
     }

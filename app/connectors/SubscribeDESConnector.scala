@@ -19,27 +19,24 @@ package connectors
 import audit.{SubscriptionEvent, SubscriptionFailedEvent}
 import config.ApplicationConfig
 import exceptions.HttpStatusException
-import javax.inject.Inject
-import metrics.API4
+import javax.inject.{Inject, Singleton}
+import metrics.{API4, Metrics}
 import models.des
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import utils.ApiRetryHelper
-import javax.inject.Singleton
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscribeDESConnector @Inject()(app: Application,
-                                      val rmc: Configuration,
-                                      env: Environment,
-                                      appConfig: ApplicationConfig,
-                                      val ac: AuditConnector,
-                                      val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class SubscribeDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                      private[connectors] val ac: AuditConnector,
+                                      private[connectors] val httpClient: HttpClient,
+                                      private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
   def subscribe
   (safeId: String, data: des.SubscriptionRequest)

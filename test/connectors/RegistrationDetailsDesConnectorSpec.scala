@@ -17,15 +17,13 @@
 package connectors
 
 import audit.MockAudit
-import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,11 +33,10 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
 
   trait Fixture {
 
-    val connector = new RegistrationDetailsDesConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
-      override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }

@@ -16,17 +16,15 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{GGAdmin, Metrics}
+import metrics.GGAdmin
 import models.{KnownFact, KnownFactsForService}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -35,9 +33,8 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new GovernmentGatewayAdminConnector(app, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val testConnector = new GovernmentGatewayAdminConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val serviceURL = "url"
-      override private[connectors] val metrics = mock[Metrics]
     }
 
     val knownFacts = KnownFactsForService(Seq(

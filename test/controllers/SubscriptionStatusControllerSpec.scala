@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.ApplicationConfig
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -24,20 +23,16 @@ import models.des
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.{Configuration, Environment}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
 class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
 
-  lazy val ssConn = new SubscriptionStatusDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient)
+  lazy val ssConn = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
   val authAction: AuthAction = SuccessfulAuthAction
 
   lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, authAction, mockCC) {

@@ -18,8 +18,6 @@ package connectors
 
 import config.ApplicationConfig
 import javax.inject.{Inject, Singleton}
-import metrics.Metrics
-import play.api.{Application, Configuration, Environment}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.Authorization
@@ -28,16 +26,12 @@ import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
 @Singleton
-class DESConnector @Inject()(app: Application,
-                             val runModeConfiguration: Configuration,
-                             environment: Environment,
-                             applicationConfig: ApplicationConfig,
+class DESConnector @Inject()(applicationConfig: ApplicationConfig,
                              val auditConnector: AuditConnector) extends HttpResponseHelper {
 
   private[connectors] val baseUrl: String = applicationConfig.desUrl
   private[connectors] val token: String = s"Bearer ${applicationConfig.desToken}"
   private[connectors] val env: String = applicationConfig.desEnv
-  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
   private[connectors] val requestUrl = "anti-money-laundering/subscription"
   private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)

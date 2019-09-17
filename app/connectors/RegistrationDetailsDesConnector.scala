@@ -20,7 +20,6 @@ import config.ApplicationConfig
 import javax.inject.Inject
 import models.des.registrationdetails.RegistrationDetails
 import play.api.http.Status.OK
-import play.api.{Application, Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -28,12 +27,9 @@ import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegistrationDetailsDesConnector @Inject()(app: Application,
-                                                val rmc: Configuration,
-                                                env: Environment,
-                                                appConfig: ApplicationConfig,
-                                                val ac: AuditConnector,
-                                                val httpClient: HttpClient) extends DESConnector(app, rmc, env, appConfig, ac) {
+class RegistrationDetailsDesConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                                private[connectors] val ac: AuditConnector,
+                                                private[connectors] val httpClient: HttpClient) extends DESConnector(appConfig, ac) {
 
     def getRegistrationDetails(safeId: String)(
       implicit

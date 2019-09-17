@@ -29,7 +29,7 @@ import models.{des, fe}
 import org.joda.time.LocalDate
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService

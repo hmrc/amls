@@ -17,21 +17,15 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
-import metrics.{Metrics, PayAPI}
+import metrics.PayAPI
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.{Configuration, Environment}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -43,9 +37,8 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     val testPayment = payApiPaymentGen.sample.get
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
-    val testConnector = new PayAPIConnector(app, mockAppConfig, mockHttpClient) {
+    val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
       override private[connectors] val paymentUrl = "url"
-      override private[connectors] val metrics = mock[Metrics]
     }
 
     val testPaymentId = testPayment._id

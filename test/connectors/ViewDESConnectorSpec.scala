@@ -18,22 +18,16 @@ package connectors
 
 import audit.MockAudit
 import com.codahale.metrics.Timer
-import config.ApplicationConfig
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API5, Metrics}
+import metrics.API5
 import models.des._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.{Configuration, Environment}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.{AmlsBaseSpec, ApiRetryHelper}
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,11 +35,10 @@ import scala.concurrent.Future
 class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   trait Fixture {
-    val testDESConnector = new ViewDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val testDESConnector = new ViewDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }

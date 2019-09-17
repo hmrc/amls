@@ -20,7 +20,7 @@ import audit.{MockAudit, SubscriptionFailedEvent}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API4, Metrics}
+import metrics.API4
 import models.des
 import models.des.SubscriptionRequest
 import org.mockito.ArgumentCaptor
@@ -30,8 +30,8 @@ import org.scalatest.BeforeAndAfter
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.audit.HandlerResult
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.AmlsBaseSpec
 
@@ -45,11 +45,10 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   }
 
   trait Fixture {
-    val testConnector =  new SubscribeDESConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val testConnector =  new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }

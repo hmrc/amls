@@ -25,13 +25,11 @@ import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.{SubscriptionViewModel, des}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.concurrent.IntegrationPatience
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 

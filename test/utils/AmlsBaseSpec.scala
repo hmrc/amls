@@ -17,6 +17,7 @@
 package utils
 
 import config.ApplicationConfig
+import metrics.Metrics
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
@@ -36,6 +37,7 @@ trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with Int
   val mockHttpClient = mock[HttpClient]
   val mockCC = mock[ControllerComponents]
   val mockBodyParsers = mock[PlayBodyParsers]
+  val mockMetrics = mock[Metrics]
 
   val maxRetries = 10
   val initialWaitMs = 10

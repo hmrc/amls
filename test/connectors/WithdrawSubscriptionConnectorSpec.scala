@@ -18,23 +18,17 @@ package connectors
 
 import audit.MockAudit
 import com.codahale.metrics.Timer
-import config.ApplicationConfig
 import exceptions.HttpStatusException
-import metrics.{API8, Metrics}
+import metrics.API8
 import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse, WithdrawalReason}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.{Configuration, Environment}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.{AmlsBaseSpec, ApiRetryHelper}
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,11 +38,10 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(app, mockRunModeConf, mockEnvironment, mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
     }

@@ -21,9 +21,7 @@ import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
 
 @Singleton
-class Metrics @Inject()(
-                       metrics: com.kenshoo.play.metrics.Metrics
-                       ) {
+class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
   // $COVERAGE-OFF$
   private val registry: MetricRegistry = metrics.defaultRegistry
   private val timers = Map[APITypes, Timer](

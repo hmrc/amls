@@ -30,14 +30,14 @@ import org.joda.time.LocalDate
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AmendVariationService
 import utils._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with IterateeHelpers {
 
