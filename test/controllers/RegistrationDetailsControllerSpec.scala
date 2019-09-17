@@ -25,13 +25,12 @@ import org.scalatest.MustMatchers
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
 class RegistrationDetailsControllerSpec extends AmlsBaseSpec with MustMatchers {
 
-  override implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
   val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
   val authAction: AuthAction = SuccessfulAuthAction
 

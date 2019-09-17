@@ -31,7 +31,6 @@ import scala.concurrent.Future
 
 class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  override implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
   val authAction: AuthAction = SuccessfulAuthAction
 
   trait Fixture {
