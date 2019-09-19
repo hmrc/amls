@@ -39,7 +39,7 @@ object SubscriptionEvent {
       detail = Json.toJson(request).as[JsObject]
         ++ Json.toJson(hc.toAuditDetails()).as[JsObject]
         ++ JsObject(Map("amlsRegistrationNumber" -> JsString(response.amlsRefNo)))
-        ++ JsObject(Map("response" -> JsString(response.paymentReference)))
+        ++ JsObject(Map("paymentReference" -> JsString(response.paymentReference)))
         ++ JsObject(Map("safeId" -> JsString(safeId)))
         ++ Json.toJson(response).as[JsObject]
     )
