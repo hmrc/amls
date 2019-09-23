@@ -27,19 +27,25 @@ class RPExtraSpec extends PlaySpec with OneAppPerSuite{
 
   "RPExtra" should {
     "serialise Json successfully" in {
-      val extra = RPExtra(Some(StringOrInt(112233)),Some("1990-2-2"),
+      val extra = RPExtra(
+        Some(StringOrInt(112233)),
+        Some("1990-2-2"),
         Some(StatusConstants.Deleted),
         None,
         Some("10"),
+        Some("Failed"),
+        Some("2001-3-3"),
         Some("Passed"),
-        Some("2001-3-3"))
+        Some("2002-6-6"))
 
       val json = Json.obj("lineId" ->112233,
         "endDate" ->"1990-2-2",
         "status" ->"Deleted",
         "retest" ->"10",
-        "testResult" ->"Passed",
-        "testDate" ->"2001-3-3")
+        "testResultFitAndProper" ->"Failed",
+        "testDateFitAndProper" ->"2001-3-3",
+        "testResultApprovalCheck" ->"Passed",
+        "testDateApprovalCheck" ->"2002-6-6")
 
       RPExtra.reads.reads(json) must be(JsSuccess(extra))
     }
@@ -49,40 +55,57 @@ class RPExtraSpec extends PlaySpec with OneAppPerSuite{
         "endDate" ->"1990-2-2",
         "status" ->"Deleted",
         "retest" ->"10",
-        "testResult" ->"Passed",
-        "testDate" ->"2001-3-3")
+        "testResultFitAndProper" ->"Failed",
+        "testDateFitAndProper" ->"2001-3-3",
+        "testResultApprovalCheck" ->"Passed",
+        "testDateApprovalCheck" ->"2002-6-6")
 
-      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,Some("1990-2-2"),Some("Deleted"),None,Some("10"),Some("Passed"),Some("2001-3-3"))))
+      RPExtra.reads.reads(json) must be(JsSuccess(
+        RPExtra(
+          None,
+          Some("1990-2-2"),
+          Some("Deleted"),
+          None,
+          Some("10"),
+          Some("Failed"),
+          Some("2001-3-3"),
+          Some("Passed"),
+          Some("2002-6-6")))
+      )
     }
 
     "serialise Json successfully2" in {
       val json = Json.obj(
         "status" ->"Deleted")
 
-      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,None,Some("Deleted"),None,None,None)))
+      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,None,Some("Deleted"),None,None,None,None,None)))
     }
 
     "Deserialise Json successfully1" in {
       val json = Json.obj(
         "status" ->"Deleted")
 
-      RPExtra.jsonWrites.writes(RPExtra(None,None,Some("Deleted"),None,None,None)) must be(json)
+      RPExtra.jsonWrites.writes(RPExtra(None,None,Some("Deleted"),None,None,None,None,None)) must be(json)
     }
 
     "Deserialise Json successfully2" in {
 
       val json = Json.obj()
 
-      RPExtra.jsonWrites.writes(RPExtra(None,None,None,None,None,None)) must be(json)
+      RPExtra.jsonWrites.writes(RPExtra(None,None,None,None,None,None,None,None)) must be(json)
     }
 
     "successfully format" in {
-      val extra = RPExtra(Some(StringOrInt(112233)),Some("1990-2-2"),
+      val extra = RPExtra(
+        Some(StringOrInt(112233)),
+        Some("1990-2-2"),
         Some(StatusConstants.Deleted),
         None,
         Some("10"),
+        Some("Failed"),
+        Some("2001-3-3"),
         Some("Passed"),
-        Some("2001-3-3"))
+        Some("2002-6-6"))
 
       RPExtra.reads.reads(RPExtra.jsonWrites.writes(extra)) must be(JsSuccess(extra))
     }

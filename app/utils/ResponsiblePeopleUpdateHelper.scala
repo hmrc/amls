@@ -35,9 +35,10 @@ trait ResponsiblePeopleUpdateHelper {
 
     val desRPExtra = desRp.extra.copy(
       retest = viewRp.extra.retest,
-      testResult = viewRp.extra.testResult,
-      testDate = viewRp.extra.testDate
-    )
+      testResultFitAndProper = viewRp.extra.testResultFitAndProper,
+      testDateFitAndProper = viewRp.extra.testDateFitAndProper,
+      testResultApprovalCheck = viewRp.extra.testResultApprovalCheck,
+      testDateApprovalCheck = viewRp.extra.testDateApprovalCheck)
 
     val desResponsiblePeople = desRp.copy(extra = desRPExtra)
 
