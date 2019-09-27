@@ -88,6 +88,7 @@ class SubscriptionControllerSpec
       aspSection = None,
       msbSection = None,
       hvdSection = None,
+      ampSection = None,
       supervisionSection = None
     )
 

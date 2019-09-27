@@ -31,6 +31,7 @@ class BusinessActivitiesSpec extends PlaySpec {
     val  mlrActivities = Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false))
     val tcspService = Some(TcspServicesOffered(true,false, true, true, true))
     val servicesforRegOff = Some(ServicesforRegOff(true, true, true, false, false, false, false, false))
+    val ampServiceModel = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Other"))))
 
     val model = BusinessActivities(mlrActivities, None, None, None, None, tcspService, servicesforRegOff, eabServiceModel)
 
@@ -98,7 +99,7 @@ class BusinessActivitiesSpec extends PlaySpec {
     val hvdAlcoholTobacco = Some(HvdAlcoholTobacco(true))
 
     val allmodel = BusinessActivities(bmMlrActivities, None, hvdGoodsSold,
-      hvdAlcoholTobacco, aspModel, tcspService1, servicesforRegOff1, eabServiceModel, Some(activitiesModel))
+      hvdAlcoholTobacco, aspModel, tcspService1, servicesforRegOff1, eabServiceModel, ampServiceModel, Some(activitiesModel))
 
     "serialise business activities model for all" in {
       BusinessActivities.format.writes(allmodel) must be(Json.obj(
@@ -200,7 +201,7 @@ class BusinessActivitiesSpec extends PlaySpec {
 
       val viewTcspService = Some(TcspServicesOffered(true,false, false, false, true))
       val viewModel = BusinessActivities(bmMlrActivities, None, hvdGoodsSold,
-        hvdAlcoholTobacco, aspModel, viewTcspService, servicesforRegOff1, eabServiceModel, Some(activitiesModel))
+        hvdAlcoholTobacco, aspModel, viewTcspService, servicesforRegOff1, eabServiceModel, ampServiceModel, Some(activitiesModel))
 
       allmodel.equals(viewModel) must be(false)
     }

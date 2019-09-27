@@ -20,8 +20,7 @@ import models.des._
 import models.des.aboutyou.AboutYouRelease7
 import models.des.tradingpremises._
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication;
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec};
 
 class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
@@ -132,6 +131,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
       eabAll = None,
       eabResdEstAgncy = None,
       responsiblePersons = None,
+      amp = None,
       extraFields = ExtraFields(
         declaration = Declaration(true),
         filingIndividual = AboutYouRelease7(None, true, None, None),

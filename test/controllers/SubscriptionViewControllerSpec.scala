@@ -29,8 +29,8 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.{FakeApplication, FakeRequest}
 import utils.{ApiRetryHelper, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
@@ -138,6 +138,7 @@ class SubscriptionViewControllerSpec
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 }

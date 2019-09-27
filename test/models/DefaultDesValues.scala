@@ -29,7 +29,6 @@ import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => Des
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, _}
-import models.fe.responsiblepeople.ApprovalFlags
 import org.joda.time.LocalDate
 
 object DefaultDesValues {
@@ -58,6 +57,7 @@ object DefaultDesValues {
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
   private val servicesforRegOff = Some(ServicesforRegOff(true,false,false,false,false,false,false,true,Some("other service")))
   private val aspServicesOffered =  Some(AspServicesOffered(true, false, false, true, true))
+  private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Other"))))
   private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false))
   private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
   private val hvdGoodsSold = Some(HvdGoodsSold(false,false,true,true,true,false,false,false,false,false,false,true,Some("Details"),
@@ -65,7 +65,7 @@ object DefaultDesValues {
   private val hvdAlcoholTobacco = Some(HvdAlcoholTobacco(true))
 
   val BusinessActivitiesSection = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
-    tcspServicesOffered, servicesforRegOff, deseabServiceModel, desallActivitiesModel)
+    tcspServicesOffered, servicesforRegOff, deseabServiceModel, ampServices, desallActivitiesModel)
 
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 
