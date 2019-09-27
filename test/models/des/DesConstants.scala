@@ -18,6 +18,7 @@ package models.des
 
 import models.des.aboutthebusiness.{Address => AboutTheBusinessAddress, _}
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp.{Asp => AspModel}
 import models.des.bankdetails._
 import models.des.businessactivities._
@@ -30,7 +31,7 @@ import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
 import org.joda.time.LocalDate
-import utils.{StatusConstants, AckRefGenerator}
+import utils.{AckRefGenerator, StatusConstants}
 
 object DesConstants {
   val testChangeIndicators = ChangeIndicators(false)
@@ -151,6 +152,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -163,6 +165,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, false)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -175,6 +178,7 @@ object DesConstants {
     None,
     None,
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -187,6 +191,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -199,6 +204,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     None,
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -211,6 +217,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
@@ -223,6 +230,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAllWithDateChangeFlag)
   )
 
@@ -1345,6 +1353,8 @@ object DesConstants {
 
   val testEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), true, Some("PrevWarnWRegProvideDetails"))
   val testAmendEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), false, None)
+
+  val testAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2020-09-19")), true, 40)
 
   val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None)
   val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)
@@ -2557,6 +2567,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2579,6 +2590,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2601,6 +2613,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2623,6 +2636,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2645,6 +2659,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2667,6 +2682,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2689,6 +2705,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     None,
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2711,6 +2728,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2733,6 +2751,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRp),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2756,6 +2775,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpPhase2),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2784,6 +2804,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2894,6 +2915,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.amendStatusResponsiblePersonsAPI5),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2919,6 +2941,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.amendStatusResponsiblePersonsAPI5),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -2944,6 +2967,7 @@ object DesConstants {
     Some(DesConstants.testAmendEabAll),
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraAmendFields
   )
 
@@ -2970,6 +2994,7 @@ object DesConstants {
     Some(DesConstants.testAmendEabAll),
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.newAmendExtraFields
   )
 
@@ -2992,6 +3017,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.newResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.newExtraFields
   )
 
@@ -3014,6 +3040,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.viewResponsiblePersonsAPI5),
+    Some(DesConstants.testAmp),
     DesConstants.newExtraFields
   )
 
@@ -3036,6 +3063,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.viewResponsiblePersonsAPI5),
+    Some(DesConstants.testAmp),
     DesConstants.newExtraFields
   )
 
@@ -3133,6 +3161,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersonsTest1),
+    Some(DesConstants.testAmp),
     DesConstants.newExtraFields
   )
 
@@ -3158,6 +3187,7 @@ object DesConstants {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersonsTest1),
+    Some(DesConstants.testAmp),
     DesConstants.newExtraFields
   )
 

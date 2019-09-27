@@ -17,8 +17,11 @@
 package models
 
 
+import java.time.LocalDateTime
+
 import models.fe.SubscriptionView
-import models.fe.declaration.{Other => DeclarationOther, RoleWithinBusiness}
+import models.fe.amp.{Amp, AmpData}
+import models.fe.declaration.{RoleWithinBusiness, Other => DeclarationOther}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate
 import utils.StatusConstants
@@ -110,8 +113,7 @@ object SupervisionSection {
 
 object AboutYouSection {
 
-  import models.fe.declaration.AddPerson
-  import models.fe.declaration.BeneficialShareholder
+  import models.fe.declaration.{AddPerson, BeneficialShareholder}
 
   val model = AddPerson("fName", None, "lName", RoleWithinBusiness(Set(DeclarationOther("Agent"))))
 
@@ -120,8 +122,8 @@ object AboutYouSection {
 
 object BusinessActivitiesSection {
 
-  import models.fe.businessactivities._
   import models.fe.businessactivities.ExpectedAMLSTurnover.Third
+  import models.fe.businessactivities._
 
   val model = BusinessActivities(
     Some(InvolvedInOtherNo),
@@ -175,8 +177,8 @@ object EabSection {
 
 object MsbSection {
 
-  import models.fe.moneyservicebusiness._
   import models.fe.moneyservicebusiness.ExpectedThroughput.Third
+  import models.fe.moneyservicebusiness._
 
   private val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
   private val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
@@ -593,8 +595,8 @@ object ResponsiblePeopleSection {
 
 object HvdSection {
 
-  import models.fe.hvd._
   import models.fe.hvd.PercentageOfCashPaymentOver15000.Second
+  import models.fe.hvd._
 
   private val DefaultCashPayment = CashPaymentYes(new LocalDate(1978, 2, 15))
   private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details")))
@@ -622,6 +624,21 @@ object HvdSection {
     Some(true),
     Some(PaymentMethods(true, true, true, Some("aaaaaaaaaaaaa"))),
     Some(LinkedCashPayments(true))))
+}
+
+object AmpSection {
+
+  private val ampData = AmpData(
+    typeOfParticipant = List("artGalleryOwner"),
+    typeOfParticipantDetail = Some("An Other"),
+    true,
+    Some("2019-09-19 16:58:06.259Z"),
+    true,
+    Some("fortyOneToSixty")
+  )
+
+  val completeModel = Some(Amp("someCredId", ampData, LocalDateTime.now(), false, false ))
+
 }
 
 object SubscriptionViewModel {
