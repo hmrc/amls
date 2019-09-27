@@ -16,6 +16,7 @@
 
 package models.fe
 
+import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businessmatching.BusinessMatching
@@ -44,6 +45,7 @@ case class SubscriptionRequest(
                                 aspSection: Option[Asp],
                                 msbSection: Option[MoneyServiceBusiness],
                                 hvdSection: Option[Hvd],
+                                ampSection: Option[Amp],
                                 supervisionSection: Option[Supervision]
                               )
 
