@@ -78,6 +78,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
     aspSection = ASPTCSPSection.AspSection,
     msbSection = MsbSection.completeModel,
     hvdSection = HvdSection.completeModel,
+    ampSection = AmpSection.completeModel,
     supervisionSection = SupervisionSection.completeModel
   )
 }

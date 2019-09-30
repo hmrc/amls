@@ -637,7 +637,7 @@ object AmpSection {
     Some("fortyOneToSixty")
   )
 
-  val completeModel = Some(Amp("someCredId", ampData, LocalDateTime.now(), false, false ))
+  val completeModel = Some(Amp(ampData))
 
 }
 
@@ -657,6 +657,7 @@ object SubscriptionViewModel {
     ASPTCSPSection.AspModelForView,
     MsbSection.modelForView,
     HvdSection.modelForView,
+    AmpSection.completeModel,
     SupervisionSection.modelForView
   )
 
@@ -675,6 +676,7 @@ object SubscriptionViewModel {
     ASPTCSPSection.AspModelForView,
     MsbSection.modelForView,
     HvdSection.modelForView,
+    AmpSection.completeModel,
     SupervisionSection.modelForView
   )
 }

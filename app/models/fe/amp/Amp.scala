@@ -16,43 +16,60 @@
 
 package models.fe.amp
 
-import java.time.LocalDateTime
-
+import models.des.SubscriptionView
+import models.des.businessactivities.AmpServices
 import play.api.libs.json._
+import utils.CommonMethods
 
-final case class Amp(_id: String,
-                     data: AmpData,
-                     lastUpdated: LocalDateTime,
-                     hasChanged: Boolean = false,
-                     hasAccepted: Boolean = false) {
+final case class Amp(//_id: String,
+                     data: AmpData)
+//                     lastUpdated: LocalDateTime,
+//                     hasChanged: Boolean = false,
+//                     hasAccepted: Boolean = false)
+                     {
 }
 
 object Amp  {
 
-  implicit lazy val reads: Reads[Amp] = {
+  implicit val format = Json.format[Amp]
 
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "_id").read[String] and
-        (__ \ "data").read[AmpData] and
-        (__ \ "lastUpdated").read(MongoDateTimeFormats.localDateTimeRead) and
-        (__ \ "hasChanged").readNullable[Boolean].map(_.getOrElse(false)) and
-        (__ \ "hasAccepted").readNullable[Boolean].map(_.getOrElse(false))
-      ) (Amp.apply _)
+  implicit def conv(view: SubscriptionView): Option[Amp] = {
+    view match {
+      case SubscriptionView(_,_,_,_,_,_, ba,_,_,_,_,_,_,_,_,_,_,_, Some(amp), _) => Some(
+        Amp(AmpData(
+          view.businessActivities.ampServicesCarriedOut,
+          ba.ampServicesCarriedOut.flatMap(s => s.other.specifyOther),
+          amp.transactionsAccptOvrThrshld.transactionsAccptOvrThrshldAnswer,
+          amp.transactionsAccptOvrThrshld.dateOfTheFirst,
+          amp.sysAutoIdOfLinkedTransactions,
+          getPercentage(amp.ampPercentageTurnover)))
+      )
+      case _ => None
+    }
   }
 
-  implicit lazy val writes: OWrites[Amp] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "_id").write[String] and
-        (__ \ "data").write[AmpData] and
-        (__ \ "lastUpdated").write(MongoDateTimeFormats.localDateTimeWrite) and
-        (__ \ "hasChanged").write[Boolean] and
-        (__ \ "hasAccepted").write[Boolean]
-      ) (unlift(Amp.unapply))
+  def getPercentage(percentage:Int): Option[String] = {
+    percentage match {
+      case 20 => Some("zeroToTwenty")
+      case 40 => Some("twentyOneToForty")
+      case 60 => Some("fortyOneToSixty")
+      case 80 => Some("sixtyOneToEighty")
+      case 100 => Some("eightyOneToOneHundred")
+      case _ => None
+    }
   }
 
+  private implicit def conv(services: Option[AmpServices]): List[String] = {
+    val optionList = services match {
+      case Some(amp) => List(
+        CommonMethods.getSpecificType(amp.artGallery, "artGalleryOwner"),
+        CommonMethods.getSpecificType(amp.privateDealer, "artDealer"),
+        CommonMethods.getSpecificType(amp.intermediary, "artAgent"),
+        CommonMethods.getSpecificType(amp.auctionHouse, "artAuctioneer"),
+        CommonMethods.getSpecificType(amp.other.otherAnswer, "somethingElse"))
+      case None => List()
+    }
+
+    optionList.flatten
+  }
 }
