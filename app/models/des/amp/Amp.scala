@@ -25,10 +25,7 @@ case class Amp (  transactionsAccptOvrThrshld: TransactionsAccptOvrThrshld,
 case class TransactionsAccptOvrThrshld ( transactionsAccptOvrThrshldAnswer: Boolean,
                                          dateOfTheFirst: Option[String] )
 
-
-
 object Amp {
-
 
   implicit val format: OFormat[Amp] = Json.format[Amp]
 

@@ -1354,7 +1354,7 @@ object DesConstants {
   val testEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), true, Some("PrevWarnWRegProvideDetails"))
   val testAmendEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), false, None)
 
-  val testAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2020-09-19")), true, 40)
+  val testAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60)
 
   val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None)
   val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)

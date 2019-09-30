@@ -18,6 +18,7 @@ package models
 
 import models.des.aboutthebusiness.{Address => ATBAddress, _}
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp._
 import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
 import models.des.businessdetails.BusinessDetails
@@ -57,7 +58,7 @@ object DefaultDesValues {
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
   private val servicesforRegOff = Some(ServicesforRegOff(true,false,false,false,false,false,false,true,Some("other service")))
   private val aspServicesOffered =  Some(AspServicesOffered(true, false, false, true, true))
-  private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Other"))))
+  private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
   private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false))
   private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
   private val hvdGoodsSold = Some(HvdGoodsSold(false,false,true,true,true,false,false,false,false,false,false,true,Some("Details"),
@@ -242,6 +243,8 @@ object DefaultDesValues {
     extra = RPExtra()
   )
   ))
+
+  val AmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60))
 
   val AspSection =  Some(Asp(true, None))
 

@@ -629,8 +629,8 @@ object HvdSection {
 object AmpSection {
 
   private val ampData = AmpData(
-    typeOfParticipant = List("artGalleryOwner"),
-    typeOfParticipantDetail = Some("An Other"),
+    typeOfParticipant = List("artGalleryOwner", "artDealer", "artAgent" ,"artAuctioneer",  "somethingElse"),
+    typeOfParticipantDetail = Some("Another service"),
     true,
     Some("2019-09-19 16:58:06.259Z"),
     true,

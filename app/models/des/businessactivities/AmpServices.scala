@@ -32,7 +32,7 @@ object AmpServices {
 
   implicit def conv(services: Option[Amp]) : Option[AmpServices] = {
 
-    services.map(amp => amp.data.typeOfParticipantDetail.foldLeft[AmpServices](none)((ampServices: AmpServices, service) => service match {
+    services.map(amp => amp.data.typeOfParticipant.foldLeft[AmpServices](none)((ampServices: AmpServices, service) => service match {
       case "artGalleryOwner" => ampServices.copy(artGallery = true)
       case "artDealer" => ampServices.copy(privateDealer = true)
       case "artAgent" => ampServices.copy(intermediary = true)

@@ -100,6 +100,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
             responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
             asp = DefaultDesValues.AspSection,
+            ampAll = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
             declaration = Declaration(true)
           )
@@ -131,6 +132,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
             responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
             asp = DefaultDesValues.AspSection,
+            ampAll = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
             declaration = Declaration(true)
           )
@@ -188,6 +190,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
       responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
       asp = DefaultDesValues.AspSection,
+      ampAll = DefaultDesValues.AmpSection,
       aspOrTcsp = DefaultDesValues.AspOrTcspSection,
       declaration = Declaration(true)
     )
@@ -709,6 +712,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           responsiblePersons = DefaultDesValues.ResponsiblePersonsSectionForRelease7Phase2,
           asp = DefaultDesValues.AspSection,
           aspOrTcsp = DefaultDesValues.AspOrTcspSection,
+          ampAll = DefaultDesValues.AmpSection,
           declaration = Declaration(true)
         )
 

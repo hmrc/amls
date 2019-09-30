@@ -31,9 +31,9 @@ class BusinessActivitiesSpec extends PlaySpec {
     val  mlrActivities = Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false))
     val tcspService = Some(TcspServicesOffered(true,false, true, true, true))
     val servicesforRegOff = Some(ServicesforRegOff(true, true, true, false, false, false, false, false))
-    val ampServiceModel = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Other"))))
+    val ampServiceModel = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
 
-    val model = BusinessActivities(mlrActivities, None, None, None, None, tcspService, servicesforRegOff, eabServiceModel)
+    val model = BusinessActivities(mlrActivities, None, None, None, None, tcspService, servicesforRegOff, eabServiceModel, ampServiceModel)
 
     "serialise business activities model for eabServicesCarriedOut " in {
       BusinessActivities.format.writes(model) must be(Json.obj(
@@ -69,8 +69,18 @@ class BusinessActivitiesSpec extends PlaySpec {
           "assetManagementCompany" ->false,
           "landManagementAgent" ->false,
           "developmentCompany" ->false,
-          "socialHousingProvider" ->false)
-       ))
+          "socialHousingProvider" ->false),
+        "ampServicesCarriedOut" -> Json.obj(
+          "artGallery" -> true,
+          "auctionHouse" -> true,
+          "privateDealer" -> true,
+          "intermediary" -> true,
+          "other" -> Json.obj(
+            "otherAnswer" -> true,
+            "specifyOther" -> "Another service")
+        )
+       )
+      )
     }
 
     val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("100"))))
@@ -160,6 +170,15 @@ class BusinessActivitiesSpec extends PlaySpec {
               "landManagementAgent" -> false,
               "developmentCompany" -> false,
               "socialHousingProvider" -> false),
+        "ampServicesCarriedOut" -> Json.obj(
+          "artGallery" -> true,
+          "auctionHouse" -> true,
+          "privateDealer" -> true,
+          "intermediary" -> true,
+          "other" -> Json.obj(
+            "otherAnswer" -> true,
+            "specifyOther" -> "Another service")
+        ),
         "all" -> Json.obj("businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
           "franchiseDetails"->
