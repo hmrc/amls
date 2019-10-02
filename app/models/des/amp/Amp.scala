@@ -44,7 +44,7 @@ object Amp {
   {
       ampOpt.map(amp => amp.data).map(amp => {
         Amp( transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld( amp.boughtOrSoldOverThreshold,
-                                                                        amp.dataTransactionOverThreshold),
+                                                                        amp.dateTransactionOverThreshold),
              sysAutoIdOfLinkedTransactions = amp.identifyLinkedTransactions,
              ampPercentageTurnover = getPercentage(amp.percentageExpectedTurnover)
         )
