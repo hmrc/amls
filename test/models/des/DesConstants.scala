@@ -144,7 +144,7 @@ object DesConstants {
   )
 
   val testBusinessActivities = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -157,7 +157,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoFormationAgent = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -170,7 +170,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoTcsp = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -183,7 +183,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoAsp = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -196,7 +196,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoEab = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -209,7 +209,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoMsb = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
     None,
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -222,7 +222,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesWithDateChangeFlag = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -235,7 +235,7 @@ object DesConstants {
   )
 
   val testAmendBusinessActivities = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, false, false, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, false, false, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, false)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),

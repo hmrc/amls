@@ -17,8 +17,6 @@
 package models
 
 
-import java.time.LocalDateTime
-
 import models.fe.SubscriptionView
 import models.fe.amp.{Amp, AmpData}
 import models.fe.declaration.{RoleWithinBusiness, Other => DeclarationOther}
@@ -380,7 +378,7 @@ object BusinessMatchingSection {
       Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
       Some("AA1 1AA"), "GB"), ""),
     BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
-      BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
+      BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices, ArtMarketParticipant)),
     msbServices,
     Some(TypeOfBusiness("TypeOfBusiness")), Some(CompanyRegistrationNumber("12345678")), psrNumber)
 }

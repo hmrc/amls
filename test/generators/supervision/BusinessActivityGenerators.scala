@@ -30,7 +30,8 @@ trait BusinessActivityGenerators {
     eab <- arbitrary[Boolean]
     bpsp <- arbitrary[Boolean]
     tditpsp <- arbitrary[Boolean]
-  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp)
+    amp <- arbitrary[Boolean]
+  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp, amp)
 
   implicit val arbitraryMlrActivities: Arbitrary[MlrActivitiesAppliedFor] = Arbitrary(activityGen.sample.get)
   implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(LocalDate.now())

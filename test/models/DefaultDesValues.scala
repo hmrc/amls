@@ -59,7 +59,7 @@ object DefaultDesValues {
   private val servicesforRegOff = Some(ServicesforRegOff(true,false,false,false,false,false,false,true,Some("other service")))
   private val aspServicesOffered =  Some(AspServicesOffered(true, false, false, true, true))
   private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
-  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false))
+  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false,false))
   private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
   private val hvdGoodsSold = Some(HvdGoodsSold(false,false,true,true,true,false,false,false,false,false,false,true,Some("Details"),
     Some(HowGoodsAreSold(true,false,true))))

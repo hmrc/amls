@@ -28,7 +28,7 @@ class BusinessActivitiesSpec extends PlaySpec {
 
     val eabServiceModel = Some(EabServices(true,false,
       false,false,false,false,false,false,false))
-    val  mlrActivities = Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false))
+    val  mlrActivities = Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false, false))
     val tcspService = Some(TcspServicesOffered(true,false, true, true, true))
     val servicesforRegOff = Some(ServicesforRegOff(true, true, true, false, false, false, false, false))
     val ampServiceModel = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
@@ -100,7 +100,7 @@ class BusinessActivitiesSpec extends PlaySpec {
 
     val tcspService1 = Some(TcspServicesOffered(true,false, false, true, true))
     val servicesforRegOff1 = Some(ServicesforRegOff(false, false, false, false, false, false, false, false))
-    val bmMlrActivities = Some(MlrActivitiesAppliedFor(true, false, false, true, false, false, true))
+    val bmMlrActivities = Some(MlrActivitiesAppliedFor(true, false, false, true, false, false, true, false))
 
     val aspModel = Some(AspServicesOffered(true, false,false,true,true))
 
