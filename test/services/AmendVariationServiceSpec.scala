@@ -76,10 +76,7 @@ class AmendVariationServiceSpec extends PlaySpec
       des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
-
-
   val avs = new TestAmendVariationService
-
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
