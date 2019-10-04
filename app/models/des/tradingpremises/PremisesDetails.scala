@@ -53,6 +53,17 @@ object Hvd{
   }
 }
 
+case class Amp(amp: Boolean)
+
+object Amp{
+  implicit val format = Json.format[Amp]
+
+  implicit def convert(businessActivity: Set[BusinessActivity]) : Amp ={
+    Amp(businessActivity.contains(BusinessActivity.ArtMarketParticipant))
+  }
+}
+
+
 case class Asp(asp: Boolean)
 
 object Asp{
@@ -102,3 +113,5 @@ object Tditpsp{
     Tditpsp(businessActivity.contains(BusinessActivity.TelephonePaymentService))
   }
 }
+
+

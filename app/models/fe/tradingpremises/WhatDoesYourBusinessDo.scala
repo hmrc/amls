@@ -32,6 +32,7 @@ object BusinessActivity{
   case object MoneyServiceBusiness extends BusinessActivity
   case object TrustAndCompanyServices extends BusinessActivity
   case object TelephonePaymentService extends BusinessActivity
+  case object ArtMarketParticipant extends BusinessActivity
 
   implicit val jsonActivityReads: Reads[BusinessActivity] = Reads {
     case JsString("01") => JsSuccess(AccountancyServices)
@@ -41,6 +42,7 @@ object BusinessActivity{
     case JsString("05") => JsSuccess(MoneyServiceBusiness)
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
+    case JsString("08") => JsSuccess(ArtMarketParticipant)
     case _ => JsError((JsPath \ "activities") -> ValidationError("error.invalid"))
   }
 
@@ -52,6 +54,7 @@ object BusinessActivity{
     case MoneyServiceBusiness => JsString("05")
     case TrustAndCompanyServices => JsString("06")
     case TelephonePaymentService => JsString("07")
+    case ArtMarketParticipant => JsString("08")
   }
 }
 
