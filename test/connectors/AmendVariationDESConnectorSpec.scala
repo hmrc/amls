@@ -283,6 +283,9 @@ class AmendVariationDESConnectorSpec extends PlaySpec
               "eab": {
               "eab": false
               },
+              "amp": {
+              "amp": false
+              },
             "responsiblePersons":false,
             "filingIndividual":false
          },

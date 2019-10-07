@@ -156,6 +156,10 @@ object DesConstants {
     Some(testBusinessActivitiesAll)
   )
 
+  val testAmendAmpBusinessActivities = testBusinessActivities.copy(
+    ampServicesCarriedOut = Some(AmpServices(false, true, true, true, AmpServicesOther(true, Some("Another service"))))
+  )
+
   val testBusinessActivitiesNoFormationAgent = BusinessActivities(
     Some(MlrActivitiesAppliedFor(true, true, true, true, true, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
@@ -243,6 +247,7 @@ object DesConstants {
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
     Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     None)
 
   val AgentPremisesModel1 = AgentPremises("TradingName",
@@ -1385,6 +1390,7 @@ object DesConstants {
   val testAmendEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), false, None)
 
   val testAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60)
+  val testAmendAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), false, 60)
 
   val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None)
   val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)
@@ -2997,15 +3003,21 @@ object DesConstants {
     Some(DesConstants.testAmendEabAll),
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
-    Some(DesConstants.testAmp),
+    Some(DesConstants.testAmendAmp),
     DesConstants.extraAmendFields
+  )
+
+  val amendVariationRequest2 = amendVariationRequest1.copy(amp = Some(DesConstants.testAmp))
+
+  val amendVariationRequest3 = amendVariationRequest1.copy(
+    businessActivities = DesConstants.testAmendAmpBusinessActivities, amp = Some(DesConstants.testAmp)
   )
 
   val amendExtraFields = RPExtra(Some(StringOrInt("333333")), None, Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
 
   val updateAmendVariationCompleteRequest1 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
-    ChangeIndicators(true, true, true, true, true, true, true, true, true, true, true, true, true, true),
+    ChangeIndicators(true, true, true, true, true, true, true, true, true, true, true, true, true, true, true),
     "Amendment",
     DesConstants.testAmendBusinessDetails,
     DesConstants.testAmendViewBusinessContactDetails1,
@@ -3024,7 +3036,7 @@ object DesConstants {
     Some(DesConstants.testAmendEabAll),
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
-    Some(DesConstants.testAmp),
+    Some(DesConstants.testAmendAmp),
     DesConstants.newAmendExtraFields
   )
 
