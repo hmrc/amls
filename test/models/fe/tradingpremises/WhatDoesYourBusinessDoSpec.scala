@@ -60,13 +60,14 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
       val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
         BusinessActivity.BillPaymentServices,
         BusinessActivity.MoneyServiceBusiness,
-        BusinessActivity.TrustAndCompanyServices))
+        BusinessActivity.TrustAndCompanyServices,
+        BusinessActivity.ArtMarketParticipant))
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel1) must be(model)
     }
 
     "convert des model to frontend model when msb is not selected" in {
-      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.BillPaymentServices, BusinessActivity.TrustAndCompanyServices))
+      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.BillPaymentServices, BusinessActivity.TrustAndCompanyServices, BusinessActivity.ArtMarketParticipant))
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel2) must be(model)
     }

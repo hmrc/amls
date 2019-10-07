@@ -303,7 +303,7 @@ object DesConstants {
     Eab(false),
     Bpsp(false),
     Tditpsp(false),
-    TradingPremisesAmp(true),
+    TradingPremisesAmp(false),
     Some("2001-01-01")
   )
 
