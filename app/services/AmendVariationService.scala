@@ -203,7 +203,7 @@ class AmendVariationService @Inject()(
 
    private[services] def validateResult(request: AmendVariationRequest) = {
      // $COVERAGE-OFF$
-     val stream: InputStream = getClass.getResourceAsStream ("/resources/api6_schema_release_3.0.0.json")
+     val stream: InputStream = getClass.getResourceAsStream ("/resources/api6_schema_release_4.2.0.json")
      val lines = scala.io.Source.fromInputStream(stream).getLines
      val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
