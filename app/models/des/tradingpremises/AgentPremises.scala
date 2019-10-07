@@ -16,7 +16,6 @@
 
 package models.des.tradingpremises
 
-import config.AmlsConfig
 import models.des.RequestType
 import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
@@ -32,6 +31,7 @@ case class AgentPremises(tradingName:String,
                          eab: Eab,
                          bpsp: Bpsp,
                          tditpsp: Tditpsp,
+                         amp: Amp,
                          startDate : Option[String],
                          sectorChangeDate: Option[String] = None
                         )
@@ -49,6 +49,7 @@ object AgentPremises {
         (__ \ "eab").readNullable[Eab].map{_.getOrElse(Eab(false))} and
         (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
+        (__ \ "amp").readNullable[Amp].map{_.getOrElse(Amp(false))} and
         (__ \ "startDate").readNullable[String] and
         (__ \ "agentSectorChgDate").readNullable[String]
       ) (AgentPremises.apply _)
@@ -66,6 +67,7 @@ object AgentPremises {
         (__ \ "eab").write[Eab] and
         (__ \ "bpsp").write[Bpsp] and
         (__ \ "tditpsp").write[Tditpsp] and
+        (__ \ "amp").write[Amp] and
         (__ \ "startDate").writeNullable[String] and
         (__ \ "agentSectorChgDate").writeNullable[String]
       ) (unlift(AgentPremises.unapply _))
@@ -82,6 +84,7 @@ object AgentPremises {
     AgentPremises(ytp.tradingName, ytp.tradingPremisesAddress,
       ytp.isResidential,
       tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
+      z,
       z,
       z,
       z,

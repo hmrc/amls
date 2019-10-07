@@ -227,13 +227,15 @@ object TradingPremisesSection {
   val model = Some(Seq(TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
     Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2010, 1, 1), false),
     None, None, None, None,
-    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices, BusinessActivity.MoneyServiceBusiness)),
+    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices, BusinessActivity.MoneyServiceBusiness,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))
   ),
     TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
       Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
       Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
-      WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
+      WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices,
+        BusinessActivity.ArtMarketParticipant))
     )
   ))
 
@@ -247,7 +249,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))), Some(111111), Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
@@ -262,7 +265,8 @@ object TradingPremisesSection {
         BusinessActivity.BillPaymentServices,
         BusinessActivity.TelephonePaymentService,
         BusinessActivity.MoneyServiceBusiness,
-        BusinessActivity.TrustAndCompanyServices)),
+        BusinessActivity.TrustAndCompanyServices,
+        BusinessActivity.ArtMarketParticipant)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, CurrencyExchange, TransmittingMoney, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("TradingName",
@@ -277,7 +281,8 @@ object TradingPremisesSection {
         BusinessActivity.BillPaymentServices,
         BusinessActivity.TelephonePaymentService,
         BusinessActivity.MoneyServiceBusiness,
-        BusinessActivity.TrustAndCompanyServices)),
+        BusinessActivity.TrustAndCompanyServices,
+        BusinessActivity.ArtMarketParticipant)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, CurrencyExchange, TransmittingMoney, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName",
       Address("OwnBusinessAddressLine1", "OwnBusinessAddressLine2", Some("OwnBusinessAddressLine3"), Some("OwnBusinessAddressLine4"), "YY1 1YY"),
@@ -285,7 +290,8 @@ object TradingPremisesSection {
       None, None, None, None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.BillPaymentServices,
         BusinessActivity.EstateAgentBusinessService,
-        BusinessActivity.TrustAndCompanyServices)), None, Some(444444), Some(StatusConstants.Unchanged)),
+        BusinessActivity.TrustAndCompanyServices,
+        BusinessActivity.ArtMarketParticipant)), None, Some(444444), Some(StatusConstants.Unchanged)),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName1",
       Address("OB11AddressLine1", "OB1AddressLine2", Some("OB1AddressLine3"), Some("OB1AddressLine4"), "XX1 1XX"),
       new LocalDate(2001, 1, 1), false), None, None, None, None, WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
@@ -294,7 +300,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), Some(555555), Some(StatusConstants.Unchanged))))
 
 
@@ -311,7 +318,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), None, Some("Added"))))
 }
 

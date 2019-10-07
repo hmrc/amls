@@ -21,13 +21,7 @@ import models.des.businessactivities.AmpServices
 import play.api.libs.json._
 import utils.CommonMethods
 
-final case class Amp(//_id: String,
-                     data: AmpData)
-//                     lastUpdated: LocalDateTime,
-//                     hasChanged: Boolean = false,
-//                     hasAccepted: Boolean = false)
-                     {
-}
+final case class Amp(data: AmpData)
 
 object Amp  {
 

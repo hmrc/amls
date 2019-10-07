@@ -52,7 +52,7 @@ case class SubscriptionRequest(
                                 tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
                                 eabAll: Option[EabAll],
                                 eabResdEstAgncy: Option[EabResdEstAgncy],
-                                ampAll: Option[Amp],
+                                amp: Option[Amp],
                                 responsiblePersons: Option[Seq[ResponsiblePersons]],
                                 filingIndividual: AboutYouRelease7,
                                 declaration: Declaration
@@ -104,7 +104,7 @@ object SubscriptionRequest {
       tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
-      ampAll = data.ampSection,
+      amp = data.ampSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
       filingIndividual = data.aboutYouSection,
       declaration = Declaration(true)

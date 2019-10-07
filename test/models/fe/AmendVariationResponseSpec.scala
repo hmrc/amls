@@ -58,6 +58,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
             eab = Eab(false),
             bpsp = Bpsp(false),
             tditpsp = Tditpsp(false),
+            amp = Amp(false),
             startDate = "2001-01-01",
             endDate = Some("9999-12-31"),
             lineId = Some("000001"),
@@ -82,6 +83,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
               eab = Eab(false),
               bpsp = Bpsp(false),
               tditpsp = Tditpsp(false),
+              amp = Amp(false),
               startDate = "2018-02-01",
               endDate = Some("9999-12-31"),
               status = Some("Added"),
@@ -113,6 +115,7 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
               eab = Eab(false),
               bpsp = Bpsp(false),
               tditpsp = Tditpsp(false),
+              amp = Amp(false),
               startDate = None
             ),
             startDate = Some("2017-01-12"),

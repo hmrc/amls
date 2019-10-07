@@ -29,7 +29,7 @@ import models.des.msb._
 import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => DesSoleProprietor, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, _}
+import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, Amp => AmpTradingPremises, _}
 import org.joda.time.LocalDate
 
 object DefaultDesValues {
@@ -101,6 +101,7 @@ object DefaultDesValues {
     Eab(false),
     Bpsp(false),
     Tditpsp(false),
+    AmpTradingPremises(true),
     "2010-01-01")
 
   private val ownBusinessPremises = OwnBusinessPremises(true, Some(Seq(premises)))
@@ -114,6 +115,7 @@ object DefaultDesValues {
     Eab(true),
     Bpsp(true),
     Tditpsp(false),
+    AmpTradingPremises(true),
     Some("2008-01-01"))
 
   private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)

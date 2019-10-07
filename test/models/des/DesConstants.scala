@@ -29,7 +29,7 @@ import models.des.msb._
 import models.des.responsiblepeople.{Address, PersonName, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
+import models.des.tradingpremises.{Amp => TradingPremisesAmp, Address => TradingPremisesAddress, _}
 import org.joda.time.LocalDate
 import utils.{AckRefGenerator, StatusConstants}
 
@@ -260,6 +260,7 @@ object DesConstants {
     Eab(false),
     Bpsp(true),
     Tditpsp(false),
+    TradingPremisesAmp(true),
     Some("2001-01-01")
   )
 
@@ -278,6 +279,7 @@ object DesConstants {
     Eab(false),
     Bpsp(true),
     Tditpsp(false),
+    TradingPremisesAmp(true),
     Some("2001-01-01")
   )
 
@@ -296,6 +298,7 @@ object DesConstants {
     Eab(false),
     Bpsp(false),
     Tditpsp(false),
+    TradingPremisesAmp(true),
     Some("2001-01-01")
   )
 
@@ -314,6 +317,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -346,6 +350,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -378,6 +383,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("2001-01-01"),
     None
   )
@@ -411,6 +417,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -442,6 +449,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     None,
     None
   )
@@ -486,6 +494,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -520,6 +529,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("2001-01-01"),
     None
   )
@@ -554,6 +564,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(444444)),
@@ -575,6 +586,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
@@ -599,6 +611,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(444444)),
@@ -620,6 +633,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
@@ -644,6 +658,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(444444)),
@@ -666,6 +681,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
@@ -691,6 +707,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-05-05",
       None,
       Some(StringOrInt(444444)),
@@ -712,6 +729,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
@@ -736,6 +754,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-05-05",
       None,
       Some(StringOrInt(444444)),
@@ -758,6 +777,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt(555555)),
@@ -783,6 +803,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      TradingPremisesAmp(true),
       "2001-05-05",
       None,
       Some(StringOrInt("444444")),
@@ -804,6 +825,7 @@ object DesConstants {
       Eab(true),
       Bpsp(true),
       Tditpsp(true),
+      TradingPremisesAmp(true),
       "2001-01-01",
       None,
       Some(StringOrInt("555555")),
@@ -827,6 +849,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -856,6 +879,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -888,6 +912,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -920,6 +945,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -952,6 +978,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -982,6 +1009,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -1014,6 +1042,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
@@ -1046,6 +1075,7 @@ object DesConstants {
     Eab(true),
     Bpsp(true),
     Tditpsp(true),
+    TradingPremisesAmp(true),
     Some("1967-08-13"),
     None
   )
