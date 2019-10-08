@@ -72,12 +72,12 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false))) must be(
+      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false, false))) must be(
         BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, EstateAgentBusinessService, BillPaymentServices)))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities when input is false" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false))) must be(
+      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))) must be(
         BusinessActivities(Set.empty))
     }
   }

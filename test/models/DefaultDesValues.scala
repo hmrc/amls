@@ -18,6 +18,7 @@ package models
 
 import models.des.aboutthebusiness.{Address => ATBAddress, _}
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp._
 import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
 import models.des.businessdetails.BusinessDetails
@@ -28,8 +29,7 @@ import models.des.msb._
 import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => DesSoleProprietor, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, _}
-import models.fe.responsiblepeople.ApprovalFlags
+import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, Amp => AmpTradingPremises, _}
 import org.joda.time.LocalDate
 
 object DefaultDesValues {
@@ -58,14 +58,15 @@ object DefaultDesValues {
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
   private val servicesforRegOff = Some(ServicesforRegOff(true,false,false,false,false,false,false,true,Some("other service")))
   private val aspServicesOffered =  Some(AspServicesOffered(true, false, false, true, true))
-  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false))
+  private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
+  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false,false))
   private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
   private val hvdGoodsSold = Some(HvdGoodsSold(false,false,true,true,true,false,false,false,false,false,false,true,Some("Details"),
     Some(HowGoodsAreSold(true,false,true))))
   private val hvdAlcoholTobacco = Some(HvdAlcoholTobacco(true))
 
   val BusinessActivitiesSection = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
-    tcspServicesOffered, servicesforRegOff, deseabServiceModel, desallActivitiesModel)
+    tcspServicesOffered, servicesforRegOff, deseabServiceModel, ampServices, desallActivitiesModel)
 
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 
@@ -100,6 +101,7 @@ object DefaultDesValues {
     Eab(false),
     Bpsp(false),
     Tditpsp(false),
+    AmpTradingPremises(true),
     "2010-01-01")
 
   private val ownBusinessPremises = OwnBusinessPremises(true, Some(Seq(premises)))
@@ -113,6 +115,7 @@ object DefaultDesValues {
     Eab(true),
     Bpsp(true),
     Tditpsp(false),
+    AmpTradingPremises(true),
     Some("2008-01-01"))
 
   private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
@@ -242,6 +245,8 @@ object DefaultDesValues {
     extra = RPExtra()
   )
   ))
+
+  val AmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60))
 
   val AspSection =  Some(Asp(true, None))
 

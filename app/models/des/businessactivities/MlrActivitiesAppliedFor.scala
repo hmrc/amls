@@ -19,8 +19,7 @@ package models.des.businessactivities
 import models.fe.businessmatching._
 import play.api.libs.json.Json
 
-//TODO: Replace temporary AMP schema fix
-case class MlrActivitiesAppliedFor(msb: Boolean, hvd: Boolean, asp: Boolean, tcsp: Boolean, eab: Boolean, bpsp: Boolean, tditpsp: Boolean, amp: Boolean = false)
+case class MlrActivitiesAppliedFor(msb: Boolean, hvd: Boolean, asp: Boolean, tcsp: Boolean, eab: Boolean, bpsp: Boolean, tditpsp: Boolean, amp: Boolean)
 
 object MlrActivitiesAppliedFor {
 
@@ -40,6 +39,7 @@ object MlrActivitiesAppliedFor {
           case EstateAgentBusinessService => result.copy(eab = true)
           case BillPaymentServices => result.copy(bpsp = true)
           case TelephonePaymentService => result.copy(tditpsp = true)
+          case ArtMarketParticipant => result.copy(amp = true)
         }
       )
     Some(mlrActivities)

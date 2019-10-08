@@ -20,10 +20,9 @@ import models.des.{DesConstants, RequestType, StringOrInt}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
+import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
-import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
 
 class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
@@ -47,6 +46,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
       Eab(false),
       Bpsp(false),
       Tditpsp(false),
+      amp = Amp(false),
       "2010-01-01",
       None,
       None,
@@ -65,6 +65,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
       Eab(true),
       Bpsp(true),
       Tditpsp(false),
+      Amp(false),
       Some("2008-01-01"),
       Some("2003-04-05")
     )
@@ -76,6 +77,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
       Eab(false),
       Bpsp(false),
       Tditpsp(false),
+      Amp(false),
       Some("2008-01-01"))
     val agentPremises2 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
       Msb(false, false, false, false, false),
@@ -85,6 +87,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
       Eab(false),
       Bpsp(false),
       Tditpsp(true),
+      Amp(false),
       Some("2008-01-01"))
 
     "serialise Trading premises model" in {
@@ -127,6 +130,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
           "eab" -> Json.obj("eab" -> false),
           "bpsp" -> Json.obj("bpsp" -> false),
           "tditpsp" -> Json.obj("tditpsp" -> false),
+          "amp" -> Json.obj("amp" -> false),
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
           "tradingNameChangeDate" -> "1999-04-01"
@@ -153,6 +157,7 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
               "eab" -> Json.obj("eab" -> true),
               "bpsp" -> Json.obj("bpsp" -> true),
               "tditpsp" -> Json.obj("tditpsp" -> false),
+              "amp" -> Json.obj("amp" -> false),
               "startDate" -> "2008-01-01",
               "agentSectorChgDate" -> "2003-04-05"
             ),

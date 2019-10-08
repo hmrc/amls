@@ -16,16 +16,14 @@
 
 package models.des.businessActivities
 
-import models.fe.SubscriptionRequest
 import models._
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
+import models.fe.SubscriptionRequest
 import models.fe.asp._
-import models.fe.businessmatching.BusinessMatching
-import models.fe.estateagentbusiness.{BusinessTransfer, Auction, Services, EstateAgentBusiness}
+import models.fe.estateagentbusiness.{Auction, BusinessTransfer, EstateAgentBusiness, Services}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
 
 class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
@@ -93,7 +91,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1999-11-11")))))
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None)
+        BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
 
       BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1999-11-11"))
 
@@ -104,7 +102,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1900-11-11")))))
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None)
+        BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
 
       BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1900-11-11"))
 
@@ -115,7 +113,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), None))))
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, None, None, None, None)
+        BusinessActivitiesSection.model, None, None, None, None, None, None, None)
 
       BusinessActivitiesAll.getEarliestDate(feModel) must be(None)
 

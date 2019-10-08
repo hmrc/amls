@@ -77,9 +77,9 @@ class SupervisionSpec extends PlaySpec
 }
 
 trait SupervisionValues {
-  val activitiesWithAspTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = true, eab = false, bpsp = false, tditpsp = false)
-  val activitiesWithAsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = false, eab = false, bpsp = false, tditpsp = false)
-  val activitiesWithTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = false, tcsp = true, eab = false, bpsp = false, tditpsp = false)
+  val activitiesWithAspTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = true, eab = false, bpsp = false, tditpsp = false, amp = false)
+  val activitiesWithAsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = false, eab = false, bpsp = false, tditpsp = false, amp = false)
+  val activitiesWithTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = false, tcsp = true, eab = false, bpsp = false, tditpsp = false, amp = false)
   val activitiesWithSupervision: Gen[MlrActivitiesAppliedFor] = Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
   val negativeSupervision = Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
 }

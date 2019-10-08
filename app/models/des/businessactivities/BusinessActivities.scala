@@ -28,12 +28,14 @@ case class BusinessActivities(
                                tcspServicesOffered: Option[TcspServicesOffered] = None,
                                tcspServicesforRegOffBusinessAddrVirtualOff: Option[ServicesforRegOff] = None,
                                eabServicesCarriedOut: Option[EabServices] = None,
+                               ampServicesCarriedOut: Option[AmpServices] = None,
                                all: Option[BusinessActivitiesAll] = None)
 
 object BusinessActivities {
   implicit val format = Json.format[BusinessActivities]
 
   implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
+
 
     BusinessActivities(
       feModel.businessMatchingSection,
@@ -44,6 +46,7 @@ object BusinessActivities {
       feModel.tcspSection,
       feModel.tcspSection,
       feModel.eabSection,
+      feModel.ampSection,
       BusinessActivitiesAll.convtoActivitiesALL(feModel)
     )
   }

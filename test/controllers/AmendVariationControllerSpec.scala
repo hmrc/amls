@@ -93,6 +93,7 @@ class AmendVariationControllerSpec extends PlaySpec
     aspSection = None,
     msbSection = None,
     hvdSection = None,
+    ampSection = None,
     supervisionSection = None
   )
 
