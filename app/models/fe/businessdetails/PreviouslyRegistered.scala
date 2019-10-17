@@ -22,6 +22,7 @@ import play.api.libs.json._
 sealed trait PreviouslyRegistered
 
 case class PreviouslyRegisteredYes(value: String) extends PreviouslyRegistered
+case class PreviouslyRegisteredYesOptionalMlr(value: Option[String]) extends PreviouslyRegistered
 
 case object PreviouslyRegisteredNo extends PreviouslyRegistered
 
@@ -29,15 +30,28 @@ object PreviouslyRegistered {
 
   implicit val jsonReads: Reads[PreviouslyRegistered] =
     (__ \ "previouslyRegistered").read[Boolean] flatMap {
-      case true => (__ \ "prevMLRRegNo").read[String] map PreviouslyRegisteredYes.apply _
+      case true => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYesOptionalMlr.apply
       case false => Reads(_ => JsSuccess(PreviouslyRegisteredNo))
     }
 
   implicit val jsonWrites = Writes[PreviouslyRegistered] {
-    case PreviouslyRegisteredYes(value) => Json.obj(
-      "previouslyRegistered" -> true,
-      "prevMLRRegNo" -> value
-    )
+    case PreviouslyRegisteredYes(value) =>
+      Json.obj(
+        "previouslyRegistered" -> true,
+        "prevMLRRegNo" -> value
+      )
+    case PreviouslyRegisteredYesOptionalMlr(x) =>
+      if(x.isDefined) {
+        Json.obj(
+          "previouslyRegistered" -> true,
+          "prevMLRRegNo" -> x
+        )
+      }
+      else {
+        Json.obj(
+          "previouslyRegistered" -> true
+        )
+      }
     case PreviouslyRegisteredNo => Json.obj("previouslyRegistered" -> false)
   }
 
