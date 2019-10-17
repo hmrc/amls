@@ -100,6 +100,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
             responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
             asp = DefaultDesValues.AspSection,
+            amp = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
             declaration = Declaration(true)
           )
@@ -131,6 +132,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
             responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
             asp = DefaultDesValues.AspSection,
+            amp = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
             declaration = Declaration(true)
           )
@@ -188,6 +190,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
       responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
       asp = DefaultDesValues.AspSection,
+      amp = DefaultDesValues.AmpSection,
       aspOrTcsp = DefaultDesValues.AspOrTcspSection,
       declaration = Declaration(true)
     )
@@ -207,6 +210,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       aspSection = ASPTCSPSection.AspSection,
       msbSection = MsbSection.completeModel,
       hvdSection = HvdSection.completeModel,
+      ampSection = AmpSection.completeModel,
       supervisionSection = SupervisionSection.completeModel
     )
   }
@@ -708,6 +712,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           responsiblePersons = DefaultDesValues.ResponsiblePersonsSectionForRelease7Phase2,
           asp = DefaultDesValues.AspSection,
           aspOrTcsp = DefaultDesValues.AspOrTcspSection,
+          amp = DefaultDesValues.AmpSection,
           declaration = Declaration(true)
         )
 
@@ -726,6 +731,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           aspSection = ASPTCSPSection.AspSection,
           msbSection = MsbSection.completeModel,
           hvdSection = HvdSection.completeModel,
+          ampSection = AmpSection.completeModel,
           supervisionSection = SupervisionSection.completeModel
         )
       }

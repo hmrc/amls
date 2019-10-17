@@ -22,7 +22,6 @@ import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.libs.json._
 
-
 class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
 
   "YourTradingPremises" must {
@@ -45,6 +44,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerS
         Eab(false),
         Bpsp(true),
         Tditpsp(false),
+        Amp(false),
         None
       )
       val agentDetail = AgentDetails("", None,None,None,agentPremises, Some("2001-01-01"))

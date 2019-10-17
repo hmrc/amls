@@ -130,6 +130,7 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 }

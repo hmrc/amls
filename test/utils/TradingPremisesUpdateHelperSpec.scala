@@ -24,7 +24,6 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-
 class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
 
   val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
@@ -50,6 +49,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Eab(true),
         Bpsp(true),
         Tditpsp(false),
+        Amp(false),
         "2001-05-01",
         None,
         Some(StringOrInt(444444)),
@@ -121,6 +121,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Eab(true),
         Bpsp(true),
         Tditpsp(false),
+        Amp(false),
         "2001-05-01",
         None,
         None,

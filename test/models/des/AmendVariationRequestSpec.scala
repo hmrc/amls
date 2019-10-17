@@ -73,6 +73,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
       ASPTCSPSection.AspModelForView,
       MsbSection.modelForView,
       HvdSection.modelForView,
+      AmpSection.completeModel,
       SupervisionSection.modelForView
     )
   }
@@ -101,6 +102,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6Phase2),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 
@@ -129,6 +131,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6Phase2),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
@@ -159,6 +162,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
+    Some(DesConstants.testAmp),
     newExtraFields
   )
 }

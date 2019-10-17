@@ -495,6 +495,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 

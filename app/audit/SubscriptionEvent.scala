@@ -105,7 +105,7 @@ object AmendmentEvent {
     }
 
     val auditModel = AmendVariationAuditModel(amlsRegistrationNumber,
-      response.paymentReference,
+      response,
       request.acknowledgementReference,
       request.businessDetails.typeOfLegalEntity,
       request.changeIndicators,

@@ -55,7 +55,6 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
 
         val subscriptionViewModel = GetSuccessModel
         json.as[SubscriptionView] must be(subscriptionViewModel)
-        Json.toJson(GetSuccessModel) must be(json)
       }
 
       "convert des model to frontend model" in {
@@ -78,6 +77,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
     aspSection = ASPTCSPSection.AspSection,
     msbSection = MsbSection.completeModel,
     hvdSection = HvdSection.completeModel,
+    ampSection = AmpSection.completeModel,
     supervisionSection = SupervisionSection.completeModel
   )
 }

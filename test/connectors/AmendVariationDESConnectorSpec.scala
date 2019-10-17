@@ -16,13 +16,13 @@
 
 package connectors
 
-import audit.{AmendmentEventFailed, MockAudit}
+import audit.{AmendmentEvent, AmendmentEventFailed, MockAudit}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.API6
 import models.des
-import models.des.AmendVariationRequest
+import models.des.{AmendVariationRequest, AmendVariationResponse}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -139,6 +139,39 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       }
     }
 
+    "return a Successful AmendEvent" in new Fixture {
+
+      val response = HttpResponse(
+        responseStatus = OK,
+        responseHeaders = Map(
+          "CorrelationId" -> Seq("my-correlation-id")
+        ),
+        responseJson = Some(Json.toJson(successModel))
+      )
+
+      val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
+
+      val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+
+      when {
+        testDESConnector.httpPut.PUT[des.AmendVariationRequest,
+          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
+      } thenReturn Future.successful(response)
+
+      when {
+        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+      } thenReturn Future.successful(auditResult)
+
+      whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest)) { _ =>
+          val subscriptionEvent = AmendmentEvent(amlsRegistrationNumber, testRequest, successModel)
+          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent: ExtendedDataEvent = captor.getValue
+          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+          capturedEvent.auditType mustEqual subscriptionEvent.auditType
+          capturedEvent.detail mustEqual subscriptionEvent.detail
+      }
+    }
+
     "return a failed future (json validation)" in new Fixture {
 
       val response = HttpResponse(
@@ -231,6 +264,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
               },
               "eab": {
               "eab": false
+              },
+              "amp": {
+              "amp": false
               },
             "responsiblePersons":false,
             "filingIndividual":false

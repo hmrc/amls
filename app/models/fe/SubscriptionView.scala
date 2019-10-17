@@ -16,20 +16,20 @@
 
 package models.fe
 
-import models.fe.businessdetails.BusinessDetails
+import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.bankdetails.BankDetails
 import models.fe.businessactivities.BusinessActivities
-import models.fe.businessmatching.{BusinessActivity, BusinessMatching, TrustAndCompanyServices, MoneyServiceBusiness => MSBActivity}
+import models.fe.businessdetails.BusinessDetails
+import models.fe.businessmatching.BusinessMatching
 import models.fe.declaration.AddPerson
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
+import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.responsiblepeople.ResponsiblePeople
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
-import models.des.{SubscriptionView => DesSubscriptionView}
-import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import play.api.libs.json.Json
 
 case class SubscriptionView(
@@ -46,6 +46,7 @@ case class SubscriptionView(
                              aspSection: Option[Asp],
                              msbSection: Option[MoneyServiceBusiness],
                              hvdSection: Option[Hvd],
+                             ampSection: Option[Amp],
                              supervisionSection: Option[Supervision]
                            )
 
@@ -75,6 +76,7 @@ object SubscriptionView {
       aspSection = desView,
       msbSection = desView,
       hvdSection = desView,
+      ampSection = desView,
       supervisionSection = Supervision.convertFrom(desView.aspOrTcsp,
         desView.businessActivities.mlrActivitiesAppliedFor)
     )

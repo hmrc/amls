@@ -45,7 +45,7 @@ case object Receptionist extends TcspService
 case object ConferenceRooms extends TcspService
 case class Other(details: String) extends TcspService
 
-case class ProvidedServices(services: Set[TcspService])
+case class  ProvidedServices(services: Set[TcspService])
 
 object ProvidedServices {
 

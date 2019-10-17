@@ -16,12 +16,12 @@
 
 package audit
 
-import models.des.{AmendVariationRequest, ChangeIndicators}
+import models.des.{AmendVariationRequest, AmendVariationResponse, ChangeIndicators}
 import models.des.businessdetails.BusinessType
 import play.api.libs.json.Json
 
 case class AmendVariationAuditModel(amlsRegistrationNumber: String,
-                                    paymentReference: Option[String],
+                                    response: AmendVariationResponse,
                                     acknowledgementReference: String,
                                     typeOfLegalEntity: BusinessType,
                                     changeIndicators: ChangeIndicators,

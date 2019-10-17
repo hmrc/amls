@@ -79,6 +79,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with IterateeHelpers with 
       aspSection = None,
       msbSection = None,
       hvdSection = None,
+      ampSection = None,
       supervisionSection = None
     )
 

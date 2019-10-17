@@ -50,11 +50,14 @@ class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
     "eab": {
     "eab": true
     },
+    "amp": {
+    "amp": true
+    },
     "responsiblePersons": false,
     "filingIndividual": true
   }""")
 
-      val changeIndicators = ChangeIndicators(false,false,true,true,true,true,true,false,true,false,true,true,false,true)
+      val changeIndicators = ChangeIndicators(false, false, true, true, true, true, true, false, true, false, true, true, true, false, true)
 
       ChangeIndicators.format.writes(changeIndicators) must be(json)
 

@@ -80,6 +80,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
     aspSection = None,
     msbSection = None,
     hvdSection = None,
+    ampSection = None,
     supervisionSection = None
   )
 

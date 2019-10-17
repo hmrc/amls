@@ -18,7 +18,8 @@ package models
 
 
 import models.fe.SubscriptionView
-import models.fe.declaration.{Other => DeclarationOther, RoleWithinBusiness}
+import models.fe.amp.{Amp, AmpData}
+import models.fe.declaration.{RoleWithinBusiness, Other => DeclarationOther}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate
 import utils.StatusConstants
@@ -110,8 +111,7 @@ object SupervisionSection {
 
 object AboutYouSection {
 
-  import models.fe.declaration.AddPerson
-  import models.fe.declaration.BeneficialShareholder
+  import models.fe.declaration.{AddPerson, BeneficialShareholder}
 
   val model = AddPerson("fName", None, "lName", RoleWithinBusiness(Set(DeclarationOther("Agent"))))
 
@@ -120,8 +120,8 @@ object AboutYouSection {
 
 object BusinessActivitiesSection {
 
-  import models.fe.businessactivities._
   import models.fe.businessactivities.ExpectedAMLSTurnover.Third
+  import models.fe.businessactivities._
 
   val model = BusinessActivities(
     Some(InvolvedInOtherNo),
@@ -175,8 +175,8 @@ object EabSection {
 
 object MsbSection {
 
-  import models.fe.moneyservicebusiness._
   import models.fe.moneyservicebusiness.ExpectedThroughput.Third
+  import models.fe.moneyservicebusiness._
 
   private val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
   private val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
@@ -227,13 +227,15 @@ object TradingPremisesSection {
   val model = Some(Seq(TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
     Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2010, 1, 1), false),
     None, None, None, None,
-    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices, BusinessActivity.MoneyServiceBusiness)),
+    WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices, BusinessActivity.MoneyServiceBusiness,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))
   ),
     TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
       Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
       Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
-      WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
+      WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices,
+        BusinessActivity.ArtMarketParticipant))
     )
   ))
 
@@ -247,7 +249,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))), Some(111111), Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
@@ -263,7 +266,8 @@ object TradingPremisesSection {
         BusinessActivity.TelephonePaymentService,
         BusinessActivity.MoneyServiceBusiness,
         BusinessActivity.TrustAndCompanyServices)),
-      Some(MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal))), None, Some("Added")),
+        BusinessActivity.ArtMarketParticipant)),
+      Some(MsbServices(Set(ChequeCashingNotScrapMetal, CurrencyExchange, TransmittingMoney, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("TradingName",
         Address("AgentAddressLine1", "AgentAddressLine2", Some("AgentAddressLine3"), Some("AgentAddressLine4"), "XX1 1XX"),
@@ -278,13 +282,16 @@ object TradingPremisesSection {
         BusinessActivity.TelephonePaymentService,
         BusinessActivity.MoneyServiceBusiness,
         BusinessActivity.TrustAndCompanyServices)),
-      Some(MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal))), None, Some("Added")),
+        BusinessActivity.ArtMarketParticipant)),
+      Some(MsbServices(Set(ChequeCashingNotScrapMetal, CurrencyExchange, TransmittingMoney, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName",
       Address("OwnBusinessAddressLine1", "OwnBusinessAddressLine2", Some("OwnBusinessAddressLine3"), Some("OwnBusinessAddressLine4"), "YY1 1YY"),
       new LocalDate(2001, 5, 5), false),
       None, None, None, None,
-      WhatDoesYourBusinessDo(Set(BusinessActivity.BillPaymentServices,
+      WhatDoesYourBusinessDo(Set(
+        BusinessActivity.ArtMarketParticipant,
         BusinessActivity.EstateAgentBusinessService,
+        BusinessActivity.BillPaymentServices,
         BusinessActivity.TrustAndCompanyServices)), None, Some(444444), Some(StatusConstants.Unchanged)),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName1",
       Address("OB11AddressLine1", "OB1AddressLine2", Some("OB1AddressLine3"), Some("OB1AddressLine4"), "XX1 1XX"),
@@ -294,7 +301,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), Some(555555), Some(StatusConstants.Unchanged))))
 
 
@@ -311,7 +319,8 @@ object TradingPremisesSection {
       BusinessActivity.BillPaymentServices,
       BusinessActivity.TelephonePaymentService,
       BusinessActivity.MoneyServiceBusiness,
-      BusinessActivity.TrustAndCompanyServices)),
+      BusinessActivity.TrustAndCompanyServices,
+      BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal))), None, Some("Added"))))
 }
 
@@ -378,7 +387,7 @@ object BusinessMatchingSection {
       Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
       Some("AA1 1AA"), "GB"), ""),
     BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
-      BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
+      BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices, ArtMarketParticipant)),
     msbServices,
     Some(TypeOfBusiness("TypeOfBusiness")), Some(CompanyRegistrationNumber("12345678")), psrNumber)
 }
@@ -593,8 +602,8 @@ object ResponsiblePeopleSection {
 
 object HvdSection {
 
-  import models.fe.hvd._
   import models.fe.hvd.PercentageOfCashPaymentOver15000.Second
+  import models.fe.hvd._
 
   private val DefaultCashPayment = CashPaymentYes(new LocalDate(1978, 2, 15))
   private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details")))
@@ -624,6 +633,21 @@ object HvdSection {
     Some(LinkedCashPayments(true))))
 }
 
+object AmpSection {
+
+  private val ampData = AmpData(
+    typeOfParticipant = List("artGalleryOwner", "artDealer", "artAgent" ,"artAuctioneer",  "somethingElse"),
+    typeOfParticipantDetail = Some("Another service"),
+    true,
+    Some("2019-09-19 16:58:06.259Z"),
+    true,
+    Some("fortyOneToSixty")
+  )
+
+  val completeModel = Some(Amp(ampData))
+
+}
+
 object SubscriptionViewModel {
 
   val convertedViewModel = SubscriptionView(
@@ -640,6 +664,7 @@ object SubscriptionViewModel {
     ASPTCSPSection.AspModelForView,
     MsbSection.modelForView,
     HvdSection.modelForView,
+    AmpSection.completeModel,
     SupervisionSection.modelForView
   )
 
@@ -658,6 +683,7 @@ object SubscriptionViewModel {
     ASPTCSPSection.AspModelForView,
     MsbSection.modelForView,
     HvdSection.modelForView,
+    AmpSection.completeModel,
     SupervisionSection.modelForView
   )
 }

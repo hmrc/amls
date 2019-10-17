@@ -200,6 +200,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
       Some(DesConstants.testEabAll),
       Some(DesConstants.testEabResdEstAgncy),
       Some(DesConstants.testResponsiblePersons),
+      Some(DesConstants.testAmp),
       DesConstants.extraFields
     )
     Tcsp.conv(SubscriptionViewModel) must
@@ -233,6 +234,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
       Some(DesConstants.testEabAll),
       Some(DesConstants.testEabResdEstAgncy),
       Some(DesConstants.testResponsiblePersons),
+      Some(DesConstants.testAmp),
       DesConstants.extraFields
     )
     Tcsp.conv(SubscriptionViewModel) must

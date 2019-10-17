@@ -102,3 +102,13 @@ object Tditpsp{
     Tditpsp(businessActivity.contains(BusinessActivity.TelephonePaymentService))
   }
 }
+
+case class Amp(amp: Boolean)
+
+object Amp{
+  implicit val format = Json.format[Amp]
+
+  implicit def convert(businessActivity: Set[BusinessActivity]) : Amp ={
+    Amp(businessActivity.contains(BusinessActivity.ArtMarketParticipant))
+  }
+}

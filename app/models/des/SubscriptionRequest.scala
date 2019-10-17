@@ -18,6 +18,7 @@ package models.des
 
 import models.des.aboutthebusiness.{BusinessContactDetails, CorporationTaxRegisteredCbUbLlp, PreviouslyRegisteredMLR, VATRegistration}
 import models.des.aboutyou.AboutYouRelease7
+import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetails
 import models.des.businessactivities.BusinessActivities
@@ -51,6 +52,7 @@ case class SubscriptionRequest(
                                 tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
                                 eabAll: Option[EabAll],
                                 eabResdEstAgncy: Option[EabResdEstAgncy],
+                                amp: Option[Amp],
                                 responsiblePersons: Option[Seq[ResponsiblePersons]],
                                 filingIndividual: AboutYouRelease7,
                                 declaration: Declaration
@@ -101,6 +103,7 @@ object SubscriptionRequest {
       tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
+      amp = data.ampSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
       filingIndividual = data.aboutYouSection,
       declaration = Declaration(true)

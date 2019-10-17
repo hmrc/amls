@@ -18,6 +18,7 @@ package models.des
 
 import models.des.aboutthebusiness._
 import models.des.aboutyou.AboutYouRelease7
+import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetailsView
 import models.des.businessactivities.BusinessActivities
@@ -54,6 +55,7 @@ case class AmendVariationRequest(
                                 eabAll : Option[EabAll],
                                 eabResdEstAgncy : Option[EabResdEstAgncy],
                                 responsiblePersons: Option[Seq[ResponsiblePersons]],
+                                amp: Option[Amp],
                                 extraFields: ExtraFields
                               ) {
   def setChangeIndicator(changeIndicators: ChangeIndicators): AmendVariationRequest = {
@@ -104,6 +106,7 @@ object AmendVariationRequest {
         (__ \ "eabAll").readNullable[EabAll] and
         (__ \ "eabResdEstAgncy").readNullable[EabResdEstAgncy] and
         (__ \ "responsiblePersons").readNullable[Seq[ResponsiblePersons]] and
+        (__ \ "amp").readNullable[Amp] and
         __.read[ExtraFields]
       ) (AmendVariationRequest.apply _)
   }
@@ -131,6 +134,7 @@ object AmendVariationRequest {
       (__ \ "eabAll").writeNullable[EabAll] and
       (__ \ "eabResdEstAgncy").writeNullable[EabResdEstAgncy] and
       (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
+      (__ \ "amp").writeNullable[Amp] and
       __.write[ExtraFields]
       ) (unlift(AmendVariationRequest.unapply _))
   }
@@ -152,6 +156,7 @@ object AmendVariationRequest {
                                        responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
                                        msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
                                        hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
+                                       ampConv : Option[fe.amp.Amp] => Option[Amp],
                                        messageType : AmlsMessageType,
                                        requestType: RequestType
   ): Outgoing =
@@ -176,6 +181,7 @@ object AmendVariationRequest {
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
-      extraFields = data.aboutYouSection
+      extraFields = data.aboutYouSection,
+      amp = data.ampSection
     )
 }
