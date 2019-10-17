@@ -154,17 +154,17 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testDESConnector.httpPut.PUT[des.AmendVariationRequest,
+        testConnector.httpClient.PUT[des.AmendVariationRequest,
           HttpResponse](eqTo(url), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testDESConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testDESConnector.amend(amlsRegistrationNumber, testRequest)) { _ =>
+      whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) { _ =>
           val subscriptionEvent = AmendmentEvent(amlsRegistrationNumber, testRequest, successModel)
-          verify(testDESConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          verify(testConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
           val capturedEvent: ExtendedDataEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
