@@ -141,7 +141,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     }
   }
 
-  val businessDetailsModel = BusinessDetails(PreviouslyRegisteredYes("12345678"),
+  val businessDetailsModel = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
     Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
@@ -650,7 +650,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
     "convert correctly" in {
 
       val businessDetailsModel = BusinessDetails(
-        PreviouslyRegisteredYes("12345678"),
+        PreviouslyRegisteredYes(Some("12345678")),
         Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
         Some(VATRegisteredYes("123456789")),
         Some(CorporationTaxRegisteredYes("1234567890")),

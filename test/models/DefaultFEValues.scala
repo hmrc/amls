@@ -398,7 +398,7 @@ object AboutTheBusinessSection {
 
   private val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
   // scalastyle:off magic.number
-  val model = BusinessDetails(PreviouslyRegisteredYes("12345678"),
+  val model = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
     Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
     Some(VATRegisteredYes("123456789")),
     Some(regForCorpTax),

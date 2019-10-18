@@ -21,8 +21,7 @@ import play.api.libs.json._
 
 sealed trait PreviouslyRegistered
 
-case class PreviouslyRegisteredYes(value: String) extends PreviouslyRegistered
-case class PreviouslyRegisteredYesOptionalMlr(value: Option[String]) extends PreviouslyRegistered
+case class PreviouslyRegisteredYes(value: Option[String]) extends PreviouslyRegistered
 
 case object PreviouslyRegisteredNo extends PreviouslyRegistered
 
@@ -30,28 +29,26 @@ object PreviouslyRegistered {
 
   implicit val jsonReads: Reads[PreviouslyRegistered] =
     (__ \ "previouslyRegistered").read[Boolean] flatMap {
-      case true => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYesOptionalMlr.apply
+      case true => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYes.apply
       case false => Reads(_ => JsSuccess(PreviouslyRegisteredNo))
     }
 
   implicit val jsonWrites = Writes[PreviouslyRegistered] {
     case PreviouslyRegisteredYes(value) =>
-      Json.obj(
-        "previouslyRegistered" -> true,
-        "prevMLRRegNo" -> value
-      )
-    case PreviouslyRegisteredYesOptionalMlr(x) =>
-      if(x.isDefined) {
+      if(value.isDefined) {
         Json.obj(
           "previouslyRegistered" -> true,
-          "prevMLRRegNo" -> x
+          "prevMLRRegNo" -> value
         )
-      }
-      else {
+      } else {
         Json.obj(
           "previouslyRegistered" -> true
         )
       }
+    case PreviouslyRegisteredYes(None) =>
+      Json.obj(
+        "previouslyRegistered" -> true
+      )
     case PreviouslyRegisteredNo => Json.obj("previouslyRegistered" -> false)
   }
 
@@ -59,8 +56,8 @@ object PreviouslyRegistered {
     prevMLR match {
       case Some(prevReg) => {
         (prevReg.amlsRegistered, prevReg.prevRegForMlr) match {
-          case (true, false) => PreviouslyRegisteredYes(prevReg.mlrRegNumber.getOrElse(""))
-          case (false, true) => PreviouslyRegisteredYes(prevReg.prevMlrRegNumber.getOrElse(""))
+          case (true, false) => PreviouslyRegisteredYes(Some(prevReg.mlrRegNumber.getOrElse("")))
+          case (false, true) => PreviouslyRegisteredYes(Some(prevReg.prevMlrRegNumber.getOrElse("")))
           case (_, _) => PreviouslyRegisteredNo
         }
       }
