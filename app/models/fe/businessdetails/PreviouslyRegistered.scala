@@ -34,21 +34,10 @@ object PreviouslyRegistered {
     }
 
   implicit val jsonWrites = Writes[PreviouslyRegistered] {
-    case PreviouslyRegisteredYes(value) =>
-      if(value.isDefined) {
-        Json.obj(
-          "previouslyRegistered" -> true,
-          "prevMLRRegNo" -> value
-        )
-      } else {
-        Json.obj(
-          "previouslyRegistered" -> true
-        )
-      }
-    case PreviouslyRegisteredYes(None) =>
-      Json.obj(
-        "previouslyRegistered" -> true
-      )
+    case PreviouslyRegisteredYes(value) => Json.obj(
+      "previouslyRegistered" -> true,
+      "prevMLRRegNo" -> value
+    )
     case PreviouslyRegisteredNo => Json.obj("previouslyRegistered" -> false)
   }
 
@@ -56,13 +45,20 @@ object PreviouslyRegistered {
     prevMLR match {
       case Some(prevReg) => {
         (prevReg.amlsRegistered, prevReg.prevRegForMlr) match {
-          case (true, false) => PreviouslyRegisteredYes(Some(prevReg.mlrRegNumber.getOrElse("")))
-          case (false, true) => PreviouslyRegisteredYes(Some(prevReg.prevMlrRegNumber.getOrElse("")))
+          case (true, false) => PreviouslyRegisteredYes(getStringOption(prevReg.mlrRegNumber.getOrElse("")))
+          case (false, true) => PreviouslyRegisteredYes(getStringOption(prevReg.prevMlrRegNumber.getOrElse("")))
           case (_, _) => PreviouslyRegisteredNo
         }
       }
       case None => PreviouslyRegisteredNo
     }
+  }
 
+  def getStringOption(value: String): Option[String] = {
+    if(value.isEmpty) {
+      None
+    } else {
+      Some(value)
+    }
   }
 }
