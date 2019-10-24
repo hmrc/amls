@@ -39,7 +39,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       Json.fromJson[PreviouslyRegistered](json) must
         be(JsSuccess(PreviouslyRegisteredYes(Some("12345678")), JsPath \ "prevMLRRegNo"))
     }
-
+ 
     "write the correct value" in {
 
       Json.toJson(PreviouslyRegisteredNo) must
