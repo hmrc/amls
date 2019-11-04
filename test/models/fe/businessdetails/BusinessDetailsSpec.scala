@@ -24,7 +24,7 @@ import play.api.libs.json.{JsNull, Json}
 
 class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
-  val previouslyRegistered = PreviouslyRegisteredYes("12345678")
+  val previouslyRegistered = PreviouslyRegisteredYes(Some("12345678"))
 
   val regForVAT = VATRegisteredYes("123456789")
 
@@ -80,7 +80,7 @@ class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
 
     val completeModel = BusinessDetails(
-      previouslyRegistered = PreviouslyRegisteredYes("12345678"),
+      previouslyRegistered = PreviouslyRegisteredYes(Some("12345678")),
       activityStartDate = Some(activityStartDate),
       vatRegistered = Some(regForVAT),
       corporationTaxRegistered = Some(regForCorpTax),

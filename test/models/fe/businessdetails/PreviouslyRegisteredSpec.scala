@@ -46,6 +46,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
 
       Json.fromJson[PreviouslyRegistered](json) must
         be(JsError((JsPath \ "prevMLRRegNo") -> JsonValidationError("error.path.missing")))
+        be(JsSuccess(PreviouslyRegisteredYes(Some("12345678")), JsPath \ "prevMLRRegNo"))
     }
 
     "write the correct value" in {
@@ -53,7 +54,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       Json.toJson(PreviouslyRegisteredNo) must
         be(Json.obj("previouslyRegistered" -> false))
 
-      Json.toJson(PreviouslyRegisteredYes("12345678")) must
+      Json.toJson(PreviouslyRegisteredYes(Some("12345678"))) must
         be(Json.obj(
           "previouslyRegistered" -> true,
           "prevMLRRegNo" -> "12345678"
@@ -65,7 +66,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
         None,
         true,
         Some("555553333322222")))
-      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes("555553333322222"))
+      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber is returned from des" in {
@@ -73,7 +74,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
         Some("555553333322222"),
         false,
         None))
-      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes("555553333322222"))
+      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber and  mlrRegNumberis os none" in {
