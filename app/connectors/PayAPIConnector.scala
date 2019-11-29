@@ -46,7 +46,7 @@ class PayAPIConnector @Inject()(app: Application) extends HttpResponseHelper wit
 
   private def getPaymentFunction(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
-    val url = s"$paymentUrl/pay-api/payment/$paymentId"
+    val url = s"$paymentUrl/pay-api/payment/summary/$paymentId"
 
     val bodyParser = JsonParsed[Payment]
 

@@ -45,20 +45,20 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
   "Payment" must {
     "serialise to JSON" in {
       Json.toJson(Payment(
-        _id,
+        id,
         other,
         ref,
-        desc,
+        //desc,
         amountInPence,
-        url,
+        //url,
         PaymentStatuses.Successful
       )) must be(Json.obj(
-        "_id" -> _id,
+        "_id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
-        "description" -> desc,
+        //"description" -> desc,
         "amountInPence" -> amountInPence,
-        "returnUrl" -> url,
+        //"returnUrl" -> url,
         "status" -> "Successful"
       ))
 

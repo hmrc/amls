@@ -48,7 +48,7 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
   )
 
   val payApiPaymentGen: Gen[Payment] = for {
-    _id <- hashGen
+    id <- hashGen
     taxType <- taxTypesGen
     ref <- paymentRefGen
     desc <- alphaNumOfLengthGen(refLength)
@@ -56,12 +56,12 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     url <- alphaNumOfLengthGen(refLength)
     paymentStatus <- paymentStatusGen
   } yield Payment(
-    _id,
+    id,
     taxType.head,
     ref,
-    desc,
+    //desc,
     amountInPence,
-    url,
+    //url,
     paymentStatus.head
   )
 
