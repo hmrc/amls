@@ -1091,7 +1091,7 @@
                     "$ref": "#/definitions/agentPremiseDetails"
                   },
                   "startDate": {
-                    "$ref": "#/definitions/dateString"
+                    "$ref": "#/definitions/extendedDateString"
                   },
                   "dateChangeFlag": {
                     "type": "boolean"
@@ -3478,7 +3478,7 @@
           "$ref": "#/definitions/dateString"
         },
         "startDate": {
-          "$ref": "#/definitions/dateString"
+          "$ref": "#/definitions/extendedDateString"
         },
         "dateChangeFlag": {
           "type": "boolean"
