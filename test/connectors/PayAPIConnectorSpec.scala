@@ -43,7 +43,7 @@ class PayAPIConnectorSpec extends PlaySpec
 
     val mockHttp = mock[HttpGet]
     val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl = s"url/pay-api/payment/${testPayment.id}"
+    val paymentUrl = s"url/pay-api/payment/summary/${testPayment.id}"
 
     object testConnector extends PayAPIConnector(app) {
       override private[connectors] val httpGet: HttpGet = mockHttp
