@@ -1,0 +1,7 @@
+ + [AMLS-4578] - 'Updated "Is your business currently registered with HMRC?"'
+ + [AMLS-5247] - 'Add payment values to explicit audit events'
+ + [AMLS-5292] - 'Schema change quick fix'
+ + [AMLS-5332] - CR32: Handling additional fields in responsible people part of schema
+ + [AMLS-5334] - 'Updating AMP models'
+ + [AMLS-5346] - 'Extend change indicator logic to cover AMP'
+ + [AMLS-5401] - 'Add latest schemas and tidy up'
