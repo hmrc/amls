@@ -1,1 +1,0 @@
- + [AMLS-5332] - CR32: Handling additional fields in responsible people part of schema
