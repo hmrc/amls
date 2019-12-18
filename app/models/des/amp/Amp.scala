@@ -43,7 +43,7 @@ object Amp {
   implicit def conv(ampOpt: Option[models.fe.amp.Amp]): Option[Amp] =
   {
       ampOpt.map(amp => amp.data).map(amp => {
-        Amp( transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld( amp.boughtOrSoldOverThreshold,
+        Amp( transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld( amp.soldOverThreshold,
                                                                         amp.dateTransactionOverThreshold),
              sysAutoIdOfLinkedTransactions = amp.identifyLinkedTransactions,
              ampPercentageTurnover = getPercentage(amp.percentageExpectedTurnover)

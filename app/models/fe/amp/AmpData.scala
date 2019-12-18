@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 
 final case class AmpData(typeOfParticipant: List[String],
                          typeOfParticipantDetail: Option[String],
-                         boughtOrSoldOverThreshold: Boolean,
+                         soldOverThreshold: Boolean,
                          dateTransactionOverThreshold: Option[String],
                          identifyLinkedTransactions: Boolean,
                          percentageExpectedTurnover: Option[String]) {
