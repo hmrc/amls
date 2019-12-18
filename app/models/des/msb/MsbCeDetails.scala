@@ -31,6 +31,7 @@ object MsbCeDetails {
           case _ => JsSuccess(false)
         }
         case x: JsBoolean => JsSuccess(x.value)
+        case _ => throw new MatchError(this)
       }
   }
 

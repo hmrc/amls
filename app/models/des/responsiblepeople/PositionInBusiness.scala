@@ -50,6 +50,7 @@ object PositionInBusiness {
         case FeSoleProprietor => pos.copy(_6 = true)
         case DesignatedMember => pos.copy(_7 = true)
         case Other(_) => pos.copy(_8 = true)
+        case _ => throw new MatchError(this)
       }
     }
   }
