@@ -34,12 +34,10 @@ object TaxTypes extends Enum[TaxType] {
   override def values = findValues
 }
 
-case class Payment(_id: String,
+case class Payment( id: String,
                     taxType: TaxType,
                     reference: String,
-                    description: String,
                     amountInPence: Int,
-                    returnUrl: String,
                     status: PaymentStatus)
 
 object Payment {

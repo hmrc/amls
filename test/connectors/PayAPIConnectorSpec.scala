@@ -43,7 +43,7 @@ class PayAPIConnectorSpec extends PlaySpec
 
     val mockHttp = mock[HttpGet]
     val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
+    val paymentUrl = s"url/pay-api/payment/summary/${testPayment.id}"
 
     object testConnector extends PayAPIConnector(app) {
       override private[connectors] val httpGet: HttpGet = mockHttp
@@ -51,7 +51,7 @@ class PayAPIConnectorSpec extends PlaySpec
       override private[connectors] val metrics = mock[Metrics]
     }
 
-    val testPaymentId = testPayment._id
+    val testPaymentId = testPayment.id
 
     implicit val hc = HeaderCarrier()
 

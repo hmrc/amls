@@ -29,7 +29,6 @@ case class Payment(_id: String,
                     amlsRefNo: String,
                     safeId: String,
                     reference: String,
-                    description: String,
                     amountInPence: Int,
                     status: PaymentStatus,
                     createdAt: LocalDateTime,
@@ -41,11 +40,10 @@ object Payment {
 
   def apply(amlsRegNo: String, safeId: String, apiPayment: PayApiPayment): Payment =
     Payment(
-      apiPayment._id,
+      apiPayment.id,
       amlsRegNo,
       safeId,
       apiPayment.reference,
-      apiPayment.description,
       apiPayment.amountInPence,
       apiPayment.status,
       LocalDateTime.now
@@ -56,7 +54,6 @@ object Payment {
       bacsPaymentRequest.amlsReference,
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,
-      "BACS Payment",
       bacsPaymentRequest.amountInPence,
       Created,
       LocalDateTime.now,
