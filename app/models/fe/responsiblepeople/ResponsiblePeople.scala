@@ -19,6 +19,8 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class ResponsiblePeople(
                               personName: Option[PersonName] = None,

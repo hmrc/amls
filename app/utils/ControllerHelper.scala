@@ -16,14 +16,13 @@
 
 package utils
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.{JsPath, Json, JsonValidationError}
 
 trait ControllerHelper {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
+  def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]) = Json.obj(
     "errors" -> (errors map {
       case (path, error) =>
         Json.obj(

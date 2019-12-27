@@ -18,7 +18,7 @@ package models.fe.tradingpremises
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class BusinessStructureSpec extends PlaySpec {
 
@@ -47,7 +47,7 @@ class BusinessStructureSpec extends PlaySpec {
 
     "throw error for invalid data" in {
       Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "20")) must
-        be(JsError(JsPath \ "agentsBusinessStructure", ValidationError("error.invalid")))
+        be(JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
     }
 
     "convert input string successfully" in {

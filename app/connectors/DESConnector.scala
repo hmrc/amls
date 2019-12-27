@@ -16,32 +16,24 @@
 
 package connectors
 
-import config.{AmlsConfig, MicroserviceAuditConnector, WSHttp}
+import config.ApplicationConfig
 import javax.inject.{Inject, Singleton}
-import metrics.Metrics
-import play.api.Application
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
 @Singleton
-class DESConnector @Inject()(app: Application)
-  extends HttpResponseHelper {
+class DESConnector @Inject()(applicationConfig: ApplicationConfig,
+                             val auditConnector: AuditConnector) extends HttpResponseHelper {
 
-  private[connectors] val baseUrl: String = AmlsConfig.desUrl
-  private[connectors] val token: String = s"Bearer ${AmlsConfig.desToken}"
-  private[connectors] val env: String = AmlsConfig.desEnv
-  private[connectors] val wsHttp:WSHttp = app.injector.instanceOf(classOf[WSHttp])
-  private[connectors] val httpPost: HttpPost = wsHttp
-  private[connectors] val httpPut: HttpPut = wsHttp
-  private[connectors] val httpGet: HttpGet = wsHttp
-  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
+  private[connectors] val baseUrl: String = applicationConfig.desUrl
+  private[connectors] val token: String = s"Bearer ${applicationConfig.desToken}"
+  private[connectors] val env: String = applicationConfig.desEnv
   private[connectors] val requestUrl = "anti-money-laundering/subscription"
   private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-  private[connectors] val auditConnector: AuditConnector = new MicroserviceAuditConnector(app)
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
 
 

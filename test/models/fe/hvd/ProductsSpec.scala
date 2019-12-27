@@ -17,10 +17,10 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 
 class ProductsSpec extends PlaySpec with MockitoSugar {
@@ -49,12 +49,12 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
       "fail when on path is missing" in {
         Json.fromJson[Products](Json.obj(
           "product" -> Seq("01"))) must
-          be(JsError((JsPath \ "products") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "products") -> JsonValidationError("error.path.missing")))
       }
 
       "fail when on invalid data" in {
         Json.fromJson[Products](Json.obj("products" -> Seq("40"))) must
-          be(JsError(JsPath \ "products"  -> ValidationError("error.invalid")))
+          be(JsError(JsPath \ "products"  -> JsonValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {

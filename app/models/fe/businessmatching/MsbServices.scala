@@ -40,7 +40,7 @@ object MsbService {
       case JsString("03") => JsSuccess(ChequeCashingNotScrapMetal)
       case JsString("04") => JsSuccess(ChequeCashingScrapMetal)
       case JsString("05") => JsSuccess(ForeignExchange)
-      case _ => JsError((JsPath \ "msbServices") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "msbServices") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonW = Writes[MsbService] {

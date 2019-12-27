@@ -20,19 +20,20 @@ import connectors.DeregisterSubscriptionConnector
 import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeregisterSubscriptionController @Inject()(
-                                                  deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
-                                                  implicit val apiRetryHelper: ApiRetryHelper,
-                                                  authAction: AuthAction
-                                                ) extends BaseController with ControllerHelper {
+class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
+                                                 implicit val apiRetryHelper: ApiRetryHelper,
+                                                 authAction: AuthAction,
+                                                 bodyParsers: PlayBodyParsers,
+                                                 val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
 
-  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(parse.json) {
+  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {

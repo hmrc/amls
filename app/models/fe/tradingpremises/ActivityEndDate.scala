@@ -18,6 +18,8 @@ package models.fe.tradingpremises
 
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class ActivityEndDate (endDate: LocalDate)
 

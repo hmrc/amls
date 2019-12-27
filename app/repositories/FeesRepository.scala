@@ -25,13 +25,13 @@ import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.play.json.ImplicitBSONHandlers._
-import uk.gov.hmrc.mongo.{ReactiveRepository, Repository}
+import uk.gov.hmrc.mongo.ReactiveRepository
 import utils.MongoUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait FeesRepository extends Repository[Fees, BSONObjectID] {
+trait FeesRepository extends ReactiveRepository[Fees, BSONObjectID] {
   def insert(feeResponse: Fees):Future[Boolean]
   def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]]
 }

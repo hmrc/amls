@@ -19,10 +19,10 @@ package models.fe.estateagentbusiness
 import models.des.businessactivities.BusinessActivities
 import models.des.{DesConstants, SubscriptionView}
 import models.des.estateagentbusiness.EabAll
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 
 class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar {
@@ -43,7 +43,7 @@ class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar {
     "fail to validate when given an empty `Yes` value" in {
       val json = Json.obj("penalisedUnderEstateAgentsAct" -> true)
       Json.fromJson[PenalisedUnderEstateAgentsAct](json) must
-        be(JsError((JsPath \ "penalisedUnderEstateAgentsActDetails") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "penalisedUnderEstateAgentsActDetails") -> JsonValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

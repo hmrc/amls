@@ -21,7 +21,7 @@ import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.PropertyChecks
 import org.scalatestplus.play.PlaySpec
 

@@ -17,7 +17,7 @@
 package models.fe.estateagentbusiness
 
 import models.des.DesConstants
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

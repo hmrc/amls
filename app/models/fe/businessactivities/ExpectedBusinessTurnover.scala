@@ -16,7 +16,6 @@
 
 package models.fe.businessactivities
 
-import config.AmlsConfig
 import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -45,7 +44,7 @@ object ExpectedBusinessTurnover {
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
       case _ =>
-        Reads(_ => JsError(JsPath \ "expectedBusinessTurnover", ValidationError("error.invalid")))
+        Reads(_ => JsError(JsPath \ "expectedBusinessTurnover", JsonValidationError("error.invalid")))
     }
   }
 

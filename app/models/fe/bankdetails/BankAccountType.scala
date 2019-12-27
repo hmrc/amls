@@ -34,7 +34,7 @@ object BankAccountType {
       case "02" => Reads(_ => JsSuccess(BelongsToBusiness))
       case "03" => Reads(_ => JsSuccess(BelongsToOtherBusiness))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "bankAccountType", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
     }
   }
 

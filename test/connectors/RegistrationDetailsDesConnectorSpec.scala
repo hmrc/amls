@@ -17,54 +17,29 @@
 package connectors
 
 import audit.MockAudit
-import config.AmlsConfig
-import metrics.Metrics
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfter, MustMatchers}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.BeforeAndAfter
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RegistrationDetailsDesConnectorSpec extends PlaySpec
-  with MustMatchers
-  with ScalaFutures
-  with MockitoSugar
-  with BeforeAndAfter
-  with OneAppPerSuite {
-
-  val mockHttpGet = mock[HttpGet]
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
 
   trait Fixture {
-    val connector = new RegistrationDetailsDesConnector(app) {
+
+    val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockAuditConnector, mockHttpClient) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
-      override private[connectors] val httpPost = mock[HttpPost]
-      override private[connectors] val httpGet = mockHttpGet
-      override private[connectors] val metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
-      override private[connectors] val auditConnector = mock[AuditConnector]
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }
-
-    implicit val headerCarrier = HeaderCarrier()
-
-  }
-
-  before {
-    reset(mockHttpGet)
   }
 
   "The RegistrationDetailsDesConnector" must {
@@ -74,12 +49,11 @@ class RegistrationDetailsDesConnectorSpec extends PlaySpec
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        mockHttpGet.GET[HttpResponse](eqTo(s"${AmlsConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
+        connector.httpClient.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
       } thenReturn Future.successful(HttpResponse(OK, Some(Json.toJson(details))))
 
       whenReady (connector.getRegistrationDetails(safeId)) { _ mustBe details }
 
     }
   }
-
 }

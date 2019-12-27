@@ -20,7 +20,7 @@ import models.des.StringOrInt
 import models.fe.responsiblepeople.ResponsiblePeople
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
-import play.api.test.FakeApplication
+
 import utils.StatusConstants
 
 class RPExtraSpec extends PlaySpec with OneAppPerSuite{

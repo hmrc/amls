@@ -36,7 +36,7 @@ object WithdrawalReason {
       case JsString("Under another supervisor") => JsSuccess(UnderAnotherSupervisor)
       case JsString("Joined AWRS Group") => JsSuccess(JoinedAWRSGroup)
       case JsString("Other, please specify") => JsSuccess(Other)
-      case _ => JsError((JsPath \ "withdrawalReason") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "withdrawalReason") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =

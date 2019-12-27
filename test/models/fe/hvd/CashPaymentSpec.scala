@@ -18,10 +18,9 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class CashPaymentSpec extends PlaySpec with MockitoSugar {
 
@@ -50,7 +49,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("acceptedAnyPayment" -> true)
 
         Json.fromJson[CashPayment](json) must
-          be(JsError((JsPath \ "paymentDate") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "paymentDate") -> JsonValidationError("error.path.missing")))
       }
 
       "Successfully read and write Json data" in {
@@ -60,6 +59,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
       }
 
       "write the correct value" in {
+        import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
         Json.toJson(CashPaymentNo) must
           be(Json.obj("acceptedAnyPayment" -> false))

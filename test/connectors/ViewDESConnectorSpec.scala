@@ -20,47 +20,28 @@ import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API5, Metrics}
+import metrics.API5
 import models.des._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ViewDESConnectorSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with OneAppPerSuite
-    with AmlsReferenceNumberGenerator {
-
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   trait Fixture {
-
-    object testDESConnector extends ViewDESConnector(app) {
+    val testDESConnector = new ViewDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-      override private[connectors] val auditConnector = mock[AuditConnector]
-
     }
-
-    implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
 
@@ -82,7 +63,7 @@ class ViewDESConnectorSpec
         responseJson = Some(Json.toJson(ViewSuccessModel))
       )
 
-      when(testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any()))
+      when(testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any()))
         .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
@@ -97,7 +78,7 @@ class ViewDESConnectorSpec
         responseHeaders = Map.empty
       )
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -116,7 +97,7 @@ class ViewDESConnectorSpec
       )
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
@@ -128,7 +109,7 @@ class ViewDESConnectorSpec
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpGet.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {

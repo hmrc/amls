@@ -37,6 +37,7 @@ object NonUkResident {
               Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, true,
                 Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
             ))
+          case _ => throw new Exception("Cannot match on residence type.")
         }
         case _ => None
       } getOrElse {
@@ -52,6 +53,7 @@ object NonUkResident {
               None,
               Some(NonUkResident(rp.dateOfBirth map { _.dateOfBirth.toString }, false, None)))
           }
+          case _ => throw new Exception("Cannot match on passport and residence")
         }
       }
     }

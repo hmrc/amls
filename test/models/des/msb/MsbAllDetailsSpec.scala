@@ -18,7 +18,7 @@ package models.des.msb
 
 import models.fe.moneyservicebusiness._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
+
 
 class MsbAllDetailsSpec extends PlaySpec with OneAppPerSuite{
 

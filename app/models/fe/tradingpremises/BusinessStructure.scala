@@ -39,7 +39,7 @@ object BusinessStructure {
       case "04" => Reads(_ => JsSuccess(IncorporatedBody))
       case "05" => Reads(_ => JsSuccess(UnincorporatedBody))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
     }
   }
 

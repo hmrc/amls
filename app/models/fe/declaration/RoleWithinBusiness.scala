@@ -16,7 +16,6 @@
 
 package models.fe.declaration
 
-import config.AmlsConfig
 import models.des.aboutyou.AboutYouRelease7
 import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
@@ -75,7 +74,7 @@ object RoleWithinBusiness {
           val test = (JsPath \ "roleWithinBusinessOther").read[String].map(Other.apply _)
           test map identity[RoleType]
         case _ =>
-          Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[RoleType]]](
         Reads[Set[RoleType]](_ => JsSuccess(Set.empty))
       ) {

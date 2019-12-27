@@ -21,6 +21,8 @@ import org.joda.time.LocalDate
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class Positions(positions: Set[PositionWithinBusiness], startDate: Option[LocalDate])
 
@@ -47,7 +49,7 @@ object PositionWithinBusiness {
       case JsString("06") => JsSuccess(SoleProprietor)
       case JsString("07") => JsSuccess(DesignatedMember)
       case JsObject(m) if m.contains("other") => JsSuccess(Other(m("other").as[String]))
-      case _ => JsError((JsPath \ "positions") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "positions") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonWrites = Writes[PositionWithinBusiness] {

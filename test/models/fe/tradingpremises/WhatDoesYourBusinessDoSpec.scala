@@ -19,7 +19,7 @@ package models.fe.tradingpremises
 import models.des.DesConstants
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
   val model = WhatDoesYourBusinessDo(
@@ -46,7 +46,7 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
 
       "fail when on invalid data" in {
         Json.fromJson[WhatDoesYourBusinessDo](Json.obj("activities" -> Seq("40"))) must
-          be(JsError(((JsPath \ "activities") (0) \ "activities") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "activities") (0) \ "activities") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {

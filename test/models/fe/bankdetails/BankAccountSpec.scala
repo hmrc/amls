@@ -17,7 +17,7 @@
 package models.fe.bankdetails
 
 import models.des.bankdetails.{IBANNumberView, AccountNumberView, ukAccountView, BankAccountView}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
 

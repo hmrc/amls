@@ -17,20 +17,26 @@
 package connectors
 
 import audit.{AmendmentEvent, AmendmentEventFailed}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject._
-import metrics.API6
+import metrics.{API6, Metrics}
 import models.des
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendVariationDESConnector @Inject()(app: Application) extends DESConnector(app) {
+class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                           private[connectors] val ac: AuditConnector,
+                                           private[connectors] val httpClient: HttpClient,
+                                           private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
   def amend
   (amlsRegistrationNumber: String, data: des.AmendVariationRequest)
@@ -59,7 +65,7 @@ class AmendVariationDESConnector @Inject()(app: Application) extends DESConnecto
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpPut.PUT[des.AmendVariationRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
+    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

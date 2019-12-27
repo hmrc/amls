@@ -16,7 +16,6 @@
 
 package models.des.msb
 
-import config.AmlsConfig
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
@@ -32,6 +31,7 @@ object MsbCeDetails {
           case _ => JsSuccess(false)
         }
         case x: JsBoolean => JsSuccess(x.value)
+        case _ => throw new MatchError(this)
       }
   }
 

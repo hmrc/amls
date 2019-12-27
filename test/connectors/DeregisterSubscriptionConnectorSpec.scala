@@ -20,55 +20,40 @@ import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import metrics.{API10, Metrics}
+import metrics.API10
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import utils.AmlsBaseSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeregisterSubscriptionConnectorSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with OneAppPerSuite
-  with AmlsReferenceNumberGenerator {
-
-  implicit override lazy val app: FakeApplication = FakeApplication()
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   trait Fixture {
-    object deregisterSubscriptionConnector extends DeregisterSubscriptionConnector(app) {
+
+    val testConnector = new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val httpGet: HttpGet = mock[HttpGet]
-      override private[connectors] val httpPost: HttpPost = mock[HttpPost]
-      override private[connectors] val metrics: Metrics = mock[Metrics]
       override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      override private[connectors] val auditConnector = mock[AuditConnector]
-
     }
+
     val mockTimer = mock[Timer.Context]
     when {
-      deregisterSubscriptionConnector.metrics.timer(eqTo(API10))
+      testConnector.metrics.timer(eqTo(API10))
     } thenReturn mockTimer
 
     implicit val hc = HeaderCarrier()
 
-    val url = s"${deregisterSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/deregistration"
+    val url = s"${testConnector.fullUrl}/$amlsRegistrationNumber/deregistration"
   }
 
   val successModel = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
@@ -87,11 +72,11 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
       )
 
       when {
-        deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest)) {
+      whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest)) {
         _ mustEqual successModel
       }
     }
@@ -106,11 +91,11 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
       )
 
       when {
-        deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
+      whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(BAD_REQUEST)
           body must be(Some("message"))
@@ -120,12 +105,12 @@ class DeregisterSubscriptionConnectorSpec extends PlaySpec
     "return failed response on exception" in new Fixture {
 
       when {
-        deregisterSubscriptionConnector.httpPost.POST[des.DeregisterSubscriptionRequest,
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(
-        deregisterSubscriptionConnector.deregistration(
+        testConnector.deregistration(
           amlsRegistrationNumber,
           testRequest
         ).failed, timeout(Span(2, Seconds))

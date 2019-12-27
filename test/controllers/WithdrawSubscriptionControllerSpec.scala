@@ -20,27 +20,26 @@ import connectors.WithdrawSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
-import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{ApiRetryHelper, AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with ScalaFutures with AmlsReferenceNumberGenerator {
+class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  implicit val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction = SuccessfulAuthAction
+
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
     val controller = new WithdrawSubscriptionController(
-      desConnector,
-      apiRetryHelper = mock[ApiRetryHelper],
-      authAction = authAction
+      connector = desConnector,
+      authAction = authAction,
+      bodyParsers = mockBodyParsers,
+      cc = mockCC
     )
   }
 
@@ -57,7 +56,7 @@ class WithdrawSubscriptionControllerSpec extends PlaySpec with MockitoSugar with
 
   private val postRequestWithNoBody = FakeRequest("POST", "/")
     .withHeaders("CONTENT_TYPE" -> "application/json")
-    .withBody[JsValue](JsNull)
+    .withBody[JsValue](Json.parse("{}"))
 
   "WithdrawSubscriptionController" must {
 

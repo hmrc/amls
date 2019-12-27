@@ -17,7 +17,7 @@
 package models.fe.estateagentbusiness
 
 import models.des.businessactivities.EabServices
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -41,16 +41,16 @@ class ServicesSpec extends PlaySpec with MockitoSugar {
 
       "fail when on path is missing" in {
         Json.fromJson[Services](Json.obj("service" -> Seq("01"))) must
-          be(JsError((JsPath \ "services") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "services") -> JsonValidationError("error.path.missing")))
       }
 
       "fail when on invalid data" in {
         Json.fromJson[Services](Json.obj("services" -> Seq("40"))) must
-          be(JsError(((JsPath \ "services") (0) \ "services") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "services") (0) \ "services") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {
-        val json = Json.obj("services" -> Set("01", "02", "03", "04", "05", "06", "07", "08", "09"))
+        val json = Json.obj("services" -> Seq("01","02","09","05","08","06","07","03","04"))
         Json.toJson(Services(businessServices)) must be(json)
 
       }

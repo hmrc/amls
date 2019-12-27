@@ -16,7 +16,6 @@
 
 package utils
 
-import config.AmlsConfig
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 
@@ -92,5 +91,4 @@ trait ResponsiblePeopleUpdateHelper {
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }
   }
-
 }

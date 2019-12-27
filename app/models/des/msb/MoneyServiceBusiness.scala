@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import config.AmlsConfig
+
 import models.fe.businessmatching.{CurrencyExchange, ForeignExchange, MsbService, TransmittingMoney}
 import play.api.libs.json._
 

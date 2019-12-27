@@ -16,8 +16,6 @@
 
 package models.des.businessactivities
 
-
-import config.AmlsConfig
 import models.fe.businessactivities.{InvolvedInOtherYes, InvolvedInOtherNo}
 import play.api.libs.json.Json
 

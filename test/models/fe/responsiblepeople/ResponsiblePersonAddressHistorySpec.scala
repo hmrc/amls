@@ -19,7 +19,7 @@ package models.fe.responsiblepeople
 import models.des.DesConstants
 import models.des.responsiblepeople.{SoleProprietor => DesSoleProprietor, _}
 import models.fe.responsiblepeople.TimeAtAddress.{OneToThreeYears, SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

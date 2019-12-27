@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import config.AmlsConfig
+
 import play.api.data.validation.ValidationError
 import models.des.msb.{MsbAllDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
 import play.api.libs.json._
@@ -44,7 +44,7 @@ object ExpectedThroughput {
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
       case _ =>
-        Reads(_ => JsError(JsPath \ "throughput", ValidationError("error.invalid")))
+        Reads(_ => JsError(JsPath \ "throughput", JsonValidationError("error.invalid")))
     }
   }
 

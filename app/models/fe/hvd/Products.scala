@@ -92,7 +92,7 @@ object Products {
           val test = (JsPath \ "otherDetails").read[String].map(Other.apply _)
           test map identity[ItemType]
         case _ =>
-          Reads(_ => JsError((JsPath \ "products") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "products") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ItemType]]](
         Reads[Set[ItemType]](_ => JsSuccess(Set.empty))
       ) {

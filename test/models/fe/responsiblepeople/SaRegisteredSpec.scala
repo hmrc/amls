@@ -17,10 +17,10 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.RegDetails
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class SaRegisteredSpec extends PlaySpec with MockitoSugar {
 
@@ -46,7 +46,7 @@ class SaRegisteredSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("saRegistered" -> true)
 
         Json.fromJson[SaRegistered](json) must
-          be(JsError((JsPath \ "utrNumber") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "utrNumber") -> JsonValidationError("error.path.missing")))
       }
 
       "write the correct value" in {

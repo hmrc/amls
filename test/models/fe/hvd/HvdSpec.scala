@@ -39,6 +39,7 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
   val NewLinkedCashPayment = LinkedCashPayments(true)
 
   "hvd" must {
+    import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
     val completeJson = Json.obj(
       "cashPayment" -> Json.obj(

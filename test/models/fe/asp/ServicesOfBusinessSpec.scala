@@ -16,9 +16,8 @@
 
 package models.fe.asp
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
@@ -44,14 +43,14 @@ class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
       "fail when on invalid data" in {
 
         Json.fromJson[ServicesOfBusiness](Json.obj("services" -> Seq("40"))) must
-          be(JsError(((JsPath \ "services")(0) \ "services") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "services")(0) \ "services") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {
 
-        val json = Json.obj("services" -> Set("01","02","03","04","05"))
-        Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
+        val json = Json.obj("services" -> Seq("04","05","03","02","01"))
 
+        Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
       }
     }
 }

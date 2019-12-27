@@ -17,7 +17,7 @@
 package models.fe.businessmatching
 
 import models.des.businessactivities.MlrActivitiesAppliedFor
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -51,7 +51,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[BusinessActivities](Json.obj("businessActivity" -> "01")) must
-          be(JsError((JsPath \ "businessActivities") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "businessActivities") -> JsonValidationError("error.path.missing")))
       }
     }
 
@@ -68,7 +68,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
     "throw error for invalid data" in {
       Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq(JsString("20")))) must
-        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", ValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", JsonValidationError("error.invalid")))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities" in {

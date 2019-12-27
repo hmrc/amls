@@ -20,7 +20,7 @@ import models.des.bankdetails.{AccountNumber, BankAccount, BankDetails, ukAccoun
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import models.fe.bankdetails.{PersonalAccount, UKAccount, BankDetails => FEBankDetails}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 class BankDetailsSpec extends PlaySpec with MockitoSugar {
   "BankAccountDetails" must {

@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import config.AmlsConfig
 import models.fe
 import models.fe.businessmatching.BusinessType
 import models.fe.responsiblepeople.{SoleProprietor => FeSoleProprietor, _}
@@ -51,6 +50,7 @@ object PositionInBusiness {
         case FeSoleProprietor => pos.copy(_6 = true)
         case DesignatedMember => pos.copy(_7 = true)
         case Other(_) => pos.copy(_8 = true)
+        case _ => throw new MatchError(this)
       }
     }
   }

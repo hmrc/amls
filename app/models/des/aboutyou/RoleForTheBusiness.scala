@@ -36,6 +36,7 @@ object RoleForTheBusiness {
         roleType match {
           case ExternalAccountant => result.copy(externalAccountant = true)
           case Other(details) => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
+          case _ => throw new MatchError(this)
         }
     }
   }

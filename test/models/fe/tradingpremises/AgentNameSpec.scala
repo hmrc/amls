@@ -17,7 +17,7 @@
 package models.fe.tradingpremises
 
 import models.des.tradingpremises.{AgentDetails, AgentPremises}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess}
 

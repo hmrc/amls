@@ -19,7 +19,7 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople._
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
+
 
 class NationalityDetailsSpec extends PlaySpec with OneAppPerSuite {
 

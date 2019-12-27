@@ -16,24 +16,25 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import connectors.WithdrawSubscriptionConnector
+import javax.inject.{Inject, Singleton}
 import models.des.WithdrawSubscriptionRequest
 import play.api.libs.json._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class WithdrawSubscriptionController @Inject()(
-                                                connector: WithdrawSubscriptionConnector,
-                                                implicit val apiRetryHelper: ApiRetryHelper,
-                                                authAction: AuthAction
-                                              ) extends BaseController with ControllerHelper {
+class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector,
+                                               authAction: AuthAction,
+                                               bodyParsers: PlayBodyParsers,
+                                               val cc: ControllerComponents)
+                                              (implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with ControllerHelper {
 
-  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(parse.json) {
+  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {

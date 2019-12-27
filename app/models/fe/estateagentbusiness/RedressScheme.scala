@@ -45,7 +45,7 @@ object RedressScheme {
               Other(_)
             }
           case _ =>
-            Reads(_ => JsError((JsPath \ "propertyRedressScheme") -> ValidationError("error.invalid")))
+            Reads(_ => JsError((JsPath \ "propertyRedressScheme") -> JsonValidationError("error.invalid")))
         }
       }
       case false => Reads(_ => JsSuccess(RedressSchemedNo))

@@ -44,7 +44,7 @@ object ResponseType {
       case "SubscriptionReponse" => SubscriptionResponseType
       case "AmendOrVariationResponse" => AmendOrVariationResponseType
       case _ =>
-        ValidationError("error.invalid")
+        JsonValidationError("error.invalid")
     }
   }
 }

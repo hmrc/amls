@@ -92,7 +92,7 @@ object BusinessTypes {
         case "14" =>
           (JsPath \ "specifyOtherBusiness").read[String].map(Other.apply) map identity[BusinessType]
         case _ =>
-          Reads(_ => JsError((JsPath \ "businessType") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "businessType") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[BusinessType]]](
         Reads[Set[BusinessType]](_ => JsSuccess(Set.empty))
       ) {

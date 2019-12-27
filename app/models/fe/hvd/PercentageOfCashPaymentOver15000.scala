@@ -44,7 +44,7 @@ object PercentageOfCashPaymentOver15000 {
       case "04" => Reads(_ => JsSuccess(Fourth))
       case "05" => Reads(_ => JsSuccess(Fifth))
       case _ =>
-        Reads(_ => JsError((JsPath \ "percentage") -> ValidationError("error.invalid")))
+        Reads(_ => JsError((JsPath \ "percentage") -> JsonValidationError("error.invalid")))
     }
   }
 

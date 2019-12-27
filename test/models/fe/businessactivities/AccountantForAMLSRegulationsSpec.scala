@@ -34,13 +34,13 @@ class AccountantForAMLSRegulationsSpec extends PlaySpec
     "successfully validate given an `true` value" in {
       val json = Json.obj("accountantForAMLSRegulations" -> true)
       Json.fromJson[AccountantForAMLSRegulations](json) must
-        be(JsSuccess(AccountantForAMLSRegulations(true), JsPath \ "accountantForAMLSRegulations"))
+        be(JsSuccess(AccountantForAMLSRegulations(true)))
     }
 
     "successfully validate given an `false` value" in {
       val json = Json.obj("accountantForAMLSRegulations" -> false)
       Json.fromJson[AccountantForAMLSRegulations](json) must
-        be(JsSuccess(AccountantForAMLSRegulations(false), JsPath \ "accountantForAMLSRegulations"))
+        be(JsSuccess(AccountantForAMLSRegulations(false)))
     }
 
     "write the correct value given an NCARegisteredYes" in {

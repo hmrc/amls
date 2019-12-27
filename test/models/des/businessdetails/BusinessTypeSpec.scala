@@ -44,7 +44,7 @@ class BusinessTypeSpec extends PlaySpec {
 
         "throw error for invalid data" in {
           Json.fromJson[BusinessType](JsString("")) must
-            be(JsError(JsPath, ValidationError("error.invalid")))
+            be(JsError(JsPath, JsonValidationError("error.invalid")))
         }
 
         "write the correct value" in {

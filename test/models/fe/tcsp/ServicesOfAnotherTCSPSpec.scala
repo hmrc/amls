@@ -16,10 +16,10 @@
 
 package models.fe.tcsp
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class ServicesOfAnotherTCSPSpec extends PlaySpec with MockitoSugar {
 
@@ -41,7 +41,7 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("servicesOfAnotherTCSP" -> true)
 
         Json.fromJson[ServicesOfAnotherTCSP](json) must
-          be(JsError((JsPath \ "mlrRefNumber") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "mlrRefNumber") -> JsonValidationError("error.path.missing")))
       }
 
       "write the correct value" in {

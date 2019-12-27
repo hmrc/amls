@@ -33,7 +33,7 @@ object SalesChannel {
       case JsString("Retail") => JsSuccess(Retail)
       case JsString("Wholesale") => JsSuccess(Wholesale)
       case JsString("Auction") => JsSuccess(Auction)
-      case _ => JsError((JsPath \ "salesChannels") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "salesChannels") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =

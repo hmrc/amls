@@ -16,10 +16,12 @@
 
 package models.fe.tradingpremises
 
-import config.AmlsConfig
+
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
 import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class YourTradingPremises(
                                 tradingName: String,

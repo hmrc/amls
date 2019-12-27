@@ -31,10 +31,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
-class PaymentService @Inject()(
-                                val paymentConnector: PayAPIConnector,
-                                val paymentsRepository: PaymentRepository
-                              ) {
+class PaymentService @Inject()(val paymentConnector: PayAPIConnector,
+                               val paymentsRepository: PaymentRepository) {
+
   def createPayment(paymentId: String, amlsRegistrationNumber: String, safeId: String)
                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
     (for {

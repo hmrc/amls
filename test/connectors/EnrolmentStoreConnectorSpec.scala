@@ -17,42 +17,27 @@
 package connectors
 
 import com.codahale.metrics.Timer
-import config.{AppConfig, MicroserviceAuditConnector}
 import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
-import metrics.{EnrolmentStoreKnownFacts, Metrics}
+import metrics.EnrolmentStoreKnownFacts
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.MustMatchers
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnectorSpec extends PlaySpec
-  with MustMatchers
-  with ScalaFutures
-  with MockitoSugar
-  with AmlsReferenceNumberGenerator
-  with BaseGenerator
-  with OneAppPerSuite {
+class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with AmlsReferenceNumberGenerator with BaseGenerator {
 
   trait Fixture {
 
-    implicit val hc = HeaderCarrier()
     implicit val ec = mock[ExecutionContext]
-
-    val metrics = mock[Metrics]
-    val http = mock[CorePut]
-    val authConnector = mock[AuthConnector]
-    val config = mock[AppConfig]
     val mockTimer = mock[Timer.Context]
-    val connector = new EnrolmentStoreConnector(http, metrics, mock[MicroserviceAuditConnector], config)
+
+    val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
 
     val baseUrl = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
@@ -69,12 +54,12 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
     } thenReturn mockTimer
 
     when {
-      config.enrolmentStoreUrl
+      connector.config.enrolmentStoreUrl
     } thenReturn baseUrl
 
     def mockResponse(response: Future[HttpResponse]) =
       when {
-        connector.http.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
+        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
       } thenReturn response
 
   }
@@ -89,7 +74,7 @@ class EnrolmentStoreConnectorSpec extends PlaySpec
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.http).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
+          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
         }
       }
 

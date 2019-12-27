@@ -49,6 +49,7 @@ object RolesWithinBusiness {
           case NominatedOfficer => result.copy(nominatedOfficer = true)
           case DesignatedMember => result.copy(designatedMember = true)
           case Other(details) => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
+          case _ => throw new MatchError(this)
         }
     }
   }

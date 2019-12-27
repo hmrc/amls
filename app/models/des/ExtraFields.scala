@@ -16,7 +16,6 @@
 
 package models.des
 
-import config.AmlsConfig
 import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 import play.api.libs.json._
 
@@ -33,7 +32,6 @@ object ExtraFields {
 
   implicit def format =
     Json.format[ExtraFields]
-
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {
     ExtraFields(Declaration(true), AboutYouRelease7.convert(person), None)

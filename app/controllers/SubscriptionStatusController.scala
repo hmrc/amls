@@ -20,17 +20,18 @@ import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import play.api.mvc.ControllerComponents
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector,
-                                              implicit val apiRetryHelper: ApiRetryHelper,
-                                              authAction: AuthAction) extends BaseController {
+                                              authAction: AuthAction,
+                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 

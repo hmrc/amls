@@ -17,6 +17,8 @@
 package models.fe.businessdetails
 
 import models.des.SubscriptionView
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class BusinessDetails(
                              previouslyRegistered: PreviouslyRegistered,

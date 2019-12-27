@@ -18,10 +18,10 @@ package models.fe.supervision
 
 import models.des.supervision.{SupervisionDetails, SupervisorDetails}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class AnotherBodySpec extends PlaySpec with MockitoSugar {
 
@@ -75,7 +75,7 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
 
       "fail when on missing all data" in {
         Json.fromJson[AnotherBody](Json.obj()) must
-          be(JsError((JsPath \ "anotherBody") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "anotherBody") -> JsonValidationError("error.path.missing")))
       }
     }
 

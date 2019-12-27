@@ -20,7 +20,7 @@ import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.{MoneyServiceBusiness => BMMoneyServiceBusiness_, _}
 import models.fe.moneyservicebusiness._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
+
 
 class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
 
