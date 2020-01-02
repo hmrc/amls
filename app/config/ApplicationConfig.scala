@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import play.api.{Configuration, Environment}
 class ApplicationConfig @Inject()(config: Configuration, environment: Environment) {
 
   private def baseUrl(serviceName: String) = {
-    val protocol = config.getOptional[String](s"microservice.services.protocol").getOrElse("https")
+    val protocol = config.getOptional[String](s"microservice.services.$serviceName.protocol").getOrElse("http")
     val host = config.get[String](s"microservice.services.$serviceName.host")
     val port = config.get[String](s"microservice.services.$serviceName.port")
     s"$protocol://$host:$port"
