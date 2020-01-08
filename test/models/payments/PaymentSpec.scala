@@ -38,6 +38,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "X12345678",
         "X73289473",
         "X987654321",
+        "A test payment",
         10000,
         Successful,
         now,
@@ -50,6 +51,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "amlsRefNo" -> "X12345678",
         "safeId" -> "X73289473",
         "reference" -> "X987654321",
+        "description" -> "A test payment",
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
@@ -74,10 +76,11 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         val now = LocalDateTime.now
 
         Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
-          payApiModel.id,
+          payApiModel._id,
           refNumber,
           safeId,
           payApiModel.reference,
+          payApiModel.description,
           payApiModel.amountInPence,
           payApiModel.status,
           now,
@@ -94,6 +97,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           paymentRequest.amlsReference,
           paymentRequest.safeId,
           paymentRequest.paymentReference,
+          _,
           paymentRequest.amountInPence,
           Created,
           _,

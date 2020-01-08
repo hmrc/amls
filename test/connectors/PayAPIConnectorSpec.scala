@@ -35,13 +35,13 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
   trait Fixture {
 
     val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl = s"url/pay-api/payment/summary/${testPayment.id}"
+    val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
     val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
       override private[connectors] val paymentUrl = "url"
     }
 
-    val testPaymentId = testPayment.id
+    val testPaymentId = testPayment._id
 
     val mockTimer = mock[Timer.Context]
 

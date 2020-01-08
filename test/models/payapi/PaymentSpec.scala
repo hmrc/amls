@@ -27,12 +27,16 @@ import play.api.libs.json.Json
 
 class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGenerator {
 
-  val id = "biuh98huiu"
+  val _id = "biuh98huiu"
   val ref = "ref"
+  val desc = "desc"
+  val url = "url"
 
   val amountInPence = 100
   val commissionInPence = 20
   val totalInPence = 120
+
+  val id = "uihuibhjbui"
   val name = "providerName"
   val providerRef = "providerRef"
 
@@ -41,19 +45,24 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
   "Payment" must {
     "serialise to JSON" in {
       Json.toJson(Payment(
-        id,
+        _id,
         other,
         ref,
+        desc,
         amountInPence,
+        url,
         PaymentStatuses.Successful
       )) must be(Json.obj(
-        "id" -> id,
+        "_id" -> _id,
         "taxType" -> "other",
         "reference" -> ref,
+        "description" -> desc,
         "amountInPence" -> amountInPence,
+        "returnUrl" -> url,
         "status" -> "Successful"
       ))
 
     }
   }
+
 }

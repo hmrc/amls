@@ -43,7 +43,7 @@ class PayAPIConnector @Inject()(private[connectors] val applicationConfig: Appli
 
   private def getPaymentFunction(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
-    val url = s"$paymentUrl/pay-api/payment/summary/$paymentId"
+    val url = s"$paymentUrl/pay-api/payment/$paymentId"
 
     val bodyParser = JsonParsed[Payment]
 

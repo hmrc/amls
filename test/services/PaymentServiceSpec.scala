@@ -69,7 +69,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
     "createPayment is called" must {
       "respond with payment if call to connector is successful" in {
         when {
-          testPayAPIConnector.getPayment(eqTo(testPayApiPayment.id))(any())
+          testPayAPIConnector.getPayment(eqTo(testPayApiPayment._id))(any())
         } thenReturn {
           Future.successful(testPayApiPayment)
         }
@@ -80,7 +80,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
           Future.successful(testPayment)
         }
 
-        whenReady(testPaymentService.createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId)) { res =>
+        whenReady(testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber, safeId)) { res =>
           res mustBe Some(testPayment)
 
           verify(
@@ -98,7 +98,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
           Future.failed(HttpStatusException(NOT_FOUND, None))
         }
 
-        val result = testPaymentService.createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId)
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber, safeId)
         await(result) mustBe None
 
       }
@@ -111,7 +111,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, None))
         }
 
-        val result = testPaymentService.createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId).failed
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber, safeId).failed
 
         await(result) mustBe PaymentException(Some(INTERNAL_SERVER_ERROR), "Could not retrieve payment")
 
@@ -127,7 +127,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
           Future.failed(e)
         }
 
-        val result = testPaymentService.createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId).failed
+        val result = testPaymentService.createPayment(testPayApiPayment._id, amlsRegistrationNumber, safeId).failed
 
         await(result) mustBe e
       }

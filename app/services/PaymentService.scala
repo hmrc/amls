@@ -74,7 +74,7 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector,
       refreshedPayment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
       _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
     } yield {
-      PaymentStatusResult(paymentReference, refreshedPayment.id, refreshedPayment.status)
+      PaymentStatusResult(paymentReference, refreshedPayment._id, refreshedPayment.status)
     }
   }
 
