@@ -39,7 +39,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
   val now = LocalDateTime.now()
 
   "Payment" must {
-    "serialise to JSON" in {
+    "serialise to JSON with no description" in {
       Json.toJson(Payment(
         id,
         other,
@@ -51,6 +51,25 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
+        "amountInPence" -> amountInPence,
+        "status" -> "Successful"
+      ))
+
+    }
+
+    "serialise to JSON with a description" in {
+      Json.toJson(Payment(
+        id,
+        other,
+        ref,
+        Some("Desc"),
+        amountInPence,
+        PaymentStatuses.Successful
+      )) must be(Json.obj(
+        "id" -> id,
+        "taxType" -> "other",
+        "reference" -> ref,
+        "description" -> "Desc",
         "amountInPence" -> amountInPence,
         "status" -> "Successful"
       ))

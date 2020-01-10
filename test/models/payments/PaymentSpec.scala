@@ -28,7 +28,7 @@ import play.api.libs.json.{JsSuccess, Json}
 //noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
 
-  "The Payment model" when {
+  "The Payment model without description" when {
     "serialising" must {
 
       val now = LocalDateTime.now
@@ -68,7 +68,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
     }
 
     "converting" must {
-      "convert from a Pay Api payment" in {
+      "convert from a Pay Api payment with no description" in {
         val payApiModel = payApiPaymentGen.sample.get
         val refNumber = amlsRefNoGen.sample.get
         val safeId = amlsRefNoGen.sample.get
@@ -88,7 +88,27 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         )
       }
 
-      "convert from a BACS payment request" in {
+      "convert from a Pay Api payment with a description" in {
+        val payApiModel = payApiPaymentGenDesc.sample.get
+        val refNumber = amlsRefNoGen.sample.get
+        val safeId = amlsRefNoGen.sample.get
+        val now = LocalDateTime.now
+
+        Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
+          payApiModel.id,
+          refNumber,
+          safeId,
+          payApiModel.reference,
+          payApiModel.description,
+          payApiModel.amountInPence,
+          payApiModel.status,
+          now,
+          isBacs = None,
+          None
+        )
+      }
+
+      "convert from a BACS payment request without description" in {
         val paymentRequest = createBacsPaymentRequestGen.sample.get
 
         Payment(paymentRequest) match {
@@ -96,7 +116,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           paymentRequest.amlsReference,
           paymentRequest.safeId,
           paymentRequest.paymentReference,
-          None,
+          _,
           paymentRequest.amountInPence,
           Created,
           _,
