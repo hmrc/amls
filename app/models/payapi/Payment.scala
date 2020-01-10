@@ -37,7 +37,7 @@ object TaxTypes extends Enum[TaxType] {
 case class Payment(_id: String,
                     taxType: TaxType,
                     reference: String,
-                    description: String,
+                    description: Option[String],
                     amountInPence: Int,
                     returnUrl: String,
                     status: PaymentStatus)
