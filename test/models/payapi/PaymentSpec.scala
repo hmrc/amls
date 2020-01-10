@@ -44,6 +44,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         id,
         other,
         ref,
+        None,
         amountInPence,
         PaymentStatuses.Successful
       )) must be(Json.obj(

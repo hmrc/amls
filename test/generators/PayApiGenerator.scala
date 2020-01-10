@@ -59,6 +59,7 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     id,
     taxType.head,
     ref,
+    None,
     amountInPence,
     paymentStatus.head
   )
