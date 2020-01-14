@@ -48,7 +48,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         _id,
         other,
         ref,
-        desc,
+        Some(desc),
         amountInPence,
         url,
         PaymentStatuses.Successful
