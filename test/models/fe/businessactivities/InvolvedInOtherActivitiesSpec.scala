@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover, OtherBusinessActivities}
+import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
 import models.fe.businessactivities.ExpectedAMLSTurnover.{Sixth, Third}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
 
@@ -46,7 +46,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("involvedInOther" -> true)
 
       Json.fromJson[InvolvedInOther](json) must
-        be(JsError((JsPath \ "details") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "details") -> JsonValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

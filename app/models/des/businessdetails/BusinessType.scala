@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 
 package models.des.businessdetails
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json._
+import play.api.libs.json.{JsError, JsString, JsSuccess, JsonValidationError, Reads, Writes}
 
 sealed trait BusinessType
 
@@ -47,7 +46,7 @@ object BusinessType {
     case JsString("Corporate Body") => JsSuccess(LimitedCompany)
     case JsString("Unincorporated Body") => JsSuccess(UnincorporatedBody)
     case _ =>
-      JsError(ValidationError("error.invalid"))
+      JsError(JsonValidationError("error.invalid"))
   }
 
   implicit val writes = Writes[BusinessType] {

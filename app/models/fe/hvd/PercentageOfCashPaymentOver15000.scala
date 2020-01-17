@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ object PercentageOfCashPaymentOver15000 {
       case "04" => Reads(_ => JsSuccess(Fourth))
       case "05" => Reads(_ => JsSuccess(Fifth))
       case _ =>
-        Reads(_ => JsError((JsPath \ "percentage") -> ValidationError("error.invalid")))
+        Reads(_ => JsError((JsPath \ "percentage") -> JsonValidationError("error.invalid")))
     }
   }
 

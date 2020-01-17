@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,26 @@
 package connectors
 
 import audit.SubscriptionViewEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
-import metrics.API5
+import metrics.{API5, Metrics}
 import models.des.SubscriptionView
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector  @Inject()(app: Application) extends DESConnector(app) {
+class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                 private[connectors] val ac: AuditConnector,
+                                 private[connectors] val httpClient: HttpClient,
+                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
     def view(amlsRegistrationNumber: String)(
       implicit ec: ExecutionContext,
@@ -52,7 +58,7 @@ class ViewDESConnector  @Inject()(app: Application) extends DESConnector(app) {
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpGet.GET[HttpResponse](Url)(implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
+    httpClient.GET[HttpResponse](Url)(implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

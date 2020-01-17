@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -49,7 +49,7 @@ class TimeAtAddressSpec extends PlaySpec with MockitoSugar {
 
     "throw error for invalid data" in {
       Json.fromJson[TimeAtAddress](Json.obj(FieldName -> "20")) must
-        be(JsError(JsPath \ FieldName, ValidationError("error.invalid")))
+        be(JsError(JsPath \ FieldName, JsonValidationError("error.invalid")))
     }
   }
 }

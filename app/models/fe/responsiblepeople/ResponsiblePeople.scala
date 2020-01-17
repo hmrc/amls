@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 package models.fe.responsiblepeople
 
-import config.AmlsConfig
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
@@ -61,17 +62,9 @@ object ResponsiblePeople {
   }
 
   def convertResponsiblePersonToResponsiblePeople(desRp: ResponsiblePersons): ResponsiblePeople = {
-    val passedFitAndProper: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      desRp.passedFitAndProperTest
-    } else {
-      desRp.msbOrTcsp.map(x => x.passedFitAndProperTest)
-    }
+    val passedFitAndProper: Option[Boolean] = desRp.passedFitAndProperTest
 
-    val paidApproval: Option[Boolean] = if (AmlsConfig.phase2Changes) {
-      desRp.passedApprovalCheck
-    } else {
-      None
-    }
+    val paidApproval: Option[Boolean] = desRp.passedApprovalCheck
 
     ResponsiblePeople(
       desRp.nameDetails,

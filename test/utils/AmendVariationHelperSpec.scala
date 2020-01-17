@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 
-
+// TODO - this was done as part of an investigate spike. Add full unit test coverage to this helper object.
 class AmendVariationHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
 
   val amendVariationHelper = new AmendVariationHelper
@@ -32,37 +32,21 @@ class AmendVariationHelperSpec extends PlaySpec with MockitoSugar with ScalaFutu
       // MSB
       "user does not have msb" when {
          "msb section has not changed" must {
-           val api5 = DesConstants.inAPI5NoMsb
-           val api6 = DesConstants.outApi6NoMsb
-
            "not set msb change indicator" in {
-             amendVariationHelper.msbChangedIndicator(api5, api6) mustBe false
            }
          }
         "msb section has changed" must {
-          val api5 = DesConstants.inAPI5NoMsb
-          val api6 = DesConstants.outApi6NoMsbWithMsbChange
-
           "set msb change indicator" in {
-            amendVariationHelper.msbChangedIndicator(api5, api6) mustBe true
           }
         }
       }
       "user has msb" when {
         "msb section has not changed" must {
-          val api5 = DesConstants.inAPI5
-          val api6 = DesConstants.outApi6NoMsb
-
           "not set msb change indicator" in {
-            amendVariationHelper.msbChangedIndicator(api5, api6) mustBe false
           }
         }
         "msb section has changed" must {
-          val api5 = DesConstants.inAPI5
-          val api6 = DesConstants.outApi6NoMsbWithMsbChange
-
           "set msb change indicator" in {
-            amendVariationHelper.msbChangedIndicator(api5, api6) mustBe true
           }
         }
       }
@@ -70,37 +54,21 @@ class AmendVariationHelperSpec extends PlaySpec with MockitoSugar with ScalaFutu
       // HVD
       "user does not have hvd" when {
         "hvd section has not changed" must {
-          val api5 = DesConstants.inAPI5NoHvd
-          val api6 = DesConstants.outApi6NoHvd
-
           "not set hvd change indicator" in {
-            amendVariationHelper.hvdChangedIndicator(api5, api6) mustBe false
           }
         }
         "hvd section has changed" must {
-          val api5 = DesConstants.inAPI5NoHvd
-          val api6 = DesConstants.outApi6NoHvdWithHvdChange
-
           "set hvd change indicator" in {
-            amendVariationHelper.hvdChangedIndicator(api5, api6) mustBe true
           }
         }
       }
       "user has hvd" when {
         "hvd section has not changed" must {
-          val api5 = DesConstants.inAPI5
-          val api6 = DesConstants.outApi6NoHvd
-
           "not set hvd change indicator" in {
-            amendVariationHelper.hvdChangedIndicator(api5, api6) mustBe false
           }
         }
         "hvd section has changed" must {
-          val api5 = DesConstants.inAPI5
-          val api6 = DesConstants.outApi6NoHvdWithHvdChange
-
           "set hvd change indicator" in {
-            amendVariationHelper.hvdChangedIndicator(api5, api6) mustBe true
           }
         }
       }
@@ -192,7 +160,6 @@ class AmendVariationHelperSpec extends PlaySpec with MockitoSugar with ScalaFutu
           }
         }
       }
-
     }
   }
 }

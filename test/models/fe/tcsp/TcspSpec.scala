@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.fe.tcsp
 
 import models.des.{DesConstants, SubscriptionView}
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -200,6 +200,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
       Some(DesConstants.testEabAll),
       Some(DesConstants.testEabResdEstAgncy),
       Some(DesConstants.testResponsiblePersons),
+      Some(DesConstants.testAmp),
       DesConstants.extraFields
     )
     Tcsp.conv(SubscriptionViewModel) must
@@ -233,6 +234,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
       Some(DesConstants.testEabAll),
       Some(DesConstants.testEabResdEstAgncy),
       Some(DesConstants.testResponsiblePersons),
+      Some(DesConstants.testAmp),
       DesConstants.extraFields
     )
     Tcsp.conv(SubscriptionViewModel) must

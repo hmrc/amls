@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.fe
 
-import config.AmlsConfig
 import models.des.{SubscriptionResponse => DesSubscriptionResponse}
 import play.api.libs.json._
 
@@ -35,7 +34,6 @@ object SubscriptionResponse {
   implicit val format = Json.format[SubscriptionResponse]
 
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
-    if (AmlsConfig.phase2Changes) {
       SubscriptionResponse(desResponse.etmpFormBundleNumber,
         desResponse.amlsRefNo,
         desResponse.fpNumbers.getOrElse(0) + desResponse.approvalCheckNumbers.getOrElse(0),
@@ -53,24 +51,5 @@ object SubscriptionResponse {
           desResponse.approvalCheckFee)
         )
       )
-    } else {
-      SubscriptionResponse(desResponse.etmpFormBundleNumber,
-        desResponse.amlsRefNo,
-        desResponse.fpNumbers.getOrElse(0),
-        desResponse.fpNumbers.getOrElse(0) - desResponse.responsiblePersonNotCharged.getOrElse(0),
-        desResponse.approvalCheckNumbers.getOrElse(0),
-        desResponse.premiseFYNumber.getOrElse(0),
-        Some(SubscriptionFees(desResponse.paymentReference,
-          desResponse.registrationFee.getOrElse(0),
-          desResponse.fpFee,
-          desResponse.fpFeeRate,
-          desResponse.premiseFee,
-          desResponse.premiseFeeRate,
-          desResponse.totalFees,
-          desResponse.approvalCheckFeeRate,
-          desResponse.approvalCheckFee)
-        )
-      )
-    }
   }
 }

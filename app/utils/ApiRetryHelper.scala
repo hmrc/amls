@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,20 @@ package utils
 
 import akka.actor.ActorSystem
 import akka.pattern.Patterns.after
-import config.AmlsConfig
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject._
 import play.api.Logger
+
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ApiRetryHelper @Inject()(val as: ActorSystem)  {
+class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig)  {
 
-  lazy val maxAttempts: Int = AmlsConfig.maxAttempts
-  lazy val initialWaitInMS: Int = AmlsConfig.initialWaitMs
-  lazy val waitFactor: Float= AmlsConfig.waitFactor
+  lazy val maxAttempts: Int = appConfig.maxAttempts
+  lazy val initialWaitInMS: Int = appConfig.initialWaitMs
+  lazy val waitFactor: Float= appConfig.waitFactor
 
   def doWithBackoff[T](f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
     expBackOffHelper(1, initialWaitInMS, f)

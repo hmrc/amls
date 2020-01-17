@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package models.des
 
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
 
 class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
 
@@ -51,11 +50,14 @@ class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
     "eab": {
     "eab": true
     },
+    "amp": {
+    "amp": true
+    },
     "responsiblePersons": false,
     "filingIndividual": true
   }""")
 
-      val changeIndicators = ChangeIndicators(false,false,true,true,true,true,true,false,true,false,true,true,false,true)
+      val changeIndicators = ChangeIndicators(false, false, true, true, true, true, true, false, true, false, true, true, true, false, true)
 
       ChangeIndicators.format.writes(changeIndicators) must be(json)
 

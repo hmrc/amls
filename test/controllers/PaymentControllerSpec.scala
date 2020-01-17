@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,17 @@ import models.payapi.PaymentStatuses
 import models.payments._
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.PaymentService
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
 
-class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGenerator {
+class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
   trait Fixture {
-    implicit val hc = HeaderCarrier()
 
     val testPaymentService = mock[PaymentService]
 
@@ -46,9 +43,13 @@ class PaymentControllerSpec extends PlaySpec with MockitoSugar with PaymentGener
 
     val safeId = amlsRefNoGen.sample.get
 
+    val authAction: AuthAction = SuccessfulAuthAction
+
     val testController = new PaymentController(
-      paymentService = testPaymentService
-    )
+      paymentService = testPaymentService,
+      authAction = authAction,
+      bodyParsers = mockBodyParsers,
+      cc = mockCC)
 
     val accountType = "org"
     val accountRef = "TestOrgRef"

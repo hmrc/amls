@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package audit
 
-import models.des.{AmendVariationRequest, ChangeIndicators}
+import models.des.{AmendVariationRequest, AmendVariationResponse, ChangeIndicators}
 import models.des.businessdetails.BusinessType
 import play.api.libs.json.Json
 
 case class AmendVariationAuditModel(amlsRegistrationNumber: String,
-                                    paymentReference: Option[String],
+                                    response: AmendVariationResponse,
                                     acknowledgementReference: String,
                                     typeOfLegalEntity: BusinessType,
                                     changeIndicators: ChangeIndicators,

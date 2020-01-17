@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package services
 
-import config.MicroserviceAuditConnector
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
 import models.des
-import models.des.msb.{CountriesList, MsbAllDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
@@ -34,8 +32,9 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{AmendVariationHelper, ApiRetryHelper}
-
+import utils.{AmendVariationHelper}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.ApiRetryHelper
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -67,10 +66,10 @@ class AmendVariationServiceSpec extends PlaySpec
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
-    mock[MicroserviceAuditConnector],
-    mock[AmendVariationHelper]
+    mock[AuditConnector],
+    mock[AmendVariationHelper],
+    feeRepo
   ) {
-    override private[services] lazy val feeResponseRepository: FeesMongoRepository = feeRepo
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
     override private[services] def amendVariationResponse(
       request: AmendVariationRequest,
@@ -78,10 +77,7 @@ class AmendVariationServiceSpec extends PlaySpec
       des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
-
-
   val avs = new TestAmendVariationService
-
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -199,13 +195,65 @@ class AmendVariationServiceSpec extends PlaySpec
           DesConstants.ownBusinessPremisesTPR7
         )
       )
+    }
 
-      //whenReady(avs.compareAndUpdate(
-      //  DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
-      //) {
-      //  updatedRequest =>
-      //    updatedRequest must be(testRequest)
-      //}
+    "amp change indicators" when {
+      "amp section changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        when {
+          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        } thenReturn Future.successful(viewModel)
+
+        val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
+          tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
+            DesConstants.ownBusinessPremisesTPR7
+          )
+        )
+
+        whenReady(avs.compareAndUpdate(
+          DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
+        ) {
+          updatedRequest =>
+            updatedRequest.changeIndicators.amp must be(true)
+            true
+        }
+      }
+
+      "amp section not changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        when {
+          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        } thenReturn Future.successful(viewModel)
+
+        whenReady(avs.compareAndUpdate(
+          DesConstants.amendVariationRequest2, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
+        ) {
+          updatedRequest =>
+            updatedRequest.changeIndicators.amp must be(false)
+            true
+        }
+      }
+
+      "amp section not changed amp services have changed" in {
+
+        val viewModel = DesConstants.SubscriptionViewModelAPI5
+
+        when {
+          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        } thenReturn Future.successful(viewModel)
+
+        whenReady(avs.compareAndUpdate(
+          DesConstants.amendVariationRequest3, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
+        ) {
+          updatedRequest =>
+            updatedRequest.changeIndicators.amp must be(true)
+            true
+        }
+      }
     }
 
   }

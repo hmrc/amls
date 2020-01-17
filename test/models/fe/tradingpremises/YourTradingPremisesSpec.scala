@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.libs.json._
-import play.api.test.FakeApplication
 
 class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
 
@@ -45,6 +44,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerS
         Eab(false),
         Bpsp(true),
         Tditpsp(false),
+        Amp(false),
         None
       )
       val agentDetail = AgentDetails("", None,None,None,agentPremises, Some("2001-01-01"))

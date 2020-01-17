@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,8 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
       "tcsp": false,
       "eab": true,
       "bpsp": false,
-      "tditpsp": false
+      "tditpsp": false,
+      "amp": false
     },
     "eabServicesCarriedOut": {
       "residentialEstateAgency": true,
@@ -494,6 +495,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ object Products {
           val test = (JsPath \ "otherDetails").read[String].map(Other.apply _)
           test map identity[ItemType]
         case _ =>
-          Reads(_ => JsError((JsPath \ "products") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "products") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ItemType]]](
         Reads[Set[ItemType]](_ => JsSuccess(Set.empty))
       ) {

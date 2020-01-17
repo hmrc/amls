@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,35 +21,10 @@ import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsP
 import org.joda.time.LocalDate
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
-import play.api.test.FakeApplication
+
 
 
 class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> false))
-
-  "ResponsiblePeople" must {
-
-    "validate complete json" must {
-
-      "serialise as expected" in {
-        Json.toJson(CompleteResponsiblePeople) must be(CompleteJson)
-      }
-
-      "deserialise as expected" in {
-        CompleteJson.as[ResponsiblePeople] must be(CompleteResponsiblePeople)
-      }
-    }
-
-    "convert des model to frontend model" in {
-      ResponsiblePeople.convert(Some(DesConstants.testResponsiblePersonsForRp)) must be(DefaultValues.convertedModel)
-    }
-  }
-}
-
-class ResponsiblePeoplePhase2Spec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
-
-  implicit override lazy val app = FakeApplication(additionalConfiguration = Map("microservice.services.feature-toggle.phase-2-changes" -> true))
 
   "ResponsiblePeople" must {
 
@@ -203,6 +178,8 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.training),
     DefaultValues.approvalFlags
   )
+
+  import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
   val CompleteJson = Json.obj(
     "personName" -> Json.obj(

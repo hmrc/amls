@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ import models.fe.businesscustomer.{ReviewDetails, Address => BMAddress}
 import models.fe.businessmatching._
 import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.test.FakeApplication
+
 
 class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 

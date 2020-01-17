@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import utils.StatusConstants
 
-case class RPExtra(
-                    lineId: Option[StringOrInt] = None,
+case class RPExtra(lineId: Option[StringOrInt] = None,
                     endDate: Option[String] = None,
                     status: Option[String] = None,
                     retestFlag: Option[Boolean] = None,
                     retest: Option[String] = None,
-                    testResult: Option[String] = None,
-                    testDate: Option[String] = None
-                  )
+                    testResultFitAndProper: Option[String] = None,
+                    testDateFitAndProper: Option[String] = None,
+                    testResultApprovalCheck: Option[String] = None,
+                    testDateApprovalCheck: Option[String] = None)
 
 object RPExtra {
 
@@ -41,8 +41,10 @@ object RPExtra {
       (__ \ "status").readNullable[String] and
       (__ \ "retestFlag").readNullable[Boolean] and
       (__ \ "retest").readNullable[String] and
-      (__ \ "testResult").readNullable[String] and
-      (__ \ "testDate").readNullable[String]
+      (__ \ "testResultFitAndProper").readNullable[String] and
+      (__ \ "testDateFitAndProper").readNullable[String]and
+      (__ \ "testResultApprovalCheck").readNullable[String] and
+      (__ \ "testDateApprovalCheck").readNullable[String]
     ) (RPExtra.apply _)
 
   implicit val jsonWrites: Writes[RPExtra] = {
@@ -52,8 +54,10 @@ object RPExtra {
         (__ \ "status").writeNullable[String] and
         (__ \ "retestFlag").writeNullable[Boolean] and
         (__ \ "retest").writeNullable[String] and
-        (__ \ "testResult").writeNullable[String] and
-        (__ \ "testDate").writeNullable[String]
+        (__ \ "testResultFitAndProper").writeNullable[String] and
+        (__ \ "testDateFitAndProper").writeNullable[String] and
+        (__ \ "testResultApprovalCheck").writeNullable[String] and
+        (__ \ "testDateApprovalCheck").writeNullable[String]
       ) (unlift(RPExtra.unapply))
   }
 
@@ -62,6 +66,8 @@ object RPExtra {
       rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))),
       None,
       rp.lineId.fold[Option[String]](None)(_ => if(rp.hasChanged) rp.status else Some(StatusConstants.Unchanged)),
+      None,
+      None,
       None,
       None,
       None,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package connectors
 
 import audit.KnownFactsEvent
-import config.{AppConfig, MicroserviceAuditConnector}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
@@ -25,19 +25,19 @@ import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.http.{CorePut, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EnrolmentStoreConnector @Inject()(
-  val http: CorePut,
-  val metrics: Metrics,
-  mac: MicroserviceAuditConnector,
-  config: AppConfig
-) extends HttpResponseHelper {
+class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: HttpClient,
+                                        private[connectors] val metrics: Metrics,
+                                        private[connectors] val mac: AuditConnector,
+                                        private[connectors] val config: ApplicationConfig) extends HttpResponseHelper {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
                                                                             headerCarrier: HeaderCarrier,
@@ -58,7 +58,7 @@ class EnrolmentStoreConnector @Inject()(
 
     Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
 
-    http.PUT(url, knownFacts) map { response =>
+    httpClient.PUT(url, knownFacts) map { response =>
       timer.stop()
       Logger.debug(s"$prefix - Base Response: ${response.status}")
       Logger.debug(s"$prefix - Response body: ${response.body}")

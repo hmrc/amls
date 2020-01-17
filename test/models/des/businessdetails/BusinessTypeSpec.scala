@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class BusinessTypeSpec extends PlaySpec {
 
         "throw error for invalid data" in {
           Json.fromJson[BusinessType](JsString("")) must
-            be(JsError(JsPath, ValidationError("error.invalid")))
+            be(JsError(JsPath, JsonValidationError("error.invalid")))
         }
 
         "write the correct value" in {

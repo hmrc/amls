@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object BusinessStructure {
       case "04" => Reads(_ => JsSuccess(IncorporatedBody))
       case "05" => Reads(_ => JsSuccess(UnincorporatedBody))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
     }
   }
 

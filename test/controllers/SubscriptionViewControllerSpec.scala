@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,144 +25,19 @@ import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.{SubscriptionViewModel, des}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatest.concurrent.IntegrationPatience
 import play.api.libs.json.Json
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.{FakeApplication, FakeRequest}
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionViewControllerSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with IterateeHelpers
-    with OneAppPerSuite {
+class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatience with IterateeHelpers {
 
-  implicit override lazy val app = FakeApplication(
-    additionalConfiguration = Map(
-      "microservice.services.feature-toggle.phase-2-changes" -> false
-    )
-  )
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val Controller: SubscriptionViewController = new SubscriptionViewController (mock[ViewDESConnector])
-
-  val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
-    x =>
-      x.agentDetails match {
-        case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
-          startDate = y.agentPremises.startDate)))
-        case _ => None
-      }
-  }
-
-  val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRp.copy(
-    businessActivities = DesConstants.testBusinessActivities.copy(
-      all = Some(DesConstants.testBusinessActivitiesAll.copy(
-        businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-      ))
-    ),
-    tradingPremises = DesConstants.testTradingPremisesAPI5.copy(
-      agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))
-    ),
-    msb = Some(DesConstants.testMsb.copy(
-      msbAllDetails = Some(MsbAllDetails(
-        Some("£50k-£100k"),
-        true,
-        Some(CountriesList(List("AD", "GB"))),
-        true)
-      )))
-  )
-
-  val request = FakeRequest()
-    .withHeaders(CONTENT_TYPE -> "application/json")
-
-  "SubscriptionViewController" must {
-
-    val amlsRegistrationNumber = "XAML00000567890"
-
-
-    "return a `BadRequest` response when the amls registration number is invalid" in {
-
-      val result = Controller.view("test", "test", "test")(request)
-      val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
-
-      status(result) must be(BAD_REQUEST)
-      contentAsJson(result) must be(failure)
-    }
-
-    "return a valid response when the amls registration number is valid" in {
-
-      when {
-        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-      } thenReturn Future.successful(release7SubscriptionViewModel)
-
-      val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
-
-      status(result) must be(OK)
-      contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModel))
-
-    }
-
-    "return an invalid response when the service fails" in {
-
-      when {
-        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-      } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
-
-      whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
-      }
-    }
-
-  }
-
-  val testViewSuccessModel = des.SubscriptionView(
-    etmpFormBundleNumber = "111111",
-    DesConstants.testBusinessDetails,
-    DesConstants.testViewBusinessContactDetails,
-    DesConstants.testBusinessReferencesAll,
-    Some(DesConstants.testbusinessReferencesAllButSp),
-    Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
-    DesConstants.testTradingPremisesAPI5,
-    DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
-    Some(DesConstants.testHvd),
-    Some(DesConstants.testAsp),
-    Some(DesConstants.testAspOrTcsp),
-    Some(DesConstants.testTcspAll),
-    Some(DesConstants.testTcspTrustCompFormationAgt),
-    Some(DesConstants.testEabAll),
-    Some(DesConstants.testEabResdEstAgncy),
-    Some(DesConstants.testResponsiblePersons),
-    DesConstants.extraFields
-  )
-}
-
-class SubscriptionViewControllerSpecPhase2
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with IterateeHelpers
-    with OneAppPerSuite {
-
-  implicit override lazy val app = FakeApplication(
-    additionalConfiguration = Map(
-      "microservice.services.feature-toggle.phase-2-changes" -> true
-    )
-  )
-
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector])
+  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector], authAction, mockCC)
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
@@ -255,6 +130,7 @@ class SubscriptionViewControllerSpecPhase2
     Some(DesConstants.testEabAll),
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
+    Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
 }

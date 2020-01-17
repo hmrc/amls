@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ case class OwnBusinessPremisesDetails(tradingName: Option[String],
                                       eab:Eab,
                                       bpsp:Bpsp,
                                       tditpsp:Tditpsp,
+                                      amp: Amp,
                                       startDate : String,
                                       endDate: Option[String] = None,
                                       lineId: Option[StringOrInt] = None,
@@ -55,6 +56,7 @@ object OwnBusinessPremisesDetails {
         (__ \ "eab").readNullable[Eab].map{_.getOrElse(Eab(false))} and
         (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
         (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
+        (__ \ "amp").readNullable[Amp].map{_.getOrElse(Amp(false))} and
         (__ \ "startDate").read[String] and
         (__ \ "endDate").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
@@ -77,6 +79,7 @@ object OwnBusinessPremisesDetails {
         (__ \ "eab").write[Eab] and
         (__ \ "bpsp").write[Bpsp] and
         (__ \ "tditpsp").write[Tditpsp] and
+        (__ \ "amp").write[Amp] and
         (__ \ "startDate").write[String] and
         (__ \ "endDate").writeNullable[String] and
         __.writeNullable[StringOrInt] and
@@ -96,6 +99,7 @@ object OwnBusinessPremisesDetails {
         OwnBusinessPremisesDetails(Some(y.tradingName), y.tradingPremisesAddress,
           y.isResidential,
           x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
+          z,
           z,
           z,
           z,

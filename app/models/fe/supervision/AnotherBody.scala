@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package models.fe.supervision
 import models.des.supervision.SupervisionDetails
 import org.joda.time.LocalDate
 import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 sealed trait AnotherBody
 
@@ -39,6 +41,7 @@ object AnotherBody {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
     import play.api.libs.json._
+    import play.api.libs.json.JodaReads.DefaultJodaLocalDateReads
 
     (__ \ "anotherBody").read[Boolean] flatMap {
       case true =>

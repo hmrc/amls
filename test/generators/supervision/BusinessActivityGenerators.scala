@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ trait BusinessActivityGenerators {
     eab <- arbitrary[Boolean]
     bpsp <- arbitrary[Boolean]
     tditpsp <- arbitrary[Boolean]
-  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp)
+    amp <- arbitrary[Boolean]
+  } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp, amp)
 
   implicit val arbitraryMlrActivities: Arbitrary[MlrActivitiesAppliedFor] = Arbitrary(activityGen.sample.get)
   implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(LocalDate.now())

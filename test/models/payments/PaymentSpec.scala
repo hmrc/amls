@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "X12345678",
         "X73289473",
         "X987654321",
-        "A test payment",
+        Some("A test payment"),
         10000,
         Successful,
         now,

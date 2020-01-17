@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 package models.fe.responsiblepeople
 
-import config.AmlsConfig
 import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
+import play.api.libs.json.JodaReads.DefaultJodaLocalDateReads
 
 case class DateOfBirth(dateOfBirth: LocalDate)
 
@@ -43,7 +44,7 @@ object DateOfBirth {
       idDetail.dateOfBirth
     )
 
-    if(!ukDob.isEmpty && AmlsConfig.phase2Changes) {
+    if(!ukDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))
     } else if (!nonUkDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(nonUkDob.getOrElse(""))))

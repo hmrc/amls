@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package utils
 
-import config.AmlsConfig
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 
@@ -35,9 +34,10 @@ trait ResponsiblePeopleUpdateHelper {
 
     val desRPExtra = desRp.extra.copy(
       retest = viewRp.extra.retest,
-      testResult = viewRp.extra.testResult,
-      testDate = viewRp.extra.testDate
-    )
+      testResultFitAndProper = viewRp.extra.testResultFitAndProper,
+      testDateFitAndProper = viewRp.extra.testDateFitAndProper,
+      testResultApprovalCheck = viewRp.extra.testResultApprovalCheck,
+      testDateApprovalCheck = viewRp.extra.testDateApprovalCheck)
 
     val desResponsiblePeople = desRp.copy(extra = desRPExtra)
 
@@ -91,5 +91,4 @@ trait ResponsiblePeopleUpdateHelper {
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }
   }
-
 }

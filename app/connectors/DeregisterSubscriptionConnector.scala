@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,27 @@
 package connectors
 
 import audit.DeregisterSubscriptionEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
-import javax.inject.Inject
-import metrics.API10
+import javax.inject.{Inject, Singleton}
+import metrics.{API10, Metrics}
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse}
+import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
-import javax.inject.Singleton
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeregisterSubscriptionConnector @Inject()(app: Application) extends DESConnector(app) {
+class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                                private[connectors] val ac: AuditConnector,
+                                                private[connectors] val httpClient: HttpClient,
+                                                private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
     implicit ec: ExecutionContext,
@@ -55,7 +60,7 @@ class DeregisterSubscriptionConnector @Inject()(app: Application) extends DESCon
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpPost.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

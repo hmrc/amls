@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.des
 
-import config.AmlsConfig
 import play.api.libs.json.{Json, Reads}
 
 case class ChangeIndicators(businessDetails: Boolean = false,
@@ -31,6 +30,7 @@ case class ChangeIndicators(businessDetails: Boolean = false,
                             aspOrTcsp: Boolean = false,
                             tcsp: Boolean = false,
                             eab: Boolean = false,
+                            amp: Boolean = false,
                             responsiblePersons: Boolean = false,
                             filingIndividual: Boolean = false
                            )
@@ -55,6 +55,7 @@ object ChangeIndicators {
           (__ \ "aspOrTcsp" \ "aspOrTcsp").read[Boolean] and
           (__ \ "tcsp" \ "tcsp").read[Boolean] and
           (__ \ "eab" \ "eab").read[Boolean] and
+          (__ \ "amp" \ "amp").read[Boolean] and
           (__ \ "responsiblePersons").read[Boolean] and
           (__ \ "filingIndividual").read[Boolean]
         ) (ChangeIndicators.apply _)
@@ -71,6 +72,7 @@ object ChangeIndicators {
           (__ \ "aspOrTcsp" \ "aspOrTcsp").write[Boolean] and
           (__ \ "tcsp" \ "tcsp").write[Boolean] and
           (__ \ "eab" \ "eab").write[Boolean] and
+          (__ \ "amp" \ "amp").write[Boolean] and
           (__ \ "responsiblePersons").write[Boolean] and
           (__ \ "filingIndividual").write[Boolean])(unlift(ChangeIndicators.unapply _))
 

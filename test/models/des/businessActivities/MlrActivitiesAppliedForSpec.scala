@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 
 package models.des.businessActivities
 
-import models.des.businessactivities.{MlrActivitiesAppliedFor, AspServicesOffered}
-import models.fe.asp._
+import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.BusinessType.SoleProprietor
 import models.fe.businessmatching._
@@ -39,7 +38,7 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
         None,
         None)
 
-      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, true)))
+      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, true, false)))
     }
 
     "convert when no front model is empty" in {
@@ -52,7 +51,7 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
         None,
         None)
 
-      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false)))
+      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false, false)))
     }
   }
 

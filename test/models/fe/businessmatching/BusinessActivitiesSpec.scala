@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.fe.businessmatching
 
 import models.des.businessactivities.MlrActivitiesAppliedFor
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -51,7 +51,7 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[BusinessActivities](Json.obj("businessActivity" -> "01")) must
-          be(JsError((JsPath \ "businessActivities") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "businessActivities") -> JsonValidationError("error.path.missing")))
       }
     }
 
@@ -68,16 +68,16 @@ class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 
     "throw error for invalid data" in {
       Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq(JsString("20")))) must
-        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", ValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", JsonValidationError("error.invalid")))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false))) must be(
+      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false, false))) must be(
         BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, EstateAgentBusinessService, BillPaymentServices)))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities when input is false" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false))) must be(
+      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))) must be(
         BusinessActivities(Set.empty))
     }
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,20 @@ import connectors.DeregisterSubscriptionConnector
 import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
-import play.api.mvc.Action
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.{ApiRetryHelper, ControllerHelper}
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeregisterSubscriptionController @Inject()(
-                                                  deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
-                                                  implicit val apiRetryHelper: ApiRetryHelper
-                                                ) extends BaseController with ControllerHelper {
+class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
+                                                 implicit val apiRetryHelper: ApiRetryHelper,
+                                                 authAction: AuthAction,
+                                                 bodyParsers: PlayBodyParsers,
+                                                 val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
 
-  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.fe.estateagentbusiness
 
 import models.des.estateagentbusiness.EabResdEstAgncy
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -58,7 +58,7 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
                             )
 
         Json.fromJson[RedressScheme](json) must
-          be(JsError((JsPath \ "propertyRedressSchemeOther") -> ValidationError("error.path.missing")))
+          be(JsError((JsPath \ "propertyRedressSchemeOther") -> JsonValidationError("error.path.missing")))
       }
 
       "fail to validate when invalid option is passed" in {
@@ -68,7 +68,7 @@ class RedressSchemeSpec extends PlaySpec with MockitoSugar {
         )
 
         Json.fromJson[RedressScheme](json) must
-          be(JsError((JsPath \ "propertyRedressScheme") -> ValidationError("error.invalid")))
+          be(JsError((JsPath \ "propertyRedressScheme") -> JsonValidationError("error.invalid")))
       }
 
 

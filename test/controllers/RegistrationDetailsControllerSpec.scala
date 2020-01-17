@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,24 @@
 package controllers
 
 import connectors.RegistrationDetailsDesConnector
-import models.fe.registrationdetails.RegistrationDetails
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails => DesRegistrationDetails}
+import models.fe.registrationdetails.RegistrationDetails
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.MustMatchers
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.ApiRetryHelper
 
-class RegistrationDetailsControllerSpec extends PlaySpec with MustMatchers with ScalaFutures with MockitoSugar {
+class RegistrationDetailsControllerSpec extends AmlsBaseSpec with MustMatchers {
 
-  implicit val hc = HeaderCarrier()
+  val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
-  implicit val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
-
-  val controller = new RegistrationDetailsController(rddc, apiRetryHelper){  }
+  val controller = new RegistrationDetailsController(rddc, authAction, mockCC)
 
   "The RegistrationDetailsController" must {
     "use the Des connector to retrieve registration details" in {

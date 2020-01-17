@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,18 @@ import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.Action
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ApiRetryHelper
+import play.api.mvc.ControllerComponents
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector)
-  ( implicit val apiRetryHelper: ApiRetryHelper) extends BaseController {
+class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector,
+                                              authAction: AuthAction,
+                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 
@@ -43,7 +44,7 @@ class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConne
     )
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async {
+    authAction.async {
       implicit request =>
         Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {

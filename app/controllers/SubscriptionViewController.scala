@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,17 @@ import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.Action
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ApiRetryHelper
+import play.api.mvc.ControllerComponents
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SubscriptionViewController @Inject()(vdc: ViewDESConnector)
-  (implicit val apiRetryHelper: ApiRetryHelper) extends BaseController {
+class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
+                                           authAction: AuthAction,
+                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def connector: ViewDESConnector = vdc
 
@@ -44,7 +45,7 @@ class SubscriptionViewController @Inject()(vdc: ViewDESConnector)
     )
 
   def view(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async {
+    authAction.async {
       implicit request =>
         Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ object SalesChannel {
       case JsString("Retail") => JsSuccess(Retail)
       case JsString("Wholesale") => JsSuccess(Wholesale)
       case JsString("Auction") => JsSuccess(Auction)
-      case _ => JsError((JsPath \ "salesChannels") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "salesChannels") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =

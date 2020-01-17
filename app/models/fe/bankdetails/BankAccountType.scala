@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ object BankAccountType {
       case "02" => Reads(_ => JsSuccess(BelongsToBusiness))
       case "03" => Reads(_ => JsSuccess(BelongsToOtherBusiness))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "bankAccountType", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
     }
   }
 

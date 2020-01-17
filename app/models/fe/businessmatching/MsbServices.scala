@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ object MsbService {
       case JsString("03") => JsSuccess(ChequeCashingNotScrapMetal)
       case JsString("04") => JsSuccess(ChequeCashingScrapMetal)
       case JsString("05") => JsSuccess(ForeignExchange)
-      case _ => JsError((JsPath \ "msbServices") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "msbServices") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonW = Writes[MsbService] {

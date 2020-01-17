@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import play.api.libs.json._
 
 sealed trait PreviouslyRegistered
 
-case class PreviouslyRegisteredYes(value: String) extends PreviouslyRegistered
+case class PreviouslyRegisteredYes(value: Option[String]) extends PreviouslyRegistered
 
 case object PreviouslyRegisteredNo extends PreviouslyRegistered
 
@@ -29,7 +29,7 @@ object PreviouslyRegistered {
 
   implicit val jsonReads: Reads[PreviouslyRegistered] =
     (__ \ "previouslyRegistered").read[Boolean] flatMap {
-      case true => (__ \ "prevMLRRegNo").read[String] map PreviouslyRegisteredYes.apply _
+      case true => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYes.apply
       case false => Reads(_ => JsSuccess(PreviouslyRegisteredNo))
     }
 
@@ -45,13 +45,20 @@ object PreviouslyRegistered {
     prevMLR match {
       case Some(prevReg) => {
         (prevReg.amlsRegistered, prevReg.prevRegForMlr) match {
-          case (true, false) => PreviouslyRegisteredYes(prevReg.mlrRegNumber.getOrElse(""))
-          case (false, true) => PreviouslyRegisteredYes(prevReg.prevMlrRegNumber.getOrElse(""))
+          case (true, false) => PreviouslyRegisteredYes(getStringOption(prevReg.mlrRegNumber.getOrElse("")))
+          case (false, true) => PreviouslyRegisteredYes(getStringOption(prevReg.prevMlrRegNumber.getOrElse("")))
           case (_, _) => PreviouslyRegisteredNo
         }
       }
       case None => PreviouslyRegisteredNo
     }
+  }
 
+  def getStringOption(value: String): Option[String] = {
+    if(value.isEmpty) {
+      None
+    } else {
+      Some(value)
+    }
   }
 }

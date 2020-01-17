@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package models.fe.businessdetails
 
 import models.des.aboutthebusiness.VATRegistration
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class VATRegisteredSpec extends PlaySpec with MockitoSugar {
 
@@ -46,7 +46,7 @@ class VATRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("registeredForVAT" -> true)
 
       Json.fromJson[VATRegistered](json) must
-        be(JsError((JsPath \ "vrnNumber") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "vrnNumber") -> JsonValidationError("error.path.missing")))
     }
 
     "write the correct value" in {

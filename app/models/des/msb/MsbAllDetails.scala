@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,14 @@
 
 package models.des.msb
 
-import config.AmlsConfig
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
 import play.api.libs.json.Json
 
-case class MsbAllDetails(
-                          anticipatedTotThrputNxt12Mths: Option[String],
-                          otherCntryBranchesOrAgents: Boolean,
-                          countriesList: Option[CountriesList],
-                          sysLinkedTransIdentification: Boolean
-                        )
+case class MsbAllDetails(anticipatedTotThrputNxt12Mths: Option[String],
+                         otherCntryBranchesOrAgents: Boolean,
+                         countriesList: Option[CountriesList],
+                         sysLinkedTransIdentification: Boolean)
 
 object MsbAllDetails {
 

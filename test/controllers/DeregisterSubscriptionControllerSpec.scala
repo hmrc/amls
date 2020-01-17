@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,28 @@ import connectors.DeregisterSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.DeregisterSubscriptionResponse
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.concurrent.ScalaFutures
-import play.api.libs.json.{JsNull, JsValue, Json}
-import play.api.test.{FakeApplication, FakeRequest}
+import play.api.libs.json.{JsValue, Json}
+import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsJson, _}
-import utils.ApiRetryHelper
+import utils.{AmlsBaseSpec, ApiRetryHelper, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class DeregisterSubscriptionControllerSpec extends PlaySpec
-  with MockitoSugar
-  with ScalaFutures
-  with AmlsReferenceNumberGenerator
-  with OneAppPerSuite
-{
-  implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem)
+class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
+
+  val authAction: AuthAction = SuccessfulAuthAction
 
   trait Fixture {
     lazy val mockDeregConnector: DeregisterSubscriptionConnector = mock[DeregisterSubscriptionConnector]
+
     val deregisterSubscriptionController = new DeregisterSubscriptionController(
       deregisterSubscriptionConnector = mockDeregConnector,
-      apiRetryHelper = mock[ApiRetryHelper]
+      apiRetryHelper = mock[ApiRetryHelper],
+      authAction = authAction,
+      bodyParsers = mockBodyParsers,
+      cc = mockCC
     )
   }
 
@@ -66,7 +63,7 @@ class DeregisterSubscriptionControllerSpec extends PlaySpec
 
   private val postRequestWithNoBody = FakeRequest("POST", "/")
     .withHeaders("CONTENT_TYPE" -> "application/json")
-    .withBody[JsValue](JsNull)
+    .withBody[JsValue](Json.parse("{}"))
 
   "DeregisterSubscriptionController" must {
 

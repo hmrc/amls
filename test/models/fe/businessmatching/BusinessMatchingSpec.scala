@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import models.des.DesConstants
 import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.BusinessType.SoleProprietor
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
@@ -87,7 +87,7 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
         ReviewDetails("CompanyName", SoleProprietor, Address("BusinessAddressLine1", "BusinessAddressLine2", Some("BusinessAddressLine3"),
           Some("BusinessAddressLine4"), Some("AA1 1AA"), "GB"), ""),
         BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
-          BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, TrustAndCompanyServices)),
+          BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, ArtMarketParticipant, TrustAndCompanyServices)),
         Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange))),
         Some(TypeOfBusiness("TypeOfBusiness")),
         Some(CompanyRegistrationNumber("12345678")),

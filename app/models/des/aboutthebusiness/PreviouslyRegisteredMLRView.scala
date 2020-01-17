@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,12 @@ object PreviouslyRegisteredMLRView{
 
   implicit def convert(businessDetails:BusinessDetails):Option[PreviouslyRegisteredMLRView] ={
     businessDetails.previouslyRegistered match{
-      case x:PreviouslyRegisteredYes if(x.value.length == 15)=> Some(PreviouslyRegisteredMLRView(false, None, true, Some(x.value)))
-      case x:PreviouslyRegisteredYes if(x.value.length == 8) => Some(PreviouslyRegisteredMLRView(true, Some(x.value), false, None))
+      case x:PreviouslyRegisteredYes
+        if(x.value.getOrElse("").length == 15)=> Some(PreviouslyRegisteredMLRView(false, None, true, x.value))
+      case x:PreviouslyRegisteredYes
+        if(x.value.getOrElse("").length == 8) => Some(PreviouslyRegisteredMLRView(true, x.value, false, None))
+
+      case PreviouslyRegisteredYes(None) => Some(PreviouslyRegisteredMLRView(true, None, false, None))
       case PreviouslyRegisteredNo => Some(PreviouslyRegisteredMLRView(false, None, false, None))
       case _ => None
     }

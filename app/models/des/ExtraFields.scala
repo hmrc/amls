@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.des
 
-import config.AmlsConfig
 import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
 import play.api.libs.json._
 
@@ -33,7 +32,6 @@ object ExtraFields {
 
   implicit def format =
     Json.format[ExtraFields]
-
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {
     ExtraFields(Declaration(true), AboutYouRelease7.convert(person), None)

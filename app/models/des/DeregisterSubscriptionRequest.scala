@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ object DeregistrationReason {
       case JsString("Under another supervisor") => JsSuccess(UnderAnotherSupervisor)
       case JsString("Change of Legal Entity") => JsSuccess(ChangeOfLegalEntity)
       case JsString("Other, please specify") => JsSuccess(Other)
-      case _ => JsError((JsPath \ "deregistrationReason") -> ValidationError("error.invalid"))
+      case _ => JsError((JsPath \ "deregistrationReason") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,13 +41,13 @@ class PreviouslyRegisteredSpec extends PlaySpec{
       }
 
       "convert front end model to PreviouslyRegisteredMLRYes8" in {
-        val from = BusinessDetails(PreviouslyRegisteredYes("12345678"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+        val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(true, Some("12345678"), false, None)))
       }
 
       "convert front end model to PreviouslyRegisteredMLR15" in {
-        val from = BusinessDetails(PreviouslyRegisteredYes("123456789123456"), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+        val from = BusinessDetails(PreviouslyRegisteredYes(Some("123456789123456")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
         PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456"))))
       }

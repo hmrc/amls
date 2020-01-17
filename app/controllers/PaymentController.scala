@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,27 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import cats.data.OptionT
 import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import models.payments.{CreateBacsPaymentRequest, RefreshPaymentStatusRequest, SetBacsRequest}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.PaymentService
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ControllerHelper
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class PaymentController @Inject()(
-                                   private[controllers] val paymentService: PaymentService
-                                 ) extends BaseController with ControllerHelper {
+class PaymentController @Inject()(private[controllers] val paymentService: PaymentService,
+                                  authAction: AuthAction,
+                                  bodyParsers: PlayBodyParsers,
+                                  val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
 
-  def createBacsPayment(accountType: String, accountRef: String) = Action.async(parse.json) {
+  def createBacsPayment(accountType: String, accountRef: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       request.body.asOpt[CreateBacsPaymentRequest] match {
         case Some(r) => paymentService.createBacsPayment(r) map { p => Created(Json.toJson(p)) }
@@ -44,7 +44,8 @@ class PaymentController @Inject()(
       }
   }
 
-  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) = Action.async(parse.text) {
+  def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) =
+    authAction.async(bodyParsers.text) {
     implicit request: Request[String] => {
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
@@ -62,7 +63,7 @@ class PaymentController @Inject()(
     }
   }
 
-  def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = Action.async {
+  def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = authAction.async {
     implicit request =>
       paymentService.getPaymentByPaymentReference(paymentReference) map {
         case Some(payment) => Ok(Json.toJson(payment))
@@ -70,7 +71,7 @@ class PaymentController @Inject()(
       }
   }
 
-  def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = Action.async {
+  def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = authAction.async {
     implicit request =>
       paymentService.getPaymentByAmlsReference(amlsReference) map {
         case Some(payment) => Ok(Json.toJson(payment))
@@ -78,7 +79,7 @@ class PaymentController @Inject()(
       }
   }
 
-  def updateBacsFlag(accountType: String, ref: String, paymentReference: String) = Action.async(parse.json) {
+  def updateBacsFlag(accountType: String, ref: String, paymentReference: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       val processBody = for {
         bacsRequest <- OptionT.fromOption[Future](request.body.asOpt[SetBacsRequest])
@@ -89,7 +90,7 @@ class PaymentController @Inject()(
       processBody getOrElse NotFound
   }
 
-  def refreshStatus(accountType: String, ref: String) = Action.async(parse.json) {
+  def refreshStatus(accountType: String, ref: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       request.body.asOpt[RefreshPaymentStatusRequest] map { r =>
         paymentService.refreshStatus(r.paymentReference).value map {

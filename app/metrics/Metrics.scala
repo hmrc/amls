@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{Counter, MetricRegistry, Timer}
 
 @Singleton
-class Metrics @Inject()(
-                       metrics: com.kenshoo.play.metrics.Metrics
-                       ) {
+class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
   // $COVERAGE-OFF$
   private val registry: MetricRegistry = metrics.defaultRegistry
   private val timers = Map[APITypes, Timer](

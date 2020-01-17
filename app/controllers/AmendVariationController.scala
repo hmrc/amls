@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,27 +21,26 @@ import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
 import play.api.Logger
-import play.api.data.validation.ValidationError
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
-import play.api.mvc.{Action, Request}
+import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
 import services.AmendVariationService
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.ApiRetryHelper
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(
-  implicit val apiRetryHelper: ApiRetryHelper,
-  avs: AmendVariationService
-) extends BaseController {
+class AmendVariationController @Inject()(avs: AmendVariationService,
+                                         authAction: AuthAction,
+                                         bodyParsers: PlayBodyParsers,
+                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
   private[controllers] def service: AmendVariationService = avs
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  private def toError(errors: Seq[(JsPath, Seq[ValidationError])]): JsObject =
+  private def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]): JsObject =
     Json.obj(
       "errors" -> (errors map {
         case (path, error) =>
@@ -92,7 +91,7 @@ class AmendVariationController @Inject()(
   }
 
   def amend(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -100,7 +99,7 @@ class AmendVariationController @Inject()(
     }
 
   def variation(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -108,7 +107,7 @@ class AmendVariationController @Inject()(
     }
 
   def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewal]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
@@ -116,7 +115,7 @@ class AmendVariationController @Inject()(
     }
 
   def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async(parse.json) {
+    authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewalAmendment]"
         Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,26 @@
 
 package connectors
 
-import config.AmlsConfig
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.Inject
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
-import play.api.Mode.Mode
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
-import play.api.{Application, Configuration, Logger}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PayAPIConnector @Inject()(app: Application) extends HttpResponseHelper with ServicesConfig {
+class PayAPIConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
+                                private[connectors] val httpClient: HttpClient,
+                                private[connectors] val metrics: Metrics) extends HttpResponseHelper {
 
-  private[connectors] val httpGet: HttpGet = app.injector.instanceOf[HttpGet]
-  private[connectors] val paymentUrl = AmlsConfig.payAPIUrl
-  private[connectors] val metrics: Metrics = app.injector.instanceOf[Metrics]
-  override protected def mode: Mode = app.mode
-  override protected def runModeConfiguration: Configuration = app.configuration
+  private[connectors] val paymentUrl = applicationConfig.payAPIUrl
 
   def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
     getPaymentFunction(paymentId)
@@ -55,7 +52,7 @@ class PayAPIConnector @Inject()(app: Application) extends HttpResponseHelper wit
 
     Logger.debug(s"$prefix - Request body: $paymentId")
 
-    httpGet.GET[HttpResponse](url) map {
+    httpClient.GET[HttpResponse](url) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

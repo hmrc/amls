@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,14 @@ case class BusinessActivities(
                                tcspServicesOffered: Option[TcspServicesOffered] = None,
                                tcspServicesforRegOffBusinessAddrVirtualOff: Option[ServicesforRegOff] = None,
                                eabServicesCarriedOut: Option[EabServices] = None,
+                               ampServicesCarriedOut: Option[AmpServices] = None,
                                all: Option[BusinessActivitiesAll] = None)
 
 object BusinessActivities {
   implicit val format = Json.format[BusinessActivities]
 
   implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
+
 
     BusinessActivities(
       feModel.businessMatchingSection,
@@ -44,6 +46,7 @@ object BusinessActivities {
       feModel.tcspSection,
       feModel.tcspSection,
       feModel.eabSection,
+      feModel.ampSection,
       BusinessActivitiesAll.convtoActivitiesALL(feModel)
     )
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ sealed trait BusinessActivity
 
 case object AccountancyServices extends BusinessActivity
 
+case object ArtMarketParticipant extends BusinessActivity
+
 case object BillPaymentServices extends BusinessActivity
 
 case object EstateAgentBusinessService extends BusinessActivity
@@ -43,17 +45,19 @@ object BusinessActivity {
 
   implicit val jsonActivityReads: Reads[BusinessActivity] = Reads {
     case JsString("01") => JsSuccess(AccountancyServices)
+    case JsString("08") => JsSuccess(ArtMarketParticipant)
     case JsString("02") => JsSuccess(BillPaymentServices)
     case JsString("03") => JsSuccess(EstateAgentBusinessService)
     case JsString("04") => JsSuccess(HighValueDealing)
     case JsString("05") => JsSuccess(MoneyServiceBusiness)
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
-    case _ => JsError((JsPath \ "businessActivities") -> ValidationError("error.invalid"))
+    case _ => JsError((JsPath \ "businessActivities") -> JsonValidationError("error.invalid"))
   }
 
   implicit val jsonActivityWrite = Writes[BusinessActivity] {
     case AccountancyServices => JsString("01")
+    case ArtMarketParticipant => JsString("08")
     case BillPaymentServices => JsString("02")
     case EstateAgentBusinessService => JsString("03")
     case HighValueDealing => JsString("04")
@@ -66,58 +70,28 @@ object BusinessActivity {
 object BusinessActivities {
 
   implicit val formats = Json.format[BusinessActivities]
-  def getMSB(msb: Boolean): Option[BusinessActivity] = {
-    msb match {
-      case true => Some(MoneyServiceBusiness)
-      case false => None
-    }
-  }
 
-  def getHVD(hvd: Boolean): Option[BusinessActivity] = {
-    hvd match {
-      case true => Some(HighValueDealing)
-      case false => None
-    }
-  }
-  def getASP(asp: Boolean): Option[BusinessActivity] = {
-    asp match {
-      case true => Some(AccountancyServices)
-      case false => None
-    }
-  }
-  def getTCSP(tcsp: Boolean): Option[BusinessActivity] = {
-    tcsp match {
-      case true => Some(TrustAndCompanyServices)
-      case false => None
-    }
-  }
-  def getEAB(eab: Boolean): Option[BusinessActivity] = {
-    eab match {
-      case true => Some(EstateAgentBusinessService)
-      case false => None
-    }
-  }
-  def getBpsp(bpsp: Boolean): Option[BusinessActivity] = {
-    bpsp match {
-      case true => Some(BillPaymentServices)
-      case false => None
-    }
-  }
-  def getTditpsp(tditpsp: Boolean): Option[BusinessActivity] = {
-    tditpsp match {
-      case true => Some(TelephonePaymentService)
-      case false => None
+  def getActivity[A  <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] = {
+    if (present) {
+      Some(activity)
+    } else {
+      None
     }
   }
 
   implicit def conv(activities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
-
     activities match {
-      case Some(mlrActivitiesAppliedFor) => BusinessActivities(Set(getMSB(mlrActivitiesAppliedFor.msb), getHVD(mlrActivitiesAppliedFor.hvd),
-        getASP(mlrActivitiesAppliedFor.asp), getTCSP(mlrActivitiesAppliedFor.tcsp),
-        getEAB(mlrActivitiesAppliedFor.eab), getBpsp(mlrActivitiesAppliedFor.bpsp), getTditpsp(mlrActivitiesAppliedFor.tditpsp)).flatten)
+      case Some(mlrActivitiesAppliedFor) => BusinessActivities(Set(
+          getActivity(MoneyServiceBusiness, mlrActivitiesAppliedFor.msb),
+          getActivity(HighValueDealing, mlrActivitiesAppliedFor.hvd),
+          getActivity(AccountancyServices, mlrActivitiesAppliedFor.asp),
+          getActivity(TrustAndCompanyServices, mlrActivitiesAppliedFor.tcsp),
+          getActivity(EstateAgentBusinessService, mlrActivitiesAppliedFor.eab),
+          getActivity(BillPaymentServices, mlrActivitiesAppliedFor.bpsp),
+          getActivity(TelephonePaymentService, mlrActivitiesAppliedFor.tditpsp),
+          getActivity(ArtMarketParticipant, mlrActivitiesAppliedFor.amp))
+        .flatten)
       case _ => BusinessActivities(Set.empty)
     }
-
   }
 }

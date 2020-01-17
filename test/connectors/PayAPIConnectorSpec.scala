@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,41 +19,29 @@ package connectors
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
-import metrics.{Metrics, PayAPI}
+import metrics.PayAPI
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
+import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
 
-class PayAPIConnectorSpec extends PlaySpec
-  with OneServerPerSuite
-  with MockitoSugar
-  with ScalaFutures
-  with PayApiGenerator
-  with IntegrationPatience {
+class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
 
   trait Fixture {
 
-    val mockHttp = mock[HttpGet]
     val testPayment = payApiPaymentGen.sample.get
     val paymentUrl = s"url/pay-api/payment/${testPayment._id}"
 
-    object testConnector extends PayAPIConnector(app) {
-      override private[connectors] val httpGet: HttpGet = mockHttp
+    val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
       override private[connectors] val paymentUrl = "url"
-      override private[connectors] val metrics = mock[Metrics]
     }
 
     val testPaymentId = testPayment._id
-
-    implicit val hc = HeaderCarrier()
 
     val mockTimer = mock[Timer.Context]
 
@@ -73,7 +61,7 @@ class PayAPIConnectorSpec extends PlaySpec
       )
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
@@ -86,7 +74,7 @@ class PayAPIConnectorSpec extends PlaySpec
       val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {
@@ -99,7 +87,7 @@ class PayAPIConnectorSpec extends PlaySpec
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        mockHttp.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {

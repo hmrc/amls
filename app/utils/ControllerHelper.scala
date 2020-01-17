@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,13 @@
 
 package utils
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.{JsPath, Json, JsonValidationError}
 
 trait ControllerHelper {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  def toError(errors: Seq[(JsPath, Seq[ValidationError])]) = Json.obj(
+  def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]) = Json.obj(
     "errors" -> (errors map {
       case (path, error) =>
         Json.obj(

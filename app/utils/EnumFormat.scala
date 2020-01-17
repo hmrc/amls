@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ object EnumFormat {
   def apply[T <: EnumEntry](e: Enum[T]): Format[T] = Format(
     Reads {
       case JsString(value) => e.withNameOption(value).map(JsSuccess(_))
-        .getOrElse(JsError(ValidationError(s"Unknown ${e.getClass.getSimpleName} value: $value", s"error.invalid.${e.getClass.getSimpleName.toLowerCase.replaceAllLiterally("$", "")}")))
+        .getOrElse(JsError(JsonValidationError(s"Unknown ${e.getClass.getSimpleName} value: $value", s"error.invalid.${e.getClass.getSimpleName.toLowerCase.replaceAllLiterally("$", "")}")))
       case _ => JsError("Can only parse String")
     },
     Writes(v => JsString(v.entryName))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package models.fe.hvd
 import org.joda.time.{LocalDate}
 import models.des.hvd.{Hvd=> DesHvd}
 import play.api.libs.json.Reads
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 
 sealed trait CashPayment
 
@@ -31,6 +33,7 @@ object CashPayment {
   implicit val jsonReads: Reads[CashPayment] = {
     import play.api.libs.json.Reads._
     import play.api.libs.json._
+    import play.api.libs.json.JodaReads.DefaultJodaLocalDateReads
 
     (__ \ "acceptedAnyPayment").read[Boolean] flatMap {
       case true => (__ \ "paymentDate").read[LocalDate] map CashPaymentYes.apply

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import config.AmlsConfig
 import models.des.StatusProvider
 import models.fe
 import models.fe.responsiblepeople.TimeAtAddress._
@@ -131,25 +130,15 @@ object ResponsiblePersons {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
-    val msbOrTcsp: Option[MsbOrTcsp] = if (AmlsConfig.phase2Changes) {
-      None
-    } else {
-      rp.approvalFlags.hasAlreadyPassedFitAndProper.fold[Option[MsbOrTcsp]](None) { x => Some(MsbOrTcsp(x)) }
-    }
+    val msbOrTcsp: Option[MsbOrTcsp] = None
 
-    val passedFitAndProperTest: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+    val passedFitAndProperTest: Option[Boolean] =
       // TODO: When toggle is removed then this can be made non optional
       rp.approvalFlags.hasAlreadyPassedFitAndProper orElse Some(false)
-    } else {
-      None
-    }
 
-    val passedApprovalCheck: Option[Boolean] = if (AmlsConfig.phase2Changes) {
+    val passedApprovalCheck: Option[Boolean] =
       // TODO: When toggle is removed then this can be made non optional
       rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
-    } else {
-      None
-    }
 
     ResponsiblePersons(
       NameDetails.from(Some(rp)),

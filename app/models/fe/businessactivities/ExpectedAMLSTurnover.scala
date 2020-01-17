@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import config.AmlsConfig
+
 import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
 import play.Logger
 import play.api.data.validation.ValidationError
@@ -52,7 +52,7 @@ object ExpectedAMLSTurnover {
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
       case _ =>
-        Reads(_ =>JsError(JsPath \ "expectedAMLSTurnover", ValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "expectedAMLSTurnover", JsonValidationError("error.invalid")))
     }
   }
 

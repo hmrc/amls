@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.des.tradingpremises
 
-import config.AmlsConfig
 import models.des.RequestType
 import models.des.{StatusProvider, StringOrInt}
 import play.api.libs.functional.syntax._
@@ -38,6 +37,7 @@ case class AgentDetails(
                          removalReason: Option[String] = None,
                          removalReasonOther: Option[String] = None
                        ) {
+
   override def hashCode = 41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
     agentPremises.hashCode + status.hashCode)
 

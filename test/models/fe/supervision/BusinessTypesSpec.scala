@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package models.fe.supervision
 
 import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
@@ -45,12 +45,12 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
     "fail when on path is missing" in {
       Json.fromJson[BusinessTypes](Json.obj()) must
-        be(JsError((JsPath \ "businessType") -> ValidationError("error.path.missing")))
+        be(JsError((JsPath \ "businessType") -> JsonValidationError("error.path.missing")))
     }
 
     "fail when on invalid data" in {
       Json.fromJson[BusinessTypes](Json.obj("businessType" -> Seq("40"))) must
-        be(JsError((JsPath \ "businessType") -> ValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessType") -> JsonValidationError("error.invalid")))
     }
 
   }

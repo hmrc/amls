@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ case object Receptionist extends TcspService
 case object ConferenceRooms extends TcspService
 case class Other(details: String) extends TcspService
 
-case class ProvidedServices(services: Set[TcspService])
+case class  ProvidedServices(services: Set[TcspService])
 
 object ProvidedServices {
 
@@ -69,7 +69,7 @@ object ProvidedServices {
         case "08" =>
           (JsPath \ "details").read[String].map(Other.apply _) map identity[TcspService]
         case _ =>
-          Reads(_ => JsError((JsPath \ "services") -> ValidationError("error.invalid")))
+          Reads(_ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[TcspService]]](
         Reads[Set[TcspService]](_ => JsSuccess(Set.empty))
       ) {

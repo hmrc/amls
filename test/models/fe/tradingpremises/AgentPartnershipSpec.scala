@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class AgentPartnershipSpec extends PlaySpec {
 
     "Success read and write json" in {
       AgentPartnership.formats.reads(AgentPartnership.formats.writes(AgentPartnership("somename"))) must
-        be(JsSuccess(AgentPartnership("somename"), JsPath \ "agentPartnership"))
+        be(JsSuccess(AgentPartnership("somename")))
     }
 
     "convert when agentLegalEntityName is empty" in {

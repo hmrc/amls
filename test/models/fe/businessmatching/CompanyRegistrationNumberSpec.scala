@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.fe.businessmatching
 
 import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
 
@@ -31,7 +31,7 @@ class CompanyRegistrationNumberSpec extends PlaySpec with MockitoSugar {
         val companyRegistrationNumber = CompanyRegistrationNumber("12345678")
         val jsonCompanyRegistrationNumber = Json.obj("companyRegistrationNumber" -> "12345678")
         val fromJson = Json.fromJson[CompanyRegistrationNumber](jsonCompanyRegistrationNumber)
-        fromJson must be(JsSuccess(companyRegistrationNumber, JsPath \ "companyRegistrationNumber"))
+        fromJson must be(JsSuccess(companyRegistrationNumber))
       }
     }
 

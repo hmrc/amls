@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import connectors.WithdrawSubscriptionConnector
+import javax.inject.{Inject, Singleton}
 import models.des.WithdrawSubscriptionRequest
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
-import play.api.mvc.Action
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import utils.{ApiRetryHelper, ControllerHelper}
+import play.api.mvc.{ControllerComponents, PlayBodyParsers}
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class WithdrawSubscriptionController @Inject()(
-                                                connector: WithdrawSubscriptionConnector,
-                                                implicit val apiRetryHelper: ApiRetryHelper
-                                              ) extends BaseController with ControllerHelper {
+class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector,
+                                               authAction: AuthAction,
+                                               bodyParsers: PlayBodyParsers,
+                                               val cc: ControllerComponents)
+                                              (implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with ControllerHelper {
 
-  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = Action.async(parse.json) {
+  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,30 +23,19 @@ import models.des
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{ApiRetryHelper, IterateeHelpers}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionStatusControllerSpec
-  extends PlaySpec
-    with MockitoSugar
-    with ScalaFutures
-    with IntegrationPatience
-    with IterateeHelpers
-    with AmlsReferenceNumberGenerator
-    with OneAppPerSuite {
+class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
 
-  implicit val apiRetryHelper: ApiRetryHelper = mock[ApiRetryHelper]
+  lazy val ssConn = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
+  val authAction: AuthAction = SuccessfulAuthAction
 
-  lazy val ssConn = new SubscriptionStatusDESConnector(app)
-
-  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn) {
+  lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, authAction, mockCC) {
     override val connector = mock[SubscriptionStatusDESConnector]
   }
 

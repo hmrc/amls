@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package models.fe
 
+import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businessmatching.BusinessMatching
@@ -44,6 +45,7 @@ case class SubscriptionRequest(
                                 aspSection: Option[Asp],
                                 msbSection: Option[MoneyServiceBusiness],
                                 hvdSection: Option[Hvd],
+                                ampSection: Option[Amp],
                                 supervisionSection: Option[Supervision]
                               )
 

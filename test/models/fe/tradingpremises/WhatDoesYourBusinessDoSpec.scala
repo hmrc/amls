@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package models.fe.tradingpremises
 import models.des.DesConstants
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
   val model = WhatDoesYourBusinessDo(
@@ -46,7 +46,7 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
 
       "fail when on invalid data" in {
         Json.fromJson[WhatDoesYourBusinessDo](Json.obj("activities" -> Seq("40"))) must
-          be(JsError(((JsPath \ "activities") (0) \ "activities") -> ValidationError("error.invalid")))
+          be(JsError(((JsPath \ "activities") (0) \ "activities") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {
@@ -60,13 +60,14 @@ class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
       val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
         BusinessActivity.BillPaymentServices,
         BusinessActivity.MoneyServiceBusiness,
-        BusinessActivity.TrustAndCompanyServices))
+        BusinessActivity.TrustAndCompanyServices,
+        BusinessActivity.ArtMarketParticipant))
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel1) must be(model)
     }
 
     "convert des model to frontend model when msb is not selected" in {
-      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.BillPaymentServices, BusinessActivity.TrustAndCompanyServices))
+      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.BillPaymentServices, BusinessActivity.TrustAndCompanyServices, BusinessActivity.ArtMarketParticipant))
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel2) must be(model)
     }

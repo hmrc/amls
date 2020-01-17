@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,27 @@
 package connectors
 
 import audit.WithdrawSubscriptionEvent
+import config.ApplicationConfig
 import exceptions.HttpStatusException
 import javax.inject.{Inject, Singleton}
-import metrics.API8
+import metrics.{API8, Metrics}
 import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse}
+import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class WithdrawSubscriptionConnector  @Inject()(app: Application) extends DESConnector(app) {
+class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                              private[connectors] val ac: AuditConnector,
+                                              private[connectors] val httpClient: HttpClient,
+                                              private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
@@ -54,7 +60,7 @@ class WithdrawSubscriptionConnector  @Inject()(app: Application) extends DESConn
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
-    httpPost.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

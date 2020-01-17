@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ package models.fe.businessdetails
 
 import models.des.DesConstants
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNull, Json}
 
 class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
-  val previouslyRegistered = PreviouslyRegisteredYes("12345678")
+  val previouslyRegistered = PreviouslyRegisteredYes(Some("12345678"))
 
   val regForVAT = VATRegisteredYes("123456789")
 
@@ -80,7 +80,7 @@ class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
 
     val completeModel = BusinessDetails(
-      previouslyRegistered = PreviouslyRegisteredYes("12345678"),
+      previouslyRegistered = PreviouslyRegisteredYes(Some("12345678")),
       activityStartDate = Some(activityStartDate),
       vatRegistered = Some(regForVAT),
       corporationTaxRegistered = Some(regForCorpTax),

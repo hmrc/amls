@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
 
 package controllers
 
+import javax.inject.{Inject, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.Action
+import play.api.mvc.ControllerComponents
 import repositories.FeesRepository
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import play.api.libs.concurrent.Execution.Implicits._
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import utils.AuthAction
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait FeeResponseController extends BaseController {
-
-  private[controllers] def repository: FeesRepository
+@Singleton
+class FeeResponseController @Inject()(authAction: AuthAction,
+                                      val cc: ControllerComponents)(implicit val repository: FeesRepository) extends BackendController(cc) {
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    Action.async {
+    authAction.async {
       implicit request => {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
           case Some(feeResponse) => {
@@ -48,10 +50,4 @@ trait FeeResponseController extends BaseController {
       }
 
     }
-
-}
-
-object FeeResponseController extends FeeResponseController {
-  // $COVERAGE-OFF$
-  override private[controllers] val repository: FeesRepository = FeesRepository()
 }

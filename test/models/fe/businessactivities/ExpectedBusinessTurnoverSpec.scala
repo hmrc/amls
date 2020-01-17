@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package models.fe.businessactivities
 
 import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
 import models.fe.businessactivities.ExpectedBusinessTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
-import play.api.test.FakeApplication
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+
 
 class ExpectedBusinessTurnoverSpec extends PlaySpec with OneAppPerSuite {
 
@@ -79,7 +79,7 @@ class ExpectedBusinessTurnoverSpec extends PlaySpec with OneAppPerSuite {
 
       "throw error for invalid data" in {
         Json.fromJson[ExpectedBusinessTurnover](Json.obj("expectedBusinessTurnover" -> "20")) must
-          be(JsError(JsPath \ "expectedBusinessTurnover", ValidationError("error.invalid")))
+          be(JsError(JsPath \ "expectedBusinessTurnover", JsonValidationError("error.invalid")))
       }
     }
 

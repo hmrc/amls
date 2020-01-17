@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package models.fe
 
-import config.AmlsConfig
 import models.des.{AmendVariationRequest, StatusProvider, AmendVariationResponse => DesAmendVariationResponse}
 import play.api.libs.json.Json
 
@@ -77,49 +76,26 @@ object AmendVariationResponse {
       des.premiseHYNumber.getOrElse(0) + des.premiseFYNumber.getOrElse(0) - addedOwnBusinessTradingPremisesCount - addedAgentTradingPremisesCount
     }
 
-    if(AmlsConfig.phase2Changes) {
-      AmendVariationResponse(
-        processingDate = des.processingDate,
-        etmpFormBundleNumber = des.etmpFormBundleNumber,
-        registrationFee = des.registrationFee.getOrElse(0),
-        fpFee = des.fpFee,
-        fpFeeRate = des.fpFeeRate,
-        premiseFee = des.premiseFee.getOrElse(0),
-        premiseFeeRate = des.premiseFYFeeRate,
-        totalFees = des.totalFees.getOrElse(0),
-        paymentReference = des.paymentReference,
-        difference = des.difference,
-        addedResponsiblePeople = des.fpNumbers.getOrElse(0) + des.approvalCheckNumbers.getOrElse(0),
-        addedResponsiblePeopleFitAndProper = des.fpNumbers.getOrElse(0),
-        addedResponsiblePeopleApprovalCheck = des.approvalCheckNumbers.getOrElse(0),
-        addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
-        halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
-        zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
-        approvalCheckNumbers = Some(des.approvalCheckNumbers.getOrElse(0)),
-        approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
-        approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
-      )
-    } else {
-      AmendVariationResponse(
-        processingDate = des.processingDate,
-        etmpFormBundleNumber = des.etmpFormBundleNumber,
-        registrationFee = des.registrationFee.getOrElse(0),
-        fpFee = des.fpFee,
-        fpFeeRate = des.fpFeeRate,
-        premiseFee = des.premiseFee.getOrElse(0),
-        premiseFeeRate = des.premiseFYFeeRate,
-        totalFees = des.totalFees.getOrElse(0),
-        paymentReference = des.paymentReference,
-        difference = des.difference,
-        addedResponsiblePeople = des.fpNumbers.getOrElse(0),
-        addedResponsiblePeopleFitAndProper = des.responsiblePersonNotCharged.getOrElse(0),
-        addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
-        halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
-        zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
-        approvalCheckNumbers = Some(des.approvalCheckNumbers.getOrElse(0)),
-        approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
-        approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
-      )
-    }
+    AmendVariationResponse(
+      processingDate = des.processingDate,
+      etmpFormBundleNumber = des.etmpFormBundleNumber,
+      registrationFee = des.registrationFee.getOrElse(0),
+      fpFee = des.fpFee,
+      fpFeeRate = des.fpFeeRate,
+      premiseFee = des.premiseFee.getOrElse(0),
+      premiseFeeRate = des.premiseFYFeeRate,
+      totalFees = des.totalFees.getOrElse(0),
+      paymentReference = des.paymentReference,
+      difference = des.difference,
+      addedResponsiblePeople = des.fpNumbers.getOrElse(0) + des.approvalCheckNumbers.getOrElse(0),
+      addedResponsiblePeopleFitAndProper = des.fpNumbers.getOrElse(0),
+      addedResponsiblePeopleApprovalCheck = des.approvalCheckNumbers.getOrElse(0),
+      addedFullYearTradingPremises = des.premiseFYNumber.getOrElse(0),
+      halfYearlyTradingPremises = des.premiseHYNumber.getOrElse(0),
+      zeroRatedTradingPremises = if (isRenewalPeriod) 0 else zeroRated,
+      approvalCheckNumbers = Some(des.approvalCheckNumbers.getOrElse(0)),
+      approvalCheckFeeRate = Some(des.approvalCheckFeeRate.getOrElse(0)),
+      approvalCheckFee = Some(des.approvalCheckFee.getOrElse(0))
+    )
   }
 }

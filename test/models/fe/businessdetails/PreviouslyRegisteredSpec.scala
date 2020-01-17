@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package models.fe.businessdetails
 
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
 
@@ -37,15 +37,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       val json = Json.obj("previouslyRegistered" -> true, "prevMLRRegNo" ->"12345678")
 
       Json.fromJson[PreviouslyRegistered](json) must
-        be(JsSuccess(PreviouslyRegisteredYes("12345678"), JsPath \ "prevMLRRegNo"))
-    }
-
-    "fail to validate when given an empty `Yes` value" in {
-
-      val json = Json.obj("previouslyRegistered" -> true)
-
-      Json.fromJson[PreviouslyRegistered](json) must
-        be(JsError((JsPath \ "prevMLRRegNo") -> ValidationError("error.path.missing")))
+        be(JsSuccess(PreviouslyRegisteredYes(Some("12345678")), JsPath \ "prevMLRRegNo"))
     }
 
     "write the correct value" in {
@@ -53,7 +45,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
       Json.toJson(PreviouslyRegisteredNo) must
         be(Json.obj("previouslyRegistered" -> false))
 
-      Json.toJson(PreviouslyRegisteredYes("12345678")) must
+      Json.toJson(PreviouslyRegisteredYes(Some("12345678"))) must
         be(Json.obj(
           "previouslyRegistered" -> true,
           "prevMLRRegNo" -> "12345678"
@@ -65,7 +57,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
         None,
         true,
         Some("555553333322222")))
-      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes("555553333322222"))
+      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber is returned from des" in {
@@ -73,7 +65,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
         Some("555553333322222"),
         false,
         None))
-      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes("555553333322222"))
+      PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber and  mlrRegNumberis os none" in {

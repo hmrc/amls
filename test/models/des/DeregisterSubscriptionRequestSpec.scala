@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.des
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 import DeregistrationReason._
 
 class DeregisterSubscriptionRequestSpec extends PlaySpec {
@@ -126,7 +126,7 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
         )
 
         DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \"deregistrationReason" \"deregistrationReason",
-          List(ValidationError(List("error.invalid"))))))
+          List(JsonValidationError(List("error.invalid"))))))
         )
       }
     }

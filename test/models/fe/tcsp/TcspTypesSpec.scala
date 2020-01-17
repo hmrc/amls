@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.fe.tcsp
 
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class TcspTypesSpec extends PlaySpec {
 
@@ -45,7 +45,7 @@ class TcspTypesSpec extends PlaySpec {
       "throw error message on reading invalid data" in {
 
         Json.fromJson[TcspTypes](Json.obj("serviceProviders" -> Seq("40"))) must
-          be(JsError(JsPath \ "serviceProviders" -> ValidationError("error.invalid")))
+          be(JsError(JsPath \ "serviceProviders" -> JsonValidationError("error.invalid")))
 
       }
     }

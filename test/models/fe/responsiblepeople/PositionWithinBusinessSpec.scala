@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{CorpBodyOrUnInCorpBodyOrLlp, Partnership, PositionInBusiness, RPExtra, ResponsiblePersons, SoleProprietor => DesSoleProprietor}
 import org.joda.time.LocalDate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -64,7 +64,7 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
 
     "fail to validate when given an empty value" in {
       Json.fromJson[PositionWithinBusiness](JsString("")) must
-        be(JsError((JsPath \ "positions") -> ValidationError("error.invalid")))
+        be(JsError((JsPath \ "positions") -> JsonValidationError("error.invalid")))
     }
 
     "write the correct value for BeneficialOwner" in {

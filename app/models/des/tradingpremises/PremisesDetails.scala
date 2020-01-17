@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,5 +100,15 @@ object Tditpsp{
 
   implicit def convert(businessActivity: Set[BusinessActivity]) : Tditpsp ={
     Tditpsp(businessActivity.contains(BusinessActivity.TelephonePaymentService))
+  }
+}
+
+case class Amp(amp: Boolean)
+
+object Amp{
+  implicit val format = Json.format[Amp]
+
+  implicit def convert(businessActivity: Set[BusinessActivity]) : Amp ={
+    Amp(businessActivity.contains(BusinessActivity.ArtMarketParticipant))
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,26 @@
 package connectors
 
 import audit.{SubscriptionEvent, SubscriptionFailedEvent}
+import config.ApplicationConfig
 import exceptions.HttpStatusException
-import javax.inject.Inject
-import metrics.API4
+import javax.inject.{Inject, Singleton}
+import metrics.{API4, Metrics}
 import models.des
+import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
-import javax.inject.Singleton
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscribeDESConnector @Inject()(app: Application) extends DESConnector(app) {
+class SubscribeDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
+                                      private[connectors] val ac: AuditConnector,
+                                      private[connectors] val httpClient: HttpClient,
+                                      private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
   def subscribe
   (safeId: String, data: des.SubscriptionRequest)
@@ -60,7 +65,7 @@ class SubscribeDESConnector @Inject()(app: Application) extends DESConnector(app
 
     val url = s"$fullUrl/$safeId"
 
-    httpPost.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
+    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

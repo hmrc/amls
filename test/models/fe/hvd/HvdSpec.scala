@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks{
   val NewLinkedCashPayment = LinkedCashPayments(true)
 
   "hvd" must {
+    import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
     val completeJson = Json.obj(
       "cashPayment" -> Json.obj(

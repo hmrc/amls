@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ object TimeAtAddress {
         case "03" => Reads(_ => JsSuccess(OneToThreeYears))
         case "04" => Reads(_ => JsSuccess(ThreeYearsPlus))
         case _ =>
-          Reads(_ =>JsError(JsPath \ "timeAtAddress", ValidationError("error.invalid")))
+          Reads(_ =>JsError(JsPath \ "timeAtAddress", JsonValidationError("error.invalid")))
       }
     }
 

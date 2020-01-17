@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ sealed trait BusinessActivity
 object BusinessActivity{
 
   case object AccountancyServices extends BusinessActivity
+  case object ArtMarketParticipant extends BusinessActivity
   case object BillPaymentServices extends  BusinessActivity
   case object EstateAgentBusinessService extends BusinessActivity
   case object HighValueDealing extends BusinessActivity
@@ -41,7 +42,8 @@ object BusinessActivity{
     case JsString("05") => JsSuccess(MoneyServiceBusiness)
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
-    case _ => JsError((JsPath \ "activities") -> ValidationError("error.invalid"))
+    case JsString("08") => JsSuccess(ArtMarketParticipant)
+    case _ => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
   }
 
   implicit val jsonActivityWrite = Writes[BusinessActivity] {
@@ -52,6 +54,7 @@ object BusinessActivity{
     case MoneyServiceBusiness => JsString("05")
     case TrustAndCompanyServices => JsString("06")
     case TelephonePaymentService => JsString("07")
+    case ArtMarketParticipant => JsString("08")
   }
 }
 
@@ -77,7 +80,8 @@ object WhatDoesYourBusinessDo {
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.hvd.hvd, BusinessActivity.HighValueDealing),
       convMsb(agentPremises.msb),
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.tcsp.tcsp, BusinessActivity.TrustAndCompanyServices),
-      CommonMethods.getSpecificType[BusinessActivity](agentPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService)
+      CommonMethods.getSpecificType[BusinessActivity](agentPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
+      CommonMethods.getSpecificType[BusinessActivity](agentPremises.amp.amp, BusinessActivity.ArtMarketParticipant)
     ).flatten
 
     WhatDoesYourBusinessDo(businessActivities)
@@ -91,7 +95,8 @@ object WhatDoesYourBusinessDo {
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.hvd.hvd, BusinessActivity.HighValueDealing),
       convMsb(ownPremises.msb),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.tcsp.tcsp, BusinessActivity.TrustAndCompanyServices),
-      CommonMethods.getSpecificType[BusinessActivity](ownPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService)
+      CommonMethods.getSpecificType[BusinessActivity](ownPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
+      CommonMethods.getSpecificType[BusinessActivity](ownPremises.amp.amp, BusinessActivity.ArtMarketParticipant)
     ).flatten
 
     WhatDoesYourBusinessDo(businessActivities)

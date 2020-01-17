@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package utils
 
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
+import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
@@ -71,35 +72,42 @@ class AmendVariationHelper {
 
   private def hasMsbSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasHvdSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _, _)) => true
+      case _ => false
+    }
+  }
+
+  private def hasAmpSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, _, _, _, _, _, _, true)) => true
       case _ => false
     }
   }
 
   private def hasAspSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasTcspSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasEabSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _)) => true
+      case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _, _)) => true
       case _ => false
     }
   }
@@ -123,6 +131,16 @@ class AmendVariationHelper {
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareHvd - desRequest.hvd: ${desRequest.hvd}")
 
     !convApi5Hvd.equals(desRequest.hvd)
+  }
+
+  private def convAndcompareAmp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5Amp = Amp.conv(viewResponse)
+    val convApi5Amp = models.des.amp.Amp.conv(api5Amp)
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAmp - convApi5Amp: ${convApi5Amp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAmp - desRequest.amp: ${desRequest.amp}")
+
+    !convApi5Amp.equals(desRequest.hvd)
   }
 
   private def convAndcompareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
