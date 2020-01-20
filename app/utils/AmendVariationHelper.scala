@@ -27,8 +27,7 @@ import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.tcsp.Tcsp
 import play.api.Logger
 
-// TODO - this was done as part of an investigate spike. Add full unit test coverage to this helper object.
-class AmendVariationHelper {
+trait AmendVariationHelper {
 
   def msbChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
     if(hasMsbSector(response)) {
@@ -68,6 +67,11 @@ class AmendVariationHelper {
     } else {
       isEABChanged(desRequest, response)
     }
+  }
+
+  def ampChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    !(response.amp.equals(desRequest.amp) &&
+      response.businessActivities.ampServicesCarriedOut.equals(desRequest.businessActivities.ampServicesCarriedOut))
   }
 
   private def hasMsbSector(response: SubscriptionView) = {

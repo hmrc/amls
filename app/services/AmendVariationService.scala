@@ -36,17 +36,17 @@ import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateH
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendVariationService @Inject()(
-                                      private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
                                       private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
                                       private[services] val viewDesConnector: ViewDESConnector,
                                       private[services] val auditConnector: AuditConnector,
-                                      private[services] val amendVariationHelper: AmendVariationHelper,
-                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository()) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository())
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with AmendVariationHelper {
 
   private[services] val validator: SchemaValidator = SchemaValidator()
 
-  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
+  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)
+       (implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
 
   private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
@@ -56,9 +56,12 @@ class AmendVariationService @Inject()(
       updateWithResponsiblePeople
     )
 
-    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
+    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) =>
+      AmendVariationRequest] = Set(
+      updateWithHvdDateOfChangeFlag,
       updateWithSupervisorDateOfChangeFlag,
-      updateWithBusinessActivitiesDateOfChangeFlag)
+      updateWithBusinessActivitiesDateOfChangeFlag
+    )
     transforms ++ release7Transforms
   }
 
@@ -78,16 +81,13 @@ class AmendVariationService @Inject()(
         tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
         businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
         bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = amendVariationHelper.msbChangedIndicator(viewResponse, desRequest),
-        hvd = amendVariationHelper.hvdChangedIndicator(viewResponse, desRequest),
-        asp = amendVariationHelper.aspChangedIndicator(viewResponse, desRequest),
+        msb = msbChangedIndicator(viewResponse, desRequest),
+        hvd = hvdChangedIndicator(viewResponse, desRequest),
+        asp = aspChangedIndicator(viewResponse, desRequest),
         aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        tcsp = amendVariationHelper.tcspChangedIndicator(viewResponse, desRequest),
-        eab = amendVariationHelper.eabChangedIndicator(viewResponse, desRequest),
-        amp = !(
-          viewResponse.amp.equals(desRequest.amp) &&
-            viewResponse.businessActivities.ampServicesCarriedOut.equals(desRequest.businessActivities.ampServicesCarriedOut)
-          ),
+        tcsp = tcspChangedIndicator(viewResponse, desRequest),
+        eab = eabChangedIndicator(viewResponse, desRequest),
+        amp = ampChangeIndicator(viewResponse, desRequest),
         responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
         filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
       ))

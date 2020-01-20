@@ -1217,7 +1217,7 @@ object DesConstants {
 
   val testMsb = MoneyServiceBusiness(
     Some(MsbAllDetails(
-      Some("999999"),
+      Some("£50k-£100k"),
       true,
       Some(CountriesList(List("AD", "GB"))),
       true)
