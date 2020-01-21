@@ -18,7 +18,6 @@ package utils
 
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
-import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
@@ -88,13 +87,6 @@ trait AmendVariationHelper {
     }
   }
 
-  private def hasAmpSector(response: SubscriptionView) = {
-    response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, _, _, _, _, _, true)) => true
-      case _ => false
-    }
-  }
-
   private def hasAspSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
       case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _, _)) => true
@@ -135,16 +127,6 @@ trait AmendVariationHelper {
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareHvd - desRequest.hvd: ${desRequest.hvd}")
 
     !convApi5Hvd.equals(desRequest.hvd)
-  }
-
-  private def convAndcompareAmp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Amp = Amp.conv(viewResponse)
-    val convApi5Amp = models.des.amp.Amp.conv(api5Amp)
-
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAmp - convApi5Amp: ${convApi5Amp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAmp - desRequest.amp: ${desRequest.amp}")
-
-    !convApi5Amp.equals(desRequest.hvd)
   }
 
   private def convAndcompareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
