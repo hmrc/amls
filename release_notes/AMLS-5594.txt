@@ -1,1 +1,0 @@
- + [AMLS-5594] - 'Correct protocol for base url and bring repo into 2020'
