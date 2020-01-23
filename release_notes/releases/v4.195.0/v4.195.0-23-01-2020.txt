@@ -1,1 +1,2 @@
+ + [AMLS-5266] - | Upgraded service to Play 2.6
  + [AMLS-5594] - 'Correct protocol for base url and bring repo into 2020'
