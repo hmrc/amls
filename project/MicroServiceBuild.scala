@@ -25,7 +25,7 @@ private object AppDependencies {
     "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10",
     "uk.gov.hmrc" %% "auth-client" % authVersion,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % "0.45.0",
+    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.3.0",
     "com.typesafe.play" %% "play-json-joda" % joda
   )
 

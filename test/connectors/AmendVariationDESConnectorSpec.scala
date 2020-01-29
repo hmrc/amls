@@ -96,7 +96,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any(),any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(),any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -119,7 +119,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
@@ -155,7 +155,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
@@ -188,7 +188,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
@@ -216,7 +216,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any())(any(), any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       when {
