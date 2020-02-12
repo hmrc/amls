@@ -41,7 +41,7 @@ object Payment {
 
   def apply(amlsRegNo: String, safeId: String, apiPayment: PayApiPayment): Payment =
     Payment(
-      apiPayment._id,
+      apiPayment.id,
       amlsRegNo,
       safeId,
       apiPayment.reference,
@@ -56,7 +56,7 @@ object Payment {
       bacsPaymentRequest.amlsReference,
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,
-      Some("BACS Payment"),
+      None,
       bacsPaymentRequest.amountInPence,
       Created,
       LocalDateTime.now,

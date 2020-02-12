@@ -28,7 +28,7 @@ import play.api.libs.json.{JsSuccess, Json}
 //noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
 
-  "The Payment model" when {
+  "The Payment model without description" when {
     "serialising" must {
 
       val now = LocalDateTime.now
@@ -38,7 +38,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "X12345678",
         "X73289473",
         "X987654321",
-        Some("A test payment"),
+        None,
         10000,
         Successful,
         now,
@@ -51,7 +51,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "amlsRefNo" -> "X12345678",
         "safeId" -> "X73289473",
         "reference" -> "X987654321",
-        "description" -> "A test payment",
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
@@ -69,14 +68,34 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
     }
 
     "converting" must {
-      "convert from a Pay Api payment" in {
+      "convert from a Pay Api payment with no description" in {
         val payApiModel = payApiPaymentGen.sample.get
         val refNumber = amlsRefNoGen.sample.get
         val safeId = amlsRefNoGen.sample.get
         val now = LocalDateTime.now
 
         Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
-          payApiModel._id,
+          payApiModel.id,
+          refNumber,
+          safeId,
+          payApiModel.reference,
+          None,
+          payApiModel.amountInPence,
+          payApiModel.status,
+          now,
+          isBacs = None,
+          None
+        )
+      }
+
+      "convert from a Pay Api payment with a description" in {
+        val payApiModel = payApiPaymentGenDesc.sample.get
+        val refNumber = amlsRefNoGen.sample.get
+        val safeId = amlsRefNoGen.sample.get
+        val now = LocalDateTime.now
+
+        Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
+          payApiModel.id,
           refNumber,
           safeId,
           payApiModel.reference,
@@ -89,7 +108,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         )
       }
 
-      "convert from a BACS payment request" in {
+      "convert from a BACS payment request without description" in {
         val paymentRequest = createBacsPaymentRequestGen.sample.get
 
         Payment(paymentRequest) match {
