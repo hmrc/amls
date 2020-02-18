@@ -16,9 +16,10 @@
 
 package exceptions
 
+import uk.gov.hmrc.http.HttpException
 import utils._
 
-case class HttpStatusException(status: Int, body: Option[String]) extends Throwable {
+case class HttpStatusException(status: Int, body: Option[String]) extends HttpException(body.getOrElse(""), status) {
 
   lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
 
