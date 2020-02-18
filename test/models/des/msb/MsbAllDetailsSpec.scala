@@ -68,6 +68,20 @@ class MsbAllDetailsSpec extends PlaySpec with OneAppPerSuite{
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
 
+    "convert to  frontend MSB model to correct Msb Des model when empty countries list" in {
+      val msbAllDetails = Some(MsbAllDetails(Some("£100k-£250k"), false, None, true))
+
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
+        Some(ExpectedThroughput.Fourth),
+        None,
+        Some(IdentifyLinkedTransactions(true)),
+        None,
+        None,
+        Some(BranchesOrAgents(false, Some(Seq())))
+      )
+      MsbAllDetails.conv(msbModel) must be(msbAllDetails)
+    }
+
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Fifth" in {
       val msbAllDetails = Some(MsbAllDetails(Some("£250k-£1m"), false, None, false))
 
