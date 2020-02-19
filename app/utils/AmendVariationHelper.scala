@@ -18,8 +18,11 @@ package utils
 
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
+import models.fe.amp.Amp
+import models.fe.{SubscriptionView => feSubscriptionView}
 import models.fe.asp.Asp
 import models.fe.businessactivities.BusinessActivities
+import models.fe.businessdetails.BusinessDetails
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
@@ -29,6 +32,10 @@ import models.fe.tcsp.Tcsp
 import play.api.Logger
 
 trait AmendVariationHelper {
+
+  def businessActivitiesChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    convAndCompareBusinessActivities(response, desRequest)
+  }
 
   def msbChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
     if(hasMsbSector(response)) {
@@ -116,6 +123,52 @@ trait AmendVariationHelper {
       case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _, _)) => true
       case _ => false
     }
+  }
+
+  private def convAndCompareBusinessActivities(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5BM   = BusinessMatching.conv(viewResponse)
+    val api5Hvd  = Hvd.conv(viewResponse)
+    val api5Asp  = Asp.conv(viewResponse)
+    val api5Tcsp = Tcsp.conv(viewResponse)
+    val api5Eab  = EstateAgentBusiness.conv(viewResponse)
+    val api5Amp  = Amp.conv(viewResponse)
+    val api5BD   = BusinessDetails.conv(viewResponse)
+
+    val api5BA   = BusinessActivities.convertBusinessActivities(
+      viewResponse.businessActivities.all,
+      viewResponse.businessActivities.mlrActivitiesAppliedFor
+    )
+
+    val mlrActivitiesAppliedFor = models.des.businessactivities.MlrActivitiesAppliedFor.conv(api5BM)
+    val msbServicesCarriedOut   = models.des.businessactivities.MsbServicesCarriedOut.conv(api5BM)
+    val hvdGoodsSold            = models.des.businessactivities.HvdGoodsSold.conv(api5Hvd)
+    val hvdAlcoholTobacco       = models.des.businessactivities.HvdAlcoholTobacco.covn(api5Hvd)
+    val aspServicesOffered      = models.des.businessactivities.AspServicesOffered.conv(api5Asp)
+    val tcspServicesOffered     = models.des.businessactivities.TcspServicesOffered.covn(api5Tcsp)
+    val servicesforRegOff       = models.des.businessactivities.ServicesforRegOff.conv(api5Tcsp)
+    val eabServices             = models.des.businessactivities.EabServices.convert(api5Eab)
+    val ampServices             = models.des.businessactivities.AmpServices.conv(api5Amp)
+
+    val businessActivitiesAll   = models.des.businessactivities.BusinessActivitiesAll.
+      convtoActivitiesALLChangeFlags(
+        api5BD,
+        api5BA,
+        api5Asp,
+        api5Eab,
+        api5Hvd,
+        api5BM
+      )
+
+    !mlrActivitiesAppliedFor.equals(desRequest.businessActivities.mlrActivitiesAppliedFor) ||
+    !msbServicesCarriedOut.equals(desRequest.businessActivities.msbServicesCarriedOut) ||
+    !hvdGoodsSold.equals(desRequest.businessActivities.hvdGoodsSold) ||
+    !hvdAlcoholTobacco.equals(desRequest.businessActivities.hvdAlcoholTobacco) ||
+    !aspServicesOffered.equals(desRequest.businessActivities.aspServicesOffered) ||
+    !tcspServicesOffered.equals(desRequest.businessActivities.tcspServicesOffered) ||
+    !servicesforRegOff.equals(desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff) ||
+    !eabServices.equals(desRequest.businessActivities.eabServicesCarriedOut) ||
+    !ampServices.equals(desRequest.businessActivities.ampServicesCarriedOut) ||
+    !businessActivitiesAll.equals(desRequest.businessActivities.all)
   }
 
   private def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
