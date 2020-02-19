@@ -84,7 +84,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
         msb = msbChangedIndicator(viewResponse, desRequest),
         hvd = hvdChangedIndicator(viewResponse, desRequest),
         asp = aspChangedIndicator(viewResponse, desRequest),
-        aspOrTcsp = !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
+        aspOrTcsp = aspOrTcspChangeIndicator(viewResponse, desRequest),
         tcsp = tcspChangedIndicator(viewResponse, desRequest),
         eab = eabChangedIndicator(viewResponse, desRequest),
         amp = ampChangeIndicator(viewResponse, desRequest),

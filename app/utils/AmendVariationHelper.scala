@@ -19,10 +19,12 @@ package utils
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.fe.asp.Asp
+import models.fe.businessactivities.BusinessActivities
 import models.fe.businessmatching.BusinessMatching
 import models.fe.estateagentbusiness.EstateAgentBusiness
 import models.fe.hvd.Hvd
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
+import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import play.api.Logger
 
@@ -65,6 +67,14 @@ trait AmendVariationHelper {
       convAndcompareEab(response, desRequest)
     } else {
       isEABChanged(desRequest, response)
+    }
+  }
+
+  def aspOrTcspChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    if(hasAspSector(response) || hasTcspSector(response)) {
+      convAndCompareAspOrTcsp(response, desRequest)
+    } else {
+      isAspOrTcspChanged(response, desRequest)
     }
   }
 
@@ -169,6 +179,16 @@ trait AmendVariationHelper {
       convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
+  private def convAndCompareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val api5AspOrTcsp = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
+    val convApi5AspOrTcsp = Some(models.des.supervision.AspOrTcsp.conv(api5AspOrTcsp))
+
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isASPChanged - convApi5AspOrTcsp: ${convApi5AspOrTcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+
+    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+  }
+
   private def isMsbChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - viewResponse.msb: ${response.msb}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - desRequest.msb: ${desRequest.msb}")
@@ -209,5 +229,12 @@ trait AmendVariationHelper {
 
     !(response.eabAll.equals(desRequest.eabAll) &&
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+  }
+
+  private def isAspOrTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - viewResponse.aspOrTcsp: ${response.aspOrTcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+
+    !response.aspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 }
