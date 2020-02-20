@@ -19,7 +19,6 @@ package utils
 import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.fe.amp.Amp
-import models.fe.{SubscriptionView => feSubscriptionView}
 import models.fe.asp.Asp
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businessdetails.BusinessDetails
@@ -126,120 +125,111 @@ trait AmendVariationHelper {
   }
 
   private def convAndCompareBusinessActivities(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5BM   = BusinessMatching.conv(viewResponse)
-    val api5Hvd  = Hvd.conv(viewResponse)
-    val api5Asp  = Asp.conv(viewResponse)
-    val api5Tcsp = Tcsp.conv(viewResponse)
-    val api5Eab  = EstateAgentBusiness.conv(viewResponse)
-    val api5Amp  = Amp.conv(viewResponse)
-    val api5BD   = BusinessDetails.conv(viewResponse)
-
-    val api5BA   = BusinessActivities.convertBusinessActivities(
+    val feBM   = BusinessMatching.conv(viewResponse)
+    val feHvd  = Hvd.conv(viewResponse)
+    val feAsp  = Asp.conv(viewResponse)
+    val feTcsp = Tcsp.conv(viewResponse)
+    val feEab  = EstateAgentBusiness.conv(viewResponse)
+    val feAmp  = Amp.conv(viewResponse)
+    val feBD   = BusinessDetails.conv(viewResponse)
+    val feBA   = BusinessActivities.convertBusinessActivities(
       viewResponse.businessActivities.all,
       viewResponse.businessActivities.mlrActivitiesAppliedFor
     )
 
-    val mlrActivitiesAppliedFor = models.des.businessactivities.MlrActivitiesAppliedFor.conv(api5BM)
-    val msbServicesCarriedOut   = models.des.businessactivities.MsbServicesCarriedOut.conv(api5BM)
-    val hvdGoodsSold            = models.des.businessactivities.HvdGoodsSold.conv(api5Hvd)
-    val hvdAlcoholTobacco       = models.des.businessactivities.HvdAlcoholTobacco.covn(api5Hvd)
-    val aspServicesOffered      = models.des.businessactivities.AspServicesOffered.conv(api5Asp)
-    val tcspServicesOffered     = models.des.businessactivities.TcspServicesOffered.covn(api5Tcsp)
-    val servicesforRegOff       = models.des.businessactivities.ServicesforRegOff.conv(api5Tcsp)
-    val eabServices             = models.des.businessactivities.EabServices.convert(api5Eab)
-    val ampServices             = models.des.businessactivities.AmpServices.conv(api5Amp)
+    val desMlrActivitiesAppliedFor = models.des.businessactivities.MlrActivitiesAppliedFor.conv(feBM)
+    val desMsbServicesCarriedOut   = models.des.businessactivities.MsbServicesCarriedOut.conv(feBM)
+    val desHvdGoodsSold            = models.des.businessactivities.HvdGoodsSold.conv(feHvd)
+    val desHvdAlcoholTobacco       = models.des.businessactivities.HvdAlcoholTobacco.covn(feHvd)
+    val desAspServicesOffered      = models.des.businessactivities.AspServicesOffered.conv(feAsp)
+    val desTcspServicesOffered     = models.des.businessactivities.TcspServicesOffered.covn(feTcsp)
+    val desServicesforRegOff       = models.des.businessactivities.ServicesforRegOff.conv(feTcsp)
+    val desEabServices             = models.des.businessactivities.EabServices.convert(feEab)
+    val desAmpServices             = models.des.businessactivities.AmpServices.conv(feAmp)
+    val desBusinessActivitiesAll   = models.des.businessactivities.BusinessActivitiesAll.
+      convtoActivitiesALLChangeFlags(feBD, feBA, feAsp, feEab, feHvd, feBM)
 
-    val businessActivitiesAll   = models.des.businessactivities.BusinessActivitiesAll.
-      convtoActivitiesALLChangeFlags(
-        api5BD,
-        api5BA,
-        api5Asp,
-        api5Eab,
-        api5Hvd,
-        api5BM
-      )
-
-    !mlrActivitiesAppliedFor.equals(desRequest.businessActivities.mlrActivitiesAppliedFor) ||
-    !msbServicesCarriedOut.equals(desRequest.businessActivities.msbServicesCarriedOut) ||
-    !hvdGoodsSold.equals(desRequest.businessActivities.hvdGoodsSold) ||
-    !hvdAlcoholTobacco.equals(desRequest.businessActivities.hvdAlcoholTobacco) ||
-    !aspServicesOffered.equals(desRequest.businessActivities.aspServicesOffered) ||
-    !tcspServicesOffered.equals(desRequest.businessActivities.tcspServicesOffered) ||
-    !servicesforRegOff.equals(desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff) ||
-    !eabServices.equals(desRequest.businessActivities.eabServicesCarriedOut) ||
-    !ampServices.equals(desRequest.businessActivities.ampServicesCarriedOut) ||
-    !businessActivitiesAll.equals(desRequest.businessActivities.all)
+    !desMlrActivitiesAppliedFor.equals(desRequest.businessActivities.mlrActivitiesAppliedFor) ||
+    !desMsbServicesCarriedOut.equals(desRequest.businessActivities.msbServicesCarriedOut) ||
+    !desHvdGoodsSold.equals(desRequest.businessActivities.hvdGoodsSold) ||
+    !desHvdAlcoholTobacco.equals(desRequest.businessActivities.hvdAlcoholTobacco) ||
+    !desAspServicesOffered.equals(desRequest.businessActivities.aspServicesOffered) ||
+    !desTcspServicesOffered.equals(desRequest.businessActivities.tcspServicesOffered) ||
+    !desServicesforRegOff.equals(desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff) ||
+    !desEabServices.equals(desRequest.businessActivities.eabServicesCarriedOut) ||
+    !desAmpServices.equals(desRequest.businessActivities.ampServicesCarriedOut) ||
+    !desBusinessActivitiesAll.equals(desRequest.businessActivities.all)
   }
 
   private def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
-    val api5BM = BusinessMatching.conv(viewResponse)
-    val api5Msb = MoneyServiceBusiness.conv(viewResponse)
-    val convApi5Msb = models.des.msb.MoneyServiceBusiness.conv(api5Msb, api5BM, amendVariation = true)
+    val feBM   = BusinessMatching.conv(viewResponse)
+    val feMsb  = MoneyServiceBusiness.conv(viewResponse)
+    val desMsb = models.des.msb.MoneyServiceBusiness.conv(feMsb, feBM, amendVariation = true)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - convApi5Msb: ${convApi5Msb}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desMsb: ${desMsb}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desRequest.msb: ${desRequest.msb}")
 
-    !convApi5Msb.equals(desRequest.msb)
+    !desMsb.equals(desRequest.msb)
   }
 
   private def convAndcompareHvd(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Hvd = Hvd.conv(viewResponse)
-    val convApi5Hvd = models.des.hvd.Hvd.conv(api5Hvd)
+    val feHvd  = Hvd.conv(viewResponse)
+    val desHvd = models.des.hvd.Hvd.conv(feHvd)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareHvd - convApi5Hvd: ${convApi5Hvd}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareHvd - desHvd: ${desHvd}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareHvd - desRequest.hvd: ${desRequest.hvd}")
 
-    !convApi5Hvd.equals(desRequest.hvd)
+    !desHvd.equals(desRequest.hvd)
   }
 
   private def convAndcompareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Asp = Asp.conv(viewResponse)
-    val convApi5Asp = models.des.asp.Asp.conv(api5Asp)
+    val feAsp  = Asp.conv(viewResponse)
+    val desAsp = models.des.asp.Asp.conv(feAsp)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isASPChanged - convApi5Asp: ${convApi5Asp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isASPChanged - desAsp: ${desAsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isHChanged - desRequest.asp: ${desRequest.asp}")
 
-    !convApi5Asp.equals(desRequest.asp)
+    !desAsp.equals(desRequest.asp)
   }
 
   private def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Tcsp = Tcsp.conv(viewResponse)
-    val convApi5Tcsp = Some(models.des.tcsp.TcspAll.conv(api5Tcsp))
-    val convApi5TcspFormationAgt = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(api5Tcsp))
+    val feTcsp              = Tcsp.conv(viewResponse)
+    val desTcsp             = Some(models.des.tcsp.TcspAll.conv(feTcsp))
+    val desTcspFormationAgt = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(feTcsp))
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5Tcsp: ${convApi5Tcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcsp: ${desTcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - convApi5TcspFormationAgt: ${convApi5TcspFormationAgt}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcspFormationAgt: ${desTcspFormationAgt}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
 
-    !(convApi5Tcsp.equals(desRequest.tcspAll) &&
-      convApi5TcspFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
+    !(desTcsp.equals(desRequest.tcspAll) &&
+      desTcspFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
   }
 
   private def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5Eab = EstateAgentBusiness.conv(viewResponse)
-    val convApi5Eab = Some(models.des.estateagentbusiness.EabAll.convert(api5Eab.getOrElse(EstateAgentBusiness())))
-    val convApi5EabResdEstAgncy =  models.des.estateagentbusiness.EabResdEstAgncy.convert(api5Eab)
+    val feEab              = EstateAgentBusiness.conv(viewResponse)
+    val desEab             = Some(models.des.estateagentbusiness.EabAll.convert(feEab.getOrElse(EstateAgentBusiness())))
+    val desEabResdEstAgncy =  models.des.estateagentbusiness.EabResdEstAgncy.convert(feEab)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - convApi5Eabl: ${convApi5Eab}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEab: ${desEab}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabAll: ${desRequest.eabAll}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - convApi5EabResdEstAgncy: ${convApi5EabResdEstAgncy}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEabResdEstAgncy: ${desEabResdEstAgncy}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
 
-    !(convApi5Eab.equals(desRequest.eabAll) &&
-      convApi5EabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
+    !(desEab.equals(desRequest.eabAll) &&
+      desEabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
   private def convAndCompareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val api5AspOrTcsp = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
-    val convApi5AspOrTcsp = Some(models.des.supervision.AspOrTcsp.conv(api5AspOrTcsp))
+    val feAspOrTcsp  = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
+    val desAspOrTcsp = Some(models.des.supervision.AspOrTcsp.conv(feAspOrTcsp))
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isASPChanged - convApi5AspOrTcsp: ${convApi5AspOrTcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isASPChanged - desAspOrTcsp: ${desAspOrTcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] isHChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
 
-    !convApi5AspOrTcsp.equals(desRequest.aspOrTcsp)
+    !desAspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 
   private def isMsbChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
