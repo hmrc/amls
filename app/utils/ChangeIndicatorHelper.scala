@@ -203,7 +203,7 @@ trait ChangeIndicatorHelper {
 
   private def convAndCompareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val feAspOrTcsp  = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
-    val desAspOrTcsp = Some(models.des.supervision.AspOrTcsp.conv(feAspOrTcsp))
+    val desAspOrTcsp = models.des.supervision.AspOrTcsp.conv(feAspOrTcsp)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desAspOrTcsp: ${desAspOrTcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
