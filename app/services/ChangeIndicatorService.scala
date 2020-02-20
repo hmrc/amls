@@ -36,12 +36,12 @@ import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateH
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
-                                      private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
-                                      private[services] val viewDesConnector: ViewDESConnector,
-                                      private[services] val auditConnector: AuditConnector,
-                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository())
-  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with AmendVariationHelper {
+class ChangeIndicatorService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+                                       private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
+                                       private[services] val viewDesConnector: ViewDESConnector,
+                                       private[services] val auditConnector: AuditConnector,
+                                       private[services] val feeResponseRepository: FeesRepository = FeesRepository())
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper {
 
   private[services] val validator: SchemaValidator = SchemaValidator()
 
@@ -74,24 +74,27 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
-      updatedRequest.setChangeIndicator(changeIndicators = ChangeIndicators(
-        businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
-        businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
-        businessReferences = isBusinessReferenceChanged(desRequest, viewResponse),
-        tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
-        //businessActivities = !viewResponse.businessActivities.equals(desRequest.businessActivities),
-        businessActivities = businessActivitiesChangeIndicator(viewResponse, desRequest),
-        bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        msb = msbChangedIndicator(viewResponse, desRequest),
-        hvd = hvdChangedIndicator(viewResponse, desRequest),
-        asp = aspChangedIndicator(viewResponse, desRequest),
-        aspOrTcsp = aspOrTcspChangeIndicator(viewResponse, desRequest),
-        tcsp = tcspChangedIndicator(viewResponse, desRequest),
-        eab = eabChangedIndicator(viewResponse, desRequest),
-        amp = ampChangeIndicator(viewResponse, desRequest),
-        responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
-        filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
-      ))
+      updatedRequest.setChangeIndicator(
+        changeIndicators = ChangeIndicators(
+          businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
+          businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(
+            desRequest.businessContactDetails.businessAddress
+          ),
+          businessReferences = isBusinessReferenceChanged(desRequest, viewResponse),
+          tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
+          businessActivities = businessActivitiesChangeIndicator(viewResponse, desRequest),
+          bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
+          msb = msbChangedIndicator(viewResponse, desRequest),
+          hvd = hvdChangedIndicator(viewResponse, desRequest),
+          asp = aspChangedIndicator(viewResponse, desRequest),
+          aspOrTcsp = aspOrTcspChangeIndicator(viewResponse, desRequest),
+          tcsp = tcspChangedIndicator(viewResponse, desRequest),
+          eab = eabChangedIndicator(viewResponse, desRequest),
+          amp = ampChangeIndicator(viewResponse, desRequest),
+          responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
+          filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
+        )
+      )
     }
   }
 
@@ -122,11 +125,11 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
             "messages" -> messages.map(_.messages)
           )
         }
-        Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
+        Logger.warn(s"[ChangeIndicatorService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
         auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
       }, valid = identity)
     } else {
-      Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
+      Logger.debug(s"[ChangeIndicatorService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
 
     for {

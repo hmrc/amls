@@ -23,7 +23,7 @@ import models.fe
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
-import services.AmendVariationService
+import services.ChangeIndicatorService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
@@ -31,12 +31,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(avs: AmendVariationService,
+class AmendVariationController @Inject()(avs: ChangeIndicatorService,
                                          authAction: AuthAction,
                                          bodyParsers: PlayBodyParsers,
                                          val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
 
-  private[controllers] def service: AmendVariationService = avs
+  private[controllers] def service: ChangeIndicatorService = avs
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 

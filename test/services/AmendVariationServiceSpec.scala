@@ -32,7 +32,7 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{AmendVariationHelper}
+import utils.{ChangeIndicatorHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -62,7 +62,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   val feeRepo: FeesMongoRepository = mock[FeesMongoRepository]
 
-  class TestAmendVariationService extends AmendVariationService(
+  class TestChangeIndicatorService extends ChangeIndicatorService(
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
@@ -76,7 +76,7 @@ class AmendVariationServiceSpec extends PlaySpec
       des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
-  val avs = new TestAmendVariationService
+  val avs = new TestChangeIndicatorService
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -132,7 +132,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   implicit val hc = HeaderCarrier()
 
-  "AmendVariationService" must {
+  "ChangeIndicatorService" must {
 
 
     when {

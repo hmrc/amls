@@ -25,9 +25,9 @@ import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.{AmendVariationRequest, SubscriptionView}
 import org.mockito.Mockito._
 
-class AmendVariationHelperSpec extends AmlsBaseSpec with AmendVariationHelper {
+class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper {
 
-  "AmendVariationHelper" must {
+  "ChangeIndicatorHelper" must {
     "set change indicators correctly" must {
       val api5 = mock[SubscriptionView]
       val api6 = mock[AmendVariationRequest]
