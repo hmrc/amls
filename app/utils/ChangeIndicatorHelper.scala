@@ -28,6 +28,7 @@ import models.fe.hvd.Hvd
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
+import play.api.Logger
 
 trait ChangeIndicatorHelper {
 
@@ -204,6 +205,9 @@ trait ChangeIndicatorHelper {
     val feAspOrTcsp  = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
     val desAspOrTcsp = Some(models.des.supervision.AspOrTcsp.conv(feAspOrTcsp))
 
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desAspOrTcsp: ${desAspOrTcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+
     !desAspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 
@@ -230,6 +234,9 @@ trait ChangeIndicatorHelper {
   }
 
   private def isAspOrTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - response.aspOrTcsp: ${response.aspOrTcsp}")
+    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+
     !response.aspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 }
