@@ -62,7 +62,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   val feeRepo: FeesMongoRepository = mock[FeesMongoRepository]
 
-  class TestChangeIndicatorService extends ChangeIndicatorService(
+  class TestAmendVariationService extends AmendVariationService(
     mock[AmendVariationDESConnector],
     mock[SubscriptionStatusDESConnector],
     mock[ViewDESConnector],
@@ -76,7 +76,7 @@ class AmendVariationServiceSpec extends PlaySpec
       des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
-  val avs = new TestChangeIndicatorService
+  val avs = new TestAmendVariationService
 
   val response = des.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -132,7 +132,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   implicit val hc = HeaderCarrier()
 
-  "ChangeIndicatorService" must {
+  "AmendVariationService" must {
 
 
     when {

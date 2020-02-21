@@ -34,14 +34,14 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.ChangeIndicatorService
+import services.AmendVariationService
 import utils._
 
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with IterateeHelpers {
 
-  val avs: ChangeIndicatorService = mock[ChangeIndicatorService]
+  val avs: AmendVariationService = mock[AmendVariationService]
   val authAction: AuthAction = SuccessfulAuthAction
 
   val testController = new AmendVariationController(avs, authAction, mockBodyParsers, mockCC)

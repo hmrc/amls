@@ -192,7 +192,7 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
             when(businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
             when(updatedBusinessActivities.ampServicesCarriedOut) thenReturn Some(updatedAmpServices)
 
-            ampChangeIndicator(api5, api6) mustBe (true)
+            ampChangeIndicator(api5, api6) mustBe (false)
           }
         }
       }

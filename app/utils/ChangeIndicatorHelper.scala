@@ -85,8 +85,7 @@ trait ChangeIndicatorHelper {
   }
 
   def ampChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    !(response.amp.equals(desRequest.amp) &&
-      response.businessActivities.ampServicesCarriedOut.equals(desRequest.businessActivities.ampServicesCarriedOut))
+    !response.amp.equals(desRequest.amp)
   }
 
   private def hasMsbSector(response: SubscriptionView) = {
