@@ -619,7 +619,7 @@ object HvdSection {
   import models.fe.hvd._
 
   private val DefaultCashPayment = CashPaymentYes(new LocalDate(1978, 2, 15))
-  private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details")))
+  private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details"), Alcohol, Tobacco))
   private val DefaultExciseGoods = ExciseGoods(true)
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))

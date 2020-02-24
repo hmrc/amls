@@ -61,7 +61,7 @@ object DefaultDesValues {
   private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
   private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false,false))
   private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
-  private val hvdGoodsSold = Some(HvdGoodsSold(false,false,true,true,true,false,false,false,false,false,false,true,Some("Details"),
+  private val hvdGoodsSold = Some(HvdGoodsSold(true,true,true,true,true,false,false,false,false,false,false,true,Some("Details"),
     Some(HowGoodsAreSold(true,false,true))))
   private val hvdAlcoholTobacco = Some(HvdAlcoholTobacco(true))
 
