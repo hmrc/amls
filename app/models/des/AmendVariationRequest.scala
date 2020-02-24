@@ -31,6 +31,7 @@ import models.des.supervision.AspOrTcsp
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.TradingPremises
 import models.fe
+import models.fe.tcsp.CompanyFormationAgent
 import play.api.libs.json._
 import utils.AckRefGenerator
 
@@ -177,7 +178,11 @@ object AmendVariationRequest {
       asp = data.aspSection,
       aspOrTcsp = AspOrTcsp.conv(data.supervisionSection),
       tcspAll = data.tcspSection.map(tcspAllConv),
-      tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),
+      tcspTrustCompFormationAgt = if(data.tcspServicesOffered.isDefined && data.tcspServicesOffered.get.trustOrCompFormAgent) {
+        data.tcspSection.map(tcspTrustCompConv)
+      } else {
+        None
+      },
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
