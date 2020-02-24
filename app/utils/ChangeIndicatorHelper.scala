@@ -224,7 +224,12 @@ trait ChangeIndicatorHelper {
   private def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val feTcsp              = Tcsp.conv(viewResponse)
     val desTcsp             = Some(models.des.tcsp.TcspAll.conv(feTcsp))
-    val desTcspFormationAgt = Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(feTcsp))
+    val desTcspFormationAgt = if(viewResponse.businessActivities.tcspServicesOffered.isDefined &&
+      viewResponse.businessActivities.tcspServicesOffered.get.trustOrCompFormAgent) {
+      Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(feTcsp))
+    } else {
+      None
+    }
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcsp: ${desTcsp}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
