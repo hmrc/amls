@@ -44,18 +44,40 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     )
   )
   "Phase 2 toggle is on" when {
-    "convert frontend model to des model for amendment" in {
-      implicit val mt = Amendment
-      implicit val requestType = RequestType.Amendment
-      AmendVariationRequest.convert(feSubscriptionReq.copy(tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)) must be(
-        convertedDesModelRelease7.copy(amlsMessageType = "Amendment", tradingPremises = DesConstants.tradingPremisesAPI6Release7))
+    "Trust or company formation agent" when {
+      "convert frontend model to des model for amendment" in {
+        implicit val mt = Amendment
+        implicit val requestType = RequestType.Amendment
+        AmendVariationRequest.convert(feSubscriptionReq.copy(
+          tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)
+        ) must be(
+          convertedDesModelRelease7.copy(amlsMessageType = "Amendment", tradingPremises = DesConstants.tradingPremisesAPI6Release7)
+        )
+      }
 
+      "convert frontend model to des model for variation" in {
+        implicit val mt = Variation
+        implicit val requestType = RequestType.Variation
+        AmendVariationRequest.convert(feSubscriptionReq) must be(
+          convertedDesModelRelease7.copy(amlsMessageType = "Variation")
+        )
+      }
     }
 
-    "convert frontend model to des model for variation" in {
-      implicit val mt = Variation
-      implicit val requestType = RequestType.Variation
-      AmendVariationRequest.convert(feSubscriptionReq) must be(convertedDesModelRelease7.copy(amlsMessageType = "Variation"))
+    "Not trust or company formation agent" when {
+      "convert without tcspTrustCompFormationAgt for amendment" in {
+        implicit val mt = Amendment
+        implicit val requestType = RequestType.Amendment
+        AmendVariationRequest.convert(feSubscriptionReqNoFormationAgt.copy(
+          tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)
+        ).tcspTrustCompFormationAgt must be(None)
+      }
+
+      "convert without tcspTrustCompFormationAgt for variation" in {
+        implicit val mt = Variation
+        implicit val requestType = RequestType.Variation
+        AmendVariationRequest.convert(feSubscriptionReqNoFormationAgt).tcspTrustCompFormationAgt must be(None)
+      }
     }
   }
   def feSubscriptionReq = {
@@ -77,6 +99,8 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
       SupervisionSection.modelForView
     )
   }
+
+  def feSubscriptionReqNoFormationAgt = feSubscriptionReq.copy(tcspSection = ASPTCSPSection.TcspModelForViewNoCompanyFormationAgent)
 
   def convertedDesModel = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
@@ -134,6 +158,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testAmp),
     DesConstants.extraFields
   )
+
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
   val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
   def newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)

@@ -61,8 +61,21 @@ object ASPTCSPSection {
     Some(ComplexCorpStructureCreationYes),
     Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
       PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
+
+  val TcspModelForViewNoCompanyFormationAgent = Some(Tcsp(
+    Some(TcspTypes(
+      Set(CompanyDirectorEtc,
+        NomineeShareholdersProvider,
+        TrusteeProvider,
+        RegisteredOfficeEtc))),
+    None,
+    None,
+    Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
+      PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
+
   val AspModelForView = Some(Asp(Some(ServicesOfBusiness(Set(Auditing,
     FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))), Some(OtherBusinessTaxMattersYes)))
+
 }
 
 object SupervisionSection {
