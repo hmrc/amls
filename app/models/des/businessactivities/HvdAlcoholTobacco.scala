@@ -16,6 +16,7 @@
 
 package models.des.businessactivities
 
+import models.fe.hvd.{Alcohol, Tobacco}
 import play.api.libs.json.Json
 
 case class HvdAlcoholTobacco (dutySuspExAtGoods: Boolean)
@@ -27,8 +28,9 @@ object HvdAlcoholTobacco {
   implicit def covn(model: Option[models.fe.hvd.Hvd]): Option[HvdAlcoholTobacco] = {
 
     model match {
-      case Some(data) => Some(HvdAlcoholTobacco(data.exciseGoods.fold[Boolean](false)(x=>x.exciseGoods)))
-      case None => None
+      case Some(data) if(data.products.contains(Alcohol) || data.products.contains(Tobacco)) =>
+        Some(HvdAlcoholTobacco(data.exciseGoods.fold[Boolean](false)(x=>x.exciseGoods)))
+      case _ => None
     }
   }
 }
