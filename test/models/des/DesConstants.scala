@@ -91,6 +91,9 @@ object DesConstants {
   val testHvdGoodsSold = HvdGoodsSold(true, true, true, true, true, true, true, true, true, true, true, true,
     Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
 
+  val testHvdGoodsSoldNoAlcoholOrTobacco = HvdGoodsSold(false, false, true, true, true, true, true, true, true, true, true, true,
+    Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
+
   val testBusinessActivitiesAll = BusinessActivitiesAll(
     None,
     Some("2001-01-01"),
@@ -155,6 +158,8 @@ object DesConstants {
     Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
+
+  val testBusinessActivitiesNoAlcoholOrTobacco = testBusinessActivities.copy(hvdGoodsSold = Some(testHvdGoodsSoldNoAlcoholOrTobacco))
 
   val testAmendAmpBusinessActivities = testBusinessActivities.copy(
     ampServicesCarriedOut = Some(AmpServices(false, true, true, true, AmpServicesOther(true, Some("Another service"))))
