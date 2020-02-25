@@ -59,8 +59,9 @@ object MsbAllDetails {
   implicit def convBranchesOrAgents(agents: Option[BranchesOrAgents]) : (Boolean, Option[CountriesList]) = {
     agents match {
       case Some(data) => data.countries match {
-        case Some(countries) => (true, countries)
+        case Some(countries) if countries.nonEmpty => (true, countries)
         case None => (false, None)
+        case _ => (false, None)
       }
       case None => (false, None)
     }
