@@ -91,6 +91,9 @@ object DesConstants {
   val testHvdGoodsSold = HvdGoodsSold(true, true, true, true, true, true, true, true, true, true, true, true,
     Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
 
+  val testHvdGoodsSoldNoAlcoholOrTobacco = HvdGoodsSold(false, false, true, true, true, true, true, true, true, true, true, true,
+    Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
+
   val testBusinessActivitiesAll = BusinessActivitiesAll(
     None,
     Some("2001-01-01"),
@@ -155,6 +158,8 @@ object DesConstants {
     Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
+
+  val testBusinessActivitiesNoAlcoholOrTobacco = testBusinessActivities.copy(hvdGoodsSold = Some(testHvdGoodsSoldNoAlcoholOrTobacco))
 
   val testAmendAmpBusinessActivities = testBusinessActivities.copy(
     ampServicesCarriedOut = Some(AmpServices(false, true, true, true, AmpServicesOther(true, Some("Another service"))))
@@ -1107,7 +1112,7 @@ object DesConstants {
         agentDetailsAPI53
       ))
     )
-  ))
+    ))
 
   val viewStatusTradingPremises = TradingPremises(
     viewStatusOwnBusinessPremises,
@@ -1118,7 +1123,7 @@ object DesConstants {
         viewStatusAgentDetails4
       ))
     )
-  ))
+    ))
 
   val amendStatusRequestTradingPremises = TradingPremises(
     viewStatusOwnBusinessPremises,
@@ -1130,7 +1135,7 @@ object DesConstants {
         viewStatusAgentDetails4
       ))
     )
-  ))
+    ))
   val testTradingPremisesAPI6 = TradingPremises(
     ownBusinessPremisesTPAPI6,
     Some(AgentBusinessPremises(
@@ -1140,7 +1145,7 @@ object DesConstants {
         agentDetailsAPI63
       ))
     )
-  ))
+    ))
 
   val tradingPremisesAPI6Release7 = TradingPremises(
     Some(OwnBusinessPremises(false,None)),
@@ -1161,7 +1166,7 @@ object DesConstants {
         amendStatusAgentDetails1
       ))
     )
-  ))
+    ))
 
   val testAmendTradingPremisesAPI6 = TradingPremises(
     ownBusinessPremisesTP,
@@ -1172,7 +1177,7 @@ object DesConstants {
         agentDetailsAPI63
       ))
     )
-  ))
+    ))
 
   val testBankDetails = Some(BankDetailsView(
     Some("3"),
@@ -1217,7 +1222,7 @@ object DesConstants {
 
   val testMsb = MoneyServiceBusiness(
     Some(MsbAllDetails(
-      Some("999999"),
+      Some("£50k-£100k"),
       true,
       Some(CountriesList(List("AD", "GB"))),
       true)

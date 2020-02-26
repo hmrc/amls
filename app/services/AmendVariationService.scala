@@ -29,22 +29,24 @@ import play.api.Logger
 import play.api.libs.json.Json
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import utils._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendVariationService @Inject()(
-                                      private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
                                       private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
                                       private[services] val viewDesConnector: ViewDESConnector,
                                       private[services] val auditConnector: AuditConnector,
-                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository()) extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper {
+                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository())
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper {
 
   private[services] val validator: SchemaValidator = SchemaValidator()
 
-  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit f: (DesAmendVariationResponse, String) => Fees) =
+  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)
+       (implicit f: (DesAmendVariationResponse, String) => Fees) =
     f(amendVariationResponse, amlsReferenceNumber)
 
   private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
@@ -54,11 +56,13 @@ class AmendVariationService @Inject()(
       updateWithResponsiblePeople
     )
 
-    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(updateWithHvdDateOfChangeFlag,
+    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) =>
+      AmendVariationRequest] = Set(
+      updateWithHvdDateOfChangeFlag,
       updateWithSupervisorDateOfChangeFlag,
-      updateWithBusinessActivitiesDateOfChangeFlag)
+      updateWithBusinessActivitiesDateOfChangeFlag
+    )
     transforms ++ release7Transforms
-
   }
 
   def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
@@ -70,30 +74,27 @@ class AmendVariationService @Inject()(
       val updatedRequest = updateRequest(desRequest, viewResponse)
       val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] - viewResponse (API5): ${viewResponse}")
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] - desRequest (API6): ${desRequest}")
-
-      val changeIndicators = ChangeIndicators(
-        !viewResponse.businessDetails.equals(desRequest.businessDetails),
-        !viewResponse.businessContactDetails.businessAddress.equals(desRequest.businessContactDetails.businessAddress),
-        isBusinessReferenceChanged(desRequest, viewResponse),
-        !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
-        !viewResponse.businessActivities.equals(desRequest.businessActivities),
-        !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
-        !viewResponse.msb.equals(desRequest.msb),
-        !viewResponse.hvd.equals(desRequest.hvd),
-        !viewResponse.asp.equals(desRequest.asp),
-        !viewResponse.aspOrTcsp.equals(desRequest.aspOrTcsp),
-        isTcspChanged(desRequest, viewResponse),
-        isEABChanged(desRequest, viewResponse),
-        isAmpChanged(desRequest, viewResponse),
-        !viewResponse.responsiblePersons.equals(desRPs),
-        !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
+      updatedRequest.setChangeIndicator(
+        changeIndicators = ChangeIndicators(
+          businessDetails = !viewResponse.businessDetails.equals(desRequest.businessDetails),
+          businessAddress = !viewResponse.businessContactDetails.businessAddress.equals(
+            desRequest.businessContactDetails.businessAddress
+          ),
+          businessReferences = isBusinessReferenceChanged(desRequest, viewResponse),
+          tradingPremises = !viewResponse.tradingPremises.equals(desRequest.tradingPremises),
+          businessActivities = businessActivitiesChangeIndicator(viewResponse, desRequest),
+          bankAccountDetails = !viewResponse.bankAccountDetails.equals(desRequest.bankAccountDetails),
+          msb = msbChangedIndicator(viewResponse, desRequest),
+          hvd = hvdChangedIndicator(viewResponse, desRequest),
+          asp = aspChangedIndicator(viewResponse, desRequest),
+          aspOrTcsp = aspOrTcspChangeIndicator(viewResponse, desRequest),
+          tcsp = tcspChangedIndicator(viewResponse, desRequest),
+          eab = eabChangedIndicator(viewResponse, desRequest),
+          amp = ampChangeIndicator(viewResponse, desRequest),
+          responsiblePersons = !viewResponse.responsiblePersons.equals(desRPs),
+          filingIndividual = !viewResponse.extraFields.filingIndividual.equals(desRequest.extraFields.filingIndividual)
+        )
       )
-
-      Logger.debug(s"[AmendVariationService][compareAndUpdate] - changeIndicators (DIFF): ${changeIndicators}")
-
-      updatedRequest.setChangeIndicator(changeIndicators)
     }
   }
 
@@ -152,6 +153,7 @@ class AmendVariationService @Inject()(
         }
       }
     }
+
     update(desRequest, updates)
   }
 
@@ -166,28 +168,13 @@ class AmendVariationService @Inject()(
       response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
   }
 
-  private[services] def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    !(response.tcspAll.equals(desRequest.tcspAll) &&
-      response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
-  }
+  private[services] def validateResult(request: AmendVariationRequest) = {
+    // $COVERAGE-OFF$
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_4.2.0.json")
+    val lines = scala.io.Source.fromInputStream(stream).getLines
+    val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
-  private[services] def isEABChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    !(response.eabAll.equals(desRequest.eabAll) &&
-      response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
-  }
-
-  private[services] def isAmpChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    !(response.amp.equals(desRequest.amp) &&
-      response.businessActivities.ampServicesCarriedOut.equals(desRequest.businessActivities.ampServicesCarriedOut))
-  }
-
-   private[services] def validateResult(request: AmendVariationRequest) = {
-     // $COVERAGE-OFF$
-     val stream: InputStream = getClass.getResourceAsStream ("/resources/api6_schema_release_4.2.0.json")
-     val lines = scala.io.Source.fromInputStream(stream).getLines
-     val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
-      validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
+    validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
   }
 
   private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =

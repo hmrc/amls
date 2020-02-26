@@ -37,7 +37,14 @@ object ServicesforRegOff {
 
   implicit def conv(tcsp: Option[Tcsp]) : Option[ServicesforRegOff] = {
     tcsp match {
-      case Some(data) => data.providedServices.fold[Set[TcspService]](Set.empty) { x => x.services}
+      case Some(data) =>
+        lazy val serviceProviders = tcsp.tcspTypes.fold[Set[ServiceProvider]](Set.empty)(x => x.serviceProviders)
+
+        if (serviceProviders.contains(RegisteredOfficeEtc)) {
+          data.providedServices.fold[Set[TcspService]](Set.empty) { x => x.services }
+        } else {
+          None
+        }
       case _ => None
     }
   }

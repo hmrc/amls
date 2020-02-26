@@ -93,7 +93,12 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
 
-      BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1999-11-11"))
+      BusinessActivitiesAll.getEarliestDate(
+        feModel.aspSection,
+        feModel.eabSection,
+        feModel.hvdSection,
+        feModel.businessMatchingSection
+      ) must be(Some("1999-11-11"))
 
     }
 
@@ -104,7 +109,12 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
 
-      BusinessActivitiesAll.getEarliestDate(feModel) must be(Some("1900-11-11"))
+      BusinessActivitiesAll.getEarliestDate(
+        feModel.aspSection,
+        feModel.eabSection,
+        feModel.hvdSection,
+        feModel.businessMatchingSection
+      ) must be(Some("1900-11-11"))
 
     }
 
@@ -115,7 +125,12 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, None, None, None, None, None)
 
-      BusinessActivitiesAll.getEarliestDate(feModel) must be(None)
+      BusinessActivitiesAll.getEarliestDate(
+        feModel.aspSection,
+        feModel.eabSection,
+        feModel.hvdSection,
+        feModel.businessMatchingSection
+      ) must be(None)
 
     }
   }

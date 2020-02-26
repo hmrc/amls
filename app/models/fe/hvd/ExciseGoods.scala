@@ -16,7 +16,7 @@
 
 package models.fe.hvd
 
-import models.des.businessactivities.BusinessActivities
+import models.des.businessactivities.{BusinessActivities, HvdGoodsSold}
 import play.api.libs.json.Json
 
 case class ExciseGoods(exciseGoods: Boolean)
@@ -28,7 +28,11 @@ object ExciseGoods {
   implicit def conv(ba: BusinessActivities): Option[ExciseGoods] = {
     ba.hvdAlcoholTobacco match {
       case Some(goods) => Some(ExciseGoods(goods.dutySuspExAtGoods))
-      case None if(ba.hvdGoodsSold.isDefined) => Some(ExciseGoods(false))
+      case None => ba.hvdGoodsSold match {
+        case Some(HvdGoodsSold(true, _, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
+        case Some(HvdGoodsSold(_, true, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
+        case _ => None
+      }
       case _ => None
     }
   }

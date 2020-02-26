@@ -61,8 +61,21 @@ object ASPTCSPSection {
     Some(ComplexCorpStructureCreationYes),
     Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
       PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
+
+  val TcspModelForViewNoCompanyFormationAgent = Some(Tcsp(
+    Some(TcspTypes(
+      Set(CompanyDirectorEtc,
+        NomineeShareholdersProvider,
+        TrusteeProvider,
+        RegisteredOfficeEtc))),
+    None,
+    None,
+    Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms,
+      PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))), Some(ServicesOfAnotherTCSPYes("111111111111111"))))
+
   val AspModelForView = Some(Asp(Some(ServicesOfBusiness(Set(Auditing,
     FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))), Some(OtherBusinessTaxMattersYes)))
+
 }
 
 object SupervisionSection {
@@ -606,7 +619,7 @@ object HvdSection {
   import models.fe.hvd._
 
   private val DefaultCashPayment = CashPaymentYes(new LocalDate(1978, 2, 15))
-  private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details")))
+  private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details"), Alcohol, Tobacco))
   private val DefaultExciseGoods = ExciseGoods(true)
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
   private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Auction))

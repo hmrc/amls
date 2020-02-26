@@ -32,9 +32,9 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.{ChangeIndicatorHelper}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -202,65 +202,5 @@ class AmendVariationServiceSpec extends PlaySpec
           updatedRequest must be(testRequest)
       }
     }
-
-    "amp change indicators" when {
-      "amp section changed" in {
-
-        val viewModel = DesConstants.SubscriptionViewModelAPI5
-
-        when {
-          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-        } thenReturn Future.successful(viewModel)
-
-        val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
-          tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-            DesConstants.ownBusinessPremisesTPR7
-          )
-        )
-
-        whenReady(avs.compareAndUpdate(
-          DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
-        ) {
-          updatedRequest =>
-            updatedRequest.changeIndicators.amp must be(true)
-            true
-        }
-      }
-
-      "amp section not changed" in {
-
-        val viewModel = DesConstants.SubscriptionViewModelAPI5
-
-        when {
-          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-        } thenReturn Future.successful(viewModel)
-
-        whenReady(avs.compareAndUpdate(
-          DesConstants.amendVariationRequest2, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
-        ) {
-          updatedRequest =>
-            updatedRequest.changeIndicators.amp must be(false)
-            true
-        }
-      }
-
-      "amp section not changed amp services have changed" in {
-
-        val viewModel = DesConstants.SubscriptionViewModelAPI5
-
-        when {
-          avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
-        } thenReturn Future.successful(viewModel)
-
-        whenReady(avs.compareAndUpdate(
-          DesConstants.amendVariationRequest3, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
-        ) {
-          updatedRequest =>
-            updatedRequest.changeIndicators.amp must be(true)
-            true
-        }
-      }
-    }
-
   }
 }
