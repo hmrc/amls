@@ -12,8 +12,8 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   private val domainVersion = "5.6.0-play-26"
-  private val playReactivemongoVersion = "7.22.0-play-26"
-  private val authVersion = "2.32.0-play-26"
+  private val playReactivemongoVersion = "7.23.0-play-26"
+  private val authVersion = "2.33.0-play-26"
   private val joda = "2.7.3"
 
   val compile = Seq(
@@ -25,7 +25,7 @@ private object AppDependencies {
     "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.5" % "test,it",
     "com.beachape" %% "enumeratum" % "1.5.10",
     "uk.gov.hmrc" %% "auth-client" % authVersion,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.3.0",
+    "uk.gov.hmrc" %% "bootstrap-play-26" % "1.4.0",
     "com.typesafe.play" %% "play-json-joda" % joda
   )
 
