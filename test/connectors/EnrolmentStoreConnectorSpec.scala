@@ -59,7 +59,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
     def mockResponse(response: Future[HttpResponse]) =
       when {
-        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any())(any(), any(), any(), any())
+        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
       } thenReturn response
 
   }
@@ -74,7 +74,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts))(any(), any(), any(), any())
+          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
         }
       }
 
