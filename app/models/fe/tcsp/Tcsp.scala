@@ -22,6 +22,7 @@ case class Tcsp (tcspTypes: Option[TcspTypes] = None,
                  onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
                  complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
                  providedServices: Option[ProvidedServices] = None,
+                 doesServicesOfAnotherTCSP: Option[Boolean] = None,
                  servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None) {
 
   def tcspTypes(trust: TcspTypes): Tcsp =
@@ -36,11 +37,18 @@ case class Tcsp (tcspTypes: Option[TcspTypes] = None,
   def providedServices(ps: ProvidedServices): Tcsp =
     this.copy(providedServices = Some(ps))
 
+  def doesServicesOfAnotherTCSP(x: Boolean): Tcsp =
+    this.copy(doesServicesOfAnotherTCSP = Some(x))
+
   def servicesOfAnotherTCSP(p: ServicesOfAnotherTCSP): Tcsp =
     this.copy(servicesOfAnotherTCSP = Some(p))
 }
 
 object Tcsp {
+
+  def convBool(tcsp: models.des.tcsp.TcspAll): Option[Boolean] = {
+    Some(tcsp.anotherTcspServiceProvider)
+  }
   import play.api.libs.json._
 
   val key = "tcsp"
@@ -52,8 +60,8 @@ object Tcsp {
 
   implicit def conv(view: SubscriptionView): Option[Tcsp] = {
     (view.tcspAll, view.businessActivities.tcspServicesOffered) match {
-      case (Some(tcspAll), _) => Some(Tcsp(view, view, view, view.businessActivities, view))
-      case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view, view, view.businessActivities, view))
+      case (Some(tcspAll), _) => Some(Tcsp(view, view, view, view.businessActivities, convBool(tcspAll), view))
+      case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view, view, view.businessActivities, None, view))
       case (None, None) => None
       case _ => None
     }

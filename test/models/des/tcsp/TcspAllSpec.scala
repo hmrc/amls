@@ -31,6 +31,7 @@ class TcspAllSpec extends PlaySpec {
         None,
         None,
         None,
+        Some(true),
         Some(servicesOfAnother))
       )
       val tcspAllSection  = TcspAll(true,Some("12345678"))
@@ -46,8 +47,9 @@ class TcspAllSpec extends PlaySpec {
         None,
         None,
         None,
-        Some(servicesOfAnother))
-      )
+        Some(false),
+        None
+      ))
       val tcspAllSection  = TcspAll(false, None)
       TcspAll.conv(TcspSection) must be (tcspAllSection)
     }
