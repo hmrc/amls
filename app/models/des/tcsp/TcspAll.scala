@@ -27,16 +27,17 @@ object TcspAll {
 
   implicit def conv(tcsp: Tcsp) : TcspAll = {
 
-    tcsp.servicesOfAnotherTCSP match {
-      case Some(data) => data
+    (tcsp.doesServicesOfAnotherTCSP, tcsp.servicesOfAnotherTCSP) match {
+      case (Some(x), Some(data)) => (x, data)
       case _ => TcspAll(false, None)
     }
   }
 
-  implicit def conv1(anotherTcsp: ServicesOfAnotherTCSP): TcspAll = {
-    anotherTcsp match {
-      case ServicesOfAnotherTCSPYes(dtls) => TcspAll(true, Some(dtls))
-      case ServicesOfAnotherTCSPNo => TcspAll(false, None)
+  implicit def conv1(x: (Boolean, ServicesOfAnotherTCSP)): TcspAll = {
+    (x._1, x._2) match {
+      case (true, ServicesOfAnotherTCSPYes(dtls)) => TcspAll(true, Some(dtls))
+      case (true, ServicesOfAnotherTCSPNo) => TcspAll(true, None)
+      case (false, _) => TcspAll(false, None)
     }
   }
 }

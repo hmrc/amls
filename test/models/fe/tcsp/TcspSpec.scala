@@ -34,6 +34,7 @@ trait TcspValues {
       TrusteeProvider,
       CompanyDirectorEtc,
       CompanyFormationAgent))
+    val DefaultDoServicesOfAnotherTCSP = true
     val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes("12345678")
 
   }
@@ -64,6 +65,7 @@ trait TcspValues {
       "services" -> Seq("01", "08"),
       "details" -> "other service"
     ),
+    "doesServicesOfAnotherTCSP" -> true,
     "servicesOfAnotherTCSP" -> Json.obj(
       "servicesOfAnotherTCSP" -> true,
       "mlrRefNumber" -> "12345678"
@@ -75,6 +77,7 @@ trait TcspValues {
     Some(OnlyOffTheShelfCompsSoldYes),
     Some(ComplexCorpStructureCreationNo),
     Some(DefaultValues.DefaultProvidedServices),
+    Some(DefaultValues.DefaultDoServicesOfAnotherTCSP),
     Some(DefaultValues.DefaultServicesOfAnotherTCSP)
   )
 }
@@ -171,6 +174,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(OnlyOffTheShelfCompsSoldYes),
           Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
+          Some(true),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
 
@@ -210,6 +214,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(OnlyOffTheShelfCompsSoldYes),
           Some(ComplexCorpStructureCreationNo),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
+          Some(true),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
 
@@ -244,6 +249,7 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(OnlyOffTheShelfCompsSoldNo),
           Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
+          Some(true),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
 
