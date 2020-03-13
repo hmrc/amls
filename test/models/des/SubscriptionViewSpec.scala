@@ -34,8 +34,9 @@ package models.des
 
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.{JsSuccess, Json}
+import utils.AmlsBaseSpec
 
-class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
+class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
 
   "SubscriptionView" must {
     "deserialise the subscription json" when {
@@ -496,6 +497,7 @@ class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 

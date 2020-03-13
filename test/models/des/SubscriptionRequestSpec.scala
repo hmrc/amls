@@ -102,7 +102,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             asp = DefaultDesValues.AspSection,
             amp = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
-            declaration = Declaration(true)
+            declaration = Declaration(true),
+            lettingAgents = None
           )
         ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
 
@@ -134,7 +135,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
             asp = DefaultDesValues.AspSection,
             amp = DefaultDesValues.AmpSection,
             aspOrTcsp = DefaultDesValues.AspOrTcspSection,
-            declaration = Declaration(true)
+            declaration = Declaration(true),
+            lettingAgents = None
           )
         ) \ "businessReferencesCbUbLlp") must be(a[JsUndefined])
       }
@@ -192,7 +194,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
       asp = DefaultDesValues.AspSection,
       amp = DefaultDesValues.AmpSection,
       aspOrTcsp = DefaultDesValues.AspOrTcspSection,
-      declaration = Declaration(true)
+      declaration = Declaration(true),
+      lettingAgents = None
     )
 
   val feSubscriptionReq = {
@@ -713,7 +716,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerS
           asp = DefaultDesValues.AspSection,
           aspOrTcsp = DefaultDesValues.AspOrTcspSection,
           amp = DefaultDesValues.AmpSection,
-          declaration = Declaration(true)
+          declaration = Declaration(true),
+          lettingAgents = None
         )
 
       val feSubscriptionReq = {

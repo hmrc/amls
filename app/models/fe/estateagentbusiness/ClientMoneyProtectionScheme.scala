@@ -17,6 +17,9 @@
 package models.fe.estateagentbusiness
 
 import play.api.libs.json._
+import com.google.inject.Inject
+import config.ApplicationConfig
+import play.api.Play
 
 sealed trait ClientMoneyProtectionScheme
 
@@ -24,7 +27,11 @@ case object ClientMoneyProtectionSchemeYes extends ClientMoneyProtectionScheme
 
 case object ClientMoneyProtectionSchemeNo extends ClientMoneyProtectionScheme
 
-object ClientMoneyProtectionScheme {
+object ClientMoneyProtectionScheme extends {
+
+  //TODO - Ugly however; needed for feature toggle until we complete phase 3 and remove toggle
+  lazy val appConfig = Play.current.injector.instanceOf[ApplicationConfig]
+  lazy val phase3 = appConfig.phase3Release2La
 
   import utils.MappingUtils.Implicits._
 
@@ -40,14 +47,15 @@ object ClientMoneyProtectionScheme {
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[ClientMoneyProtectionScheme] = {
-    desView.lettingAgents match {
-      case Some(la) => la.clientMoneyProtection match {
+    (phase3, desView.lettingAgents) match {
+      case (true, Some(la)) => la.clientMoneyProtection match {
         case Some(true) => Some(ClientMoneyProtectionSchemeYes)
         case Some(false) => Some(ClientMoneyProtectionSchemeNo)
       }
-      case None if(desView.businessActivities.eabServicesCarriedOut.isDefined) => Some(ClientMoneyProtectionSchemeNo)
-      case None => None
+      case (true, None) if(desView.businessActivities.eabServicesCarriedOut.isDefined) => Some(ClientMoneyProtectionSchemeNo)
+      case _ => None
     }
   }
 
 }
+
