@@ -28,13 +28,14 @@ case class EabServices(
                         assetManagementCompany : Boolean,
                         landManagementAgent : Boolean,
                         developmentCompany : Boolean,
-                        socialHousingProvider : Boolean
+                        socialHousingProvider : Boolean,
+                        lettingAgents : Option[Boolean] = None
                       )
 
 object EabServices {
   implicit val format = Json.format[EabServices]
 
-  val none = EabServices(false, false, false, false, false, false, false, false, false)
+  val none = EabServices(false, false, false, false, false, false, false, false, false, None)
 
   implicit def convert(eab : Option[models.fe.estateagentbusiness.EstateAgentBusiness]) : Option[EabServices] = {
 
@@ -61,6 +62,7 @@ object EabServices {
       case LandManagement => eabServices.copy(landManagementAgent = true)
       case Development => eabServices.copy(developmentCompany = true)
       case SocialHousing => eabServices.copy(socialHousingProvider = true)
+      case Lettings => eabServices.copy(lettingAgents = Some(true))
     })
     Some(eabServices)
 

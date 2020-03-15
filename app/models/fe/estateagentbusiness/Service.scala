@@ -43,6 +43,8 @@ case object SocialHousing extends Service
 
 case object Residential extends Service
 
+case object Lettings extends Service
+
 object Service {
 
   implicit val jsonServiceReads: Reads[Service] =
@@ -56,6 +58,7 @@ object Service {
       case JsString("07") => JsSuccess(LandManagement)
       case JsString("08") => JsSuccess(Development)
       case JsString("09") => JsSuccess(SocialHousing)
+      case JsString("10") => JsSuccess(Lettings)
       case _ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
     }
 
@@ -70,6 +73,7 @@ object Service {
       case LandManagement => JsString("07")
       case Development => JsString("08")
       case SocialHousing => JsString("09")
+      case Lettings => JsString("10")
     }
 }
 
@@ -91,7 +95,8 @@ object Services {
           CommonMethods.getSpecificType[Service](eabServices.assetManagementCompany, AssetManagement),
           CommonMethods.getSpecificType[Service](eabServices.landManagementAgent, LandManagement),
           CommonMethods.getSpecificType[Service](eabServices.developmentCompany, Development),
-          CommonMethods.getSpecificType[Service](eabServices.socialHousingProvider, SocialHousing)
+          CommonMethods.getSpecificType[Service](eabServices.socialHousingProvider, SocialHousing),
+          CommonMethods.getSpecificType[Service](eabServices.lettingAgents.getOrElse(false), Lettings)
         ).flatten
 
         services match {
