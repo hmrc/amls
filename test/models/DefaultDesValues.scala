@@ -41,6 +41,9 @@ object DefaultDesValues {
   private val deseabServiceModel = Some(des.businessactivities.EabServices(false, false,
     true, false, true, false, false, false, false))
 
+  private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
+    true, false, true, false, false, false, false, Some(true)))
+
   private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("14999"))))
   private val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name"))))
   private val noOfEmployees = Some("10")
@@ -67,6 +70,9 @@ object DefaultDesValues {
 
   val BusinessActivitiesSection = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
     tcspServicesOffered, servicesforRegOff, deseabServiceModel, ampServices, desallActivitiesModel)
+
+  val BusinessActivitiesSectionLA = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
+    tcspServicesOffered, servicesforRegOff, deseabServiceModelLA, ampServices, desallActivitiesModel)
 
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 

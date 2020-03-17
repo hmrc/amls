@@ -159,6 +159,9 @@ object DesConstants {
     Some(testBusinessActivitiesAll)
   )
 
+  val testBusinessActivitiesLA = testBusinessActivities.copy(eabServicesCarriedOut =
+    Some(EabServices(true, true, true, true, true, true, true, true, true, Some(true))))
+
   val testBusinessActivitiesNoAlcoholOrTobacco = testBusinessActivities.copy(hvdGoodsSold = Some(testHvdGoodsSoldNoAlcoholOrTobacco))
 
   val testAmendAmpBusinessActivities = testBusinessActivities.copy(

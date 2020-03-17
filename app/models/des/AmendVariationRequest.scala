@@ -257,6 +257,7 @@ object AmendVariationRequest {
                                        msbConv: (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
                                        hvdConv: Option[fe.hvd.Hvd] => Option[Hvd],
                                        ampConv: Option[fe.amp.Amp] => Option[Amp],
+                                       lettingAgentConv: Option[fe.estateagentbusiness.EstateAgentBusiness] => Option[LettingAgents],
                                        messageType: AmlsMessageType,
                                        requestType: RequestType
   ): Outgoing =
