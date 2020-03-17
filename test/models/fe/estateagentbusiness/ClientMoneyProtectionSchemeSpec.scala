@@ -20,17 +20,13 @@ import models.des.DesConstants
 import models.des.businessactivities.BusinessActivities
 import models.des.estateagentbusiness.{EabAll, LettingAgents}
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 
-class ClientMoneyProtectionSchemeSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
-  }
+class ClientMoneyProtectionSchemeSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   "phase 3 toggle off" must {
 

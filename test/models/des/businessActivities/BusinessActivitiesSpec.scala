@@ -69,8 +69,7 @@ class BusinessActivitiesSpec extends PlaySpec {
           "assetManagementCompany" ->false,
           "landManagementAgent" ->false,
           "developmentCompany" ->false,
-          "socialHousingProvider" ->false,
-          "lettings"->false),
+          "socialHousingProvider" ->false),
         "ampServicesCarriedOut" -> Json.obj(
           "artGallery" -> true,
           "auctionHouse" -> true,
@@ -170,8 +169,7 @@ class BusinessActivitiesSpec extends PlaySpec {
               "assetManagementCompany" -> false,
               "landManagementAgent" -> false,
               "developmentCompany" -> false,
-              "socialHousingProvider" -> false,
-              "lettings"-> false),
+              "socialHousingProvider" -> false),
         "ampServicesCarriedOut" -> Json.obj(
           "artGallery" -> true,
           "auctionHouse" -> true,

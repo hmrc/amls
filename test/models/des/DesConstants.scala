@@ -2858,6 +2858,7 @@ object DesConstants {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 
@@ -2969,6 +2970,7 @@ object DesConstants {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.amendStatusResponsiblePersonsAPI5),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 
@@ -2995,6 +2997,7 @@ object DesConstants {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.amendStatusResponsiblePersonsAPI5),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 
@@ -3021,6 +3024,7 @@ object DesConstants {
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
     Some(DesConstants.testAmendAmp),
+    None,
     DesConstants.extraAmendFields
   )
 
@@ -3054,6 +3058,7 @@ object DesConstants {
     Some(DesConstants.testAmendEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersons),
     Some(DesConstants.testAmendAmp),
+    None,
     DesConstants.newAmendExtraFields
   )
 
@@ -3224,6 +3229,7 @@ object DesConstants {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersonsTest1),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.newExtraFields
   )
 
@@ -3250,6 +3256,7 @@ object DesConstants {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testAmendResponsiblePersonsTest1),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.newExtraFields
   )
 

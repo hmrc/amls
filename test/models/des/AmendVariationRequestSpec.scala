@@ -127,6 +127,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6Phase2),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 
@@ -156,6 +157,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6Phase2),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
   )
 
@@ -188,6 +190,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
     Some(DesConstants.testAmp),
+    None,
     newExtraFields
   )
 }

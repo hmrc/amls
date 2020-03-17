@@ -30,8 +30,7 @@ case object ClientMoneyProtectionSchemeNo extends ClientMoneyProtectionScheme
 object ClientMoneyProtectionScheme extends {
 
   //TODO - Ugly however; needed for feature toggle until we complete phase 3 and remove toggle
-  lazy val appConfig = Play.current.injector.instanceOf[ApplicationConfig]
-  lazy val phase3 = appConfig.phase3Release2La
+  def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 
   import utils.MappingUtils.Implicits._
 
@@ -47,12 +46,12 @@ object ClientMoneyProtectionScheme extends {
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[ClientMoneyProtectionScheme] = {
-    (phase3, desView.lettingAgents) match {
+    (appConfig.phase3Release2La, desView.lettingAgents) match {
       case (true, Some(la)) => la.clientMoneyProtection match {
         case Some(true) => Some(ClientMoneyProtectionSchemeYes)
         case Some(false) => Some(ClientMoneyProtectionSchemeNo)
       }
-      case (true, None) if(desView.businessActivities.eabServicesCarriedOut.isDefined) => Some(ClientMoneyProtectionSchemeNo)
+      case (true, None) => None
       case _ => None
     }
   }
