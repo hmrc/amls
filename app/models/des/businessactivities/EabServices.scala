@@ -16,7 +16,9 @@
 
 package models.des.businessactivities
 
+import config.ApplicationConfig
 import models.fe.estateagentbusiness._
+import play.api.Play
 import play.api.libs.json.Json
 
 case class EabServices(
@@ -35,7 +37,13 @@ case class EabServices(
 object EabServices {
   implicit val format = Json.format[EabServices]
 
-  val none = EabServices(false, false, false, false, false, false, false, false, false, None)
+  def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
+
+  val none = if(appConfig.phase3Release2La) {
+    EabServices(false, false, false, false, false, false, false, false, false, Some(false))
+  } else {
+    EabServices(false, false, false, false, false, false, false, false, false, None)
+  }
 
   implicit def convert(eab : Option[models.fe.estateagentbusiness.EstateAgentBusiness]) : Option[EabServices] = {
 

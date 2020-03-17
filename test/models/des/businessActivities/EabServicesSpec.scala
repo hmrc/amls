@@ -19,6 +19,7 @@ package models.des.businessActivities
 import org.scalatestplus.play.PlaySpec
 
 class EabServicesSpec extends PlaySpec {
+
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
       val from = {
@@ -26,7 +27,18 @@ class EabServicesSpec extends PlaySpec {
         EstateAgentBusiness(services = Some(Services(Set(BusinessTransfer, Development, Commercial))))
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, true, false, false, true, false, false, true, false))
+      val expected = Some(models.des.businessactivities.EabServices(false, true, false, false, true, false, false, true, false, None))
+
+      models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
+    }
+
+    "Be convertable from front end Estate agent business services when none" in {
+      val from = {
+        import models.fe.estateagentbusiness._
+        EstateAgentBusiness(services = Some(Services(Set())))
+      }
+
+      val expected = Some(models.des.businessactivities.EabServices(false, false, false, false, false, false, false, false, false, None))
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }

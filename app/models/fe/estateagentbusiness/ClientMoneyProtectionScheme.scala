@@ -27,9 +27,8 @@ case object ClientMoneyProtectionSchemeYes extends ClientMoneyProtectionScheme
 
 case object ClientMoneyProtectionSchemeNo extends ClientMoneyProtectionScheme
 
-object ClientMoneyProtectionScheme extends {
+object ClientMoneyProtectionScheme {
 
-  //TODO - Ugly however; needed for feature toggle until we complete phase 3 and remove toggle
   def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 
   import utils.MappingUtils.Implicits._
