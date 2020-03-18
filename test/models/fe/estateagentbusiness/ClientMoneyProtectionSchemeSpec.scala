@@ -30,7 +30,7 @@ class ClientMoneyProtectionSchemeSpec extends PlaySpec with MockitoSugar with On
 
   "phase 3 toggle off" must {
 
-    "return none given no model and carry out Eab" in {
+    "return none given no model" in {
       val view = DesConstants.SubscriptionViewModel.copy(eabAll = None)
       ClientMoneyProtectionScheme.conv(view) must be(None)
     }

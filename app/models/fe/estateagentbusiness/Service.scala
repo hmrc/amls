@@ -59,21 +59,21 @@ object Service {
       case JsString("08") => JsSuccess(Development)
       case JsString("09") => JsSuccess(SocialHousing)
       case JsString("10") => JsSuccess(Lettings)
-      case _ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
+      case _              => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =
     Writes[Service] {
-      case Residential => JsString("01")
-      case Commercial => JsString("02")
-      case Auction => JsString("03")
-      case Relocation => JsString("04")
+      case Residential      => JsString("01")
+      case Commercial       => JsString("02")
+      case Auction          => JsString("03")
+      case Relocation       => JsString("04")
       case BusinessTransfer => JsString("05")
-      case AssetManagement => JsString("06")
-      case LandManagement => JsString("07")
-      case Development => JsString("08")
-      case SocialHousing => JsString("09")
-      case Lettings => JsString("10")
+      case AssetManagement  => JsString("06")
+      case LandManagement   => JsString("07")
+      case Development      => JsString("08")
+      case SocialHousing    => JsString("09")
+      case Lettings         => JsString("10")
     }
 }
 

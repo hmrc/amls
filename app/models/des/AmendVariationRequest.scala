@@ -58,6 +58,7 @@ case class AmendVariationRequest(
                                 lettingAgents: Option[LettingAgents],
                                 extraFields: ExtraFields
                               ) {
+
   def setChangeIndicator(changeIndicators: ChangeIndicators): AmendVariationRequest = {
     this.copy(changeIndicators = changeIndicators)
   }

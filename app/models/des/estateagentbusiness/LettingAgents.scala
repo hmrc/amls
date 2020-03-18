@@ -28,7 +28,7 @@ object LettingAgents {
   implicit def conv(eabOpt: Option[models.fe.estateagentbusiness.EstateAgentBusiness]): Option[LettingAgents] = {
 
     eabOpt match {
-      case Some(x) => x.clientMoneyProtectionScheme match {
+      case Some(eab) => eab.clientMoneyProtectionScheme match {
         case Some(ClientMoneyProtectionSchemeYes) => Some(LettingAgents(clientMoneyProtection = Some(true)))
         case Some(ClientMoneyProtectionSchemeNo) => Some(LettingAgents(clientMoneyProtection = Some(false)))
         case _ => None
