@@ -18,7 +18,7 @@ package models.fe.estateagentbusiness
 
 import models.des.DesConstants
 import models.des.businessactivities.BusinessActivities
-import models.des.estateagentbusiness.{EabAll, LettingAgents}
+import models.des.estateagentbusiness.{LettingAgents}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.{PlaySpec}
