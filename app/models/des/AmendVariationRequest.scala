@@ -244,7 +244,7 @@ object AmendVariationRequest {
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,
                                        conv: Incoming => BusinessActivities,
-                                       conv2: fe.estateagentbusiness.EstateAgentBusiness => EabAll,
+                                       conv2: fe.eab.Eab => EabAll,
                                        prevRegMLR: fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
                                        vatABConv: fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv: fe.businessdetails.BusinessDetails => BusinessContactDetails,
@@ -258,7 +258,7 @@ object AmendVariationRequest {
                                        msbConv: (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
                                        hvdConv: Option[fe.hvd.Hvd] => Option[Hvd],
                                        ampConv: Option[fe.amp.Amp] => Option[Amp],
-                                       lettingAgentConv: Option[fe.estateagentbusiness.EstateAgentBusiness] => Option[LettingAgents],
+                                       lettingAgentConv: Option[fe.eab.Eab] => Option[LettingAgents],
                                        messageType: AmlsMessageType,
                                        requestType: RequestType
   ): Outgoing =

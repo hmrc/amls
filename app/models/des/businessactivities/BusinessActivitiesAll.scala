@@ -43,16 +43,17 @@ object BusinessActivitiesAll{
   implicit val format = Json.format[BusinessActivitiesAll]
 
   def getEarliestDate(aspSection: Option[models.fe.asp.Asp],
-                      eabSection: Option[models.fe.estateagentbusiness.EstateAgentBusiness],
+                      eabSection: Option[models.fe.eab.Eab],
                       hvdSection: Option[models.fe.hvd.Hvd],
                       businessMatchingSection: models.fe.businessmatching.BusinessMatching):Option[String] = {
     implicit def ord: Ordering[DateTime] = Ordering.by(_.getMillis)
 
     val aspDate = aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
-    val eabDate = eabSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
+    //TODO ACHI val eabDate = eabSection.fold[Option[String]](None)(_.data.eabServicesProvided.fold[Option[String]](None)(_.dateOfChange))
     val hvdDate = hvdSection.fold[Option[String]](None)(_.dateOfChange)
     val baDate =  businessMatchingSection.activities.dateOfChange
-    val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
+    //TODO ACHI val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
+    val dateLst = Seq(aspDate, hvdDate, baDate).flatten
 
     dateLst.map(x => DateTime.parse(x)).sorted(ord).headOption.map(_.toString("yyyy-MM-dd"))
   }
@@ -128,7 +129,7 @@ object BusinessActivitiesAll{
   implicit def convtoActivitiesALLChangeFlags(businessDetailsSection: models.fe.businessdetails.BusinessDetails,
                                               businessActivitiesSection: models.fe.businessactivities.BusinessActivities,
                                               aspSection: Option[models.fe.asp.Asp],
-                                              eabSection: Option[models.fe.estateagentbusiness.EstateAgentBusiness],
+                                              eabSection: Option[models.fe.eab.Eab],
                                               hvdSection: Option[models.fe.hvd.Hvd],
                                               businessMatchingSection: models.fe.businessmatching.BusinessMatching): Option[BusinessActivitiesAll] = {
     convert(
