@@ -39,7 +39,7 @@ object EabServices {
 
   def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 
-  val none = if(appConfig.phase3Release2La) {
+  val default = if(appConfig.phase3Release2La) {
     EabServices(false, false, false, false, false, false, false, false, false, Some(false))
   } else {
     EabServices(false, false, false, false, false, false, false, false, false, None)
@@ -60,7 +60,7 @@ object EabServices {
   }
 
   implicit def convServices(services: Services) : Option[EabServices] = {
-    val eabServices = services.services.foldLeft[EabServices](none)((eabServices: EabServices, service) => service match {
+    val eabServices = services.services.foldLeft[EabServices](default)((eabServices: EabServices, service) => service match {
       case Residential => eabServices.copy(residentialEstateAgency = true)
       case Commercial => eabServices.copy(commercialEstateAgency = true)
       case Auction => eabServices.copy(auctioneer = true)
