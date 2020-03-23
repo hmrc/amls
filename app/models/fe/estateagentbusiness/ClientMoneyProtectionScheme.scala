@@ -19,6 +19,7 @@ package models.fe.estateagentbusiness
 import play.api.libs.json._
 import com.google.inject.Inject
 import config.ApplicationConfig
+import models.des.businessactivities.EabServices
 import play.api.Play
 
 sealed trait ClientMoneyProtectionScheme
@@ -47,10 +48,13 @@ object ClientMoneyProtectionScheme {
   implicit def conv(desView: models.des.SubscriptionView): Option[ClientMoneyProtectionScheme] = {
     (appConfig.phase3Release2La, desView.lettingAgents) match {
       case (true, Some(la)) => la.clientMoneyProtection match {
-        case Some(true) => Some(ClientMoneyProtectionSchemeYes)
+        case Some(true)  => Some(ClientMoneyProtectionSchemeYes)
         case Some(false) => Some(ClientMoneyProtectionSchemeNo)
       }
-      case (true, None) => None
+      case (true, None) => desView.businessActivities.eabServicesCarriedOut match {
+        case Some(EabServices(_,_,_,_,_,_,_,_,_,Some(true))) => Some(ClientMoneyProtectionSchemeNo)
+        case _                                               => None
+      }
       case _ => None
     }
   }
