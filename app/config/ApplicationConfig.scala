@@ -44,4 +44,5 @@ class ApplicationConfig @Inject()(config: Configuration, environment: Environmen
 
   lazy val enrolmentStoreUrl = s"${baseUrl("tax-enrolments")}"
   def enrolmentStoreToggle = config.get[Boolean]("microservice.services.feature-toggle.enrolment-store")
+  def phase3Release2La     = config.get[Boolean]("microservice.services.feature-toggle.phase3-release2-la")
 }
