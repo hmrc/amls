@@ -16,10 +16,7 @@
 
 package models.fe.tcsp
 
-import models.des.tcsp.TcspAll
-import models.fe.tcsp.ServicesOfAnotherTCSP.tcspServicesforRegOffBusinessAddrVirtualOff
 import play.api.libs.json._
-import utils.CommonMethods
 
 sealed trait ServicesOfAnotherTCSP
 
