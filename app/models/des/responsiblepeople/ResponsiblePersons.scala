@@ -133,11 +133,9 @@ object ResponsiblePersons {
     val msbOrTcsp: Option[MsbOrTcsp] = None
 
     val passedFitAndProperTest: Option[Boolean] =
-      // TODO: When toggle is removed then this can be made non optional
       rp.approvalFlags.hasAlreadyPassedFitAndProper orElse Some(false)
 
     val passedApprovalCheck: Option[Boolean] =
-      // TODO: When toggle is removed then this can be made non optional
       rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
 
     ResponsiblePersons(
