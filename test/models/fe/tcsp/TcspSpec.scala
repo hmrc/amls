@@ -178,6 +178,18 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
   }
 
+  "converting the des subscription model must yield a frontend TCSP model where empty mlr number" in {
+    Tcsp.conv(DesConstants.SubscriptionViewModelNoTcspMLR) must
+      be(
+        Some(Tcsp(
+          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
+          Some(OnlyOffTheShelfCompsSoldYes),
+          Some(ComplexCorpStructureCreationYes),
+          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
+          Some(true),
+          Some(ServicesOfAnotherTCSPNo))))
+  }
+
   "converting the des subscription where no tcsp must yield None" in {
     Tcsp.conv(DesConstants.SubscriptionViewModelNoTcsp) must
       be(None)
