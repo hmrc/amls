@@ -1389,6 +1389,7 @@ object DesConstants {
   )
 
   val testTcspAll = TcspAll(true, Some("111111111111111"))
+  val testTcspAllNoMLR = TcspAll(true, Some(""))
   val testAmendTcspAll = TcspAll(true, Some("2222222222222"))
 
   val testTcspTrustCompFormationAgt = TcspTrustCompFormationAgt(true, true)
@@ -2594,7 +2595,7 @@ object DesConstants {
     Some("1234567890")
   )
 
-  val SubscriptionViewModel = SubscriptionView(
+  val SubscriptionViewModel: SubscriptionView = SubscriptionView(
     etmpFormBundleNumber = "111111",
     DesConstants.testBusinessDetails,
     DesConstants.testViewBusinessContactDetails,
@@ -2617,6 +2618,8 @@ object DesConstants {
     None,
     DesConstants.extraFields
   )
+
+  val SubscriptionViewModelNoTcspMLR = SubscriptionViewModel.copy(tcspAll = Some(DesConstants.testTcspAllNoMLR))
 
   val SubscriptionViewModelNoFormationAgentSvc = SubscriptionView(
     etmpFormBundleNumber = "111111",
