@@ -25,11 +25,18 @@ import models.fe.businessactivities.ExpectedBusinessTurnover
 import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import utils.AckRefGenerator
 
-class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerTest {
+
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
+  }
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"

@@ -73,13 +73,23 @@ class ClientMoneyProtectionSchemeSpecPhase3 extends PlaySpec with MockitoSugar w
         ClientMoneyProtectionScheme.conv(view) must be(Some(ClientMoneyProtectionSchemeNo))
       }
 
-      "return none given no model and carry out Eab" in {
+      "convert ClientMoneyProtectionScheme des model to frontend model with lettings in eab but no letting agent" in {
+
+        val view = DesConstants.SubscriptionViewModel.copy(
+          lettingAgents = None,
+          businessActivities = DesConstants.testBusinessActivitiesLA
+        )
+
+        ClientMoneyProtectionScheme.conv(view) must be(Some(ClientMoneyProtectionSchemeNo))
+      }
+
+      "return none given no model and no Eab" in {
 
         val view = DesConstants.SubscriptionViewModel.copy(eabAll = None)
         ClientMoneyProtectionScheme.conv(view) must be(None)
       }
 
-      "return none given no model" in {
+      "return none given no activities" in {
 
         val view = DesConstants.SubscriptionViewModel.copy(eabAll = None, businessActivities = BusinessActivities())
         ClientMoneyProtectionScheme.conv(view) must be(None)

@@ -30,11 +30,19 @@ object Eab  {
 
   implicit def conv(view: SubscriptionView): Option[Eab] = {
     view match {
-      case SubscriptionView(_, _, _, _, _, _, ba, _, _, _, _, _, _, _, _, Some(eabAll), Some(eabResdEA), _, _, Some(la), _) =>
+      case SubscriptionView(
+      _, _, _, _, _, _,
+      ba,
+      _, _, _, _, _, _, _, _,
+      Some(eabAll),
+      Some(eabResdEA),
+      _, _,
+      Some(la), _) =>
         Some(
           Eab(
             EabData(
               ba.eabServicesCarriedOut,
+              None,
               getRedressScheme(eabResdEA),
               la.clientMoneyProtection,
               eabAll.estateAgencyActProhibition,

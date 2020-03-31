@@ -19,6 +19,7 @@ package models.fe.eab
 import play.api.libs.json.Json
 
 final case class EabData(eabServicesProvided: List[String],
+                         dateOfChange: Option[String],
                          redressScheme: Option[String],
                          clientMoneyProtectionScheme: Option[Boolean],
                          penalisedEstateAgentsAct: Boolean,
