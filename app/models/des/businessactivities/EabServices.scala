@@ -38,10 +38,8 @@ object EabServices {
 
   def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 
-  def default = if(appConfig.phase3Release2La) {
+  def default = {
     EabServices(false, false, false, false, false, false, false, false, false, Some(false))
-  } else {
-    EabServices(false, false, false, false, false, false, false, false, false, None)
   }
 
   implicit def convert(eab : Option[models.fe.eab.Eab]) : Option[EabServices] = {
