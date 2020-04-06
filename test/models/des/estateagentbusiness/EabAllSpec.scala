@@ -16,6 +16,7 @@
 
 package models.des.estateagentbusiness
 
+import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -31,9 +32,17 @@ class EabAllSpec extends PlaySpec {
 
     "Be convertable from Front end estate agent business model" in  {
       val from = {
-        import models.fe.estateagentbusiness._
-        EstateAgentBusiness(services = Some(Services(Set(BusinessTransfer, Development, Commercial))),
-          None,Some(ProfessionalBodyYes("ProfBodyDetails")),Some(PenalisedUnderEstateAgentsActYes("PenaltyDetails"))
+        Eab(
+          EabData(
+            List("businessTransfer", "developmentCompany" , "commercial"),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("PenaltyDetails"),
+            true,
+            Some("ProfBodyDetails")
+          )
         )
       }
 

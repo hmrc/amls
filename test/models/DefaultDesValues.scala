@@ -76,7 +76,7 @@ object DefaultDesValues {
 
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 
-  val EabResd = Some(EabResdEstAgncy(true, Some("Ombudsman Services"), None))
+  val EabResd = Some(EabResdEstAgncy(true, Some("Ombudsman Services")))
 
   val AboutTheBusinessSection = BusinessContactDetails(
     ATBAddress("line1", "line2",

@@ -20,6 +20,7 @@ package models
 import models.fe.SubscriptionView
 import models.fe.amp.{Amp, AmpData}
 import models.fe.declaration.{RoleWithinBusiness, Other => DeclarationOther}
+import models.fe.eab.{Eab, EabData}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
 import org.joda.time.LocalDate
 import utils.StatusConstants
@@ -174,31 +175,86 @@ object BusinessActivitiesSection {
 
 object EabSection {
 
-  import models.fe.estateagentbusiness._
+  val model = Some(
+    Eab(
+      EabData(
+        List("auctioneering", "businessTransfer"),
+        None,
+        Some("propertyRedressScheme"),
+        None,
+        true,
+        Some("Details"),
+        true,
+        Some("Details")
+      )
+    )
+  )
 
-  val model = Some(EstateAgentBusiness(
-    Some(Services(Set(Auction, BusinessTransfer))),
-    Some(OmbudsmanServices),
-    Some(ProfessionalBodyNo),
-    Some(PenalisedUnderEstateAgentsActYes("Details"))))
+  val modelLA = Some(
+    Eab(
+      EabData(
+        List("auctioneering", "businessTransfer", "lettings"),
+        None,
+        Some("propertyRedressScheme"),
+        Some(true),
+        true,
+        Some("Details"),
+        true,
+        Some("Details")
+      )
+    )
+  )
 
-  val modelLA = Some(EstateAgentBusiness(
-    Some(Services(Set(Auction, BusinessTransfer, Lettings))),
-    Some(OmbudsmanServices),
-    Some(ProfessionalBodyNo),
-    Some(PenalisedUnderEstateAgentsActYes("Details")),
-    Some(ClientMoneyProtectionSchemeYes)))
+  val modelForView = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyRedressScheme"),
+        None,
+        true,
+        Some("PrevWarnWRegProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
 
-  val modelForView = Some(EstateAgentBusiness(Some(Services(Set(Residential, Commercial, SocialHousing,
-    BusinessTransfer, Development, AssetManagement, LandManagement, Auction, Relocation))),
-    Some(ThePropertyOmbudsman), Some(ProfessionalBodyYes("PrevWarnWRegProvideDetails")),
-    Some(PenalisedUnderEstateAgentsActYes("EstAgncActProhibProvideDetails"))))
-
-  val modelForViewLA = Some(EstateAgentBusiness(Some(Services(Set(Residential, Commercial, SocialHousing,
-    BusinessTransfer, Development, AssetManagement, LandManagement, Auction, Relocation, Lettings))),
-    Some(ThePropertyOmbudsman), Some(ProfessionalBodyYes("PrevWarnWRegProvideDetails")),
-    Some(PenalisedUnderEstateAgentsActYes("EstAgncActProhibProvideDetails")),
-    Some(ClientMoneyProtectionSchemeYes)))
+  val modelForViewLA = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision",
+          "lettings"
+        ),
+        None,
+        Some("propertyRedressScheme"),
+        Some(true),
+        true,
+        Some("PrevWarnWRegProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
 }
 
 object MsbSection {

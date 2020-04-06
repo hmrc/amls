@@ -1402,8 +1402,9 @@ object DesConstants {
 
   val testLettingAgents = LettingAgents(Some(true))
 
-  val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None)
-  val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)
+  val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"))
+  val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None)
+
   val responsiblePersons2 = ResponsiblePersons(
     Some(NameDetails(
       PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),

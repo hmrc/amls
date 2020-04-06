@@ -20,7 +20,7 @@ import models.fe.eab.Eab
 import play.api.libs.json.Json
 
 case class EabResdEstAgncy(regWithRedressScheme:Boolean,
-  whichRedressScheme:Option[String]
+                           whichRedressScheme:Option[String]
 )
 
 object EabResdEstAgncy {
