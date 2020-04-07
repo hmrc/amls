@@ -36,8 +36,6 @@ case class EabServices(
 object EabServices {
   implicit val format = Json.format[EabServices]
 
-  def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
-
   def default = {
     EabServices(false, false, false, false, false, false, false, false, false, Some(false))
   }

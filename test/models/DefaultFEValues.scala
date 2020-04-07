@@ -184,8 +184,8 @@ object EabSection {
         None,
         true,
         Some("Details"),
-        true,
-        Some("Details")
+        false,
+        None
       )
     )
   )
@@ -199,8 +199,8 @@ object EabSection {
         Some(true),
         true,
         Some("Details"),
-        true,
-        Some("Details")
+        false,
+        None
       )
     )
   )
@@ -220,10 +220,10 @@ object EabSection {
           "socialHousingProvision"
         ),
         None,
-        Some("propertyRedressScheme"),
+        Some("propertyOmbudsman"),
         None,
         true,
-        Some("PrevWarnWRegProvideDetails"),
+        Some("EstAgncActProhibProvideDetails"),
         true,
         Some("PrevWarnWRegProvideDetails")
       )
@@ -246,10 +246,10 @@ object EabSection {
           "lettings"
         ),
         None,
-        Some("propertyRedressScheme"),
+        Some("propertyOmbudsman"),
         Some(true),
         true,
-        Some("PrevWarnWRegProvideDetails"),
+        Some("EstAgncActProhibProvideDetails"),
         true,
         Some("PrevWarnWRegProvideDetails")
       )

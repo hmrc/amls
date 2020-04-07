@@ -154,7 +154,7 @@ object DesConstants {
     Some(AspServicesOffered(true, true, true, true, true)),
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
-    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(EabServices(true, true, true, true, true, true, true, true, true, Some(false))),
     Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )

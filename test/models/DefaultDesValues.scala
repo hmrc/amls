@@ -38,8 +38,9 @@ object DefaultDesValues {
     None,
     None
   )
-  private val deseabServiceModel = Some(des.businessactivities.EabServices(false, false,
-    true, false, true, false, false, false, false))
+  private val deseabServiceModel = Some(des.businessactivities.EabServices(
+    false, false, true, false, true, false, false, false, false, Some(false)
+  ))
 
   private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
     true, false, true, false, false, false, false, Some(true)))
@@ -76,7 +77,7 @@ object DefaultDesValues {
 
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 
-  val EabResd = Some(EabResdEstAgncy(true, Some("Ombudsman Services")))
+  val EabResd = Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
 
   val AboutTheBusinessSection = BusinessContactDetails(
     ATBAddress("line1", "line2",

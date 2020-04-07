@@ -22,11 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
-class EabServicesSpec extends PlaySpec with GuiceOneAppPerTest {
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
-  }
+class EabServicesSpec extends PlaySpec  {
 
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
@@ -45,7 +41,9 @@ class EabServicesSpec extends PlaySpec with GuiceOneAppPerTest {
         )
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, true, false, false, true, false, false, true, false, None))
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, true, false, false, true, false, false, true, false, Some(false))
+      )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }
@@ -66,7 +64,9 @@ class EabServicesSpec extends PlaySpec with GuiceOneAppPerTest {
         )
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, false, false, false, false, false, false, false, false, None))
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, false, false, false, false, false, false, false, false, Some(false))
+      )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }
