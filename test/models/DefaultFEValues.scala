@@ -190,6 +190,106 @@ object EabSection {
     )
   )
 
+  val modelPenalisedEstateAgentsFalse = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        penalisedEstateAgentsAct = false,
+        None,
+        penalisedProfessionalBody = true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelPenalisedEstateAgentsTrue = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        penalisedEstateAgentsAct = true,
+        Some("EstAgncActProhibProvideDetails"),
+        penalisedProfessionalBody = true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelPenalisedProfessionalBodyFalse = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        penalisedEstateAgentsAct = true,
+        Some("EstAgncActProhibProvideDetails"),
+        penalisedProfessionalBody = false,
+        None
+      )
+    )
+  )
+
+  val modelPenalisedProfessionalBodyTrue = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        penalisedEstateAgentsAct = true,
+        Some("EstAgncActProhibProvideDetails"),
+        penalisedProfessionalBody = true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
   val modelLA = Some(
     Eab(
       EabData(
@@ -221,6 +321,31 @@ object EabSection {
         ),
         None,
         Some("propertyOmbudsman"),
+        None,
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelForViewNoRedress = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        None,
         None,
         true,
         Some("EstAgncActProhibProvideDetails"),
