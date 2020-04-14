@@ -42,6 +42,9 @@ object Eab  {
                          eabResdEA: Option[EabResdEstAgncy],
                          la: Option[LettingAgents]) = {
 
+    //TODO - will need to check eab services and look for lettings or residential when setting
+    // redress and letting as if they do these services however the DES objects are none then we
+    // need to set to false
     Some(
       Eab(
         EabData(
