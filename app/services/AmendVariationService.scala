@@ -20,6 +20,7 @@ import java.io.InputStream
 
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
+import config.ApplicationConfig
 import connectors._
 import javax.inject.Inject
 import models.Fees
@@ -40,7 +41,8 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
                                       private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
                                       private[services] val viewDesConnector: ViewDESConnector,
                                       private[services] val auditConnector: AuditConnector,
-                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository())
+                                      private[services] val feeResponseRepository: FeesRepository = FeesRepository(),
+                                      private[services] val config: ApplicationConfig)
   extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper {
 
   private[services] val validator: SchemaValidator = SchemaValidator()
@@ -170,7 +172,11 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
 
   private[services] def validateResult(request: AmendVariationRequest) = {
     // $COVERAGE-OFF$
-    val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_4.2.0.json")
+    val stream: InputStream = if(config.phase3Release2La) {
+      getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
+    } else {
+      getClass.getResourceAsStream("/resources/api6_schema_release_4.2.0.json")
+    }
     val lines = scala.io.Source.fromInputStream(stream).getLines
     val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
