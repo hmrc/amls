@@ -330,7 +330,7 @@ object EabSection {
     )
   )
 
-  val modelForViewNoRedress = Some(
+  val modelForViewNoEabResdEstAgncy = Some(
     Eab(
       EabData(
         List(
@@ -342,6 +342,30 @@ object EabSection {
           "landManagement",
           "relocation",
           "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("notRegistered"),
+        None,
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelForViewNoRedress = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
           "socialHousingProvision"
         ),
         None,
@@ -373,6 +397,32 @@ object EabSection {
         None,
         Some("propertyOmbudsman"),
         Some(true),
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelForViewLANoLettingAgentSection = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision",
+          "lettings"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        Some(false),
         true,
         Some("EstAgncActProhibProvideDetails"),
         true,

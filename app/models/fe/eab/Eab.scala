@@ -42,21 +42,20 @@ object Eab  {
                          eabResdEA: Option[EabResdEstAgncy],
                          la: Option[LettingAgents]) = {
 
-    //TODO - will need to check eab services and look for lettings or residential when setting
-    // redress and letting as if they do these services however the DES objects are none then we
-    // need to set to false
     Some(
       Eab(
         EabData(
           ba.eabServicesCarriedOut,
           None,
-          eabResdEA match {
-            case Some(redress) => getRedressScheme(redress)
-            case _             => None
+          (eabResdEA, redressSchemeApplies(ba)) match {
+            case (Some(redress), _) => getRedressScheme(redress)
+            case (None, true)       => Some("notRegistered")
+            case _                  => None
           },
-          la match {
-            case Some(lettings) => lettings.clientMoneyProtection
-            case _              => None
+          (la, lettingAgentApplies(ba)) match {
+            case (Some(lettings), _) => lettings.clientMoneyProtection
+            case (None, true)        => Some(false)
+            case _                   => None
           },
           eabAll.estateAgencyActProhibition,
           eabAll.estAgncActProhibProvideDetails,
@@ -75,6 +74,21 @@ object Eab  {
         }
       }
       case false => Some("notRegistered")
+    }
+  }
+
+  private implicit def redressSchemeApplies(businessActivities: BusinessActivities) = {
+    businessActivities.eabServicesCarriedOut match {
+      case Some(EabServices(true, _, _, _, _, _, _, _, _, _))       => true
+      case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
+      case _                                                        => false
+    }
+  }
+
+  private implicit def lettingAgentApplies(businessActivities: BusinessActivities) = {
+    businessActivities.eabServicesCarriedOut match {
+      case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
+      case _                                                        => false
     }
   }
 

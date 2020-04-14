@@ -163,7 +163,7 @@ object DesConstants {
     Some(EabServices(true, true, true, true, true, true, true, true, true, Some(true))))
 
   val testBusinessActivitiesNoRedress = testBusinessActivities.copy(eabServicesCarriedOut =
-    Some(EabServices(true, true, true, true, true, true, true, true, true, Some(false))))
+    Some(EabServices(false, true, true, true, true, true, true, true, true, Some(false))))
 
   val testBusinessActivitiesNoAlcoholOrTobacco = testBusinessActivities.copy(hvdGoodsSold = Some(testHvdGoodsSoldNoAlcoholOrTobacco))
 
@@ -2871,8 +2871,17 @@ object DesConstants {
     eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncy)
   )
 
+  val viewModelRedressNoEabResdEstAgncy = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = None
+  )
+
   val viewModelLettings = viewModelRedress.copy(
     businessActivities = DesConstants.testBusinessActivitiesLA, lettingAgents = Some(DesConstants.testLettingAgents)
+  )
+
+  val viewModelLettingsNoLettingAgents = viewModelRedress.copy(
+    businessActivities = DesConstants.testBusinessActivitiesLA, lettingAgents = None
   )
 
   val viewModelPenalisedEstateAgentsFalse = viewModelRedress.copy(

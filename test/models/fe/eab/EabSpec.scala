@@ -36,12 +36,20 @@ class EabSpec extends PlaySpec with MockitoSugar {
         "create an eab model with a redress scheme" in {
           Eab.conv(DesConstants.viewModelRedress) mustBe EabSection.modelForView
         }
+
+        "create an eab model with a redress scheme notRegistered where no EabResdEstAgncy" in {
+          Eab.conv(DesConstants.viewModelRedressNoEabResdEstAgncy) mustBe EabSection.modelForViewNoEabResdEstAgncy
+        }
       }
 
       "when passed a subscription view with lettings" must {
 
         "create an eab model with client money protection" in {
           Eab.conv(DesConstants.viewModelLettings) mustBe EabSection.modelForViewLA
+        }
+
+        "create an eab model with a client money protection false where no LettingAgent" in {
+          Eab.conv(DesConstants.viewModelLettingsNoLettingAgents) mustBe EabSection.modelForViewLANoLettingAgentSection
         }
       }
 
