@@ -29,7 +29,7 @@ object Amp  {
 
   implicit def conv(view: SubscriptionView): Option[Amp] = {
     view match {
-      case SubscriptionView(_,_,_,_,_,_, ba,_,_,_,_,_,_,_,_,_,_,_, Some(amp), _) => Some(
+      case SubscriptionView(_,_,_,_,_,_, ba,_,_,_,_,_,_,_,_,_,_,_, Some(amp), _, _) => Some(
         Amp(AmpData(
           view.businessActivities.ampServicesCarriedOut,
           ba.ampServicesCarriedOut.flatMap(s => s.other.specifyOther),

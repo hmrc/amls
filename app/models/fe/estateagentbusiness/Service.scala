@@ -43,6 +43,8 @@ case object SocialHousing extends Service
 
 case object Residential extends Service
 
+case object Lettings extends Service
+
 object Service {
 
   implicit val jsonServiceReads: Reads[Service] =
@@ -56,20 +58,22 @@ object Service {
       case JsString("07") => JsSuccess(LandManagement)
       case JsString("08") => JsSuccess(Development)
       case JsString("09") => JsSuccess(SocialHousing)
-      case _ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
+      case JsString("10") => JsSuccess(Lettings)
+      case _              => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites =
     Writes[Service] {
-      case Residential => JsString("01")
-      case Commercial => JsString("02")
-      case Auction => JsString("03")
-      case Relocation => JsString("04")
+      case Residential      => JsString("01")
+      case Commercial       => JsString("02")
+      case Auction          => JsString("03")
+      case Relocation       => JsString("04")
       case BusinessTransfer => JsString("05")
-      case AssetManagement => JsString("06")
-      case LandManagement => JsString("07")
-      case Development => JsString("08")
-      case SocialHousing => JsString("09")
+      case AssetManagement  => JsString("06")
+      case LandManagement   => JsString("07")
+      case Development      => JsString("08")
+      case SocialHousing    => JsString("09")
+      case Lettings         => JsString("10")
     }
 }
 
@@ -91,7 +95,8 @@ object Services {
           CommonMethods.getSpecificType[Service](eabServices.assetManagementCompany, AssetManagement),
           CommonMethods.getSpecificType[Service](eabServices.landManagementAgent, LandManagement),
           CommonMethods.getSpecificType[Service](eabServices.developmentCompany, Development),
-          CommonMethods.getSpecificType[Service](eabServices.socialHousingProvider, SocialHousing)
+          CommonMethods.getSpecificType[Service](eabServices.socialHousingProvider, SocialHousing),
+          CommonMethods.getSpecificType[Service](eabServices.lettingAgents.getOrElse(false), Lettings)
         ).flatten
 
         services match {
