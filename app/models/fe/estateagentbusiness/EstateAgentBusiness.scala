@@ -20,8 +20,7 @@ case class EstateAgentBusiness(
                                 services: Option[Services] = None,
                                 redressScheme: Option[RedressScheme] = None,
                                 professionalBody: Option[ProfessionalBody] = None,
-                                penalisedUnderEstateAgentsAct: Option[PenalisedUnderEstateAgentsAct] = None,
-                                clientMoneyProtectionScheme: Option[ClientMoneyProtectionScheme] = None
+                                penalisedUnderEstateAgentsAct: Option[PenalisedUnderEstateAgentsAct] = None
                               )
 
 object EstateAgentBusiness {
@@ -33,8 +32,7 @@ object EstateAgentBusiness {
     __.read(Reads.optionNoError[Services]) and
       __.read(Reads.optionNoError[RedressScheme]) and
       __.read(Reads.optionNoError[ProfessionalBody]) and
-      __.read(Reads.optionNoError[PenalisedUnderEstateAgentsAct]) and
-      __.read(Reads.optionNoError[ClientMoneyProtectionScheme])
+      __.read(Reads.optionNoError[PenalisedUnderEstateAgentsAct])
     ) (EstateAgentBusiness.apply _)
 
   implicit val writes: Writes[EstateAgentBusiness] =
@@ -44,8 +42,7 @@ object EstateAgentBusiness {
           Json.toJson(model.services).asOpt[JsObject],
           Json.toJson(model.redressScheme).asOpt[JsObject],
           Json.toJson(model.professionalBody).asOpt[JsObject],
-          Json.toJson(model.penalisedUnderEstateAgentsAct).asOpt[JsObject],
-          Json.toJson(model.clientMoneyProtectionScheme).asOpt[JsObject]
+          Json.toJson(model.penalisedUnderEstateAgentsAct).asOpt[JsObject]
         ).flatten.fold(Json.obj()) {
           _ ++ _
         }
@@ -54,9 +51,9 @@ object EstateAgentBusiness {
   implicit def conv(view: models.des.SubscriptionView): Option[EstateAgentBusiness] = {
     (view.eabResdEstAgncy, view.businessActivities.eabServicesCarriedOut) match {
       case (Some(eabResdEstAgncy), _) =>
-        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view, view))
+        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view))
       case (None, Some(eabServicesCarriedOut)) =>
-        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view, view))
+        Some(EstateAgentBusiness(view.businessActivities.eabServicesCarriedOut, view.eabResdEstAgncy, view, view))
       case (None, None) => None
       case _ => None
     }

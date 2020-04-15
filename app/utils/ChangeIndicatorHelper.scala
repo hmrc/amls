@@ -243,19 +243,15 @@ trait ChangeIndicatorHelper {
   private def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
     val feEab              = EstateAgentBusiness.conv(viewResponse)
     val desEab             = Some(models.des.estateagentbusiness.EabAll.convert(feEab.getOrElse(EstateAgentBusiness())))
-    val desEabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.convert(feEab)
-    val desLettingAgents   = models.des.estateagentbusiness.LettingAgents.conv(feEab)
+    val desEabResdEstAgncy =  models.des.estateagentbusiness.EabResdEstAgncy.convert(feEab)
 
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEab: ${desEab}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabAll: ${desRequest.eabAll}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEabResdEstAgncy: ${desEabResdEstAgncy}")
     Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desLettingAgents: ${desLettingAgents}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.lettingAgents: ${desRequest.lettingAgents}")
 
     !(desEab.equals(desRequest.eabAll) &&
-      desEabResdEstAgncy.equals(desRequest.eabResdEstAgncy) &&
-      desLettingAgents.equals(desRequest.lettingAgents))
+      desEabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
   private def convAndCompareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {

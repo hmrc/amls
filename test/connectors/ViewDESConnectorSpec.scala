@@ -140,7 +140,6 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersons),
     Some(DesConstants.testAmp),
-    None,
     DesConstants.extraFields
   )
 }

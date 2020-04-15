@@ -18,7 +18,7 @@ package utils
 import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.businessactivities.{AmpServices, BusinessActivities, MlrActivitiesAppliedFor}
-import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
+import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.Hvd
 import models.des.msb.{MoneyServiceBusiness, MsbAllDetails}
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
@@ -334,7 +334,6 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
       "eab" when {
         val eabSection = mock[EabAll]
         val eabResdEstAgncy = mock[EabResdEstAgncy]
-        val eabLettingAgents = mock[LettingAgents]
         val fullEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true, whichRedressScheme = Some("foo"), None)
 
         "user does not have eab" when {
@@ -369,15 +368,6 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
 
             "set tcsp change indicator" in {
               when(api6.eabResdEstAgncy) thenReturn Some(updatedEabResdEstAgncy)
-              eabChangedIndicator(api5, api6) mustBe (true)
-            }
-          }
-
-          "eab letting agents section has changed" must {
-            val updatedEabLettingAgent = eabLettingAgents.copy(clientMoneyProtection = Some(true))
-
-            "set tcsp change indicator" in {
-              when(api6.lettingAgents) thenReturn Some(updatedEabLettingAgent)
               eabChangedIndicator(api5, api6) mustBe (true)
             }
           }
