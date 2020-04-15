@@ -21,7 +21,7 @@ import models.des.asp.Asp
 import models.des.bankdetails.BankDetailsView
 import models.des.businessactivities.BusinessActivities
 import models.des.businessdetails.BusinessDetails
-import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
+import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import models.des.hvd.Hvd
 import models.des.amp.Amp
 import models.des.msb.MoneyServiceBusiness
@@ -50,6 +50,7 @@ case class SubscriptionView(etmpFormBundleNumber:String,
                             eabResdEstAgncy : Option[EabResdEstAgncy],
                             responsiblePersons: Option[Seq[ResponsiblePersons]],
                             amp: Option[Amp],
+                            lettingAgents: Option[LettingAgents],
                             extraFields: ExtraFields
                            )
 
@@ -79,6 +80,7 @@ object SubscriptionView {
         (__ \ "eabResdEstAgncy").readNullable[EabResdEstAgncy] and
         (__ \ "responsiblePersons").readNullable[Seq[ResponsiblePersons]] and
         (__ \ "amp").readNullable[Amp] and
+        (__ \ "lettingAgents").readNullable[LettingAgents] and
         __.read[ExtraFields]
       ) (SubscriptionView.apply _)
   }
@@ -104,6 +106,7 @@ object SubscriptionView {
         (__ \ "eabResdEstAgncy").write[Option[EabResdEstAgncy]] and
         (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
         (__ \ "amp").write[Option[Amp]] and
+        (__ \ "lettingAgents").write[Option[LettingAgents]] and
         __.write[ExtraFields]
       ) (unlift(SubscriptionView.unapply _))
   }
