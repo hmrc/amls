@@ -23,7 +23,7 @@ import models.des.asp.Asp
 import models.des.bankdetails.BankDetails
 import models.des.businessactivities.BusinessActivities
 import models.des.businessdetails.BusinessDetails
-import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
+import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.Hvd
 import models.des.msb.MoneyServiceBusiness
 import models.des.responsiblepeople.ResponsiblePersons
@@ -55,8 +55,7 @@ case class SubscriptionRequest(
                                 amp: Option[Amp],
                                 responsiblePersons: Option[Seq[ResponsiblePersons]],
                                 filingIndividual: AboutYouRelease7,
-                                declaration: Declaration,
-                                lettingAgents: Option[LettingAgents]
+                                declaration: Declaration
                               )
 
 object SubscriptionRequest {
@@ -107,7 +106,6 @@ object SubscriptionRequest {
       amp = data.ampSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
       filingIndividual = data.aboutYouSection,
-      declaration = Declaration(true),
-      lettingAgents = data.eabSection
+      declaration = Declaration(true)
     )
 }
