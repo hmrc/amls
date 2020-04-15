@@ -39,7 +39,7 @@ object EabServices {
 
   def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 
-  def default = if(appConfig.phase3Release2La) {
+  val default = if(appConfig.phase3Release2La) {
     EabServices(false, false, false, false, false, false, false, false, false, Some(false))
   } else {
     EabServices(false, false, false, false, false, false, false, false, false, None)

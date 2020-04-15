@@ -20,17 +20,10 @@ import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import utils.AckRefGenerator
 
-class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
-  }
+class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
