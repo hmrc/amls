@@ -17,15 +17,8 @@
 package models.des.businessActivities
 
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 
-class EabServicesSpec extends PlaySpec with GuiceOneAppPerTest {
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
-  }
+class EabServicesSpec extends PlaySpec {
 
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
