@@ -16,9 +16,7 @@
 
 package models.des.businessactivities
 
-import config.ApplicationConfig
 import models.fe.estateagentbusiness._
-import play.api.Play
 import play.api.libs.json.Json
 
 case class EabServices(
@@ -30,20 +28,13 @@ case class EabServices(
                         assetManagementCompany : Boolean,
                         landManagementAgent : Boolean,
                         developmentCompany : Boolean,
-                        socialHousingProvider : Boolean,
-                        lettingAgents : Option[Boolean] = None
+                        socialHousingProvider : Boolean
                       )
 
 object EabServices {
   implicit val format = Json.format[EabServices]
 
-  def appConfig = Play.current.injector.instanceOf[ApplicationConfig]
-
-  val default = if(appConfig.phase3Release2La) {
-    EabServices(false, false, false, false, false, false, false, false, false, Some(false))
-  } else {
-    EabServices(false, false, false, false, false, false, false, false, false, None)
-  }
+  val none = EabServices(false, false, false, false, false, false, false, false, false)
 
   implicit def convert(eab : Option[models.fe.estateagentbusiness.EstateAgentBusiness]) : Option[EabServices] = {
 
@@ -60,7 +51,7 @@ object EabServices {
   }
 
   implicit def convServices(services: Services) : Option[EabServices] = {
-    val eabServices = services.services.foldLeft[EabServices](default)((eabServices: EabServices, service) => service match {
+    val eabServices = services.services.foldLeft[EabServices](none)((eabServices: EabServices, service) => service match {
       case Residential => eabServices.copy(residentialEstateAgency = true)
       case Commercial => eabServices.copy(commercialEstateAgency = true)
       case Auction => eabServices.copy(auctioneer = true)
@@ -70,7 +61,6 @@ object EabServices {
       case LandManagement => eabServices.copy(landManagementAgent = true)
       case Development => eabServices.copy(developmentCompany = true)
       case SocialHousing => eabServices.copy(socialHousingProvider = true)
-      case Lettings => eabServices.copy(lettingAgents = Some(true))
     })
     Some(eabServices)
 

@@ -182,23 +182,10 @@ object EabSection {
     Some(ProfessionalBodyNo),
     Some(PenalisedUnderEstateAgentsActYes("Details"))))
 
-  val modelLA = Some(EstateAgentBusiness(
-    Some(Services(Set(Auction, BusinessTransfer, Lettings))),
-    Some(OmbudsmanServices),
-    Some(ProfessionalBodyNo),
-    Some(PenalisedUnderEstateAgentsActYes("Details")),
-    Some(ClientMoneyProtectionSchemeYes)))
-
   val modelForView = Some(EstateAgentBusiness(Some(Services(Set(Residential, Commercial, SocialHousing,
     BusinessTransfer, Development, AssetManagement, LandManagement, Auction, Relocation))),
     Some(ThePropertyOmbudsman), Some(ProfessionalBodyYes("PrevWarnWRegProvideDetails")),
     Some(PenalisedUnderEstateAgentsActYes("EstAgncActProhibProvideDetails"))))
-
-  val modelForViewLA = Some(EstateAgentBusiness(Some(Services(Set(Residential, Commercial, SocialHousing,
-    BusinessTransfer, Development, AssetManagement, LandManagement, Auction, Relocation, Lettings))),
-    Some(ThePropertyOmbudsman), Some(ProfessionalBodyYes("PrevWarnWRegProvideDetails")),
-    Some(PenalisedUnderEstateAgentsActYes("EstAgncActProhibProvideDetails")),
-    Some(ClientMoneyProtectionSchemeYes)))
 }
 
 object MsbSection {

@@ -20,12 +20,12 @@ import models.des.businessactivities.BusinessActivities
 import models.des.{DesConstants, SubscriptionView}
 import models.des.estateagentbusiness.EabAll
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 
-class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class PenalisedUnderEstateAgentsActSpec extends PlaySpec with MockitoSugar {
   "JSON validation" must {
 
     "successfully validate given an enum value" in {

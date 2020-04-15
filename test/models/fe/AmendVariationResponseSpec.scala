@@ -135,7 +135,6 @@ class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with Mocki
       eabResdEstAgncy = None,
       responsiblePersons = None,
       amp = None,
-      lettingAgents = None,
       extraFields = ExtraFields(
         declaration = Declaration(true),
         filingIndividual = AboutYouRelease7(None, true, None, None),
