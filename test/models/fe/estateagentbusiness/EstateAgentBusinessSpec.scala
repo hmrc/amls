@@ -18,10 +18,10 @@ package models.fe.estateagentbusiness
 
 import models.des.DesConstants
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class EstateAgentBusinessSpec extends PlaySpec with MockitoSugar {
+class EstateAgentBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
 
   val services = Services(Set(Residential, Commercial, Auction))
   val professionalBody = ProfessionalBodyYes("details")
