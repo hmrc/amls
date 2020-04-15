@@ -27,8 +27,8 @@ import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.Application
 import play.api.libs.json._
 import utils.AckRefGenerator
 
