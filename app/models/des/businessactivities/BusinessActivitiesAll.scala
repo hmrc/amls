@@ -43,13 +43,13 @@ object BusinessActivitiesAll{
   implicit val format = Json.format[BusinessActivitiesAll]
 
   def getEarliestDate(aspSection: Option[models.fe.asp.Asp],
-                      eabSection: Option[models.fe.estateagentbusiness.EstateAgentBusiness],
+                      eabSection: Option[models.fe.eab.Eab],
                       hvdSection: Option[models.fe.hvd.Hvd],
                       businessMatchingSection: models.fe.businessmatching.BusinessMatching):Option[String] = {
     implicit def ord: Ordering[DateTime] = Ordering.by(_.getMillis)
 
     val aspDate = aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
-    val eabDate = eabSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
+    val eabDate = eabSection.fold[Option[String]](None)(_.data.dateOfChange)
     val hvdDate = hvdSection.fold[Option[String]](None)(_.dateOfChange)
     val baDate =  businessMatchingSection.activities.dateOfChange
     val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
@@ -58,16 +58,16 @@ object BusinessActivitiesAll{
   }
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
-      convert(
-        feModel.businessDetailsSection,
-        feModel.businessActivitiesSection,
-        getEarliestDate(
-          feModel.aspSection,
-          feModel.eabSection,
-          feModel.hvdSection,
-          feModel.businessMatchingSection
-        )
+    convert(
+      feModel.businessDetailsSection,
+      feModel.businessActivitiesSection,
+      getEarliestDate(
+        feModel.aspSection,
+        feModel.eabSection,
+        feModel.hvdSection,
+        feModel.businessMatchingSection
       )
+    )
   }
 
   def convert(atb:models.fe.businessdetails.BusinessDetails,
@@ -128,7 +128,7 @@ object BusinessActivitiesAll{
   implicit def convtoActivitiesALLChangeFlags(businessDetailsSection: models.fe.businessdetails.BusinessDetails,
                                               businessActivitiesSection: models.fe.businessactivities.BusinessActivities,
                                               aspSection: Option[models.fe.asp.Asp],
-                                              eabSection: Option[models.fe.estateagentbusiness.EstateAgentBusiness],
+                                              eabSection: Option[models.fe.eab.Eab],
                                               hvdSection: Option[models.fe.hvd.Hvd],
                                               businessMatchingSection: models.fe.businessmatching.BusinessMatching): Option[BusinessActivitiesAll] = {
     convert(

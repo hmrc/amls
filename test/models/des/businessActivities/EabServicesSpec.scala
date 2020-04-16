@@ -16,36 +16,54 @@
 
 package models.des.businessActivities
 
+import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 
-class EabServicesSpec extends PlaySpec with GuiceOneAppPerTest {
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
-  }
+class EabServicesSpec extends PlaySpec  {
 
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
       val from = {
-        import models.fe.estateagentbusiness._
-        EstateAgentBusiness(services = Some(Services(Set(BusinessTransfer, Development, Commercial))))
+        Eab(
+          EabData(
+            List("businessTransfer", "developmentCompany", "commercial"),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, true, false, false, true, false, false, true, false, None))
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, true, false, false, true, false, false, true, false, Some(false))
+      )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }
 
     "Be convertable from front end Estate agent business services when none" in {
       val from = {
-        import models.fe.estateagentbusiness._
-        EstateAgentBusiness(services = Some(Services(Set())))
+        Eab(
+          EabData(
+            List(),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, false, false, false, false, false, false, false, false, None))
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, false, false, false, false, false, false, false, false, Some(false))
+      )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }

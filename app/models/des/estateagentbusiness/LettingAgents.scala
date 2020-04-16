@@ -16,7 +16,6 @@
 
 package models.des.estateagentbusiness
 
-import models.fe.estateagentbusiness.{ClientMoneyProtectionSchemeNo, ClientMoneyProtectionSchemeYes}
 import play.api.libs.json.{Json, OFormat}
 
 case class LettingAgents (clientMoneyProtection: Option[Boolean])
@@ -25,12 +24,12 @@ object LettingAgents {
 
   implicit val format: OFormat[LettingAgents] = Json.format[LettingAgents]
 
-  implicit def conv(eabOpt: Option[models.fe.estateagentbusiness.EstateAgentBusiness]): Option[LettingAgents] = {
+  implicit def conv(eabOpt: Option[models.fe.eab.Eab]): Option[LettingAgents] = {
 
     eabOpt match {
-      case Some(eab) => eab.clientMoneyProtectionScheme match {
-        case Some(ClientMoneyProtectionSchemeYes) => Some(LettingAgents(clientMoneyProtection = Some(true)))
-        case Some(ClientMoneyProtectionSchemeNo) => Some(LettingAgents(clientMoneyProtection = Some(false)))
+      case Some(eab) => eab.data.clientMoneyProtectionScheme match {
+        case Some(true)  => Some(LettingAgents(clientMoneyProtection = Some(true)))
+        case Some(false) => Some(LettingAgents(clientMoneyProtection = Some(false)))
         case _ => None
       }
       case _ => None

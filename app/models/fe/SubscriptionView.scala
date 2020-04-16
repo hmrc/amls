@@ -23,7 +23,7 @@ import models.fe.businessactivities.BusinessActivities
 import models.fe.businessdetails.BusinessDetails
 import models.fe.businessmatching.BusinessMatching
 import models.fe.declaration.AddPerson
-import models.fe.estateagentbusiness.EstateAgentBusiness
+import models.fe.eab.Eab
 import models.fe.hvd.Hvd
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.responsiblepeople.ResponsiblePeople
@@ -35,7 +35,7 @@ import play.api.libs.json.Json
 case class SubscriptionView(
                              etmpFormBundleNumber: String,
                              businessMatchingSection: BusinessMatching,
-                             eabSection: Option[EstateAgentBusiness],
+                             eabSection: Option[Eab],
                              tradingPremisesSection: Option[Seq[TradingPremises]],
                              businessDetailsSection: BusinessDetails,
                              bankDetailsSection: Seq[BankDetails],

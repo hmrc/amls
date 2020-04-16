@@ -16,21 +16,55 @@
 
 package models.des.estateagentbusiness
 
-import models.fe.estateagentbusiness._
+import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
 class LettingAgentsSpec extends PlaySpec {
   "LettingAgents" must {
 
-    val services           = Services(Set(Residential, Commercial, Auction))
-    val redressSchemeOther = Other("test")
+    val services           = List("residential", "commercial", "auctioneering")
     val lettingAgentModel  = LettingAgents(Some(true))
     val lettingAgentModel2 = LettingAgents(Some(false))
 
-    val eab  = EstateAgentBusiness(Some(services),Some(redressSchemeOther), None, None, Some(ClientMoneyProtectionSchemeYes))
-    val eab1 = EstateAgentBusiness(Some(services),Some(RedressSchemedNo), None, None, Some(ClientMoneyProtectionSchemeNo))
-    val eab2 = EstateAgentBusiness(Some(services),None, None, None)
+    val eab = Eab(
+      EabData(
+        services,
+        None,
+        Some("propertyOmbudsman"),
+        Some(true),
+        true,
+        Some("PenaltyDetails"),
+        true,
+        Some("ProfBodyDetails")
+      )
+    )
+
+    val eab1 = Eab(
+      EabData(
+        services,
+        None,
+        Some("propertyOmbudsman"),
+        Some(false),
+        true,
+        Some("PenaltyDetails"),
+        true,
+        Some("ProfBodyDetails")
+      )
+    )
+
+    val eab2 = Eab(
+      EabData(
+        services,
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        true,
+        Some("PenaltyDetails"),
+        true,
+        Some("ProfBodyDetails")
+      )
+    )
 
     "serialise LettingAgents model true" in {
       LettingAgents.format.writes(lettingAgentModel) must be(Json.obj("clientMoneyProtection"->true))
@@ -41,12 +75,15 @@ class LettingAgentsSpec extends PlaySpec {
     }
 
     "successfully convert frontend eab to des LettingAgents model" in {
+
       LettingAgents.conv(Some(eab))  must be(Some(LettingAgents(Some(true))))
+
       LettingAgents.conv(Some(eab1)) must be(Some(LettingAgents(Some(false))))
+
       LettingAgents.conv(Some(eab2)) must be(None)
+
       LettingAgents.conv(None)       must be(None)
 
     }
   }
-
 }

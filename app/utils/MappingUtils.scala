@@ -56,4 +56,12 @@ object CommonMethods {
       case false => None
     }
   }
+
+  def getSpecificTypeWithOption[T](bSelected: Option[Boolean], bType: T) = {
+    bSelected match {
+      case Some(true) => Some(bType)
+      case Some(false) => None
+      case _ => None
+    }
+  }
 }
