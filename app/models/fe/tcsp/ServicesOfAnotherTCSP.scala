@@ -42,23 +42,23 @@ object ServicesOfAnotherTCSP {
   }
 
   def mlrExists(mlrRefNo: Option[String]) = {
-    !mlrRefNo.getOrElse("").isEmpty
+    mlrRefNo.getOrElse("").nonEmpty
   }
 
   def mlrNo(mlrRefNo: Option[String]) = {
     mlrRefNo.getOrElse("")
   }
 
-  def tcspServicesOffered(desView: models.des.SubscriptionView) = {
+  def tcspServicesOfferedIsDefined(desView: models.des.SubscriptionView) = {
     desView.businessActivities.tcspServicesOffered.isDefined
   }
 
-  def tcspServicesforRegOffBusinessAddrVirtualOff(desView: models.des.SubscriptionView) = {
+  def tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView: models.des.SubscriptionView) = {
     desView.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff.isDefined
   }
 
   def noneImpliesServicesOfAnotherTCSPNo(desView: models.des.SubscriptionView) = {
-    (tcspServicesOffered(desView) || tcspServicesforRegOffBusinessAddrVirtualOff(desView))
+    (tcspServicesOfferedIsDefined(desView) || tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView))
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
