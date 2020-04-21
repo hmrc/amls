@@ -16,9 +16,7 @@
 
 package models.fe.tcsp
 
-import models.des.tcsp.TcspAll
 import play.api.libs.json._
-import utils.CommonMethods
 
 sealed trait ServicesOfAnotherTCSP
 
@@ -43,16 +41,36 @@ object ServicesOfAnotherTCSP {
 
   }
 
+  def mlrExists(mlrRefNo: Option[String]) = {
+    mlrRefNo.getOrElse("").nonEmpty
+  }
+
+  def mlrNo(mlrRefNo: Option[String]) = {
+    mlrRefNo.getOrElse("")
+  }
+
+  def tcspServicesOfferedIsDefined(desView: models.des.SubscriptionView) = {
+    desView.businessActivities.tcspServicesOffered.isDefined
+  }
+
+  def tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView: models.des.SubscriptionView) = {
+    desView.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff.isDefined
+  }
+
+  def noneImpliesServicesOfAnotherTCSPNo(desView: models.des.SubscriptionView) = {
+    (tcspServicesOfferedIsDefined(desView) || tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView))
+  }
+
   implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
     desView.tcspAll match{
       case Some(tcsp) => tcsp.anotherTcspServiceProvider match {
-        case true => Some(ServicesOfAnotherTCSPYes(tcsp.tcspMlrRef.getOrElse("")))
-        case false => Some(ServicesOfAnotherTCSPNo)
+        case true if mlrExists(tcsp.tcspMlrRef) =>
+          Some(ServicesOfAnotherTCSPYes(mlrNo(tcsp.tcspMlrRef)))
+        case _ => Some(ServicesOfAnotherTCSPNo)
       }
-      case None if(desView.businessActivities.tcspServicesOffered.isDefined
-        || desView.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff.isDefined) =>  Some(ServicesOfAnotherTCSPNo)
+      case None if noneImpliesServicesOfAnotherTCSPNo(desView) =>
+        Some(ServicesOfAnotherTCSPNo)
       case _ => None
     }
-
   }
 }
