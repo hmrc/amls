@@ -17,7 +17,7 @@
 package models.fe.tcsp
 
 import models.des.{DesConstants, SubscriptionView}
-import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
+import models.des.tcsp.{TcspTrustCompFormationAgt}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
@@ -176,6 +176,18 @@ class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(true),
           Some(ServicesOfAnotherTCSPYes("111111111111111")))))
+  }
+
+  "converting the des subscription model must yield a frontend TCSP model where empty mlr number" in {
+    Tcsp.conv(DesConstants.SubscriptionViewModelNoTcspMLR) must
+      be(
+        Some(Tcsp(
+          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
+          Some(OnlyOffTheShelfCompsSoldYes),
+          Some(ComplexCorpStructureCreationYes),
+          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
+          Some(true),
+          Some(ServicesOfAnotherTCSPNo))))
   }
 
   "converting the des subscription where no tcsp must yield None" in {
