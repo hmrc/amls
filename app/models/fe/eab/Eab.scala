@@ -70,6 +70,8 @@ object Eab  {
         redressOption match {
           case "The Property Ombudsman Limited" => Some("propertyOmbudsman")
           case "Property Redress Scheme"        => Some("propertyRedressScheme")
+          case "Ombudsman Services"             => Some("ombudsmanServices")
+          case "Other"                          => Some("other")
           case _                                => None
         }
       }
