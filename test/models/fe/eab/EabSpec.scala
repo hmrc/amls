@@ -73,6 +73,14 @@ class EabSpec extends PlaySpec with MockitoSugar {
         }
       }
 
+      "when passed a subscription view with eabAll missing (null) for penalisedEstateAgentsAct" must {
+
+        "create an eab model with false and no detail" in {
+          Eab.conv(DesConstants.viewModelPenalisedNoEabAll) mustBe
+            EabSection.modelPenalisedpenalisedEstateAgentsActAndProfessionalBodyFalse
+        }
+      }
+
       "when passed a subscription view with penalisedEstateAgentsAct true" must {
 
         "create an eab model with true and some detail" in {
@@ -89,6 +97,15 @@ class EabSpec extends PlaySpec with MockitoSugar {
         }
       }
 
+      "when passed a subscription view with eabAll missing (null) for penalisedProfessionalBody" must {
+
+        "create an eab model with false and no detail" in {
+          Eab.conv(
+            DesConstants.viewModelPenalisedNoEabAll
+          ) mustBe EabSection.modelPenalisedpenalisedEstateAgentsActAndProfessionalBodyFalse
+        }
+      }
+
       "passed a subscription view with penalisedProfessionalBody true" must {
 
         "create an eab model with true and some detail" in {
@@ -99,10 +116,10 @@ class EabSpec extends PlaySpec with MockitoSugar {
       }
     }
 
-    "passed a subscription view with no EabAll" must {
+    "passed a subscription view with no Eab in MlrActivitiesAppliedFor" must {
 
       "return none" in {
-        Eab.conv(DesConstants.valViewModelNoEabSection) mustBe None
+        Eab.conv(DesConstants.SubscriptionViewModelNoEab) mustBe None
       }
     }
   }

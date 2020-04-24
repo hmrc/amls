@@ -211,7 +211,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoEab = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, false, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -2914,11 +2914,13 @@ object DesConstants {
     eabAll = Some(DesConstants.testEabAllPenalisedProfessionalBodyFalse)
   )
 
+  val viewModelPenalisedNoEabAll = viewModelRedress.copy(eabAll = None)
+
   val viewModelPenalisedProfessionalBodyTrue = viewModelRedress.copy(
     eabAll = Some(DesConstants.testEabAll)
   )
 
-  val valViewModelNoEabSection = viewModelNoRedress.copy(eabAll = None)
+  val valViewModelNoEabSection = testBusinessActivitiesNoEab
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"

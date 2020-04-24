@@ -265,6 +265,31 @@ object EabSection {
     )
   )
 
+  val modelPenalisedpenalisedEstateAgentsActAndProfessionalBodyFalse = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyOmbudsman"),
+        None,
+        penalisedEstateAgentsAct = false,
+        None,
+        penalisedProfessionalBody = false,
+        None
+      )
+    )
+  )
+
   val modelPenalisedProfessionalBodyTrue = Some(
     Eab(
       EabData(
