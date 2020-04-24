@@ -33,8 +33,21 @@ class EabSpec extends PlaySpec with MockitoSugar {
 
       "when passed a subscription view with residential" must {
 
-        "create an eab model with a redress scheme" in {
+        "create an eab model with a redress scheme The Property Ombudsman Limited" in {
           Eab.conv(DesConstants.viewModelRedress) mustBe EabSection.modelForView
+        }
+
+        "create an eab model with a redress scheme Ombudsman Services" in {
+          Eab.conv(DesConstants.viewModelRedressOmbudsmanServices) mustBe EabSection.modelForViewOmbusmanServices
+        }
+
+        "create an eab model with a redress scheme Property Redress Scheme" in {
+          Eab.conv(DesConstants.viewModelRedressPropertyRedressScheme) mustBe
+            EabSection.modelForViewPropertyRedressScheme
+        }
+
+        "create an eab model with a redress scheme Other" in {
+          Eab.conv(DesConstants.viewModelRedressOther) mustBe EabSection.modelForViewOther
         }
 
         "create an eab model with a redress scheme notRegistered where no EabResdEstAgncy" in {

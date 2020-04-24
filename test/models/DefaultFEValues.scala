@@ -330,6 +330,81 @@ object EabSection {
     )
   )
 
+  val modelForViewOmbusmanServices = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("ombudsmanServices"),
+        None,
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelForViewPropertyRedressScheme = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("propertyRedressScheme"),
+        None,
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
+  val modelForViewOther = Some(
+    Eab(
+      EabData(
+        List(
+          "assetManagement",
+          "auctioneering",
+          "businessTransfer",
+          "commercial",
+          "developmentCompany",
+          "landManagement",
+          "relocation",
+          "residential",
+          "socialHousingProvision"
+        ),
+        None,
+        Some("other"),
+        None,
+        true,
+        Some("EstAgncActProhibProvideDetails"),
+        true,
+        Some("PrevWarnWRegProvideDetails")
+      )
+    )
+  )
+
   val modelForViewNoEabResdEstAgncy = Some(
     Eab(
       EabData(

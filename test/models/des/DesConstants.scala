@@ -1409,6 +1409,10 @@ object DesConstants {
   val testLettingAgents = LettingAgents(Some(true))
 
   val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"))
+  val testEabResdEstAgncyOmbudsmanServices = EabResdEstAgncy(true, Some("Ombudsman Services"))
+  val testEabResdEstAgncyPropertyRedressScheme = EabResdEstAgncy(true, Some("Property Redress Scheme"))
+  val testEabResdEstAgncyOther = EabResdEstAgncy(true, Some("Other"))
+
   val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None)
 
   val responsiblePersons2 = ResponsiblePersons(
@@ -2869,6 +2873,20 @@ object DesConstants {
   val viewModelRedress = viewModelNoRedress.copy(
     businessActivities = DesConstants.testBusinessActivities,
     eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncy)
+  )
+
+  val viewModelRedressOmbudsmanServices = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyOmbudsmanServices)
+  )
+  val viewModelRedressPropertyRedressScheme = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyPropertyRedressScheme)
+  )
+
+  val viewModelRedressOther = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyOther)
   )
 
   val viewModelRedressNoEabResdEstAgncy = viewModelNoRedress.copy(
