@@ -17,7 +17,7 @@
 package models.fe.eab
 
 import models.des.SubscriptionView
-import models.des.businessactivities.{BusinessActivities, EabServices}
+import models.des.businessactivities.{BusinessActivities, EabServices, MlrActivitiesAppliedFor}
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import play.api.libs.json._
 import utils.CommonMethods
@@ -30,15 +30,15 @@ object Eab  {
 
   implicit def conv(view: SubscriptionView): Option[Eab] = {
 
-    view.eabAll match {
-      case Some(section) => eabSection(view.businessActivities, section, view.eabResdEstAgncy, view.lettingAgents)
-      case _             => None
+    hasEabSector(view) match {
+      case true => eabSection(view.businessActivities, view.eabAll, view.eabResdEstAgncy, view.lettingAgents)
+      case _    => None
     }
 
   }
 
   private implicit def eabSection(ba: BusinessActivities,
-                                  eabAll: EabAll,
+                                  eabAll: Option[EabAll],
                                   eabResdEA: Option[EabResdEstAgncy],
                                   la: Option[LettingAgents]) = {
 
@@ -57,10 +57,25 @@ object Eab  {
             case (None, true)        => Some(false)
             case _                   => None
           },
-          eabAll.estateAgencyActProhibition,
-          eabAll.estAgncActProhibProvideDetails,
-          eabAll.prevWarnedWRegToEstateAgencyActivities,
-          eabAll.prevWarnWRegProvideDetails)))
+          eabAll match {
+            case Some(all) => all.estateAgencyActProhibition
+            case _         => false
+          },
+          eabAll match {
+            case Some(all) => all.estAgncActProhibProvideDetails
+            case _         => None
+          },
+          eabAll match {
+            case Some(all) => all.prevWarnedWRegToEstateAgencyActivities
+            case _         => false
+          },
+          (eabAll) match {
+            case Some(all) => all.prevWarnWRegProvideDetails
+            case _         => None
+          }
+        )
+      )
+    )
   }
 
   private implicit def getRedressScheme(eab:EabResdEstAgncy): Option[String] = {
@@ -76,6 +91,13 @@ object Eab  {
         }
       }
       case false => Some("notRegistered")
+    }
+  }
+
+  private implicit def hasEabSector(response: SubscriptionView) = {
+    response.businessActivities.mlrActivitiesAppliedFor match {
+      case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _, _)) => true
+      case _ => false
     }
   }
 
