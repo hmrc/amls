@@ -335,7 +335,7 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
         val eabSection = mock[EabAll]
         val eabResdEstAgncy = mock[EabResdEstAgncy]
         val eabLettingAgents = mock[LettingAgents]
-        val fullEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true, whichRedressScheme = Some("foo"), None)
+        val fullEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true, whichRedressScheme = Some("foo"))
 
         "user does not have eab" when {
           val mlrActivities = mock[MlrActivitiesAppliedFor]

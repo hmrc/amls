@@ -172,11 +172,8 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
 
   private[services] def validateResult(request: AmendVariationRequest) = {
     // $COVERAGE-OFF$
-    val stream: InputStream = if(config.phase3Release2La) {
-      getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
-    } else {
-      getClass.getResourceAsStream("/resources/api6_schema_release_4.2.0.json")
-    }
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
+
     val lines = scala.io.Source.fromInputStream(stream).getLines
     val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 

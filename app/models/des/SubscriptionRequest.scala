@@ -71,7 +71,7 @@ object SubscriptionRequest {
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,
                                        conv: Incoming => BusinessActivities,
-                                       conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
+                                       conv2 : fe.eab.Eab => EabAll,
                                        prevRegMLR : fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
                                        vatABConv : fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv : fe.businessdetails.BusinessDetails => BusinessContactDetails,

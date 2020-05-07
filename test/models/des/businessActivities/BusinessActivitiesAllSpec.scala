@@ -21,7 +21,7 @@ import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
 import models.fe.SubscriptionRequest
 import models.fe.asp._
-import models.fe.estateagentbusiness.{Auction, BusinessTransfer, EstateAgentBusiness, Services}
+import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
@@ -88,7 +88,20 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
       val aspSection = Some(Asp(Some(aspServices), None))
 
-      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1999-11-11")))))
+      val eabModel = Some(
+        Eab(
+          EabData(
+            List("auctioneering", "businessTransfer"),
+            Some("1999-11-11"),
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
+      )
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
@@ -104,7 +117,20 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
     "successfully return earliest date comparing with hvd and eab change of dates" in {
 
-      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), Some("1900-11-11")))))
+      val eabModel = Some(
+        Eab(
+          EabData(
+            List("auctioneering", "businessTransfer"),
+            Some("1900-11-11"),
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
+      )
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
@@ -120,7 +146,20 @@ class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
 
     "successfully return None when there is no change of dates" in {
 
-      val eabModel = Some(EstateAgentBusiness(Some(Services(Set(Auction, BusinessTransfer), None))))
+      val eabModel = Some(
+        Eab(
+          EabData(
+            List("auctioneering", "businessTransfer"),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
+      )
 
       val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
         BusinessActivitiesSection.model, None, None, None, None, None, None, None)

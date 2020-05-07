@@ -51,11 +51,8 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
 
     // $COVERAGE-OFF$
 
-    val stream: InputStream = if(config.phase3Release2La) {
-      getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
-    } else {
-      getClass.getResourceAsStream("/resources/api4_schema_release_4.1.0.json")
-    }
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
+
     val lines = scala.io.Source.fromInputStream(stream).getLines
     val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 

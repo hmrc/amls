@@ -154,13 +154,16 @@ object DesConstants {
     Some(AspServicesOffered(true, true, true, true, true)),
     Some(TcspServicesOffered(true, true, true, true, true)),
     Some(ServicesforRegOff(true, true, true, true, false, false, true, true, Some("SpecifyOther"))),
-    Some(EabServices(true, true, true, true, true, true, true, true, true)),
+    Some(EabServices(true, true, true, true, true, true, true, true, true, Some(false))),
     Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
     Some(testBusinessActivitiesAll)
   )
 
   val testBusinessActivitiesLA = testBusinessActivities.copy(eabServicesCarriedOut =
     Some(EabServices(true, true, true, true, true, true, true, true, true, Some(true))))
+
+  val testBusinessActivitiesNoRedress = testBusinessActivities.copy(eabServicesCarriedOut =
+    Some(EabServices(false, true, true, true, true, true, true, true, true, Some(false))))
 
   val testBusinessActivitiesNoAlcoholOrTobacco = testBusinessActivities.copy(hvdGoodsSold = Some(testHvdGoodsSoldNoAlcoholOrTobacco))
 
@@ -208,7 +211,7 @@ object DesConstants {
   )
 
   val testBusinessActivitiesNoEab = BusinessActivities(
-    Some(MlrActivitiesAppliedFor(true, true, true, false, true, true, true, true)),
+    Some(MlrActivitiesAppliedFor(true, true, true, false, false, true, true, true)),
     Some(MsbServicesCarriedOut(true, true, true, true, true)),
     Some(testHvdGoodsSold),
     Some(HvdAlcoholTobacco(true)),
@@ -1397,13 +1400,21 @@ object DesConstants {
   val testEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), true, Some("PrevWarnWRegProvideDetails"))
   val testAmendEabAll = EabAll(true, Some("EstAgncActProhibProvideDetails"), false, None)
 
+  val testEabAllPenalisedEstateAgentsFalse = EabAll(false, None, true, Some("PrevWarnWRegProvideDetails"))
+  val testEabAllPenalisedProfessionalBodyFalse = EabAll(true, Some("EstAgncActProhibProvideDetails"), false, None)
+
   val testAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60)
   val testAmendAmp = Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), false, 60)
 
   val testLettingAgents = LettingAgents(Some(true))
 
-  val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None)
-  val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None, None)
+  val testEabResdEstAgncy = EabResdEstAgncy(true, Some("The Property Ombudsman Limited"))
+  val testEabResdEstAgncyOmbudsmanServices = EabResdEstAgncy(true, Some("Ombudsman Services"))
+  val testEabResdEstAgncyPropertyRedressScheme = EabResdEstAgncy(true, Some("Property Redress Scheme"))
+  val testEabResdEstAgncyOther = EabResdEstAgncy(true, Some("Other"))
+
+  val testAmendEabResdEstAgncy = EabResdEstAgncy(false, None)
+
   val responsiblePersons2 = ResponsiblePersons(
     Some(NameDetails(
       PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbb"), Some("bbbbbbbbbbb")),
@@ -2834,6 +2845,82 @@ object DesConstants {
     None,
     DesConstants.extraFields
   )
+
+  val viewModelNoRedress = SubscriptionView(
+    etmpFormBundleNumber = "111111",
+    DesConstants.testBusinessDetails,
+    DesConstants.testViewBusinessContactDetails,
+    DesConstants.testBusinessReferencesAll,
+    Some(DesConstants.testbusinessReferencesAllButSp),
+    Some(DesConstants.testBusinessReferencesCbUbLlp),
+    businessActivities = DesConstants.testBusinessActivitiesNoRedress,
+    tradingPremises = DesConstants.testTradingPremisesAPI5,
+    bankAccountDetails = DesConstants.testBankDetails,
+    msb = Some(DesConstants.testMsb),
+    hvd = Some(DesConstants.testHvd),
+    asp = Some(DesConstants.testAsp),
+    aspOrTcsp = Some(DesConstants.testAspOrTcsp),
+    tcspAll = Some(DesConstants.testTcspAll),
+    tcspTrustCompFormationAgt = Some(DesConstants.testTcspTrustCompFormationAgt),
+    eabAll = Some(DesConstants.testEabAll),
+    eabResdEstAgncy = None,
+    responsiblePersons = Some(DesConstants.testResponsiblePersons),
+    amp = Some(DesConstants.testAmp),
+    lettingAgents = None,
+    extraFields = DesConstants.extraFields
+  )
+
+  val viewModelRedress = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncy)
+  )
+
+  val viewModelRedressOmbudsmanServices = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyOmbudsmanServices)
+  )
+  val viewModelRedressPropertyRedressScheme = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyPropertyRedressScheme)
+  )
+
+  val viewModelRedressOther = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncyOther)
+  )
+
+  val viewModelRedressNoEabResdEstAgncy = viewModelNoRedress.copy(
+    businessActivities = DesConstants.testBusinessActivities,
+    eabResdEstAgncy = None
+  )
+
+  val viewModelLettings = viewModelRedress.copy(
+    businessActivities = DesConstants.testBusinessActivitiesLA, lettingAgents = Some(DesConstants.testLettingAgents)
+  )
+
+  val viewModelLettingsNoLettingAgents = viewModelRedress.copy(
+    businessActivities = DesConstants.testBusinessActivitiesLA, lettingAgents = None
+  )
+
+  val viewModelPenalisedEstateAgentsFalse = viewModelRedress.copy(
+    eabAll = Some(DesConstants.testEabAllPenalisedEstateAgentsFalse)
+  )
+
+  val viewModelPenalisedEstateAgentsTrue = viewModelRedress.copy(
+    eabAll = Some(DesConstants.testEabAll)
+  )
+
+  val viewModelPenalisedProfessionalBodyFalse = viewModelRedress.copy(
+    eabAll = Some(DesConstants.testEabAllPenalisedProfessionalBodyFalse)
+  )
+
+  val viewModelPenalisedNoEabAll = viewModelRedress.copy(eabAll = None)
+
+  val viewModelPenalisedProfessionalBodyTrue = viewModelRedress.copy(
+    eabAll = Some(DesConstants.testEabAll)
+  )
+
+  val valViewModelNoEabSection = testBusinessActivitiesNoEab
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"

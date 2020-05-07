@@ -16,33 +16,28 @@
 
 package models.des.estateagentbusiness
 
-import models.fe.estateagentbusiness.EstateAgentBusiness
-import models.fe.estateagentbusiness._
-
+import models.fe.eab.Eab
 import play.api.libs.json.Json
 
 case class EabResdEstAgncy(regWithRedressScheme:Boolean,
-  whichRedressScheme:Option[String],
-  specifyOther: Option[String]
-)
+                           whichRedressScheme:Option[String]
+                          )
 
 object EabResdEstAgncy {
   implicit val format = Json.format[EabResdEstAgncy]
 
-  implicit def convert(eabOpt: Option[EstateAgentBusiness]): Option[EabResdEstAgncy] = {
+  implicit def conv(eabOpt: Option[Eab]): Option[EabResdEstAgncy] = {
     eabOpt match {
       case Some(eab) => eab
       case _ => None
     }
   }
 
-  implicit def convert(eab: EstateAgentBusiness): Option[EabResdEstAgncy] = {
-    eab.redressScheme match {
-      case Some(Other(x)) => Some(EabResdEstAgncy(true, Some("Other"), Some(x)))
-      case Some(ThePropertyOmbudsman) => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited"), None))
-      case Some(OmbudsmanServices) => Some(EabResdEstAgncy(true, Some("Ombudsman Services"), None))
-      case Some(PropertyRedressScheme) => Some(EabResdEstAgncy(true, Some("Property Redress Scheme"), None))
-      case Some(RedressSchemedNo) => Some(EabResdEstAgncy(false, None, None))
+  implicit def convert(eab: Eab): Option[EabResdEstAgncy] = {
+    eab.data.redressScheme match {
+      case Some("propertyOmbudsman")     => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited")))
+      case Some("propertyRedressScheme") => Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
+      case Some("notRegistered")         => Some(EabResdEstAgncy(false, None))
       case _ => None
     }
   }

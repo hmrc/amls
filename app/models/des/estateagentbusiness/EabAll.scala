@@ -16,43 +16,37 @@
 
 package models.des.estateagentbusiness
 
-import models.fe.estateagentbusiness._
+import models.fe.eab.Eab
 import play.api.libs.json.Json
 
 case class EabAll(
-  estateAgencyActProhibition : Boolean,
-  estAgncActProhibProvideDetails : Option[String],
-  prevWarnedWRegToEstateAgencyActivities : Boolean,
-  prevWarnWRegProvideDetails : Option[String]
-)
+                   estateAgencyActProhibition : Boolean,
+                   estAgncActProhibProvideDetails : Option[String],
+                   prevWarnedWRegToEstateAgencyActivities : Boolean,
+                   prevWarnWRegProvideDetails : Option[String]
+                 )
 
 
 object EabAll {
   implicit val format = Json.format[EabAll]
 
-  implicit def convert(eab: EstateAgentBusiness): EabAll = {
-    val (penalised, penalisedDesc) = convPenalisedUnderEstateAgentsAct(eab.penalisedUnderEstateAgentsAct)
-    val (professionalBody, professionalBodyDesc) = convProfessionalBody(eab.professionalBody )
+  implicit def convert(eab: Eab): EabAll = {
+
+    val (penalised, penalisedDesc) = convData(
+      eab.data.penalisedEstateAgentsAct, eab.data.penalisedEstateAgentsActDetail
+    )
+
+    val (professionalBody, professionalBodyDesc) = convData(
+      eab.data.penalisedProfessionalBody, eab.data.penalisedProfessionalBodyDetail
+    )
 
     EabAll(penalised, penalisedDesc, professionalBody, professionalBodyDesc)
   }
 
-  def convPenalisedUnderEstateAgentsAct(penalised: Option[PenalisedUnderEstateAgentsAct]) : (Boolean, Option[String]) = {
-    penalised match {
-      case Some(data) => data match {
-        case PenalisedUnderEstateAgentsActYes(desc) => (true, Some(desc))
-        case PenalisedUnderEstateAgentsActNo => (false, None)
-      }
-      case _ => (false, None)
-    }
-  }
-
-  def convProfessionalBody(penalised: Option[ProfessionalBody]) : (Boolean, Option[String]) = {
-    penalised match {
-      case Some(data) => data match {
-        case ProfessionalBodyYes(desc) => (true, Some(desc))
-        case ProfessionalBodyNo => (false, None)
-      }
+  def convData(flagged: Boolean, detail: Option[String]): (Boolean, Option[String]) = {
+    flagged match {
+      case true => (true, detail)
+      case false => (false, None)
       case _ => (false, None)
     }
   }
