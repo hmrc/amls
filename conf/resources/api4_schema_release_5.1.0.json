@@ -1,145 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Digital to ETMP Update Subscription Request AMLS(04AY)",
-  "description": "Digital to ETMP Update Subscription Request AMLS (04AY) - v4.0",
+  "title": "Digital to ETMP Create Subscription Request AMLS(04AY)",
+  "description": "Digital to ETMP Create Subscription Request AMLS (04AY) - v5.1.0",
   "type": "object",
   "properties": {
     "acknowledgementReference": {
       "type": "string",
       "pattern": "^\\S{32}$"
-    },
-    "changeIndicators": {
-      "type": "object",
-      "properties": {
-        "businessDetails": {
-          "type": "boolean"
-        },
-        "businessAddress": {
-          "type": "boolean"
-        },
-        "businessReferences": {
-          "type": "boolean"
-        },
-        "tradingPremises": {
-          "type": "boolean"
-        },
-        "businessActivities": {
-          "type": "boolean"
-        },
-        "bankAccountDetails": {
-          "type": "boolean"
-        },
-        "msb": {
-          "type": "object",
-          "properties": {
-            "msb": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "msb"
-          ],
-          "additionalProperties": false
-        },
-        "hvd": {
-          "type": "object",
-          "properties": {
-            "hvd": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "hvd"
-          ],
-          "additionalProperties": false
-        },
-        "asp": {
-          "type": "object",
-          "properties": {
-            "asp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "asp"
-          ],
-          "additionalProperties": false
-        },
-        "aspOrTcsp": {
-          "type": "object",
-          "properties": {
-            "aspOrTcsp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "aspOrTcsp"
-          ],
-          "additionalProperties": false
-        },
-        "tcsp": {
-          "type": "object",
-          "properties": {
-            "tcsp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "tcsp"
-          ],
-          "additionalProperties": false
-        },
-        "eab": {
-          "type": "object",
-          "properties": {
-            "eab": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "eab"
-          ],
-          "additionalProperties": false
-        },
-        "amp": {
-          "type": "object",
-          "properties": {
-            "amp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "amp"
-          ],
-          "additionalProperties": false
-        },
-        "responsiblePersons": {
-          "type": "boolean"
-        },
-        "filingIndividual": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "businessDetails",
-        "businessAddress",
-        "businessReferences",
-        "tradingPremises",
-        "businessActivities",
-        "bankAccountDetails",
-        "responsiblePersons",
-        "filingIndividual"
-      ],
-      "additionalProperties": false
-    },
-    "amlsMessageType": {
-      "type": "string",
-      "enum": [
-        "Amendment",
-        "Variation",
-        "Renewal",
-        "Renewal Amendment"
-      ]
     },
     "businessDetails": {
       "type": "object",
@@ -185,15 +52,6 @@
             }
           },
           "additionalProperties": false
-        },
-        "corpUnincorpAndLLP": {
-          "type": "object",
-          "properties": {
-            "businessNameChangeDate": {
-              "$ref": "#/definitions/dateString"
-            }
-          },
-          "additionalProperties": false
         }
       },
       "required": [
@@ -205,11 +63,10 @@
       "type": "object",
       "properties": {
         "businessAddress": {
-          "$ref": "#/definitions/addressWithChangeDate"
+          "$ref": "#/definitions/address"
         },
         "altCorrespondenceAddress": {
-          "type": "boolean",
-          "description": "Do you want to provide an alternative address for correspondence?"
+          "type": "boolean"
         },
         "alternativeAddress": {
           "type": "object",
@@ -236,9 +93,9 @@
         },
         "businessEmail": {
           "type": "string",
-          "format": "email",
           "minLength": 3,
-          "maxLength": 100
+          "maxLength": 100,
+          "format": "email"
         },
         "businessWebAddr": {
           "type": "string",
@@ -258,7 +115,7 @@
         "amlsRegistered": {
           "type": "boolean"
         },
-        "mlrRegNumber": {
+        "mlrRegNumber8Long": {
           "type": "string",
           "pattern": "^[A-Za-z0-9]{1,8}$"
         },
@@ -313,7 +170,6 @@
       "properties": {
         "mlrActivitiesAppliedFor": {
           "type": "object",
-          "description": "What MLR activities are you applying for?",
           "properties": {
             "msb": {
               "type": "boolean"
@@ -357,7 +213,6 @@
         },
         "hvdGoodsSold": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  HVD as true.",
           "properties": {
             "alcohol": {
               "type": "boolean"
@@ -401,7 +256,6 @@
             },
             "howGoodsAreSold": {
               "type": "object",
-              "description": "How are these good to be sold?",
               "properties": {
                 "retail": {
                   "type": "boolean"
@@ -439,7 +293,6 @@
         },
         "hvdAlcoholTobacco": {
           "type": "object",
-          "description": "Only applicable if HVDGoodsSold has either Alcohol or Tobacco as true.",
           "properties": {
             "dutySuspExAtGoods": {
               "type": "boolean"
@@ -452,7 +305,6 @@
         },
         "aspServicesOffered": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  ASP as true.",
           "properties": {
             "accountant": {
               "type": "boolean"
@@ -481,7 +333,6 @@
         },
         "tcspServicesOffered": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  TCSP as true.",
           "properties": {
             "nomineeShareholders": {
               "type": "boolean"
@@ -490,16 +341,13 @@
               "type": "boolean"
             },
             "regOffBusinessAddrVirtualOff": {
-              "type": "boolean",
-              "description": "Registered office/business address/virtual office services"
+              "type": "boolean"
             },
             "compDirSecPartnerProvider": {
-              "type": "boolean",
-              "description": "Company director/secretary/partner provider"
+              "type": "boolean"
             },
             "trustOrCompFormAgent": {
-              "type": "boolean",
-              "description": "Trust or company formation agent"
+              "type": "boolean"
             }
           },
           "required": [
@@ -513,7 +361,6 @@
         },
         "tcspServicesforRegOffBusinessAddrVirtualOff": {
           "type": "object",
-          "description": "Only applicable if TCSPServicesOffered has RegOffBusinessAddrVirtualOff as true.",
           "properties": {
             "callHandling": {
               "type": "boolean"
@@ -558,7 +405,6 @@
         },
         "eabServicesCarriedOut": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  EAB as true.",
           "properties": {
             "residentialEstateAgency": {
               "type": "boolean"
@@ -586,6 +432,9 @@
             },
             "socialHousingProvider": {
               "type": "boolean"
+            },
+            "lettingAgents": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -597,7 +446,8 @@
             "assetManagementCompany",
             "landManagementAgent",
             "developmentCompany",
-            "socialHousingProvider"
+            "socialHousingProvider",
+            "lettingAgents"
           ],
           "additionalProperties": false
         },
@@ -668,14 +518,8 @@
         "all": {
           "type": "object",
           "properties": {
-            "busActivitiesChangeDate": {
-              "$ref": "#/definitions/dateString"
-            },
             "activitiesCommenceDate": {
               "$ref": "#/definitions/dateString"
-            },
-            "dateChangeFlag": {
-              "type": "boolean"
             },
             "businessActivityDetails": {
               "oneOf": [
@@ -684,14 +528,12 @@
                   "properties": {
                     "actvtsBusRegForOnlyActvtsCarOut": {
                       "type": "boolean",
-                      "description": "Are the activities the business is registering for, the only activities carried out by the business?",
                       "enum": [
                         true
                       ]
                     },
                     "respActvtsBusRegForOnlyActvtsCarOut": {
                       "type": "object",
-                      "description": "Only applicable if ActvtsBusRegForOnlyActvtsCarOut is true",
                       "properties": {
                         "mlrActivityTurnover": {
                           "$ref": "#/definitions/turnOverType"
@@ -719,7 +561,6 @@
                       "properties": {
                         "otherBusActivitiesCarriedOut": {
                           "type": "object",
-                          "description": "Only applicable if ActvtsBusRegForOnlyActvtsCarOut is false",
                           "properties": {
                             "otherBusinessActivities": {
                               "type": "string",
@@ -753,11 +594,11 @@
                 },
                 "franchiserName": {
                   "type": "array",
-                  "minItems": 0,
                   "items": {
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
-                  }
+                  },
+                  "additionalItems": false
                 }
               },
               "required": [
@@ -767,28 +608,24 @@
             },
             "noOfEmployees": {
               "type": "string",
-              "description": "How many people are employed in this business?",
               "pattern": "^\\d{0,11}$"
             },
             "noOfEmployeesForMlr": {
               "type": "string",
-              "description": "How many people in the business are/will be directly involved in the MLR activities?",
               "pattern": "^\\d{0,11}$"
             },
             "nonUkResidentCustDetails": {
               "type": "object",
-              "description": "Do you anticipate having customers not resident in the UK?",
               "properties": {
                 "nonUkResidentCustomers": {
-                  "type": "boolean",
-                  "description": "Do you anticipate having customers not resident in the UK?"
+                  "type": "boolean"
                 },
                 "whichCountries": {
                   "type": "array",
-                  "minItems": 0,
                   "items": {
                     "$ref": "#/definitions/countryCodes"
-                  }
+                  },
+                  "additionalItems": false
                 }
               },
               "required": [
@@ -803,7 +640,6 @@
                   "properties": {
                     "detailedRecordsKept": {
                       "type": "string",
-                      "description": "Do you keep detailed and auditable records of all of your transactions?",
                       "enum": [
                         "No"
                       ]
@@ -816,7 +652,6 @@
                   "properties": {
                     "detailedRecordsKept": {
                       "type": "string",
-                      "description": "Do you keep detailed and auditable records of all of your transactions?",
                       "enum": [
                         "Yes",
                         "Some"
@@ -824,7 +659,6 @@
                     },
                     "transactionRecordingMethod": {
                       "type": "object",
-                      "description": "Only applicable if DetailedRecordsKept is Yes or Some",
                       "properties": {
                         "manual": {
                           "type": "boolean"
@@ -853,29 +687,24 @@
               ]
             },
             "suspiciousActivityGuidance": {
-              "type": "boolean",
-              "description": "Do you have written guidance on how to identify and report suspicious activity?"
+              "type": "boolean"
             },
             "nationalCrimeAgencyRegistered": {
-              "type": "boolean",
-              "description": "Have you registered with the National Crime Agency to report suspicious activity online?"
+              "type": "boolean"
             },
             "formalRiskAssessmentDetails": {
               "oneOf": [
                 {
                   "type": "object",
-                  "description": "Do you have a formal Risk Assessment and Policies/Procedures?",
                   "properties": {
                     "formalRiskAssessment": {
                       "type": "boolean",
-                      "description": "Do you have a formal Risk Assessment and Policies/Procedures?",
                       "enum": [
                         true
                       ]
                     },
                     "riskAssessmentFormat": {
                       "type": "object",
-                      "description": "Only applicable if FormalRiskAssessment is true",
                       "properties": {
                         "electronicFormat": {
                           "type": "boolean"
@@ -898,11 +727,9 @@
                 },
                 {
                   "type": "object",
-                  "description": "Do you have a formal Risk Assessment and Policies/Procedures?",
                   "properties": {
                     "formalRiskAssessment": {
                       "type": "boolean",
-                      "description": "Do you have a formal Risk Assessment and Policies/Procedures?",
                       "enum": [
                         false
                       ]
@@ -917,7 +744,6 @@
             },
             "mlrAdvisor": {
               "type": "object",
-              "description": "Not required for ASP",
               "properties": {
                 "doYouHaveMlrAdvisor": {
                   "type": "boolean"
@@ -946,14 +772,12 @@
                         },
                         "agentDealsWithHmrc": {
                           "type": "boolean",
-                          "description": "Do they also deal with any of your tax related matters with HMRC?",
                           "enum": [
                             true
                           ]
                         },
                         "hmrcAgentRefNo": {
                           "type": "string",
-                          "description": "Only applicable if AgentDealsWithHMRC is true",
                           "pattern": "^[A-Za-z0-9]{1,11}$"
                         }
                       },
@@ -984,7 +808,6 @@
                         },
                         "agentDealsWithHmrc": {
                           "type": "boolean",
-                          "description": "Do they also deal with any of your tax related matters with HMRC?",
                           "enum": [
                             false
                           ]
@@ -1005,22 +828,21 @@
             }
           },
           "required": [
-            "dateChangeFlag",
-            "businessActivityDetails",
-            "franchiseDetails",
             "nonUkResidentCustDetails",
             "suspiciousActivityGuidance",
             "nationalCrimeAgencyRegistered",
-            "formalRiskAssessmentDetails"
+            "businessActivityDetails",
+            "formalRiskAssessmentDetails",
+            "franchiseDetails"
           ],
           "additionalProperties": false
         }
       },
+      "additionalProperties": false,
       "required": [
         "mlrActivitiesAppliedFor",
         "all"
-      ],
-      "additionalProperties": false
+      ]
     },
     "tradingPremises": {
       "type": "object",
@@ -1033,10 +855,10 @@
             },
             "ownBusinessPremisesDetails": {
               "type": "array",
-              "minItems": 0,
               "items": {
-                "$ref": "#/definitions/businessPremiseDetails"
-              }
+                "$ref": "#/definitions/premiseDetails"
+              },
+              "additionalItems": false
             }
           },
           "required": [
@@ -1048,20 +870,13 @@
           "type": "object",
           "properties": {
             "agentBusinessPremises": {
-              "type": "boolean",
-              "description": "Are there other businesses premises, where you have a contractual agreement for them to act as your agent and offer your services?"
+              "type": "boolean"
             },
             "agentDetails": {
               "type": "array",
-              "minItems": 0,
               "items": {
                 "type": "object",
                 "properties": {
-                  "lineId": {
-                    "type": "string",
-                    "maxLength": 6,
-                    "pattern": "^[0-9]{6}$"
-                  },
                   "agentLegalEntity": {
                     "type": "string",
                     "enum": [
@@ -1074,7 +889,6 @@
                   },
                   "companyRegNo": {
                     "type": "string",
-                    "description": "companyRegNo (for Limited Companies, Limited P'ships, Limited Liability P'ships only)",
                     "pattern": "^[A-Z0-9]{8}$"
                   },
                   "dateOfBirth": {
@@ -1084,51 +898,13 @@
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
                   },
-                  "agentDetailsChgDate": {
-                    "$ref": "#/definitions/dateString"
-                  },
                   "agentPremises": {
-                    "$ref": "#/definitions/agentPremiseDetails"
-                  },
-                  "startDate": {
-                    "$ref": "#/definitions/extendedDateString"
-                  },
-                  "dateChangeFlag": {
-                    "type": "boolean"
-                  },
-                  "endDate": {
-                    "$ref": "#/definitions/dateString"
-                  },
-                  "removalReason": {
-                    "type": "string",
-                    "enum": [
-                      "Serious compliance failures",
-                      "Minor compliance failures",
-                      "Lack of activity",
-                      "Agent ceased trading",
-                      "Requested by agent",
-                      "Other"
-                    ]
-                  },
-                  "removalReasonOther": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                  },
-                  "status": {
-                    "type": "string",
-                    "enum": [
-                      "Added",
-                      "Updated",
-                      "Deleted",
-                      "Unchanged"
-                    ]
+                    "$ref": "#/definitions/premiseDetails"
                   }
                 },
-                "required": [
-                  "dateChangeFlag"
-                ],
                 "additionalProperties": false
-              }
+              },
+              "additionalItems": false
             }
           },
           "required": [
@@ -1138,8 +914,8 @@
         }
       },
       "required": [
-        "ownBusinessPremises",
-        "agentBusinessPremises"
+        "agentBusinessPremises",
+        "ownBusinessPremises"
       ],
       "additionalProperties": false
     },
@@ -1152,7 +928,6 @@
         },
         "bankAccounts": {
           "type": "array",
-          "minItems": 0,
           "items": {
             "oneOf": [
               {
@@ -1181,15 +956,14 @@
                     "properties": {
                       "ukAccount": {
                         "type": "object",
-                        "description": "Only applicable if DoYouHaveUKAccount is true",
                         "properties": {
                           "sortCode": {
                             "type": "string",
-                            "pattern": "^[0-9]{6}$"
+                            "pattern": "^\\d{6}$"
                           },
                           "accountNumber": {
                             "type": "string",
-                            "pattern": "^[0-9]{8}$"
+                            "pattern": "^\\d{8}$"
                           }
                         },
                         "additionalProperties": false
@@ -1231,11 +1005,9 @@
                         "oneOf": [
                           {
                             "type": "object",
-                            "description": "Only applicable if DoYouHaveUKAccount is false",
                             "properties": {
                               "accountHasIban": {
                                 "type": "boolean",
-                                "description": "Does the account have an IBAN Number?",
                                 "enum": [
                                   true
                                 ]
@@ -1245,8 +1017,6 @@
                                 "properties": {
                                   "iban": {
                                     "type": "string",
-                                    "description": "Only applicable if AccountHasIBAN is true",
-                                    "maxLength": 34,
                                     "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,34}$"
                                   }
                                 },
@@ -1257,11 +1027,9 @@
                           },
                           {
                             "type": "object",
-                            "description": "Only applicable if DoYouHaveUKAccount is false",
                             "properties": {
                               "accountHasIban": {
                                 "type": "boolean",
-                                "description": "Does the account have an IBAN Number?",
                                 "enum": [
                                   false
                                 ]
@@ -1271,7 +1039,6 @@
                                 "properties": {
                                   "bankAccountNumber": {
                                     "type": "string",
-                                    "description": "Only applicable if AccountHasIBAN is false",
                                     "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,40}$"
                                   }
                                 },
@@ -1289,7 +1056,8 @@
                 "additionalProperties": false
               }
             ]
-          }
+          },
+          "additionalItems": false
         }
       },
       "additionalProperties": false
@@ -1307,28 +1075,25 @@
                 },
                 "otherCntryBranchesOrAgents": {
                   "type": "boolean",
-                  "description": "Do you have branches or agents in other countries?",
                   "enum": [
                     true
                   ]
                 },
                 "countriesList": {
                   "type": "object",
-                  "description": "Only applicable if OtherCntryBranchesOrAgents is true",
                   "properties": {
                     "listOfCountries": {
                       "type": "array",
-                      "minItems": 0,
                       "items": {
                         "$ref": "#/definitions/countryCodes"
-                      }
+                      },
+                      "additionalItems": false
                     }
                   },
                   "additionalProperties": false
                 },
                 "sysLinkedTransIdentification": {
-                  "type": "boolean",
-                  "description": "Can your systems identify linked transactions?"
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1345,14 +1110,12 @@
                 },
                 "otherCntryBranchesOrAgents": {
                   "type": "boolean",
-                  "description": "Do you have branches or agents in other countries?",
                   "enum": [
                     false
                   ]
                 },
                 "sysLinkedTransIdentification": {
-                  "type": "boolean",
-                  "description": "Can your systems identify linked transactions?"
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1367,26 +1130,20 @@
           "type": "object",
           "properties": {
             "applyForFcapsrRegNo": {
-              "type": "boolean",
-              "description": "Have you applied for an FCA PSR registration number?"
+              "type": "boolean"
             },
             "fcapsrRefNo": {
               "type": "string",
               "pattern": "^[0-9a-zA-Z \u2010\u002d]{1,6}$"
             },
-            "psrRefChangeFlag": {
-              "type": "boolean"
-            },
             "ipspServicesDetails": {
               "type": "object",
               "properties": {
                 "ipspServicesUsed": {
-                  "type": "boolean",
-                  "description": "Do you use the services of an Intermediary Payment Service Provider (IPSP)?"
+                  "type": "boolean"
                 },
                 "ipspDetails": {
                   "type": "array",
-                  "minItems": 0,
                   "items": {
                     "type": "object",
                     "properties": {
@@ -1400,7 +1157,8 @@
                       }
                     },
                     "additionalProperties": false
-                  }
+                  },
+                  "additionalItems": false
                 }
               },
               "required": [
@@ -1409,38 +1167,34 @@
               "additionalProperties": false
             },
             "informalFundsTransferSystem": {
-              "type": "boolean",
-              "description": "Do you operate an informal funds transfer system, such as acting as a hawaladar, where the money transfer transactions occur without the need for actual money movement"
+              "type": "boolean"
             },
             "noOfMoneyTrnsfrTransNxt12Mnths": {
               "type": "string",
-              "description": "What is the anticipated number of Money Transfer transactions for the next 12 months?",
               "pattern": "^\\d{0,11}$"
             },
             "countriesLrgstMoneyAmtSentTo": {
               "type": "object",
-              "description": "Top 3 countries you anticipate sending the largest amount of money to?",
               "properties": {
                 "listOfCountries": {
                   "type": "array",
-                  "minItems": 0,
                   "items": {
                     "$ref": "#/definitions/countryCodes"
-                  }
+                  },
+                  "additionalItems": false
                 }
               },
               "additionalProperties": false
             },
             "countriesLrgstTranscsSentTo": {
               "type": "object",
-              "description": "Top 3 countries you anticipate sending the largest number of transactions to?",
               "properties": {
                 "listOfCountries": {
                   "type": "array",
-                  "minItems": 0,
                   "items": {
                     "$ref": "#/definitions/countryCodes"
-                  }
+                  },
+                  "additionalItems": false
                 }
               },
               "additionalProperties": false
@@ -1448,108 +1202,141 @@
           },
           "required": [
             "applyForFcapsrRegNo",
-            "psrRefChangeFlag",
             "ipspServicesDetails",
             "informalFundsTransferSystem"
           ],
           "additionalProperties": false
         },
         "msbCeDetails": {
-          "type": "object",
-          "properties": {
-            "dealInPhysCurrencies": {
-              "type": "boolean",
-              "description": "Do you deal in physical foreign currencies."
-            },
-            "currencySources": {
+          "oneOf": [
+            {
               "type": "object",
               "properties": {
-                "bankDetails": {
-                  "type": "object",
-                  "properties": {
-                    "banks": {
-                      "type": "boolean",
-                      "description": "Do you get your money from banks"
-                    },
-                    "bankNames": {
-                      "type": "array",
-                      "minItems": 0,
-                      "items": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
-                      }
-                    }
-                  },
-                  "required": [
-                    "banks"
-                  ],
-                  "additionalProperties": false
-                },
-                "currencyWholesalerDetails": {
-                  "type": "object",
-                  "properties": {
-                    "currencyWholesalers": {
-                      "type": "boolean",
-                      "description": "Do you get your money from Currency Wholesalers"
-                    },
-                    "currencyWholesalersNames": {
-                      "type": "array",
-                      "minItems": 0,
-                      "items": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
-                      }
-                    }
-                  },
-                  "required": [
-                    "currencyWholesalers"
-                  ],
-                  "additionalProperties": false
-                },
-                "reSellCurrTakenIn": {
+                "dealInPhysCurrencies": {
                   "type": "boolean",
-                  "description": "Do you re-sell currency taken in"
+                  "enum": [
+                    true
+                  ]
+                },
+                "currencySources": {
+                  "type": "object",
+                  "properties": {
+                    "bankDetails": {
+                      "type": "object",
+                      "properties": {
+                        "banks": {
+                          "type": "boolean"
+                        },
+                        "bankNames": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                          },
+                          "additionalItems": false
+                        }
+                      },
+                      "required": [
+                        "banks"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "currencyWholesalerDetails": {
+                      "type": "object",
+                      "properties": {
+                        "currencyWholesalers": {
+                          "type": "boolean"
+                        },
+                        "currencyWholesalersNames": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,140}$"
+                          },
+                          "additionalItems": false
+                        }
+                      },
+                      "required": [
+                        "currencyWholesalers"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "reSellCurrTakenIn": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "reSellCurrTakenIn",
+                    "bankDetails",
+                    "currencyWholesalerDetails"
+                  ],
+                  "additionalProperties": false
+                },
+                "antNoOfTransNxt12Mnths": {
+                  "type": "string",
+                  "pattern": "^[0-9]{0,11}$"
+                },
+                "currSupplyToCust": {
+                  "type": "object",
+                  "properties": {
+                    "currency": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{1,3}$"
+                      },
+                      "additionalItems": false
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
               "required": [
-                "bankDetails",
-                "currencyWholesalerDetails",
-                "reSellCurrTakenIn"
+                "dealInPhysCurrencies",
+                "currencySources"
               ],
               "additionalProperties": false
             },
-            "antNoOfTransNxt12Mnths": {
-              "type": "string",
-              "pattern": "^[0-9]{0,11}$"
-            },
-            "currSupplyToCust": {
+            {
               "type": "object",
-              "description": "Top 3 currencies you anticipate supplying to customers?",
               "properties": {
-                "currency": {
-                  "type": "array",
-                  "minItems": 0,
-                  "items": {
-                    "type": "string",
-                    "pattern": "^[A-Z]{1,3}$"
-                  }
+                "dealInPhysCurrencies": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "antNoOfTransNxt12Mnths": {
+                  "type": "string",
+                  "pattern": "^[0-9]{0,11}$"
+                },
+                "currSupplyToCust": {
+                  "type": "object",
+                  "properties": {
+                    "currency": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{1,3}$"
+                      },
+                      "additionalItems": false
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
+              "required": [
+                "dealInPhysCurrencies"
+              ],
               "additionalProperties": false
             }
-          },
-          "required": [
-            "dealInPhysCurrencies"
-          ],
-          "additionalProperties": false
+          ]
         },
         "msbFxDetails": {
           "type": "object",
-          "description": "What is your anticipated number of transactions for the next 12 months?",
           "properties": {
             "anticipatedNoOfTransactions": {
               "type": "string",
-              "description": "What is the anticipated number of Money Transfer transactions for the next 12 months?",
               "pattern": "^\\d{0,11}$"
             }
           },
@@ -1563,25 +1350,18 @@
     },
     "hvd": {
       "type": "object",
-      "description": "Only applicable if MLRActivitiesAppliedFor has  HVD as true.",
       "properties": {
         "cashPaymentsAccptOvrThrshld": {
-          "type": "boolean",
-          "description": "Has the business already accepted any high value cash payments over the threshold?"
+          "type": "boolean"
         },
         "dateOfTheFirst": {
           "$ref": "#/definitions/dateString"
         },
-        "dateChangeFlag": {
-          "type": "boolean"
-        },
         "sysAutoIdOfLinkedCashPymts": {
-          "type": "boolean",
-          "description": "Do your systems automatically identify linked cash payments that exceed the HVD threshold in total?"
+          "type": "boolean"
         },
         "hvPercentageTurnover": {
           "type": "integer",
-          "description": "What percentage of your turnover do you anticipate will come from High Value Cash payments?",
           "minimum": 0,
           "maximum": 100
         },
@@ -1592,7 +1372,6 @@
               "properties": {
                 "hvdFromUnseenCustomers": {
                   "type": "boolean",
-                  "description": "Do you anticipate receiving high value cash payments over the threshold from customers you have not seen face to face?",
                   "enum": [
                     true
                   ]
@@ -1601,52 +1380,42 @@
                   "oneOf": [
                     {
                       "type": "object",
-                      "description": "Only applicable if HVDFromUnseenCustomers is true",
                       "properties": {
                         "receiptMethodViaCourier": {
-                          "type": "boolean",
-                          "description": "Via courier"
+                          "type": "boolean"
                         },
                         "receiptMethodDirectBankAct": {
-                          "type": "boolean",
-                          "description": "Direct into Bank Account"
+                          "type": "boolean"
                         },
                         "receiptMethodOther": {
                           "type": "boolean",
-                          "description": "Other means",
                           "enum": [
                             true
                           ]
                         },
                         "specifyOther": {
                           "type": "string",
-                          "description": "Only applicable for &apos;Other means&apos; = true",
                           "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                         }
                       },
                       "required": [
                         "receiptMethodViaCourier",
                         "receiptMethodDirectBankAct",
-                        "receiptMethodOther",
-                        "specifyOther"
+                        "receiptMethodOther"
                       ],
                       "additionalProperties": false
                     },
                     {
                       "type": "object",
-                      "description": "Only applicable if HVDFromUnseenCustomers is true",
                       "properties": {
                         "receiptMethodViaCourier": {
-                          "type": "boolean",
-                          "description": "Via courier"
+                          "type": "boolean"
                         },
                         "receiptMethodDirectBankAct": {
-                          "type": "boolean",
-                          "description": "Direct into Bank Account"
+                          "type": "boolean"
                         },
                         "receiptMethodOther": {
                           "type": "boolean",
-                          "description": "Other means",
                           "enum": [
                             false
                           ]
@@ -1672,7 +1441,6 @@
               "properties": {
                 "hvdFromUnseenCustomers": {
                   "type": "boolean",
-                  "description": "Do you anticipate receiving high value cash payments over the threshold from customers you have not seen face to face?",
                   "enum": [
                     false
                   ]
@@ -1688,20 +1456,16 @@
       },
       "required": [
         "cashPaymentsAccptOvrThrshld",
-        "dateChangeFlag",
         "sysAutoIdOfLinkedCashPymts",
-        "hvPercentageTurnover",
         "hvdFromUnseenCustDetails"
       ],
       "additionalProperties": false
     },
     "asp": {
       "type": "object",
-      "description": "Only applicable if MLRActivitiesAppliedFor has  ASP as true.",
       "properties": {
         "regHmrcAgtRegSchTax": {
-          "type": "boolean",
-          "description": "Are you registered under the HMRC Agent Registration Scheme to handle other business's tax matters?"
+          "type": "boolean"
         },
         "hmrcAgentRegNo": {
           "type": "string",
@@ -1720,8 +1484,7 @@
           "type": "object",
           "properties": {
             "prevSupervisedByMlsRegs": {
-              "type": "boolean",
-              "description": "Has this business's activities previously been supervised under the MLRegs 2007 by another supervisor?"
+              "type": "boolean"
             },
             "supervisorDetails": {
               "type": "object",
@@ -1736,17 +1499,11 @@
                 "supervisionEndDate": {
                   "$ref": "#/definitions/dateString"
                 },
-                "dateChangeFlag": {
-                  "type": "boolean"
-                },
                 "supervisionEndingReason": {
                   "type": "string",
                   "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 }
               },
-              "required": [
-                "dateChangeFlag"
-              ],
               "additionalProperties": false
             }
           },
@@ -1762,14 +1519,12 @@
               "properties": {
                 "prevWarnedWRegToAspActivities": {
                   "type": "boolean",
-                  "description": "Has the business or anyone in the business been warned, fined, suspended or expelled by a professional body with regards to ASP activities?",
                   "enum": [
                     true
                   ]
                 },
                 "detailsIfFinedWarned": {
                   "type": "string",
-                  "description": "Only applicable if  PrevWarnedWRegToASPActivities is true",
                   "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
                 },
                 "professionalBody": {
@@ -1855,7 +1610,8 @@
               },
               "required": [
                 "prevWarnedWRegToAspActivities",
-                "professionalBody"
+                "professionalBody",
+                "detailsIfFinedWarned"
               ],
               "additionalProperties": false
             },
@@ -1864,7 +1620,6 @@
               "properties": {
                 "prevWarnedWRegToAspActivities": {
                   "type": "boolean",
-                  "description": "Has the business or anyone in the business been warned, fined, suspended or expelled by a professional body with regards to ASP activities?",
                   "enum": [
                     false
                   ]
@@ -1960,8 +1715,8 @@
         }
       },
       "required": [
-        "supervisionDetails",
-        "professionalBodyDetails"
+        "professionalBodyDetails",
+        "supervisionDetails"
       ],
       "additionalProperties": false
     },
@@ -1978,7 +1733,6 @@
             },
             "tcspMlrRef": {
               "type": "string",
-              "description": "Only applicable if AnotherTCSPServiceProvider is true",
               "pattern": "^[A-Za-z0-9]{1,15}$"
             }
           },
@@ -2008,12 +1762,10 @@
       "type": "object",
       "properties": {
         "onlyOffTheShelfCompsSold": {
-          "type": "boolean",
-          "description": "Do you sell only off-the-shelf companies?"
+          "type": "boolean"
         },
         "complexCorpStructureCreation": {
-          "type": "boolean",
-          "description": "Would you provide the services of creating complex corporate structures for customers?"
+          "type": "boolean"
         }
       },
       "required": [
@@ -2033,8 +1785,7 @@
           "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         },
         "prevWarnedWRegToEstateAgencyActivities": {
-          "type": "boolean",
-          "description": "Has the business or anyone in the business been warned, fined, suspended or expelled by a professional body with regards to estate agency activities?"
+          "type": "boolean"
         },
         "prevWarnWRegProvideDetails": {
           "type": "string",
@@ -2051,25 +1802,30 @@
       "type": "object",
       "properties": {
         "regWithRedressScheme": {
-          "type": "boolean",
-          "description": "Is the business registered with a redress scheme?"
+          "type": "boolean"
         },
         "whichRedressScheme": {
           "type": "string",
           "enum": [
             "The Property Ombudsman Limited",
-            "Ombudsman Services",
-            "Property Redress Scheme",
-            "Other"
+            "Property Redress Scheme"
           ]
-        },
-        "specifyOther": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
         }
       },
       "required": [
         "regWithRedressScheme"
+      ],
+      "additionalProperties": false
+    },
+    "lettingAgents": {
+      "type": "object",
+      "properties": {
+        "clientMoneyProtection": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clientMoneyProtection"
       ],
       "additionalProperties": false
     },
@@ -2079,7 +1835,6 @@
         "transactionsAccptOvrThrshld": {
           "oneOf": [
             {
-              "description": "Has your business made or accepted any transactions of 10000 Euros or more? - Yes",
               "type": "object",
               "properties": {
                 "transactionsAccptOvrThrshldAnswer": {
@@ -2099,7 +1854,6 @@
               "additionalProperties": false
             },
             {
-              "description": "Has your business made or accepted any transactions of 10000 Euros or more? - No",
               "type": "object",
               "properties": {
                 "transactionsAccptOvrThrshldAnswer": {
@@ -2117,7 +1871,6 @@
           ]
         },
         "sysAutoIdOfLinkedTransactions": {
-          "description": "Are you able to automatically identify linked transactions which come to 10000 Euros or more?",
           "type": "boolean"
         },
         "ampPercentageTurnover": {
@@ -2135,15 +1888,9 @@
     },
     "responsiblePersons": {
       "type": "array",
-      "minItems": 0,
       "items": {
         "type": "object",
         "properties": {
-          "lineId": {
-            "type": "string",
-            "maxLength": 6,
-            "pattern": "^[0-9]{6}$"
-          },
           "nameDetails": {
             "type": "object",
             "properties": {
@@ -2181,14 +1928,10 @@
                   },
                   "dateOfChange": {
                     "$ref": "#/definitions/dateString"
-                  },
-                  "dateChangeFlag": {
-                    "type": "boolean"
                   }
                 },
                 "required": [
-                  "nameEverChanged",
-                  "dateChangeFlag"
+                  "nameEverChanged"
                 ],
                 "additionalProperties": false
               }
@@ -2365,9 +2108,9 @@
             "properties": {
               "contactEmailAddress": {
                 "type": "string",
-                "format": "email",
                 "minLength": 3,
-                "maxLength": 100
+                "maxLength": 100,
+                "format": "email"
               },
               "primaryTeleNo": {
                 "$ref": "#/definitions/telephoneNoType"
@@ -2382,7 +2125,7 @@
             "type": "object",
             "properties": {
               "address": {
-                "$ref": "#/definitions/addressWithChangeDate"
+                "$ref": "#/definitions/address"
               }
             },
             "additionalProperties": false
@@ -2398,7 +2141,6 @@
           },
           "addressUnderThreeYears": {
             "type": "object",
-            "description": "Only applicable if TimeAtCurrentHomeAddress is not 3+ years",
             "properties": {
               "address": {
                 "$ref": "#/definitions/address"
@@ -2417,7 +2159,6 @@
           },
           "addressUnderOneYear": {
             "type": "object",
-            "description": "Only applicable if TimeAtCurrentHomeAddress is not 0-6 months or 7-12 months",
             "properties": {
               "address": {
                 "$ref": "#/definitions/address"
@@ -2435,214 +2176,115 @@
             ]
           },
           "positionInBusiness": {
-            "type": "object",
-            "properties": {
-              "soleProprietor": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "soleProprietor": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          false
-                        ]
-                      }
-                    },
-                    "required": [
-                      "soleProprietor",
-                      "nominatedOfficer",
-                      "other"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "soleProprietor": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          true
-                        ]
-                      },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                      }
-                    },
-                    "required": [
-                      "soleProprietor",
-                      "nominatedOfficer",
-                      "other",
-                      "otherDetails"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              },
-              "partnership": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "partner": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          false
-                        ]
-                      }
-                    },
-                    "required": [
-                      "partner",
-                      "nominatedOfficer",
-                      "other"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "partner": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          true
-                        ]
-                      },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                      }
-                    },
-                    "required": [
-                      "partner",
-                      "nominatedOfficer",
-                      "other",
-                      "otherDetails"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              },
-              "corpBodyOrUnInCorpBodyOrLlp": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "director": {
-                        "type": "boolean"
-                      },
-                      "beneficialOwner": {
-                        "type": "boolean"
-                      },
-                      "designatedMember": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          false
-                        ]
-                      }
-                    },
-                    "required": [
-                      "director",
-                      "beneficialOwner",
-                      "designatedMember",
-                      "nominatedOfficer",
-                      "other"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "director": {
-                        "type": "boolean"
-                      },
-                      "beneficialOwner": {
-                        "type": "boolean"
-                      },
-                      "designatedMember": {
-                        "type": "boolean"
-                      },
-                      "nominatedOfficer": {
-                        "type": "boolean"
-                      },
-                      "other": {
-                        "type": "boolean",
-                        "description": "Other - please specify details",
-                        "enum": [
-                          true
-                        ]
-                      },
-                      "otherDetails": {
-                        "type": "string",
-                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                      }
-                    },
-                    "required": [
-                      "director",
-                      "beneficialOwner",
-                      "designatedMember",
-                      "nominatedOfficer",
-                      "other",
-                      "otherDetails"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
-              }
-            },
             "oneOf": [
               {
+                "type": "object",
+                "properties": {
+                  "soleProprietor": {
+                    "type": "object",
+                    "properties": {
+                      "soleProprietor": {
+                        "type": "boolean"
+                      },
+                      "nominatedOfficer": {
+                        "type": "boolean"
+                      },
+                      "other": {
+                        "type": "boolean"
+                      },
+                      "otherDetails": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      }
+                    },
+                    "required": [
+                      "soleProprietor",
+                      "nominatedOfficer",
+                      "other"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
                 "required": [
                   "soleProprietor"
-                ]
+                ],
+                "additionalProperties": false
               },
               {
+                "type": "object",
+                "properties": {
+                  "partnership": {
+                    "type": "object",
+                    "properties": {
+                      "partner": {
+                        "type": "boolean"
+                      },
+                      "nominatedOfficer": {
+                        "type": "boolean"
+                      },
+                      "other": {
+                        "type": "boolean"
+                      },
+                      "otherDetails": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      }
+                    },
+                    "required": [
+                      "partner",
+                      "nominatedOfficer",
+                      "other"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
                 "required": [
                   "partnership"
-                ]
+                ],
+                "additionalProperties": false
               },
               {
+                "type": "object",
+                "properties": {
+                  "corpBodyOrUnInCorpBodyOrLlp": {
+                    "type": "object",
+                    "properties": {
+                      "director": {
+                        "type": "boolean"
+                      },
+                      "beneficialOwner": {
+                        "type": "boolean"
+                      },
+                      "nominatedOfficer": {
+                        "type": "boolean"
+                      },
+                      "designatedMember": {
+                        "type": "boolean"
+                      },
+                      "other": {
+                        "type": "boolean"
+                      },
+                      "otherDetails": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
+                      }
+                    },
+                    "required": [
+                      "director",
+                      "beneficialOwner",
+                      "nominatedOfficer",
+                      "other",
+                      "designatedMember"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
                 "required": [
                   "corpBodyOrUnInCorpBodyOrLlp"
-                ]
+                ],
+                "additionalProperties": false
               }
-            ],
-            "additionalProperties": false
+            ]
           },
           "regDetails": {
             "type": "object",
@@ -2669,71 +2311,25 @@
             "additionalProperties": false
           },
           "previousExperience": {
-            "type": "boolean",
-            "description": "Do you have any previous experience in the activities this business is applying to be registered for?"
+            "type": "boolean"
           },
           "descOfPrevExperience": {
             "type": "string",
-            "description": "Only applicable if PreviousExperience is true",
             "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
           "amlAndCounterTerrFinTraining": {
-            "type": "boolean",
-            "description": "Have you undertaken any training regarding AML and counter terrorism financing?"
+            "type": "boolean"
           },
           "trainingDetails": {
             "type": "string",
-            "description": "Only applicable if AMLandCounterTerrFinTraining is true",
             "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
           },
           "startDate": {
             "$ref": "#/definitions/dateString"
           },
-          "dateChangeFlag": {
-            "type": "boolean"
-          },
-          "endDate": {
-            "$ref": "#/definitions/dateString"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "Added",
-              "Updated",
-              "Deleted",
-              "Unchanged"
-            ]
-          },
-          "retest": {
-            "description": "Fit and Proper Test Count",
-            "type": "string",
-            "maxLength": 2
-          },
-          "testResultFitAndProper": {
-            "type": "string",
-            "enum": [
-              "Passed",
-              "Failed"
-            ]
-          },
-          "testDateFitAndProper": {
-            "description": "Fit and Proper Test Date in format YYYY-MM-DD",
-            "$ref": "#/definitions/dateString"
-          },
           "passedFitAndProperTest": {
             "description": "Has this person already passed the Fit and Proper Test?",
             "type": "boolean"
-          },
-          "testResultApprovalCheck": {
-            "type": "string",
-            "enum": [
-              "Passed",
-              "Failed"
-            ]
-          },
-          "testDateApprovalCheck": {
-            "description": "Approval Check Test Date in format YYYY-MM-DD",
-            "$ref": "#/definitions/dateString"
           },
           "passedApprovalCheck": {
             "description": "Has this person already passed the Approval Check?",
@@ -2741,16 +2337,16 @@
           }
         },
         "required": [
-          "positionInBusiness",
-          "regDetails",
           "previousExperience",
           "amlAndCounterTerrFinTraining",
-          "dateChangeFlag",
+          "positionInBusiness",
+          "regDetails",
           "passedFitAndProperTest",
           "passedApprovalCheck"
         ],
         "additionalProperties": false
-      }
+      },
+      "additionalItems": false
     },
     "payment": {
       "type": "object",
@@ -2787,150 +2383,68 @@
           "type": "boolean"
         },
         "roleWithinBusiness": {
-          "oneOf": [
-            {
-              "type": "object",
-              "properties": {
-                "beneficialShareholder": {
-                  "type": "boolean"
-                },
-                "director": {
-                  "type": "boolean"
-                },
-                "partner": {
-                  "type": "boolean"
-                },
-                "internalAccountant": {
-                  "type": "boolean"
-                },
-                "soleProprietor": {
-                  "type": "boolean"
-                },
-                "nominatedOfficer": {
-                  "type": "boolean"
-                },
-                "designatedMember": {
-                  "type": "boolean"
-                },
-                "other": {
-                  "type": "boolean",
-                  "description": "Other - please specify details",
-                  "enum": [
-                    false
-                  ]
-                }
-              },
-              "required": [
-                "beneficialShareholder",
-                "director",
-                "partner",
-                "internalAccountant",
-                "soleProprietor",
-                "nominatedOfficer",
-                "designatedMember",
-                "other"
-              ],
-              "additionalProperties": false
+          "type": "object",
+          "properties": {
+            "beneficialShareholder": {
+              "type": "boolean"
             },
-            {
-              "type": "object",
-              "properties": {
-                "beneficialShareholder": {
-                  "type": "boolean"
-                },
-                "director": {
-                  "type": "boolean"
-                },
-                "partner": {
-                  "type": "boolean"
-                },
-                "internalAccountant": {
-                  "type": "boolean"
-                },
-                "soleProprietor": {
-                  "type": "boolean"
-                },
-                "nominatedOfficer": {
-                  "type": "boolean"
-                },
-                "designatedMember": {
-                  "type": "boolean"
-                },
-                "other": {
-                  "type": "boolean",
-                  "description": "Other - please specify details",
-                  "enum": [
-                    true
-                  ]
-                },
-                "specifyOtherRoleInBusiness": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                }
-              },
-              "required": [
-                "beneficialShareholder",
-                "director",
-                "partner",
-                "internalAccountant",
-                "soleProprietor",
-                "nominatedOfficer",
-                "designatedMember",
-                "other",
-                "specifyOtherRoleInBusiness"
-              ],
-              "additionalProperties": false
+            "director": {
+              "type": "boolean"
+            },
+            "partner": {
+              "type": "boolean"
+            },
+            "internalAccountant": {
+              "type": "boolean"
+            },
+            "soleProprietor": {
+              "type": "boolean"
+            },
+            "nominatedOfficer": {
+              "type": "boolean"
+            },
+            "designatedMember": {
+              "type": "boolean"
+            },
+            "other": {
+              "type": "boolean"
+            },
+            "specifyOtherRoleInBusiness": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
-          ]
+          },
+          "required": [
+            "beneficialShareholder",
+            "director",
+            "partner",
+            "internalAccountant",
+            "soleProprietor",
+            "nominatedOfficer",
+            "designatedMember",
+            "other"
+          ],
+          "additionalProperties": false
         },
         "roleForTheBusiness": {
-          "oneOf": [
-            {
-              "type": "object",
-              "properties": {
-                "externalAccountant": {
-                  "type": "boolean"
-                },
-                "other": {
-                  "type": "boolean",
-                  "description": "Other - please specify details",
-                  "enum": [
-                    false
-                  ]
-                }
-              },
-              "required": [
-                "externalAccountant",
-                "other"
-              ],
-              "additionalProperties": false
+          "type": "object",
+          "properties": {
+            "externalAccountant": {
+              "type": "boolean"
             },
-            {
-              "type": "object",
-              "properties": {
-                "externalAccountant": {
-                  "type": "boolean"
-                },
-                "other": {
-                  "type": "boolean",
-                  "description": "Other - please specify details",
-                  "enum": [
-                    true
-                  ]
-                },
-                "specifyOtherRoleForBusiness": {
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
-                }
-              },
-              "required": [
-                "externalAccountant",
-                "other",
-                "specifyOtherRoleForBusiness"
-              ],
-              "additionalProperties": false
+            "other": {
+              "type": "boolean"
+            },
+            "specifyOtherRoleForBusiness": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u000A\u000D\u002d]{1,255}$"
             }
-          ]
+          },
+          "required": [
+            "externalAccountant",
+            "other"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -2939,32 +2453,10 @@
         "roleForTheBusiness"
       ],
       "additionalProperties": false
-    },
-    "etmpFields": {
-      "type": "object",
-      "properties": {
-        "dateOfSubmission": {
-          "$ref": "#/definitions/dateString"
-        },
-        "financeDocNumber": {
-          "type": "string",
-          "pattern": "^[0-9]{12}$"
-        },
-        "currentPeriodKey": {
-          "type": "string",
-          "maxLength": 4,
-          "pattern": "^[A-Za-z0-9]{1,4}$"
-        },
-        "renewalDueDate": {
-          "$ref": "#/definitions/dateString"
-        }
-      },
-      "additionalProperties": false
     }
   },
   "required": [
     "acknowledgementReference",
-    "changeIndicators",
     "businessDetails",
     "businessContactDetails",
     "businessReferencesAll",
@@ -2985,39 +2477,6 @@
       "type": "string",
       "pattern": "^(((17|18|19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((17|18|19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|1[0-9]|2[0-9]|30)|(17|18|19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(17|18|19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$",
       "description": "Format YYYY-MM-DD, range 1700-01-01 to 2099-12-31 inclusive; validates leap years too"
-    },
-    "addressWithChangeDate": {
-      "type": "object",
-      "properties": {
-        "addressLine1": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
-        },
-        "addressLine2": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
-        },
-        "addressLine3": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
-        },
-        "addressLine4": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9 !'‘’\"“”(),./\u2014\u2013\u2010\u002d]{1,35}$"
-        },
-        "country": {
-          "$ref": "#/definitions/countryCodes"
-        },
-        "postcode": {
-          "type": "string",
-          "maxLength": 10,
-          "pattern": "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
-        },
-        "addressChangeDate": {
-          "$ref": "#/definitions/dateString"
-        }
-      },
-      "additionalProperties": false
     },
     "address": {
       "type": "object",
@@ -3311,27 +2770,21 @@
     },
     "msb": {
       "type": "object",
-      "description": "Only applicable if MLRActivitiesAppliedFor has  MSB as true.",
       "properties": {
         "mt": {
-          "type": "boolean",
-          "description": "Money Transmitter"
+          "type": "boolean"
         },
         "ce": {
-          "type": "boolean",
-          "description": "Currency Exchange"
+          "type": "boolean"
         },
         "smdcc": {
-          "type": "boolean",
-          "description": "Cheque Casher (Scrap Metal Dealer)"
+          "type": "boolean"
         },
         "nonSmdcc": {
-          "type": "boolean",
-          "description": "Cheque Casher (Non Scrap Metal Dealer)"
+          "type": "boolean"
         },
         "fx": {
-          "type": "boolean",
-          "description": "Foreign Exchange"
+          "type": "boolean"
         }
       },
       "required": [
@@ -3361,22 +2814,15 @@
       },
       "additionalProperties": false
     },
-    "businessPremiseDetails": {
+    "premiseDetails": {
       "type": "object",
       "properties": {
-        "lineId": {
-          "type": "string",
-          "pattern": "^[0-9]{6}$"
-        },
         "tradingName": {
           "type": "string",
           "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
         },
-        "tradingNameChangeDate": {
-          "$ref": "#/definitions/dateString"
-        },
         "businessAddress": {
-          "$ref": "#/definitions/addressWithChangeDate"
+          "$ref": "#/definitions/address"
         },
         "residential": {
           "type": "boolean"
@@ -3386,7 +2832,6 @@
         },
         "hvd": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has HVD as true.",
           "properties": {
             "hvd": {
               "type": "boolean"
@@ -3399,7 +2844,6 @@
         },
         "asp": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has ASP as true.",
           "properties": {
             "asp": {
               "type": "boolean"
@@ -3412,7 +2856,6 @@
         },
         "tcsp": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  TCSP as true.",
           "properties": {
             "tcsp": {
               "type": "boolean"
@@ -3425,7 +2868,6 @@
         },
         "eab": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  EAB as true.",
           "properties": {
             "eab": {
               "type": "boolean"
@@ -3438,7 +2880,6 @@
         },
         "bpsp": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  BPSP as true.",
           "properties": {
             "bpsp": {
               "type": "boolean"
@@ -3451,7 +2892,6 @@
         },
         "tditpsp": {
           "type": "object",
-          "description": "Only applicable if MLRActivitiesAppliedFor has  TDITPSP as true.",
           "properties": {
             "tditpsp": {
               "type": "boolean"
@@ -3473,137 +2913,9 @@
             "amp"
           ],
           "additionalProperties": false
-        },
-        "sectorDateChange": {
-          "$ref": "#/definitions/dateString"
         },
         "startDate": {
           "$ref": "#/definitions/extendedDateString"
-        },
-        "dateChangeFlag": {
-          "type": "boolean"
-        },
-        "endDate": {
-          "$ref": "#/definitions/dateString"
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "Added",
-            "Updated",
-            "Deleted",
-            "Unchanged"
-          ]
-        }
-      },
-      "required": [
-        "residential",
-        "dateChangeFlag"
-      ],
-      "additionalProperties": false
-    },
-    "agentPremiseDetails": {
-      "type": "object",
-      "properties": {
-        "tradingName": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9\u00C0-\u00FF !#$%&'‘’\"“”«»()*+,./:;=?@\\[\\]|~£€¥\\u005C\u2014\u2013\u2010\u005F\u005E\u0060\u002d]{1,120}$"
-        },
-        "businessAddress": {
-          "$ref": "#/definitions/addressWithChangeDate"
-        },
-        "residential": {
-          "type": "boolean"
-        },
-        "msb": {
-          "$ref": "#/definitions/msb"
-        },
-        "hvd": {
-          "type": "object",
-          "properties": {
-            "hvd": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "hvd"
-          ],
-          "additionalProperties": false
-        },
-        "asp": {
-          "type": "object",
-          "properties": {
-            "asp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "asp"
-          ],
-          "additionalProperties": false
-        },
-        "tcsp": {
-          "type": "object",
-          "properties": {
-            "tcsp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "tcsp"
-          ],
-          "additionalProperties": false
-        },
-        "eab": {
-          "type": "object",
-          "properties": {
-            "eab": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "eab"
-          ],
-          "additionalProperties": false
-        },
-        "bpsp": {
-          "type": "object",
-          "properties": {
-            "bpsp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "bpsp"
-          ],
-          "additionalProperties": false
-        },
-        "tditpsp": {
-          "type": "object",
-          "properties": {
-            "tditpsp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "tditpsp"
-          ],
-          "additionalProperties": false
-        },
-        "amp": {
-          "type": "object",
-          "properties": {
-            "amp": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "amp"
-          ],
-          "additionalProperties": false
-        },
-        "agentSectorChgDate": {
-          "$ref": "#/definitions/dateString"
         }
       },
       "required": [
@@ -3613,7 +2925,6 @@
     },
     "turnOverType": {
       "type": "string",
-      "description": "What is anticipated turnover for the next 12 months",
       "enum": [
         "£0-£15k",
         "£15k-50k",

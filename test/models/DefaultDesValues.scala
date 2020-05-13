@@ -38,8 +38,12 @@ object DefaultDesValues {
     None,
     None
   )
-  private val deseabServiceModel = Some(des.businessactivities.EabServices(false, false,
-    true, false, true, false, false, false, false))
+  private val deseabServiceModel = Some(des.businessactivities.EabServices(
+    false, false, true, false, true, false, false, false, false, Some(false)
+  ))
+
+  private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
+    true, false, true, false, false, false, false, Some(true)))
 
   private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("14999"))))
   private val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name"))))
@@ -68,9 +72,12 @@ object DefaultDesValues {
   val BusinessActivitiesSection = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
     tcspServicesOffered, servicesforRegOff, deseabServiceModel, ampServices, desallActivitiesModel)
 
+  val BusinessActivitiesSectionLA = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
+    tcspServicesOffered, servicesforRegOff, deseabServiceModelLA, ampServices, desallActivitiesModel)
+
   val EabAllDetails = Some(EabAll(true, Some("Details"), false, None))
 
-  val EabResd = Some(EabResdEstAgncy(true, Some("Ombudsman Services"), None))
+  val EabResd = Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
 
   val AboutTheBusinessSection = BusinessContactDetails(
     ATBAddress("line1", "line2",
@@ -256,17 +263,17 @@ object DefaultDesValues {
       Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))
 
   val AspOrTcspSection = Some(AspOrTcsp(Some(supervisionDetails),
-  Some(professionalBodyDetails)))
+    Some(professionalBodyDetails)))
 
   val CorpTaxRegime = Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890")))
 
   val msbSection = Some(
     MoneyServiceBusiness(
-    Some(MsbAllDetails(Some("499999"),true,Some(CountriesList(List("GB"))),true)),
-    Some(MsbMtDetails(true,Some("123456"),
-    IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
-    true,
-    Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
+      Some(MsbAllDetails(Some("499999"),true,Some(CountriesList(List("GB"))),true)),
+      Some(MsbMtDetails(true,Some("123456"),
+        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
+        true,
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
       Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )

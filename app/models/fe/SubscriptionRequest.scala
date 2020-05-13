@@ -29,12 +29,12 @@ import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
 import models.fe.businessdetails.BusinessDetails
 import models.fe.bankdetails.BankDetails
-import models.fe.estateagentbusiness.EstateAgentBusiness
+import models.fe.eab.Eab
 import play.api.libs.json.Json
 
 case class SubscriptionRequest(
                                 businessMatchingSection: BusinessMatching,
-                                eabSection: Option[EstateAgentBusiness],
+                                eabSection: Option[Eab],
                                 tradingPremisesSection: Option[Seq[TradingPremises]],
                                 businessDetailsSection: BusinessDetails,
                                 bankDetailsSection: Seq[BankDetails],

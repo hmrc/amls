@@ -16,17 +16,54 @@
 
 package models.des.businessActivities
 
+import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
 
-class EabServicesSpec extends PlaySpec {
+class EabServicesSpec extends PlaySpec  {
+
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
       val from = {
-        import models.fe.estateagentbusiness._
-        EstateAgentBusiness(services = Some(Services(Set(BusinessTransfer, Development, Commercial))))
+        Eab(
+          EabData(
+            List("businessTransfer", "developmentCompany", "commercial"),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
       }
 
-      val expected = Some(models.des.businessactivities.EabServices(false, true, false, false, true, false, false, true, false))
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, true, false, false, true, false, false, true, false, Some(false))
+      )
+
+      models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
+    }
+
+    "Be convertable from front end Estate agent business services when none" in {
+      val from = {
+        Eab(
+          EabData(
+            List(),
+            None,
+            Some("propertyRedressScheme"),
+            None,
+            true,
+            Some("Details"),
+            true,
+            Some("Details")
+          )
+        )
+      }
+
+      val expected = Some(models.des.businessactivities.EabServices(
+        false, false, false, false, false, false, false, false, false, Some(false))
+      )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
     }

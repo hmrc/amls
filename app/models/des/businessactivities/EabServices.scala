@@ -16,7 +16,8 @@
 
 package models.des.businessactivities
 
-import models.fe.estateagentbusiness._
+import config.ApplicationConfig
+import play.api.Play
 import play.api.libs.json.Json
 
 case class EabServices(
@@ -28,41 +29,41 @@ case class EabServices(
                         assetManagementCompany : Boolean,
                         landManagementAgent : Boolean,
                         developmentCompany : Boolean,
-                        socialHousingProvider : Boolean
+                        socialHousingProvider : Boolean,
+                        lettingAgents : Option[Boolean] = None
                       )
 
 object EabServices {
   implicit val format = Json.format[EabServices]
 
-  val none = EabServices(false, false, false, false, false, false, false, false, false)
+  def default = {
+    EabServices(false, false, false, false, false, false, false, false, false, Some(false))
+  }
 
-  implicit def convert(eab : Option[models.fe.estateagentbusiness.EstateAgentBusiness]) : Option[EabServices] = {
+  implicit def convert(eab : Option[models.fe.eab.Eab]) : Option[EabServices] = {
 
     eab match {
       case Some(eab) => {
-        eab.services match {
-          case Some(services) => services
-          case None => None
-        }
+        convServices(eab.data.eabServicesProvided)
       }
       case _ => None
     }
 
   }
 
-  implicit def convServices(services: Services) : Option[EabServices] = {
-    val eabServices = services.services.foldLeft[EabServices](none)((eabServices: EabServices, service) => service match {
-      case Residential => eabServices.copy(residentialEstateAgency = true)
-      case Commercial => eabServices.copy(commercialEstateAgency = true)
-      case Auction => eabServices.copy(auctioneer = true)
-      case Relocation => eabServices.copy(relocationAgent = true)
-      case BusinessTransfer => eabServices.copy(businessTransferAgent = true)
-      case AssetManagement => eabServices.copy(assetManagementCompany = true)
-      case LandManagement => eabServices.copy(landManagementAgent = true)
-      case Development => eabServices.copy(developmentCompany = true)
-      case SocialHousing => eabServices.copy(socialHousingProvider = true)
+  implicit def convServices(services: List[String]) : Option[EabServices] = {
+    val eabServices = services.foldLeft[EabServices](default)((eabServices: EabServices, service) => service match {
+      case "residential" => eabServices.copy(residentialEstateAgency = true)
+      case "commercial" => eabServices.copy(commercialEstateAgency = true)
+      case "auctioneering" => eabServices.copy(auctioneer = true)
+      case "relocation" => eabServices.copy(relocationAgent = true)
+      case "businessTransfer" => eabServices.copy(businessTransferAgent = true)
+      case "assetManagement" => eabServices.copy(assetManagementCompany = true)
+      case "landManagement" => eabServices.copy(landManagementAgent = true)
+      case "developmentCompany" => eabServices.copy(developmentCompany = true)
+      case "socialHousingProvision" => eabServices.copy(socialHousingProvider = true)
+      case "lettings" => eabServices.copy(lettingAgents = Some(true))
     })
     Some(eabServices)
-
   }
 }

@@ -20,16 +20,29 @@ import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import utils.AckRefGenerator
 
-class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
+class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
+
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
+  }
 
   implicit val ackref = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 
   val release7BusinessActivities = DesConstants.testBusinessActivities.copy(
+    all = Some(DesConstants.testBusinessActivitiesAll.copy(
+      businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
+    ))
+  )
+
+  val businessActivitiesLA = DesConstants.testBusinessActivitiesLA.copy(
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
@@ -60,6 +73,14 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
         implicit val requestType = RequestType.Variation
         AmendVariationRequest.convert(feSubscriptionReq) must be(
           convertedDesModelRelease7.copy(amlsMessageType = "Variation")
+        )
+      }
+
+      "convert frontend model with Letting Agent to des model with Letting Agent for variation" in {
+        implicit val mt = Variation
+        implicit val requestType = RequestType.Variation
+        AmendVariationRequest.convert(feSubscriptionReqLA) must be(
+          convertedDesModelLA.copy(amlsMessageType = "Variation")
         )
       }
     }
@@ -100,36 +121,9 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     )
   }
 
+  def feSubscriptionReqLA = feSubscriptionReq.copy(eabSection = EabSection.modelForViewLA)
+
   def feSubscriptionReqNoFormationAgt = feSubscriptionReq.copy(tcspSection = ASPTCSPSection.TcspModelForViewNoCompanyFormationAgent)
-
-  def convertedDesModel = AmendVariationRequest(
-    acknowledgementReference = ackref.ackRef,
-    DesConstants.testChangeIndicators,
-    "Amendment",
-    DesConstants.testBusinessDetails,
-    DesConstants.testViewBusinessContactDetails,
-    Some(PreviouslyRegisteredMLRView(false,
-      None,
-      false,
-      None)),
-    Some(DesConstants.testbusinessReferencesAllButSp),
-    Some(DesConstants.testBusinessReferencesCbUbLlp),
-    DesConstants.testBusinessActivities,
-    DesConstants.testTradingPremisesAPI6,
-    DesConstants.testBankDetails,
-    Some(DesConstants.testMsb),
-    Some(DesConstants.testHvd),
-    Some(DesConstants.testAsp),
-    Some(DesConstants.testAspOrTcsp),
-    Some(DesConstants.testTcspAll),
-    Some(DesConstants.testTcspTrustCompFormationAgt),
-    Some(DesConstants.testEabAll),
-    Some(DesConstants.testEabResdEstAgncy),
-    Some(DesConstants.testResponsiblePersonsForRpAPI6Phase2),
-    Some(DesConstants.testAmp),
-    DesConstants.extraFields
-  )
-
 
   def convertedDesModelRelease7 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
@@ -156,7 +150,13 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6Phase2),
     Some(DesConstants.testAmp),
+    None,
     DesConstants.extraFields
+  )
+
+  def convertedDesModelLA = convertedDesModelRelease7.copy(
+    lettingAgents = Some(DesConstants.testLettingAgents),
+    businessActivities = businessActivitiesLA
   )
 
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
@@ -188,6 +188,7 @@ class AmendVariationRequestSpec extends PlaySpec with OneAppPerSuite {
     Some(DesConstants.testEabResdEstAgncy),
     Some(DesConstants.testResponsiblePersonsForRpAPI6),
     Some(DesConstants.testAmp),
+    None,
     newExtraFields
   )
 }

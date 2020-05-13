@@ -20,14 +20,40 @@ import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class EabResdEstAgncySpec extends PlaySpec {
-  "EstateAgentBusiness" must {
+class LettingAgentsSpec extends PlaySpec {
+  "LettingAgents" must {
 
-    val services = List("residential", "commercial", "auctioneering")
-
-    val eabResdEstModel = EabResdEstAgncy(false,None)
+    val services           = List("residential", "commercial", "auctioneering")
+    val lettingAgentModel  = LettingAgents(Some(true))
+    val lettingAgentModel2 = LettingAgents(Some(false))
 
     val eab = Eab(
+      EabData(
+        services,
+        None,
+        Some("propertyOmbudsman"),
+        Some(true),
+        true,
+        Some("PenaltyDetails"),
+        true,
+        Some("ProfBodyDetails")
+      )
+    )
+
+    val eab1 = Eab(
+      EabData(
+        services,
+        None,
+        Some("propertyOmbudsman"),
+        Some(false),
+        true,
+        Some("PenaltyDetails"),
+        true,
+        Some("ProfBodyDetails")
+      )
+    )
+
+    val eab2 = Eab(
       EabData(
         services,
         None,
@@ -40,47 +66,24 @@ class EabResdEstAgncySpec extends PlaySpec {
       )
     )
 
-    val eab1 = Eab(
-      EabData(
-        services,
-        None,
-        Some("propertyRedressScheme"),
-        None,
-        true,
-        Some("PenaltyDetails"),
-        true,
-        Some("ProfBodyDetails")
-      )
-    )
-
-    val eab2 = Eab(
-      EabData(
-        services,
-        None,
-        Some("notRegistered"),
-        None,
-        true,
-        Some("PenaltyDetails"),
-        true,
-        Some("ProfBodyDetails")
-      )
-    )
-
-    "serialise eabresdestagency model " in {
-      EabResdEstAgncy.format.writes(eabResdEstModel) must be(Json.obj("regWithRedressScheme"->false))
+    "serialise LettingAgents model true" in {
+      LettingAgents.format.writes(lettingAgentModel) must be(Json.obj("clientMoneyProtection"->true))
     }
 
-    "successfully convert frontend eab to des model" in {
+    "serialise LettingAgents model false" in {
+      LettingAgents.format.writes(lettingAgentModel2) must be(Json.obj("clientMoneyProtection"->false))
+    }
 
-      EabResdEstAgncy.conv(Some(eab)) must be(Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited"))))
+    "successfully convert frontend eab to des LettingAgents model" in {
 
-      EabResdEstAgncy.conv(Some(eab1)) must be(Some(EabResdEstAgncy(true, Some("Property Redress Scheme"))))
+      LettingAgents.conv(Some(eab))  must be(Some(LettingAgents(Some(true))))
 
-      EabResdEstAgncy.conv(Some(eab2)) must be(Some(EabResdEstAgncy(false, None)))
+      LettingAgents.conv(Some(eab1)) must be(Some(LettingAgents(Some(false))))
 
-      EabResdEstAgncy.conv(None) must be(None)
+      LettingAgents.conv(Some(eab2)) must be(None)
+
+      LettingAgents.conv(None)       must be(None)
 
     }
   }
-
 }

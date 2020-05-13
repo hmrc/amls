@@ -23,7 +23,7 @@ import models.des.asp.Asp
 import models.des.bankdetails.BankDetails
 import models.des.businessactivities.BusinessActivities
 import models.des.businessdetails.BusinessDetails
-import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
+import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import models.des.hvd.Hvd
 import models.des.msb.MoneyServiceBusiness
 import models.des.responsiblepeople.ResponsiblePersons
@@ -55,7 +55,8 @@ case class SubscriptionRequest(
                                 amp: Option[Amp],
                                 responsiblePersons: Option[Seq[ResponsiblePersons]],
                                 filingIndividual: AboutYouRelease7,
-                                declaration: Declaration
+                                declaration: Declaration,
+                                lettingAgents: Option[LettingAgents]
                               )
 
 object SubscriptionRequest {
@@ -70,7 +71,7 @@ object SubscriptionRequest {
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,
                                        conv: Incoming => BusinessActivities,
-                                       conv2 : fe.estateagentbusiness.EstateAgentBusiness => EabAll,
+                                       conv2 : fe.eab.Eab => EabAll,
                                        prevRegMLR : fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
                                        vatABConv : fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv : fe.businessdetails.BusinessDetails => BusinessContactDetails,
@@ -106,6 +107,7 @@ object SubscriptionRequest {
       amp = data.ampSection,
       responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
       filingIndividual = data.aboutYouSection,
-      declaration = Declaration(true)
+      declaration = Declaration(true),
+      lettingAgents = data.eabSection
     )
 }
