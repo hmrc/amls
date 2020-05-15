@@ -35,8 +35,8 @@ object Msb{
       y match {
         case TransmittingMoney => x.copy(mt = true)
         case CurrencyExchange => x.copy(ce = true)
-        case ChequeCashingNotScrapMetal => x.copy(smdcc = true)
-        case ChequeCashingScrapMetal => x.copy(nonSmdcc = true)
+        case ChequeCashingNotScrapMetal => x.copy(nonSmdcc= true)
+        case ChequeCashingScrapMetal => x.copy(smdcc = true)
         case ForeignExchange => x.copy(fx = true)
       }
     )
