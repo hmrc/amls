@@ -21,7 +21,7 @@ import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global

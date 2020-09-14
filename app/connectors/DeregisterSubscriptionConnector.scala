@@ -26,9 +26,8 @@ import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse
 import play.api.Logger
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}

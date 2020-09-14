@@ -25,9 +25,8 @@ import models.des.SubscriptionView
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.ApiRetryHelper
 
 import scala.concurrent.{ExecutionContext, Future}

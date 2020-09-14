@@ -23,7 +23,7 @@ import models.fe.SubscriptionView
 import play.api.Logger
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
