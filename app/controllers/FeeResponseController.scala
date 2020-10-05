@@ -22,7 +22,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import repositories.FeesRepository
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.AuthAction
 
 import scala.concurrent.ExecutionContext.Implicits.global

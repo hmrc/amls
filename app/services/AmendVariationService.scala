@@ -33,8 +33,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
@@ -42,7 +40,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
                                       private[services] val viewDesConnector: ViewDESConnector,
                                       private[services] val auditConnector: AuditConnector,
                                       private[services] val feeResponseRepository: FeesRepository = FeesRepository(),
-                                      private[services] val config: ApplicationConfig)
+                                      private[services] val config: ApplicationConfig)(implicit val ec: ExecutionContext)
   extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper {
 
   private[services] val validator: SchemaValidator = SchemaValidator()

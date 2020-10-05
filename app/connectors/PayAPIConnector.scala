@@ -24,8 +24,7 @@ import models.payapi.Payment
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import utils.HttpResponseHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
