@@ -17,10 +17,11 @@
 package models.des
 
 import models.{des, fe}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNumber, JsObject, JsString}
 
-class SubscriptionResponseSpec extends PlaySpec with OneAppPerSuite {
+class SubscriptionResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "SubscriptionResponse" must {
     "Serialise correctly with registration fee" in {

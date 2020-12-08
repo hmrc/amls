@@ -103,14 +103,6 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
     }
 
     "return failed response on exception" in new Fixture {
-      val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseString = Some("message")
-      )
-
       when {
         withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
           HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())

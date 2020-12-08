@@ -16,16 +16,12 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.businessdetails._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
 class PreviouslyRegisteredViewSpec extends PlaySpec {
 
   "PreviouslyRegistered" must {
-
-    val Contact = ContactingYou("123456789", "afa@test.com")
-    val Office = RegisteredOfficeUK("1", "2", None, None, "NE3 0QQ")
 
     "deserialise PreviouslyRegistered model" when {
       "given option yes" in {
@@ -90,7 +86,6 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
 
       }
 
-
       "successfully evaluate api5 and api6 data BusinessReferencesAll when data is changed" in {
 
         val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
@@ -106,7 +101,6 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
         viewBusinessReferencesAll.equals(desBusinessReferencesAll) must be(false)
 
       }
-
 
       "successfully evaluate api5 and api6 data BusinessReferencesAll when data is changed1" in {
 

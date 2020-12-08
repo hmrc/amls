@@ -40,8 +40,6 @@ class TcspAllSpec extends PlaySpec {
 
     "convert frontend model to Des with No" in {
 
-      val servicesOfAnother = ServicesOfAnotherTCSPNo
-
       val TcspSection = Some(Tcsp(
         None,
         None,
@@ -55,8 +53,6 @@ class TcspAllSpec extends PlaySpec {
     }
 
     "convert frontend model to Des when frontened model holds no data" in {
-
-      val servicesOfAnother = ServicesOfAnotherTCSPYes("12345678")
 
       val TcspSection = Some(Tcsp(
         None,

@@ -25,13 +25,14 @@ import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
-import models.fe.{SubscriptionFees, SubscriptionResponse}
+import models.fe.SubscriptionResponse
 import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.test.Helpers._
 import repositories.FeesRepository
@@ -90,7 +91,7 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
   implicit val hc = HeaderCarrier()
 }
 
-class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
 
   "SubscriptionService subscribe" must {
     "return a successful response" which {
@@ -139,7 +140,6 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
-          val subscriptionResponse = SubscriptionResponse("", amlsRegistrationNumber, 1, 0, 0, 0, None, previouslySubmitted = true)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
@@ -178,11 +178,6 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           reset(connector.ggConnector)
 
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " " + amlsRegistrationNumber)).toString
-
-          val subscriptionResponse = SubscriptionResponse(
-            "", amlsRegistrationNumber, 0, 0, 0, 0, Some(SubscriptionFees("PaymentRef", 500, Some(50), None, 115, None, 1000,
-              Some(BigDecimal(20)), Some(BigDecimal(30)))), previouslySubmitted = true
-          )
 
           when {
             successValidate.isSuccess

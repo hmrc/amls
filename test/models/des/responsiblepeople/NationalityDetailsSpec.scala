@@ -18,10 +18,10 @@ package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
 import org.joda.time.LocalDate
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-
-class NationalityDetailsSpec extends PlaySpec with OneAppPerSuite {
+class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "ResponsiblePeople" should {
         "convert frontend model to des model for UkResidence" in {

@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivitiesAll, MlrActivitiesAppliedFor, MlrAdvisor}
+import models.des.businessactivities.{MlrActivitiesAppliedFor, MlrAdvisor}
 import play.api.libs.json.Json
 
 case class AccountantForAMLSRegulations(accountantForAMLSRegulations: Boolean)

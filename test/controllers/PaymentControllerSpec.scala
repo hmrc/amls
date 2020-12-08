@@ -60,9 +60,6 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
     val postRequest = FakeRequest("POST", "/")
       .withHeaders("CONTENT_TYPE" -> "text/plain")
       .withBody[String]("")
-
-    private val postRequestWithNoBody = FakeRequest("POST", "/")
-      .withHeaders("CONTENT_TYPE" -> "text/plain")
   }
 
   "PaymentController" when {

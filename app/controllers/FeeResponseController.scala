@@ -34,7 +34,7 @@ class FeeResponseController @Inject()(authAction: AuthAction,
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async {
-      implicit request => {
+      {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
           case Some(feeResponse) => {
             Logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
@@ -48,6 +48,5 @@ class FeeResponseController @Inject()(authAction: AuthAction,
           Future.successful(InternalServerError)
         }
       }
-
     }
 }

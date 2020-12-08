@@ -17,14 +17,11 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
-import models.fe.businessactivities.ExpectedAMLSTurnover.{Sixth, Third}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
-
 
   "JSON validation" must {
     "successfully validate given an enum value" in {
@@ -61,10 +58,10 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
         ))
     }
   }
+
   "convert des to frontend model successfully" in {
     val desModel = BusinessActivityDetails(true, None)
     InvolvedInOther.conv(desModel) must be(Some(InvolvedInOtherNo))
-
   }
 
   "convert des to frontend model successfully when involved in other is false with other value" in {
@@ -80,7 +77,6 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
   "convert des to frontend model successfully when Des ExpectedAMLSTurnover is none" in {
     val desModel = BusinessActivityDetails(false, None)
     InvolvedInOther.conv(desModel) must be(None)
-
   }
 
 }

@@ -16,7 +16,7 @@
 
 package models.fe.businessmatching
 
-import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
+import models.des.businessdetails.BusinessDetails
 import play.api.libs.json.Json
 
 case class CompanyRegistrationNumber(companyRegistrationNumber: String)

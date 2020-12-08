@@ -17,11 +17,9 @@
 package models.fe.businessmatching
 
 import models.des.businessactivities.MlrActivitiesAppliedFor
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
-
 
 class BusinessActivitiesSpec extends PlaySpec with MockitoSugar {
 

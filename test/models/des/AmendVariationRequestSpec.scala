@@ -21,7 +21,7 @@ import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import utils.AckRefGenerator

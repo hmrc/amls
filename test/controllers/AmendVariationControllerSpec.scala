@@ -18,7 +18,7 @@ package controllers
 
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
-import models.des.{AmendVariationRequest, DesConstants}
+import models.des.AmendVariationRequest
 import models.fe
 import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
@@ -117,8 +117,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
       "return a valid response when the payload is valid" in {
 
-        val viewModel = DesConstants.SubscriptionViewModelForRp
-
         when(testController.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
@@ -133,8 +131,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
       }
 
       "return an invalid response when the service fails" in {
-
-        val viewModel = DesConstants.SubscriptionViewModelForRp
 
         when(testController.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
@@ -214,8 +210,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
       "return a valid response when the payload is valid" in {
 
-        val viewModel = DesConstants.SubscriptionViewModelForRp
-
         when(testController.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
@@ -230,8 +224,6 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
       }
 
       "return an invalid response when the service fails" in {
-
-        val viewModel = DesConstants.SubscriptionViewModelForRp
 
         when(testController.service.compareAndUpdate(any(), any())(any(), any()))
           .thenReturn(Future.successful(mock[AmendVariationRequest]))

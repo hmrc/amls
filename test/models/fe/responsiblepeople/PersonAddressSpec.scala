@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsSuccess, Json}
 
 class PersonAddressSpec extends PlaySpec {

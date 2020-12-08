@@ -18,7 +18,7 @@ package models.fe.businessdetails
 
 import models.des.aboutthebusiness.{AlternativeAddress, Address => DesAddress}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsNull, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class CorrespondenceAddressSpec extends PlaySpec {
 

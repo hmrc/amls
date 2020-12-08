@@ -19,10 +19,10 @@ package models.des.msb
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.{MoneyServiceBusiness => BMMoneyServiceBusiness_, _}
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-
-class MsbMtDetailsSpec extends PlaySpec with OneAppPerSuite {
+class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "MsbMtDetails" should {
 

@@ -16,9 +16,7 @@
 
 package models.fe.tradingpremises
 
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{Writes, _}
-
 
 sealed trait BusinessStructure
 

@@ -17,10 +17,8 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import models.des.businessactivities.HowGoodsAreSold
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.libs.json.Json
-
 
 class HowWillYouSellGoodsSpec extends WordSpec with MustMatchers{
 

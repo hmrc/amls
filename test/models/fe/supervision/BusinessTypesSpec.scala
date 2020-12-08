@@ -17,9 +17,8 @@
 package models.fe.supervision
 
 import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class BusinessTypesSpec extends PlaySpec with MockitoSugar {

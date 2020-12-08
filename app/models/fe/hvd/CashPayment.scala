@@ -19,8 +19,6 @@ package models.fe.hvd
 import org.joda.time.{LocalDate}
 import models.des.hvd.{Hvd=> DesHvd}
 import play.api.libs.json.Reads
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 sealed trait CashPayment
 

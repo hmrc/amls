@@ -16,7 +16,7 @@
 
 package models.des.supervision
 
-import models.fe.supervision.{AnotherBodyNo, AnotherBodyYes, AnotherBody, Supervision}
+import models.fe.supervision.{AnotherBodyNo, AnotherBodyYes, AnotherBody}
 import play.api.libs.json.Json
 
 case class SupervisionDetails (prevSupervisedByMlsRegs: Boolean = false,

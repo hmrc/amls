@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{IpspDetails, MsbMtDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
+import models.des.msb.{IpspDetails, MsbMtDetails}
 import play.api.libs.json._
 
 sealed trait BusinessUseAnIPSP

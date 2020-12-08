@@ -17,13 +17,12 @@
 package utils
 
 import models.des.DesConstants
-import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-
-class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with OneAppPerSuite {
+class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with GuiceOneAppPerSuite {
 
   val testResponsiblePeopleUpdateHelper = new ResponsiblePeopleUpdateHelper {}
 

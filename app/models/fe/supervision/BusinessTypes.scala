@@ -17,7 +17,6 @@
 package models.fe.supervision
 
 import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDetails}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 

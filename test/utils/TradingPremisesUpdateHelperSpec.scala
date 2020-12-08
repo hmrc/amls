@@ -16,15 +16,14 @@
 
 package utils
 
-import models.des
 import models.des.tradingpremises._
 import models.des.{DesConstants, StringOrInt}
-import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
 
   val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
 

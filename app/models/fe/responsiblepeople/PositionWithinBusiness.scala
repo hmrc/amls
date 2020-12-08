@@ -18,7 +18,6 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{OtherDetails, PositionInBusiness, ResponsiblePersons}
 import org.joda.time.LocalDate
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 import play.api.libs.json.JodaWrites._

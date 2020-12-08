@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.NationalityDetails
-import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
 sealed trait ResidenceType
@@ -38,7 +37,6 @@ object ResidenceType {
   }
 
   implicit val jsonWrites: Writes[ResidenceType] = {
-    import play.api.libs.functional.syntax._
     import play.api.libs.json.Writes._
     import play.api.libs.json._
     Writes[ResidenceType] {

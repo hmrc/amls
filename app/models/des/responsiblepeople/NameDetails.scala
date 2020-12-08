@@ -17,7 +17,7 @@
 package models.des.responsiblepeople
 
 import play.api.libs.json.Json
-import models.fe.responsiblepeople.{ResponsiblePeople, PersonName => FEPersonName}
+import models.fe.responsiblepeople.ResponsiblePeople
 
 case class NameDetails (personName: PersonName,
                         othrNamesOrAliasesDetails: Option[OthrNamesOrAliasesDetails], //it is not optional

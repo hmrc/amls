@@ -16,8 +16,8 @@
 
 package audit
 
-import models.des.{ReadStatusResponse, SubscriptionRequest, SubscriptionResponse}
-import play.api.libs.json.{Json, Writes}
+import models.des.ReadStatusResponse
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -26,11 +26,7 @@ import utils.AuditHelper
 object SubscriptionStatusEvent {
   def apply
   (amlsRegistrationNumber: String, response: ReadStatusResponse)
-  (implicit
-   hc: HeaderCarrier,
-   reqW: Writes[SubscriptionRequest],
-   resW: Writes[SubscriptionResponse]
-  ): DataEvent =
+  (implicit hc: HeaderCarrier): DataEvent =
     DataEvent(
       auditSource = AuditHelper.appName,
       auditType = "OutboundCall",

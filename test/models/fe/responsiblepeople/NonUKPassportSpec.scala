@@ -17,9 +17,8 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class NonUKPassportSpec  extends PlaySpec with MockitoSugar {

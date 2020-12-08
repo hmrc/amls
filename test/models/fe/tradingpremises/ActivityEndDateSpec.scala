@@ -18,15 +18,15 @@ package models.fe.tradingpremises
 
 import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import play.api.libs.json.JsSuccess
 
 class ActivityEndDateSpec extends PlaySpec {
 
   "ActivityEndDate" must {
-
     "Success read and write json" in {
       ActivityEndDate.format.reads(ActivityEndDate.format.writes(ActivityEndDate(new LocalDate(1888,1,1)))) must
         be(JsSuccess(ActivityEndDate(new LocalDate(1888,1,1))))
     }
   }
+
 }

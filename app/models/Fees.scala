@@ -20,7 +20,6 @@ import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
 import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 

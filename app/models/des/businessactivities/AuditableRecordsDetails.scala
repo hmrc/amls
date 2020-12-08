@@ -19,7 +19,6 @@ package models.des.businessactivities
 import models.fe.businessactivities.{BusinessActivities => FEBusinessActivities, _}
 import play.api.libs.json.Json
 
-
 case class TransactionRecordingMethod(manual: Boolean = false,
                                       spreadsheet: Boolean = false,
                                       commercialPackage: Boolean = false,
@@ -43,7 +42,6 @@ case class AuditableRecordsDetails(detailedRecordsKept: String,
                                    transactionRecordingMethod: Option[TransactionRecordingMethod] = None)
 
 object AuditableRecordsDetails {
-  import TransactionRecordingMethod._
 
   implicit val format = Json.format[AuditableRecordsDetails]
 

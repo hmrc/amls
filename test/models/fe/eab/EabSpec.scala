@@ -18,7 +18,7 @@ package models.fe.eab
 
 import models.EabSection
 import models.des.{DesConstants}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class EabSpec extends PlaySpec with MockitoSugar {

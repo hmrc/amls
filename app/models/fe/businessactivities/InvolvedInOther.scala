@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
+import models.des.businessactivities.BusinessActivityDetails
 import play.api.libs.json._
 
 sealed trait InvolvedInOther

@@ -17,7 +17,6 @@
 package models.fe.tcsp
 
 import models.des.businessactivities.BusinessActivities
-import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
 import play.api.libs.json._
 import utils.CommonMethods

@@ -17,9 +17,9 @@
 package models.fe.tradingpremises
 
 import models.des.DesConstants
-import models.des.tradingpremises.{AgentDetails, AgentPremises}
+import models.des.tradingpremises.AgentDetails
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import play.api.libs.json.JsSuccess
 
 class AgentCompanyDetailsSpec extends PlaySpec {
 

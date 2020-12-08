@@ -21,14 +21,14 @@ import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatestplus.play.PlaySpec
 
 class SupervisionSpec extends PlaySpec
   with MockitoSugar
   with SupervisionValues
-  with PropertyChecks
+  with ScalaCheckPropertyChecks
   with SupervisionGenerators
   with BusinessActivityGenerators {
 

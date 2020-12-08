@@ -17,7 +17,6 @@
 package models.fe.tradingpremises
 
 import models.des.tradingpremises.Msb
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 

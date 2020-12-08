@@ -17,11 +17,9 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
-
 
 class ProductsSpec extends PlaySpec with MockitoSugar {
 

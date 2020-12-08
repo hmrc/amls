@@ -170,7 +170,6 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with IterateeHelpers with 
 
     "return a 422 response when DES fails with a duplicate subscription error" in {
       val reason = s"Business Partner already has an active AMLS Subscription with $amlsRegistrationNumber"
-      val errorBody = Json.obj("reason" -> reason).toString
 
       when {
         controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())

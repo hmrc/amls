@@ -20,10 +20,10 @@ import models.BusinessMatchingSection
 import models.fe.businessmatching._
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
 import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FEMoneyServiceBusiness, _}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-class MoneyServiceBusinessSpec extends PlaySpec with OneAppPerSuite {
-
+class MoneyServiceBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "MoneyServiceBusiness" should {
 

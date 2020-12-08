@@ -17,7 +17,6 @@
 package models.fe.tcsp
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
 class TcspTypesSpec extends PlaySpec {

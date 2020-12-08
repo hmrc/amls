@@ -17,10 +17,8 @@
 package models.des.businessactivities
 
 import models.fe
-import models.fe.SubscriptionRequest
 import models.fe.businessdetails.ActivityStartDate
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormatter
 import play.api.libs.json.Json
 
 case class BusinessActivitiesAll(

@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, MsbAllDetails}
+import models.des.msb.MsbAllDetails
 import play.api.libs.json.Json
 
 case class IdentifyLinkedTransactions (linkedTxn: Boolean)

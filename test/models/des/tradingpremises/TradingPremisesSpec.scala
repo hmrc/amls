@@ -20,12 +20,12 @@ import models.des.{DesConstants, RequestType, StringOrInt}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 import models.fe.{tradingpremises => FETradingPremisesPkg}
 import org.joda.time.LocalDate
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
-import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
-class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
+class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   "TradingPremises" must {
 
@@ -263,9 +263,6 @@ class TradingPremisesSpec extends PlaySpec with OneAppPerSuite with MockitoSugar
     }
 
     "successfully convert TradingPremises front-end model to DES" when {
-
-      val ytp = mock[YourTradingPremises]
-      val wdybd = mock[WhatDoesYourBusinessDo]
 
       val tradingPremises = Some(Seq(FETradingPremises(
         registeringAgentPremises = Some(RegisteringAgentPremises(true)),

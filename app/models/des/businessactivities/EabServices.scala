@@ -16,8 +16,6 @@
 
 package models.des.businessactivities
 
-import config.ApplicationConfig
-import play.api.Play
 import play.api.libs.json.Json
 
 case class EabServices(

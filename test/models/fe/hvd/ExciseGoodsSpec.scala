@@ -18,7 +18,7 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import play.api.libs.json.JsSuccess
 
 class ExciseGoodsSpec extends PlaySpec {
 

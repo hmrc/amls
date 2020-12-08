@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople._
 import play.api.libs.json.Json
 
 case class Address (addressLine1: String,

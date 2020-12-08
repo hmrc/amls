@@ -17,7 +17,6 @@
 package models.fe.declaration
 
 import models.des.aboutyou.AboutYouRelease7
-import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
 import play.api.libs.json.{Json, Reads, _}
 import utils.CommonMethods

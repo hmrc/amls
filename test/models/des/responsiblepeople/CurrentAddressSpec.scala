@@ -18,9 +18,7 @@ package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.TimeAtAddress.OneToThreeYears
 import models.fe.responsiblepeople.{PersonAddressNonUK, PersonAddressUK, ResponsiblePersonCurrentAddress}
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
-
 
 class CurrentAddressSpec extends PlaySpec {
 

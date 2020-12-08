@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{PreviousNameDetails, PersonName => DesPersonName}
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 
 class PreviousNameSpec extends PlaySpec {

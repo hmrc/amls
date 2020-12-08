@@ -17,12 +17,12 @@
 package models.fe.declaration
 
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.data.validation.ValidationError
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
   "JSON" must {
 
@@ -76,8 +76,6 @@ class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSu
       val json = Json.obj(
         "roleWithinBusiness" -> Set("invalid")
       )
-
-      val model = RoleWithinBusiness(Set(BeneficialShareholder))
 
       RoleWithinBusiness.jsonReads.reads(json) must be(
         JsError((JsPath \ "roleWithinBusiness") -> JsonValidationError("error.invalid"))

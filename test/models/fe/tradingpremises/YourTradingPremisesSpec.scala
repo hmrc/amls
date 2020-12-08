@@ -19,10 +19,9 @@ package models.fe.tradingpremises
 import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
 import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.libs.json._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-class YourTradingPremisesSpec extends WordSpec with MustMatchers with OneAppPerSuite {
+class YourTradingPremisesSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
 
   "YourTradingPremises" must {
 

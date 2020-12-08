@@ -16,7 +16,6 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.{NominatedOfficer, Partner, Positions}
 import play.api.libs.json.Json
 
 case class Partnership (partner: Boolean = false,

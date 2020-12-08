@@ -16,16 +16,14 @@
 
 package models.des.responsiblepeople
 
-import models.fe.responsiblepeople.{PreviousName, ResponsiblePeople}
+import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.json.Json
-
 
 case class PreviousNameDetails (nameEverChanged: Boolean,
                                 previousName: Option[PersonName],
                                 dateOfChange: Option[String],
                                 dateChangeFlag: Option[Boolean] = None
                                )
-
 
 object PreviousNameDetails {
   implicit val format = Json.format[PreviousNameDetails]

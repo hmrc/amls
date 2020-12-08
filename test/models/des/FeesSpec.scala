@@ -19,7 +19,7 @@ package models.des
 import models.{AmendOrVariationResponseType, Fees, des}
 import org.joda.time.{DateTime, DateTimeUtils, DateTimeZone}
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 

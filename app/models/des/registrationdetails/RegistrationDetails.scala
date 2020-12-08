@@ -16,7 +16,6 @@
 
 package models.des.registrationdetails
 
-import org.joda.time.LocalDate
 import play.api.libs.json._
 
 sealed trait OrganisationType

@@ -17,7 +17,7 @@
 package models.fe.hvd
 
 import models.des.hvd.ReceiptMethods
-import play.api.libs.json.{JsSuccess, Reads, Json, __}
+import play.api.libs.json.Json
 
 case class PaymentMethods(
                            courier: Boolean,

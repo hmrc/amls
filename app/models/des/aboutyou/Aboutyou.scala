@@ -16,7 +16,6 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration._
 import play.api.libs.json.Json
 
 case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
@@ -53,7 +52,6 @@ object Aboutyou {
         case _ => Some("Other")
       }
     }
-
 
     Aboutyou(
       aboutYouRelease7.individualDetails,

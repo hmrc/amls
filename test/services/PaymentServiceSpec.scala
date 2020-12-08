@@ -20,13 +20,13 @@ import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.payapi.{PaymentStatuses, Payment => PayApiPayment}
+import models.payapi.PaymentStatuses
 import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
 import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}

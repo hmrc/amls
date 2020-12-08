@@ -18,12 +18,13 @@ package models.des.responsiblepeople
 
 import models.des.StringOrInt
 import models.fe.responsiblepeople.ResponsiblePeople
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
 import utils.StatusConstants
 
-class RPExtraSpec extends PlaySpec with OneAppPerSuite{
+class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite{
 
   "RPExtra" should {
     "serialise Json successfully" in {

@@ -18,9 +18,8 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{CorpBodyOrUnInCorpBodyOrLlp, Partnership, PositionInBusiness, RPExtra, ResponsiblePersons, SoleProprietor => DesSoleProprietor}
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {

@@ -20,7 +20,7 @@ import models.des.DesConstants
 import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessmatching.BusinessType.SoleProprietor
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class BusinessMatchingSpec extends PlaySpec with MockitoSugar {

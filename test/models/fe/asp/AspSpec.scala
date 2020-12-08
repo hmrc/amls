@@ -17,9 +17,7 @@
 package models.fe.asp
 
 import models.des.DesConstants
-import models.des.asp.{Asp => DesAsp}
-import models.fe.businessmatching.BusinessActivities
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -56,7 +54,6 @@ trait AspValues {
 class AspSpec extends PlaySpec with MockitoSugar with AspValues {
 
   "Asp" must {
-
 
     "have a default function that" must {
 
@@ -133,14 +130,14 @@ class AspSpec extends PlaySpec with MockitoSugar with AspValues {
     }
 
     "converting the des subscription model must yield a frontend Hvd model" in {
-      val desAsp = DesAsp(true, None)
       Asp.conv(DesConstants.SubscriptionViewModel) must be(
         Some(
           Asp(
             Some(ServicesOfBusiness(Set(Auditing, FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))),
-            Some(OtherBusinessTaxMattersYes
-            ))))
+            Some(OtherBusinessTaxMattersYes)
+          )))
     }
+
     "convert to None given view.asp = None" in {
       Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None,businessActivities = models.des.businessactivities.BusinessActivities())) must be(None)
     }

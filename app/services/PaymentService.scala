@@ -22,7 +22,6 @@ import cats.data.OptionT
 import cats.implicits._
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
-import models.payapi.{Payment => PayApiPayment}
 import models.payments.{CreateBacsPaymentRequest, Payment, PaymentStatusResult}
 import play.api.http.Status._
 import repositories.PaymentRepository

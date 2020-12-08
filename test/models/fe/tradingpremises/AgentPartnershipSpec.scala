@@ -17,7 +17,7 @@
 package models.fe.tradingpremises
 
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import play.api.libs.json.JsSuccess
 
 class AgentPartnershipSpec extends PlaySpec {
 

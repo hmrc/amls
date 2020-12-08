@@ -17,7 +17,6 @@
 package utils
 
 import enumeratum.{Enum, EnumEntry}
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 object EnumFormat {

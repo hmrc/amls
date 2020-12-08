@@ -16,12 +16,10 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
-import play.api.data.validation.ValidationError
+import models.des.businessactivities.BusinessActivityDetails
 import play.api.libs.json._
 
 sealed trait ExpectedBusinessTurnover
-
 
 object ExpectedBusinessTurnover {
 
@@ -47,7 +45,6 @@ object ExpectedBusinessTurnover {
         Reads(_ => JsError(JsPath \ "expectedBusinessTurnover", JsonValidationError("error.invalid")))
     }
   }
-
 
   implicit val jsonWrites = Writes[ExpectedBusinessTurnover] {
     case First => Json.obj("expectedBusinessTurnover" -> "01")

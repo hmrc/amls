@@ -20,7 +20,6 @@ import java.time.LocalDateTime
 
 import models.payapi.PaymentStatuses.Created
 import models.payapi.{Payment => PayApiPayment, _}
-import play.api.http.Writeable
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
 import utils.EnumFormat

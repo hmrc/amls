@@ -18,13 +18,12 @@ package models.fe.moneyservicebusiness
 
 import models.des.DesConstants
 import models.des.msb.{CountriesList, MsbAllDetails}
-import models.fe.businessmatching.{ChequeCashingNotScrapMetal, MsbServices, TransmittingMoney}
 import models.fe.moneyservicebusiness.ExpectedThroughput.Third
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-
-class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with OneAppPerSuite {
+class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestData with GuiceOneAppPerSuite {
 
   "MoneyServiceBusiness" should {
 
@@ -110,9 +109,8 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
   }
 }
 
-
 trait MoneyServiceBusinessTestData {
-  private val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+
   private val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
   private val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
@@ -131,7 +129,6 @@ trait MoneyServiceBusinessTestData {
   )
 
   val emptyModel = MoneyServiceBusiness(None)
-
 
   val completeJson = Json.obj(
       "throughput" -> Json.obj("throughput" -> "02"),

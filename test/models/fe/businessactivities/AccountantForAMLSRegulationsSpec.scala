@@ -16,18 +16,18 @@
 
 package models.fe.businessactivities
 
-import generators.supervision.{BusinessActivityGenerators, SupervisionGenerators}
+import generators.supervision.BusinessActivityGenerators
 import models.des.businessactivities.{BusinessActivitiesAll, MlrAdvisor}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 import org.mockito.Mockito.when
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class AccountantForAMLSRegulationsSpec extends PlaySpec
   with MockitoSugar
   with BusinessActivityGenerators
-  with PropertyChecks {
+  with ScalaCheckPropertyChecks {
 
   "JSON validation" must {
 

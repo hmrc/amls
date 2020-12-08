@@ -22,7 +22,7 @@ import models.payments.Payment
 import play.api.Logger
 import play.api.libs.json.Json
 import reactivemongo.api.DefaultDB
-import reactivemongo.api.commands.{UpdateWriteResult, WriteError, WriteResult}
+import reactivemongo.api.commands.{UpdateWriteResult, WriteResult}
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.play.json.ImplicitBSONHandlers._

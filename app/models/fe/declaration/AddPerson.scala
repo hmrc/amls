@@ -16,7 +16,7 @@
 
 package models.fe.declaration
 
-import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
+import models.des.aboutyou.AboutYouRelease7
 
 case class AddPerson(firstName: String,
                      middleName: Option[String],
