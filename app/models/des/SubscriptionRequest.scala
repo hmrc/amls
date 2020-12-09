@@ -76,6 +76,7 @@ object SubscriptionRequest {
                                        vatABConv : fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv : fe.businessdetails.BusinessDetails => BusinessContactDetails,
                                        conv4 : Seq[fe.bankdetails.BankDetails] => BankDetails,
+                                       tpConv : Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
                                        aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
                                        aspConv : Option[fe.asp.Asp] => Option[Asp],
                                        tcspAllConv: fe.tcsp.Tcsp => TcspAll,
