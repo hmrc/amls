@@ -16,10 +16,8 @@
 
 package models.fe.businessactivities
 
-
-import models.des.businessactivities.{BusinessActivitiesAll, BusinessActivityDetails}
+import models.des.businessactivities.BusinessActivityDetails
 import play.Logger
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 sealed trait ExpectedAMLSTurnover

@@ -16,9 +16,8 @@
 
 package models.fe.responsiblepeople
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class TimeAtAddressSpec extends PlaySpec with MockitoSugar {

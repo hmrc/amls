@@ -19,12 +19,11 @@ package models.fe.responsiblepeople
 import models.des.DesConstants
 import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
 import org.joda.time.LocalDate
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-
-
-class ResponsiblePeopleSpec extends PlaySpec with OneAppPerSuite with ResponsiblePeopleValues {
+class ResponsiblePeopleSpec extends PlaySpec with GuiceOneAppPerSuite with ResponsiblePeopleValues {
 
   "ResponsiblePeople" must {
 
@@ -136,9 +135,7 @@ trait ResponsiblePeopleValues {
   }
 
   object NewValues {
-    private val residenceYear = 1990
-    private val residenceMonth = 2
-    private val residenceDay = 24
+
     private val residence = NonUKResidence
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"

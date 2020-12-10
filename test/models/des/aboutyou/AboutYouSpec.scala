@@ -16,10 +16,8 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration._
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsSuccess, Json}
-
+import play.api.libs.json.Json
 
 class AboutYouSpec extends PlaySpec {
   "AboutYouDetails" must {

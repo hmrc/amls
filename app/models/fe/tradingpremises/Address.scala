@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Reads, Writes}
 
 case class Address(
                   addressLine1: String,

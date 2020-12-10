@@ -17,11 +17,9 @@
 package models.payapi
 
 import java.time.LocalDateTime
-
 import generators.AmlsReferenceNumberGenerator
-import models.payapi.PaymentStatuses.Successful
 import models.payapi.TaxTypes.`other`
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 

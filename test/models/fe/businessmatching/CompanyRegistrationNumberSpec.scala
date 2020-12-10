@@ -16,10 +16,10 @@
 
 package models.fe.businessmatching
 
-import models.des.businessdetails.{BusinessDetails, CorpAndBodyLlps}
-import org.scalatest.mockito.MockitoSugar
+import models.des.businessdetails.BusinessDetails
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class CompanyRegistrationNumberSpec extends PlaySpec with MockitoSugar {
 

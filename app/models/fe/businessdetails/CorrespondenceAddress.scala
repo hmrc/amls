@@ -17,7 +17,7 @@
 package models.fe.businessdetails
 
 import models.des.aboutthebusiness.AlternativeAddress
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Reads, Writes}
 
 sealed trait CorrespondenceAddress
 

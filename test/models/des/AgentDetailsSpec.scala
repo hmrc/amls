@@ -19,9 +19,10 @@ package models.des
 import models.des.tradingpremises.{AgentDetails, AgentPremises, Amp, Asp, Bpsp, Eab, Hvd, Msb, Tcsp, Tditpsp, Address => DesAddress}
 import models.fe.tradingpremises._
 import org.joda.time.LocalDate
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-class AgentDetailsSpec extends PlaySpec with OneAppPerSuite {
+class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "AgentDetails" must {
     "convert frontend Trading premises into backend model in Amendment flow" in {

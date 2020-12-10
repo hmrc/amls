@@ -17,11 +17,12 @@
 package models.des
 
 import org.joda.time.{LocalDate, LocalDateTime}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
   val json = Json.parse("""{
                |  "processingDate": "2017-07-18T09:49:18Z",

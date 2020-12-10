@@ -21,11 +21,11 @@ import models.fe.businesscustomer.{ReviewDetails, Address => BMAddress}
 import models.fe.businessmatching._
 import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-
-class PositionInBusinessSpec extends PlaySpec with MockitoSugar with OneAppPerSuite {
+class PositionInBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
   val today = new LocalDate()
 

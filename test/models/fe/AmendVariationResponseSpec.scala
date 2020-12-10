@@ -19,10 +19,11 @@ package models.fe
 import models.des._
 import models.des.aboutyou.AboutYouRelease7
 import models.des.tradingpremises._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-class AmendVariationResponseSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
+class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
     val amendvariationRequest = AmendVariationRequest(
       acknowledgementReference = "ackRef",

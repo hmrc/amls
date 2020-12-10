@@ -16,7 +16,7 @@
 
 package models.des
 
-import models.des.aboutyou.{AboutYouRelease7, Aboutyou}
+import models.des.aboutyou.AboutYouRelease7
 import play.api.libs.json._
 
 case class ExtraFields(declaration: Declaration,

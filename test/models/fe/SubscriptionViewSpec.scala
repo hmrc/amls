@@ -21,10 +21,11 @@ import models.des.DesConstants
 import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
 import models.des.msb.{CountriesList, MsbAllDetails}
 import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class SubscriptionViewSpec extends PlaySpec with OneAppPerSuite {
+class SubscriptionViewSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None){
     x => x.agentDetails match {

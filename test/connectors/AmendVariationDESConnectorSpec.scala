@@ -22,7 +22,7 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.API6
 import models.des
-import models.des.{AmendVariationRequest, AmendVariationResponse}
+import models.des.AmendVariationRequest
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._

@@ -17,7 +17,6 @@
 package models.des.tradingpremises
 
 import play.api.libs.json.Json
-import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetailsView(
                          agentLegalEntity:String,

@@ -17,7 +17,6 @@
 package models.fe.tcsp
 
 import models.des.SubscriptionView
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 

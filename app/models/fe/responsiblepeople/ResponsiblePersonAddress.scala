@@ -16,9 +16,6 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{ResponsiblePersons, AddressUnderThreeYears}
-
-
 case class ResponsiblePersonAddress(personAddress: PersonAddress,
                                     timeAtAddress: TimeAtAddress)
 
@@ -32,7 +29,6 @@ object ResponsiblePersonAddress {
     ResponsiblePersonCurrentAddress(address.personAddress, address.timeAtAddress, dateOfChange = None)
   }
 
-
 }
 
 case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress,
@@ -45,4 +41,3 @@ object ResponsiblePersonCurrentAddress {
 
   implicit val format = Json.format[ResponsiblePersonCurrentAddress]
 }
-

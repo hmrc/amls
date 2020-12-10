@@ -16,10 +16,11 @@
 
 package models.des
 
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class ChangeIndicatorsSpec extends PlaySpec with OneAppPerSuite {
+class ChangeIndicatorsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "ChangeIndicators" must {
     "serialize correctly" in {

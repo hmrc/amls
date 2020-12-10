@@ -18,9 +18,8 @@ package utils
 
 import models.des.DesConstants
 import org.joda.time.LocalDate
-import org.mockito.Matchers.{eq => eqTo}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {

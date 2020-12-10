@@ -17,10 +17,9 @@
 package models.fe.businessdetails
 
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import play.api.libs.json.{JsPath, JsSuccess, Json}
 
 class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
 

@@ -18,10 +18,7 @@ package models.fe.businessactivities
 
 import models.des.businessactivities._
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
-
-import scala.language.postfixOps
 
 class HowManyEmployeesSpec extends PlaySpec {
 

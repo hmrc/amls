@@ -17,14 +17,12 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, MsbAllDetails}
-import models.fe
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 
 class BranchesOrAgentsSpec extends PlaySpec {
 
   "MsbServices" must {
-
 
     "round trip through Json correctly" in {
 

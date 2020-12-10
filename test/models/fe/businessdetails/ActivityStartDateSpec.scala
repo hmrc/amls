@@ -16,13 +16,10 @@
 
 package models.fe.businessdetails
 
-import models.des.aboutthebusiness.Address
 import models.des.businessactivities._
 import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, JsSuccess, Json}
-
+import play.api.libs.json.{JsSuccess, Json}
 
 class ActivityStartDateSpec extends PlaySpec {
   "ActivityStartDate" must {

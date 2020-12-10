@@ -17,7 +17,6 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.FormalRiskAssessmentDetails
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 

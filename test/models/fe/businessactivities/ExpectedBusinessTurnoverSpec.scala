@@ -18,13 +18,11 @@ package models.fe.businessactivities
 
 import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
 import models.fe.businessactivities.ExpectedBusinessTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.data.validation.ValidationError
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-
-class ExpectedBusinessTurnoverSpec extends PlaySpec with OneAppPerSuite {
+class ExpectedBusinessTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "ExpectedBusinessTurnover" should {
 

@@ -20,15 +20,16 @@ import config.ApplicationConfig
 import metrics.Metrics
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with OneAppPerSuite {
+trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
 
   val mockRunModeConf = mock[Configuration]
   val mockEnvironment = mock[Environment]

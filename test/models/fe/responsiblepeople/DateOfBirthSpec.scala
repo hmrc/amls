@@ -18,10 +18,11 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
 import org.joda.time.LocalDate
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsPath, JsString, JsSuccess, Json}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.Json
 
-class DateOfBirthSpec extends PlaySpec with OneAppPerSuite {
+class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val date = new LocalDate(1990,2,24)
 

@@ -17,9 +17,9 @@
 package models.fe.tradingpremises
 
 import models.des.tradingpremises.{AgentDetails, AgentPremises}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess}
+import play.api.libs.json.JsSuccess
 
 class AgentNameSpec extends PlaySpec with MockitoSugar{
 

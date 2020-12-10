@@ -17,7 +17,6 @@
 package models.des.businessdetails
 
 import org.scalatestplus.play.PlaySpec
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 class BusinessTypeSpec extends PlaySpec {

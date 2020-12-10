@@ -18,12 +18,11 @@ package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, MsbAllDetails}
 import models.fe.moneyservicebusiness.ExpectedThroughput._
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.data.validation.ValidationError
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-
-class ExpectedThroughputSpec extends PlaySpec with OneAppPerSuite {
+class ExpectedThroughputSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "ExpectedThroughput" should {
 

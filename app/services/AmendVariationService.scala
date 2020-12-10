@@ -109,10 +109,8 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
     val result = validateResult(request)
 
     if (!result.isSuccess) {
-
       // $COVERAGE-OFF$
-
-      val errors = result.fold(invalid = { errors =>
+      result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
         }

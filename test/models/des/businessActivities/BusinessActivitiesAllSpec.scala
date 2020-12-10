@@ -22,10 +22,11 @@ import models.des.businessactivities._
 import models.fe.SubscriptionRequest
 import models.fe.asp._
 import models.fe.eab.{Eab, EabData}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class BusinessActivitiesAllSpec extends PlaySpec with OneAppPerSuite {
+class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "All Business Activities" should {
     "be serialisable from business activities" in{

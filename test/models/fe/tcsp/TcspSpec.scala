@@ -18,16 +18,13 @@ package models.fe.tcsp
 
 import models.des.{DesConstants, SubscriptionView}
 import models.des.tcsp.{TcspTrustCompFormationAgt}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
 trait TcspValues {
 
   object DefaultValues {
-
-    private val offTheShelf = true
-    private val complexStructure = false
 
     val DefaultProvidedServices = ProvidedServices(Set(PhonecallHandling, Other("other service")))
     val DefaultCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
@@ -40,9 +37,6 @@ trait TcspValues {
   }
 
   object NewValues {
-
-    private val offTheShelf = true
-    private val complexStructure = false
 
     val NewProvidedServices = ProvidedServices(Set(EmailHandling))
     val NewCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,

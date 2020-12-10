@@ -16,7 +16,6 @@
 
 package models.des.registrationdetails
 
-import org.joda.time.LocalDate
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, JsSuccess, Json}

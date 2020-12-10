@@ -18,8 +18,6 @@ package models.fe.tradingpremises
 
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails, TradingPremises => DesTradingPremises}
 import play.api.libs.json.Json
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 case class TradingPremises(
                             registeringAgentPremises: Option[RegisteringAgentPremises] = None,

@@ -18,8 +18,6 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.ResponsiblePersons
 import play.api.libs.json.{Writes => _}
-import utils.MappingUtils.Implicits._
-
 
 sealed trait Training
 

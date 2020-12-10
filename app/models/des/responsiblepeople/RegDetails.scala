@@ -18,7 +18,6 @@ package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
 import play.api.libs.json.Json
-import play.libs.F.Tuple
 
 case class RegDetails (vatRegistered: Boolean,
                        vrnNumber: Option[String],

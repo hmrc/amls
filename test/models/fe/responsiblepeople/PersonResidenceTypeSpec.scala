@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.JsSuccess
 

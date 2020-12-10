@@ -16,7 +16,6 @@
 
 package utils
 
-import play.api.Logger
 import play.api.libs.iteratee.{Input, Iteratee}
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.Result

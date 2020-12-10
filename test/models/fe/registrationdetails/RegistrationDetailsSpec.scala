@@ -17,7 +17,6 @@
 package models.fe.registrationdetails
 
 import models.des.registrationdetails.{Individual, LLP, Organisation, RegistrationDetails => DesRegistrationDetails}
-import org.joda.time.LocalDate
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 

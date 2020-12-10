@@ -17,7 +17,6 @@
 package models.fe.hvd
 
 import models.des.businessactivities.BusinessActivities
-import play.api.data.validation.ValidationError
 import play.api.libs.json.Reads.StringReads
 import play.api.libs.json._
 import utils.CommonMethods
@@ -119,7 +118,6 @@ object Products {
       }
   }
 
-
   implicit def conv(ba: BusinessActivities): Option[Products] = {
     val itemTypes: Option[Set[ItemType]] = ba.hvdGoodsSold match {
       case Some(products) => Some(Set(CommonMethods.getSpecificType(products.alcohol, Alcohol),
@@ -139,6 +137,5 @@ object Products {
 
     itemTypes.map(Products(_))
   }
-
 
 }

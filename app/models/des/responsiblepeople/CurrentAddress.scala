@@ -17,7 +17,6 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import play.api.Logger
 import play.api.libs.json.Json
 
 case class CurrentAddress(address: AddressWithChangeDate)

@@ -16,7 +16,7 @@
 
 package models.fe.businessmatching
 
-import models.des.businessdetails.{BusinessDetails, UnincorpBody}
+import models.des.businessdetails.BusinessDetails
 import play.api.libs.json.Json
 
 case class TypeOfBusiness(typeOfBusiness: String)

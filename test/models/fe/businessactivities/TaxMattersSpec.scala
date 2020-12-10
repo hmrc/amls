@@ -17,8 +17,7 @@
 package models.fe.businessactivities
 
 import org.scalatest.{Matchers, WordSpec}
-import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class TaxMattersSpec extends WordSpec with Matchers {
 

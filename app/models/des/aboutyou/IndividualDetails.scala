@@ -27,12 +27,6 @@ object IndividualDetails {
 
   implicit val formats = Json.format[IndividualDetails]
 
-  private def emptyToOption(str: Option[String]): Option[String] =
-    str match {
-      case Some("") => None
-      case _ => None
-    }
-
   implicit def convert(person: models.fe.declaration.AddPerson):Option[IndividualDetails] ={
     person.firstName match {
       case "" => None

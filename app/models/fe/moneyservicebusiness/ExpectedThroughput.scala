@@ -16,9 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-
-import play.api.data.validation.ValidationError
-import models.des.msb.{MsbAllDetails, MoneyServiceBusiness => DesMoneyServiceBusiness}
+import models.des.msb.MsbAllDetails
 import play.api.libs.json._
 
 sealed trait ExpectedThroughput

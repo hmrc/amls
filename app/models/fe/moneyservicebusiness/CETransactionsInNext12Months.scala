@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MsbCeDetails, MsbCeDetailsR7}
+import models.des.msb.MsbCeDetailsR7
 import play.api.libs.json.Json
 
 case class CETransactionsInNext12Months (ceTransaction: String)

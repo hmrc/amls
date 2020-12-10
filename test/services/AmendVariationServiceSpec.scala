@@ -28,12 +28,12 @@ import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesMongoRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.ChangeIndicatorHelper
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
@@ -41,7 +41,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendVariationServiceSpec extends PlaySpec
-  with OneAppPerSuite
+  with GuiceOneAppPerSuite
   with MockitoSugar
   with ScalaFutures
   with IntegrationPatience

@@ -20,7 +20,6 @@ import models.des.supervision.SupervisionDetails
 import org.joda.time.LocalDate
 import play.api.libs.json.{Json, Reads, Writes}
 import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 sealed trait AnotherBody
 
@@ -30,7 +29,6 @@ case class AnotherBodyYes(supervisorName: String,
                           endingReason: String) extends AnotherBody
 
 case object AnotherBodyNo extends AnotherBody
-
 
 object AnotherBody {
 

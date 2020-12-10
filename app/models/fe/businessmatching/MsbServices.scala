@@ -17,7 +17,6 @@
 package models.fe.businessmatching
 
 import models.des.businessactivities.MsbServicesCarriedOut
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import utils.CommonMethods
 

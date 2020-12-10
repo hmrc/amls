@@ -18,7 +18,7 @@ package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, IpspServicesDetails, MsbMtDetails}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class MostTransactionsSpec extends PlaySpec {
 

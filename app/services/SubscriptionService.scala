@@ -60,8 +60,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
   }
 
 
-  private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest)
-                                               (implicit ec: ExecutionContext): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
+  private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
     case ex@HttpStatusException(BAD_REQUEST, _) => {
       ex.jsonBody map {
         case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
@@ -125,7 +124,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
   private def validateRequest(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     val result = validateResult(request)
     if (!result.isSuccess) {
-      val errors = result.fold(invalid = { errors =>
+      result.fold(invalid = { errors =>
         errors.foldLeft[String]("") {
           (a, b) => a + "," + b._1.toJsonString
         }

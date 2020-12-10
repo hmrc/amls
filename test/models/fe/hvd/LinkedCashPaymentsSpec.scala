@@ -18,10 +18,11 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.libs.json.{JsPath, JsSuccess}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.JsSuccess
 
-class LinkedCashPaymentsSpec extends PlaySpec with OneAppPerSuite {
+class LinkedCashPaymentsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "LinkedCashPayments" should {
 

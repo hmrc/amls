@@ -17,11 +17,11 @@
 package models.des.msb
 
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-
-class MsbFxDetailsSpec extends PlaySpec with OneAppPerSuite {
+class MsbFxDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "MsbFxDetails" should {
 

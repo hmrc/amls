@@ -43,11 +43,10 @@ object EabAll {
     EabAll(penalised, penalisedDesc, professionalBody, professionalBodyDesc)
   }
 
-  def convData(flagged: Boolean, detail: Option[String]): (Boolean, Option[String]) = {
+  def convData(flagged: Boolean, detail: Option[String]): (Boolean, Option[String]) =
     flagged match {
       case true => (true, detail)
-      case false => (false, None)
-      case _ => (false, None)
+      case _    => (false, None)
     }
-  }
+
 }

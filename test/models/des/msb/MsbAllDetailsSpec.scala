@@ -17,10 +17,10 @@
 package models.des.msb
 
 import models.fe.moneyservicebusiness._
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 
-
-class MsbAllDetailsSpec extends PlaySpec with OneAppPerSuite{
+class MsbAllDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "MsbAllDetails" should {
 

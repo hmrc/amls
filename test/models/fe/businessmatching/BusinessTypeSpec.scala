@@ -19,7 +19,7 @@ package models.fe.businessmatching
 import models.fe.businessmatching.BusinessType.{LPrLLP, LimitedCompany, Partnership, SoleProprietor, UnincorporatedBody}
 import models.des.businessdetails.{BusinessType => DesBusinessType}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json}
+import play.api.libs.json.{JsPath, JsSuccess}
 
 class BusinessTypeSpec extends PlaySpec {
 

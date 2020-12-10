@@ -17,7 +17,7 @@
 package models.des.aboutyou
 
 import models.fe.declaration.{ExternalAccountant, Other, RoleWithinBusiness}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 /**

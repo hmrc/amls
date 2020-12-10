@@ -26,7 +26,6 @@ import models.{SubscriptionViewModel, des}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.IntegrationPatience
-import org.scalatestplus.play.OneAppPerTest
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

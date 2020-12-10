@@ -18,7 +18,6 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.RegDetails
 import play.api.libs.json._
-import utils.MappingUtils.Implicits._
 
 sealed trait SaRegistered
 

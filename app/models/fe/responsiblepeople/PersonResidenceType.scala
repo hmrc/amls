@@ -17,7 +17,6 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.NationalityDetails
-import org.joda.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
 case class PersonResidenceType(
@@ -48,14 +47,12 @@ object PersonResidenceType {
       ) (unlift(PersonResidenceType.unapply))
   }
 
-
   implicit def conv(nationality: Option[NationalityDetails]): Option[PersonResidenceType] = {
     nationality match {
       case Some(details) => details
       case None => None
     }
   }
-
 
   implicit def convNationality(details: NationalityDetails): Option[PersonResidenceType] = {
     details.idDetails match {

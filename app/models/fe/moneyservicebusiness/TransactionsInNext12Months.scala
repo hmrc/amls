@@ -16,7 +16,7 @@
 
 package models.fe.moneyservicebusiness
 
-import models.des.msb.{MoneyServiceBusiness => DesMoneyServiceBusiness, MsbMtDetails}
+import models.des.msb.MsbMtDetails
 import play.api.libs.json.Json
 
 case class TransactionsInNext12Months (txnAmount: String)

@@ -32,7 +32,7 @@
 
 package models.des
 
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 import utils.AmlsBaseSpec
 

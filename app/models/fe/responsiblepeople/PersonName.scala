@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{OthrNamesOrAliasesDetails, NameDetails}
+import models.des.responsiblepeople.NameDetails
 import play.api.libs.json.{Writes => _}
 
 case class PersonName(
