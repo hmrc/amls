@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,23 @@ package models.des.businessactivities
 import models.fe.amp.Amp
 import play.api.libs.json.{Json, OFormat}
 
-case class AmpServices( artGallery: Boolean,
-                        auctionHouse: Boolean,
-                        privateDealer: Boolean,
-                        intermediary: Boolean,
+case class AmpServices( auctionHouse: Boolean,
+                        artGallery: Boolean,
+                        artAdvisorOrAgent: Boolean,
+                        artDealer: Boolean,
                         other: AmpServicesOther )
 
 object AmpServices {
   implicit val format: OFormat[AmpServices] = Json.format[AmpServices]
 
-  val none = AmpServices(artGallery = false, auctionHouse = false, privateDealer = false, intermediary = false, AmpServicesOther(otherAnswer = false, None))
+  val none = AmpServices(auctionHouse = false, artGallery = false, artAdvisorOrAgent = false, artDealer = false, AmpServicesOther(otherAnswer = false, None))
 
   implicit def conv(services: Option[Amp]) : Option[AmpServices] = {
 
     services.map(amp => amp.data.typeOfParticipant.foldLeft[AmpServices](none)((ampServices: AmpServices, service) => service match {
       case "artGalleryOwner" => ampServices.copy(artGallery = true)
-      case "artDealer" => ampServices.copy(privateDealer = true)
-      case "artAgent" => ampServices.copy(intermediary = true)
+      case "artDealer" => ampServices.copy(artDealer = true)
+      case "artAgent" => ampServices.copy(artAdvisorOrAgent = true)
       case "artAuctioneer" => ampServices.copy(auctionHouse = true)
       case "somethingElse" => ampServices.copy(other = AmpServicesOther( otherAnswer = true,
                                                                          specifyOther = amp.data.typeOfParticipantDetail))

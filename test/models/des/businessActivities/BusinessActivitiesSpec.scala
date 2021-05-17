@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,10 +71,10 @@ class BusinessActivitiesSpec extends PlaySpec {
           "developmentCompany" ->false,
           "socialHousingProvider" ->false),
         "ampServicesCarriedOut" -> Json.obj(
-          "artGallery" -> true,
           "auctionHouse" -> true,
-          "privateDealer" -> true,
-          "intermediary" -> true,
+          "artGallery" -> true,
+          "artAdvisorOrAgent" -> true,
+          "artDealer" -> true,
           "other" -> Json.obj(
             "otherAnswer" -> true,
             "specifyOther" -> "Another service")
@@ -171,10 +171,10 @@ class BusinessActivitiesSpec extends PlaySpec {
               "developmentCompany" -> false,
               "socialHousingProvider" -> false),
         "ampServicesCarriedOut" -> Json.obj(
-          "artGallery" -> true,
           "auctionHouse" -> true,
-          "privateDealer" -> true,
-          "intermediary" -> true,
+          "artGallery" -> true,
+          "artAdvisorOrAgent" -> true,
+          "artDealer" -> true,
           "other" -> Json.obj(
             "otherAnswer" -> true,
             "specifyOther" -> "Another service")

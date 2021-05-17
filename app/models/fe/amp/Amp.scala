@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,10 +56,10 @@ object Amp  {
   private implicit def conv(services: Option[AmpServices]): List[String] = {
     val optionList = services match {
       case Some(amp) => List(
-        CommonMethods.getSpecificType(amp.artGallery, "artGalleryOwner"),
-        CommonMethods.getSpecificType(amp.privateDealer, "artDealer"),
-        CommonMethods.getSpecificType(amp.intermediary, "artAgent"),
         CommonMethods.getSpecificType(amp.auctionHouse, "artAuctioneer"),
+        CommonMethods.getSpecificType(amp.artGallery, "artGalleryOwner"),
+        CommonMethods.getSpecificType(amp.artAdvisorOrAgent, "artAgent"),
+        CommonMethods.getSpecificType(amp.artDealer, "artDealer"),
         CommonMethods.getSpecificType(amp.other.otherAnswer, "somethingElse"))
       case None => List()
     }

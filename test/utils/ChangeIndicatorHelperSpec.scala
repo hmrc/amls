@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +179,7 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
 
         "section not changed amp services have changed" must {
           "set amp change indicator" in {
-            val updatedAmpServices = ampServices.copy(privateDealer = true)
+            val updatedAmpServices = ampServices.copy(artDealer = true)
             val businessActivities = mock[BusinessActivities]
             val updatedBusinessActivities = mock[BusinessActivities]
 
