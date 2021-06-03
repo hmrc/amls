@@ -17,7 +17,6 @@
 package models.des
 
 import models.des.aboutthebusiness._
-import models.des.aboutyou.AboutYouRelease7
 import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetailsView
@@ -245,12 +244,9 @@ object AmendVariationRequest {
                                        gen: AckRefGenerator,
                                        conv: Incoming => BusinessActivities,
                                        conv2: fe.eab.Eab => EabAll,
-                                       prevRegMLR: fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
                                        vatABConv: fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv: fe.businessdetails.BusinessDetails => BusinessContactDetails,
                                        conv4: Seq[fe.bankdetails.BankDetails] => Option[BankDetailsView],
-                                       tpConv: Seq[fe.tradingpremises.TradingPremises] => TradingPremises,
-                                       aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
                                        aspConv: Option[fe.asp.Asp] => Option[Asp],
                                        tcspAllConv: fe.tcsp.Tcsp => TcspAll,
                                        tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,

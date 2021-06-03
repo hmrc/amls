@@ -4,22 +4,18 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val domainVersion = "5.9.0-play-26"
-  private val playReactivemongoVersion = "7.30.0-play-26"
-  private val authVersion = "3.0.0-play-26"
-  private val joda = "2.7.4"
-
   val compile = Seq(
-    "uk.gov.hmrc" %% "simple-reactivemongo" % playReactivemongoVersion,
+    "uk.gov.hmrc"         %% "simple-reactivemongo"       % "7.31.0-play-26",
     ws,
-    "uk.gov.hmrc" %% "domain" % domainVersion,
-    "org.typelevel" %% "cats" % "0.9.0",
-    "com.eclipsesource" %% "play-json-schema-validator" % "0.9.4",
-    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "2.2.0" % "test,it",
-    "com.beachape" %% "enumeratum" % "1.6.1",
-    "uk.gov.hmrc" %% "auth-client" % authVersion,
-    "uk.gov.hmrc" %% "bootstrap-backend-play-26" % "2.24.0",
-    "com.typesafe.play" %% "play-json-joda" % joda
+    "uk.gov.hmrc"         %% "domain"                     % "5.11.0-play-26",
+    "org.typelevel"       %% "cats"                       % "0.9.0",
+    "com.eclipsesource"   %% "play-json-schema-validator" % "0.9.4",
+    "de.flapdoodle.embed" %  "de.flapdoodle.embed.mongo"  % "2.2.0" % "test,it",
+    "com.beachape"        %% "enumeratum"                 % "1.6.1",
+    "uk.gov.hmrc"         %% "bootstrap-backend-play-26"  % "5.3.0",
+    "com.typesafe.play"   %% "play-json-joda"             % "2.7.4",
+    "com.github.ghik"     %  "silencer-lib"               % "1.7.1" % Provided cross CrossVersion.full,
+    compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.1" cross CrossVersion.full)
   )
 
   trait TestDependencies {
@@ -35,12 +31,12 @@ private object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
-        "org.scalatest" %% "scalatest" % scalatestVersion % scope,
-        "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
-        "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
-        "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.mockito" % "mockito-core" % "1.10.19" % scope
+        "org.scalatest"           %% "scalatest"          % scalatestVersion % scope,
+        "org.scalatestplus.play"  %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
+        "org.scalacheck"          %% "scalacheck"         % scalacheckVersion % scope,
+        "org.pegdown"             %  "pegdown"            % pegdownVersion % scope,
+        "com.typesafe.play"       %% "play-test"          % PlayVersion.current % scope,
+        "org.mockito"             %  "mockito-core"       % "1.10.19" % scope
       )
     }.test
   }
@@ -51,11 +47,11 @@ private object AppDependencies {
       override lazy val scope: String = "it"
 
       override lazy val test = Seq(
-        "org.scalatest" %% "scalatest" % scalatestVersion % scope,
-        "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
-        "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.mockito" % "mockito-core" % "1.10.19" % scope
+        "org.scalatest"           %% "scalatest"          % scalatestVersion % scope,
+        "org.scalatestplus.play"  %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
+        "org.pegdown"             %  "pegdown"            % pegdownVersion % scope,
+        "com.typesafe.play"       %% "play-test"          % PlayVersion.current % scope,
+        "org.mockito"             %  "mockito-core"       % "1.10.19" % scope
       )
     }.test
   }

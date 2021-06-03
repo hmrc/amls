@@ -64,7 +64,6 @@ class PaymentController @Inject()(private[controllers] val paymentService: Payme
   }
 
   def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = authAction.async {
-    implicit request =>
       paymentService.getPaymentByPaymentReference(paymentReference) map {
         case Some(payment) => Ok(Json.toJson(payment))
         case _ => NotFound
@@ -72,7 +71,6 @@ class PaymentController @Inject()(private[controllers] val paymentService: Payme
   }
 
   def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = authAction.async {
-    implicit request =>
       paymentService.getPaymentByAmlsReference(amlsReference) map {
         case Some(payment) => Ok(Json.toJson(payment))
         case _ => NotFound
