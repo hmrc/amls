@@ -42,7 +42,7 @@ class RegistrationDetailsDesConnector @Inject()(private[connectors] val appConfi
     private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
 
-    httpClient.GET[HttpResponse](url, desHeaders)(implicitly, hc, ec) map {
+    httpClient.GET[HttpResponse](url, headers = desHeaders)(implicitly, hc, ec) map {
       case response if response.status == OK => response.json.as[RegistrationDetails]
       case response => throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
     }

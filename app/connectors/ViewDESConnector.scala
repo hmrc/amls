@@ -57,7 +57,7 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.GET[HttpResponse](Url, desHeaders)(implicitly[HttpReads[HttpResponse]], hc,ec) map {
+    httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc,ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
