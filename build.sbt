@@ -4,7 +4,6 @@ import sbt._
 import uk.gov.hmrc._
 import DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName: String = "amls"
@@ -36,7 +35,8 @@ def findPlayConfFiles(rootDir: File): Seq[String] = {
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
-    ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
+    ScoverageKeys.coverageExcludedPackages :=
+      "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
     ScoverageKeys.coverageMinimum := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true,
@@ -49,7 +49,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(majorVersion := 4)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(scalaVersion := "2.12.13")
+  .settings(scalaVersion := "2.12.12")
   .settings(defaultSettings(): _*)
   .settings(
     libraryDependencies ++= appDependencies,
@@ -65,10 +65,7 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest /testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     IntegrationTest / parallelExecution := false
   )
-  .settings(
-    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
-    resolvers += Resolver.bintrayRepo("emueller", "maven")
-  )
+  .settings(resolvers += Resolver.bintrayRepo("emueller", "maven"))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(scalacOptions += "-P:silencer:pathFilters=routes")
   .settings(scalacOptions += "-P:silencer:globalFilters=Unused import")

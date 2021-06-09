@@ -71,11 +71,11 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
 
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj("errors" -> Seq(
+        Json.obj("path" -> "obj.withdrawalReason",
+          "error" -> "error.path.missing"),
         Json.obj("path" -> "obj.acknowledgementReference",
           "error" -> "error.path.missing"),
         Json.obj("path" -> "obj.withdrawalDate",
-          "error" -> "error.path.missing"),
-        Json.obj("path" -> "obj.withdrawalReason",
           "error" -> "error.path.missing")
       ))
 
