@@ -20,7 +20,6 @@ import config.ApplicationConfig
 import javax.inject.{Inject, Singleton}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.Authorization
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
@@ -36,13 +35,13 @@ class DESConnector @Inject()(applicationConfig: ApplicationConfig,
   private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
 
+  protected implicit val hc = HeaderCarrier()
 
-  protected def desHeaderCarrier(implicit hc: HeaderCarrier) = {
+  protected def desHeaders = Seq(
+    "Authorization" -> token,
+    "Environment" -> env,
+    HeaderNames.ACCEPT -> "application/json",
+    HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
+  )
 
-    hc.copy(authorization = Some(Authorization(token))).withExtraHeaders(
-      "Environment" -> env,
-      HeaderNames.ACCEPT -> "application/json",
-      HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
-    )
-  }
 }

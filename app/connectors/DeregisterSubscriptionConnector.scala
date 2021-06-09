@@ -59,7 +59,7 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
     Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data)(wr1,implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, desHeaders)(wr1,implicitly[HttpReads[HttpResponse]],hc, ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")
