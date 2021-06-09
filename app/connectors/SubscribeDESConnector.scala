@@ -64,7 +64,7 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
 
     val url = s"$fullUrl/$safeId"
 
-    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data)(wr1, implicitly[HttpReads[HttpResponse]], desHeaderCarrier,ec) map {
+    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

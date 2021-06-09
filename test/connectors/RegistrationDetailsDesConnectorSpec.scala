@@ -49,8 +49,8 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        connector.httpClient.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"))(any(), any(), any())
-      } thenReturn Future.successful(HttpResponse(OK, Some(Json.toJson(details))))
+        connector.httpClient.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"), any(), any())(any(), any(), any())
+      } thenReturn Future.successful(HttpResponse(status = OK, json = Json.toJson(details), headers = Map.empty))
 
       whenReady (connector.getRegistrationDetails(safeId)) { _ mustBe details }
 

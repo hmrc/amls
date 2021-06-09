@@ -58,7 +58,7 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.GET[HttpResponse](s"$Url/status")(implicitly[HttpReads[HttpResponse]],desHeaderCarrier,ec) map {
+    httpClient.GET[HttpResponse](s"$Url/status", headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
         Logger.debug(s"$prefix - Base Response: ${response.status}")

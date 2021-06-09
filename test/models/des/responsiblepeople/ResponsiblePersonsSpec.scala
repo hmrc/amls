@@ -188,18 +188,18 @@ object RPValues {
     "nino" -> "nino"
   )
   val idDetails = Json.obj()
-    .+("ukResident", ukResident)
-    .+("dateOfBirth", JsString("1990-02-24"))
+    .+(("ukResident", ukResident))
+    .+(("dateOfBirth", JsString("1990-02-24")))
   val nationalityDetails = Json.obj()
-    .+("areYouUkResident", JsBoolean(true))
-    .+("idDetails", idDetails)
-    .+("countryOfBirth", JsString("GB"))
-    .+("nationality", JsString("GB"))
+    .+(("areYouUkResident", JsBoolean(true)))
+    .+(("idDetails", idDetails))
+    .+(("countryOfBirth", JsString("GB")))
+    .+(("nationality", JsString("GB")))
 
   val jsonExpectedFromWritePhase2 = jsonExpectedFromWrite
     .-("nationalityDetails")
-    .+("nationalityDetails", nationalityDetails)
+    .+(("nationalityDetails", nationalityDetails))
     .-("msbOrTcsp")
-    .+("passedFitAndProperTest", JsBoolean(false))
-    .+("passedApprovalCheck", JsBoolean(true))
+    .+(("passedFitAndProperTest", JsBoolean(false)))
+    .+(("passedApprovalCheck", JsBoolean(true)))
 }

@@ -62,7 +62,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
 
     "convert to frontend MSB model to correct Msb Des model when Send money to other country is true" in {
@@ -99,7 +99,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
 
     "convert to frontend MSB model to correct Msb Des model when submission is not an amendment or variation" in {
@@ -136,7 +136,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, false) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, false)) must be(Some(msbMtDetails))
     }
 
 
@@ -178,7 +178,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
 
 
@@ -220,7 +220,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
 
     "convert to frontend MSB model to correct Msb Des model when psrNumberModel is None" in {
@@ -261,7 +261,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(mostTransactions),
         Some(whichCurrencies)
       )
-      MsbMtDetails.conv(msbModel, bm, true) must be(Some(msbMtDetails))
+      MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
   }
 }

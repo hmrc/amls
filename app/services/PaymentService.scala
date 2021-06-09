@@ -45,8 +45,7 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector,
     }
   }
 
-  def createBacsPayment(request: CreateBacsPaymentRequest)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Payment] = {
+  def createBacsPayment(request: CreateBacsPaymentRequest)(implicit ec: ExecutionContext): Future[Payment] = {
     paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
       case Some(p) =>
         val copied = p.copy(isBacs = Some(true))
@@ -55,13 +54,12 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector,
     }
   }
 
-  def getPaymentByAmlsReference(amlsRefNo: String)(implicit ec: ExecutionContext, hc: HeaderCarrier) =
-    paymentsRepository.findLatestByAmlsReference(amlsRefNo)
+  def getPaymentByAmlsReference(amlsRefNo: String) = paymentsRepository.findLatestByAmlsReference(amlsRefNo)
 
-  def getPaymentByPaymentReference(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Option[Payment]] =
+  def getPaymentByPaymentReference(paymentReference: String): Future[Option[Payment]] =
     paymentsRepository.findLatestByPaymentReference(paymentReference)
 
-  def updatePayment(payment: Payment)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Boolean] =
+  def updatePayment(payment: Payment)(implicit ec: ExecutionContext): Future[Boolean] =
     paymentsRepository.update(payment) map {
       case r if r.ok => true
       case result => throw new Exception(result.errmsg.getOrElse(s"Unknown error when trying to update payment ref ${payment.reference}"))

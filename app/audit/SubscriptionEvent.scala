@@ -51,8 +51,7 @@ object SubscriptionFailedEvent {
   (safeId: String, request: SubscriptionRequest, ex: HttpStatusException)
   (implicit
    hc: HeaderCarrier,
-   reqW: Writes[SubscriptionRequest],
-   resW: Writes[SubscriptionResponse]
+   reqW: Writes[SubscriptionRequest]
   ): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,
@@ -71,8 +70,7 @@ object SubscriptionValidationFailedEvent {
   (safeId: String, request: SubscriptionRequest, validationResults: Seq[JsObject])
   (implicit
    hc: HeaderCarrier,
-   reqW: Writes[SubscriptionRequest],
-   resW: Writes[SubscriptionResponse]
+   reqW: Writes[SubscriptionRequest]
   ): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,
@@ -90,11 +88,7 @@ object SubscriptionValidationFailedEvent {
 object AmendmentEvent {
   def apply
   (amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
-  (implicit
-   hc: HeaderCarrier,
-   reqW: Writes[AmendVariationRequest],
-   resW: Writes[AmendVariationResponse]
-  ): ExtendedDataEvent = {
+  (implicit hc: HeaderCarrier): ExtendedDataEvent = {
 
     val inputAuditType = request.amlsMessageType match {
       case "Amendment" => "amendmentSubmitted"
@@ -126,11 +120,7 @@ object AmendmentEvent {
 object AmendmentEventFailed {
   def apply
   (amlsRegistrationNumber: String, request: AmendVariationRequest, ex: HttpStatusException)
-  (implicit
-   hc: HeaderCarrier,
-   reqW: Writes[SubscriptionRequest],
-   resW: Writes[SubscriptionResponse]
-  ): ExtendedDataEvent = {
+  (implicit hc: HeaderCarrier): ExtendedDataEvent = {
 
     val inputAuditType = request.amlsMessageType match {
       case "Amendment" => "amendmentFailed"

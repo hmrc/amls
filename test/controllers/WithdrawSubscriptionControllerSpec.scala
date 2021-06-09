@@ -69,22 +69,20 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
       contentAsJson(result) must be(Json.toJson(success))
     }
 
-
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj("errors" -> Seq(
-        Json.obj("path" -> "obj.withdrawalReason",
-          "error" -> "error.path.missing"),
         Json.obj("path" -> "obj.acknowledgementReference",
           "error" -> "error.path.missing"),
         Json.obj("path" -> "obj.withdrawalDate",
-          "error" -> "error.path.missing"))
-      )
+          "error" -> "error.path.missing"),
+        Json.obj("path" -> "obj.withdrawalReason",
+          "error" -> "error.path.missing")
+      ))
 
       private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequestWithNoBody)
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
-
 
     "return failed response on exception" in new Fixture {
       when(desConnector.withdrawal(any(), any())(any(), any(), any(), any(), any()))

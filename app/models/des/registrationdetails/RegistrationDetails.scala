@@ -51,6 +51,7 @@ object OrganisationType {
 }
 
 sealed trait OrganisationBodyDetails
+
 case class Organisation(organisationName: String, isAGroup: Option[Boolean] = None, organisationType: Option[OrganisationType] = None) extends OrganisationBodyDetails
 
 object Organisation {

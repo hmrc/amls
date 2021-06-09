@@ -35,10 +35,9 @@ object MsbMtDetails {
   implicit val format = Json.format[MsbMtDetails]
 
   implicit def conv(msbNbmTuple:(models.fe.moneyservicebusiness.MoneyServiceBusiness, models.fe.businessmatching.BusinessMatching, Boolean)) : Option[MsbMtDetails] = {
-
     val (msb, bm, amendVariation) = msbNbmTuple
 
-    val (largetAmount, largestTransaction) = msb.sendMoneyToOtherCountry.foldLeft[(Option[CountriesList], Option[CountriesList])](None, None)(
+    val (largetAmount, largestTransaction) = msb.sendMoneyToOtherCountry.foldLeft[(Option[CountriesList], Option[CountriesList])]((None, None))(
       (x, y)=> y.money match {
       case true =>  (msb.sendTheLargestAmountsOfMoney.fold[Seq[String]](Seq.empty)(x => Seq(Some(x.country_1), x.country_2, x.country_3).flatten),
         msb.mostTransactions.fold[Seq[String]](Seq.empty)(x => x.mostTransactionsCountries))
