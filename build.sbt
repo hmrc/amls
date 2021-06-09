@@ -56,7 +56,7 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged := true,
     PlayKeys.playDefaultPort := 8940
   )
-.configs(IntegrationTest)
+  .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     IntegrationTest / Keys.fork := false,
@@ -64,9 +64,9 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest /testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     IntegrationTest / parallelExecution := false
-  )
-  .settings(resolvers += Resolver.bintrayRepo("emueller", "maven"))
+   )
   .disablePlugins(JUnitXmlReportPlugin)
+  .settings(resolvers += "third-party-maven-releases" at "https://artefacts.tax.service.gov.uk/artifactory/third-party-maven-releases/")
   .settings(scalacOptions += "-P:silencer:pathFilters=routes")
   .settings(scalacOptions += "-P:silencer:globalFilters=Unused import")
 
