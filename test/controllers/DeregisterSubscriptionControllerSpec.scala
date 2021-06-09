@@ -81,11 +81,11 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj(
         "errors" -> Seq(
-          Json.obj("path" -> "obj.deregistrationReason",
-            "error" -> "error.path.missing"),
           Json.obj("path" -> "obj.acknowledgementReference",
             "error" -> "error.path.missing"),
           Json.obj("path" -> "obj.deregistrationDate",
+            "error" -> "error.path.missing"),
+          Json.obj("path" -> "obj.deregistrationReason",
             "error" -> "error.path.missing")
         ))
 

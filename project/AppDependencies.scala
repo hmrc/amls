@@ -16,8 +16,8 @@ private object AppDependencies {
     "uk.gov.hmrc"         %% "bootstrap-backend-play-26"  % "5.3.0",
     "com.typesafe.play"   %% "play-json-joda"             % "2.7.4",
     "com.github.kxbmap"   %% "configs"                    % "0.4.4",
-    "com.github.ghik"     %  "silencer-lib"               % "1.7.1" % Provided cross CrossVersion.full,
-    compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.1" cross CrossVersion.full)
+    "com.github.ghik"     %  "silencer-lib"               % "1.7.5" % Provided cross CrossVersion.full,
+    compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.5" cross CrossVersion.full)
   )
 
   trait TestDependencies {
