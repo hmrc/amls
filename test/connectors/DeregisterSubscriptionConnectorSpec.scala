@@ -82,7 +82,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return failed response on invalid request" in new Fixture {
       val response = HttpResponse(
         status = BAD_REQUEST,
-        body = "message",
+        body = "",
         headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
@@ -94,7 +94,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(BAD_REQUEST)
-          body must be(Some("message"))
+          body.getOrElse("").isEmpty must be(true)
       }
     }
 

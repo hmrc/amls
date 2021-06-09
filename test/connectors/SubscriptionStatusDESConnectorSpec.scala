@@ -89,7 +89,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
 
       val response = HttpResponse(
         status = BAD_REQUEST,
-        body = "400",
+        body = "",
         headers = Map.empty
       )
       when {
@@ -99,16 +99,15 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
-          body mustEqual Some("400")
+          body.getOrElse("").isEmpty mustEqual true
       }
     }
 
     "return a failed future (json validation)" in new Fixture {
 
-      val msg = "message"
       val response = HttpResponse(
-        status = INTERNAL_SERVER_ERROR,
-        body = msg,
+        status = OK,
+        json = Json.toJson("message"),
         headers = Map.empty
       )
 
@@ -118,8 +117,8 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some(msg)
+          status mustEqual OK
+          body mustEqual Some("\"message\"")
       }
     }
 

@@ -80,12 +80,12 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
       "return an unsuccessful response when a non-200 response is returned" in new Fixture {
 
-        mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "message")))
+        mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "")))
 
         whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual BAD_REQUEST
-            body mustEqual Some("message")
+            body.getOrElse("").isEmpty mustEqual true
         }
       }
 

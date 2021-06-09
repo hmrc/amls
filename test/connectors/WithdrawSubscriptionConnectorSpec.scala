@@ -84,10 +84,8 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
     "return failed response on invalid request" in new Fixture {
       val response = HttpResponse(
         status = BAD_REQUEST,
-        body = "message",
-        headers = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        )
+        body = "",
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       when {
@@ -98,7 +96,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(BAD_REQUEST)
-          body must be(Some("message"))
+          body.getOrElse("").isEmpty must be(true)
       }
     }
 
