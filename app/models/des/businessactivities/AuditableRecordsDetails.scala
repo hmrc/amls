@@ -28,7 +28,7 @@ object TransactionRecordingMethod {
   implicit val format = Json.format[TransactionRecordingMethod]
 
   implicit def convert(record: Set[TransactionType]): Option[TransactionRecordingMethod] = {
-    val (digiTrType, value) = record.foldLeft[(Boolean, Option[String])](false, None) {
+    val (digiTrType, value) = record.foldLeft[(Boolean, Option[String])]((false, None)) {
       case (m, DigitalSoftware(str)) =>
         (true, Some(str))
       case (m, _) =>

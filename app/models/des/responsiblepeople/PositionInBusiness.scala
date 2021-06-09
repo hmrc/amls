@@ -41,7 +41,7 @@ object PositionInBusiness {
   }
 
   private def getPositionAsflags(positions: Positions) = {
-    positions.positions.foldLeft(false, false, false, false, false, false, false, false){
+    positions.positions.foldLeft((false, false, false, false, false, false, false, false)){
       (pos, p) => p match {
         case BeneficialOwner => pos.copy(_1 = true)
         case Director => pos.copy(_2 = true)

@@ -68,7 +68,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
     "called" must {
       "call the ES6 enrolment store endpoint for known facts" in new Fixture {
 
-        val response = HttpResponse(NO_CONTENT, responseString = Some("message"))
+        val response = HttpResponse(status = NO_CONTENT, body = "message")
 
         mockResponse(Future.successful(response))
 
@@ -80,7 +80,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
       "return an unsuccessful response when a non-200 response is returned" in new Fixture {
 
-        mockResponse(Future.successful(HttpResponse(BAD_REQUEST, responseString = Some("message"))))
+        mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "message")))
 
         whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>

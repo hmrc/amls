@@ -21,9 +21,9 @@ import play.api.libs.json.Json
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
 case class TradingPremises(
-                            ownBusinessPremises: Option[OwnBusinessPremises],
-                            agentBusinessPremises: Option[AgentBusinessPremises]
-                          )
+  ownBusinessPremises: Option[OwnBusinessPremises],
+  agentBusinessPremises: Option[AgentBusinessPremises]
+)
 
 object TradingPremises {
 
@@ -37,4 +37,5 @@ object TradingPremises {
   implicit def convert(tradingPremises: Option[Seq[FETradingPremises]])(implicit requestType: RequestType): TradingPremises = {
     convert(tradingPremises.getOrElse(Seq.empty))
   }
+
 }

@@ -59,7 +59,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
     "return a successful response" in new Fixture {
 
-      val response = HttpResponse(OK, responseString = Some("message"))
+      val response = HttpResponse(status = OK, body = "message")
       when {
         testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
@@ -71,7 +71,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
     "return an unsuccessful response when a non-200 response is returned" in new Fixture {
 
-      val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
+      val response = HttpResponse(status = BAD_REQUEST, body = "message")
 
       when {
         testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())

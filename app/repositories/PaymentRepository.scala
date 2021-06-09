@@ -25,7 +25,7 @@ import reactivemongo.api.DefaultDB
 import reactivemongo.api.commands.{UpdateWriteResult, WriteResult}
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONObjectID
-import reactivemongo.play.json.ImplicitBSONHandlers._
+import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
 import uk.gov.hmrc.mongo.ReactiveRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -52,19 +52,18 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
     )
   }
 
-  def insert(newPayment: Payment): Future[Payment] = collection.insert(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
+  def insert(newPayment: Payment): Future[Payment] =
+    collection.insert(ordered = false).one(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
 
-  def update(payment: Payment): Future[UpdateWriteResult] = collection.update(
-    Json.obj("_id" -> payment._id),
-    payment
-  )
+  def update(payment: Payment): Future[UpdateWriteResult] =
+    collection.update(ordered = false).one(Json.obj("_id" -> payment._id), payment)
 
   def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] = {
-    collection.find(Json.obj("amlsRefNo" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Payment]
+    collection.find(Json.obj("amlsRefNo" -> amlsReferenceNumber), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
 
   def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] =
-    collection.find(Json.obj("reference" -> paymentReference)).sort(Json.obj("createdAt" -> -1)).one[Payment]
+    collection.find(Json.obj("reference" -> paymentReference), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Payment]
 
   private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
     case writeResult: WriteResult if isError(writeResult) => {

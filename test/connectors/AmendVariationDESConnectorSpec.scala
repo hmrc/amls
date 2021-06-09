@@ -87,11 +87,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
     "return a succesful future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseJson = Some(Json.toJson(successModel))
+        status = OK,
+        json = Json.toJson(successModel),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       when {
@@ -107,10 +105,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
     "return a failed future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        )
+        status = BAD_REQUEST,
+        body = "",
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
@@ -129,7 +126,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
-          body mustEqual None
+          body.getOrElse("").isEmpty mustEqual true
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
           verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
@@ -142,11 +139,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
     "return a Successful AmendEvent" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseJson = Some(Json.toJson(successModel))
+        status = OK,
+        json = Json.toJson(successModel),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
@@ -175,11 +170,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
     "return a failed future (json validation)" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseString = Some("message")
+        status = OK,
+        json = Json.toJson("message"),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
@@ -198,7 +191,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual OK
-          body mustEqual Some("message")
+          body mustEqual Some("\"message\"")
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
           verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
@@ -235,6 +228,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
           capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
+
   }
 
   def testRequest = Json.parse(
@@ -1076,4 +1070,5 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
      }
   }
       }""").as[AmendVariationRequest]
+
 }

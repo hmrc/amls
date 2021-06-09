@@ -68,16 +68,16 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
 
   "DESConnector" must {
 
-    "return a succesful future" in new Fixture {
+    "return a successful future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map.empty,
-        responseJson = Some(Json.toJson(successModel))
+        status = OK,
+        json = Json.toJson(successModel),
+        headers = Map.empty
       )
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber)) {
@@ -88,43 +88,44 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
     "return a failed future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map.empty
+        status = BAD_REQUEST,
+        body = "400",
+        headers = Map.empty
       )
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
-          body mustEqual None
+          body mustEqual Some("400")
       }
     }
 
     "return a failed future (json validation)" in new Fixture {
 
+      val msg = "message"
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map.empty,
-        responseString = Some("message")
+        status = INTERNAL_SERVER_ERROR,
+        body = msg,
+        headers = Map.empty
       )
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
-          status mustEqual OK
-          body mustEqual Some("message")
+          status mustEqual INTERNAL_SERVER_ERROR
+          body mustEqual Some(msg)
       }
     }
 
     "return a failed future (exception)" in new Fixture {
-
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url))(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {

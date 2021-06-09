@@ -19,6 +19,7 @@ package models.des.msb
 import models.fe.moneyservicebusiness.{MoneyServiceBusiness => FeMoneyServiceBusiness, _}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+import play.api.Logger
 import play.api.libs.json.Json
 
 class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
@@ -85,6 +86,7 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(true))
+          case _ => Logger.info("No MsbCe Details")
         }
       }
 
@@ -94,6 +96,7 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(false))
+          case _ => Logger.info("No MsbCe Details")
         }
       }
 

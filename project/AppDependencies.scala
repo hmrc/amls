@@ -5,8 +5,9 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   val compile = Seq(
-    "uk.gov.hmrc"         %% "simple-reactivemongo"       % "7.31.0-play-26",
     ws,
+    "uk.gov.hmrc"         %% "simple-reactivemongo"       % "8.0.0-play-26",
+    "uk.gov.hmrc"         %% "mongo-caching"              % "7.0.0-play-26",
     "uk.gov.hmrc"         %% "domain"                     % "5.11.0-play-26",
     "org.typelevel"       %% "cats"                       % "0.9.0",
     "com.eclipsesource"   %% "play-json-schema-validator" % "0.9.4",
@@ -14,8 +15,9 @@ private object AppDependencies {
     "com.beachape"        %% "enumeratum"                 % "1.6.1",
     "uk.gov.hmrc"         %% "bootstrap-backend-play-26"  % "5.3.0",
     "com.typesafe.play"   %% "play-json-joda"             % "2.7.4",
-    "com.github.ghik"     %  "silencer-lib"               % "1.7.1" % Provided cross CrossVersion.full,
-    compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.1" cross CrossVersion.full)
+    "com.github.kxbmap"   %% "configs"                    % "0.4.4",
+    "com.github.ghik"     %  "silencer-lib"               % "1.7.5" % Provided cross CrossVersion.full,
+    compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.5" cross CrossVersion.full)
   )
 
   trait TestDependencies {

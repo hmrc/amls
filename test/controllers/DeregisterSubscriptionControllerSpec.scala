@@ -78,15 +78,14 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
       contentAsJson(result) must be(Json.toJson(success))
     }
 
-
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj(
         "errors" -> Seq(
-          Json.obj("path" -> "obj.deregistrationReason",
-            "error" -> "error.path.missing"),
           Json.obj("path" -> "obj.acknowledgementReference",
             "error" -> "error.path.missing"),
           Json.obj("path" -> "obj.deregistrationDate",
+            "error" -> "error.path.missing"),
+          Json.obj("path" -> "obj.deregistrationReason",
             "error" -> "error.path.missing")
         ))
 
@@ -94,7 +93,6 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
-
 
     "return failed response on exception" in new Fixture {
 
@@ -119,5 +117,6 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
       status(result) must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
+
   }
 }

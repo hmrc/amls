@@ -55,13 +55,13 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     "return a successful response" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map.empty,
-        responseJson = Some(Json.toJson(testPayment))
+        status = OK,
+        json = Json.toJson(testPayment),
+        headers = Map.empty
       )
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId)) {
@@ -71,23 +71,23 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
 
     "return an unsuccessful response when a non-200 response is returned" in new Fixture {
 
-      val response = HttpResponse(BAD_REQUEST, responseString = Some("message"))
+      val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
-          body mustEqual Some("message")
+          body.getOrElse("").isEmpty mustEqual true
       }
     }
 
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl))(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady (testConnector.getPayment(testPaymentId).failed) {

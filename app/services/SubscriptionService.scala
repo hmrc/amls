@@ -43,7 +43,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                     private[services] val auditConnector: AuditConnector,
                                     private[services] val config: ApplicationConfig,
-                                    private[services] val feeResponseRepository: FeesRepository = FeesRepository()) {
+                                    val feeResponseRepository: FeesRepository) {
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 

@@ -116,7 +116,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByPaymentReference(eqTo(paymentRef))(any(), any())
+          testPaymentService.getPaymentByPaymentReference(eqTo(paymentRef))
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
@@ -127,7 +127,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
       "return a 404 Not Found when the reference doesn't match" in new Fixture {
         when {
-          testPaymentService.getPaymentByPaymentReference(any())(any(), any())
+          testPaymentService.getPaymentByPaymentReference(any())
         } thenReturn Future.successful(None)
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRefGen.sample.get)(request)
@@ -143,7 +143,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByAmlsReference(eqTo(amlsRef))(any(), any())
+          testPaymentService.getPaymentByAmlsReference(eqTo(amlsRef))
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByAmlsRef(accountType, accountRef, amlsRef)(request)
@@ -154,7 +154,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
       "return a 404 Not Found when the reference doesn't match" in new Fixture {
         when {
-          testPaymentService.getPaymentByAmlsReference(any())(any(), any())
+          testPaymentService.getPaymentByAmlsReference(any())
         } thenReturn Future.successful(None)
 
         val result = testController.getPaymentByAmlsRef(accountType, accountRef, paymentRefGen.sample.get)(request)
@@ -209,11 +209,11 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByPaymentReference(eqTo(payment.reference))(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(eqTo(payment.reference))
         } thenReturn Future.successful(Some(payment))
 
         when {
-          testController.paymentService.updatePayment(any())(any(), any())
+          testController.paymentService.updatePayment(any())(any())
         } thenReturn Future.successful(true)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
@@ -221,14 +221,14 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val result = testController.updateBacsFlag(accountType, accountRef, payment.reference)(putRequest)
 
         status(result) mustBe NO_CONTENT
-        verify(testController.paymentService).updatePayment(eqTo(payment.copy(isBacs = Some(true))))(any(), any())
+        verify(testController.paymentService).updatePayment(eqTo(payment.copy(isBacs = Some(true))))(any())
       }
 
       "return 404 Not Found if the payment was not found" in new Fixture {
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByPaymentReference(any())(any(), any())
+          testController.paymentService.getPaymentByPaymentReference(any())
         } thenReturn Future.successful(None)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
@@ -245,7 +245,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
       val payment = Payment(createBacsRequest)
 
       when {
-        testController.paymentService.createBacsPayment(eqTo(createBacsRequest))(any(), any())
+        testController.paymentService.createBacsPayment(eqTo(createBacsRequest))(any())
       } thenReturn Future.successful(payment)
 
       val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.toJson(createBacsRequest))

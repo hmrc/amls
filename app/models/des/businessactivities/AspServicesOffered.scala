@@ -39,7 +39,7 @@ object AspServicesOffered {
 
   implicit def conv1(svcs: Set[Service]) : Option[AspServicesOffered] = {
     val (accountant, payrollServiceProvider, bookKeeper,
-    auditor, financialOrTaxAdvisor) = svcs.foldLeft[(Boolean, Boolean, Boolean, Boolean, Boolean)](false, false, false, false, false)((x, y) =>
+    auditor, financialOrTaxAdvisor) = svcs.foldLeft[(Boolean, Boolean, Boolean, Boolean, Boolean)]((false, false, false, false, false))((x, y) =>
       y match {
         case Accountancy => x.copy(_1 = true)
         case PayrollServices => x.copy(_2 = true)

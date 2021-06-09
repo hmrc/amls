@@ -54,10 +54,8 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
-    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     PlayKeys.playDefaultPort := 8940
   )
-
 .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
@@ -72,6 +70,8 @@ lazy val microservice = Project(appName, file("."))
     resolvers += Resolver.bintrayRepo("emueller", "maven")
   )
   .disablePlugins(JUnitXmlReportPlugin)
+  .settings(scalacOptions += "-P:silencer:pathFilters=routes")
+  .settings(scalacOptions += "-P:silencer:globalFilters=Unused import")
 
 val allPhases = "tt->test;test->test;test->compile;compile->compile"
 val allItPhases = "tit->it;it->it;it->compile;compile->compile"

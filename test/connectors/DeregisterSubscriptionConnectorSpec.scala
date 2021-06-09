@@ -64,11 +64,9 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return successful response for valid request" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseJson = Some(Json.toJson(successModel))
+        status = OK,
+        json = Json.toJson(successModel),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       when {
@@ -83,11 +81,9 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
     "return failed response on invalid request" in new Fixture {
       val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseString = Some("message")
+        status = BAD_REQUEST,
+        body = "message",
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       when {

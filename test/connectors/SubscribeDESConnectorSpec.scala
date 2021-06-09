@@ -79,11 +79,9 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     "return a succesful future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseJson = Some(Json.toJson(successModel))
+        status = OK,
+        json = Json.toJson(successModel),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       when {
@@ -99,10 +97,9 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     "return a failed future" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = BAD_REQUEST,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        )
+        status = BAD_REQUEST,
+        body = "",
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
@@ -121,7 +118,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
-          body mustEqual None
+          body.getOrElse("").isEmpty mustEqual true
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
           verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
@@ -134,11 +131,9 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     "return a failed future (json validation)" in new Fixture {
 
       val response = HttpResponse(
-        responseStatus = OK,
-        responseHeaders = Map(
-          "CorrelationId" -> Seq("my-correlation-id")
-        ),
-        responseString = Some("message")
+        status = OK,
+        json = Json.toJson("message"),
+        headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
@@ -157,7 +152,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       whenReady(testConnector.subscribe(safeId, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual OK
-          body mustEqual Some("message")
+          body mustEqual Some("\"message\"")
           val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
           verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
           val capturedEvent = captor.getValue
@@ -225,7 +220,6 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   }
 
   def testRequest = Json.parse(
-
     """{
   "acknowledgementReference": "$AckRef$",
   "businessDetails": {
@@ -580,4 +574,5 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     "declarationFlag": true
   }
 }""").as[SubscriptionRequest]
+
 }

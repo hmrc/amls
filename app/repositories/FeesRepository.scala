@@ -20,11 +20,11 @@ import com.google.inject.{Inject, Provider, Singleton}
 import models.Fees
 import play.api.Logger
 import play.api.libs.json.Json
-import play.modules.reactivemongo.{MongoDbConnection, ReactiveMongoComponent}
+import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
-import reactivemongo.play.json.ImplicitBSONHandlers._
+import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
 import uk.gov.hmrc.mongo.ReactiveRepository
 import utils.MongoUtils._
 
@@ -54,21 +54,15 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
   }
 
   override def insert(feeResponse: Fees): Future[Boolean] = {
-    collection.insert[Fees](feeResponse) map { lastError =>
+    collection.insert(ordered = false).one(feeResponse) map { lastError =>
       Logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result: ${lastError.ok}, errors: ${lastError.writeErrors.getMessages}")
       lastError.ok
     }
   }
 
   override def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] = {
-    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber)).sort(Json.obj("createdAt" -> -1)).one[Fees]
+    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Fees]
   }
 }
 
-object FeesRepository extends MongoDbConnection {
-
-  private lazy val feesRepository = new FeesMongoRepository
-
-  def apply(): FeesMongoRepository = feesRepository
-}
 

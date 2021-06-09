@@ -232,10 +232,13 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       converted.agentBusinessPremises match {
         case Some(x: AgentBusinessPremises) => x.agentDetails match {
-          case Some(details: Seq[AgentDetails]) =>
-            details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
-            details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
-        }
+           case Some(details: Seq[AgentDetails]) =>
+             details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
+             details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
+
+           case _ => throw new RuntimeException("Invalid Agent details")
+         }
+        case _ => throw new RuntimeException("Invalid Agent Business Premises")
       }
 
     }
@@ -277,10 +280,14 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
         result.agentBusinessPremises match {
           case Some(p) => p.agentDetails match {
-            case Some(agentDetails :: tail) =>
+            case Some(agentDetails :: _) =>
               agentDetails.removalReason must be(Some("Other"))
               agentDetails.removalReasonOther must be(Some("Some other reason"))
+
+            case _ => throw new RuntimeException("Invalid Agent details")
           }
+
+          case _ => throw new RuntimeException("Invalid Agent Business Premises")
         }
 
       }
