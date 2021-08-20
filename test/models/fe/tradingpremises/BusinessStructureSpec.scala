@@ -37,11 +37,11 @@ class BusinessStructureSpec extends PlaySpec {
 
     "Write JSON data successfully" in {
 
-      Json.toJson(BusinessStructure.SoleProprietor) must be(Json.obj("agentsBusinessStructure" -> "01"))
-      Json.toJson(BusinessStructure.LimitedLiabilityPartnership) must be(Json.obj("agentsBusinessStructure" -> "02"))
-      Json.toJson(BusinessStructure.Partnership) must be(Json.obj("agentsBusinessStructure" -> "03"))
-      Json.toJson(BusinessStructure.IncorporatedBody) must be(Json.obj("agentsBusinessStructure" -> "04"))
-      Json.toJson(BusinessStructure.UnincorporatedBody) must be(Json.obj("agentsBusinessStructure" -> "05"))
+      Json.toJson(BusinessStructure.SoleProprietor: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "01"))
+      Json.toJson(BusinessStructure.LimitedLiabilityPartnership: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "02"))
+      Json.toJson(BusinessStructure.Partnership: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "03"))
+      Json.toJson(BusinessStructure.IncorporatedBody: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "04"))
+      Json.toJson(BusinessStructure.UnincorporatedBody: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "05"))
     }
 
     "throw error for invalid data" in {

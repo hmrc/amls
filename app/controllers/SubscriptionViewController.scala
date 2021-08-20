@@ -18,9 +18,10 @@ package controllers
 
 import connectors.ViewDESConnector
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import models.fe.SubscriptionView
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -32,7 +33,7 @@ import scala.concurrent.Future
 @Singleton
 class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
                                            authAction: AuthAction,
-                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
+                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
 
   private[controllers] def connector: ViewDESConnector = vdc
 
@@ -47,20 +48,20 @@ class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
   def view(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async {
       implicit request =>
-        Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
           case Some(_) =>
             connector.view(amlsRegistrationNumber) map {
               response =>
                val feModel:SubscriptionView = response
                 val prefix = "[SubscriptionViewController][view]"
-                Logger.debug(s"$prefix model - $feModel")
+                logger.debug(s"$prefix model - $feModel")
                 val json = Json.toJson(feModel)
-                Logger.debug(s"$prefix Json - $json")
+                logger.debug(s"$prefix Json - $json")
                 Ok(json)
             } recoverWith {
               case e@HttpStatusException(status, Some(body)) =>
-                Logger.warn(s"$prefix - Status: ${status}, Message: $body")
+                logger.warn(s"$prefix - Status: ${status}, Message: $body")
                 Future.failed(e)
             }
 

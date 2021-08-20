@@ -87,7 +87,7 @@ class AccountViewSpec extends PlaySpec {
         )
         val ukAccountViewModel = ukAccountView("112233", "12345678")
 
-        Json.toJson(ukAccountViewModel) must be(json)
+        Json.toJson(ukAccountViewModel: AccountView) must be(json)
       }
 
       "given non-uk account json with account number" in {
@@ -104,7 +104,7 @@ class AccountViewSpec extends PlaySpec {
         )
         val nonUkAccountViewModel = AccountNumberView(accountNumber = "12345678")
 
-        Json.toJson(nonUkAccountViewModel) must be(json)
+        Json.toJson(nonUkAccountViewModel: AccountView) must be(json)
       }
 
       "given non-uk account json with iban" in {
@@ -121,7 +121,7 @@ class AccountViewSpec extends PlaySpec {
         )
         val nonUkIBANNumberViewModel = IBANNumberView(iban = "87654321")
 
-        Json.toJson(nonUkIBANNumberViewModel) must be(json)
+        Json.toJson(nonUkIBANNumberViewModel: AccountView) must be(json)
       }
     }
   }

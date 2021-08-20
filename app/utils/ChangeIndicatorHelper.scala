@@ -28,9 +28,9 @@ import models.fe.hvd.Hvd
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
-import play.api.Logger
+import play.api.{Logger, Logging}
 
-trait ChangeIndicatorHelper {
+trait ChangeIndicatorHelper extends Logging {
 
   def businessActivitiesChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
     convAndCompareBusinessActivities(response, desRequest)
@@ -148,35 +148,35 @@ trait ChangeIndicatorHelper {
     val desBusinessActivitiesAll   = models.des.businessactivities.BusinessActivitiesAll.
       convtoActivitiesALLChangeFlags(feBD, feBA, feAsp, feEab, feHvd, feBM)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desMlrActivitiesAppliedFor: ${desMlrActivitiesAppliedFor}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.mlrActivitiesAppliedFor: ${desRequest.businessActivities.mlrActivitiesAppliedFor}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desMlrActivitiesAppliedFor: ${desMlrActivitiesAppliedFor}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.mlrActivitiesAppliedFor: ${desRequest.businessActivities.mlrActivitiesAppliedFor}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desMsbServicesCarriedOut: ${desMsbServicesCarriedOut}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.msbServicesCarriedOut: ${desRequest.businessActivities.msbServicesCarriedOut}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desMsbServicesCarriedOut: ${desMsbServicesCarriedOut}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.msbServicesCarriedOut: ${desRequest.businessActivities.msbServicesCarriedOut}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desHvdGoodsSold: ${desHvdGoodsSold}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.hvdGoodsSold: ${desRequest.businessActivities.hvdGoodsSold}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desHvdGoodsSold: ${desHvdGoodsSold}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.hvdGoodsSold: ${desRequest.businessActivities.hvdGoodsSold}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desHvdAlcoholTobacco: ${desHvdAlcoholTobacco}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.hvdAlcoholTobacco: ${desRequest.businessActivities.hvdAlcoholTobacco}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desHvdAlcoholTobacco: ${desHvdAlcoholTobacco}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.hvdAlcoholTobacco: ${desRequest.businessActivities.hvdAlcoholTobacco}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desAspServicesOffered: ${desAspServicesOffered}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.aspServicesOffered: ${desRequest.businessActivities.aspServicesOffered}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desAspServicesOffered: ${desAspServicesOffered}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.aspServicesOffered: ${desRequest.businessActivities.aspServicesOffered}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desTcspServicesOffered: ${desTcspServicesOffered}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.tcspServicesOffered: ${desRequest.businessActivities.tcspServicesOffered}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desTcspServicesOffered: ${desTcspServicesOffered}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.tcspServicesOffered: ${desRequest.businessActivities.tcspServicesOffered}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desServicesforRegOff: ${desServicesforRegOff}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff: ${desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desServicesforRegOff: ${desServicesforRegOff}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff: ${desRequest.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desEabServices: ${desEabServices}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.eabServicesCarriedOut: ${desRequest.businessActivities.eabServicesCarriedOut}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desEabServices: ${desEabServices}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.eabServicesCarriedOut: ${desRequest.businessActivities.eabServicesCarriedOut}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desAmpServices: ${desAmpServices}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.ampServicesCarriedOut: ${desRequest.businessActivities.ampServicesCarriedOut}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desAmpServices: ${desAmpServices}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.ampServicesCarriedOut: ${desRequest.businessActivities.ampServicesCarriedOut}")
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desBusinessActivitiesAll: ${desBusinessActivitiesAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.all: ${desRequest.businessActivities.all}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desBusinessActivitiesAll: ${desBusinessActivitiesAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desRequest.businessActivities.all: ${desRequest.businessActivities.all}")
 
     !desMlrActivitiesAppliedFor.equals(desRequest.businessActivities.mlrActivitiesAppliedFor) ||
       !desMsbServicesCarriedOut.equals(desRequest.businessActivities.msbServicesCarriedOut) ||
@@ -195,8 +195,8 @@ trait ChangeIndicatorHelper {
     val feMsb  = MoneyServiceBusiness.conv(viewResponse)
     val desMsb = models.des.msb.MoneyServiceBusiness.conv(feMsb, feBM, amendVariation = true)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desMsb: ${desMsb}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desRequest.msb: ${desRequest.msb}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desMsb: ${desMsb}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desRequest.msb: ${desRequest.msb}")
 
     !desMsb.equals(desRequest.msb)
   }
@@ -205,8 +205,8 @@ trait ChangeIndicatorHelper {
     val feHvd  = Hvd.conv(viewResponse)
     val desHvd = models.des.hvd.Hvd.conv(feHvd)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desHvd: ${desHvd}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.hvd: ${desRequest.hvd}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desHvd: ${desHvd}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.hvd: ${desRequest.hvd}")
 
     !desHvd.equals(desRequest.hvd)
   }
@@ -215,8 +215,8 @@ trait ChangeIndicatorHelper {
     val feAsp  = Asp.conv(viewResponse)
     val desAsp = models.des.asp.Asp.conv(feAsp)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAsp - desAsp: ${desAsp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAsp - desRequest.tcspAll: ${desRequest.asp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAsp - desAsp: ${desAsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAsp - desRequest.tcspAll: ${desRequest.asp}")
 
     !desAsp.equals(desRequest.asp)
   }
@@ -231,10 +231,10 @@ trait ChangeIndicatorHelper {
       None
     }
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcsp: ${desTcsp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcspFormationAgt: ${desTcspFormationAgt}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspTrustCompFormationAgt:${desRequest.tcspTrustCompFormationAgt}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcsp: ${desTcsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspAll: ${desRequest.tcspAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desTcspFormationAgt: ${desTcspFormationAgt}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareTcsp - desRequest.tcspTrustCompFormationAgt:${desRequest.tcspTrustCompFormationAgt}")
 
     !(desTcsp.equals(desRequest.tcspAll) &&
       desTcspFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
@@ -250,12 +250,12 @@ trait ChangeIndicatorHelper {
         val desEabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.conv(feEab)
         val desLettingAgents   = models.des.estateagentbusiness.LettingAgents.conv(feEab)
 
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEab: ${desEab}")
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabAll: ${desRequest.eabAll}")
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEabResdEstAgncy: ${desEabResdEstAgncy}")
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desLettingAgents: ${desLettingAgents}")
-        Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.lettingAgents: ${desRequest.lettingAgents}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEab: ${desEab}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabAll: ${desRequest.eabAll}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEabResdEstAgncy: ${desEabResdEstAgncy}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desLettingAgents: ${desLettingAgents}")
+        logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.lettingAgents: ${desRequest.lettingAgents}")
 
         !(desEab.equals(desRequest.eabAll) &&
           desEabResdEstAgncy.equals(desRequest.eabResdEstAgncy) &&
@@ -267,56 +267,56 @@ trait ChangeIndicatorHelper {
     val feAspOrTcsp  = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
     val desAspOrTcsp = models.des.supervision.AspOrTcsp.conv(feAspOrTcsp)
 
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desAspOrTcsp: ${desAspOrTcsp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desAspOrTcsp: ${desAspOrTcsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
 
     !desAspOrTcsp.equals(desRequest.aspOrTcsp)
   }
 
   private def isMsbChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - response.msb: ${response.msb}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - desRequest.tcspAll: ${desRequest.msb}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - response.msb: ${response.msb}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isMsbChanged - desRequest.tcspAll: ${desRequest.msb}")
 
     !response.msb.equals(desRequest.msb)
   }
 
   private def isHvdChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHvdChanged - response.hvd: ${response.hvd}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isHvdChanged - desRequest.hvd: ${desRequest.hvd}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isHvdChanged - response.hvd: ${response.hvd}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isHvdChanged - desRequest.hvd: ${desRequest.hvd}")
 
     !response.hvd.equals(desRequest.hvd)
   }
 
   private def isAspChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspChanged - response.hvd: ${response.asp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspChanged - desRequest.asp: ${desRequest.asp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isAspChanged - response.hvd: ${response.asp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isAspChanged - desRequest.asp: ${desRequest.asp}")
 
     !response.asp.equals(desRequest.asp)
   }
 
   private def isTcspChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspAll: ${response.tcspAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspTrustCompFormationAgt: ${response.tcspTrustCompFormationAgt}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspAll: ${response.tcspAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspAll: ${desRequest.tcspAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - response.tcspTrustCompFormationAgt: ${response.tcspTrustCompFormationAgt}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isTcspChanged - desRequest.tcspTrustCompFormationAgt: ${desRequest.tcspTrustCompFormationAgt}")
 
     !(response.tcspAll.equals(desRequest.tcspAll) &&
       response.tcspTrustCompFormationAgt.equals(desRequest.tcspTrustCompFormationAgt))
   }
 
   private def isEABChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabAll: ${response.eabAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabResdEstAgncy: ${response.eabResdEstAgncy}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabAll: ${response.eabAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabAll: ${desRequest.eabAll}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - response.eabResdEstAgncy: ${response.eabResdEstAgncy}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isEABChanged - desRequest.eabResdEstAgncy: ${desRequest.eabResdEstAgncy}")
 
     !(response.eabAll.equals(desRequest.eabAll) &&
       response.eabResdEstAgncy.equals(desRequest.eabResdEstAgncy))
   }
 
   private def isAspOrTcspChanged(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - response.aspOrTcsp: ${response.aspOrTcsp}")
-    Logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - response.aspOrTcsp: ${response.aspOrTcsp}")
+    logger.debug(s"[AmendVariationService][compareAndUpdate] isAspOrTcspChanged - desRequest.aspOrTcsp: ${desRequest.aspOrTcsp}")
 
     !response.aspOrTcsp.equals(desRequest.aspOrTcsp)
   }

@@ -67,31 +67,31 @@ class PositionWithinBusinessSpec extends PlaySpec with MockitoSugar {
     }
 
     "write the correct value for BeneficialOwner" in {
-      Json.toJson(BeneficialOwner) must be(JsString("01"))
+      Json.toJson(BeneficialOwner: PositionWithinBusiness) must be(JsString("01"))
     }
 
     "write the correct value for Director" in {
-      Json.toJson(Director) must be(JsString("02"))
+      Json.toJson(Director: PositionWithinBusiness) must be(JsString("02"))
     }
 
     "write the correct value for InternalAccountant" in {
-      Json.toJson(InternalAccountant) must be(JsString("03"))
+      Json.toJson(InternalAccountant: PositionWithinBusiness) must be(JsString("03"))
     }
 
     "write the correct value for NominatedOfficer" in {
-      Json.toJson(NominatedOfficer) must be(JsString("04"))
+      Json.toJson(NominatedOfficer: PositionWithinBusiness) must be(JsString("04"))
     }
 
     "write the correct value for Partner" in {
-      Json.toJson(Partner) must be(JsString("05"))
+      Json.toJson(Partner: PositionWithinBusiness) must be(JsString("05"))
     }
 
     "write the correct value for SoleProprietor" in {
-      Json.toJson(SoleProprietor) must be(JsString("06"))
+      Json.toJson(SoleProprietor: PositionWithinBusiness) must be(JsString("06"))
     }
 
     "write the correct value for Other" in {
-      Json.toJson(Other("some other role")) mustBe Json.obj("other" -> "some other role")
+      Json.toJson(Other("some other role"): PositionWithinBusiness) mustBe Json.obj("other" -> "some other role")
     }
 
     "convert des model to frontend model successfully" in {

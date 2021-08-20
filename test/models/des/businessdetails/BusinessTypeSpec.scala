@@ -48,19 +48,19 @@ class BusinessTypeSpec extends PlaySpec {
 
         "write the correct value" in {
 
-          Json.toJson(BusinessType.SoleProprietor) must
+          Json.toJson(BusinessType.SoleProprietor: BusinessType) must
             be(JsString("Sole Proprietor"))
 
-          Json.toJson(BusinessType.LimitedCompany) must
+          Json.toJson(BusinessType.LimitedCompany: BusinessType) must
             be(JsString("Corporate Body"))
 
-          Json.toJson(BusinessType.LPrLLP) must
+          Json.toJson(BusinessType.LPrLLP: BusinessType) must
             be(JsString("Limited Liability Partnership"))
 
-          Json.toJson(BusinessType.Partnership) must
+          Json.toJson(BusinessType.Partnership: BusinessType) must
             be(JsString("Partnership"))
 
-          Json.toJson(BusinessType.UnincorporatedBody) must
+          Json.toJson(BusinessType.UnincorporatedBody: BusinessType) must
             be(JsString("Unincorporated Body"))
 
 

@@ -44,10 +44,10 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with MockitoSugar {
       }
 
       "write the correct value" in {
-        Json.toJson(ServicesOfAnotherTCSPNo) must
+        Json.toJson(ServicesOfAnotherTCSPNo: ServicesOfAnotherTCSP) must
           be(Json.obj("servicesOfAnotherTCSP" -> false))
 
-        Json.toJson(ServicesOfAnotherTCSPYes("12345678")) must
+        Json.toJson(ServicesOfAnotherTCSPYes("12345678"): ServicesOfAnotherTCSP) must
           be(Json.obj(
             "servicesOfAnotherTCSP" -> true,
             "mlrRefNumber" -> "12345678"

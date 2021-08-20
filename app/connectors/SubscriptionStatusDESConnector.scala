@@ -54,35 +54,35 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
     val prefix = "[DESConnector][readstatus]"
     val bodyParser = JsonParsed[ReadStatusResponse]
     val timer = metrics.timer(API9)
-    Logger.debug(s"$prefix - reg no: $amlsRegistrationNumber")
+    logger.debug(s"$prefix - reg no: $amlsRegistrationNumber")
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
     httpClient.GET[HttpResponse](s"$Url/status", headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response Body: ${response.body}")
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     }flatMap {
       case _ @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
         metrics.success(API9)
         audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
-        Logger.debug(s"$prefix - Success response")
-        Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
+        logger.debug(s"$prefix - Success response")
+        logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Future.successful(body)
       case r @ status(s) =>
         metrics.failed(API9)
-        Logger.warn(s"$prefix - Failure response: $s")
+        logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API9)
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }

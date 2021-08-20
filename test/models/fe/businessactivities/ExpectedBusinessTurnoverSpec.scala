@@ -53,25 +53,25 @@ class ExpectedBusinessTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
       }
 
       "write the correct value" in {
-        Json.toJson(ExpectedBusinessTurnover.First) must
+        Json.toJson(ExpectedBusinessTurnover.First: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "01"))
 
-        Json.toJson(ExpectedBusinessTurnover.Second) must
+        Json.toJson(ExpectedBusinessTurnover.Second: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "02"))
 
-        Json.toJson(ExpectedBusinessTurnover.Third) must
+        Json.toJson(ExpectedBusinessTurnover.Third: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "03"))
 
-        Json.toJson(ExpectedBusinessTurnover.Fourth) must
+        Json.toJson(ExpectedBusinessTurnover.Fourth: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "04"))
 
-        Json.toJson(ExpectedBusinessTurnover.Fifth) must
+        Json.toJson(ExpectedBusinessTurnover.Fifth: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "05"))
 
-        Json.toJson(ExpectedBusinessTurnover.Sixth) must
+        Json.toJson(ExpectedBusinessTurnover.Sixth: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "06"))
 
-        Json.toJson(ExpectedBusinessTurnover.Seventh) must
+        Json.toJson(ExpectedBusinessTurnover.Seventh: ExpectedBusinessTurnover) must
           be(Json.obj("expectedBusinessTurnover" -> "07"))
       }
 

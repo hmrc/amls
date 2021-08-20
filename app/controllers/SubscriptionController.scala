@@ -17,18 +17,19 @@
 package controllers
 
  import exceptions.{DuplicateSubscriptionException, HttpStatusException}
+
  import javax.inject.{Inject, Singleton}
  import models.des.{RequestType, SubscriptionRequest}
  import models.fe
  import models.fe.SubscriptionErrorResponse
- import play.api.Logger
+ import play.api.{Logger, Logging}
  import play.api.libs.json._
  import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
  import services.SubscriptionService
  import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
  import utils.{ApiRetryHelper, AuthAction}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+ import scala.concurrent.ExecutionContext.Implicits.global
  import scala.concurrent.Future
  import scala.util.matching.Regex
 
@@ -36,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
                                        authAction: AuthAction,
                                        bodyParsers: PlayBodyParsers,
-                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
+                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
@@ -60,7 +61,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
   def subscribe(accountType: String, ref: String, safeId: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
       implicit request =>
-        Logger.debug(s"$prefix - SafeId: $safeId")
+        logger.debug(s"$prefix - SafeId: $safeId")
         safeIdRegex.findFirstIn(safeId) match {
           case Some(_) =>
             implicit val requestType: RequestType.Subscription.type = RequestType.Subscription
@@ -77,7 +78,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
                         .as("application/json"))
 
                   case e @ HttpStatusException(status, Some(body)) =>
-                    Logger.warn(s"$prefix - Status: $status, Message: $body")
+                    logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
               case JsError(errors) => Future.successful(BadRequest(toError(errors)))

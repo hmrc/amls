@@ -57,7 +57,7 @@ class CorrespondenceAddressSpec extends PlaySpec {
     "write correct value to json" in {
       val data = UKCorrespondenceAddress("Name", "Business", "38B", "Longbenton", Some("line 1"), None, "NE7 7DX")
 
-      Json.toJson(data) must
+      Json.toJson(data: CorrespondenceAddress) must
         be(Json.obj(
           "yourName" -> "Name",
           "businessName" -> "Business",
@@ -71,7 +71,7 @@ class CorrespondenceAddressSpec extends PlaySpec {
     "write correct value to json for NonUk Registered office" in {
       val data = NonUKCorrespondenceAddress("Name", "Business", "38B", "some place", Some("line 1"), None, "AR")
 
-      Json.toJson(data) must
+      Json.toJson(data: CorrespondenceAddress) must
         be(Json.obj(
           "yourName" -> "Name",
           "businessName" -> "Business",

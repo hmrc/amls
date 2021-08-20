@@ -60,32 +60,32 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
     httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc,ec) map {
       response =>
         timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response Body: ${response.body}")
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
       case status(OK) & bodyParser(JsSuccess(body: SubscriptionView, _)) =>
         metrics.success(API5)
         audit.sendDataEvent(SubscriptionViewEvent(amlsRegistrationNumber, body))
-        Logger.debug(s"$prefix - Success response")
-        Logger.debug(s"$prefix - Response body: $body")
+        logger.debug(s"$prefix - Success response")
+        logger.debug(s"$prefix - Response body: $body")
         Future.successful(body)
       case r@status(OK) & bodyParser(JsError(errs)) =>
         metrics.failed(API5)
-        Logger.warn(s"$prefix - Deserialisation Errors: $errs")
+        logger.warn(s"$prefix - Deserialisation Errors: $errs")
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("Failed to parse the json response from DES (API5)")))
       case r@status(s) =>
         metrics.failed(API5)
-        Logger.warn(s"$prefix - Failure response: $s")
+        logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API5)
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }

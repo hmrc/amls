@@ -52,10 +52,10 @@ class NonUKPassportSpec  extends PlaySpec with MockitoSugar {
 
     "write the correct value" in {
 
-      Json.toJson(NoPassport) must
+      Json.toJson(NoPassport: NonUKPassport) must
         be(Json.obj("nonUKPassport" -> false))
 
-      Json.toJson(NonUKPassportYes("0123456789")) must
+      Json.toJson(NonUKPassportYes("0123456789"): NonUKPassport) must
         be(Json.obj(
           "nonUKPassport" -> true,
           "nonUKPassportNumber" -> "0123456789"

@@ -18,7 +18,7 @@ package repositories
 
 import com.google.inject.{Inject, Provider, Singleton}
 import models.Fees
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.Json
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.api.DefaultDB
@@ -37,7 +37,7 @@ trait FeesRepository extends ReactiveRepository[Fees, BSONObjectID] {
 }
 
 @Singleton
-class FeesRepositoryProvider @Inject() (component: ReactiveMongoComponent) extends Provider[FeesRepository] {
+class FeesRepositoryProvider @Inject() (component: ReactiveMongoComponent) extends Provider[FeesRepository] with Logging {
 
   override def get(): FeesRepository =
     new FeesMongoRepository()(component.mongoConnector.db)
@@ -55,7 +55,7 @@ class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRep
 
   override def insert(feeResponse: Fees): Future[Boolean] = {
     collection.insert(ordered = false).one(feeResponse) map { lastError =>
-      Logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result: ${lastError.ok}, errors: ${lastError.writeErrors.getMessages}")
+      logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result: ${lastError.ok}, errors: ${lastError.writeErrors.getMessages}")
       lastError.ok
     }
   }

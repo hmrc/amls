@@ -17,10 +17,11 @@
 package controllers
 
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, _}
 import models.fe
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
 import services.AmendVariationService
@@ -34,7 +35,7 @@ import scala.concurrent.Future
 class AmendVariationController @Inject()(avs: AmendVariationService,
                                          authAction: AuthAction,
                                          bodyParsers: PlayBodyParsers,
-                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
+                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
 
   private[controllers] def service: AmendVariationService = avs
 
@@ -75,7 +76,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
                     Ok(Json.toJson(response))
                 } recoverWith {
                   case e@HttpStatusException(status, message) =>
-                    Logger.warn(s"$prefix - Status: $status, Message: $message")
+                    logger.warn(s"$prefix - Status: $status, Message: $message")
                     Future.failed(e)
                 }
             }
@@ -94,7 +95,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
-        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 
@@ -102,7 +103,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
-        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Variation, RequestType.Variation)
     }
 
@@ -110,7 +111,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewal]"
-        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
     }
 
@@ -118,7 +119,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewalAmendment]"
-        Logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
         update(amlsRegistrationNumber, RenewalAmendment, RequestType.RenewalAmendment)
     }
 }

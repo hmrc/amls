@@ -17,18 +17,18 @@
 package services
 
 import java.io.InputStream
-
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.ApplicationConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
+
 import javax.inject.Inject
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
 import models.fe.SubscriptionResponse
 import models.{Fees, KnownFact, KnownFactsForService}
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.mvc.Http.Status._
 import repositories.FeesRepository
@@ -43,7 +43,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                     private[services] val auditConnector: AuditConnector,
                                     private[services] val config: ApplicationConfig,
-                                    val feeResponseRepository: FeesRepository) {
+                                    val feeResponseRepository: FeesRepository) extends Logging {
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
@@ -68,7 +68,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
             .findFirstIn(body.reason)
             .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
             amlsRegNo => {
-                  Logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
+                  logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
                   failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
             }
@@ -78,7 +78,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
     }.getOrElse(Future.failed(ex))
 
     case e@HttpStatusException(status, Some(body)) =>
-      Logger.warn(s" - Status: $status, Message: $body")
+      logger.warn(s" - Status: $status, Message: $body")
       Future.failed(e)
   }
 
@@ -138,19 +138,19 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
           )
         }
 
-        Logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
+        logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
         auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, resultObjects))
       }, valid = identity)
 
     } else {
-      Logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
+      logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
   }
 
   private def failResponse(ex: Throwable, body: HttpExceptionBody) = {
     ex match {
-      case e: HttpStatusException => Logger.warn(s" - Status: ${e.status}, Message: $body")
-      case _ => Logger.warn(s" - Exception thrown - Message: $body")
+      case e: HttpStatusException => logger.warn(s" - Status: ${e.status}, Message: $body")
+      case _ => logger.warn(s" - Exception thrown - Message: $body")
     }
 
     Future.failed(ex)
@@ -163,7 +163,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
     } else {
       ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
     }) map (_ => response) recover {
-      case ex => Logger.warn("[AddKnownFactsFailed]", ex)
+      case ex => logger.warn("[AddKnownFactsFailed]", ex)
         response
     }
   }

@@ -50,10 +50,10 @@ class VATRegisteredSpec extends PlaySpec with MockitoSugar {
 
     "write the correct value" in {
 
-      Json.toJson(VATRegisteredNo) must
+      Json.toJson(VATRegisteredNo: VATRegistered) must
         be(Json.obj("registeredForVAT" -> false))
 
-      Json.toJson(VATRegisteredYes("12345678")) must
+      Json.toJson(VATRegisteredYes("12345678"): VATRegistered) must
         be(Json.obj(
           "registeredForVAT" -> true,
           "vrnNumber" -> "12345678"

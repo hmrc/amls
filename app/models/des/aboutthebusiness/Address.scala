@@ -31,6 +31,7 @@ case class Address (addressLine1: String,
 
 object Address {
   implicit val format = Json.format[Address]
+  lazy val logger = Logger(this.getClass)
 
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 
@@ -38,7 +39,7 @@ object Address {
     (str.nonEmpty,str.matches(postcodeRegex))   match {
       case (true,true) => Some(str)
       case _ => {
-        Logger.warn("[Address][Invalid postcode not sent to DES]")
+        logger.warn("[Address][Invalid postcode not sent to DES]")
         None
       }
     }

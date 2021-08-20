@@ -54,25 +54,25 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "write the correct value" in {
 
-        Json.toJson(ExpectedAMLSTurnover.First) must
+        Json.toJson(ExpectedAMLSTurnover.First: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "01"))
 
-        Json.toJson(ExpectedAMLSTurnover.Second) must
+        Json.toJson(ExpectedAMLSTurnover.Second: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "02"))
 
-        Json.toJson(ExpectedAMLSTurnover.Third) must
+        Json.toJson(ExpectedAMLSTurnover.Third: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "03"))
 
-        Json.toJson(ExpectedAMLSTurnover.Fourth) must
+        Json.toJson(ExpectedAMLSTurnover.Fourth: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "04"))
 
-        Json.toJson(ExpectedAMLSTurnover.Fifth) must
+        Json.toJson(ExpectedAMLSTurnover.Fifth: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "05"))
 
-        Json.toJson(ExpectedAMLSTurnover.Sixth) must
+        Json.toJson(ExpectedAMLSTurnover.Sixth: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "06"))
 
-        Json.toJson(ExpectedAMLSTurnover.Seventh) must
+        Json.toJson(ExpectedAMLSTurnover.Seventh: ExpectedAMLSTurnover) must
           be(Json.obj("expectedAMLSTurnover" -> "07"))
       }
 

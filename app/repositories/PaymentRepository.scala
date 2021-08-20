@@ -17,6 +17,7 @@
 package repositories
 
 import exceptions.PaymentException
+
 import javax.inject.{Inject, Singleton}
 import models.payments.Payment
 import play.api.Logger
@@ -34,6 +35,8 @@ import utils.MongoUtils._
 
 @Singleton
 class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
+
+  lazy val log: Logger = Logger(this.getClass)
 
   override def indexes: Seq[Index] = {
     Seq(
@@ -67,7 +70,7 @@ class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveReposi
 
   private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
     case writeResult: WriteResult if isError(writeResult) => {
-      Logger.debug(s"[PaymentsMongoRepository][insert] paymentDetails: $payment, result: ${writeResult.ok}, errors: ${writeResult.writeErrors.getMessages}")
+      log.debug(s"[PaymentsMongoRepository][insert] paymentDetails: $payment, result: ${writeResult.ok}, errors: ${writeResult.writeErrors.getMessages}")
       Future.failed(PaymentException(None, writeResult.writeErrors.getMessages))
     }
     case _ => Future.successful(payment)

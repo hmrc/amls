@@ -20,14 +20,15 @@ import akka.actor.ActorSystem
 import akka.pattern.Patterns.after
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject._
-import play.api.Logger
+import play.api.{Logger, Logging}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig)  {
+class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig) extends Logging {
 
   lazy val maxAttempts: Int = appConfig.maxAttempts
   lazy val initialWaitInMS: Int = appConfig.initialWaitMs
@@ -45,7 +46,7 @@ class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig
       case e: HttpStatusException =>
         if ( e.status >= 500 && e.status < 600 && currentAttempt < maxAttempts) {
           val wait = Math.ceil(currentWait * waitFactor).toInt
-          Logger.warn(s"Failure, retrying after $wait ms")
+          logger.warn(s"Failure, retrying after $wait ms")
           after(wait.milliseconds, as.scheduler, ec, Future.successful(1)).flatMap { _ =>
             expBackOffHelper(currentAttempt + 1, wait.toInt, f)
           }
