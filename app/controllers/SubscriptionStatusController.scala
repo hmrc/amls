@@ -18,8 +18,9 @@ package controllers
 
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json._
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -31,7 +32,7 @@ import scala.concurrent.Future
 @Singleton
 class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConnector,
                                               authAction: AuthAction,
-                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
+                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 
@@ -46,7 +47,7 @@ class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConne
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async {
       implicit request =>
-        Logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
+        logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
         amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
           case Some(_) =>
             connector.status(amlsRegistrationNumber) map {
@@ -54,7 +55,7 @@ class SubscriptionStatusController  @Inject()(ssConn: SubscriptionStatusDESConne
                 Ok(Json.toJson(response))
             } recoverWith {
               case e@HttpStatusException(status, Some(body)) =>
-                Logger.warn(s"$prefix - Status: ${status}, Message: $body")
+                logger.warn(s"$prefix - Status: ${status}, Message: $body")
                 Future.failed(e)
             }
 

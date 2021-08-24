@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.Fees
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import repositories.FeesRepository
@@ -30,21 +30,21 @@ import scala.concurrent.Future
 
 @Singleton
 class FeeResponseController @Inject()(authAction: AuthAction,
-                                      val cc: ControllerComponents)(implicit val repository: FeesRepository) extends BackendController(cc) {
+                                      val cc: ControllerComponents)(implicit val repository: FeesRepository) extends BackendController(cc) with Logging {
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async {
       {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
           case Some(feeResponse) => {
-            Logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
+            logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
             Ok(Json.toJson[Fees](feeResponse))
           }
           case None => NotFound
         }
       }.recoverWith {
         case e:Throwable => {
-          Logger.error(s"[FeeResponseController - get] ",e)
+          logger.error(s"[FeeResponseController - get] ",e)
           Future.successful(InternalServerError)
         }
       }

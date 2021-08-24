@@ -60,40 +60,40 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
     val prefix = "[DESConnector][amend]"
     val bodyParser = JsonParsed[des.AmendVariationResponse]
     val timer = metrics.timer(API6)
-    Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
+    logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
 
     httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc,ec) map {
       response =>
         timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response Body: ${response.body}")
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
-        Logger.debug(s"$prefix - Success response")
-        Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
-        Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        logger.debug(s"$prefix - Success response")
+        logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
+        logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         auditConnector.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API6)
-        Logger.warn(s"$prefix - Failure response: $s")
-        Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        logger.warn(s"$prefix - Failure response: $s")
+        logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         val httpEx = HttpStatusException(s, Option(r.body))
         auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
         Future.failed(httpEx)
     } recoverWith {
       case e: HttpStatusException =>
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, e))
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API6)
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
         auditConnector.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
         Future.failed(httpEx)

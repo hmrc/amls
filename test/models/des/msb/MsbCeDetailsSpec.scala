@@ -23,6 +23,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 
 class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
+  lazy val logger: Logger = Logger(this.getClass)
 
   "MsbCeDetails" should {
 
@@ -86,7 +87,7 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(true))
-          case _ => Logger.info("No MsbCe Details")
+          case _ => logger.info("No MsbCe Details")
         }
       }
 
@@ -96,7 +97,7 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(false))
-          case _ => Logger.info("No MsbCe Details")
+          case _ => logger.info("No MsbCe Details")
         }
       }
 

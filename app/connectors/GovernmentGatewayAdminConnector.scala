@@ -19,10 +19,11 @@ package connectors
 import audit.KnownFactsEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
 import models.KnownFactsForService
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http._
@@ -36,7 +37,7 @@ import scala.concurrent.Future
 class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
                                                 private[connectors] val auditConnector: AuditConnector,
                                                 private[connectors] val httpClient: HttpClient,
-                                                private[connectors] val metrics: Metrics) extends HttpResponseHelper {
+                                                private[connectors] val metrics: Metrics) extends HttpResponseHelper with Logging {
 
   private[connectors] val serviceURL = applicationConfig.ggUrl
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
@@ -60,33 +61,33 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
   ): Future[HttpResponse] = {
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
     val timer = metrics.timer(GGAdmin)
-    Logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
+    logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
     httpClient.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map {
       response =>
         timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response body: ${response.body}")
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response body: ${response.body}")
         response
     } flatMap {
       case response @ status(OK) =>
         metrics.success(GGAdmin)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
-        Logger.debug(s"$prefix - Success Response")
-        Logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+        logger.debug(s"$prefix - Success Response")
+        logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
       case response @ status(s) =>
         metrics.failed(GGAdmin)
-        Logger.warn(s"$prefix - Failure Response: $s")
-        Logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+        logger.warn(s"$prefix - Failure Response: $s")
+        logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(response.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(GGAdmin)
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }

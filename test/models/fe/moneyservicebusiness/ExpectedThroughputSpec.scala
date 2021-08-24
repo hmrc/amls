@@ -54,25 +54,25 @@ class ExpectedThroughputSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "write the correct value" in {
 
-        Json.toJson(ExpectedThroughput.First) must
+        Json.toJson(ExpectedThroughput.First: ExpectedThroughput) must
           be(Json.obj("throughput" -> "01"))
 
-        Json.toJson(ExpectedThroughput.Second) must
+        Json.toJson(ExpectedThroughput.Second: ExpectedThroughput) must
           be(Json.obj("throughput" -> "02"))
 
-        Json.toJson(ExpectedThroughput.Third) must
+        Json.toJson(ExpectedThroughput.Third: ExpectedThroughput) must
           be(Json.obj("throughput" -> "03"))
 
-        Json.toJson(ExpectedThroughput.Fourth) must
+        Json.toJson(ExpectedThroughput.Fourth: ExpectedThroughput) must
           be(Json.obj("throughput" -> "04"))
 
-        Json.toJson(ExpectedThroughput.Fifth) must
+        Json.toJson(ExpectedThroughput.Fifth: ExpectedThroughput) must
           be(Json.obj("throughput" -> "05"))
 
-        Json.toJson(ExpectedThroughput.Sixth) must
+        Json.toJson(ExpectedThroughput.Sixth: ExpectedThroughput) must
           be(Json.obj("throughput" -> "06"))
 
-        Json.toJson(ExpectedThroughput.Seventh) must
+        Json.toJson(ExpectedThroughput.Seventh: ExpectedThroughput) must
           be(Json.obj("throughput" -> "07"))
       }
 

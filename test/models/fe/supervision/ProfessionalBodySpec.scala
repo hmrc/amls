@@ -49,10 +49,10 @@ class ProfessionalBodySpec extends PlaySpec with MockitoSugar {
 
     "write the correct value" in {
 
-      Json.toJson(ProfessionalBodyNo) must
+      Json.toJson(ProfessionalBodyNo: ProfessionalBody) must
         be(Json.obj("penalised" -> false))
 
-      Json.toJson(ProfessionalBodyYes("details")) must
+      Json.toJson(ProfessionalBodyYes("details"): ProfessionalBody) must
         be(Json.obj(
           "penalised" -> true,
           "professionalBody" -> "details"

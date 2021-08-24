@@ -145,7 +145,7 @@ class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
     "serialised" must {
       "write the correct values" in {
         types foreach {
-          case (t, str) => Json.toJson(t) mustBe JsString(str)
+          case (t, str) => Json.toJson(t: OrganisationType) mustBe JsString(str)
         }
       }
     }

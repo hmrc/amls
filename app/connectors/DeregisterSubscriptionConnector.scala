@@ -56,36 +56,36 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
     val prefix = "[DESConnector][deregistration]"
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]
     val timer = metrics.timer(API10)
-    Logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
+    logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
     httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1,implicitly[HttpReads[HttpResponse]],hc, ec) map {
       response =>
         timer.stop()
-        Logger.debug(s"$prefix - Base Response: ${response.status}")
-        Logger.debug(s"$prefix - Response Body: ${response.body}")
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
       case r@status(OK) & bodyParser(JsSuccess(body: DeregisterSubscriptionResponse, _)) =>
         metrics.success(API10)
         audit.sendDataEvent(DeregisterSubscriptionEvent(amlsRegistrationNumber, data, body))
-        Logger.debug(s"$prefix - Success response")
-        Logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
-        Logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        logger.debug(s"$prefix - Success response")
+        logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
+        logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
       case r@status(s) =>
         metrics.failed(API10)
-        Logger.warn(s"$prefix - Failure response: $s")
-        Logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+        logger.warn(s"$prefix - Failure response: $s")
+        logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(r.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API10)
-        Logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }

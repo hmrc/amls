@@ -61,10 +61,10 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
       "write the correct value" in {
         import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
-        Json.toJson(CashPaymentNo) must
+        Json.toJson(CashPaymentNo: CashPayment) must
           be(Json.obj("acceptedAnyPayment" -> false))
 
-        Json.toJson(DefaultCashPaymentYes) must
+        Json.toJson(DefaultCashPaymentYes: CashPayment) must
           be(Json.obj(
             "acceptedAnyPayment" -> true,
             "paymentDate" -> new LocalDate(1990, 2, 24)

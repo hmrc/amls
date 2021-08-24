@@ -17,6 +17,8 @@
 package connectors
 
 import config.ApplicationConfig
+import play.api.Logging
+
 import javax.inject.{Inject, Singleton}
 import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -25,7 +27,7 @@ import utils._
 
 @Singleton
 class DESConnector @Inject()(applicationConfig: ApplicationConfig,
-                             val auditConnector: AuditConnector) extends HttpResponseHelper {
+                             val auditConnector: AuditConnector) extends HttpResponseHelper with Logging {
 
   private[connectors] val baseUrl: String = applicationConfig.desUrl
   private[connectors] val token: String = s"Bearer ${applicationConfig.desToken}"

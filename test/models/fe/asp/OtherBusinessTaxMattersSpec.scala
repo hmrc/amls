@@ -39,10 +39,10 @@ class OtherBusinessTaxMattersSpec extends PlaySpec with MockitoSugar {
 
 
     "write the correct value" in {
-      Json.toJson(OtherBusinessTaxMattersNo) must
+      Json.toJson(OtherBusinessTaxMattersNo: OtherBusinessTaxMatters) must
         be(Json.obj("otherBusinessTaxMatters" -> false))
 
-      Json.toJson(OtherBusinessTaxMattersYes) must
+      Json.toJson(OtherBusinessTaxMattersYes: OtherBusinessTaxMatters) must
         be(Json.obj("otherBusinessTaxMatters" -> true))
     }
   }

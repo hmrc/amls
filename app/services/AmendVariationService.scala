@@ -17,22 +17,23 @@
 package services
 
 import java.io.InputStream
-
 import audit.AmendVariationValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.ApplicationConfig
 import connectors._
+
 import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.Json
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
@@ -41,7 +42,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
                                       private[services] val auditConnector: AuditConnector,
                                       val feeResponseRepository: FeesRepository,
                                       private[services] val config: ApplicationConfig)(implicit val ec: ExecutionContext)
-  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper {
+  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper with Logging {
 
   private[services] val validator: SchemaValidator = SchemaValidator()
 
@@ -123,11 +124,11 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
             "messages" -> messages.map(_.messages)
           )
         }
-        Logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
+        logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
         auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
       }, valid = identity)
     } else {
-      Logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
+      logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
 
     for {

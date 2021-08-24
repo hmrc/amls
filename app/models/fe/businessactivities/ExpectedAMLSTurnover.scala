@@ -17,7 +17,7 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.BusinessActivityDetails
-import play.Logger
+import play.api.Logger
 import play.api.libs.json._
 
 sealed trait ExpectedAMLSTurnover
@@ -64,8 +64,10 @@ object ExpectedAMLSTurnover {
     case Seventh => Json.obj("expectedAMLSTurnover" -> "07")
   }
 
+  lazy val logger: Logger = Logger(this.getClass)
+
   def conv(activityDtls: BusinessActivityDetails): Option[ExpectedAMLSTurnover] = {
-    Logger.debug(s"[ExpectedAMLSTurnover][conv] desValue = $activityDtls")
+    logger.debug(s"[ExpectedAMLSTurnover][conv] desValue = $activityDtls")
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
       case Some(data) => activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
         case true => convertAMLSTurnover(data.mlrActivityTurnover)

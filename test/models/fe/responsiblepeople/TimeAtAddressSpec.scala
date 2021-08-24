@@ -40,10 +40,10 @@ class TimeAtAddressSpec extends PlaySpec with MockitoSugar {
     }
 
     "write the correct value" in {
-      Json.toJson(TimeAtAddress.ZeroToFiveMonths) must be(ZeroToFiveJson)
-      Json.toJson(TimeAtAddress.SixToElevenMonths) must be(SixToElevenJson)
-      Json.toJson(TimeAtAddress.OneToThreeYears) must be(OneToThreeJson)
-      Json.toJson(TimeAtAddress.ThreeYearsPlus) must be(MoreThanThreeJson)
+      Json.toJson(TimeAtAddress.ZeroToFiveMonths: TimeAtAddress) must be(ZeroToFiveJson)
+      Json.toJson(TimeAtAddress.SixToElevenMonths: TimeAtAddress) must be(SixToElevenJson)
+      Json.toJson(TimeAtAddress.OneToThreeYears: TimeAtAddress) must be(OneToThreeJson)
+      Json.toJson(TimeAtAddress.ThreeYearsPlus: TimeAtAddress) must be(MoreThanThreeJson)
     }
 
     "throw error for invalid data" in {

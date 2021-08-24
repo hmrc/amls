@@ -40,9 +40,9 @@ class BankAccountTypeSpec extends PlaySpec with MockitoSugar {
     }
 
     "write correct Json value" in  {
-      Json.toJson(PersonalAccount) must be (Json.obj("bankAccountType" -> "01"))
-      Json.toJson(BelongsToBusiness) must be (Json.obj("bankAccountType" -> "02"))
-      Json.toJson(BelongsToOtherBusiness) must be (Json.obj("bankAccountType" -> "03"))
+      Json.toJson(PersonalAccount: BankAccountType) must be (Json.obj("bankAccountType" -> "01"))
+      Json.toJson(BelongsToBusiness: BankAccountType) must be (Json.obj("bankAccountType" -> "02"))
+      Json.toJson(BelongsToOtherBusiness: BankAccountType) must be (Json.obj("bankAccountType" -> "03"))
     }
   }
 

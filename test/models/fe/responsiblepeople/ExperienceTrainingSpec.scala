@@ -47,7 +47,7 @@ class ExperienceTrainingSpec extends PlaySpec with MockitoSugar {
 
     "write the correct value for Yes" in {
 
-      Json.toJson(ExperienceTrainingYes("0123456789")) must
+      Json.toJson(ExperienceTrainingYes("0123456789"): ExperienceTraining) must
         be(Json.obj(
           "experienceTraining" -> true,
           "experienceInformation" -> "0123456789"
@@ -55,7 +55,7 @@ class ExperienceTrainingSpec extends PlaySpec with MockitoSugar {
     }
 
     "write the correct value for No" in {
-      Json.toJson(ExperienceTrainingNo) must be(Json.obj("experienceTraining" -> false))
+      Json.toJson(ExperienceTrainingNo: ExperienceTraining) must be(Json.obj("experienceTraining" -> false))
 
       val json = Json.obj("experienceTraining" -> false)
 

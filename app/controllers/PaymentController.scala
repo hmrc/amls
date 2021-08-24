@@ -18,9 +18,10 @@ package controllers
 
 import cats.data.OptionT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import models.payments.{CreateBacsPaymentRequest, RefreshPaymentStatusRequest, SetBacsRequest}
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.PaymentService
@@ -34,7 +35,7 @@ import scala.concurrent.Future
 class PaymentController @Inject()(private[controllers] val paymentService: PaymentService,
                                   authAction: AuthAction,
                                   bodyParsers: PlayBodyParsers,
-                                  val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
+                                  val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper with Logging {
 
   def createBacsPayment(accountType: String, accountRef: String) = authAction.async(bodyParsers.json) {
     implicit request =>
@@ -49,7 +50,7 @@ class PaymentController @Inject()(private[controllers] val paymentService: Payme
     implicit request: Request[String] => {
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
-          Logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
+          logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
           paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
             case Some(_) => Created
             case _ => InternalServerError
