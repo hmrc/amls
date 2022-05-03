@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
   val id = "biuh98huiu"
   val ref = "ref"
 
-  val amountInPence = 100
   val commissionInPence = 20
   val totalInPence = 120
   val name = "providerName"
@@ -43,13 +42,11 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         other,
         ref,
         None,
-        amountInPence,
         PaymentStatuses.Successful
       )) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
-        "amountInPence" -> amountInPence,
         "status" -> "Successful"
       ))
 
@@ -61,14 +58,12 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         other,
         ref,
         Some("Desc"),
-        amountInPence,
         PaymentStatuses.Successful
       )) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
         "description" -> "Desc",
-        "amountInPence" -> amountInPence,
         "status" -> "Successful"
       ))
 

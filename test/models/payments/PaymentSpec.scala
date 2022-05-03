@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "X73289473",
         "X987654321",
         None,
-        10000,
         Successful,
         now,
         isBacs = Some(true),
@@ -49,7 +48,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "amlsRefNo" -> "X12345678",
         "safeId" -> "X73289473",
         "reference" -> "X987654321",
-        "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
         "createdAt" -> now,
@@ -78,7 +76,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           safeId,
           payApiModel.reference,
           None,
-          payApiModel.amountInPence,
           payApiModel.status,
           now,
           isBacs = None,
@@ -98,7 +95,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           safeId,
           payApiModel.reference,
           payApiModel.description,
-          payApiModel.amountInPence,
           payApiModel.status,
           now,
           isBacs = None,
@@ -115,7 +111,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
           paymentRequest.safeId,
           paymentRequest.paymentReference,
           _,
-          paymentRequest.amountInPence,
           Created,
           _,
           Some(true),

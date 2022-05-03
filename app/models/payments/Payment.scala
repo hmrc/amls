@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ case class Payment(_id: String,
                     safeId: String,
                     reference: String,
                     description: Option[String],
-                    amountInPence: Int,
                     status: PaymentStatus,
                     createdAt: LocalDateTime,
                     isBacs: Option[Boolean] = None,
@@ -45,7 +44,6 @@ object Payment {
       safeId,
       apiPayment.reference,
       apiPayment.description,
-      apiPayment.amountInPence,
       apiPayment.status,
       LocalDateTime.now
     )
@@ -56,7 +54,6 @@ object Payment {
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,
       None,
-      bacsPaymentRequest.amountInPence,
       Created,
       LocalDateTime.now,
       isBacs = Some(true)

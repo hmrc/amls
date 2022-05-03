@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ case class Payment( id: String,
                     taxType: TaxType,
                     reference: String,
                     description: Option[String],
-                    amountInPence: Int,
                     status: PaymentStatus)
 
 object Payment {
