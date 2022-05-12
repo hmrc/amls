@@ -10,7 +10,7 @@ private object AppDependencies {
     "uk.gov.hmrc"         %% "mongo-caching"              % "7.0.0-play-28",
     "uk.gov.hmrc"         %% "domain"                     % "6.2.0-play-28",
     "org.typelevel"       %% "cats"                       % "0.9.0",
-    "com.eclipsesource"   %% "play-json-schema-validator" % "0.9.5",
+    "com.eclipsesource"   %% "play-json-schema-validator" % "0.9.4",
     "de.flapdoodle.embed" %  "de.flapdoodle.embed.mongo"  % "2.2.0" % "test,it",
     "com.beachape"        %% "enumeratum"                 % "1.6.1",
     "uk.gov.hmrc"         %% "bootstrap-backend-play-28"  % "5.12.0",
