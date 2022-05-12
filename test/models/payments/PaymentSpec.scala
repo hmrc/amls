@@ -48,7 +48,6 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "amlsRefNo" -> "X12345678",
         "safeId" -> "X73289473",
         "reference" -> "X987654321",
-        "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
         "createdAt" -> now,
