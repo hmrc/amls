@@ -52,7 +52,6 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     taxType <- taxTypesGen
     ref <- paymentRefGen
     desc <- alphaNumOfLengthGen(refLength)
-    amountInPence <- numGen
     url <- alphaNumOfLengthGen(refLength)
     paymentStatus <- paymentStatusGen
   } yield Payment(
@@ -60,7 +59,6 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     taxType.head,
     ref,
     None,
-    amountInPence,
     paymentStatus.head
   )
 
@@ -69,7 +67,6 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     taxType <- taxTypesGen
     ref <- paymentRefGen
     desc <- alphaNumOfLengthGen(refLength)
-    amountInPence <- numGen
     url <- alphaNumOfLengthGen(refLength)
     paymentStatus <- paymentStatusGen
   } yield Payment(
@@ -77,7 +74,6 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
     taxType.head,
     ref,
     Some(desc),
-    amountInPence,
     paymentStatus.head
   )
 }

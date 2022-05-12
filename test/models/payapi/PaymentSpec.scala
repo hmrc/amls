@@ -43,13 +43,11 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         other,
         ref,
         None,
-        amountInPence,
         PaymentStatuses.Successful
       )) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
-        "amountInPence" -> amountInPence,
         "status" -> "Successful"
       ))
 
@@ -61,14 +59,12 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
         other,
         ref,
         Some("Desc"),
-        amountInPence,
         PaymentStatuses.Successful
       )) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
         "description" -> "Desc",
-        "amountInPence" -> amountInPence,
         "status" -> "Successful"
       ))
 
