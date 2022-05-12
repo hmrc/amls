@@ -19,6 +19,7 @@ package services
 import java.io.InputStream
 import audit.SubscriptionValidationFailedEvent
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
+import com.eclipsesource.schema.drafts.Version4._
 import config.ApplicationConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
