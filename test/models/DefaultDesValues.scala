@@ -56,7 +56,7 @@ object DefaultDesValues {
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
   private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
   private val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
-  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"),None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), false, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
     formalRiskAssessmentDetails, mlrAdvisor))
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
@@ -144,7 +144,7 @@ object DefaultDesValues {
   val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Other"), Some("Agent"), Some("Other"), Some("Agent"))
 
   private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))))
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), true))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val nationalDtlsPhase2 = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1970-01-01"))), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
@@ -176,7 +176,7 @@ object DefaultDesValues {
     true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
-    None,
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -199,7 +199,7 @@ object DefaultDesValues {
     true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
-    None,
+    false,
     None,
     Some(false),
     Some(true),
@@ -218,12 +218,12 @@ object DefaultDesValues {
     Some("1-3 years"),
     positionInBusinessForRelease7,
     regDtls,
-    true,
+    previousExperience = true,
     Some("Some training"),
-    true,
+    amlAndCounterTerrFinTraining = true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
-    None,
+    dateChangeFlag = false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -245,7 +245,7 @@ object DefaultDesValues {
     true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
-    None,
+    false,
     None,
     Some(false),
     Some(true),
@@ -257,7 +257,7 @@ object DefaultDesValues {
 
   val AspSection =  Some(Asp(true, None))
 
-  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",None,"Ending reason")))
+  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",false,"Ending reason")))
   private val professionalBodyDetails = ProfessionalBodyDetails(true,Some("details"),
     Some(ProfessionalBodyDesMember(true,
       Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))
@@ -289,6 +289,6 @@ object DefaultDesValues {
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
   // scalastyle:off magic.number
-  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
+  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),false,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
 
 }

@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 case class PreviousNameDetails (nameEverChanged: Boolean,
                                 previousName: Option[PersonName],
                                 dateOfChange: Option[String],
-                                dateChangeFlag: Option[Boolean] = None
+                                dateChangeFlag: Boolean = false
                                )
 
 object PreviousNameDetails {

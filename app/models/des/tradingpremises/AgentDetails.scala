@@ -29,7 +29,7 @@ case class AgentDetails(
                          agentLegalEntityName: Option[String],
                          agentPremises: AgentPremises,
                          startDate: Option[String] = None,
-                         dateChangeFlag: Option[Boolean] = None,
+                         dateChangeFlag: Boolean = false,
                          endDate: Option[String] = None,
                          status: Option[String] = None,
                          lineId: Option[StringOrInt] = None,
@@ -61,7 +61,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "startDate").readNullable[String] and
-        (__ \ "dateChangeFlag").readNullable[Boolean] and
+        (__ \ "dateChangeFlag").read[Boolean] and
         (__ \ "endDate").readNullable[String] and
         (__ \ "status").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
@@ -79,7 +79,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").writeNullable[String] and
         (__ \ "agentPremises").write[AgentPremises] and
         (__ \ "startDate").writeNullable[String] and
-        (__ \ "dateChangeFlag").writeNullable[Boolean] and
+        (__ \ "dateChangeFlag").write[Boolean] and
         (__ \ "endDate").writeNullable[String] and
         (__ \ "status").writeNullable[String] and
         __.writeNullable[StringOrInt] and
@@ -117,7 +117,7 @@ object AgentDetails {
       },
       agentPremises = tradingPremises,
       startDate,
-      None,
+      false,
       endDate,
       tradingPremises.status,
       tradingPremises.lineId,

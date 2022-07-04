@@ -126,7 +126,7 @@ class AmendVariationServiceSpec extends PlaySpec
     true,
     Some("test"),
     None,
-    None,
+    false,
     None,
     extra = unchangedExtra
   )

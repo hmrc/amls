@@ -45,7 +45,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val model = BusinessActivitiesAll(Some("2016-05-25"),
         None,
-        None,
+        false,
         activityDetails,
         franchiseDetails,
         noOfEmployees,

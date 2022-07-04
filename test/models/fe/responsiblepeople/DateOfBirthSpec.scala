@@ -55,7 +55,7 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
               Some("1990-03-23"),false,None
             ))
           )),None,None
-        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,None,None,extra = RPExtra()
+        )),None,None,None,None,None,None,None,None,None,false,None,false,None,None,false,None,extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990,3,23))))
@@ -67,7 +67,7 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
           false,
           Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
           , None, None
-        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None, extra = RPExtra()
+        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, false, None, extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990, 2, 24))))

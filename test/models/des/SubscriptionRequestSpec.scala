@@ -173,7 +173,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
 
-  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), None, BusinessActivityDetails(true,
+  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), false, BusinessActivityDetails(true,
     Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
@@ -685,7 +685,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
 
     val desallActivitiesModel = BusinessActivitiesAll(None,
       Some("2001-01-01"),
-      None,
+      false,
       BusinessActivityDetails(true,
         Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
       Some(FranchiseDetails(true, Some(Seq("Name")))),

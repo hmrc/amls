@@ -118,7 +118,8 @@ object RPValues {
           "middleName" -> "mname",
           "lastName" -> "lname"
         ),
-        "dateOfChange" -> "1990-02-24"
+        "dateOfChange" -> "1990-02-24",
+        "dateChangeFlag" -> true
       )
     ),
     "nationalityDetails" -> Json.obj(
@@ -179,6 +180,7 @@ object RPValues {
     "descOfPrevExperience" -> "Some training",
     "amlAndCounterTerrFinTraining" -> true,
     "trainingDetails" -> "test",
+    "dateChangeFlag" -> false,
     "msbOrTcsp" -> Json.obj(
       "passedFitAndProperTest" -> true
     )

@@ -97,7 +97,7 @@ object DesConstants {
   val testBusinessActivitiesAll = BusinessActivitiesAll(
     None,
     Some("2001-01-01"),
-    None,
+    false,
     BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
     Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
     Some("12345678901"),
@@ -123,7 +123,7 @@ object DesConstants {
   val testBusinessActivitiesAllWithDateChangeFlag = BusinessActivitiesAll(
     None,
     Some("2001-01-01"),
-    Some(false),
+    false,
     BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
     Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
     Some("12345678901"),
@@ -345,7 +345,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     agentPremisesapi51,
     None,
-    None,
+    false,
     None,
     Some("Added"),
     Some(StringOrInt(111111))
@@ -378,7 +378,7 @@ object DesConstants {
     Some("aaaaaaaaaaa"),
     agentPremisesapi52,
     None,
-    None,
+    false,
     None,
     Some("Added"),
     None
@@ -411,7 +411,7 @@ object DesConstants {
     Some("AgentLegalEntityName2"),
     agentPremisesapi53,
     None,
-    None,
+    false,
     None,
     Some("Added"),
     None
@@ -444,7 +444,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     agentPremisesapi61,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("1"))
@@ -477,7 +477,7 @@ object DesConstants {
     Some("aaaaaaaaaaa"),
     agentPremisesapi61Release7,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
@@ -489,7 +489,7 @@ object DesConstants {
     Some("AgentLegalEntityName for amend"),
     agentPremisesapi61,
     None,
-    None,
+    false,
     None,
     Some("Added"),
     Some(StringOrInt("133333"))
@@ -524,7 +524,7 @@ object DesConstants {
     Some("aaaaaaaaaaa"),
     agentPremisesapi62,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("2"))
@@ -557,7 +557,7 @@ object DesConstants {
     Some("AgentLegalEntityName2"),
     agentPremisesapi63,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("3"))
@@ -679,7 +679,7 @@ object DesConstants {
       None,
       Some(StringOrInt(444444)),
       Some(StatusConstants.Unchanged),
-      dateChangeFlag = Some(false)
+      dateChangeFlag = false
     ),
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
@@ -702,7 +702,7 @@ object DesConstants {
       None,
       Some(StringOrInt(555555)),
       Some(StatusConstants.Deleted),
-      dateChangeFlag = Some(false)
+      dateChangeFlag = false
     )
   ))))
 
@@ -775,7 +775,7 @@ object DesConstants {
       None,
       Some(StringOrInt(444444)),
       Some(StatusConstants.Unchanged),
-      dateChangeFlag = Some(false)
+      dateChangeFlag = false
     ),
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
@@ -798,7 +798,7 @@ object DesConstants {
       None,
       Some(StringOrInt(555555)),
       Some(StatusConstants.Unchanged),
-      dateChangeFlag = Some(false)
+      dateChangeFlag = false
     )
   ))))
 
@@ -877,7 +877,7 @@ object DesConstants {
     Some("1970-01-01"),
     viewStatusAgentPremises1,
     None,
-    None
+    false
   )
 
   val viewStatusAgentPremises2 = AgentPremises("aaaaaaaaaaaa",
@@ -907,7 +907,7 @@ object DesConstants {
     Some("1970-01-01"),
     viewStatusAgentPremises2,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
@@ -940,7 +940,7 @@ object DesConstants {
     Some("1970-01-01"),
     viewStatusAgentPremises3,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Added),
     Some(StringOrInt("333333"))
@@ -973,7 +973,7 @@ object DesConstants {
     Some("1970-01-01"),
     viewStatusAgentPremises4,
     None,
-    None,
+    false,
     None,
     None,
     Some(StringOrInt("444444"))
@@ -1005,7 +1005,8 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amenStatusAgentPremises1,
-    None,None,
+    None,
+    false,
     Some(StatusConstants.Added),
     None
   )
@@ -1037,7 +1038,7 @@ object DesConstants {
     Some("1970-01-01"),
     amendStatusAgentPremises2,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Deleted),
     Some(StringOrInt("222222"))
@@ -1070,7 +1071,7 @@ object DesConstants {
     Some("1970-01-01"),
     amendStatusAgentPremises3,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Updated),
     Some(StringOrInt("333333"))
@@ -1103,7 +1104,7 @@ object DesConstants {
     Some("1970-01-01"),
     amendStatusAgentPremises4,
     None,
-    None,
+    false,
     None,
     Some(StatusConstants.Unchanged),
     Some(StringOrInt("444444"))
@@ -1341,7 +1342,7 @@ object DesConstants {
 
   val testHvd = HvdModel(true,
     Some("2001-01-01"),
-    None,
+    false,
     true,
     Some(0),
     Some(HvdFromUnseenCustDetails(
@@ -1357,7 +1358,7 @@ object DesConstants {
     "NameOfLastSupervisor",
     "2001-01-01",
     "2001-01-01",
-    None,
+    false,
     "SupervisionEndingReason")
   val testSupervisionDetails = SupervisionDetails(true, Some(testSupervisorDetails))
   val testAspOrTcsp = AspOrTcsp(
@@ -1428,7 +1429,7 @@ object DesConstants {
         true,
         Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13"),
-        Some(false)
+        false
       ))
     )),
     Some(NationalityDetails(
@@ -1461,7 +1462,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
-    Some(false),
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(None, None, Some(StatusConstants.Added))
   )
@@ -1477,7 +1478,7 @@ object DesConstants {
         true,
         Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
         Some("1967-08-13"),
-        Some(false)
+        false
       ))
     )),
     Some(NationalityDetails(
@@ -1510,7 +1511,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
-    Some(false),
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
@@ -1558,7 +1559,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
-    None,
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(None, None, None)
   )
@@ -1606,7 +1607,7 @@ object DesConstants {
     true,
     Some("bbbbbbbbbbb"),
     None,
-    None,
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(Some(StringOrInt("123456")), None, Some(StatusConstants.Deleted))
   )
@@ -1673,7 +1674,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
-      None,
+      false,
       Some(MsbOrTcsp(true)),
       extra = RPExtra(Some(StringOrInt("333333")), None, Some("added"), None, None, None)
     ),
@@ -1692,7 +1693,7 @@ object DesConstants {
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01"),
-          Some(false)
+          false
         ))
       )),
       Some(NationalityDetails(
@@ -1743,7 +1744,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
-      Some(false),
+      false,
       Some(MsbOrTcsp(true)),
       extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Updated), Some(false), Some("some test result"), Some("2012-12-12"))
     ),
@@ -1811,7 +1812,7 @@ object DesConstants {
     true,
     Some("TrainingDetails"),
     None,
-    Some(false),
+    false,
     Some(MsbOrTcsp(true)),
     extra = RPExtra(Some(StringOrInt("333333")), None, None, None, Some("10"), Some("some test result"), Some("2012-12-12"))
   )
@@ -1893,7 +1894,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(false)),
       passedFitAndProperTest = None,
       passedApprovalCheck = None,
@@ -1943,7 +1944,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(true)),
       passedFitAndProperTest = None,
       passedApprovalCheck = None,
@@ -2013,7 +2014,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       None,
       passedFitAndProperTest = Some(false),
       passedApprovalCheck = Some(true),
@@ -2063,7 +2064,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(true)),
       passedFitAndProperTest = Some(true),
       passedApprovalCheck = Some(false),
@@ -2134,7 +2135,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       None,
       passedFitAndProperTest = Some(false),
       passedApprovalCheck = Some(true),
@@ -2184,7 +2185,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       None,
       passedFitAndProperTest = Some(true),
       passedApprovalCheck = Some(false),
@@ -2254,7 +2255,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(false)),
       extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
@@ -2301,7 +2302,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(true)),
       extra = RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
@@ -2369,7 +2370,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(false)),
       extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, None, None)
     ),
@@ -2416,7 +2417,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       Some(MsbOrTcsp(true)),
       extra = RPExtra(Some(StringOrInt("222222")), None, Some(StatusConstants.Unchanged), None, None, None)
     )
@@ -2484,7 +2485,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       Some(today),
-      None,
+      false,
       None,
       passedFitAndProperTest = Some(false),
       passedApprovalCheck = Some(true),
@@ -2534,7 +2535,7 @@ object DesConstants {
       false,
       None,
       Some(today),
-      None,
+      false,
       None,
       passedFitAndProperTest = Some(true),
       passedApprovalCheck = Some(false),
@@ -3022,7 +3023,7 @@ object DesConstants {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    false,
     Some(MsbOrTcsp(false)),
     extra = RPExtra(Some(StringOrInt("333333")), Some("2016-09-17T09:30:47Z"), Some("added"), Some(false), Some("some test result"), Some("2012-12-12"))
   ))
@@ -3033,7 +3034,7 @@ object DesConstants {
 
   val testAmendHvd = HvdModel(true,
     Some("2001-01-01"),
-    Some(false),
+    false,
     true,
     None,
     Some(HvdFromUnseenCustDetails(
@@ -3242,7 +3243,7 @@ object DesConstants {
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
           Some("2001-01-01"),
-          Some(false)
+          false
         ))
       )),
       Some(NationalityDetails(
@@ -3293,7 +3294,7 @@ object DesConstants {
       true,
       Some("TrainingDetails"),
       None,
-      Some(false),
+      false,
       Some(MsbOrTcsp(true)),
       extra = RPExtra(Some(StringOrInt("333333")), None, Some(StatusConstants.Unchanged), None, Some("10"), Some("some test result"), Some("2012-12-12"))
     ),

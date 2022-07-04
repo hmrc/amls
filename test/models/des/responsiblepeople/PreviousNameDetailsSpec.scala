@@ -32,7 +32,7 @@ class PreviousNameDetailsSpec extends PlaySpec {
     "successfully convert a person without a previous name" in {
       val person = ResponsiblePeople(legalName = Some(PreviousName(hasPreviousName = false, None, None, None)))
 
-      PreviousNameDetails.from(person) mustBe Some(PreviousNameDetails(false, None, None, None))
+      PreviousNameDetails.from(person) mustBe Some(PreviousNameDetails(false, None, None, false))
     }
   }
 }

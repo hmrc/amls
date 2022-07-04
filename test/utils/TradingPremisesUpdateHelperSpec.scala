@@ -54,11 +54,11 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         Some(StringOrInt(444444)),
         Some(StatusConstants.Unchanged),
         None,
-        None,
+        false,
         None
       )
 
-      val expectedData = data.copy(dateChangeFlag = Some(true), status = Some(StatusConstants.Updated))
+      val expectedData = data.copy(dateChangeFlag = true, status = Some(StatusConstants.Updated))
 
       val modelWithchangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
         tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
@@ -77,13 +77,13 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
       val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
         businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
           all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-            dateChangeFlag = Some(false)
+            dateChangeFlag = false
           ))
         ),
         aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
           supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
             supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
-              dateChangeFlag = Some(false)
+              dateChangeFlag = false
             ))
           ))
         )),
@@ -126,7 +126,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with Sc
         None,
         Some(StatusConstants.Unchanged),
         None,
-        Some(false),
+        false,
         None
       )
 

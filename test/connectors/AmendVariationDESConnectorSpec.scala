@@ -495,7 +495,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                      },
                      "startDate":"2001-01-01",
                      "lineId":4,
-                     "status":"Added"
+                     "status":"Added",
+                     "dateChangeFlag" : false
                   },
                   {
                      "tradingName":"OwnBusinessTradingName1",
@@ -535,7 +536,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                      },
                      "startDate":"2001-01-01",
                      "lineId":5,
-                     "status":"Added"
+                     "status":"Added",
+                     "dateChangeFlag" : false
                   }
                ]
             },
@@ -581,7 +583,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":{
                            "tditpsp":true
                         },
-                        "startDate":"1967-08-13"
+                        "startDate":"1967-08-13",
+                        "dateChangeFlag": false
                      },
                      "status":"Added",
                      "lineId":1
@@ -625,7 +628,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":{
                            "tditpsp":true
                         },
-                        "startDate":"1967-08-13"
+                        "startDate":"1967-08-13",
+                        "dateChangeFlag": false
                      },
                      "status":"Added",
                      "lineId":2
@@ -669,7 +673,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":{
                            "tditpsp":true
                         },
-                        "startDate":"2001-01-01"
+                        "startDate":"2001-01-01",
+                        "dateChangeFlag": false
                      },
                      "status":"Added",
                      "lineId":3

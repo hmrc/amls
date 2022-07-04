@@ -70,7 +70,7 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
       val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
         responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
           rps =>
-            Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
+            Seq(rps.tail.head.copy(dateChangeFlag = true,
               extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
         })
 
@@ -129,7 +129,7 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
           val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
             responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
               rps =>
-                Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
+                Seq(rps.tail.head.copy(dateChangeFlag = true,
                   extra = rps.tail.head.extra.copy(status = Some("Updated"))))
             })
 
@@ -163,10 +163,10 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
                   nameDetails = rps.tail.head.nameDetails map {
                     nd =>
                       nd.copy(previousNameDetails = nd.previousNameDetails map {
-                        pnd => pnd.copy(dateChangeFlag = Some(true))
+                        pnd => pnd.copy(dateChangeFlag = true)
                       })
                   }
-                  , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
+                  , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = false))
             }
           )
 

@@ -29,7 +29,7 @@ trait SupervisionGenerators {
     endDate <- Gen.const(LocalDate.now())
     dateChange <- arbitrary[Boolean]
     reason <- arbitrary[String]
-  } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), Some(dateChange), reason)
+  } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), dateChange, reason)
 
   val supervisionDetailsGen: Gen[SupervisionDetails] = for {
     supervised <- arbitrary[Boolean]

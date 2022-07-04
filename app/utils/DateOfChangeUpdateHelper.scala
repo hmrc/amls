@@ -24,7 +24,7 @@ trait DateOfChangeUpdateHelper {
   def updateWithHvdDateOfChangeFlag(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
     val hvdWithDateOfChangeFlag = desRequest.hvd.fold(false)(!_.dateOfTheFirst.equals(viewResponse.hvd.fold[Option[String]](None)(_.dateOfTheFirst)))
     val hvdWithDateOfChange = desRequest.hvd match {
-      case Some(hvd) => Some(hvd.copy(dateChangeFlag = Some(hvdWithDateOfChangeFlag)))
+      case Some(hvd) => Some(hvd.copy(dateChangeFlag = hvdWithDateOfChangeFlag))
       case _ => None
     }
     desRequest.copy(
@@ -50,7 +50,7 @@ trait DateOfChangeUpdateHelper {
       case _ => false
     }
     val supervisorWithDateChangeFlag = getSupervisorDetails(desRequest.aspOrTcsp) match {
-      case Some(supervision) => Some(supervision.copy(dateChangeFlag = Some(supervisorDateChangeFlag)))
+      case Some(supervision) => Some(supervision.copy(dateChangeFlag = supervisorDateChangeFlag))
       case _ => None
     }
     desRequest.copy(
@@ -67,7 +67,7 @@ trait DateOfChangeUpdateHelper {
       !_.activitiesCommenceDate.equals(viewResponse.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
     }
     val businessActivitiesWithFlag = desRequest.businessActivities.all match {
-      case Some(all) => Some(all.copy(dateChangeFlag = Some(businessActivitiesCommenceDateChangeFlag)))
+      case Some(all) => Some(all.copy(dateChangeFlag = businessActivitiesCommenceDateChangeFlag))
       case _ => None
     }
     desRequest.copy(

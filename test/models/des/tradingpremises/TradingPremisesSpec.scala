@@ -52,7 +52,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
       None,
       None,
       sectorDateChange = Some("2009-01-01"),
-      dateChangeFlag = None,
+      dateChangeFlag = false,
       tradingNameChangeDate = Some("1999-04-01")
     )
 
@@ -99,7 +99,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
         Some("string"),
         agentPremises,
         None,
-        None,
+        false,
         Some("1999-01-01"),
         Some("Deleted"),
         Some(StringOrInt("11223344")),
@@ -134,6 +134,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
           "amp" -> Json.obj("amp" -> false),
           "startDate" -> "2010-01-01",
           "sectorDateChange" -> "2009-01-01",
+          "dateChangeFlag" -> false,
           "tradingNameChangeDate" -> "1999-04-01"
         ))),
         "agentBusinessPremises" -> Json.obj("agentBusinessPremises" -> true,
@@ -141,7 +142,6 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
             "agentLegalEntity" -> "Limited Liability Partnership",
             "dateOfBirth" -> "string",
             "agentLegalEntityName" -> "string",
-            "agentDetailsChgDate" -> "2010-01-23",
             "agentPremises" -> Json.obj("tradingName" -> "string",
               "businessAddress" -> Json.obj("addressLine1" -> "string",
                 "addressLine2" -> "string",
@@ -162,12 +162,14 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
               "startDate" -> "2008-01-01",
               "agentSectorChgDate" -> "2003-04-05"
             ),
+            "dateChangeFlag" -> false,
             "endDate" -> "1999-01-01",
             "status" -> "Deleted",
+            "lineId" -> "11223344",
+            "agentDetailsChgDate" -> "2010-01-23",
             "status" -> "Deleted",
             "removalReason" -> "Other",
-            "removalReasonOther" -> "Some other reason",
-            "lineId" -> "11223344"
+            "removalReasonOther" -> "Some other reason"
           ))))
 
       TradingPremises.format.writes(desTradingPremises) must be(json)
@@ -185,7 +187,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
           Some("LLP Partnership"),
           agentPremises,
           None,
-          None,
+          false,
           None,
           Some("Deleted"),
           Some(StringOrInt("11223344")),
