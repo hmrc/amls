@@ -290,6 +290,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       "socialHousingProvider": false
     },
     "all": {
+      "dateChangeFlag":false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {
@@ -357,6 +358,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       "ownBusinessPremisesDetails": [
         {
           "tradingName": "trading1",
+          "dateChangeFlag":false,
           "businessAddress": {
             "addressLine1": "add",
             "addressLine2": "add",
@@ -409,6 +411,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     "supervisionDetails": {
       "prevSupervisedByMlsRegs": true,
       "supervisorDetails": {
+        "dateChangeFlag":false,
         "nameOfLastSupervisor": "joe",
         "supervisionStartDate": "2010-11-11",
         "supervisionEndDate": "2010-11-11",
@@ -460,6 +463,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   },
   "responsiblePersons": [
     {
+      "dateChangeFlag":false,
       "nameDetails": {
         "personName": {
           "firstName": "somename",
@@ -472,6 +476,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
           ]
         },
         "previousNameDetails": {
+          "dateChangeFlag":false,
           "nameEverChanged": true,
           "previousName": {
             "firstName": "firstname",

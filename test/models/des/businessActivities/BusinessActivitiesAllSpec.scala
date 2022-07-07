@@ -43,7 +43,8 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
       val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
       val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
 
-      val model = BusinessActivitiesAll(Some("2016-05-25"),
+      val model = BusinessActivitiesAll(
+        Some("2016-05-25"),
         None,
         false,
         activityDetails,
@@ -59,6 +60,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       BusinessActivitiesAll.format.writes(model) must be(Json.obj(
         "busActivitiesChangeDate" ->"2016-05-25",
+        "dateChangeFlag" -> false,
         "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
         "franchiseDetails"->

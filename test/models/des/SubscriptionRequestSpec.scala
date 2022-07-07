@@ -396,7 +396,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
           "tditpsp": {
             "tditpsp": false
           },
-          "startDate": "1980-11-11"
+          "startDate": "1980-11-11",
+          "dateChangeFlag": false
         }
       ]
     },

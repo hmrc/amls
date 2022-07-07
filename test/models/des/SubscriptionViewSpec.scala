@@ -118,7 +118,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
       "socialHousingProvider": false
     },
     "all": {
-      "DateChangeFlag" : false,
+      "dateChangeFlag": false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {
@@ -183,6 +183,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
       "ownBusinessPremises": true,
       "ownBusinessPremisesDetails": [
         {
+        "dateChangeFlag":false,
           "lineId": 1,
           "tradingName": "trade1",
           "businessAddress": {
@@ -199,6 +200,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
           "endDate": "9999-12-31"
         },
         {
+          "dateChangeFlag":false,
           "lineId": 2,
           "tradingName": "trade2",
           "businessAddress": {
@@ -215,6 +217,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
           "endDate": "9999-12-31"
         },
         {
+          "dateChangeFlag":false,
           "lineId": 3,
           "tradingName": "trade3",
           "businessAddress": {
@@ -261,6 +264,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
   },
   "responsiblePersons": [
     {
+      "dateChangeFlag":false,
       "lineId": 1,
       "nameDetails": {
         "personName": {
@@ -274,6 +278,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
           ]
         },
         "previousNameDetails": {
+          "dateChangeFlag":false,
           "nameEverChanged": true,
           "previousName": {
             "firstName": "fn",
@@ -338,6 +343,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
     },
     {
       "lineId": 2,
+      "dateChangeFlag":false,
       "nameDetails": {
         "personName": {
           "firstName": "fn2",
@@ -388,6 +394,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
     },
     {
       "lineId": 3,
+      "dateChangeFlag":false,
       "nameDetails": {
         "personName": {
           "firstName": "fn3",
@@ -536,7 +543,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
       "lettingAgents": true
     },
     "all": {
-      "DateChangeFlag" : false,
+      "dateChangeFlag" : false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {
@@ -602,6 +609,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
       "ownBusinessPremisesDetails": [
         {
           "lineId": 1,
+          "dateChangeFlag":false,
           "tradingName": "trade1",
           "businessAddress": {
             "addressLine1": "add1",
@@ -618,6 +626,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
         },
         {
           "lineId": 2,
+          "dateChangeFlag":false,
           "tradingName": "trade2",
           "businessAddress": {
             "addressLine1": "add2",
@@ -634,6 +643,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
         },
         {
           "lineId": 3,
+          "dateChangeFlag":false,
           "tradingName": "trade3",
           "businessAddress": {
             "addressLine1": "add3",
@@ -682,6 +692,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
   },
   "responsiblePersons": [
     {
+    "dateChangeFlag":false,
       "lineId": 1,
       "nameDetails": {
         "personName": {
@@ -695,6 +706,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
           ]
         },
         "previousNameDetails": {
+          "dateChangeFlag":false,
           "nameEverChanged": true,
           "previousName": {
             "firstName": "fn",
@@ -759,6 +771,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
     },
     {
       "lineId": 2,
+      "dateChangeFlag":false,
       "nameDetails": {
         "personName": {
           "firstName": "fn2",
@@ -809,6 +822,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
     },
     {
       "lineId": 3,
+      "dateChangeFlag":false,
       "nameDetails": {
         "personName": {
           "firstName": "fn3",

@@ -245,6 +245,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
               "msb": false
               },
               "hvd": {
+              "dateChangeFlag": false,
               "hvd": false
               },
               "asp": {
@@ -392,8 +393,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                "socialHousingProvider":true
             },
             "all":{
+            "dateChangeFlag": false,
                "activitiesCommenceDate":"2001-01-01",
-               "DateChangeFlag":false,
                "businessActivityDetails":{
                   "actvtsBusRegForOnlyActvtsCarOut":true,
                   "respActvtsBusRegForOnlyActvtsCarOut":{
@@ -494,9 +495,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":false
                      },
                      "startDate":"2001-01-01",
+                     "dateChangeFlag":false,
                      "lineId":4,
-                     "status":"Added",
-                     "dateChangeFlag" : false
+                     "status":"Added"
                   },
                   {
                      "tradingName":"OwnBusinessTradingName1",
@@ -535,9 +536,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":true
                      },
                      "startDate":"2001-01-01",
+                     "dateChangeFlag":false,
                      "lineId":5,
-                     "status":"Added",
-                     "dateChangeFlag" : false
+                     "status":"Added"
                   }
                ]
             },
@@ -545,6 +546,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                "agentBusinessPremises":true,
                "agentDetails":[
                   {
+                  "dateChangeFlag":false,
                      "agentLegalEntity":"Sole Proprietor",
                      "agentLegalEntityName":"AgentLegalEntityName",
                      "agentPremises":{
@@ -583,13 +585,13 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                         "tditpsp":{
                            "tditpsp":true
                         },
-                        "startDate":"1967-08-13",
-                        "dateChangeFlag": false
+                        "startDate":"1967-08-13"
                      },
                      "status":"Added",
                      "lineId":1
                   },
                   {
+                  "dateChangeFlag":false,
                      "agentLegalEntity":"Sole Proprietor",
                      "agentLegalEntityName":"aaaaaaaaaaa",
                      "agentPremises":{
@@ -629,12 +631,13 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                            "tditpsp":true
                         },
                         "startDate":"1967-08-13",
-                        "dateChangeFlag": false
+                        "dateChangeFlag":false
                      },
                      "status":"Added",
                      "lineId":2
                   },
                   {
+                  "dateChangeFlag":false,
                      "agentLegalEntity":"Sole Proprietor",
                      "agentLegalEntityName":"AgentLegalEntityName2",
                      "agentPremises":{
@@ -674,7 +677,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                            "tditpsp":true
                         },
                         "startDate":"2001-01-01",
-                        "dateChangeFlag": false
+                        "dateChangeFlag":false
                      },
                      "status":"Added",
                      "lineId":3
@@ -791,6 +794,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
             }
          },
          "hvd":{
+            "dateChangeFlag" : false,
             "cashPaymentsAccptOvrThrshld":true,
             "dateOfTheFirst":"2001-01-01",
             "sysAutoIdOfLinkedCashPymts":true,
@@ -812,6 +816,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
             "supervisionDetails":{
                "prevSupervisedByMlsRegs":true,
                "supervisorDetails":{
+                  "dateChangeFlag":false,
                   "nameOfLastSupervisor":"NameOfLastSupervisor",
                   "supervisionStartDate":"2001-01-01",
                   "supervisionEndDate":"2001-01-01",
@@ -863,6 +868,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
          },
          "responsiblePersons":[
             {
+            "dateChangeFlag":false,
                "nameDetails":{
                   "personName":{
                      "firstName":"FirstName",
@@ -876,6 +882,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                      ]
                   },
                   "previousNameDetails":{
+                  "dateChangeFlag":false,
                      "nameEverChanged":true,
                      "previousName":{
                         "firstName":"FirstName",
@@ -936,6 +943,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                },
                "previousExperience":false,
                "amlAndCounterTerrFinTraining":true,
+               "dateChangeFlag":false,
                "trainingDetails":"TrainingDetails",
                "msbOrTcsp":{
                   "passedFitAndProperTest":false
@@ -961,6 +969,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                      ]
                   },
                   "previousNameDetails":{
+                     "dateChangeFlag":false,
                      "nameEverChanged":true,
                      "previousName":{
                         "firstName":"bbbbbbbbbbbb",
@@ -1037,6 +1046,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
                "previousExperience":true,
                "descOfPrevExperience":"bbbbbbbbbb",
                "amlAndCounterTerrFinTraining":false,
+               "dateChangeFlag":false,
                "msbOrTcsp":{
                   "passedFitAndProperTest":true
                },
@@ -1075,5 +1085,9 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
      }
   }
       }""").as[AmendVariationRequest]
+
+  /*
+play.api.libs.json.JsResultException: JsResultException(errors:List((/tradingPremises/agentBusinessPremises/agentDetails(1)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/businessActivities/all/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/aspOrTcsp/supervisionDetails/supervisorDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/responsiblePersons(1)/nameDetails/previousNameDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/tradingPremises/agentBusinessPremises/agentDetails(2)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/hvd/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/responsiblePersons(0)/nameDetails/previousNameDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/tradingPremises/agentBusinessPremises/agentDetails(0)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray())))))
+  */
 
 }
