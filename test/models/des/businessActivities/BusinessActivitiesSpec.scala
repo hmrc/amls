@@ -179,7 +179,8 @@ class BusinessActivitiesSpec extends PlaySpec {
             "otherAnswer" -> true,
             "specifyOther" -> "Another service")
         ),
-        "all" -> Json.obj("businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
+        "all" -> Json.obj("dateChangeFlag"->false,
+          "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
           "franchiseDetails"->
             Json.obj("isBusinessAFranchise"->true,
