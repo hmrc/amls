@@ -71,7 +71,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
       }
 
       "write Json correctly" in {
-        val json = SubscriptionRequest.format.writes(SubscriptionRequest.format.reads(release7Json).get)
+        val json = SubscriptionRequest.format.writes(SubscriptionRequest.format.reads(release7Json).asOpt.get)
         (json \\ "msbCeDetails").head must be(JsObject(Seq(
           ("dealInPhysCurrencies", JsBoolean(true)),
           ("currencySources", JsObject(Seq(
@@ -173,7 +173,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
 
-  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), true, BusinessActivityDetails(true,
+  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), false, BusinessActivityDetails(true,
     Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
@@ -297,6 +297,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
       "socialHousingProvider": false
     },
     "all": {
+      "dateChangeFlag": false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {
@@ -379,6 +380,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
             "fx": false
           },
           "hvd": {
+            "dateChangeFlag": false,
             "hvd": false
           },
           "asp": {
@@ -396,7 +398,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
           "tditpsp": {
             "tditpsp": false
           },
-          "startDate": "1980-11-11"
+          "startDate": "1980-11-11",
+          "dateChangeFlag": false
         }
       ]
     },
@@ -492,6 +495,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
         "nameOfLastSupervisor": "joe",
         "supervisionStartDate": "2010-11-11",
         "supervisionEndDate": "2010-11-11",
+        "dateChangeFlag": false,
         "supervisionEndingReason": "being over experienced"
       }
     },
@@ -624,6 +628,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
       "descOfPrevExperience": "scenario1.2",
       "amlAndCounterTerrFinTraining": true,
       "trainingDetails": "scenario1.2",
+      "dateChangeFlag": false,
       "msbOrTcsp": {
         "passedFitAndProperTest": true
       }
@@ -685,7 +690,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
 
     val desallActivitiesModel = BusinessActivitiesAll(None,
       Some("2001-01-01"),
-      true,
+      false,
       BusinessActivityDetails(true,
         Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
       Some(FranchiseDetails(true, Some(Seq("Name")))),

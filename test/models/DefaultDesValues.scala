@@ -144,7 +144,7 @@ object DefaultDesValues {
   val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Other"), Some("Agent"), Some("Other"), Some("Agent"))
 
   private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), true))))
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), false))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val nationalDtlsPhase2 = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1970-01-01"))), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))

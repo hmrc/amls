@@ -47,7 +47,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         respPeoplePhase2,
         BusinessMatchingSection.emptyModel
       )
-      responsiblePersonPhase2 must be (RPValues.modelPhase3)
+      responsiblePersonPhase2 must be (RPValues.modelPhase2)
     }
 /*
     ResponsiblePersonCall call:
@@ -132,7 +132,7 @@ object RPValues {
           "lastName" -> "lname"
         ),
         "dateOfChange" -> "1990-02-24",
-        "dateChangeFlag" -> true
+        "dateChangeFlag" -> false
       )
     ),
     "nationalityDetails" -> Json.obj(
