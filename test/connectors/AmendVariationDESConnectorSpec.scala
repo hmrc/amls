@@ -1085,9 +1085,4 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
      }
   }
       }""").as[AmendVariationRequest]
-
-  /*
-play.api.libs.json.JsResultException: JsResultException(errors:List((/tradingPremises/agentBusinessPremises/agentDetails(1)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/businessActivities/all/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/aspOrTcsp/supervisionDetails/supervisorDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/responsiblePersons(1)/nameDetails/previousNameDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/tradingPremises/agentBusinessPremises/agentDetails(2)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/hvd/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/responsiblePersons(0)/nameDetails/previousNameDetails/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray()))), (/tradingPremises/agentBusinessPremises/agentDetails(0)/dateChangeFlag,List(JsonValidationError(List(error.path.missing),WrappedArray())))))
-  */
-
 }
