@@ -96,14 +96,6 @@ object RPValues {
 
   val model = DefaultDesValues.ResponsiblePersonsSectionForRelease7.get.head.copy(startDate = None)
 
-  val modelPhase3 = model.copy(
-    msbOrTcsp = None,
-    passedFitAndProperTest = Some(false),
-    passedApprovalCheck = Some(true),
-    dateChangeFlag = true,
-    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
-  )
-
   val modelPhase2 = model.copy(
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),

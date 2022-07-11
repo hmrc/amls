@@ -380,7 +380,6 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
             "fx": false
           },
           "hvd": {
-            "dateChangeFlag": false,
             "hvd": false
           },
           "asp": {
@@ -561,7 +560,8 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
             "firstName": "firstname",
             "lastName": "lastname"
           },
-          "dateOfChange": "2011-11-11"
+          "dateOfChange": "2011-11-11",
+          "dateChangeFlag": false
         }
       },
       "nationalityDetails": {
