@@ -61,7 +61,7 @@ object AgentDetails {
         (__ \ "agentLegalEntityName").readNullable[String] and
         (__ \ "agentPremises").read[AgentPremises] and
         (__ \ "startDate").readNullable[String] and
-        (__ \ "dateChangeFlag").read[Boolean] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
         (__ \ "endDate").readNullable[String] and
         (__ \ "status").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and

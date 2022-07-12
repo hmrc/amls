@@ -62,7 +62,7 @@ object OwnBusinessPremisesDetails {
         __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "status").readNullable[String] and
         (__ \ "sectorDateChange").readNullable[String] and
-        (__ \ "dateChangeFlag").read[Boolean] and
+          ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
         (__ \ "tradingNameChangeDate").readNullable[String]
       ) (OwnBusinessPremisesDetails.apply _)
   }

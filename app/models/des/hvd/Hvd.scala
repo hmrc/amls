@@ -18,7 +18,8 @@ package models.des.hvd
 
 import models.fe.hvd.PercentageOfCashPaymentOver15000._
 import models.fe.hvd._
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class Hvd(
                 cashPaymentsAccptOvrThrshld: Boolean,
@@ -31,7 +32,18 @@ case class Hvd(
 
 object Hvd {
 
-  implicit val format = Json.format[Hvd]
+  implicit val jsonReads = {
+    (
+      (__ \ "cashPaymentsAccptOvrThrshld").read[Boolean] and
+        (__ \ "dateOfTheFirst").readNullable[String] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
+        (__ \ "sysAutoIdOfLinkedCashPymts").read[Boolean] and
+        (__ \ "hvPercentageTurnover").readNullable[Int] and
+        (__ \ "hvdFromUnseenCustDetails").readNullable[HvdFromUnseenCustDetails]
+      ) (Hvd.apply _)
+  }
+
+  implicit def jsonWrites = Json.writes[Hvd]
 
   private val Zero = 0
   private val Twenty = 20

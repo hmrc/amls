@@ -16,7 +16,8 @@
 
 package models.des.supervision
 
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class SupervisorDetails (nameOfLastSupervisor: String,
                               supervisionStartDate: String,
@@ -27,6 +28,17 @@ case class SupervisorDetails (nameOfLastSupervisor: String,
 
 object SupervisorDetails {
 
-  implicit val format = Json.format[SupervisorDetails]
+  implicit val jsonReads = {
+    (
+      (__ \ "nameOfLastSupervisor").read[String] and
+        (__ \ "supervisionStartDate").read[String] and
+        (__ \ "supervisionEndDate").read[String] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
+        (__ \ "supervisionEndingReason").read[String]
+      ) (SupervisorDetails.apply _)
+  }
+
+  implicit def jsonWrites = Json.writes[SupervisorDetails]
+
 
 }

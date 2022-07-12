@@ -68,7 +68,7 @@ object ResponsiblePersons {
         (__ \ "amlAndCounterTerrFinTraining").read[Boolean] and
         (__ \ "trainingDetails").readNullable[String] and
         (__ \ "startDate").readNullable[String] and
-        (__ \ "dateChangeFlag").read[Boolean] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
         (__ \ "msbOrTcsp").readNullable[MsbOrTcsp] and
         (__ \ "passedFitAndProperTest").readNullable[Boolean] and
         (__ \ "passedApprovalCheck").readNullable[Boolean] and

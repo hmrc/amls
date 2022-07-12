@@ -19,7 +19,8 @@ package models.des.businessactivities
 import models.fe
 import models.fe.businessdetails.ActivityStartDate
 import org.joda.time.DateTime
-import play.api.libs.json.Json
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
@@ -38,7 +39,27 @@ case class BusinessActivitiesAll(
 
 object BusinessActivitiesAll{
 
-  implicit val format = Json.format[BusinessActivitiesAll]
+  implicit val jsonReads = {
+    (
+      (__ \ "busActivitiesChangeDate").readNullable[String] and
+        (__ \ "activitiesCommenceDate").readNullable[String] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
+        (__ \ "businessActivityDetails").read[BusinessActivityDetails] and
+        (__ \ "franchiseDetails").readNullable[FranchiseDetails] and
+        (__ \ "noOfEmployees").readNullable[String] and
+        (__ \ "noOfEmployeesForMlr").readNullable[String] and
+        (__ \ "nonUkResidentCustDetails").read[NonUkResidentCustDetails] and
+        (__ \ "auditableRecordsDetails").read[AuditableRecordsDetails] and
+        (__ \ "suspiciousActivityGuidance").read[Boolean] and
+        (__ \ "nationalCrimeAgencyRegistered").read[Boolean] and
+        (__ \ "formalRiskAssessmentDetails").readNullable[FormalRiskAssessmentDetails] and
+        (__ \ "mlrAdvisor").readNullable[MlrAdvisor]
+    ) (BusinessActivitiesAll.apply _)
+  }
+
+  implicit def jsonWrites = Json.writes[BusinessActivitiesAll]
+
+
 
   def getEarliestDate(aspSection: Option[models.fe.asp.Asp],
                       eabSection: Option[models.fe.eab.Eab],

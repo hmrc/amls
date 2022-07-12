@@ -57,7 +57,7 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
         formalRiskAssessmentDetails,
         mlrAdvisor)
 
-      BusinessActivitiesAll.format.writes(model) must be(Json.obj(
+      BusinessActivitiesAll.jsonWrites.writes(model) must be(Json.obj(
         "busActivitiesChangeDate" ->"2016-05-25",
                "dateChangeFlag" -> false,
         "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
