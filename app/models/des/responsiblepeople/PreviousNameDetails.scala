@@ -17,26 +17,16 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.ResponsiblePeople
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
+import play.api.libs.json.Json
 
 case class PreviousNameDetails (nameEverChanged: Boolean,
                                 previousName: Option[PersonName],
                                 dateOfChange: Option[String],
-                                dateChangeFlag: Boolean = false
+                                dateChangeFlag: Option[Boolean] = None
                                )
 
 object PreviousNameDetails {
-  implicit val jsonReads = {
-    (
-      (__ \ "nameEverChanged").read[Boolean] and
-        (__ \ "previousName").readNullable[PersonName] and
-        (__ \ "dateOfChange").readNullable[String] and
-        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false))
-      ) (PreviousNameDetails.apply _)
-  }
-
-  implicit def jsonWrites = Json.writes[PreviousNameDetails]
+  implicit val format = Json.format[PreviousNameDetails]
 
   def from(person: ResponsiblePeople): Option[PreviousNameDetails] = {
     (person.legalName, person.legalNameChangeDate) match {

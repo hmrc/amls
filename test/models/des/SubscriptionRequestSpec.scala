@@ -17,6 +17,7 @@
 package models.des
 
 import models._
+import models.des.SubscriptionRequest.Outgoing
 import models.des.aboutthebusiness.Address
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
 import models.des.businessactivities._
@@ -173,7 +174,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
 
-  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), false, BusinessActivityDetails(true,
+  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), None, BusinessActivityDetails(true,
     Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
@@ -297,7 +298,6 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
       "socialHousingProvider": false
     },
     "all": {
-      "dateChangeFlag": false,
       "businessActivityDetails": {
         "actvtsBusRegForOnlyActvtsCarOut": false,
         "respActvtsBusRegForOnlyActvtsCarOut": {
@@ -397,8 +397,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
           "tditpsp": {
             "tditpsp": false
           },
-          "startDate": "1980-11-11",
-          "dateChangeFlag": false
+          "startDate": "1980-11-11"
         }
       ]
     },
@@ -494,7 +493,6 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
         "nameOfLastSupervisor": "joe",
         "supervisionStartDate": "2010-11-11",
         "supervisionEndDate": "2010-11-11",
-        "dateChangeFlag": false,
         "supervisionEndingReason": "being over experienced"
       }
     },
@@ -560,8 +558,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
             "firstName": "firstname",
             "lastName": "lastname"
           },
-          "dateOfChange": "2011-11-11",
-          "dateChangeFlag": false
+          "dateOfChange": "2011-11-11"
         }
       },
       "nationalityDetails": {
@@ -628,7 +625,6 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
       "descOfPrevExperience": "scenario1.2",
       "amlAndCounterTerrFinTraining": true,
       "trainingDetails": "scenario1.2",
-      "dateChangeFlag": false,
       "msbOrTcsp": {
         "passedFitAndProperTest": true
       }
@@ -689,19 +685,19 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
     )
 
     val desallActivitiesModel = BusinessActivitiesAll(None,
-      Some("2001-01-01"),
-      false,
-      BusinessActivityDetails(true,
+      activitiesCommenceDate = Some("2001-01-01"),
+      dateChangeFlag = None,
+      businessActivityDetails = BusinessActivityDetails(true,
         Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
-      Some(FranchiseDetails(true, Some(Seq("Name")))),
-      Some("10"),
-      Some("5"),
-      NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))),
-      AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
-      true,
-      true,
-      Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
-      Some(MlrAdvisor(true,
+      franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name")))),
+      noOfEmployees = Some("10"),
+      noOfEmployeesForMlr = Some("5"),
+      nonUkResidentCustDetails = NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))),
+      auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
+      suspiciousActivityGuidance = true,
+      nationalCrimeAgencyRegistered = true,
+      formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
+      mlrAdvisor = Some(MlrAdvisor(true,
         Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
 
     val desSubscriptionReq =
@@ -762,7 +758,21 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
     )
     )
 
+    val desRelease7SubscriptionViewModel1 = desSubscriptionReq.copy(
+      tradingPremises = DefaultDesValues.TradingPremisesSection1,
+      hvd = DefaultDesValues.hvdSection1,
+      aspOrTcsp = DefaultDesValues.AspOrTcspSection1,
+      responsiblePersons = DefaultDesValues.ResponsiblePersonsSectionForRelease7Phase21,
+      businessActivities = DefaultDesValues.BusinessActivitiesSection.copy(
+      all = Some(desallActivitiesModel)
+    )
+    )
+
     val desSubscriptionReqLA = desRelease7SubscriptionViewModel.copy(
+      tradingPremises = DefaultDesValues.TradingPremisesSection1,
+      hvd = DefaultDesValues.hvdSection1,
+      aspOrTcsp = DefaultDesValues.AspOrTcspSection1,
+      responsiblePersons = DefaultDesValues.ResponsiblePersonsSectionForRelease7Phase21,
       lettingAgents = Some(DesConstants.testLettingAgents),
       businessActivities = DefaultDesValues.BusinessActivitiesSectionLA.copy(
         all = Some(desallActivitiesModel)
@@ -771,13 +781,15 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
 
     "convert correctly" in {
       implicit val requestType = RequestType.Subscription
-      des.SubscriptionRequest.convert(feRelease7SubscriptionViewModel) must be(desRelease7SubscriptionViewModel)
+      val result: Outgoing = des.SubscriptionRequest.convert(feRelease7SubscriptionViewModel)
+      result must be(desRelease7SubscriptionViewModel1)
 
     }
 
     "convert correctly with LA" in {
       implicit val requestType = RequestType.Subscription
       des.SubscriptionRequest.convert(feSubscriptionViewModelLA) must be(desSubscriptionReqLA)
+
     }
   }
 }

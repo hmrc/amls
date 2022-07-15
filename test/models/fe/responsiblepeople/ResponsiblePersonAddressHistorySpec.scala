@@ -229,7 +229,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    false,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -255,7 +255,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    false,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -281,7 +281,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    false,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -307,7 +307,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    false,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -333,7 +333,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    false,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )

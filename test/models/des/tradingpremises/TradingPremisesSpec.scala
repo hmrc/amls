@@ -30,8 +30,8 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
   "TradingPremises" must {
 
     val premises = OwnBusinessPremisesDetails(
-      Some("string"),
-      Address("string",
+      tradingName = Some("string"),
+      businessAddress = Address("string",
         "string",
         Some("string"),
         Some("string"),
@@ -39,24 +39,27 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
         Some("AA1 1AA"),
         Some("1999-05-01")
       ),
-      false,
-      Msb(false, false, true, true, false),
-      Hvd(true),
-      Asp(false),
-      Tcsp(true),
-      Eab(false),
-      Bpsp(false),
-      Tditpsp(false),
+      residential = false,
+      msb = Msb(false, false, true, true, false),
+      hvd = Hvd(true),
+      asp = Asp(false),
+      tcsp = Tcsp(true),
+      eab = Eab(false),
+      bpsp = Bpsp(false),
+      tditpsp = Tditpsp(false),
       amp = Amp(false),
-      "2010-01-01",
-      None,
-      None,
+      startDate = "2010-01-01",
+      endDate = None,
+      lineId = None,
       sectorDateChange = Some("2009-01-01"),
-      dateChangeFlag = false,
+      dateChangeFlag = Some(false),
       tradingNameChangeDate = Some("1999-04-01")
     )
 
+    val premises1 = premises.copy(dateChangeFlag = None)
+
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
+    val ownBusinessPremises1 = Some(OwnBusinessPremises(true, Some(Seq(premises1))))
 
     val agentPremises = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA"), Some("2002-03-11")), true,
       Msb(true, false, false, false, false),
@@ -94,18 +97,18 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     "serialise Trading premises model" in {
 
       val agentDetail = AgentDetails(
-        "Limited Liability Partnership",
-        None, Some("string"),
-        Some("string"),
-        agentPremises,
-        None,
-        false,
-        Some("1999-01-01"),
-        Some("Deleted"),
-        Some(StringOrInt("11223344")),
-        Some("2010-01-23"),
-        Some("Other"),
-        Some("Some other reason")
+        agentLegalEntity = "Limited Liability Partnership",
+        companyRegNo = None, dateOfBirth = Some("string"),
+        agentLegalEntityName = Some("string"),
+        agentPremises = agentPremises,
+        startDate = None,
+        dateChangeFlag = Some(false),
+        endDate = Some("1999-01-01"),
+        status = Some("Deleted"),
+        lineId = Some(StringOrInt("11223344")),
+        agentDetailsChangeDate = Some("2010-01-23"),
+        removalReason = Some("Other"),
+        removalReasonOther = Some("Some other reason")
       )
 
       val agentBusinessPremises = Some(AgentBusinessPremises(true, Some(Seq(agentDetail))))
@@ -181,28 +184,30 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       val agentBusinessPremises = Some(AgentBusinessPremises(agentBusinessPremises = true, Some(Seq(
         AgentDetails(
-          "Limited Liability Partnership",
-          None,
-          None,
-          Some("LLP Partnership"),
-          agentPremises,
-          None,
-          false,
-          None,
-          Some("Deleted"),
-          Some(StringOrInt("11223344")),
-          Some("2009-05-03"),
-          removalReason = Some("Other"),
-          removalReasonOther = Some("Some other reason")
+          agentLegalEntity = "Limited Liability Partnership",
+          companyRegNo = None,
+          dateOfBirth = None,
+          agentLegalEntityName = Some("LLP Partnership"),
+          agentPremises = agentPremises,
+          startDate = None,
+          dateChangeFlag = None,
+          endDate = None,
+          status = Some("Deleted"),
+          lineId = Some(StringOrInt("11223344")),
+          agentDetailsChangeDate = Some("2009-05-03"),
+          removalReason = None,
+          removalReasonOther = None
         ),
 
         AgentDetails("Partnership", None, None, Some("Partnership"), agentPremises1),
         AgentDetails("Unincorporated Body", None, None, None, agentPremises2)))))
 
-      val desTradingPremises = TradingPremises(ownBusinessPremises, agentBusinessPremises)
+      val desTradingPremises = TradingPremises(ownBusinessPremises1, agentBusinessPremises)
 
       val tradingPremises = Some(Seq(
-        FETradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
+        FETradingPremises(Some(
+          RegisteringAgentPremises(false)),
+          YourTradingPremises("string",
           FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA", Some("1999-05-01"))
           , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
           None, None, None, None,
@@ -228,7 +233,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
       ))
       implicit val requestType = RequestType.Subscription
 
-      val converted = TradingPremises.convert(tradingPremises)
+      val converted: TradingPremises = TradingPremises.convert(tradingPremises)
 
       converted must be(desTradingPremises)
 

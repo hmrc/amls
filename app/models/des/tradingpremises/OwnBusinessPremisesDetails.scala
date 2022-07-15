@@ -37,7 +37,7 @@ case class OwnBusinessPremisesDetails(tradingName: Option[String],
                                       lineId: Option[StringOrInt] = None,
                                       status: Option[String] = None,
                                       sectorDateChange: Option[String] = None,
-                                      dateChangeFlag: Boolean = false,
+                                      dateChangeFlag: Option[Boolean] = None,
                                       tradingNameChangeDate: Option[String] = None
                                      )
 
@@ -62,7 +62,7 @@ object OwnBusinessPremisesDetails {
         __.read(Reads.optionNoError[StringOrInt]) and
         (__ \ "status").readNullable[String] and
         (__ \ "sectorDateChange").readNullable[String] and
-          ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
+        (__ \ "dateChangeFlag").readNullable[Boolean] and
         (__ \ "tradingNameChangeDate").readNullable[String]
       ) (OwnBusinessPremisesDetails.apply _)
   }
@@ -85,7 +85,7 @@ object OwnBusinessPremisesDetails {
         __.writeNullable[StringOrInt] and
         (__ \ "status").writeNullable[String] and
         (__ \ "sectorDateChange").writeNullable[String] and
-        (__ \ "dateChangeFlag").write[Boolean] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "tradingNameChangeDate").writeNullable[String]
       ) (unlift(OwnBusinessPremisesDetails.unapply))
   }
@@ -111,7 +111,7 @@ object OwnBusinessPremisesDetails {
           x.lineId,
           x.status,
           x.whatDoesYourBusinessDoAtThisAddress.dateOfChange,
-          false,
+          None,
           x.yourTradingPremises.tradingNameChangeDate
         )
       }

@@ -43,7 +43,7 @@ trait TradingPremisesUpdateHelper {
 
     val updatedAgentStatus = agentWithLineIds.map(agentDtls => updateAgentStatus(agentDtls, viewTradingPremises))
     val updatedAgentStatusWithoutLineId =
-      agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = false))
+      agentWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
 
     val addAgentList = updatedAgentStatus ++ updatedAgentStatusWithoutLineId
 
@@ -62,7 +62,7 @@ trait TradingPremisesUpdateHelper {
 
     val updatedOwnStatus = ownWithLineIds.map(own => updateOwnPremisesStatus(own, viewTradingPremises))
     val updatedOwnStatusWithoutLineId =
-      ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = false))
+      ownWithoutLineIds.map(x => x.copy(status = Some(StatusConstants.Added), dateChangeFlag = Some(false)))
     val addOwnList = updatedOwnStatus ++ updatedOwnStatusWithoutLineId
 
     desTradingPremises.ownBusinessPremises.map {
@@ -80,7 +80,7 @@ trait TradingPremisesUpdateHelper {
       val updatedStatus = updateOwnPremisesStatus(ownDetails, bpDetails)
       val startDateChangeFlag = updateOwnPremisesStartDateFlag(ownDetails, bpDetails)
       ownDetails.copy(status = Some(updatedStatus), dateChangeFlag = startDateChangeFlag)
-    } getOrElse ownDetails.copy(status = Some(StatusConstants.Unchanged), dateChangeFlag = false)
+    } getOrElse ownDetails.copy(status = Some(StatusConstants.Unchanged), dateChangeFlag = Some(false))
   }
 
   private def updateOwnPremisesStatus(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
@@ -93,8 +93,8 @@ trait TradingPremisesUpdateHelper {
     }
   }
 
-  private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails): Boolean =
-    (!ownDetails.status.contains(StatusConstants.Deleted)) && !ownDetails.startDate.equals(viewOwnDtls.startDate)
+  private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) =
+    Some((!ownDetails.status.contains(StatusConstants.Deleted)) && !ownDetails.startDate.equals(viewOwnDtls.startDate))
 
   private def updateAgentStatus(agentDetails: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
     viewTradingPremises.agentBusinessPremises.fold(agentDetails) {
@@ -118,11 +118,11 @@ trait TradingPremisesUpdateHelper {
     }
   }
 
-  private def updateAgentDetailsDateOfChangeFlag(agentDetails: AgentDetails, viewAgent: AgentDetails): Boolean = {
+  private def updateAgentDetailsDateOfChangeFlag(agentDetails: AgentDetails, viewAgent: AgentDetails) = {
     agentDetails.startDate match {
       case _ if !agentDetails.status.contains(StatusConstants.Deleted) =>
-        !agentDetails.startDate.equals(viewAgent.startDate)
-      case _ => false
+        Some(!agentDetails.startDate.equals(viewAgent.startDate))
+      case _ => Some(false)
     }
   }
 }

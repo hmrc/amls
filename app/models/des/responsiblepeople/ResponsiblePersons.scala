@@ -38,7 +38,7 @@ case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               amlAndCounterTerrFinTraining: Boolean,
                               trainingDetails: Option[String],
                               startDate: Option[String],
-                              dateChangeFlag: Boolean = false,
+                              dateChangeFlag: Option[Boolean] = None,
                               msbOrTcsp: Option[MsbOrTcsp] = None,
                               passedFitAndProperTest: Option[Boolean] = None,
                               passedApprovalCheck: Option[Boolean] = None,
@@ -68,7 +68,7 @@ object ResponsiblePersons {
         (__ \ "amlAndCounterTerrFinTraining").read[Boolean] and
         (__ \ "trainingDetails").readNullable[String] and
         (__ \ "startDate").readNullable[String] and
-        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)) and
+        (__ \ "dateChangeFlag").readNullable[Boolean] and
         (__ \ "msbOrTcsp").readNullable[MsbOrTcsp] and
         (__ \ "passedFitAndProperTest").readNullable[Boolean] and
         (__ \ "passedApprovalCheck").readNullable[Boolean] and
@@ -97,7 +97,7 @@ object ResponsiblePersons {
         (__ \ "amlAndCounterTerrFinTraining").write[Boolean] and
         (__ \ "trainingDetails").writeNullable[String] and
         (__ \ "startDate").writeNullable[String] and
-        (__ \ "dateChangeFlag").write[Boolean] and
+        (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "msbOrTcsp").writeNullable[MsbOrTcsp] and
         (__ \ "passedFitAndProperTest").writeNullable[Boolean] and
         (__ \ "passedApprovalCheck").writeNullable[Boolean] and
@@ -106,7 +106,7 @@ object ResponsiblePersons {
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
-    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, false, None,
+    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
       extra = RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
@@ -139,27 +139,27 @@ object ResponsiblePersons {
       rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
 
     ResponsiblePersons(
-      NameDetails.from(Some(rp)),
-      rp,
-      rp.contactDetails,
-      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
-      PositionInBusiness.conv(rp.positions, bm),
-      rp,
-      expTraining,
-      expTrainingDesc,
-      training,
-      trainingDesc,
-      rp.positions,
-      false,
-      msbOrTcsp,
-      passedFitAndProperTest,
-      passedApprovalCheck,
-      rp
+      nameDetails = NameDetails.from(Some(rp)),
+      nationalityDetails = rp,
+      contactCommDetails = rp.contactDetails,
+      currentAddressDetails = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
+      timeAtCurrentAddress = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
+      addressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
+      timeAtAddressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
+      addressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
+      timeAtAddressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
+      positionInBusiness = PositionInBusiness.conv(rp.positions, bm),
+      regDetails = rp,
+      previousExperience = expTraining,
+      descOfPrevExperience = expTrainingDesc,
+      amlAndCounterTerrFinTraining = training,
+      trainingDetails = trainingDesc,
+      startDate = rp.positions,
+      dateChangeFlag = None,
+      msbOrTcsp = msbOrTcsp,
+      passedFitAndProperTest = passedFitAndProperTest,
+      passedApprovalCheck = passedApprovalCheck,
+      extra = rp
     )
   }
 

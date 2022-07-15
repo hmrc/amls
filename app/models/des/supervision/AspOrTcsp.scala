@@ -32,5 +32,11 @@ object AspOrTcsp {
       case _ => None
     }
   }
+  def conv1(supervision: Option[Supervision]): Option[AspOrTcsp] = {
+    supervision match {
+      case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv1(x.anotherBody), ProfessionalBodyDetails.conv(x)))
+      case _ => None
+    }
+  }
 
 }

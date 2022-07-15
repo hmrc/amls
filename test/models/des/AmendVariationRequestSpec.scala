@@ -37,13 +37,14 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
   }
 
   val release7BusinessActivities = DesConstants.testBusinessActivities.copy(
-    all = Some(DesConstants.testBusinessActivitiesAll.copy(
+    all = Some(DesConstants.testBusinessActivitiesAll1.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
   )
 
   val businessActivitiesLA = DesConstants.testBusinessActivitiesLA.copy(
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
+      dateChangeFlag = Some(false),
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
   )
@@ -58,6 +59,7 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
   )
   "Phase 2 toggle is on" when {
     "Trust or company formation agent" when {
+
       "convert frontend model to des model for amendment" in {
         implicit val mt = Amendment
         implicit val requestType = RequestType.Amendment
@@ -127,31 +129,31 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
   def convertedDesModelRelease7 = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
-    DesConstants.testChangeIndicators,
-    "Amendment",
-    DesConstants.testBusinessDetails,
-    DesConstants.testViewBusinessContactDetails,
-    Some(PreviouslyRegisteredMLRView(false,
+    changeIndicators = DesConstants.testChangeIndicators,
+    amlsMessageType = "Amendment",
+    businessDetails = DesConstants.testBusinessDetails,
+    businessContactDetails = DesConstants.testViewBusinessContactDetails,
+    businessReferencesAll = Some(PreviouslyRegisteredMLRView(false,
       None,
       false,
       None)),
-    Some(DesConstants.testbusinessReferencesAllButSp),
-    Some(DesConstants.testBusinessReferencesCbUbLlp),
-    release7BusinessActivities,
-    DesConstants.testTradingPremisesAPI6,
-    DesConstants.testBankDetails,
-    Some(release7Msb),
-    Some(DesConstants.testHvd),
-    Some(DesConstants.testAsp),
-    Some(DesConstants.testAspOrTcsp),
-    Some(DesConstants.testTcspAll),
-    Some(DesConstants.testTcspTrustCompFormationAgt),
-    Some(DesConstants.testEabAll),
-    Some(DesConstants.testEabResdEstAgncy),
-    Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6Phase2),
-    Some(DesConstants.testAmp),
-    None,
-    DesConstants.extraFields
+    businessReferencesAllButSp = Some(DesConstants.testbusinessReferencesAllButSp),
+    businessReferencesCbUbLlp = Some(DesConstants.testBusinessReferencesCbUbLlp),
+    businessActivities = release7BusinessActivities,
+    tradingPremises = DesConstants.testTradingPremisesAPI6,
+    bankAccountDetails = DesConstants.testBankDetails,
+    msb = Some(release7Msb),
+    hvd = Some(DesConstants.testHvd),
+    asp = Some(DesConstants.testAsp),
+    aspOrTcsp = Some(DesConstants.testAspOrTcsp1),
+    tcspAll = Some(DesConstants.testTcspAll),
+    tcspTrustCompFormationAgt = Some(DesConstants.testTcspTrustCompFormationAgt),
+    eabAll = Some(DesConstants.testEabAll),
+    eabResdEstAgncy = Some(DesConstants.testEabResdEstAgncy),
+    responsiblePersons = Some(DesConstants.testResponsiblePersonsForRelease7RpAPI6Phase2),
+    amp = Some(DesConstants.testAmp),
+    lettingAgents = None,
+    extraFields = DesConstants.extraFields
   )
 
   def convertedDesModelLA = convertedDesModelRelease7.copy(

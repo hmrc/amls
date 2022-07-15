@@ -54,16 +54,18 @@ trait ResponsiblePeopleUpdateHelper {
       nd =>
         nd.copy(previousNameDetails = nd.previousNameDetails map {
           pnd =>
-            pnd.copy(dateChangeFlag = pnd.dateOfChange != {
+            pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
               for {
                 nameDetails <- viewRp.nameDetails
                 previousNameDetails <- nameDetails.previousNameDetails
                 prevDateOfChange <- previousNameDetails.dateOfChange
               } yield prevDateOfChange
-            })
+            }))
         })
     },
-      dateChangeFlag = updatedStatusRp.startDate != viewRp.startDate)
+      dateChangeFlag = Some(updatedStatusRp.startDate !=
+        viewRp.startDate
+      ))
 
   }
 
@@ -81,9 +83,9 @@ trait ResponsiblePeopleUpdateHelper {
         val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
           nds =>
             nds.copy(previousNameDetails = nds.previousNameDetails map {
-              pnd => pnd.copy(dateChangeFlag = false)
+              pnd => pnd.copy(dateChangeFlag = Some(false))
             })
-        }, dateChangeFlag = false))
+        }, dateChangeFlag = Some(false)))
         rpWithLineIds ++ rpWithDateChangeFlags
       }
       case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)

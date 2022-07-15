@@ -56,7 +56,7 @@ object DefaultDesValues {
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
   private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
   private val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
-  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), false, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
     formalRiskAssessmentDetails, mlrAdvisor))
   private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
@@ -126,11 +126,17 @@ object DefaultDesValues {
     Some("2008-01-01"))
 
   private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
+  private def agentDetails1 = AgentDetails(agentLegalEntity = "Sole Proprietor", companyRegNo = None, dateOfBirth = Some("1970-01-01"), agentLegalEntityName = Some("entity name"), agentPremises = agentPremises)
 
   private val agentBusinessPremises = AgentBusinessPremises(true, Some(Seq(agentDetails)))
+  private val agentBusinessPremises1 = AgentBusinessPremises(true, Some(Seq(agentDetails1)))
 
   val TradingPremisesSection = {
     DesTradingPremises(Some(ownBusinessPremises), Some(agentBusinessPremises))
+  }
+
+  val TradingPremisesSection1 = {
+    DesTradingPremises(Some(ownBusinessPremises), Some(agentBusinessPremises1))
   }
 
   val bankDetailsSection = {
@@ -144,7 +150,9 @@ object DefaultDesValues {
   val filingIndividual = Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Other"), Some("Agent"), Some("Other"), Some("Agent"))
 
   private val nameDtls = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
-    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), false))))
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), Some(false)))))
+  val nameDtls1 = Some(NameDetails(PersonName(Some("name"), Some("some"), Some("surname")), Some(OthrNamesOrAliasesDetails(true, Some(Seq("Doc")))),
+    Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), None))))
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val nationalDtlsPhase2 = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1970-01-01"))), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
@@ -160,27 +168,50 @@ object DefaultDesValues {
   val tcspTrustCompFormationAgtSection = Some(TcspTrustCompFormationAgt(true,true))
 
   val ResponsiblePersonsSection = Some(Seq(ResponsiblePersons(
-    nameDtls,
-    nationalDtls,
-    contactDtls,
-    currentDesAddress,
-    Some("0-6 months"),
-    additionalDesAddress,
-    Some("7-12 months"),
-    extraAdditional,
-    Some("1-3 years"),
-    positionInBusiness,
-    regDtls,
-    true,
-    Some("Some training"),
-    true,
-    Some("test"),
-    Some((new LocalDate()).toString("yyyy-MM-dd")),
-    false,
-    Some(MsbOrTcsp(true)),
+    nameDetails = nameDtls,
+    nationalityDetails = nationalDtls,
+    contactCommDetails = contactDtls,
+    currentAddressDetails = currentDesAddress,
+    timeAtCurrentAddress = Some("0-6 months"),
+    addressUnderThreeYears = additionalDesAddress,
+    timeAtAddressUnderThreeYears = Some("7-12 months"),
+    addressUnderOneYear = extraAdditional,
+    timeAtAddressUnderOneYear = Some("1-3 years"),
+    positionInBusiness = positionInBusiness,
+    regDetails = regDtls,
+    previousExperience = true,
+    descOfPrevExperience = Some("Some training"),
+    amlAndCounterTerrFinTraining = true,
+    trainingDetails = Some("test"),
+    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    dateChangeFlag = Some(false),
+    msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
   ))
+  val ResponsiblePersonsSection1 = Some(Seq(ResponsiblePersons(
+    nameDetails = nameDtls,
+    nationalityDetails = nationalDtls,
+    contactCommDetails = contactDtls,
+    currentAddressDetails = currentDesAddress,
+    timeAtCurrentAddress = Some("0-6 months"),
+    addressUnderThreeYears = additionalDesAddress,
+    timeAtAddressUnderThreeYears = Some("7-12 months"),
+    addressUnderOneYear = extraAdditional,
+    timeAtAddressUnderOneYear = Some("1-3 years"),
+    positionInBusiness = positionInBusiness,
+    regDetails = regDtls,
+    previousExperience = true,
+    descOfPrevExperience = Some("Some training"),
+    amlAndCounterTerrFinTraining = true,
+    trainingDetails = Some("test"),
+    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    dateChangeFlag = None,
+    msbOrTcsp = Some(MsbOrTcsp(true)),
+    extra = RPExtra()
+  )
+  ))
+
 
   val ResponsiblePersonsSectionPhase2 = Some(Seq(ResponsiblePersons(
     nameDtls,
@@ -199,7 +230,7 @@ object DefaultDesValues {
     true,
     Some("test"),
     Some((new LocalDate()).toString("yyyy-MM-dd")),
-    false,
+    Some(false),
     None,
     Some(false),
     Some(true),
@@ -207,62 +238,67 @@ object DefaultDesValues {
   )
   ))
   val ResponsiblePersonsSectionForRelease7 = Some(Seq(ResponsiblePersons(
-    nameDtls,
-    nationalDtls,
-    contactDtls,
-    currentDesAddress,
-    Some("0-6 months"),
-    additionalDesAddress,
-    Some("7-12 months"),
-    extraAdditional,
-    Some("1-3 years"),
-    positionInBusinessForRelease7,
-    regDtls,
+    nameDetails = nameDtls,
+    nationalityDetails = nationalDtls,
+    contactCommDetails = contactDtls,
+    currentAddressDetails = currentDesAddress,
+    timeAtCurrentAddress = Some("0-6 months"),
+    addressUnderThreeYears = additionalDesAddress,
+    timeAtAddressUnderThreeYears = Some("7-12 months"),
+    addressUnderOneYear = extraAdditional,
+    timeAtAddressUnderOneYear = Some("1-3 years"),
+    positionInBusiness = positionInBusinessForRelease7,
+    regDetails = regDtls,
     previousExperience = true,
-    Some("Some training"),
+    descOfPrevExperience = Some("Some training"),
     amlAndCounterTerrFinTraining = true,
-    Some("test"),
-    Some((new LocalDate()).toString("yyyy-MM-dd")),
-    dateChangeFlag = false,
-    Some(MsbOrTcsp(true)),
+    trainingDetails = Some("test"),
+    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    dateChangeFlag = Some(false),
+    msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
   ))
-  val ResponsiblePersonsSectionForRelease7Phase2 = Some(Seq(ResponsiblePersons(
-    nameDtls,
-    nationalDtlsPhase2,
-    contactDtls,
-    currentDesAddress,
-    Some("0-6 months"),
-    additionalDesAddress,
-    Some("7-12 months"),
-    extraAdditional,
-    Some("1-3 years"),
-    positionInBusinessForRelease7,
-    regDtls,
-    true,
-    Some("Some training"),
-    true,
-    Some("test"),
-    Some((new LocalDate()).toString("yyyy-MM-dd")),
-    false,
-    None,
-    Some(false),
-    Some(true),
+  val ResponsiblePersonsSectionForRelease7Phase2: Option[Seq[ResponsiblePersons]] = Some(Seq(ResponsiblePersons(
+    nameDetails = nameDtls,
+    nationalityDetails = nationalDtlsPhase2,
+    contactCommDetails = contactDtls,
+    currentAddressDetails = currentDesAddress,
+    timeAtCurrentAddress = Some("0-6 months"),
+    addressUnderThreeYears = additionalDesAddress,
+    timeAtAddressUnderThreeYears = Some("7-12 months"),
+    addressUnderOneYear = extraAdditional,
+    timeAtAddressUnderOneYear = Some("1-3 years"),
+    positionInBusiness = positionInBusinessForRelease7,
+    regDetails = regDtls,
+    previousExperience = true,
+    descOfPrevExperience = Some("Some training"),
+    amlAndCounterTerrFinTraining = true,
+    trainingDetails = Some("test"),
+    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    dateChangeFlag = None,
+    msbOrTcsp = None,
+    passedFitAndProperTest = Some(false),
+    passedApprovalCheck = Some(true),
     extra = RPExtra()
   )
   ))
+
+  val ResponsiblePersonsSectionForRelease7Phase21 = ResponsiblePersonsSectionForRelease7Phase2.map(x => Seq(x.head.copy(nameDetails = nameDtls1)))
 
   val AmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60))
 
   val AspSection =  Some(Asp(true, None))
 
-  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",false,"Ending reason")))
+  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",Some(false),"Ending reason")))
+  private val supervisionDetails1 = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",None,"Ending reason")))
   private val professionalBodyDetails = ProfessionalBodyDetails(true,Some("details"),
     Some(ProfessionalBodyDesMember(true,
       Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))
 
   val AspOrTcspSection = Some(AspOrTcsp(Some(supervisionDetails),
+    Some(professionalBodyDetails)))
+  val AspOrTcspSection1 = Some(AspOrTcsp(Some(supervisionDetails1),
     Some(professionalBodyDetails)))
 
   val CorpTaxRegime = Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890")))
@@ -289,6 +325,7 @@ object DefaultDesValues {
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
   // scalastyle:off magic.number
-  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),false,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
+  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),Some(false),true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
+  val hvdSection1 = Some(DesHvd(true,Some("1978-02-15"), None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
 
 }

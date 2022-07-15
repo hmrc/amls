@@ -27,7 +27,7 @@ trait SupervisionGenerators {
     name <- arbitrary[String]
     startDate <- Gen.const(LocalDate.now())
     endDate <- Gen.const(LocalDate.now())
-    dateChange <- arbitrary[Boolean]
+    dateChange <- arbitrary[Option[Boolean]]
     reason <- arbitrary[String]
   } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), dateChange, reason)
 

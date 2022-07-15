@@ -21,6 +21,7 @@ import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetailsView
 import models.des.businessactivities.BusinessActivities
+import models.des.businessactivities.BusinessActivities.conv
 import models.des.businessdetails.BusinessDetails
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import models.des.hvd.Hvd
@@ -242,7 +243,6 @@ object AmendVariationRequest {
   // scalastyle:off
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,
-                                       conv: Incoming => BusinessActivities,
                                        conv2: fe.eab.Eab => EabAll,
                                        vatABConv: fe.businessdetails.BusinessDetails => Option[VATRegistration],
                                        contactABConv: fe.businessdetails.BusinessDetails => BusinessContactDetails,
@@ -267,7 +267,7 @@ object AmendVariationRequest {
       businessReferencesAll = data.businessDetailsSection,
       businessReferencesAllButSp = data.businessDetailsSection,
       businessReferencesCbUbLlp = data.businessDetailsSection,
-      businessActivities = conv(data),
+      businessActivities = BusinessActivities.convWithFlag(data),
       tradingPremises = data.tradingPremisesSection,
       bankAccountDetails = data.bankDetailsSection,
       msb = msbConv(data.msbSection, data.businessMatchingSection, true),

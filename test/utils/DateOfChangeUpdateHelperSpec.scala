@@ -44,7 +44,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
 
         val expectedRequest = request.copy(
           hvd = Some(changeToHvd.copy(
-            dateChangeFlag = true
+            dateChangeFlag = Some(true)
           ))
         )
 
@@ -75,7 +75,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
           aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
             supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
               supervisorDetails = Some(changeToSupervisor.copy(
-                dateChangeFlag = true
+                dateChangeFlag = Some(true)
               ))
             ))
           ))
@@ -105,7 +105,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
             all = Some(changeToBusinessActivitiesAll.copy(
-              dateChangeFlag = true
+              dateChangeFlag = Some(true)
             ))
           )
         )
@@ -129,7 +129,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
 
         val expectedRequest = request.copy(
           hvd = Some(DesConstants.testHvd.copy(
-            dateChangeFlag = false
+            dateChangeFlag = Some(false)
           ))
         )
 
@@ -151,7 +151,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
           aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
             supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
               supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
-                dateChangeFlag = false
+                dateChangeFlag = Some(false)
               ))
             ))
           ))
@@ -174,7 +174,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
             all = Some(DesConstants.testBusinessActivitiesAll.copy(
-              dateChangeFlag = false
+              dateChangeFlag = Some(false)
             ))
           )
         )

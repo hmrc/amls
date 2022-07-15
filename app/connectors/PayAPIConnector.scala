@@ -54,6 +54,8 @@ class PayAPIConnector @Inject()(private[connectors] val applicationConfig: Appli
 
     httpClient.GET[HttpResponse](url) map {
       response =>
+
+        println(" response is ::"+response)
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response body: ${response.body}")

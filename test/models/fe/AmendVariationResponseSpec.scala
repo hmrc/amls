@@ -64,7 +64,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
             endDate = Some("9999-12-31"),
             lineId = Some("000001"),
             status = Some("Updated"),
-            dateChangeFlag = false
+            dateChangeFlag = Some(false)
           ),
             OwnBusinessPremisesDetails(
               tradingName = Some("trade3"),
@@ -88,7 +88,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
               startDate = "2018-02-01",
               endDate = Some("9999-12-31"),
               status = Some("Added"),
-              dateChangeFlag = false
+              dateChangeFlag = Some(false)
             )
           ))
         )),
@@ -120,7 +120,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
               startDate = None
             ),
             startDate = Some("2017-01-12"),
-            dateChangeFlag = false,
+            dateChangeFlag = Some(false),
             status = Some("Added")
           )))
         ))
