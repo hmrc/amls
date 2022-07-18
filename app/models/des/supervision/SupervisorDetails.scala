@@ -29,4 +29,6 @@ object SupervisorDetails {
 
   implicit val format = Json.format[SupervisorDetails]
 
+
+
 }

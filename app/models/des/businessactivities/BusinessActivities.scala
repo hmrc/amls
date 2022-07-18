@@ -35,8 +35,6 @@ object BusinessActivities {
   implicit val format = Json.format[BusinessActivities]
 
   implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
-
-
     BusinessActivities(
       feModel.businessMatchingSection,
       feModel.businessMatchingSection,
@@ -50,4 +48,21 @@ object BusinessActivities {
       BusinessActivitiesAll.convtoActivitiesALL(feModel)
     )
   }
+
+  def convWithFlag(feModel: fe.SubscriptionRequest): BusinessActivities = {
+    BusinessActivities(
+      feModel.businessMatchingSection,
+      feModel.businessMatchingSection,
+      HvdGoodsSold.conv(feModel.hvdSection),
+      feModel.hvdSection,
+      feModel.aspSection,
+      feModel.tcspSection,
+      feModel.tcspSection,
+      feModel.eabSection,
+      feModel.ampSection,
+      BusinessActivitiesAll.convtoActivitiesALLWithFlag(feModel)
+    )
+  }
+
+
 }

@@ -16,6 +16,7 @@
 
 package models.des.responsiblepeople
 
+import models.DefaultDesValues.{nameDtls, nameDtls1}
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
 import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSection}
 import org.joda.time.LocalDate
@@ -47,8 +48,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         respPeoplePhase2,
         BusinessMatchingSection.emptyModel
       )
-
-      responsiblePersonPhase2 must be (RPValues.modelPhase2)
+      responsiblePersonPhase2 must be (RPValues.modelPhase3)
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
@@ -91,12 +91,14 @@ object RPValues {
 
   val model = DefaultDesValues.ResponsiblePersonsSectionForRelease7.get.head.copy(startDate = None)
 
-  val modelPhase2 = model.copy(
+  val modelPhase2: ResponsiblePersons = model.copy(
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),
     passedApprovalCheck = Some(true),
     nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
+
+  val modelPhase3 = modelPhase2.copy(dateChangeFlag = None, nameDetails = nameDtls1)
 
   val jsonExpectedFromWrite = Json.obj(
     "nameDetails" -> Json.obj(
@@ -118,7 +120,8 @@ object RPValues {
           "middleName" -> "mname",
           "lastName" -> "lname"
         ),
-        "dateOfChange" -> "1990-02-24"
+        "dateOfChange" -> "1990-02-24",
+        "dateChangeFlag" -> false
       )
     ),
     "nationalityDetails" -> Json.obj(
@@ -179,6 +182,7 @@ object RPValues {
     "descOfPrevExperience" -> "Some training",
     "amlAndCounterTerrFinTraining" -> true,
     "trainingDetails" -> "test",
+    "dateChangeFlag" -> false,
     "msbOrTcsp" -> Json.obj(
       "passedFitAndProperTest" -> true
     )

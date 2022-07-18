@@ -95,19 +95,19 @@ object DesConstants {
     Some("SpecifyOther"), Some(HowGoodsAreSold(true, true, true)))
 
   val testBusinessActivitiesAll = BusinessActivitiesAll(
-    None,
-    Some("2001-01-01"),
-    None,
-    BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
-    Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
-    Some("12345678901"),
-    Some("11223344556"),
-    NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
-    AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
-    true,
-    true,
-    Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-    Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
+    busActivitiesChangeDate = None,
+    activitiesCommenceDate = Some("2001-01-01"),
+    dateChangeFlag = None,
+    businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("99999")))),
+    franchiseDetails = Some(FranchiseDetails(true, Some(Seq("FranchiserName1")))),
+    noOfEmployees = Some("12345678901"),
+    noOfEmployeesForMlr = Some("11223344556"),
+    nonUkResidentCustDetails = NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
+    auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+    suspiciousActivityGuidance = true,
+    nationalCrimeAgencyRegistered = true,
+    formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
+    mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
       Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
         "AdvisorAddressLine1",
         "AdvisorAddressLine2",
@@ -119,6 +119,7 @@ object DesConstants {
       None
     ))))
   )
+  val testBusinessActivitiesAll1 = testBusinessActivitiesAll.copy(dateChangeFlag = Some(false))
 
   val testBusinessActivitiesAllWithDateChangeFlag = BusinessActivitiesAll(
     None,
@@ -565,26 +566,26 @@ object DesConstants {
 
   val viewStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
-      Some("OwnBusinessTradingName"),
-      TradingPremisesAddress("OwnBusinessAddressLine1",
+      tradingName = Some("OwnBusinessTradingName"),
+      businessAddress = TradingPremisesAddress("OwnBusinessAddressLine1",
         "OwnBusinessAddressLine2",
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
         Some("YY1 1YY")),
-      false,
-      Msb(false, false, false, false, false),
-      Hvd(false),
-      Asp(false),
-      Tcsp(true),
-      Eab(true),
-      Bpsp(true),
-      Tditpsp(false),
-      TradingPremisesAmp(true),
-      "2001-01-01",
-      None,
-      Some(StringOrInt(444444)),
-      None
+      residential = false,
+      msb = Msb(false, false, false, false, false),
+      hvd = Hvd(false),
+      asp = Asp(false),
+      tcsp = Tcsp(true),
+      eab = Eab(true),
+      bpsp = Bpsp(true),
+      tditpsp = Tditpsp(false),
+      amp = TradingPremisesAmp(true),
+      startDate = "2001-01-01",
+      endDate = None,
+      lineId = Some(StringOrInt(444444)),
+      status = None
     ),
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
@@ -1354,14 +1355,36 @@ object DesConstants {
   val testAmendAsp = AspModel(false, None)
 
   val testSupervisorDetails = SupervisorDetails(
-    "NameOfLastSupervisor",
-    "2001-01-01",
-    "2001-01-01",
-    None,
-    "SupervisionEndingReason")
+    nameOfLastSupervisor = "NameOfLastSupervisor",
+    supervisionStartDate = "2001-01-01",
+    supervisionEndDate = "2001-01-01",
+    dateChangeFlag = None,
+    supervisionEndingReason = "SupervisionEndingReason")
+
+  val testSupervisorDetails1 = SupervisorDetails(
+    nameOfLastSupervisor = "NameOfLastSupervisor",
+    supervisionStartDate = "2001-01-01",
+    supervisionEndDate = "2001-01-01",
+    dateChangeFlag = Some(false),
+    supervisionEndingReason = "SupervisionEndingReason")
   val testSupervisionDetails = SupervisionDetails(true, Some(testSupervisorDetails))
+  val testSupervisionDetails1 = SupervisionDetails(true, Some(testSupervisorDetails1))
   val testAspOrTcsp = AspOrTcsp(
     Some(testSupervisionDetails),
+    Some(ProfessionalBodyDetails(
+      true,
+      Some("DetailsIfFinedWarned"),
+      Some(ProfessionalBodyDesMember(
+        true,
+        Some(MemberOfProfessionalBody(
+          true, true, true, true, true, true, true, true, true, true, true, true, true, true, Some("SpecifyOther")
+        ))
+      ))
+    ))
+  )
+
+  val testAspOrTcsp1 = AspOrTcsp(
+    Some(testSupervisionDetails1),
     Some(ProfessionalBodyDetails(
       true,
       Some("DetailsIfFinedWarned"),

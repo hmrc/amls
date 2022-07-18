@@ -18,12 +18,13 @@ package models.des.hvd
 
 import models.fe.hvd.PercentageOfCashPaymentOver15000._
 import models.fe.hvd._
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class Hvd(
                 cashPaymentsAccptOvrThrshld: Boolean,
                 dateOfTheFirst: Option[String],
-                dateChangeFlag: Option[Boolean],
+                dateChangeFlag: Option[Boolean] ,
                 sysAutoIdOfLinkedCashPymts: Boolean,
                 hvPercentageTurnover: Option[Int],
                 hvdFromUnseenCustDetails: Option[HvdFromUnseenCustDetails]

@@ -95,7 +95,7 @@ class UKPassportSpec  extends PlaySpec with MockitoSugar {
       amlAndCounterTerrFinTraining = false,
       trainingDetails = None,
       startDate = None,
-      dateChangeFlag = None,
+      dateChangeFlag = Some(false),
       msbOrTcsp = None,
       extra = RPExtra()
     )

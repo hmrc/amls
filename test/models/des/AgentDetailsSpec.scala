@@ -36,7 +36,7 @@ class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Amp(false),None,None),Some("2008-01-01"),None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Amp(false),None,None),Some("2008-01-01"),Some(false),None,None))
     }
 
     "convert frontend Trading premises into backend model in Subscription flow" in {
@@ -50,7 +50,7 @@ class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor",None,Some("1970-01-01"),Some("entity name"),
         AgentPremises("string",DesAddress("string","string",Some("string"),Some("string"),"GB",Some("AA1 1AA"),None),true,
           Msb(false,false,false,false,false),Hvd(false),Asp(false),
-          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Amp(false),Some("2008-01-01"),None),None,None,None,None))
+          Tcsp(false),Eab(true),Bpsp(true),Tditpsp(false),Amp(false),Some("2008-01-01"),None),None,Some(false),None,None))
     }
   }
 

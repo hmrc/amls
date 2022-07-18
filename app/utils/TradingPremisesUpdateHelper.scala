@@ -93,13 +93,8 @@ trait TradingPremisesUpdateHelper {
     }
   }
 
-  private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) = {
-    ownDetails.startDate match {
-      case _ if !ownDetails.status.contains(StatusConstants.Deleted) =>
-        Some(!ownDetails.startDate.equals(viewOwnDtls.startDate))
-      case _ => Some(false)
-    }
-  }
+  private def updateOwnPremisesStartDateFlag(ownDetails: OwnBusinessPremisesDetails, viewOwnDtls: OwnBusinessPremisesDetails) =
+    Some((!ownDetails.status.contains(StatusConstants.Deleted)) && !ownDetails.startDate.equals(viewOwnDtls.startDate))
 
   private def updateAgentStatus(agentDetails: AgentDetails, viewTradingPremises: TradingPremises): AgentDetails = {
     viewTradingPremises.agentBusinessPremises.fold(agentDetails) {

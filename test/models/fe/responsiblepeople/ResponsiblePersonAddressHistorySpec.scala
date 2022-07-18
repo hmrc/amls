@@ -26,8 +26,6 @@ import play.api.libs.json.Json
 class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
 
 
-
-
   "ResponsiblePersonAddressHistory" must {
 
     "update the model with current address" in {
@@ -231,7 +229,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -257,7 +255,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -283,7 +281,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -309,7 +307,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -335,7 +333,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
     true,
     Some("TrainingDetails"),
     None,
-    None,
+    Some(false),
     Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )

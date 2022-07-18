@@ -39,7 +39,7 @@ class LinkedCashPaymentsSpec extends PlaySpec with GuiceOneAppPerSuite {
   "converting the des model must yield a frontend model" in {
     DesHvd(true,
       Some("2001-01-01"),
-      None,
+      Some(false),
       true,
       Some(0),
       Some(HvdFromUnseenCustDetails(

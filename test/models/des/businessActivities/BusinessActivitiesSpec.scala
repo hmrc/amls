@@ -94,7 +94,7 @@ class BusinessActivitiesSpec extends PlaySpec {
     val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
     val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"),"GB", None))
     val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
-    val activitiesModel = BusinessActivitiesAll(None, None,None, activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+    val activitiesModel = BusinessActivitiesAll(None, None,Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
       nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
       formalRiskAssessmentDetails, mlrAdvisor)
 
@@ -179,7 +179,8 @@ class BusinessActivitiesSpec extends PlaySpec {
             "otherAnswer" -> true,
             "specifyOther" -> "Another service")
         ),
-        "all" -> Json.obj("businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
+        "all" -> Json.obj("dateChangeFlag"->false,
+          "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
           "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
           "franchiseDetails"->
             Json.obj("isBusinessAFranchise"->true,

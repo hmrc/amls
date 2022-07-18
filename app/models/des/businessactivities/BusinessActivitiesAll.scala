@@ -19,7 +19,8 @@ package models.des.businessactivities
 import models.fe
 import models.fe.businessdetails.ActivityStartDate
 import org.joda.time.DateTime
-import play.api.libs.json.Json
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
@@ -39,6 +40,23 @@ case class BusinessActivitiesAll(
 object BusinessActivitiesAll{
 
   implicit val format = Json.format[BusinessActivitiesAll]
+  val jsonRead = {
+    (
+      (__ \ "busActivitiesChangeDate").readNullable[String] and
+        (__ \ "activitiesCommenceDate").readNullable[String] and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)).map(x=>Some(x)) and
+        (__ \ "businessActivityDetails").read[BusinessActivityDetails] and
+        (__ \ "franchiseDetails").readNullable[FranchiseDetails] and
+        (__ \ "noOfEmployees").readNullable[String] and
+        (__ \ "noOfEmployeesForMlr").readNullable[String] and
+        (__ \ "nonUkResidentCustDetails").read[NonUkResidentCustDetails] and
+        (__ \ "auditableRecordsDetails").read[AuditableRecordsDetails] and
+        (__ \ "suspiciousActivityGuidance").read[Boolean] and
+        (__ \ "nationalCrimeAgencyRegistered").read[Boolean] and
+        (__ \ "formalRiskAssessmentDetails").readNullable[FormalRiskAssessmentDetails] and
+        (__ \ "mlrAdvisor").readNullable[MlrAdvisor]
+      ) (BusinessActivitiesAll.apply _)
+  }
 
   def getEarliestDate(aspSection: Option[models.fe.asp.Asp],
                       eabSection: Option[models.fe.eab.Eab],
@@ -68,6 +86,21 @@ object BusinessActivitiesAll{
     )
   }
 
+  def convtoActivitiesALLWithFlag(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
+    convertWithFlag(
+      feModel.businessDetailsSection,
+      feModel.businessActivitiesSection,
+      getEarliestDate(
+        feModel.aspSection,
+        feModel.eabSection,
+        feModel.hvdSection,
+        feModel.businessMatchingSection
+      )
+    )
+  }
+
+
+
   def convert(atb:models.fe.businessdetails.BusinessDetails,
               activities: models.fe.businessactivities.BusinessActivities,
               dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
@@ -76,6 +109,26 @@ object BusinessActivitiesAll{
       dateOfChange,
       atb.activityStartDate,
       None,
+      BusinessActivityDetails.convert(activities),
+      activities.businessFranchise,
+      employeeCount(activities.howManyEmployees),
+      mlremployeeCount(activities.howManyEmployees),
+      activities.customersOutsideUK,
+      AuditableRecordsDetails.convert(activities),
+      activities.identifySuspiciousActivity,
+      activities.ncaRegistered,
+      activities.riskAssessmentPolicy,
+      activities))
+  }
+
+  def convertWithFlag(atb:models.fe.businessdetails.BusinessDetails,
+              activities: models.fe.businessactivities.BusinessActivities,
+              dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
+
+    Some(BusinessActivitiesAll(
+      dateOfChange,
+      atb.activityStartDate,
+      Some(false),
       BusinessActivityDetails.convert(activities),
       activities.businessFranchise,
       employeeCount(activities.howManyEmployees),

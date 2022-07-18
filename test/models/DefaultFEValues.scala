@@ -140,21 +140,21 @@ object BusinessActivitiesSection {
   import models.fe.businessactivities._
 
   val model = BusinessActivities(
-    Some(InvolvedInOtherNo),
-    None,
-    Some(ExpectedAMLSTurnover.First),
-    Some(BusinessFranchiseYes("Name")),
-    Some(true),
-    Some(CustomersOutsideUK(true, Some(Seq("GB", "AB")))),
-    Some(NCARegistered(true)),
-    Some(AccountantForAMLSRegulations(true)),
-    Some(IdentifySuspiciousActivity(true)),
-    Some(RiskAssessmentPolicyYes(Set(Digital))),
-    Some(HowManyEmployees("10", "5")),
-    Some(WhoIsYourAccountant("Name", Some("TradingName"),
+    involvedInOther = Some(InvolvedInOtherNo),
+    expectedBusinessTurnover = None,
+    expectedAMLSTurnover = Some(ExpectedAMLSTurnover.First),
+    businessFranchise = Some(BusinessFranchiseYes("Name")),
+    transactionRecord = Some(true),
+    customersOutsideUK = Some(CustomersOutsideUK(true, Some(Seq("GB", "AB")))),
+    ncaRegistered = Some(NCARegistered(true)),
+    accountantForAMLSRegulations = Some(AccountantForAMLSRegulations(true)),
+    identifySuspiciousActivity = Some(IdentifySuspiciousActivity(true)),
+    riskAssessmentPolicy = Some(RiskAssessmentPolicyYes(Set(Digital))),
+    howManyEmployees = Some(HowManyEmployees("10", "5")),
+    whoIsYourAccountant = Some(WhoIsYourAccountant("Name", Some("TradingName"),
       UkAccountantsAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "AA1 1AA"))),
-    Some(TaxMatters(true)),
-    Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("value"))))
+    taxMatters = Some(TaxMatters(true)),
+    transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("value"))))
   )
 
 

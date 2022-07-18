@@ -139,27 +139,27 @@ object ResponsiblePersons {
       rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
 
     ResponsiblePersons(
-      NameDetails.from(Some(rp)),
-      rp,
-      rp.contactDetails,
-      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
-      rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
-      PositionInBusiness.conv(rp.positions, bm),
-      rp,
-      expTraining,
-      expTrainingDesc,
-      training,
-      trainingDesc,
-      rp.positions,
-      None,
-      msbOrTcsp,
-      passedFitAndProperTest,
-      passedApprovalCheck,
-      rp
+      nameDetails = NameDetails.from(Some(rp)),
+      nationalityDetails = rp,
+      contactCommDetails = rp.contactDetails,
+      currentAddressDetails = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
+      timeAtCurrentAddress = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
+      addressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
+      timeAtAddressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
+      addressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
+      timeAtAddressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
+      positionInBusiness = PositionInBusiness.conv(rp.positions, bm),
+      regDetails = rp,
+      previousExperience = expTraining,
+      descOfPrevExperience = expTrainingDesc,
+      amlAndCounterTerrFinTraining = training,
+      trainingDetails = trainingDesc,
+      startDate = rp.positions,
+      dateChangeFlag = None,
+      msbOrTcsp = msbOrTcsp,
+      passedFitAndProperTest = passedFitAndProperTest,
+      passedApprovalCheck = passedApprovalCheck,
+      extra = rp
     )
   }
 

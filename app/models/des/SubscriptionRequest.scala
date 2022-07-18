@@ -98,7 +98,7 @@ object SubscriptionRequest {
       msb = msbConv(data.msbSection, data.businessMatchingSection, false),
       hvd = data.hvdSection,
       asp = data.aspSection,
-      aspOrTcsp = AspOrTcsp.conv(data.supervisionSection),
+      aspOrTcsp = AspOrTcsp.conv1(data.supervisionSection),
       tcspAll = data.tcspSection.map(tcspAllConv),
       tcspTrustCompFormationAgt = data.tcspSection.map(tcspTrustCompConv),
       eabAll = data.eabSection.map(conv2),
