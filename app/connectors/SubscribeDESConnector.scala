@@ -63,8 +63,6 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$safeId"
-    println(" url is :;"+url)
-    println(" SubscriptionRequest is :;"+{Json.toJson(data)})
 
     httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
