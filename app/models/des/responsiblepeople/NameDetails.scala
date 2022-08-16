@@ -26,12 +26,12 @@ case class NameDetails (personName: PersonName,
 object NameDetails {
   implicit val format = Json.format[NameDetails]
 
-  def from(maybePerson: Option[ResponsiblePeople]) : Option[NameDetails] = {
+  def from(maybePerson: Option[ResponsiblePeople], amendVariation: Boolean) : Option[NameDetails] = {
     maybePerson match {
       case Some(person) => Some(NameDetails(
         person.personName,
         OthrNamesOrAliasesDetails.from(person),
-        PreviousNameDetails.from(person)))
+        PreviousNameDetails.from(person, amendVariation)))
       case _ => None
     }
   }

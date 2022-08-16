@@ -80,7 +80,7 @@ object SubscriptionRequest {
                                        aspConv : Option[fe.asp.Asp] => Option[Asp],
                                        tcspAllConv: fe.tcsp.Tcsp => TcspAll,
                                        tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
-                                       responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
+                                       responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching, Boolean) => Option[Seq[ResponsiblePersons]],
                                        msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
                                        hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
                                        requestType: RequestType
@@ -104,7 +104,7 @@ object SubscriptionRequest {
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
       amp = data.ampSection,
-      responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
+      responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection, false),
       filingIndividual = data.aboutYouSection,
       declaration = Declaration(true),
       lettingAgents = data.eabSection

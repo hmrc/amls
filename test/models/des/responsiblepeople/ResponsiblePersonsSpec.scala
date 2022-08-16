@@ -46,7 +46,8 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        BusinessMatchingSection.emptyModel
+        BusinessMatchingSection.emptyModel,
+        false
       )
       responsiblePersonPhase2 must be (RPValues.modelPhase3)
     }
@@ -61,7 +62,8 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val responsiblePersonPhase2 = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        BusinessMatchingSection.emptyModel
+        BusinessMatchingSection.emptyModel,
+        false
       )
 
       responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
@@ -79,7 +81,8 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
           ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         respPeoplePhase2,
-        BusinessMatchingSection.emptyModel
+        BusinessMatchingSection.emptyModel,
+            false
       )
 
       responsiblePersonPhase2.passedApprovalCheck must be (Some(false))

@@ -33,7 +33,8 @@ class PreviousNameSpec extends PlaySpec {
       val previousNameDetails = Some(PreviousNameDetails(
         true,
         Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
-        Some("2001-01-01")
+        Some("2001-01-01"),
+        None
       ))
 
       val previousName = PreviousName(true, Some("first name"), Some("middle name"), Some("last name"))
@@ -47,6 +48,7 @@ class PreviousNameSpec extends PlaySpec {
     "convert des name details to frontend when previousNameDetails has none values" in {
       val previousNameDetails = Some(PreviousNameDetails(
         false,
+        None,
         None,
         None
       ))
