@@ -250,7 +250,7 @@ object AmendVariationRequest {
                                        aspConv: Option[fe.asp.Asp] => Option[Asp],
                                        tcspAllConv: fe.tcsp.Tcsp => TcspAll,
                                        tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
-                                       responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching) => Option[Seq[ResponsiblePersons]],
+                                       responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching, Boolean) => Option[Seq[ResponsiblePersons]],
                                        msbConv: (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
                                        hvdConv: Option[fe.hvd.Hvd] => Option[Hvd],
                                        ampConv: Option[fe.amp.Amp] => Option[Amp],
@@ -282,7 +282,7 @@ object AmendVariationRequest {
       },
       eabAll = data.eabSection.map(conv2),
       eabResdEstAgncy = data.eabSection,
-      responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection),
+      responsiblePersons = responsiblePeopleConv(data.responsiblePeopleSection, data.businessMatchingSection, true),
       extraFields = data.aboutYouSection,
       amp = data.ampSection,
       lettingAgents = data.eabSection

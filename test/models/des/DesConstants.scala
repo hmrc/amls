@@ -1548,7 +1548,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        Some(false)
       ))
     )),
     Some(NationalityDetails(
@@ -1596,7 +1597,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-        Some("1967-08-13")
+        Some("1967-08-13"),
+        None
       ))
     )),
     Some(NationalityDetails(
@@ -1645,7 +1647,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          None
         ))
       )),
       Some(NationalityDetails(
@@ -1783,7 +1786,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-        Some("2001-01-01")
+        Some("2001-01-01"),
+        None
       ))
     )),
     Some(NationalityDetails(
@@ -1865,7 +1869,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          None
         ))
       )),
       Some(NationalityDetails(
@@ -1932,7 +1937,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          None
         ))
       )),
       Some(NationalityDetails(
@@ -1985,7 +1991,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          None
         ))
       )),
       Some(NationalityDetails(
@@ -2052,7 +2059,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          None
         ))
       )),
       Some(NationalityDetails(
@@ -2106,7 +2114,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2173,7 +2182,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2226,7 +2236,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2291,7 +2302,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2341,7 +2353,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2406,7 +2419,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2456,7 +2470,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2523,7 +2538,8 @@ object DesConstants {
         Some(PreviousNameDetails(
           true,
           Some(PersonName(Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-          Some("1967-08-13")
+          Some("1967-08-13"),
+          Some(false)
         ))
       )),
       Some(NationalityDetails(
@@ -2603,7 +2619,8 @@ object DesConstants {
     Some(PreviousNameDetails(
       true,
       Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-      Some("2001-01-01")
+      Some("2001-01-01"),
+      None
     ))
   )
   val nationalityDetails = NationalityDetails(
@@ -2994,7 +3011,8 @@ object DesConstants {
       Some(PreviousNameDetails(
         true,
         Some(PersonName(Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-        Some("2001-01-01")
+        Some("2001-01-01"),
+        None
       ))
     )),
     Some(NationalityDetails(

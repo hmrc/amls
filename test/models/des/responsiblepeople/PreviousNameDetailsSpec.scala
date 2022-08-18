@@ -23,16 +23,22 @@ import org.scalatestplus.play.PlaySpec
 class PreviousNameDetailsSpec extends PlaySpec {
 
   "PreviousNameDetails" should {
-    "successfully convert frontend model to des model" in {
+    "successfully convert frontend model to des model amendJourney" in {
       // scalastyle:off magic.number
-      PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head) mustBe
-        Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24")))
+      PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head, amendVariation = true) mustBe
+        Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), Some(false)))
+    }
+
+    "successfully convert frontend model to des model nonAmendJourney" in {
+      // scalastyle:off magic.number
+      PreviousNameDetails.from(ResponsiblePeopleSection.model.get.head, amendVariation = false) mustBe
+        Some(PreviousNameDetails(true, Some(PersonName(Some("fname"), Some("mname"), Some("lname"))), Some("1990-02-24"), None))
     }
 
     "successfully convert a person without a previous name" in {
       val person = ResponsiblePeople(legalName = Some(PreviousName(hasPreviousName = false, None, None, None)))
 
-      PreviousNameDetails.from(person) mustBe Some(PreviousNameDetails(false, None, None, None))
+      PreviousNameDetails.from(person,amendVariation = false) mustBe Some(PreviousNameDetails(false, None, None, None))
     }
   }
 }

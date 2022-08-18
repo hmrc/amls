@@ -55,7 +55,8 @@ class PersonNameSpec extends PlaySpec with MockitoSugar {
         Some(PreviousNameDetails(
           true,
           Some(DesPersonName(Some("FirstName1"), Some("MiddleName1"), Some("LastName1"))),
-          Some("2001-01-01")
+          Some("2001-01-01"),
+          None
         ))
       ))
 

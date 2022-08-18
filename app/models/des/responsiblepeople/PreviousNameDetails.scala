@@ -22,16 +22,21 @@ import play.api.libs.json.Json
 case class PreviousNameDetails (nameEverChanged: Boolean,
                                 previousName: Option[PersonName],
                                 dateOfChange: Option[String],
-                                dateChangeFlag: Option[Boolean] = None
+                                dateChangeFlag: Option[Boolean]
                                )
 
 object PreviousNameDetails {
   implicit val format = Json.format[PreviousNameDetails]
 
-  def from(person: ResponsiblePeople): Option[PreviousNameDetails] = {
+
+  def from(person: ResponsiblePeople, amendVariation: Boolean): Option[PreviousNameDetails] = {
+    val dateChangeFlag = amendVariation match {
+      case true => Some(false)
+      case false => None
+    }
     (person.legalName, person.legalNameChangeDate) match {
-      case (Some(name), date) if name.hasPreviousName => Some(PreviousNameDetails(true, name, date.map(_.toString)))
-      case _ => Some(PreviousNameDetails(false, None, None))
+      case (Some(name), date) if name.hasPreviousName => Some(PreviousNameDetails(true, name, date.map(_.toString),dateChangeFlag))
+      case _ => Some(PreviousNameDetails(false, None, None, dateChangeFlag))
     }
   }
 }

@@ -109,10 +109,10 @@ object ResponsiblePersons {
     responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
       extra = RPExtra(None)))
 
-  implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching): Option[Seq[ResponsiblePersons]] = {
+  implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
       case Some(data) =>
-        Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm)))
+        Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm, amendVariation)))
       case _ => None
     }
   }
@@ -126,7 +126,7 @@ object ResponsiblePersons {
     }
   }
 
-  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching): ResponsiblePersons = {
+  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): ResponsiblePersons = {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
@@ -139,7 +139,7 @@ object ResponsiblePersons {
       rp.approvalFlags.hasAlreadyPaidApprovalCheck orElse Some(false)
 
     ResponsiblePersons(
-      nameDetails = NameDetails.from(Some(rp)),
+      nameDetails = NameDetails.from(Some(rp), amendVariation),
       nationalityDetails = rp,
       contactCommDetails = rp.contactDetails,
       currentAddressDetails = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
