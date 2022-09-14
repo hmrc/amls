@@ -102,7 +102,7 @@ object AgentDetails {
     }
 
     val dateChangeFlag = requestType match {
-      case RequestType.Subscription => Some(false)
+      case RequestType.Amendment => Some(false)
       case _ => None
     }
 
