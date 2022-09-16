@@ -101,6 +101,11 @@ object AgentDetails {
       case _ => (None, None)
     }
 
+    val dateChangeFlag = requestType match {
+      case RequestType.Amendment => Some(false)
+      case _ => None
+    }
+
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
       companyRegNo = assignCompanyRegNo,
@@ -117,7 +122,7 @@ object AgentDetails {
       },
       agentPremises = tradingPremises,
       startDate,
-      None,
+      dateChangeFlag = dateChangeFlag,
       endDate,
       tradingPremises.status,
       tradingPremises.lineId,
