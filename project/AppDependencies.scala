@@ -6,7 +6,7 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc"         %% "simple-reactivemongo"       % "8.0.0-play-28",
+    "uk.gov.hmrc.mongo"   %% "hmrc-mongo-play-28"         % "0.73.0",
     "uk.gov.hmrc"         %% "mongo-caching"              % "7.0.0-play-28",
     "uk.gov.hmrc"         %% "domain"                     % "6.2.0-play-28",
     "org.typelevel"       %% "cats"                       % "0.9.0",
