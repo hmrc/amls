@@ -69,6 +69,15 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
       responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
     }
 
+    "Default value of dateChangeFlag of ResponsiblePersons should be Some(false)" in {
+      val responsiblePersons = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        ResponsiblePeopleSection.model.get.head,
+        BusinessMatchingSection.emptyModel,
+        false
+      )
+      responsiblePersons.dateChangeFlag must be (Some(false))
+    }
+
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - Approval should return Some(false)" in {
 
       val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(
@@ -101,7 +110,7 @@ object RPValues {
     nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
 
-  val modelPhase3 = modelPhase2.copy(dateChangeFlag = None, nameDetails = nameDtls1)
+  val modelPhase3 = modelPhase2.copy(dateChangeFlag = Some(false), nameDetails = nameDtls1)
 
   val jsonExpectedFromWrite = Json.obj(
     "nameDetails" -> Json.obj(
