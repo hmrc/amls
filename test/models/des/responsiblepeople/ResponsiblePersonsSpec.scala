@@ -69,11 +69,20 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
       responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
     }
 
-    "Default value of dateChangeFlag of ResponsiblePersons should be Some(false)" in {
+    "The dateChangeFlag field value of ResponsiblePersons should be None for non-amend journey" in {
       val responsiblePersons = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
         ResponsiblePeopleSection.model.get.head,
         BusinessMatchingSection.emptyModel,
         false
+      )
+      responsiblePersons.dateChangeFlag must be (None)
+    }
+
+    "The dateChangeFlag field value of ResponsiblePersons should be Some(false) for amend journey" in {
+      val responsiblePersons = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        ResponsiblePeopleSection.model.get.head,
+        BusinessMatchingSection.emptyModel,
+        true
       )
       responsiblePersons.dateChangeFlag must be (Some(false))
     }
@@ -110,7 +119,7 @@ object RPValues {
     nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
   )
 
-  val modelPhase3 = modelPhase2.copy(dateChangeFlag = Some(false), nameDetails = nameDtls1)
+  val modelPhase3 = modelPhase2.copy(dateChangeFlag = None, nameDetails = nameDtls1)
 
   val jsonExpectedFromWrite = Json.obj(
     "nameDetails" -> Json.obj(

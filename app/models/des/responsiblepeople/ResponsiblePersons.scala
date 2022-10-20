@@ -155,7 +155,7 @@ object ResponsiblePersons {
       amlAndCounterTerrFinTraining = training,
       trainingDetails = trainingDesc,
       startDate = rp.positions,
-      dateChangeFlag = Some(false),
+      dateChangeFlag = if(amendVariation) Some(false) else None,
       msbOrTcsp = msbOrTcsp,
       passedFitAndProperTest = passedFitAndProperTest,
       passedApprovalCheck = passedApprovalCheck,

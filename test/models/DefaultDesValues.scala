@@ -206,7 +206,7 @@ object DefaultDesValues {
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
     startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
-    dateChangeFlag = Some(false),
+    dateChangeFlag = None,
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
@@ -276,7 +276,7 @@ object DefaultDesValues {
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
     startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
-    dateChangeFlag = Some(false),
+    dateChangeFlag = None,
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),
     passedApprovalCheck = Some(true),
