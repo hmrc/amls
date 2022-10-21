@@ -69,6 +69,24 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
       responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
     }
 
+    "The dateChangeFlag field value of ResponsiblePersons should be None for non-amend journey" in {
+      val responsiblePersons = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        ResponsiblePeopleSection.model.get.head,
+        BusinessMatchingSection.emptyModel,
+        false
+      )
+      responsiblePersons.dateChangeFlag must be (None)
+    }
+
+    "The dateChangeFlag field value of ResponsiblePersons should be Some(false) for amend journey" in {
+      val responsiblePersons = ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        ResponsiblePeopleSection.model.get.head,
+        BusinessMatchingSection.emptyModel,
+        true
+      )
+      responsiblePersons.dateChangeFlag must be (Some(false))
+    }
+
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - Approval should return Some(false)" in {
 
       val respPeoplePhase2 = ResponsiblePeopleSection.model.get.head.copy(

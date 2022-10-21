@@ -128,6 +128,8 @@ class AmendVariationServiceSpec extends PlaySpec
     None,
     Some(false),
     None,
+    Some(false),
+    None,
     extra = unchangedExtra
   )
 

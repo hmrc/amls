@@ -38,7 +38,7 @@ case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               amlAndCounterTerrFinTraining: Boolean,
                               trainingDetails: Option[String],
                               startDate: Option[String],
-                              dateChangeFlag: Option[Boolean] = None,
+                              dateChangeFlag: Option[Boolean] = Some(false),
                               msbOrTcsp: Option[MsbOrTcsp] = None,
                               passedFitAndProperTest: Option[Boolean] = None,
                               passedApprovalCheck: Option[Boolean] = None,
@@ -106,8 +106,8 @@ object ResponsiblePersons {
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
-    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None, None,
-      extra = RPExtra(None)))
+    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None,
+       extra = RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
@@ -155,7 +155,7 @@ object ResponsiblePersons {
       amlAndCounterTerrFinTraining = training,
       trainingDetails = trainingDesc,
       startDate = rp.positions,
-      dateChangeFlag = None,
+      dateChangeFlag = if(amendVariation) Some(false) else None,
       msbOrTcsp = msbOrTcsp,
       passedFitAndProperTest = passedFitAndProperTest,
       passedApprovalCheck = passedApprovalCheck,
