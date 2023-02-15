@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,18 +71,18 @@ object SubscriptionRequest {
   implicit def convert(data: Incoming)(implicit
                                        gen: AckRefGenerator,
                                        conv: Incoming => BusinessActivities,
-                                       conv2 : fe.eab.Eab => EabAll,
-                                       prevRegMLR : fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
-                                       vatABConv : fe.businessdetails.BusinessDetails => Option[VATRegistration],
-                                       contactABConv : fe.businessdetails.BusinessDetails => BusinessContactDetails,
-                                       conv4 : Seq[fe.bankdetails.BankDetails] => BankDetails,
+                                       conv2: fe.eab.Eab => EabAll,
+                                       prevRegMLR: fe.businessdetails.BusinessDetails => Option[PreviouslyRegisteredMLR],
+                                       vatABConv: fe.businessdetails.BusinessDetails => Option[VATRegistration],
+                                       contactABConv: fe.businessdetails.BusinessDetails => BusinessContactDetails,
+                                       conv4: Seq[fe.bankdetails.BankDetails] => BankDetails,
                                        aboutyouConv: fe.declaration.AddPerson => AboutYouRelease7,
-                                       aspConv : Option[fe.asp.Asp] => Option[Asp],
+                                       aspConv: Option[fe.asp.Asp] => Option[Asp],
                                        tcspAllConv: fe.tcsp.Tcsp => TcspAll,
                                        tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
                                        responsiblePeopleConv: (Option[Seq[fe.responsiblepeople.ResponsiblePeople]], fe.businessmatching.BusinessMatching, Boolean) => Option[Seq[ResponsiblePersons]],
-                                       msbConv : (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
-                                       hvdConv : Option[fe.hvd.Hvd] => Option[Hvd],
+                                       msbConv: (Option[fe.moneyservicebusiness.MoneyServiceBusiness], fe.businessmatching.BusinessMatching, Boolean) => Option[MoneyServiceBusiness],
+                                       hvdConv: Option[fe.hvd.Hvd] => Option[Hvd],
                                        requestType: RequestType
   ): Outgoing =
     SubscriptionRequest(

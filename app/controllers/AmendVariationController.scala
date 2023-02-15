@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
   def update(amlsRegistrationNumber: String,
              messageType: AmlsMessageType,
              requestType: RequestType)(implicit request: Request[JsValue]) = {
-    
+
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>

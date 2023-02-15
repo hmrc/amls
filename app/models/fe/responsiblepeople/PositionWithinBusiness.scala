@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,19 @@ case class Positions(positions: Set[PositionWithinBusiness], startDate: Option[L
 sealed trait PositionWithinBusiness
 
 case object BeneficialOwner extends PositionWithinBusiness
+
 case object Director extends PositionWithinBusiness
+
 case object InternalAccountant extends PositionWithinBusiness
+
 case object NominatedOfficer extends PositionWithinBusiness
+
 case object Partner extends PositionWithinBusiness
+
 case object SoleProprietor extends PositionWithinBusiness
+
 case object DesignatedMember extends PositionWithinBusiness
+
 case class Other(value: String) extends PositionWithinBusiness
 
 object PositionWithinBusiness {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package models.des.businessActivities
 import models.fe.eab.{Eab, EabData}
 import org.scalatestplus.play.PlaySpec
 
-class EabServicesSpec extends PlaySpec  {
+class EabServicesSpec extends PlaySpec {
 
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
@@ -42,7 +42,7 @@ class EabServicesSpec extends PlaySpec  {
         false, true, false, false, true, false, false, true, false, Some(false))
       )
 
-      models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
+      models.des.businessactivities.EabServices.convert(Some(from)) must be(expected)
     }
 
     "Be convertable from front end Estate agent business services when none" in {
@@ -65,7 +65,7 @@ class EabServicesSpec extends PlaySpec  {
         false, false, false, false, false, false, false, false, false, Some(false))
       )
 
-      models.des.businessactivities.EabServices.convert(Some(from)) must be (expected)
+      models.des.businessactivities.EabServices.convert(Some(from)) must be(expected)
     }
   }
 }

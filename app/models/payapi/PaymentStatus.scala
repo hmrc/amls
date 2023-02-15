@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,13 @@ object PaymentStatus {
 
 object PaymentStatuses extends Enum[PaymentStatus] {
   case object Created extends PaymentStatus(false, Seq(Sent))
+
   case object Successful extends PaymentStatus(true)
+
   case object Sent extends PaymentStatus(false, Seq(Successful, Failed, Cancelled))
+
   case object Failed extends PaymentStatus(true)
+
   case object Cancelled extends PaymentStatus(true)
 
   override def values = findValues

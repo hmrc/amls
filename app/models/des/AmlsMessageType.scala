@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ package models.des
 sealed trait AmlsMessageType
 
 case object Amendment extends AmlsMessageType
+
 case object Variation extends AmlsMessageType
+
 case object Renewal extends AmlsMessageType
+
 case object RenewalAmendment extends AmlsMessageType
 
 object AmlsMessageType {
-  implicit def convToString(mt : AmlsMessageType) : String = {
+  implicit def convToString(mt: AmlsMessageType): String = {
     mt match {
       case Amendment => "Amendment"
       case Variation => "Variation"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,40 +26,40 @@ class TaxMattersSpec extends WordSpec with Matchers {
       val expected = Json.obj(
         "manageYourTaxAffairs" -> true
       )
-      TaxMatters.jsonWrites.writes(TaxMatters(true)) should be (expected)
+      TaxMatters.jsonWrites.writes(TaxMatters(true)) should be(expected)
     }
 
     "Serialise no to json correctly" in {
       val expected = Json.obj(
         "manageYourTaxAffairs" -> false
       )
-      TaxMatters.jsonWrites.writes(TaxMatters(false)) should be (expected)
+      TaxMatters.jsonWrites.writes(TaxMatters(false)) should be(expected)
     }
 
     "Deserialise yes from json Correctly" in {
       val json = Json.obj(
         "manageYourTaxAffairs" -> true
       )
-      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(true)))
+      TaxMatters.jsonReads.reads(json) should be(JsSuccess(TaxMatters(true)))
     }
 
     "Deserialise no from json Correctly" in {
       val json = Json.obj(
         "manageYourTaxAffairs" -> false
       )
-      TaxMatters.jsonReads.reads(json) should be (JsSuccess(TaxMatters(false)))
+      TaxMatters.jsonReads.reads(json) should be(JsSuccess(TaxMatters(false)))
     }
 
     "Round trip yes" in {
-      TaxMatters.jsonReads.reads (
+      TaxMatters.jsonReads.reads(
         TaxMatters.jsonWrites.writes(TaxMatters(true))
-      ) should be (JsSuccess(TaxMatters(true)))
+      ) should be(JsSuccess(TaxMatters(true)))
     }
 
     "Round trip no" in {
-      TaxMatters.jsonReads.reads (
+      TaxMatters.jsonReads.reads(
         TaxMatters.jsonWrites.writes(TaxMatters(false))
-      ) should be (JsSuccess(TaxMatters(false)))
+      ) should be(JsSuccess(TaxMatters(false)))
     }
   }
 

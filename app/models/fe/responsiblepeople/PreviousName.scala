@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,7 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.PreviousNameDetails
 import play.api.libs.json.Json
 
-case class PreviousName(
-                         hasPreviousName: Boolean,
-                         firstName: Option[String],
-                         middleName: Option[String],
-                         lastName: Option[String]
-                       ) {
-}
+case class PreviousName(hasPreviousName: Boolean, firstName: Option[String], middleName: Option[String], lastName: Option[String])
 
 object PreviousName {
   implicit val format = Json.format[PreviousName]

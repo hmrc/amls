@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,14 +60,14 @@ object RiskAssessmentPolicy {
     }
 
   implicit def jsonWrites = Writes[RiskAssessmentPolicy] {
-       case RiskAssessmentPolicyYes(data) =>
-            Json.obj("hasPolicy" -> true,
-            "riskassessments" -> data)
-        case RiskAssessmentPolicyNo =>
-            Json.obj("hasPolicy" -> false)
+    case RiskAssessmentPolicyYes(data) =>
+      Json.obj("hasPolicy" -> true,
+        "riskassessments" -> data)
+    case RiskAssessmentPolicyNo =>
+      Json.obj("hasPolicy" -> false)
   }
 
-  def conv(riskAssessment: Option[FormalRiskAssessmentDetails]) : Option[RiskAssessmentPolicy] = {
+  def conv(riskAssessment: Option[FormalRiskAssessmentDetails]): Option[RiskAssessmentPolicy] = {
     riskAssessment match {
       case Some(data) => data.riskAssessmentFormat match {
         case Some(dtls) => {

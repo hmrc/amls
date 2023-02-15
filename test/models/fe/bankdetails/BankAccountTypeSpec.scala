@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +26,23 @@ class BankAccountTypeSpec extends PlaySpec with MockitoSugar {
 
     "validate Json read" in {
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "01")) must
-        be (JsSuccess(PersonalAccount))
+        be(JsSuccess(PersonalAccount))
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "02")) must
-        be (JsSuccess(BelongsToBusiness))
+        be(JsSuccess(BelongsToBusiness))
       Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "03")) must
-        be (JsSuccess(BelongsToOtherBusiness))
+        be(JsSuccess(BelongsToOtherBusiness))
 
     }
 
-    "fail Json read on invalid data" in  {
-      Json.fromJson[BankAccountType](Json.obj("bankAccountType" ->"10")) must
-        be (JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
+    "fail Json read on invalid data" in {
+      Json.fromJson[BankAccountType](Json.obj("bankAccountType" -> "10")) must
+        be(JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
     }
 
-    "write correct Json value" in  {
-      Json.toJson(PersonalAccount: BankAccountType) must be (Json.obj("bankAccountType" -> "01"))
-      Json.toJson(BelongsToBusiness: BankAccountType) must be (Json.obj("bankAccountType" -> "02"))
-      Json.toJson(BelongsToOtherBusiness: BankAccountType) must be (Json.obj("bankAccountType" -> "03"))
+    "write correct Json value" in {
+      Json.toJson(PersonalAccount: BankAccountType) must be(Json.obj("bankAccountType" -> "01"))
+      Json.toJson(BelongsToBusiness: BankAccountType) must be(Json.obj("bankAccountType" -> "02"))
+      Json.toJson(BelongsToOtherBusiness: BankAccountType) must be(Json.obj("bankAccountType" -> "03"))
     }
   }
 

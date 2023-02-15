@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,21 +44,12 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
-  def addKnownFacts
-  (knownFacts: KnownFactsForService)
-  (implicit
-   headerCarrier: HeaderCarrier,
-   writes: Writes[KnownFactsForService]
-  ): Future[HttpResponse] = {
+  def addKnownFacts(knownFacts: KnownFactsForService)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
     addKnownFactsFunction(knownFacts)
   }
 
-  private def addKnownFactsFunction
-  (knownFacts: KnownFactsForService)
-  (implicit
-   headerCarrier: HeaderCarrier,
-   writes: Writes[KnownFactsForService]
-  ): Future[HttpResponse] = {
+  private def addKnownFactsFunction(knownFacts: KnownFactsForService)
+                                   (implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
     val timer = metrics.timer(GGAdmin)
     logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
@@ -69,13 +60,13 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
         logger.debug(s"$prefix - Response body: ${response.body}")
         response
     } flatMap {
-      case response @ status(OK) =>
+      case response@status(OK) =>
         metrics.success(GGAdmin)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
-      case response @ status(s) =>
+      case response@status(s) =>
         metrics.failed(GGAdmin)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")

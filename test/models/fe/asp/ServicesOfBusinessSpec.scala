@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,35 +22,35 @@ import play.api.libs.json._
 
 class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
 
-    "JSON validation" must {
-      val businessServices: Set[Service] = Set(Accountancy, PayrollServices, BookKeeping, Auditing, FinancialOrTaxAdvice)
-      "successfully validate and read services and date of change values" in {
+  "JSON validation" must {
+    val businessServices: Set[Service] = Set(Accountancy, PayrollServices, BookKeeping, Auditing, FinancialOrTaxAdvice)
+    "successfully validate and read services and date of change values" in {
 
-        val json =  Json.obj("services" -> Seq("01","02","03","04","05"),
-          "dateOfChange" -> "2016-02-24")
+      val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05"),
+        "dateOfChange" -> "2016-02-24")
 
-        Json.fromJson[ServicesOfBusiness](json) must
-          be(JsSuccess(ServicesOfBusiness(businessServices, Some("2016-02-24")), JsPath))
-      }
-
-      "successfully validate selected services value" in {
-
-        val json =  Json.obj("services" -> Seq("01","02","03","04","05"))
-
-        Json.fromJson[ServicesOfBusiness](json) must
-          be(JsSuccess(ServicesOfBusiness(businessServices, None)))
-      }
-      "fail when on invalid data" in {
-
-        Json.fromJson[ServicesOfBusiness](Json.obj("services" -> Seq("40"))) must
-          be(JsError(((JsPath \ "services")(0) \ "services") -> JsonValidationError("error.invalid")))
-      }
-
-      "successfully validate json write" in {
-
-        val json = Json.obj("services" -> Seq("04","05","03","02","01"))
-
-        Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
-      }
+      Json.fromJson[ServicesOfBusiness](json) must
+        be(JsSuccess(ServicesOfBusiness(businessServices, Some("2016-02-24")), JsPath))
     }
+
+    "successfully validate selected services value" in {
+
+      val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05"))
+
+      Json.fromJson[ServicesOfBusiness](json) must
+        be(JsSuccess(ServicesOfBusiness(businessServices, None)))
+    }
+    "fail when on invalid data" in {
+
+      Json.fromJson[ServicesOfBusiness](Json.obj("services" -> Seq("40"))) must
+        be(JsError(((JsPath \ "services") (0) \ "services") -> JsonValidationError("error.invalid")))
+    }
+
+    "successfully validate json write" in {
+
+      val json = Json.obj("services" -> Seq("04", "05", "03", "02", "01"))
+
+      Json.toJson(ServicesOfBusiness(businessServices)) must be(json)
+    }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,19 @@ import play.api.libs.json.Json
 
 class EabAllSpec extends PlaySpec {
   "EstateAgentBusiness" must {
-    val eabAllModel = EabAll(false,None,false,None)
+    val eabAllModel = EabAll(false, None, false, None)
 
     "serialise eaball model " in {
-      EabAll.format.writes(eabAllModel) must be(Json.obj("estateAgencyActProhibition"->false,
-        "prevWarnedWRegToEstateAgencyActivities"->false))
+      EabAll.format.writes(eabAllModel) must be(Json.obj("estateAgencyActProhibition" -> false,
+        "prevWarnedWRegToEstateAgencyActivities" -> false))
 
     }
 
-    "Be convertable from Front end estate agent business model" in  {
+    "Be convertable from Front end estate agent business model" in {
       val from = {
         Eab(
           EabData(
-            List("businessTransfer", "developmentCompany" , "commercial"),
+            List("businessTransfer", "developmentCompany", "commercial"),
             None,
             Some("propertyRedressScheme"),
             None,
@@ -46,9 +46,9 @@ class EabAllSpec extends PlaySpec {
         )
       }
 
-      val expected = EabAll(true,Some("PenaltyDetails"),true,Some("ProfBodyDetails"))
+      val expected = EabAll(true, Some("PenaltyDetails"), true, Some("ProfBodyDetails"))
 
-      EabAll.convert(from) must be (expected)
+      EabAll.convert(from) must be(expected)
     }
   }
 

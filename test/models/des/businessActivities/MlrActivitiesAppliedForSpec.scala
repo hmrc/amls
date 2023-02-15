@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,7 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
         TrustAndCompanyServices, TelephonePaymentService, EstateAgentBusinessService, BillPaymentServices))
       val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
       val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
-      val model = BusinessMatching(
-        reviewDetails,
-        businessActivities,
-        None,
-        None)
+      val model = BusinessMatching(reviewDetails, businessActivities, None, None)
 
       MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, true, false)))
     }
@@ -45,13 +41,9 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
       val businessActivities = BusinessActivities(Set.empty)
       val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
       val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
-      val model = BusinessMatching(
-        reviewDetails,
-        businessActivities,
-        None,
-        None)
+      val model = BusinessMatching(reviewDetails, businessActivities, None, None)
 
-      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(false, false, false, false, false,false, false, false)))
+      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false)))
     }
   }
 

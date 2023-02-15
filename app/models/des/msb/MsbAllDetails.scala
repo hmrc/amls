@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ object MsbAllDetails {
 
   implicit val format = Json.format[MsbAllDetails]
 
-  implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness) : Option[MsbAllDetails] = {
+  implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbAllDetails] = {
 
     val (otherCntryBranchesOrAgents, countryList) = convBranchesOrAgents(msb.branchesOrAgents)
 
-    Some(MsbAllDetails(msb.throughput, otherCntryBranchesOrAgents, countryList, msb.identifyLinkedTransactions.fold(false)(x =>x.linkedTxn)))
+    Some(MsbAllDetails(msb.throughput, otherCntryBranchesOrAgents, countryList, msb.identifyLinkedTransactions.fold(false)(x => x.linkedTxn)))
   }
 
   implicit def convThroughput(throughput: Option[ExpectedThroughput]): Option[String] = {
@@ -45,18 +45,18 @@ object MsbAllDetails {
 
   implicit def convThroughputValues(throughput: ExpectedThroughput): Option[String] = {
     val value = throughput match {
-          case First => "£0-£15k"
-          case Second => "£15k-50k"
-          case Third => "£50k-£100k"
-          case Fourth => "£100k-£250k"
-          case Fifth => "£250k-£1m"
-          case Sixth => "£1m-10m"
-          case Seventh => "£10m+"
-        }
+      case First => "£0-£15k"
+      case Second => "£15k-50k"
+      case Third => "£50k-£100k"
+      case Fourth => "£100k-£250k"
+      case Fifth => "£250k-£1m"
+      case Sixth => "£1m-10m"
+      case Seventh => "£10m+"
+    }
     Some(value)
   }
 
-  implicit def convBranchesOrAgents(agents: Option[BranchesOrAgents]) : (Boolean, Option[CountriesList]) = {
+  implicit def convBranchesOrAgents(agents: Option[BranchesOrAgents]): (Boolean, Option[CountriesList]) = {
     agents match {
       case Some(data) => data.countries match {
         case Some(countries) if countries.nonEmpty => (true, countries)

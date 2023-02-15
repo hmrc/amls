@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,15 @@ import reactivemongo.bson.BSONObjectID
 import utils.EnumFormat
 
 case class Payment(_id: String,
-                    amlsRefNo: String,
-                    safeId: String,
-                    reference: String,
-                    description: Option[String],
-                    amountInPence: Int,
-                    status: PaymentStatus,
-                    createdAt: LocalDateTime,
-                    isBacs: Option[Boolean] = None,
-                    updatedAt: Option[LocalDateTime] = None
+                   amlsRefNo: String,
+                   safeId: String,
+                   reference: String,
+                   description: Option[String],
+                   amountInPence: Int,
+                   status: PaymentStatus,
+                   createdAt: LocalDateTime,
+                   isBacs: Option[Boolean] = None,
+                   updatedAt: Option[LocalDateTime] = None
                   )
 
 object Payment {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class AmendVariationServiceSpec extends PlaySpec
   with IntegrationPatience
   with AmlsReferenceNumberGenerator {
 
-  val successValidate:JsResult[JsValue] = mock[JsResult[JsValue]]
+  val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
 
   val feAmendVariationResponse = AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -73,10 +73,11 @@ class AmendVariationServiceSpec extends PlaySpec
     mock[ApplicationConfig]
   ) {
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
+
     override private[services] def amendVariationResponse(
-      request: AmendVariationRequest,
-      isRenewalWindow: Boolean,
-      des: models.des.AmendVariationResponse) = feAmendVariationResponse
+                                                           request: AmendVariationRequest,
+                                                           isRenewalWindow: Boolean,
+                                                           des: models.des.AmendVariationResponse) = feAmendVariationResponse
   }
 
   val avs = new TestAmendVariationService
@@ -159,7 +160,7 @@ class AmendVariationServiceSpec extends PlaySpec
       val request = mock[des.AmendVariationRequest]
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
-      when{
+      when {
         request.responsiblePersons
       } thenReturn Some(Seq(unchangedResponsiblePersons))
 
@@ -172,7 +173,7 @@ class AmendVariationServiceSpec extends PlaySpec
         avs.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      when{
+      when {
         avs.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 

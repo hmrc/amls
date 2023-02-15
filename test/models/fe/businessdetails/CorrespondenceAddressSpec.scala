@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,10 +85,10 @@ class CorrespondenceAddressSpec extends PlaySpec {
     "convert des model to frontend ATB model" in {
 
       val desAddress = DesAddress("addr1", "addr2", None, None, "UK", None)
-      val desModel = Some(AlternativeAddress("name","trade name",desAddress))
+      val desModel = Some(AlternativeAddress("name", "trade name", desAddress))
 
       CorrespondenceAddress.conv(desModel) must be(Some(NonUKCorrespondenceAddress("name", "trade name",
-        "addr1","addr2",None,None,"UK")))
+        "addr1", "addr2", None, None, "UK")))
     }
 
     "convert des model to frontend ATB model when input is none" in {

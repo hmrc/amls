@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,22 @@
 
 package models.des.businessactivities
 
-import models.fe.businessactivities.{InvolvedInOtherYes, InvolvedInOtherNo}
+import models.fe.businessactivities.{InvolvedInOtherNo, InvolvedInOtherYes}
 import play.api.libs.json.Json
 
-case class OtherBusinessActivities(otherBusinessActivities: String,
-                                   anticipatedTotBusinessTurnover: String,
-                                   mlrActivityTurnover: String)
+case class OtherBusinessActivities(otherBusinessActivities: String, anticipatedTotBusinessTurnover: String, mlrActivityTurnover: String)
 
-object OtherBusinessActivities{
+object OtherBusinessActivities {
   implicit val format = Json.format[OtherBusinessActivities]
 }
 
-case class ExpectedAMLSTurnover(mlrActivityTurnover: Option[String] = None,
-                                otherBusActivitiesCarriedOut: Option[OtherBusinessActivities] = None)
+case class ExpectedAMLSTurnover(mlrActivityTurnover: Option[String] = None, otherBusActivitiesCarriedOut: Option[OtherBusinessActivities] = None)
 
 //noinspection ScalaStyle
-object ExpectedAMLSTurnover{
+object ExpectedAMLSTurnover {
   implicit val format = Json.format[ExpectedAMLSTurnover]
 
-  implicit def convert(bact : models.fe.businessactivities.BusinessActivities) : Option[ExpectedAMLSTurnover] = {
+  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[ExpectedAMLSTurnover] = {
     bact.involvedInOther match {
       case Some(InvolvedInOtherNo) => bact.expectedAMLSTurnover match {
         case Some(aMLSTurnover) => Some(ExpectedAMLSTurnover(convertAMLSTurnover(aMLSTurnover)))
@@ -49,7 +46,7 @@ object ExpectedAMLSTurnover{
   }
 
   def convertAMLSTurnover(to: models.fe.businessactivities.ExpectedAMLSTurnover): Option[String] = {
-    import models.fe.businessactivities.ExpectedAMLSTurnover.{Seventh, Sixth, Fifth, Fourth, Third, Second, First}
+    import models.fe.businessactivities.ExpectedAMLSTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
 
     to match {
       case First => Some("£0-£15k")
@@ -64,7 +61,7 @@ object ExpectedAMLSTurnover{
   }
 
   def convertTurnover(to: Option[models.fe.businessactivities.ExpectedBusinessTurnover]): String = {
-    import models.fe.businessactivities.ExpectedBusinessTurnover.{Seventh, Sixth, Fifth, Fourth, Third, Second, First}
+    import models.fe.businessactivities.ExpectedBusinessTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
 
     to match {
       case Some(First) => "£0-£15k"

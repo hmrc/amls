@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,19 +32,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait FeesRepository extends ReactiveRepository[Fees, BSONObjectID] {
-  def insert(feeResponse: Fees):Future[Boolean]
+  def insert(feeResponse: Fees): Future[Boolean]
+
   def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]]
 }
 
 @Singleton
-class FeesRepositoryProvider @Inject() (component: ReactiveMongoComponent) extends Provider[FeesRepository] with Logging {
+class FeesRepositoryProvider @Inject()(component: ReactiveMongoComponent) extends Provider[FeesRepository] with Logging {
 
   override def get(): FeesRepository =
     new FeesMongoRepository()(component.mongoConnector.db)
 }
 
 class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
-  with FeesRepository{
+  with FeesRepository {
 
   override def indexes: Seq[Index] = {
     import reactivemongo.bson.DefaultBSONHandlers._

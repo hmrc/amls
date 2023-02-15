@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ case class Other(details: String) extends ItemType
 object Products {
 
   def convOther(other: Boolean, specifyOther: String): Option[ItemType] =
-    other match{
+    other match {
       case true => Some(Other(specifyOther))
       case false => None
     }

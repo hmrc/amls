@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,15 @@ class AspServicesOfferedSpec extends PlaySpec {
   "AspServicesOffered" should {
 
     "convert partial front end Asp model to des AspServicesOffered" in {
-      val model = Asp(
-        Some(ServicesOfBusiness(Set(Accountancy, Auditing, FinancialOrTaxAdvice))),
-        None
-      )
+      val model = Asp(Some(ServicesOfBusiness(Set(Accountancy, Auditing, FinancialOrTaxAdvice))), None)
       AspServicesOffered.conv(Some(model)) must be(Some(AspServicesOffered(true, false, false, true, true)))
     }
 
     "convert complete front end Asp model to des AspServicesOffered " in {
       val model = Asp(
         Some(ServicesOfBusiness(Set(Accountancy, PayrollServices, BookKeeping, Auditing, FinancialOrTaxAdvice))),
-        Some(OtherBusinessTaxMattersYes)
-      )
+        Some(OtherBusinessTaxMattersYes))
+
       AspServicesOffered.conv(Some(model)) must be(Some(AspServicesOffered(true, true, true, true, true)))
     }
 

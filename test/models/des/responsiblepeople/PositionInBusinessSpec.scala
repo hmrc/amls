@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneApp
 
     "convert frontend model to des model  successfully for Partnership" in {
 
-      val bm = BusinessMatching( ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
@@ -83,7 +83,7 @@ class PositionInBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         None
       ))
 
-      val positions = Some(Positions(Set(Partner, NominatedOfficer, Other("another role")),Some(today)))
+      val positions = Some(Positions(Set(Partner, NominatedOfficer, Other("another role")), Some(today)))
 
       PositionInBusiness.conv(positions, bm) must be(desModel)
     }

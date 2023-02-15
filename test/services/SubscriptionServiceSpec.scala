@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           when(connector.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
 
-          when{
+          when {
             connector.feeResponseRepository.findLatestByAmlsReference(any())
           } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000,
             Some("PaymentRef"), None, Some(BigDecimal(20)), Some(BigDecimal(30)), new DateTime())))

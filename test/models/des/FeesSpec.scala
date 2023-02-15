@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,11 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
         val response = AmendVariationResponse(
           processingDate = "2016-09-17T09:30:47Z",
           etmpFormBundleNumber = "111111",
-          None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,Some(100), Some(100.0), Some(100.0)
+          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(100), Some(100.0), Some(100.0)
         )
 
-        Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",0,None,
-          0,0,None,None, Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
+        Fees.convertAmendmentVariation(response, "test") must be(Fees(AmendOrVariationResponseType, "test", 0, None,
+          0, 0, None, None, Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
       }
     }
 
@@ -72,8 +72,8 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
         Some(100.0)
       )
 
-      Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
-        870458.0,2172427.38,Some("string"),Some(3456.12), Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
+      Fees.convertAmendmentVariation(response, "test") must be(Fees(AmendOrVariationResponseType, "test", 1301737.96, Some(231.42),
+        870458.0, 2172427.38, Some("string"), Some(3456.12), Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
 
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class ProvidedServicesSpec extends PlaySpec with MockitoSugar {
       val allServices = Set[TcspService](PhonecallHandling, EmailHandling, EmailServer,
         SelfCollectMailboxes, MailForwarding, Receptionist, ConferenceRooms)
       val result = Json.toJson(ProvidedServices(allServices)).\("services").as[Seq[String]]
-      result must contain allOf ("01", "02", "03", "04", "05", "06", "07")
+      result must contain allOf("01", "02", "03", "04", "05", "06", "07")
     }
 
     "Serialise 'other' service as expected" in {
@@ -42,21 +42,21 @@ class ProvidedServicesSpec extends PlaySpec with MockitoSugar {
     "Deserialise single service as expected" in {
       val json = Json.obj("services" -> Set("01"))
       val expected = JsSuccess(ProvidedServices(Set(PhonecallHandling)))
-      Json.fromJson[ProvidedServices](json) must be (expected)
+      Json.fromJson[ProvidedServices](json) must be(expected)
     }
 
     "Deserialise multiple service as expected" in {
       val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05", "06", "07"))
       val allServices = Set[TcspService](PhonecallHandling, EmailHandling, EmailServer,
-                                         SelfCollectMailboxes, MailForwarding, Receptionist, ConferenceRooms)
+        SelfCollectMailboxes, MailForwarding, Receptionist, ConferenceRooms)
       val expected = JsSuccess(ProvidedServices(allServices))
-      Json.fromJson[ProvidedServices](json) must be (expected)
+      Json.fromJson[ProvidedServices](json) must be(expected)
     }
 
     "Deserialise 'other' service as expected" in {
       val json = Json.obj("services" -> Set("08"), "details" -> "other service")
       val expected = JsSuccess(ProvidedServices(Set(Other("other service"))))
-      Json.fromJson[ProvidedServices](json) must be (expected)
+      Json.fromJson[ProvidedServices](json) must be(expected)
     }
 
     "fail when on invalid data" in {

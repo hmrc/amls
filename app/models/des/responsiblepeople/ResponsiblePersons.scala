@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ object ResponsiblePersons {
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
     responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None,
-       extra = RPExtra(None)))
+      extra = RPExtra(None)))
 
   implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
@@ -126,7 +126,8 @@ object ResponsiblePersons {
     }
   }
 
-  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): ResponsiblePersons = {
+  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching,
+                                                           amendVariation: Boolean): ResponsiblePersons = {
     val (training, trainingDesc) = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
@@ -155,7 +156,7 @@ object ResponsiblePersons {
       amlAndCounterTerrFinTraining = training,
       trainingDetails = trainingDesc,
       startDate = rp.positions,
-      dateChangeFlag = if(amendVariation) Some(false) else None,
+      dateChangeFlag = if (amendVariation) Some(false) else None,
       msbOrTcsp = msbOrTcsp,
       passedFitAndProperTest = passedFitAndProperTest,
       passedApprovalCheck = passedApprovalCheck,
@@ -215,7 +216,7 @@ object ResponsiblePersons {
     }
   }
 
-  implicit object RpExtraHasStatus extends StatusProvider[ResponsiblePersons]{
-    override def getStatus(rp:ResponsiblePersons): Option[String] = rp.extra.status
+  implicit object RpExtraHasStatus extends StatusProvider[ResponsiblePersons] {
+    override def getStatus(rp: ResponsiblePersons): Option[String] = rp.extra.status
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import models.des.msb.{MsbMtDetails}
 import play.api.libs.json._
 
 sealed trait BusinessAppliedForPSRNumber
+
 case class BusinessAppliedForPSRNumberYes(regNumber: String) extends BusinessAppliedForPSRNumber
+
 case object BusinessAppliedForPSRNumberNo extends BusinessAppliedForPSRNumber
 
 object BusinessAppliedForPSRNumber {
@@ -29,7 +31,7 @@ object BusinessAppliedForPSRNumber {
     (__ \ "appliedFor").read[Boolean] flatMap {
       case true => (__ \ "regNumber").read[String] map BusinessAppliedForPSRNumberYes.apply
       case false => Reads(_ => JsSuccess(BusinessAppliedForPSRNumberNo))
-  }
+    }
 
   implicit val jsonWrites = Writes[BusinessAppliedForPSRNumber] {
     case BusinessAppliedForPSRNumberYes(value) => Json.obj(
@@ -42,8 +44,8 @@ object BusinessAppliedForPSRNumber {
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[BusinessAppliedForPSRNumber] = {
     msbMt match {
       case Some(msbDtls) => msbDtls.applyForFcapsrRegNo match {
-        case true =>Some(BusinessAppliedForPSRNumberYes(msbDtls.fcapsrRefNo.getOrElse("")))
-        case false =>Some(BusinessAppliedForPSRNumberNo)
+        case true => Some(BusinessAppliedForPSRNumberYes(msbDtls.fcapsrRefNo.getOrElse("")))
+        case false => Some(BusinessAppliedForPSRNumberNo)
       }
       case None => None
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,13 @@ sealed trait ServiceProvider {
 }
 
 case object NomineeShareholdersProvider extends ServiceProvider
+
 case object TrusteeProvider extends ServiceProvider
+
 case object RegisteredOfficeEtc extends ServiceProvider
+
 case object CompanyDirectorEtc extends ServiceProvider
+
 case object CompanyFormationAgent extends ServiceProvider
 
 object TcspTypes {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class SendTheLargestAmountsOfMoneySpec extends PlaySpec {
         SendTheLargestAmountsOfMoney.format.reads(SendTheLargestAmountsOfMoney.format.writes(data)) must
           be(JsSuccess(data))
       }
-     }
+    }
 
     "convert des to frontend model" in {
       val msbMtDetails = Some(MsbMtDetails(
@@ -47,7 +47,7 @@ class SendTheLargestAmountsOfMoneySpec extends PlaySpec {
         Some(CountriesList(List("GB", "AD"))),
         Some(CountriesList(List("AD", "GB")))
       ))
-      SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(Some(SendTheLargestAmountsOfMoney("GB",Some("AD"),None)))
+      SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)))
     }
 
     "convert des to frontend model when no countries listed" in {

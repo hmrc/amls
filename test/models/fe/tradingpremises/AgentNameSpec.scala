@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.JsSuccess
 
-class AgentNameSpec extends PlaySpec with MockitoSugar{
+class AgentNameSpec extends PlaySpec with MockitoSugar {
 
   "AgentName" must {
     "Success read and write json" in {
@@ -33,7 +33,7 @@ class AgentNameSpec extends PlaySpec with MockitoSugar{
     val agentPremises = mock[AgentPremises]
 
     "convert when agentLegalEntityName is empty" in {
-      AgentName.conv(AgentDetails("thing",None,None,None,agentPremises)) must be(None)
+      AgentName.conv(AgentDetails("thing", None, None, None, agentPremises)) must be(None)
     }
   }
 }

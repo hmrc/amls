@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 sealed trait ResponseType
 
 case object SubscriptionResponseType extends ResponseType
+
 case object AmendOrVariationResponseType extends ResponseType
 
 object ResponseType {
@@ -37,7 +38,7 @@ object ResponseType {
     case AmendOrVariationResponseType => JsString("AmendOrVariationResponse")
   }
 
-  implicit val jsonReads : Reads[ResponseType] = {
+  implicit val jsonReads: Reads[ResponseType] = {
     import play.api.libs.json.Reads.StringReads
     (__).read[String] flatMap {
       case "SubscriptionReponse" => SubscriptionResponseType
@@ -63,17 +64,18 @@ case class Fees(responseType: ResponseType,
 object Fees {
   def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
     subscriptionResponse.subscriptionFees map {
-      feesResponse =>  Fees(SubscriptionResponseType,
-        subscriptionResponse.amlsRefNo,
-        feesResponse.registrationFee,
-        feesResponse.fpFee,
-        feesResponse.premiseFee,
-        feesResponse.totalFees,
-        Some(feesResponse.paymentReference),
-        None,
-        feesResponse.approvalCheckFeeRate,
-        feesResponse.approvalCheckFee,
-        DateTime.now(DateTimeZone.UTC))
+      feesResponse =>
+        Fees(SubscriptionResponseType,
+          subscriptionResponse.amlsRefNo,
+          feesResponse.registrationFee,
+          feesResponse.fpFee,
+          feesResponse.premiseFee,
+          feesResponse.totalFees,
+          Some(feesResponse.paymentReference),
+          None,
+          feesResponse.approvalCheckFeeRate,
+          feesResponse.approvalCheckFee,
+          DateTime.now(DateTimeZone.UTC))
     }
   }
 

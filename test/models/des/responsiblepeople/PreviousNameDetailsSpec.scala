@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class PreviousNameDetailsSpec extends PlaySpec {
     "successfully convert a person without a previous name" in {
       val person = ResponsiblePeople(legalName = Some(PreviousName(hasPreviousName = false, None, None, None)))
 
-      PreviousNameDetails.from(person,amendVariation = false) mustBe Some(PreviousNameDetails(false, None, None, None))
+      PreviousNameDetails.from(person, amendVariation = false) mustBe Some(PreviousNameDetails(false, None, None, None))
     }
   }
 }

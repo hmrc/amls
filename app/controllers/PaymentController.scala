@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,35 +47,35 @@ class PaymentController @Inject()(private[controllers] val paymentService: Payme
 
   def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) =
     authAction.async(bodyParsers.text) {
-    implicit request: Request[String] => {
-      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-        case Some(_) => {
-          logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
-            case Some(_) => Created
-            case _ => InternalServerError
+      implicit request: Request[String] => {
+        amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
+          case Some(_) => {
+            logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
+            paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
+              case Some(_) => Created
+              case _ => InternalServerError
+            }
           }
+          case None =>
+            Future.successful {
+              BadRequest(toError("Invalid amlsRegistrationNumber"))
+            }
         }
-        case None =>
-          Future.successful {
-            BadRequest(toError("Invalid amlsRegistrationNumber"))
-          }
       }
+    }
+
+  def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = authAction.async {
+    paymentService.getPaymentByPaymentReference(paymentReference) map {
+      case Some(payment) => Ok(Json.toJson(payment))
+      case _ => NotFound
     }
   }
 
-  def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = authAction.async {
-      paymentService.getPaymentByPaymentReference(paymentReference) map {
-        case Some(payment) => Ok(Json.toJson(payment))
-        case _ => NotFound
-      }
-  }
-
   def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = authAction.async {
-      paymentService.getPaymentByAmlsReference(amlsReference) map {
-        case Some(payment) => Ok(Json.toJson(payment))
-        case _ => NotFound
-      }
+    paymentService.getPaymentByAmlsReference(amlsReference) map {
+      case Some(payment) => Ok(Json.toJson(payment))
+      case _ => NotFound
+    }
   }
 
   def updateBacsFlag(accountType: String, ref: String, paymentReference: String) = authAction.async(bodyParsers.json) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,23 +33,18 @@ trait IterateeHelpers {
 
     val target: Iteratee[Array[Byte], Result]
 
-    def apply[B]
-    (b: B)
-    (implicit
-     f: Format[B],
-     ec: ExecutionContext
-    ): Future[Result] = {
+    def apply[B](b: B)(implicit f: Format[B], ec: ExecutionContext): Future[Result] = {
       val bytes = Json.toJson(b).toString
-      target.feed(Input.El(bytes.getBytes)) flatMap { _.run }
+      target.feed(Input.El(bytes.getBytes)) flatMap {
+        _.run
+      }
     }
 
-    def json
-    (b: JsValue)
-    (implicit
-     ec: ExecutionContext
-    ): Future[Result] = {
+    def json(b: JsValue)(implicit ec: ExecutionContext): Future[Result] = {
       val bytes = b.toString
-      target.feed(Input.El(bytes.getBytes)) flatMap { _.run }
+      target.feed(Input.El(bytes.getBytes)) flatMap {
+        _.run
+      }
     }
   }
 }

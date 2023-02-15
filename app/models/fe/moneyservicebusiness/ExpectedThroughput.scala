@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,17 @@ sealed trait ExpectedThroughput
 object ExpectedThroughput {
 
   case object First extends ExpectedThroughput
+
   case object Second extends ExpectedThroughput
+
   case object Third extends ExpectedThroughput
+
   case object Fourth extends ExpectedThroughput
+
   case object Fifth extends ExpectedThroughput
+
   case object Sixth extends ExpectedThroughput
+
   case object Seventh extends ExpectedThroughput
 
   implicit val jsonReads = {
@@ -64,14 +70,14 @@ object ExpectedThroughput {
   }
 
   def convThroughput(msbAll: String): ExpectedThroughput = {
-      msbAll match {
-        case "£0-£15k" => First
-        case "£15k-50k" => Second
-        case "£50k-£100k" => Third
-        case "£100k-£250k" => Fourth
-        case "£250k-£1m" => Fifth
-        case "£1m-10m" => Sixth
-        case "£10m+" => Seventh
-      }
+    msbAll match {
+      case "£0-£15k" => First
+      case "£15k-50k" => Second
+      case "£50k-£100k" => Third
+      case "£100k-£250k" => Fourth
+      case "£250k-£1m" => Fifth
+      case "£1m-10m" => Sixth
+      case "£10m+" => Seventh
+    }
   }
 }

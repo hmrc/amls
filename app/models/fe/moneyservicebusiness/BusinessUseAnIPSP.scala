@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import play.api.libs.json._
 
 sealed trait BusinessUseAnIPSP
 
-case class BusinessUseAnIPSPYes(name: String , reference: String) extends BusinessUseAnIPSP
+case class BusinessUseAnIPSPYes(name: String, reference: String) extends BusinessUseAnIPSP
 
 case object BusinessUseAnIPSPNo extends BusinessUseAnIPSP
 
@@ -37,12 +37,12 @@ object BusinessUseAnIPSP {
   }
 
   implicit val jsonWrites = Writes[BusinessUseAnIPSP] {
-    case BusinessUseAnIPSPYes(name ,referenceNumber) => Json.obj(
-                                          "useAnIPSP" -> true,
-                                           "name" -> name,
-                                           "referenceNumber" -> referenceNumber
+    case BusinessUseAnIPSPYes(name, referenceNumber) => Json.obj(
+      "useAnIPSP" -> true,
+      "name" -> name,
+      "referenceNumber" -> referenceNumber
 
-                                        )
+    )
     case BusinessUseAnIPSPNo => Json.obj("useAnIPSP" -> false)
   }
 
@@ -53,7 +53,7 @@ object BusinessUseAnIPSP {
     }
   }
 
-  def convIdDetails(ipspDtls: Option[IpspDetails]) : Option[BusinessUseAnIPSP] = {
+  def convIdDetails(ipspDtls: Option[IpspDetails]): Option[BusinessUseAnIPSP] = {
     ipspDtls match {
       case Some(ipsp) => Some(BusinessUseAnIPSPYes(ipsp.ipspName, ipsp.ipspMlrRegNo))
       case None => Some(BusinessUseAnIPSPNo)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople._
 import play.api.libs.json.Json
 
-case class AddressUnderThreeYears (address: Address)
+case class AddressUnderThreeYears(address: Address)
 
 object AddressUnderThreeYears {
   implicit val format = Json.format[AddressUnderThreeYears]
@@ -33,9 +33,9 @@ object AddressUnderThreeYears {
 
   implicit def convPersonAddress(addrHistory: ResponsiblePersonAddress): Option[AddressUnderThreeYears] = {
     addrHistory.personAddress match {
-      case uk:PersonAddressUK => Some(AddressUnderThreeYears(Address(uk.addressLine1, uk.addressLine2, uk.addressLine3,
-        uk.addressLine4, "GB" ,Some(uk.postCode))))
-      case nonUk:PersonAddressNonUK => Some(AddressUnderThreeYears(Address(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
+      case uk: PersonAddressUK => Some(AddressUnderThreeYears(Address(uk.addressLine1, uk.addressLine2, uk.addressLine3,
+        uk.addressLine4, "GB", Some(uk.postCode))))
+      case nonUk: PersonAddressNonUK => Some(AddressUnderThreeYears(Address(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
         nonUk.addressLineNonUK4, nonUk.country, None)))
     }
   }

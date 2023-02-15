@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def msbChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasMsbSector(response)) {
+    if (hasMsbSector(response)) {
       convAndcompareMsb(response, desRequest)
     } else {
       isMsbChanged(response, desRequest)
@@ -45,7 +45,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def hvdChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasHvdSector(response)) {
+    if (hasHvdSector(response)) {
       convAndcompareHvd(response, desRequest)
     } else {
       isHvdChanged(response, desRequest)
@@ -53,7 +53,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def aspChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasAspSector(response)) {
+    if (hasAspSector(response)) {
       convAndcompareAsp(response, desRequest)
     } else {
       isAspChanged(response, desRequest)
@@ -61,7 +61,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def tcspChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasTcspSector(response)) {
+    if (hasTcspSector(response)) {
       convAndcompareTcsp(response, desRequest)
     } else {
       isTcspChanged(desRequest, response)
@@ -69,7 +69,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def eabChangedIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasEabSector(response)) {
+    if (hasEabSector(response)) {
       convAndcompareEab(response, desRequest)
     } else {
       isEABChanged(desRequest, response)
@@ -77,7 +77,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   def aspOrTcspChangeIndicator(response: SubscriptionView, desRequest: AmendVariationRequest) = {
-    if(hasAspSector(response) || hasTcspSector(response)) {
+    if (hasAspSector(response) || hasTcspSector(response)) {
       convAndCompareAspOrTcsp(response, desRequest)
     } else {
       isAspOrTcspChanged(response, desRequest)
@@ -90,62 +90,62 @@ trait ChangeIndicatorHelper extends Logging {
 
   private def hasMsbSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (true, _, _, _, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor(true, _, _, _, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasHvdSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, true, _, _, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor(_, true, _, _, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasAspSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, true, _, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor(_, _, true, _, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasTcspSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, _, true, _, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor(_, _, _, true, _, _, _, _)) => true
       case _ => false
     }
   }
 
   private def hasEabSector(response: SubscriptionView) = {
     response.businessActivities.mlrActivitiesAppliedFor match {
-      case Some(MlrActivitiesAppliedFor (_, _, _, _, true, _, _, _)) => true
+      case Some(MlrActivitiesAppliedFor(_, _, _, _, true, _, _, _)) => true
       case _ => false
     }
   }
 
   private def convAndCompareBusinessActivities(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feBM   = BusinessMatching.conv(viewResponse)
-    val feHvd  = Hvd.conv(viewResponse)
-    val feAsp  = Asp.conv(viewResponse)
+    val feBM = BusinessMatching.conv(viewResponse)
+    val feHvd = Hvd.conv(viewResponse)
+    val feAsp = Asp.conv(viewResponse)
     val feTcsp = Tcsp.conv(viewResponse)
     val feEab = Eab.conv(viewResponse)
-    val feAmp  = Amp.conv(viewResponse)
-    val feBD   = BusinessDetails.conv(viewResponse)
-    val feBA   = BusinessActivities.convertBusinessActivities(
+    val feAmp = Amp.conv(viewResponse)
+    val feBD = BusinessDetails.conv(viewResponse)
+    val feBA = BusinessActivities.convertBusinessActivities(
       viewResponse.businessActivities.all,
       viewResponse.businessActivities.mlrActivitiesAppliedFor
     )
 
     val desMlrActivitiesAppliedFor = models.des.businessactivities.MlrActivitiesAppliedFor.conv(feBM)
-    val desMsbServicesCarriedOut   = models.des.businessactivities.MsbServicesCarriedOut.conv(feBM)
-    val desHvdGoodsSold            = models.des.businessactivities.HvdGoodsSold.conv(feHvd)
-    val desHvdAlcoholTobacco       = models.des.businessactivities.HvdAlcoholTobacco.covn(feHvd)
-    val desAspServicesOffered      = models.des.businessactivities.AspServicesOffered.conv(feAsp)
-    val desTcspServicesOffered     = models.des.businessactivities.TcspServicesOffered.covn(feTcsp)
-    val desServicesforRegOff       = models.des.businessactivities.ServicesforRegOff.conv(feTcsp)
-    val desEabServices             = models.des.businessactivities.EabServices.convert(feEab)
-    val desAmpServices             = models.des.businessactivities.AmpServices.conv(feAmp)
-    val desBusinessActivitiesAll   = models.des.businessactivities.BusinessActivitiesAll.
+    val desMsbServicesCarriedOut = models.des.businessactivities.MsbServicesCarriedOut.conv(feBM)
+    val desHvdGoodsSold = models.des.businessactivities.HvdGoodsSold.conv(feHvd)
+    val desHvdAlcoholTobacco = models.des.businessactivities.HvdAlcoholTobacco.covn(feHvd)
+    val desAspServicesOffered = models.des.businessactivities.AspServicesOffered.conv(feAsp)
+    val desTcspServicesOffered = models.des.businessactivities.TcspServicesOffered.covn(feTcsp)
+    val desServicesforRegOff = models.des.businessactivities.ServicesforRegOff.conv(feTcsp)
+    val desEabServices = models.des.businessactivities.EabServices.convert(feEab)
+    val desAmpServices = models.des.businessactivities.AmpServices.conv(feAmp)
+    val desBusinessActivitiesAll = models.des.businessactivities.BusinessActivitiesAll.
       convtoActivitiesALLChangeFlags(feBD, feBA, feAsp, feEab, feHvd, feBM)
 
     logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareBusinessActivities - desMlrActivitiesAppliedFor: ${desMlrActivitiesAppliedFor}")
@@ -190,9 +190,9 @@ trait ChangeIndicatorHelper extends Logging {
       !desBusinessActivitiesAll.equals(desRequest.businessActivities.all)
   }
 
-  private def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest)  = {
-    val feBM   = BusinessMatching.conv(viewResponse)
-    val feMsb  = MoneyServiceBusiness.conv(viewResponse)
+  private def convAndcompareMsb(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
+    val feBM = BusinessMatching.conv(viewResponse)
+    val feMsb = MoneyServiceBusiness.conv(viewResponse)
     val desMsb = models.des.msb.MoneyServiceBusiness.conv(feMsb, feBM, amendVariation = true)
 
     logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareMsb - desMsb: ${desMsb}")
@@ -202,7 +202,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   private def convAndcompareHvd(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feHvd  = Hvd.conv(viewResponse)
+    val feHvd = Hvd.conv(viewResponse)
     val desHvd = models.des.hvd.Hvd.conv(feHvd)
 
     logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desHvd: ${desHvd}")
@@ -212,7 +212,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   private def convAndcompareAsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feAsp  = Asp.conv(viewResponse)
+    val feAsp = Asp.conv(viewResponse)
     val desAsp = models.des.asp.Asp.conv(feAsp)
 
     logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareAsp - desAsp: ${desAsp}")
@@ -222,9 +222,9 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   private def convAndcompareTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feTcsp              = Tcsp.conv(viewResponse)
-    val desTcsp             = Some(models.des.tcsp.TcspAll.conv(feTcsp))
-    val desTcspFormationAgt = if(viewResponse.businessActivities.tcspServicesOffered.isDefined &&
+    val feTcsp = Tcsp.conv(viewResponse)
+    val desTcsp = Some(models.des.tcsp.TcspAll.conv(feTcsp))
+    val desTcspFormationAgt = if (viewResponse.businessActivities.tcspServicesOffered.isDefined &&
       viewResponse.businessActivities.tcspServicesOffered.get.trustOrCompFormAgent) {
       Some(models.des.tcsp.TcspTrustCompFormationAgt.conv(feTcsp))
     } else {
@@ -241,14 +241,14 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   private def convAndcompareEab(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feEab              = Eab.conv(viewResponse)
+    val feEab = Eab.conv(viewResponse)
 
     feEab match {
       case None => true
       case Some(eabModel) =>
-        val desEab             = Some(models.des.estateagentbusiness.EabAll.convert(eabModel))
+        val desEab = Some(models.des.estateagentbusiness.EabAll.convert(eabModel))
         val desEabResdEstAgncy = models.des.estateagentbusiness.EabResdEstAgncy.conv(feEab)
-        val desLettingAgents   = models.des.estateagentbusiness.LettingAgents.conv(feEab)
+        val desLettingAgents = models.des.estateagentbusiness.LettingAgents.conv(feEab)
 
         logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desEab: ${desEab}")
         logger.debug(s"[AmendVariationService][compareAndUpdate] convAndcompareEab - desRequest.eabAll: ${desRequest.eabAll}")
@@ -264,7 +264,7 @@ trait ChangeIndicatorHelper extends Logging {
   }
 
   private def convAndCompareAspOrTcsp(viewResponse: SubscriptionView, desRequest: AmendVariationRequest) = {
-    val feAspOrTcsp  = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
+    val feAspOrTcsp = Supervision.convertFrom(viewResponse.aspOrTcsp, viewResponse.businessActivities.mlrActivitiesAppliedFor)
     val desAspOrTcsp = models.des.supervision.AspOrTcsp.conv(feAspOrTcsp)
 
     logger.debug(s"[AmendVariationService][compareAndUpdate] convAndCompareAspOrTcsp - desAspOrTcsp: ${desAspOrTcsp}")

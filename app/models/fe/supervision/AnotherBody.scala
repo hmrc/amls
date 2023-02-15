@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,7 @@ import play.api.libs.json.JodaWrites._
 
 sealed trait AnotherBody
 
-case class AnotherBodyYes(supervisorName: String,
-                          startDate: LocalDate,
-                          endDate: LocalDate,
-                          endingReason: String) extends AnotherBody
+case class AnotherBodyYes(supervisorName: String, startDate: LocalDate, endDate: LocalDate, endingReason: String) extends AnotherBody
 
 case object AnotherBodyNo extends AnotherBody
 
@@ -54,7 +51,7 @@ object AnotherBody {
   }
 
   implicit val jsonWrites = Writes[AnotherBody] {
-    case a : AnotherBodyYes => Json.obj(
+    case a: AnotherBodyYes => Json.obj(
       "anotherBody" -> true,
       "supervisorName" -> a.supervisorName,
       "startDate" -> Json.obj("supervisionStartDate" -> a.startDate),
@@ -64,7 +61,7 @@ object AnotherBody {
     case AnotherBodyNo => Json.obj("anotherBody" -> false)
   }
 
-  implicit def conv(supDtls: Option[SupervisionDetails] ): Option[AnotherBody] = {
+  implicit def conv(supDtls: Option[SupervisionDetails]): Option[AnotherBody] = {
     supDtls match {
       case Some(sup) => sup.supervisorDetails.fold[Option[AnotherBody]](Some(AnotherBodyNo))(x => Some(AnotherBodyYes(x.nameOfLastSupervisor,
         LocalDate.parse(x.supervisionStartDate),

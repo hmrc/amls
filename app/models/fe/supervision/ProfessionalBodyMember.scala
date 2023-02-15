@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object ProfessionalBodyMember {
     case ProfessionalBodyMemberNo => Json.obj("isAMember" -> false)
   }
 
-  implicit def conv(supDtls: Option[ProfessionalBodyDetails] ): Option[ProfessionalBodyMember] = {
+  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBodyMember] = {
     supDtls match {
       case Some(pBodyDtls) => pBodyDtls.professionalBody match {
         case Some(member) => member.professionalBodyDetails
@@ -49,7 +49,7 @@ object ProfessionalBodyMember {
     }
   }
 
-  implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[ProfessionalBodyMember]  = {
+  implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[ProfessionalBodyMember] = {
     pBodyMember match {
       case Some(_) => Some(ProfessionalBodyMemberYes)
       case None => Some(ProfessionalBodyMemberNo)

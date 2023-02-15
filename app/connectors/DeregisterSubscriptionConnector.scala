@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,28 +38,23 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
                                                 private[connectors] val httpClient: HttpClient,
                                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest) (
-    implicit ec: ExecutionContext,
-    wr1: Writes[DeregisterSubscriptionRequest],
-    wr2: Writes[DeregisterSubscriptionResponse],
-    hc: HeaderCarrier,
-    apiRetryHelper: ApiRetryHelper
-  ): Future[DeregisterSubscriptionResponse] = {
+  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
+                    (implicit ec: ExecutionContext, wr1: Writes[DeregisterSubscriptionRequest], wr2: Writes[DeregisterSubscriptionResponse],
+                     hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper): Future[DeregisterSubscriptionResponse] = {
     apiRetryHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
   }
 
-  private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                          wr1: Writes[DeregisterSubscriptionRequest],
-                                                                                          wr2: Writes[DeregisterSubscriptionResponse],
-                                                                                          hc: HeaderCarrier
-  ): Future[DeregisterSubscriptionResponse] = {
+  private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
+                                    (implicit ec: ExecutionContext, wr1: Writes[DeregisterSubscriptionRequest],
+                                     wr2: Writes[DeregisterSubscriptionResponse], hc: HeaderCarrier
+                                    ): Future[DeregisterSubscriptionResponse] = {
     val prefix = "[DESConnector][deregistration]"
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]
     val timer = metrics.timer(API10)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1,implicitly[HttpReads[HttpResponse]],hc, ec) map {
+    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")

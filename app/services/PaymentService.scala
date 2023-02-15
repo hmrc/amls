@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
-class PaymentService @Inject()(val paymentConnector: PayAPIConnector,
-                               val paymentsRepository: PaymentRepository) {
+class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymentsRepository: PaymentRepository) {
 
   def createPayment(paymentId: String, amlsRegistrationNumber: String, safeId: String)
                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {

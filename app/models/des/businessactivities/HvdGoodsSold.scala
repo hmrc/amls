@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,20 @@ import models.fe.hvd._
 import play.api.libs.json.Json
 
 
-case class HvdGoodsSold (alcohol: Boolean,
-                         tobacco: Boolean,
-                         antiques: Boolean,
-                         cars: Boolean,
-                         otherMotorVehicles: Boolean,
-                         caravans: Boolean,
-                         jewellery: Boolean,
-                         gold: Boolean,
-                         scrapMetals: Boolean,
-                         mobilePhones: Boolean,
-                         clothing: Boolean,
-                         other: Boolean,
-                         specifyOther: Option[String],
-                         howGoodsAreSold: Option[HowGoodsAreSold] )
+case class HvdGoodsSold(alcohol: Boolean,
+                        tobacco: Boolean,
+                        antiques: Boolean,
+                        cars: Boolean,
+                        otherMotorVehicles: Boolean,
+                        caravans: Boolean,
+                        jewellery: Boolean,
+                        gold: Boolean,
+                        scrapMetals: Boolean,
+                        mobilePhones: Boolean,
+                        clothing: Boolean,
+                        other: Boolean,
+                        specifyOther: Option[String],
+                        howGoodsAreSold: Option[HowGoodsAreSold])
 
 object HvdGoodsSold {
   implicit val format = Json.format[HvdGoodsSold]
@@ -46,29 +46,29 @@ object HvdGoodsSold {
   }
 
   // scalastyle:off  cyclomatic.complexity
-  implicit  def conv1(hvd: models.fe.hvd.Hvd) : Option[HvdGoodsSold] = {
+  implicit def conv1(hvd: models.fe.hvd.Hvd): Option[HvdGoodsSold] = {
 
     val products = hvd.products.fold[Set[ItemType]](Set.empty)(x => x.items)
 
     val hvdGoodsSold = products.foldLeft(
-      HvdGoodsSold(false,false,false,false,false,false,false,false,false,false,false,false,None,None)){
+      HvdGoodsSold(false, false, false, false, false, false, false, false, false, false, false, false, None, None)) {
       (result, productType) =>
-      productType match {
-        case Alcohol => result.copy(alcohol = true)
-        case Tobacco => result.copy(tobacco = true)
-        case Antiques => result.copy(antiques = true)
-        case Cars => result.copy(cars = true)
-        case OtherMotorVehicles => result.copy(otherMotorVehicles = true)
-        case Caravans => result.copy(caravans = true)
-        case Jewellery => result.copy(jewellery = true)
-        case Gold => result.copy(gold = true)
-        case ScrapMetals => result.copy(scrapMetals = true)
-        case MobilePhones => result.copy(mobilePhones = true)
-        case Clothing => result.copy(clothing = true)
-        case Other(dtls) => result.copy(other = true, specifyOther = Some(dtls))
-      }
+        productType match {
+          case Alcohol => result.copy(alcohol = true)
+          case Tobacco => result.copy(tobacco = true)
+          case Antiques => result.copy(antiques = true)
+          case Cars => result.copy(cars = true)
+          case OtherMotorVehicles => result.copy(otherMotorVehicles = true)
+          case Caravans => result.copy(caravans = true)
+          case Jewellery => result.copy(jewellery = true)
+          case Gold => result.copy(gold = true)
+          case ScrapMetals => result.copy(scrapMetals = true)
+          case MobilePhones => result.copy(mobilePhones = true)
+          case Clothing => result.copy(clothing = true)
+          case Other(dtls) => result.copy(other = true, specifyOther = Some(dtls))
+        }
     }
-    val CompleteModel = hvdGoodsSold.copy(howGoodsAreSold= hvd.howWillYouSellGoods)
+    val CompleteModel = hvdGoodsSold.copy(howGoodsAreSold = hvd.howWillYouSellGoods)
     Some(CompleteModel)
   }
 }

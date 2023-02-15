@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite 
             "BeneficialShareholder",
             "ExternalAccountant",
             "InternalAccountant"
-        ),
+          ),
           "roleWithinBusinessOther" -> "Other details here"
         )
 
@@ -174,44 +174,26 @@ class AddPersonSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite 
           Some(RoleForTheBusiness(false, false, None))
         )
 
-        val frontendModel = AddPerson("fName", None, "lName",
-          models.fe.declaration.RoleWithinBusiness(Set())
-        )
+        val frontendModel = AddPerson("fName", None, "lName", models.fe.declaration.RoleWithinBusiness(Set()))
 
         AddPerson.convert(desModel) must be(frontendModel)
 
       }
 
       "given des model where roles within and for are None" in {
-        val desModel = AboutYouRelease7(
-          Some(IndividualDetails("fName", None, "lName")),
-          true,
-          None,
-          None
-        )
+        val desModel = AboutYouRelease7(Some(IndividualDetails("fName", None, "lName")), true, None, None)
 
-        val frontendModel = AddPerson("fName", None, "lName",
-          models.fe.declaration.RoleWithinBusiness(Set())
-        )
+        val frontendModel = AddPerson("fName", None, "lName", models.fe.declaration.RoleWithinBusiness(Set()))
 
         AddPerson.convert(desModel) must be(frontendModel)
-
       }
 
       "given des model where there is None for individual details" in {
-        val desModel = AboutYouRelease7(
-          None,
-          true,
-          None,
-          None
-        )
+        val desModel = AboutYouRelease7(None, true, None, None)
 
-        val frontendModel = AddPerson("", None, "",
-          models.fe.declaration.RoleWithinBusiness(Set())
-        )
+        val frontendModel = AddPerson("", None, "", models.fe.declaration.RoleWithinBusiness(Set()))
 
         AddPerson.convert(desModel) must be(frontendModel)
-
       }
     }
 

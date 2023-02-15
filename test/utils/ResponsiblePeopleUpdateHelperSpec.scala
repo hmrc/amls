@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
 
       val request = DesConstants.updateAmendVariationRequestRP.copy(
         responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-          rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Unchanged)))}
+          rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Unchanged))) }
         }
       )
 
@@ -122,7 +122,7 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
 
           val request = DesConstants.updateAmendVariationRequestRP.copy(
             responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-              rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = None))}
+              rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
             }
           )
 
@@ -153,7 +153,7 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with 
           )
           val request = DesConstants.updateAmendVariationRequestRP.copy(
             responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-              rps => Seq(rps.tail.head) map {p => p.copy(extra = p.extra.copy(status = None))}
+              rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
             }
           )
           val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(

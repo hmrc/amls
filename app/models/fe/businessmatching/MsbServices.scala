@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,16 @@ import utils.CommonMethods
 sealed trait MsbService
 
 case object TransmittingMoney extends MsbService
+
 case object CurrencyExchange extends MsbService
+
 case object ChequeCashingNotScrapMetal extends MsbService
+
 case object ChequeCashingScrapMetal extends MsbService
+
 case object ForeignExchange extends MsbService
 
-case class MsbServices(msbServices : Set[MsbService])
+case class MsbServices(msbServices: Set[MsbService])
 
 object MsbService {
 
@@ -55,15 +59,15 @@ object MsbServices {
 
   implicit val formats = Json.format[MsbServices]
 
-  implicit def conv(msb: Option[MsbServicesCarriedOut]): Option[MsbServices]= {
+  implicit def conv(msb: Option[MsbServicesCarriedOut]): Option[MsbServices] = {
     msb match {
       case Some(msbDtls) => msbDtls
       case None => None
     }
   }
 
-  implicit def convMsb(msb: MsbServicesCarriedOut): Option[MsbServices]= {
-    val `empty` =  Set.empty[MsbService]
+  implicit def convMsb(msb: MsbServicesCarriedOut): Option[MsbServices] = {
+    val `empty` = Set.empty[MsbService]
     val services = Set(CommonMethods.getSpecificType[MsbService](msb.mt, TransmittingMoney),
       CommonMethods.getSpecificType[MsbService](msb.ce, CurrencyExchange),
       CommonMethods.getSpecificType[MsbService](msb.nonSmdcc, ChequeCashingNotScrapMetal),

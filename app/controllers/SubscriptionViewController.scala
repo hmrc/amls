@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
           case Some(_) =>
             connector.view(amlsRegistrationNumber) map {
               response =>
-               val feModel:SubscriptionView = response
+                val feModel: SubscriptionView = response
                 val prefix = "[SubscriptionViewController][view]"
                 logger.debug(s"$prefix model - $feModel")
                 val json = Json.toJson(feModel)

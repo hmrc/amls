@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,8 @@ class BankAccountViewSpec extends PlaySpec {
     "deserialise bankAccount model" when {
       "given a UK Account" in {
 
-        val bankAccountViewModel = BankAccountView(
-          "Personal", "Personal", true, ukAccountView("112233", "12345678")
-        )
+        val bankAccountViewModel = BankAccountView("Personal", "Personal", true, ukAccountView("112233", "12345678"))
+
         val json = Json.parse(
           """{
         "accountName": "Personal",
@@ -50,9 +49,8 @@ class BankAccountViewSpec extends PlaySpec {
 
       "given a non UK Account with account number" in {
 
-        val bankAccountViewModel = BankAccountView(
-          "Personal", "Personal", false, AccountNumberView(accountNumber = "12345678")
-        )
+        val bankAccountViewModel = BankAccountView("Personal", "Personal", false, AccountNumberView(accountNumber = "12345678"))
+
         val json = Json.parse(
           """{
         "accountName": "Personal",
@@ -75,9 +73,8 @@ class BankAccountViewSpec extends PlaySpec {
 
       "given a non UK Account with iban" in {
 
-        val bankAccountViewModel = BankAccountView(
-          "Personal", "Personal", false, IBANNumberView(iban = "12345678")
-        )
+        val bankAccountViewModel = BankAccountView("Personal", "Personal", false, IBANNumberView(iban = "12345678"))
+
         val json = Json.parse(
           """{
         "accountName": "Personal",
@@ -197,8 +194,8 @@ class BankAccountViewSpec extends PlaySpec {
     "caps the number of bank accounts to 99" in {
       var accounts: Seq[models.fe.bankdetails.BankDetails] = Seq()
 
-      for (i <- 0 until 110){
-        accounts = accounts:+ BankDetails(PersonalAccount, s"AccountName$i", NonUKIBANNumber("87654321"))
+      for (i <- 0 until 110) {
+        accounts = accounts :+ BankDetails(PersonalAccount, s"AccountName$i", NonUKIBANNumber("87654321"))
       }
 
       val amendBankDetails = BankDetailsView(
@@ -206,7 +203,7 @@ class BankAccountViewSpec extends PlaySpec {
         Some(accounts)
       )
 
-      BankDetailsView.convert(accounts) must be (Some(amendBankDetails))
+      BankDetailsView.convert(accounts) must be(Some(amendBankDetails))
     }
   }
 }

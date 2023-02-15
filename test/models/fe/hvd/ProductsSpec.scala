@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,17 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
     "JSON validation" must {
 
       "successfully validate given values" in {
-        val json =  Json.obj(
-          "products" -> Seq("06","07", "08", "02", "01", "11"))
+        val json = Json.obj(
+          "products" -> Seq("06", "07", "08", "02", "01", "11"))
 
         Json.fromJson[Products](json) must
           be(JsSuccess(Products(Set(Clothing, Jewellery, Alcohol, Caravans, Gold, Tobacco))))
       }
 
       "successfully validate given values with option other details" in {
-        val json =  Json.obj(
+        val json = Json.obj(
           "products" -> Seq("09", "12"),
-        "otherDetails" -> "test")
+          "otherDetails" -> "test")
 
         Json.fromJson[Products](json) must
           be(JsSuccess(Products(Set(Other("test"), ScrapMetals))))
@@ -52,14 +52,14 @@ class ProductsSpec extends PlaySpec with MockitoSugar {
 
       "fail when on invalid data" in {
         Json.fromJson[Products](Json.obj("products" -> Seq("40"))) must
-          be(JsError(JsPath \ "products"  -> JsonValidationError("error.invalid")))
+          be(JsError(JsPath \ "products" -> JsonValidationError("error.invalid")))
       }
 
       "write valid data in using json write" in {
-        Json.toJson[Products](Products(Set(Tobacco, Other("test657")))) must be (
-        Json.obj("products" -> Json.arr("02", "12"),
-          "otherDetails" -> "test657"
-        ))
+        Json.toJson[Products](Products(Set(Tobacco, Other("test657")))) must be(
+          Json.obj("products" -> Json.arr("02", "12"),
+            "otherDetails" -> "test657"
+          ))
       }
     }
     "convert to None given hvdGoodsSold = None" in {

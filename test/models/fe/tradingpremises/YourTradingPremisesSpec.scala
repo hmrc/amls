@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers with GuiceOneAp
         Amp(false),
         None
       )
-      val agentDetail = AgentDetails("", None,None,None,agentPremises, Some("2001-01-01"))
+      val agentDetail = AgentDetails("", None, None, None, agentPremises, Some("2001-01-01"))
 
       val feModel = YourTradingPremises("TradingName",
         Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),

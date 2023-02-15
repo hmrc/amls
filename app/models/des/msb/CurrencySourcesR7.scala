@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package models.des.msb
 import models.fe.moneyservicebusiness.WhichCurrencies
 import play.api.libs.json.Json
 
-case class CurrencySourcesR7(bankDetails: Option[MSBBankDetails] =  None,
-                             currencyWholesalerDetails: Option[CurrencyWholesalerDetails] =  None,
+case class CurrencySourcesR7(bankDetails: Option[MSBBankDetails] = None,
+                             currencyWholesalerDetails: Option[CurrencyWholesalerDetails] = None,
                              reSellCurrTakenIn: Boolean)
 
 object CurrencySourcesR7 {
@@ -28,12 +28,9 @@ object CurrencySourcesR7 {
   implicit val format = Json.format[CurrencySourcesR7]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[CurrencySourcesR7] = {
-    msb.whichCurrencies map  {
-      data:WhichCurrencies => CurrencySourcesR7(
-        data.bankMoneySource,
-        data.wholesalerMoneySource,
-        data.customerMoneySource
-      )
+    msb.whichCurrencies map {
+      data: WhichCurrencies =>
+        CurrencySourcesR7(data.bankMoneySource, data.wholesalerMoneySource, data.customerMoneySource)
     }
   }
 

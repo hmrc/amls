@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant(
         "Name",
         Some("TradingName"),
-        UkAccountantsAddress("AdvisorAddressLine1","AdvisorAddressLine2",Some("AdvisorAddressLine3"),Some("AdvisorAddressLine4"),"AA1 1AA")))
+        UkAccountantsAddress("AdvisorAddressLine1", "AdvisorAddressLine2", Some("AdvisorAddressLine3"), Some("AdvisorAddressLine4"), "AA1 1AA")))
     }
 
     "convert des to frontend model successfully for nonuk address" in {
@@ -83,8 +83,8 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
         None
       ))))
 
-      WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant("Name",Some("TradingName"),
-        NonUkAccountantsAddress("line1","line2",Some("line3"),Some("line4"),"GB")))
+      WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant("Name", Some("TradingName"),
+        NonUkAccountantsAddress("line1", "line2", Some("line3"), Some("line4"), "GB")))
     }
 
     "convert des to frontend model successfully when MlrAdvisor None" in {

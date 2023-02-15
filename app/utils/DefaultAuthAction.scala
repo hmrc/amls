@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,8 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DefaultAuthAction @Inject()(
-                                   val authConnector: AuthConnector,
-                                   val controllerComponents: ControllerComponents
-                                 )(implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
+class DefaultAuthAction @Inject()(val authConnector: AuthConnector, val controllerComponents: ControllerComponents)
+                                 (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
 
   override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
 
@@ -40,7 +38,7 @@ class DefaultAuthAction @Inject()(
       logger.debug(s"DefaultAuthAction calling authorised(ConfidenceLevel.L50) - success")
       Future.successful(None)
     }.recover[Option[Result]] {
-      case e : AuthorisationException => {
+      case e: AuthorisationException => {
         logger.debug(s"DefaultAuthAction calling authorised(ConfidenceLevel.L50 - fail: " + e)
         Some(Results.Unauthorized)
       }
@@ -48,6 +46,7 @@ class DefaultAuthAction @Inject()(
   }
 
   override def parser: BodyParser[AnyContent] = controllerComponents.parsers.anyContent
+
   override protected def executionContext: ExecutionContext = controllerComponents.executionContext
 }
 

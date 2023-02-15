@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, Reads, Writes}
 import play.api.libs.json._
 
 
-case class BankMoneySource(bankNames : String)
+case class BankMoneySource(bankNames: String)
 
 case object BankMoneySource {
 
@@ -28,7 +28,7 @@ case object BankMoneySource {
     import play.api.libs.functional.syntax._
 
     ((__ \ "moneySources" \ 'bankMoneySource).readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None)))((bankMoney: Option[String], names: Option[String]) => {
+      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None))) ((bankMoney: Option[String], names: Option[String]) => {
       (bankMoney, names) match {
         case (Some(_), Some(n)) => Some(BankMoneySource(n))
         case _ => None
@@ -43,9 +43,10 @@ case object BankMoneySource {
 
 }
 
-case class WholesalerMoneySource(wholesalerNames : String)
+case class WholesalerMoneySource(wholesalerNames: String)
 
 object WholesalerMoneySource {
+
   import play.api.libs.functional.syntax._
 
   implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
@@ -59,8 +60,8 @@ object WholesalerMoneySource {
   }
 
   implicit val jsonWrites = Writes[Option[WholesalerMoneySource]] {
-    case Some(source) =>  Json.obj("wholesalerMoneySource" -> "Yes", "wholesalerNames" -> source.wholesalerNames)
-    case _ =>  Json.obj()
+    case Some(source) => Json.obj("wholesalerMoneySource" -> "Yes", "wholesalerNames" -> source.wholesalerNames)
+    case _ => Json.obj()
   }
 }
 

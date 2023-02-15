@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(false,None)),
+      val msbCeDetails = Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(false, None)),
         Some(CurrencyWholesalerDetails(false, None)), true, "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some(true)))
 
       val businessUseAnIPSP = BusinessUseAnIPSPNo

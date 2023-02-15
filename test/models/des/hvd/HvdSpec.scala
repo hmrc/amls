@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class HvdSpec extends PlaySpec {
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000)
       )
 
-      Hvd.conv(Some(completeModel)) must be(Some(Hvd(true, Some("1956-02-15"),None, true, Some(60),
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(true, Some("1956-02-15"), None, true, Some(60),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 
@@ -58,7 +58,7 @@ class HvdSpec extends PlaySpec {
         receiveCashPayments = Some(true),
         cashPaymentMethods = Some(paymentMethods),
         percentageOfCashPaymentOver15000 = Some(DefaultPercentageOfCashPaymentOver15000),
-          dateOfChange = Some("1999-1-1"))
+        dateOfChange = Some("1999-1-1"))
 
       Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, true, Some(20),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
@@ -146,7 +146,7 @@ class HvdSpec extends PlaySpec {
         percentageOfCashPaymentOver15000 = None
       )
 
-      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None,None, false, Some(0),
+      Hvd.conv(Some(completeModel)) must be(Some(Hvd(false, None, None, false, Some(0),
         Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))))
     }
 

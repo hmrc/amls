@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,23 @@ import play.api.libs.json.{Reads, Writes}
 sealed trait CorrespondenceAddress
 
 case class UKCorrespondenceAddress(
-                                  yourName: String,
-                                  businessName: String,
-                                  addressLine1: String,
-                                  addressLine2: String,
-                                  addressLine3: Option[String],
-                                  addressLine4: Option[String],
-                                  postCode: String
+                                    yourName: String,
+                                    businessName: String,
+                                    addressLine1: String,
+                                    addressLine2: String,
+                                    addressLine3: Option[String],
+                                    addressLine4: Option[String],
+                                    postCode: String
                                   ) extends CorrespondenceAddress
 
 case class NonUKCorrespondenceAddress(
-                                     yourName: String,
-                                     businessName: String,
-                                     addressLineNonUK1: String,
-                                     addressLineNonUK2: String,
-                                     addressLineNonUK3: Option[String],
-                                     addressLineNonUK4: Option[String],
-                                     country: String
+                                       yourName: String,
+                                       businessName: String,
+                                       addressLineNonUK1: String,
+                                       addressLineNonUK2: String,
+                                       addressLineNonUK3: Option[String],
+                                       addressLineNonUK4: Option[String],
+                                       country: String
                                      ) extends CorrespondenceAddress
 
 object CorrespondenceAddress {
@@ -54,7 +54,7 @@ object CorrespondenceAddress {
         (__ \ "correspondenceAddressLine2").read[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
-        (__ \ "correspondencePostCode").read[String])(UKCorrespondenceAddress.apply _) map identity[CorrespondenceAddress]
+        (__ \ "correspondencePostCode").read[String]) (UKCorrespondenceAddress.apply _) map identity[CorrespondenceAddress]
       ) orElse (
       ((__ \ "yourName").read[String] and
         (__ \ "businessName").read[String] and
@@ -62,7 +62,7 @@ object CorrespondenceAddress {
         (__ \ "correspondenceAddressLine2").read[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
-        (__ \ "correspondenceCountry").read[String])(NonUKCorrespondenceAddress.apply _)
+        (__ \ "correspondenceCountry").read[String]) (NonUKCorrespondenceAddress.apply _)
       )
   }
 
@@ -80,7 +80,7 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondencePostCode").write[String]
-          )(unlift(UKCorrespondenceAddress.unapply)).writes(a)
+          ) (unlift(UKCorrespondenceAddress.unapply)).writes(a)
       case a: NonUKCorrespondenceAddress =>
         (
           (__ \ "yourName").write[String] and
@@ -90,7 +90,7 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondenceCountry").write[String]
-          )(unlift(NonUKCorrespondenceAddress.unapply)).writes(a)
+          ) (unlift(NonUKCorrespondenceAddress.unapply)).writes(a)
     }
   }
 

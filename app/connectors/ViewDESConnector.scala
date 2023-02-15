@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,19 +37,12 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
                                  private[connectors] val httpClient: HttpClient,
                                  private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-    def view(amlsRegistrationNumber: String)(
-      implicit ec: ExecutionContext,
-      hc: HeaderCarrier,
-      apiRetryHelper: ApiRetryHelper
-    ): Future[SubscriptionView] = {
-      apiRetryHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
-    }
+  def view(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, hc: HeaderCarrier,
+                                           apiRetryHelper: ApiRetryHelper): Future[SubscriptionView] = {
+    apiRetryHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
+  }
 
-  private def viewFunction(amlsRegistrationNumber: String)
-          (
-            implicit ec: ExecutionContext,
-            hc: HeaderCarrier
-          ): Future[SubscriptionView] = {
+  private def viewFunction(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]
     val timer = metrics.timer(API5)
@@ -57,7 +50,7 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc,ec) map {
+    httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")

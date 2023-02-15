@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import play.api.libs.json.{JsSuccess, Json}
 
 import utils.StatusConstants
 
-class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite{
+class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "RPExtra" should {
     "serialise Json successfully" in {
@@ -39,27 +39,27 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite{
         Some("Passed"),
         Some("2002-6-6"))
 
-      val json = Json.obj("lineId" ->112233,
-        "endDate" ->"1990-2-2",
-        "status" ->"Deleted",
-        "retest" ->"10",
-        "testResultFitAndProper" ->"Failed",
-        "testDateFitAndProper" ->"2001-3-3",
-        "testResultApprovalCheck" ->"Passed",
-        "testDateApprovalCheck" ->"2002-6-6")
+      val json = Json.obj("lineId" -> 112233,
+        "endDate" -> "1990-2-2",
+        "status" -> "Deleted",
+        "retest" -> "10",
+        "testResultFitAndProper" -> "Failed",
+        "testDateFitAndProper" -> "2001-3-3",
+        "testResultApprovalCheck" -> "Passed",
+        "testDateApprovalCheck" -> "2002-6-6")
 
       RPExtra.reads.reads(json) must be(JsSuccess(extra))
     }
 
     "serialise Json successfully1" in {
       val json = Json.obj(
-        "endDate" ->"1990-2-2",
-        "status" ->"Deleted",
-        "retest" ->"10",
-        "testResultFitAndProper" ->"Failed",
-        "testDateFitAndProper" ->"2001-3-3",
-        "testResultApprovalCheck" ->"Passed",
-        "testDateApprovalCheck" ->"2002-6-6")
+        "endDate" -> "1990-2-2",
+        "status" -> "Deleted",
+        "retest" -> "10",
+        "testResultFitAndProper" -> "Failed",
+        "testDateFitAndProper" -> "2001-3-3",
+        "testResultApprovalCheck" -> "Passed",
+        "testDateApprovalCheck" -> "2002-6-6")
 
       RPExtra.reads.reads(json) must be(JsSuccess(
         RPExtra(
@@ -77,23 +77,23 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite{
 
     "serialise Json successfully2" in {
       val json = Json.obj(
-        "status" ->"Deleted")
+        "status" -> "Deleted")
 
-      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None,None,Some("Deleted"),None,None,None,None,None)))
+      RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None, None, Some("Deleted"), None, None, None, None, None)))
     }
 
     "Deserialise Json successfully1" in {
       val json = Json.obj(
-        "status" ->"Deleted")
+        "status" -> "Deleted")
 
-      RPExtra.jsonWrites.writes(RPExtra(None,None,Some("Deleted"),None,None,None,None,None)) must be(json)
+      RPExtra.jsonWrites.writes(RPExtra(None, None, Some("Deleted"), None, None, None, None, None)) must be(json)
     }
 
     "Deserialise Json successfully2" in {
 
       val json = Json.obj()
 
-      RPExtra.jsonWrites.writes(RPExtra(None,None,None,None,None,None,None,None)) must be(json)
+      RPExtra.jsonWrites.writes(RPExtra(None, None, None, None, None, None, None, None)) must be(json)
     }
 
     "successfully format" in {
@@ -118,30 +118,30 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite{
     }
 
     "Should create an correct RPExtra object for deleted Responsible People" in {
-      val rp = ResponsiblePeople(lineId=Some(1),status=Some(StatusConstants.Deleted), hasChanged = true )
+      val rp = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Deleted), hasChanged = true)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
-      rpe.status must be (Some(StatusConstants.Deleted))
+      rpe.status must be(Some(StatusConstants.Deleted))
     }
 
     "Should create an correct RPExtra object for added Responsible People" in {
-      val rp = ResponsiblePeople(lineId=None,status=None, hasChanged = true )
+      val rp = ResponsiblePeople(lineId = None, status = None, hasChanged = true)
       val rpe = RPExtra.conv(rp)
-      rpe.status must be (None)
+      rpe.status must be(None)
     }
 
     "Should create an correct RPExtra object for updated Responsible People" in {
-      val rp = ResponsiblePeople(lineId=Some(1),status=Some(StatusConstants.Updated), hasChanged = true )
+      val rp = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Updated), hasChanged = true)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
-      rpe.status must be (Some(StatusConstants.Updated))
+      rpe.status must be(Some(StatusConstants.Updated))
     }
 
     "Should create an correct RPExtra object for unchanged Responsible People" in {
-      val rp = ResponsiblePeople(lineId=Some(1),status=None, hasChanged = false )
+      val rp = ResponsiblePeople(lineId = Some(1), status = None, hasChanged = false)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
-      rpe.status must be (Some(StatusConstants.Unchanged))
+      rpe.status must be(Some(StatusConstants.Unchanged))
     }
 
   }

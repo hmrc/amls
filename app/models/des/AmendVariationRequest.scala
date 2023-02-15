@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,40 +34,40 @@ import models.fe
 import utils.AckRefGenerator
 
 case class AmendVariationRequest(
-                                acknowledgementReference: String,
-                                changeIndicators: ChangeIndicators,
-                                amlsMessageType: String,
-                                businessDetails: BusinessDetails,
-                                businessContactDetails : BusinessContactDetails,
-                                businessReferencesAll : Option[PreviouslyRegisteredMLRView],
-                                businessReferencesAllButSp: Option[VATRegistration],
-                                businessReferencesCbUbLlp: Option[CorporationTaxRegisteredCbUbLlp],
-                                businessActivities : BusinessActivities,
-                                tradingPremises: TradingPremises,
-                                bankAccountDetails : Option[BankDetailsView],
-                                msb: Option[MoneyServiceBusiness],
-                                hvd: Option[Hvd],
-                                asp: Option[Asp],
-                                aspOrTcsp: Option[AspOrTcsp],
-                                tcspAll: Option[TcspAll],
-                                tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
-                                eabAll : Option[EabAll],
-                                eabResdEstAgncy : Option[EabResdEstAgncy],
-                                responsiblePersons: Option[Seq[ResponsiblePersons]],
-                                amp: Option[Amp],
-                                lettingAgents: Option[LettingAgents],
-                                extraFields: ExtraFields
-                              ) {
+                                  acknowledgementReference: String,
+                                  changeIndicators: ChangeIndicators,
+                                  amlsMessageType: String,
+                                  businessDetails: BusinessDetails,
+                                  businessContactDetails: BusinessContactDetails,
+                                  businessReferencesAll: Option[PreviouslyRegisteredMLRView],
+                                  businessReferencesAllButSp: Option[VATRegistration],
+                                  businessReferencesCbUbLlp: Option[CorporationTaxRegisteredCbUbLlp],
+                                  businessActivities: BusinessActivities,
+                                  tradingPremises: TradingPremises,
+                                  bankAccountDetails: Option[BankDetailsView],
+                                  msb: Option[MoneyServiceBusiness],
+                                  hvd: Option[Hvd],
+                                  asp: Option[Asp],
+                                  aspOrTcsp: Option[AspOrTcsp],
+                                  tcspAll: Option[TcspAll],
+                                  tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
+                                  eabAll: Option[EabAll],
+                                  eabResdEstAgncy: Option[EabResdEstAgncy],
+                                  responsiblePersons: Option[Seq[ResponsiblePersons]],
+                                  amp: Option[Amp],
+                                  lettingAgents: Option[LettingAgents],
+                                  extraFields: ExtraFields
+                                ) {
 
   def setChangeIndicator(changeIndicators: ChangeIndicators): AmendVariationRequest = {
     this.copy(changeIndicators = changeIndicators)
   }
 
-  def setExtraFields(extraFields : ExtraFields): AmendVariationRequest = {
+  def setExtraFields(extraFields: ExtraFields): AmendVariationRequest = {
     this.copy(extraFields = extraFields)
   }
 
-  def setResponsiblePersons(responsiblePersons: Seq[ResponsiblePersons]) : AmendVariationRequest = {
+  def setResponsiblePersons(responsiblePersons: Seq[ResponsiblePersons]): AmendVariationRequest = {
     this.copy(responsiblePersons = Some(responsiblePersons))
   }
 
@@ -86,11 +86,11 @@ object AmendVariationRequest {
   import play.api.libs.json.Reads._
   import play.api.libs.json._
 
-  /******************************************************************
+  /** ****************************************************************
     * As the object is now > 22 fields we need to address the tupple 22
     * problem. This is done by splitting the reads/writes into two
     * parts and merging them together.
-  * *****************************************************************/
+    * **************************************************************** */
 
   val readsOne: Reads[Tuple12[String,
     ChangeIndicators,
@@ -205,7 +205,7 @@ object AmendVariationRequest {
       ) (t => t)
 
   //Combine the writes
-  implicit val writes: Writes[AmendVariationRequest] = Writes { (amendVariationRequest:AmendVariationRequest) =>
+  implicit val writes: Writes[AmendVariationRequest] = Writes { (amendVariationRequest: AmendVariationRequest) =>
     val fieldsOne = (
       amendVariationRequest.acknowledgementReference,
       amendVariationRequest.changeIndicators,

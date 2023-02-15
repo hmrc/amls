@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,10 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
 
     "back off exponentially" in {
       def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
-        if(iteration >= maxRetries) {
+        if (iteration >= maxRetries) {
           expectedTime + currentWait
         } else {
-          val nextWait:Int = Math.ceil(currentWait * waitFactor).toInt
+          val nextWait: Int = Math.ceil(currentWait * waitFactor).toInt
           getMinimumExpectedDuration(iteration + 1, expectedTime + currentWait, nextWait)
         }
       }
@@ -75,7 +75,7 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
       var counter = 0
 
       val failThenSuccessFunc = () => {
-        if(counter < numberOfRetries) {
+        if (counter < numberOfRetries) {
           counter = counter + 1
           Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
         }
@@ -85,7 +85,7 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
       }
 
       whenReady(apiRetryHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
-        result =>  {
+        result => {
           result mustEqual "A successful future"
           counter must be >= numberOfRetries
         }

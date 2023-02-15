@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ class BankDetailsSpec extends PlaySpec with MockitoSugar {
     "convert des model to frontend model" in {
 
       val convertedModel = List(
-        BankDetails(BelongsToBusiness,"AccountName",UKAccount("12345678","123456")),
-        BankDetails(PersonalAccount,"AccountName1",NonUKIBANNumber("87654321")),
-        BankDetails(BelongsToOtherBusiness,"AccountName2",NonUKAccountNumber("87654321")))
+        BankDetails(BelongsToBusiness, "AccountName", UKAccount("12345678", "123456")),
+        BankDetails(PersonalAccount, "AccountName1", NonUKIBANNumber("87654321")),
+        BankDetails(BelongsToOtherBusiness, "AccountName2", NonUKAccountNumber("87654321")))
 
       BankDetails.conv(DesConstants.testBankDetails) must be(convertedModel)
     }

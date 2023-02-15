@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,19 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople.{NonUKResidence, ResponsiblePeople, UKResidence}
 import play.api.libs.json.Json
 
-case class NationalityDetails (areYouUkResident: Boolean,
-                               idDetails: Option[IdDetail],
-                               countryOfBirth: Option[String],
-                               nationality: Option[String])
+case class NationalityDetails(areYouUkResident: Boolean, idDetails: Option[IdDetail], countryOfBirth: Option[String], nationality: Option[String])
+
 object NationalityDetails {
   implicit val format = Json.format[NationalityDetails]
 
-  implicit def convert(rp: ResponsiblePeople) : Option[NationalityDetails] = {
+  implicit def convert(rp: ResponsiblePeople): Option[NationalityDetails] = {
     rp.personResidenceType map { residenceType =>
 
       residenceType.isUKResidence match {
-          
         case uk: UKResidence =>
-          NationalityDetails(true,
-            UkResident.convert(uk, rp.dateOfBirth),
-            Some(residenceType.countryOfBirth),
-            Some(residenceType.nationality)
-          )
+          NationalityDetails(true, UkResident.convert(uk, rp.dateOfBirth), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
         case NonUKResidence =>
-          NationalityDetails(false,
-            NonUkResident.convert(rp),
-            Some(residenceType.countryOfBirth),
-            Some(residenceType.nationality)
-          )
+          NationalityDetails(false, NonUkResident.convert(rp), Some(residenceType.countryOfBirth), Some(residenceType.nationality))
       }
     }
   }

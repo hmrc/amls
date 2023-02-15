@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,26 +37,16 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
                                       private[connectors] val httpClient: HttpClient,
                                       private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-  def subscribe
-  (safeId: String, data: des.SubscriptionRequest)
-  (implicit
-   ec: ExecutionContext,
-   wr1: Writes[des.SubscriptionRequest],
-   wr2: Writes[des.SubscriptionResponse],
-   hc: HeaderCarrier,
-   apiRetryHelper: ApiRetryHelper
-  ): Future[des.SubscriptionResponse] = {
+  def subscribe(safeId: String, data: des.SubscriptionRequest)
+               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest],
+                wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper
+               ): Future[des.SubscriptionResponse] = {
     apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
   }
 
-  private def subscribeFunction
-  (safeId: String, data: des.SubscriptionRequest)
-  (implicit
-   ec: ExecutionContext,
-   wr1: Writes[des.SubscriptionRequest],
-   wr2: Writes[des.SubscriptionResponse],
-   hc: HeaderCarrier
-  ): Future[des.SubscriptionResponse] = {
+  private def subscribeFunction(safeId: String, data: des.SubscriptionRequest)
+                               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest], wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier
+                               ): Future[des.SubscriptionResponse] = {
     val prefix = "[DESConnector][subscribe]"
     val bodyParser = JsonParsed[des.SubscriptionResponse]
     val timer = metrics.timer(API4)

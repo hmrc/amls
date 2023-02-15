@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ import play.api.libs.json._
 
 sealed trait VATRegistered
 
-case class VATRegisteredYes(value : String) extends VATRegistered
+case class VATRegisteredYes(value: String) extends VATRegistered
+
 case object VATRegisteredNo extends VATRegistered
 
 
@@ -29,9 +30,9 @@ object VATRegistered {
 
   implicit val jsonReads: Reads[VATRegistered] =
     (__ \ "registeredForVAT").read[Boolean] flatMap {
-    case true => (__ \ "vrnNumber").read[String] map (VATRegisteredYes.apply _)
-    case false => Reads(_ => JsSuccess(VATRegisteredNo))
-  }
+      case true => (__ \ "vrnNumber").read[String] map (VATRegisteredYes.apply _)
+      case false => Reads(_ => JsSuccess(VATRegisteredNo))
+    }
 
   implicit val jsonWrites = Writes[VATRegistered] {
     case VATRegisteredYes(value) => Json.obj(
@@ -41,7 +42,7 @@ object VATRegistered {
     case VATRegisteredNo => Json.obj("registeredForVAT" -> false)
   }
 
-  implicit def conv(vat: Option[VATRegistration]) : Option[VATRegistered] = {
+  implicit def conv(vat: Option[VATRegistration]): Option[VATRegistered] = {
 
     vat match {
       case Some(data) => data.vatRegistered match {

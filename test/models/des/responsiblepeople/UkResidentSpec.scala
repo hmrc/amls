@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,15 @@ import org.scalatestplus.play.PlaySpec
 
 class UkResidentSpec extends PlaySpec {
 
-    "UkResident" should {
-        "convert frontend model to des model for UkResidence with DOB" in {
-            UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24))))must be(
-                Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24"))))
-        }
-
-        "convert frontend model to des model for UkResidence without DOB" in {
-            UkResident.convert(UKResidence("nino"), None) must be(Some(IdDetail(Some(UkResident("nino")))))
-        }
+  "UkResident" should {
+    "convert frontend model to des model for UkResidence with DOB" in {
+      UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24)))) must be(
+        Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24"))))
     }
+
+    "convert frontend model to des model for UkResidence without DOB" in {
+      UkResident.convert(UKResidence("nino"), None) must be(Some(IdDetail(Some(UkResident("nino")))))
+    }
+  }
 
 }

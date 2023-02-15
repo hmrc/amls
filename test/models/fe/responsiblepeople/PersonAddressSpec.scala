@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ class PersonAddressSpec extends PlaySpec {
   val DefaultAddressLine3 = Some("Default Line 3")
   val DefaultAddressLine4 = Some("Default Line 4")
   val DefaultPostcode = "AA1 1AA"
-  val DefaultCountry =  "GB"
+  val DefaultCountry = "GB"
 
   val NewAddressLine1 = "New Line 1"
   val NewAddressLine2 = "New Line 2"
@@ -91,13 +91,13 @@ class PersonAddressSpec extends PlaySpec {
       "Round trip a UK Address correctly through serialisation" in {
         PersonAddress.jsonReads.reads(
           PersonAddress.jsonWrites.writes(DefaultUKAddress)
-        ) must be (JsSuccess(DefaultUKAddress))
+        ) must be(JsSuccess(DefaultUKAddress))
       }
 
       "Round trip a Non UK Address correctly through serialisation" in {
         PersonAddress.jsonReads.reads(
           PersonAddress.jsonWrites.writes(DefaultNonUKAddress)
-        ) must be (JsSuccess(DefaultNonUKAddress))
+        ) must be(JsSuccess(DefaultNonUKAddress))
       }
 
       "Serialise UK address as expected" in {
