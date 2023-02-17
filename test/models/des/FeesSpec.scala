@@ -28,14 +28,6 @@ import java.time.temporal.ChronoUnit
 
 class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
 
-//  override def beforeAll {
-//    DateTimeUtils.setCurrentMillisFixed(1000000)
-//  }
-//
-//  override def afterAll: Unit = {
-//    DateTimeUtils.setCurrentMillisSystem()
-//  }
-
   "FeeResponse" when {
 
     "return fee response successfully" when {

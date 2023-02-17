@@ -26,11 +26,11 @@ import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
+class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   lazy val ssConn = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
   val authAction: AuthAction = SuccessfulAuthAction

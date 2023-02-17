@@ -24,13 +24,12 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.FeesRepository
-import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import java.time.LocalDateTime
-import java.time.ZoneOffset.UTC
 import scala.concurrent.Future
 
-class FeeResponseControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
+class FeeResponseControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   implicit val repository: FeesRepository = mock[FeesRepository]
   val authAction: AuthAction = SuccessfulAuthAction

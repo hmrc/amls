@@ -33,11 +33,11 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
-import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
+class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   val authAction: AuthAction = SuccessfulAuthAction
 

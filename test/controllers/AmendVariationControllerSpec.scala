@@ -39,7 +39,7 @@ import utils._
 
 import scala.concurrent.Future
 
-class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with IterateeHelpers {
+class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   val avs: AmendVariationService = mock[AmendVariationService]
   val authAction: AuthAction = SuccessfulAuthAction
