@@ -18,7 +18,6 @@ package controllers
 
 import generators.AmlsReferenceNumberGenerator
 import models.{Fees, SubscriptionResponseType}
-import org.joda.time.{DateTime, DateTimeZone}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import play.api.libs.json.Json
@@ -27,6 +26,8 @@ import play.api.test.Helpers._
 import repositories.FeesRepository
 import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 import scala.concurrent.Future
 
 class FeeResponseControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
@@ -42,7 +43,7 @@ class FeeResponseControllerSpec extends AmlsBaseSpec with IterateeHelpers with A
       .withHeaders(CONTENT_TYPE -> "application/json")
 
     val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None, Some(100), Some(100.0),
-      new DateTime(2017, 12, 1, 1, 3, DateTimeZone.UTC))
+      LocalDateTime.of(2017, 12, 1, 1, 3))
 
     "GET" must {
       "return valid fee response" in {

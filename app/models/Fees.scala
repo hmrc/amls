@@ -18,10 +18,10 @@ package models
 
 import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
-import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
-import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json._
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 
 sealed trait ResponseType
 
@@ -59,7 +59,7 @@ case class Fees(responseType: ResponseType,
                 difference: Option[BigDecimal],
                 approvalCheckFeeRate: Option[BigDecimal] = None,
                 approvalCheckFee: Option[BigDecimal] = None,
-                createdAt: DateTime)
+                createdAt: LocalDateTime)
 
 object Fees {
   def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
@@ -75,7 +75,7 @@ object Fees {
           None,
           feesResponse.approvalCheckFeeRate,
           feesResponse.approvalCheckFee,
-          DateTime.now(DateTimeZone.UTC))
+          LocalDateTime.now(UTC))
     }
   }
 
@@ -90,12 +90,8 @@ object Fees {
       amendVariationResponse.difference,
       amendVariationResponse.approvalCheckFeeRate,
       amendVariationResponse.approvalCheckFee,
-      DateTime.now(DateTimeZone.UTC))
+      LocalDateTime.now(UTC))
   }
-
-  val dateTimeFormat: DateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
-
-  implicit val dateFormat: Format[DateTime] = ReactiveMongoFormats.dateTimeFormats
 
   implicit val format: OFormat[Fees] = Json.format[Fees]
 }

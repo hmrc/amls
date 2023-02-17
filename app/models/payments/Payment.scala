@@ -16,13 +16,13 @@
 
 package models.payments
 
-import java.time.LocalDateTime
-
 import models.payapi.PaymentStatuses.Created
 import models.payapi.{Payment => PayApiPayment, _}
+import org.bson.types.ObjectId
 import play.api.libs.json.Json
-import reactivemongo.bson.BSONObjectID
 import utils.EnumFormat
+
+import java.time.LocalDateTime
 
 case class Payment(_id: String,
                    amlsRefNo: String,
@@ -51,7 +51,7 @@ object Payment {
     )
 
   def apply(bacsPaymentRequest: CreateBacsPaymentRequest): Payment =
-    Payment(BSONObjectID.generate.stringify,
+    Payment(new ObjectId().toString,
       bacsPaymentRequest.amlsReference,
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,

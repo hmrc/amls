@@ -25,13 +25,11 @@ import models.payapi.PaymentStatuses
 import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
-import org.mongodb.scala.result.UpdateResult
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
-import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}
 import repositories.PaymentRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
