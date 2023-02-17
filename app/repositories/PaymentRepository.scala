@@ -72,7 +72,7 @@ class PaymentRepository @Inject()(mongoC: MongoComponent)
         Updates.set("status", payment.status),
         Updates.set("createdAt", payment.createdAt),
         Updates.set("isBacs", payment.isBacs),
-        Updates.set("updatedAt", payment.updatedAt),
+        Updates.set("updatedAt", payment.updatedAt)
       )
     )
       .toFuture()
