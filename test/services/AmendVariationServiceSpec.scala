@@ -29,10 +29,10 @@ import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsResult, JsValue}
-import repositories.FeesMongoRepository
+import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
@@ -62,7 +62,7 @@ class AmendVariationServiceSpec extends PlaySpec
     None
   )
 
-  val feeRepo: FeesMongoRepository = mock[FeesMongoRepository]
+  val feeRepo: FeesRepository = mock[FeesRepository]
 
   class TestAmendVariationService extends AmendVariationService(
     mock[AmendVariationDESConnector],
