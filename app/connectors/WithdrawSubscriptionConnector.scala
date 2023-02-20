@@ -63,14 +63,14 @@ class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig:
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r@status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
+      case r @ status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
         metrics.success(API8)
         audit.sendDataEvent(WithdrawSubscriptionEvent(amlsRegistrationNumber, data, body))
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API8)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

@@ -62,13 +62,13 @@ class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: Http
       logger.debug(s"$prefix - Response body: ${response.body}")
       response
     } flatMap {
-      case response@status(NO_CONTENT) =>
+      case response @ status(NO_CONTENT) =>
         metrics.success(EnrolmentStoreKnownFacts)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
-      case response@status(s) =>
+      case response @ status(s) =>
         metrics.failed(EnrolmentStoreKnownFacts)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")

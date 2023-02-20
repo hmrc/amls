@@ -61,14 +61,14 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r@status(OK) & bodyParser(JsSuccess(body: DeregisterSubscriptionResponse, _)) =>
+      case r @ status(OK) & bodyParser(JsSuccess(body: DeregisterSubscriptionResponse, _)) =>
         metrics.success(API10)
         audit.sendDataEvent(DeregisterSubscriptionEvent(amlsRegistrationNumber, data, body))
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API10)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

@@ -60,13 +60,13 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
         logger.debug(s"$prefix - Response body: ${response.body}")
         response
     } flatMap {
-      case response@status(OK) =>
+      case response @ status(OK) =>
         metrics.success(GGAdmin)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
-      case response@status(s) =>
+      case response @ status(s) =>
         metrics.failed(GGAdmin)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")

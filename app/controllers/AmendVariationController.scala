@@ -75,7 +75,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
                   response =>
                     Ok(Json.toJson(response))
                 } recoverWith {
-                  case e@HttpStatusException(status, message) =>
+                  case e @ HttpStatusException(status, message) =>
                     logger.warn(s"$prefix - Status: $status, Message: $message")
                     Future.failed(e)
                 }

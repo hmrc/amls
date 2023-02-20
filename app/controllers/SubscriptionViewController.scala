@@ -60,7 +60,7 @@ class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
                 logger.debug(s"$prefix Json - $json")
                 Ok(json)
             } recoverWith {
-              case e@HttpStatusException(status, Some(body)) =>
+              case e @ HttpStatusException(status, Some(body)) =>
                 logger.warn(s"$prefix - Status: ${status}, Message: $body")
                 Future.failed(e)
             }

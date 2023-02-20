@@ -60,13 +60,13 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case _@status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
+      case _ @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
         metrics.success(API9)
         audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Future.successful(body)
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API9)
         logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))

@@ -61,14 +61,14 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r@status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
+      case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Future.successful(body)
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

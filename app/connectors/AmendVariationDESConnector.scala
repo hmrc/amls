@@ -60,14 +60,14 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
+      case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         auditConnector.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Future.successful(body)
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API6)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

@@ -61,7 +61,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
 
 
   private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
-    case ex@HttpStatusException(BAD_REQUEST, _) => {
+    case ex @ HttpStatusException(BAD_REQUEST, _) => {
       ex.jsonBody map {
         case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
           amlsRegistrationNumberRegex
@@ -77,7 +77,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
       }
     }.getOrElse(Future.failed(ex))
 
-    case e@HttpStatusException(status, Some(body)) =>
+    case e @ HttpStatusException(status, Some(body)) =>
       logger.warn(s" - Status: $status, Message: $body")
       Future.failed(e)
   }

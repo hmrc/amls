@@ -77,7 +77,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
                       UnprocessableEntity(Json.toJson(SubscriptionErrorResponse(ex.amlsRegNumber, ex.message)).toString)
                         .as("application/json"))
 
-                  case e@HttpStatusException(status, Some(body)) =>
+                  case e @ HttpStatusException(status, Some(body)) =>
                     logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }

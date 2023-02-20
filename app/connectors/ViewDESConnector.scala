@@ -63,11 +63,11 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: $body")
         Future.successful(body)
-      case r@status(OK) & bodyParser(JsError(errs)) =>
+      case r @ status(OK) & bodyParser(JsError(errs)) =>
         metrics.failed(API5)
         logger.warn(s"$prefix - Deserialisation Errors: $errs")
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("Failed to parse the json response from DES (API5)")))
-      case r@status(s) =>
+      case r @ status(s) =>
         metrics.failed(API5)
         logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
