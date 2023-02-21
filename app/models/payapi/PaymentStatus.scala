@@ -16,26 +16,33 @@
 
 package models.payapi
 
-import enumeratum.{Enum, EnumEntry}
-import utils.EnumFormat
+import play.api.libs.json._
 
-sealed abstract class PaymentStatus(val isFinal: Boolean, val validNextStates: Seq[PaymentStatus] = Seq()) extends EnumEntry
+sealed trait PaymentStatus
 
 object PaymentStatus {
-  implicit val statusFormat = EnumFormat(PaymentStatuses)
-}
 
-object PaymentStatuses extends Enum[PaymentStatus] {
-  case object Created extends PaymentStatus(false, Seq(Sent))
+  case object Created extends PaymentStatus
 
-  case object Successful extends PaymentStatus(true)
+  case object Successful extends PaymentStatus
 
-  case object Sent extends PaymentStatus(false, Seq(Successful, Failed, Cancelled))
+  case object Sent extends PaymentStatus
 
-  case object Failed extends PaymentStatus(true)
+  case object Failed extends PaymentStatus
 
-  case object Cancelled extends PaymentStatus(true)
+  case object Cancelled extends PaymentStatus
 
-  override def values = findValues
+  implicit val writes: Writes[PaymentStatus] = Writes { paymentStatus => Json.toJson(paymentStatus.toString) }
 
+  implicit val formats: Format[PaymentStatus] = new Format[PaymentStatus] {
+    override def reads(json: JsValue): JsResult[PaymentStatus] = json match {
+      case JsString("Created") => JsSuccess(Created)
+      case JsString("Successful") => JsSuccess(Successful)
+      case JsString("Sent") => JsSuccess(Sent)
+      case JsString("Failed") => JsSuccess(Failed)
+      case JsString("Cancelled") => JsSuccess(Cancelled)
+    }
+
+    override def writes(status: PaymentStatus): JsValue = JsString(status.toString)
+  }
 }

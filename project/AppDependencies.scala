@@ -29,12 +29,12 @@ private object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
-        "org.scalatest"           %% "scalatest"          % scalatestVersion % scope,
+        "org.scalatest"           %% "scalatest"          % scalatestVersion         % scope,
         "org.scalatestplus.play"  %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
-        "org.scalacheck"          %% "scalacheck"         % scalacheckVersion % scope,
-        "org.pegdown"             %  "pegdown"            % pegdownVersion % scope,
-        "com.typesafe.play"       %% "play-test"          % PlayVersion.current % scope,
-        "org.mockito"             %  "mockito-core"       % "1.10.19" % scope
+        "org.scalacheck"          %% "scalacheck"         % scalacheckVersion        % scope,
+        "org.pegdown"             %  "pegdown"            % pegdownVersion           % scope,
+        "com.typesafe.play"       %% "play-test"          % PlayVersion.current      % scope,
+        "org.mockito"             %  "mockito-core"       % "1.10.19"                % scope
       )
     }.test
   }
@@ -45,11 +45,12 @@ private object AppDependencies {
       override lazy val scope: String = "it"
 
       override lazy val test = Seq(
-        "org.scalatest"           %% "scalatest"          % scalatestVersion % scope,
-        "org.scalatestplus.play"  %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
-        "org.pegdown"             %  "pegdown"            % pegdownVersion % scope,
-        "com.typesafe.play"       %% "play-test"          % PlayVersion.current % scope,
-        "org.mockito"             %  "mockito-core"       % "1.10.19" % scope
+        "org.scalatest"           %% "scalatest"               % scalatestVersion         % scope,
+        "org.scalatestplus.play"  %% "scalatestplus-play"      % scalatestPlusPlayVersion % scope,
+        "org.pegdown"             %  "pegdown"                 % pegdownVersion           % scope,
+        "com.typesafe.play"       %% "play-test"               % PlayVersion.current      % scope,
+        "org.mockito"             %  "mockito-core"            % "1.10.19"                % scope,
+        "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28" % "0.74.0"                 % scope
       )
     }.test
   }

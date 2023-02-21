@@ -16,12 +16,12 @@
 
 package generators
 
-import java.time.LocalDateTime
-
 import models.payapi.Payment
 import models.payapi.PaymentStatus._
 import models.payapi.TaxTypes._
 import org.scalacheck.Gen
+
+import java.time.LocalDateTime
 
 trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
   val paymentRefGen = alphaNumOfLengthGen(refLength - 1) map { ref => s"X$ref" }

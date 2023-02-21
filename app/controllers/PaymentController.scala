@@ -18,16 +18,15 @@ package controllers
 
 import cats.data.OptionT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import models.payments.{CreateBacsPaymentRequest, RefreshPaymentStatusRequest, SetBacsRequest}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.PaymentService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{AuthAction, ControllerHelper}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

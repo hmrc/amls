@@ -38,7 +38,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
 
   "Payment" must {
     "serialise to JSON with no description" in {
-      Json.toJson(Payment(id, other, ref, None, amountInPence, PaymentStatuses.Successful)) must be(Json.obj(
+      Json.toJson(Payment(id, other, ref, None, amountInPence, PaymentStatus.Successful)) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
@@ -49,7 +49,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
     }
 
     "serialise to JSON with a description" in {
-      Json.toJson(Payment(id, other, ref, Some("Desc"), amountInPence, PaymentStatuses.Successful)) must be(Json.obj(
+      Json.toJson(Payment(id, other, ref, Some("Desc"), amountInPence, PaymentStatus.Successful)) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,

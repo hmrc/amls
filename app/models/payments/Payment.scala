@@ -16,11 +16,10 @@
 
 package models.payments
 
-import models.payapi.PaymentStatuses.Created
+import models.payapi.PaymentStatus.Created
 import models.payapi.{Payment => PayApiPayment, _}
 import org.bson.types.ObjectId
 import play.api.libs.json.Json
-import utils.EnumFormat
 
 import java.time.LocalDateTime
 
@@ -62,6 +61,5 @@ object Payment {
       isBacs = Some(true)
     )
 
-  implicit val statusFormat = EnumFormat(PaymentStatuses)
   implicit val format = Json.format[Payment]
 }

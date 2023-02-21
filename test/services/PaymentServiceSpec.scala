@@ -21,7 +21,7 @@ import com.mongodb.client.result.UpdateResult
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.payapi.PaymentStatuses
+import models.payapi.PaymentStatus
 import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -198,8 +198,8 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       "refresh the status" in {
         val paymentRef = paymentRefGen.sample.get
         val paymentId = paymentIdGen.sample.get
-        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
-        val payApiPayment = testPayApiPayment.copy(status = PaymentStatuses.Successful)
+        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatus.Created)
+        val payApiPayment = testPayApiPayment.copy(status = PaymentStatus.Successful)
         val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
 
         when {
@@ -215,7 +215,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         } thenReturn Future.successful(payApiPayment)
 
         testPaymentService.refreshStatus(paymentRef) map { result =>
-          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
+          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatus.Successful)
           verify(testPaymentRepo).insert(updatedPayment)
         }
       }
