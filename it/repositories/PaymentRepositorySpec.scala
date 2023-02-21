@@ -1,6 +1,5 @@
 package repositories
 
-import generators.PaymentGenerator
 import models.payapi.PaymentStatus.{Cancelled, Sent, Successful}
 import models.payments.Payment
 import org.scalatest.concurrent.IntegrationPatience
@@ -10,7 +9,7 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.LocalDateTime
 
-class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Payment] with IntegrationPatience with PaymentGenerator {
+class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Payment] with IntegrationPatience {
 
   override lazy val repository = new PaymentRepository(mongoComponent)
 
