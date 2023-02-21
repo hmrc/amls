@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class MostTransactionsSpec extends PlaySpec {
             countriesLrgstTranscsSentTo = Some(CountriesList(Seq("Country1", "Country2", "Country3"))
             )
           )
-        )) must be (Some(MostTransactions(Seq("Country1", "Country2", "Country3"))))
+        )) must be(Some(MostTransactions(Seq("Country1", "Country2", "Country3"))))
       }
     }
 
@@ -63,24 +63,24 @@ class MostTransactionsSpec extends PlaySpec {
             countriesLrgstTranscsSentTo = Some(CountriesList(Seq.empty[String])
             )
           )
-        )) must be (None)
+        )) must be(None)
       }
     }
 
     "There is no list of countries" must {
-        "return a None" in {
-          MostTransactions.convMsbMt(Some(
-            MsbMtDetails(
-              applyForFcapsrRegNo = false,
-              fcapsrRefNo = None,
-              ipspServicesDetails = IpspServicesDetails(false, None),
-              informalFundsTransferSystem = false,
-              noOfMoneyTrnsfrTransNxt12Mnths = None,
-              countriesLrgstMoneyAmtSentTo = None,
-              countriesLrgstTranscsSentTo = None
-            )
-          )) must be (None)
-        }
+      "return a None" in {
+        MostTransactions.convMsbMt(Some(
+          MsbMtDetails(
+            applyForFcapsrRegNo = false,
+            fcapsrRefNo = None,
+            ipspServicesDetails = IpspServicesDetails(false, None),
+            informalFundsTransferSystem = false,
+            noOfMoneyTrnsfrTransNxt12Mnths = None,
+            countriesLrgstMoneyAmtSentTo = None,
+            countriesLrgstTranscsSentTo = None
+          )
+        )) must be(None)
+      }
     }
   }
 }

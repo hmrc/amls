@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
 
   "Payment" must {
     "serialise to JSON with no description" in {
-      Json.toJson(Payment(
-        id,
-        other,
-        ref,
-        None,
-        amountInPence,
-        PaymentStatuses.Successful
-      )) must be(Json.obj(
+      Json.toJson(Payment(id, other, ref, None, amountInPence, PaymentStatus.Successful)) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,
@@ -56,14 +49,7 @@ class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGen
     }
 
     "serialise to JSON with a description" in {
-      Json.toJson(Payment(
-        id,
-        other,
-        ref,
-        Some("Desc"),
-        amountInPence,
-        PaymentStatuses.Successful
-      )) must be(Json.obj(
+      Json.toJson(Payment(id, other, ref, Some("Desc"), amountInPence, PaymentStatus.Successful)) must be(Json.obj(
         "id" -> id,
         "taxType" -> "other",
         "reference" -> ref,

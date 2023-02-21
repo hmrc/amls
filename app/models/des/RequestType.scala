@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,13 @@ sealed trait RequestType
 object RequestType {
 
   case object Subscription extends RequestType
+
   case object Amendment extends RequestType
+
   case object Variation extends RequestType
+
   case object Renewal extends RequestType
+
   case object RenewalAmendment extends RequestType
 
 }

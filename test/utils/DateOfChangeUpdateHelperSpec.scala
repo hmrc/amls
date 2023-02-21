@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToHvd = DesConstants.testHvd.copy(
-          dateOfTheFirst = Some(new LocalDate(1900,1,1).toString("yyyy-MM-dd"))
+          dateOfTheFirst = Some(new LocalDate(1900, 1, 1).toString("yyyy-MM-dd"))
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(
@@ -61,7 +61,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToSupervisor = DesConstants.testSupervisorDetails.copy(
-          supervisionStartDate = new LocalDate(1900,1,1).toString("yyyy-MM-dd")
+          supervisionStartDate = new LocalDate(1900, 1, 1).toString("yyyy-MM-dd")
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(
@@ -94,7 +94,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToBusinessActivitiesAll = DesConstants.testBusinessActivitiesAll.copy(
-          activitiesCommenceDate = Some(new LocalDate(1900,1,1).toString("yyyy-MM-dd"))
+          activitiesCommenceDate = Some(new LocalDate(1900, 1, 1).toString("yyyy-MM-dd"))
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(

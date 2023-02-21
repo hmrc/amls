@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import play.api.libs.json.Json
 class LettingAgentsSpec extends PlaySpec {
   "LettingAgents" must {
 
-    val services           = List("residential", "commercial", "auctioneering")
-    val lettingAgentModel  = LettingAgents(Some(true))
+    val services = List("residential", "commercial", "auctioneering")
+    val lettingAgentModel = LettingAgents(Some(true))
     val lettingAgentModel2 = LettingAgents(Some(false))
 
     val eab = Eab(
@@ -67,22 +67,22 @@ class LettingAgentsSpec extends PlaySpec {
     )
 
     "serialise LettingAgents model true" in {
-      LettingAgents.format.writes(lettingAgentModel) must be(Json.obj("clientMoneyProtection"->true))
+      LettingAgents.format.writes(lettingAgentModel) must be(Json.obj("clientMoneyProtection" -> true))
     }
 
     "serialise LettingAgents model false" in {
-      LettingAgents.format.writes(lettingAgentModel2) must be(Json.obj("clientMoneyProtection"->false))
+      LettingAgents.format.writes(lettingAgentModel2) must be(Json.obj("clientMoneyProtection" -> false))
     }
 
     "successfully convert frontend eab to des LettingAgents model" in {
 
-      LettingAgents.conv(Some(eab))  must be(Some(LettingAgents(Some(true))))
+      LettingAgents.conv(Some(eab)) must be(Some(LettingAgents(Some(true))))
 
       LettingAgents.conv(Some(eab1)) must be(Some(LettingAgents(Some(false))))
 
       LettingAgents.conv(Some(eab2)) must be(None)
 
-      LettingAgents.conv(None)       must be(None)
+      LettingAgents.conv(None) must be(None)
 
     }
   }

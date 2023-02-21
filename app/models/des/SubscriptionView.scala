@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,23 +31,23 @@ import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.TradingPremises
 import play.api.libs.json._
 
-case class SubscriptionView(etmpFormBundleNumber:String,
+case class SubscriptionView(etmpFormBundleNumber: String,
                             businessDetails: BusinessDetails,
-                            businessContactDetails : BusinessContactDetails,
-                            businessReferencesAll : Option[PreviouslyRegisteredMLRView],
+                            businessContactDetails: BusinessContactDetails,
+                            businessReferencesAll: Option[PreviouslyRegisteredMLRView],
                             businessReferencesAllButSp: Option[VATRegistration],
                             businessReferencesCbUbLlp: Option[CorporationTaxRegisteredCbUbLlp],
-                            businessActivities : BusinessActivities,
+                            businessActivities: BusinessActivities,
                             tradingPremises: TradingPremises,
-                            bankAccountDetails : Option[BankDetailsView],
+                            bankAccountDetails: Option[BankDetailsView],
                             msb: Option[MoneyServiceBusiness],
                             hvd: Option[Hvd],
                             asp: Option[Asp],
                             aspOrTcsp: Option[AspOrTcsp],
                             tcspAll: Option[TcspAll],
                             tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
-                            eabAll : Option[EabAll],
-                            eabResdEstAgncy : Option[EabResdEstAgncy],
+                            eabAll: Option[EabAll],
+                            eabResdEstAgncy: Option[EabResdEstAgncy],
                             responsiblePersons: Option[Seq[ResponsiblePersons]],
                             amp: Option[Amp],
                             lettingAgents: Option[LettingAgents],
@@ -87,27 +87,27 @@ object SubscriptionView {
 
   implicit val jsonWrites: Writes[SubscriptionView] = {
     import play.api.libs.functional.syntax._
-      ((__ \ "etmpFormBundleNumber").write[String] and
-        (__ \ "businessDetails").write[BusinessDetails] and
-        (__ \ "businessContactDetails").write[BusinessContactDetails] and
-        (__ \ "businessReferencesAll").write[Option[PreviouslyRegisteredMLRView]] and
-        (__ \ "businessReferencesAllButSp").write[Option[VATRegistration]] and
-        (__ \ "businessReferencesCbUbLlp").write[Option[CorporationTaxRegisteredCbUbLlp]] and
-        (__ \ "businessActivities").write[BusinessActivities] and
-        (__ \ "tradingPremises").write[TradingPremises] and
-        (__ \ "bankAccountDetails").write[Option[BankDetailsView]] and
-        (__ \ "msb").write[Option[MoneyServiceBusiness]] and
-        (__ \ "hvd").write[Option[Hvd]] and
-        (__ \ "asp").write[Option[Asp]] and
-        (__ \ "aspOrTcsp").write[Option[AspOrTcsp]] and
-        (__ \ "tcspAll").write[Option[TcspAll]] and
-        (__ \ "tcspTrustCompFormationAgt").write[Option[TcspTrustCompFormationAgt]] and
-        (__ \ "eabAll").write[Option[EabAll]] and
-        (__ \ "eabResdEstAgncy").write[Option[EabResdEstAgncy]] and
-        (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
-        (__ \ "amp").write[Option[Amp]] and
-        (__ \ "lettingAgents").write[Option[LettingAgents]] and
-        __.write[ExtraFields]
+    ((__ \ "etmpFormBundleNumber").write[String] and
+      (__ \ "businessDetails").write[BusinessDetails] and
+      (__ \ "businessContactDetails").write[BusinessContactDetails] and
+      (__ \ "businessReferencesAll").write[Option[PreviouslyRegisteredMLRView]] and
+      (__ \ "businessReferencesAllButSp").write[Option[VATRegistration]] and
+      (__ \ "businessReferencesCbUbLlp").write[Option[CorporationTaxRegisteredCbUbLlp]] and
+      (__ \ "businessActivities").write[BusinessActivities] and
+      (__ \ "tradingPremises").write[TradingPremises] and
+      (__ \ "bankAccountDetails").write[Option[BankDetailsView]] and
+      (__ \ "msb").write[Option[MoneyServiceBusiness]] and
+      (__ \ "hvd").write[Option[Hvd]] and
+      (__ \ "asp").write[Option[Asp]] and
+      (__ \ "aspOrTcsp").write[Option[AspOrTcsp]] and
+      (__ \ "tcspAll").write[Option[TcspAll]] and
+      (__ \ "tcspTrustCompFormationAgt").write[Option[TcspTrustCompFormationAgt]] and
+      (__ \ "eabAll").write[Option[EabAll]] and
+      (__ \ "eabResdEstAgncy").write[Option[EabResdEstAgncy]] and
+      (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
+      (__ \ "amp").write[Option[Amp]] and
+      (__ \ "lettingAgents").write[Option[LettingAgents]] and
+      __.write[ExtraFields]
       ) (unlift(SubscriptionView.unapply _))
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
   "JSON reads" must {
 
     "validate given values" in {
-      val json =  Json.obj("businessType" -> Seq("01","02"))
+      val json = Json.obj("businessType" -> Seq("01", "02"))
 
       Json.fromJson[BusinessTypes](json) must
         be(JsSuccess(BusinessTypes(Set(AccountingTechnicians, CharteredCertifiedAccountants))))
     }
 
     "validate given values with option Digital software" in {
-      val json =  Json.obj(
+      val json = Json.obj(
         "businessType" -> Seq("14", "12"),
         "specifyOtherBusiness" -> "test"
       )
@@ -58,7 +58,7 @@ class BusinessTypesSpec extends PlaySpec with MockitoSugar {
 
     "write valid data in using json write" in {
       Json.toJson[BusinessTypes](BusinessTypes(Set(AccountantsScotland, Other("test657")))) must
-        be (Json.obj(
+        be(Json.obj(
           "businessType" -> Seq("09", "14"),
           "specifyOtherBusiness" -> "test657"
         ))

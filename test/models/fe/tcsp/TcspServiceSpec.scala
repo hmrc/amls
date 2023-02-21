@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,14 @@ class TcspServiceSpec extends PlaySpec with MockitoSugar {
   "TcspService" should {
 
     "Provide the correct value" in {
-      PhonecallHandling.value must be ("01")
-      EmailHandling.value must be ("02")
-      EmailServer.value must be ("03")
-      SelfCollectMailboxes.value must be ("04")
-      MailForwarding.value must be ("05")
-      Receptionist.value must be ("06")
-      ConferenceRooms.value must be ("07")
-      Other("").value must be ("08")
+      PhonecallHandling.value must be("01")
+      EmailHandling.value must be("02")
+      EmailServer.value must be("03")
+      SelfCollectMailboxes.value must be("04")
+      MailForwarding.value must be("05")
+      Receptionist.value must be("06")
+      ConferenceRooms.value must be("07")
+      Other("").value must be("08")
     }
   }
 }

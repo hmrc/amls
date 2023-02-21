@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,18 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople._
 import play.api.libs.json.Json
 
-case class RegDetails (vatRegistered: Boolean,
-                       vrnNumber: Option[String],
-                       saRegistered: Boolean,
-                       saUtr: Option[String]
-                      )
+case class RegDetails(vatRegistered: Boolean, vrnNumber: Option[String], saRegistered: Boolean, saUtr: Option[String])
 
 object RegDetails {
   implicit val format = Json.format[RegDetails]
 
-  implicit def conv(rp: ResponsiblePeople) : Option[RegDetails] = {
+  implicit def conv(rp: ResponsiblePeople): Option[RegDetails] = {
     val (vat, vatNum) = convVat(rp.vatRegistered)
     val (sa, saNum) = convSa(rp.saRegistered)
     Some(RegDetails(vat, vatNum, sa, saNum))
   }
 
-  def convVat(vat: Option[VATRegistered]) : (Boolean, Option[String]) = {
+  def convVat(vat: Option[VATRegistered]): (Boolean, Option[String]) = {
     vat match {
       case Some(data) => data match {
         case VATRegisteredYes(num) => (true, Some(num))
@@ -44,7 +40,7 @@ object RegDetails {
     }
   }
 
-  def convSa(vat: Option[SaRegistered]) : (Boolean, Option[String]) = {
+  def convSa(vat: Option[SaRegistered]): (Boolean, Option[String]) = {
     vat match {
       case Some(data) => data match {
         case SaRegisteredYes(num) => (true, Some(num))

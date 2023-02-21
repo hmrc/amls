@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -822,41 +822,41 @@ object ResponsiblePeopleSection {
   private val nonUKPassport = NonUKPassportYes("87654321")
 
   val model = Some(Seq(ResponsiblePeople(
-    personName                    = Some(personName),
-    legalName                     = Some(previousName),
-    legalNameChangeDate           = Some(nameDateOfChange),
-    knownBy                       = otherNames,
-    personResidenceType           = Some(personResidenceType),
-    ukPassport                    = Some(ukPassport),
-    nonUKPassport                 = Some(nonUKPassport),
-    dateOfBirth                   = None,
-    contactDetails                = Some(contactDetails),
-    addressHistory                = Some(addressHistory),
-    positions                     = Some(positions),
-    saRegistered                  = Some(saRegistered),
-    vatRegistered                 = Some(vatRegistered),
-    experienceTraining            = Some(experienceTraining),
-    training                      = Some(training),
-    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(true), hasAlreadyPaidApprovalCheck = Some(true))
+    personName = Some(personName),
+    legalName = Some(previousName),
+    legalNameChangeDate = Some(nameDateOfChange),
+    knownBy = otherNames,
+    personResidenceType = Some(personResidenceType),
+    ukPassport = Some(ukPassport),
+    nonUKPassport = Some(nonUKPassport),
+    dateOfBirth = None,
+    contactDetails = Some(contactDetails),
+    addressHistory = Some(addressHistory),
+    positions = Some(positions),
+    saRegistered = Some(saRegistered),
+    vatRegistered = Some(vatRegistered),
+    experienceTraining = Some(experienceTraining),
+    training = Some(training),
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(true))
   )))
 
   val modelPhase2 = Some(Seq(ResponsiblePeople(
-    personName                    = Some(personName),
-    legalName                     = Some(previousName),
-    legalNameChangeDate           = Some(nameDateOfChange),
-    knownBy                       = otherNames,
-    personResidenceType           = Some(personResidenceType),
-    ukPassport                    = Some(ukPassport),
-    nonUKPassport                 = Some(nonUKPassport),
-    dateOfBirth                   = Some(DateOfBirth(new LocalDate(1970,1,1))),
-    contactDetails                = Some(contactDetails),
-    addressHistory                = Some(addressHistory),
-    positions                     = Some(positions),
-    saRegistered                  = Some(saRegistered),
-    vatRegistered                 = Some(vatRegistered),
-    experienceTraining            = Some(experienceTraining),
-    training                      = Some(training),
-    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper  = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
+    personName = Some(personName),
+    legalName = Some(previousName),
+    legalNameChangeDate = Some(nameDateOfChange),
+    knownBy = otherNames,
+    personResidenceType = Some(personResidenceType),
+    ukPassport = Some(ukPassport),
+    nonUKPassport = Some(nonUKPassport),
+    dateOfBirth = Some(DateOfBirth(new LocalDate(1970, 1, 1))),
+    contactDetails = Some(contactDetails),
+    addressHistory = Some(addressHistory),
+    positions = Some(positions),
+    saRegistered = Some(saRegistered),
+    vatRegistered = Some(vatRegistered),
+    experienceTraining = Some(experienceTraining),
+    training = Some(training),
+    approvalFlags = ApprovalFlags(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
   )))
 
   val modelForView = Some(List(
@@ -995,7 +995,7 @@ object HvdSection {
 object AmpSection {
 
   private val ampData = AmpData(
-    typeOfParticipant = List("artGalleryOwner", "artDealer", "artAgent" ,"artAuctioneer",  "somethingElse"),
+    typeOfParticipant = List("artGalleryOwner", "artDealer", "artAgent", "artAuctioneer", "somethingElse"),
     typeOfParticipantDetail = Some("Another service"),
     true,
     Some("2019-09-19 16:58:06.259Z"),

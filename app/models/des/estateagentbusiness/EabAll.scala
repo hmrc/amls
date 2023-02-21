@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,33 +20,25 @@ import models.fe.eab.Eab
 import play.api.libs.json.Json
 
 case class EabAll(
-                   estateAgencyActProhibition : Boolean,
-                   estAgncActProhibProvideDetails : Option[String],
-                   prevWarnedWRegToEstateAgencyActivities : Boolean,
-                   prevWarnWRegProvideDetails : Option[String]
-                 )
+                   estateAgencyActProhibition: Boolean,
+                   estAgncActProhibProvideDetails: Option[String],
+                   prevWarnedWRegToEstateAgencyActivities: Boolean,
+                   prevWarnWRegProvideDetails: Option[String])
 
 
 object EabAll {
   implicit val format = Json.format[EabAll]
 
   implicit def convert(eab: Eab): EabAll = {
-
-    val (penalised, penalisedDesc) = convData(
-      eab.data.penalisedEstateAgentsAct, eab.data.penalisedEstateAgentsActDetail
-    )
-
-    val (professionalBody, professionalBodyDesc) = convData(
-      eab.data.penalisedProfessionalBody, eab.data.penalisedProfessionalBodyDetail
-    )
-
+    val (penalised, penalisedDesc) = convData(eab.data.penalisedEstateAgentsAct, eab.data.penalisedEstateAgentsActDetail)
+    val (professionalBody, professionalBodyDesc) = convData(eab.data.penalisedProfessionalBody, eab.data.penalisedProfessionalBodyDetail)
     EabAll(penalised, penalisedDesc, professionalBody, professionalBodyDesc)
   }
 
   def convData(flagged: Boolean, detail: Option[String]): (Boolean, Option[String]) =
     flagged match {
       case true => (true, detail)
-      case _    => (false, None)
+      case _ => (false, None)
     }
 
 }

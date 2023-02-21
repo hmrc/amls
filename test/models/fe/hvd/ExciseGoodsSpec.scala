@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class ExciseGoodsSpec extends PlaySpec {
     }
 
     "convert to None if hvdAlcoholTobacco is None" in {
-      ExciseGoods.conv(DesConstants.testBusinessActivities.copy(hvdAlcoholTobacco = None,hvdGoodsSold = None)) must be(None)
+      ExciseGoods.conv(DesConstants.testBusinessActivities.copy(hvdAlcoholTobacco = None, hvdGoodsSold = None)) must be(None)
     }
 
   }

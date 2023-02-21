@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,23 +25,23 @@ import org.scalatestplus.play.PlaySpec
 
 class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
-    val amendvariationRequest = AmendVariationRequest(
-      acknowledgementReference = "ackRef",
-      changeIndicators = ChangeIndicators(
-        tradingPremises = true
-      ),
-      amlsMessageType = "msgType",
-      businessDetails = DesConstants.testBusinessDetails,
-      businessContactDetails = DesConstants.testViewBusinessContactDetails,
-      businessReferencesAll = None,
-      businessReferencesAllButSp = None,
-      businessReferencesCbUbLlp = None,
-      businessActivities = DesConstants.testBusinessActivities,
-      tradingPremises = TradingPremises(
-        ownBusinessPremises = Some(OwnBusinessPremises(
-          ownBusinessPremises = true,
-          ownBusinessPremisesDetails = Some(Seq(
-            OwnBusinessPremisesDetails(
+  val amendvariationRequest = AmendVariationRequest(
+    acknowledgementReference = "ackRef",
+    changeIndicators = ChangeIndicators(
+      tradingPremises = true
+    ),
+    amlsMessageType = "msgType",
+    businessDetails = DesConstants.testBusinessDetails,
+    businessContactDetails = DesConstants.testViewBusinessContactDetails,
+    businessReferencesAll = None,
+    businessReferencesAllButSp = None,
+    businessReferencesCbUbLlp = None,
+    businessActivities = DesConstants.testBusinessActivities,
+    tradingPremises = TradingPremises(
+      ownBusinessPremises = Some(OwnBusinessPremises(
+        ownBusinessPremises = true,
+        ownBusinessPremisesDetails = Some(Seq(
+          OwnBusinessPremisesDetails(
             tradingName = Some("COMPANY NAME 925"),
             businessAddress = Address(
               addressLine1 = "M House 0002",
@@ -66,145 +66,145 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
             status = Some("Updated"),
             dateChangeFlag = Some(false)
           ),
-            OwnBusinessPremisesDetails(
-              tradingName = Some("trade3"),
-              businessAddress = Address(
-                addressLine1 = "add3",
-                addressLine2 = "add3d",
-                addressLine3 = None,
-                addressLine4 = None,
-                country = "GB",
-                postcode = Some("e3 4rg")
-              ),
-              residential = false,
-              msb = Msb(true, false, false, false, false),
-              hvd = Hvd(false),
-              asp = Asp(false),
-              tcsp = Tcsp(false),
-              eab = Eab(false),
-              bpsp = Bpsp(false),
-              tditpsp = Tditpsp(false),
-              amp = Amp(false),
-              startDate = "2018-02-01",
-              endDate = Some("9999-12-31"),
-              status = Some("Added"),
-              dateChangeFlag = Some(false)
-            )
-          ))
-        )),
-        agentBusinessPremises = Some(AgentBusinessPremises(
-          agentBusinessPremises = true,
-          agentDetails = Some(Seq(AgentDetails(
-            agentLegalEntity = "Partnership",
-            agentLegalEntityName = Some("test partner"),
-            dateOfBirth = None,
-            agentPremises = AgentPremises(
-              tradingName = "trade2",
-              businessAddress = Address(
-                addressLine1 = "add2",
-                addressLine2 = "add2",
-                addressLine3 = None,
-                addressLine4 = None,
-                country = "GB",
-                postcode = Some("gr4 5th")
-              ),
-              residential = false,
-              msb = Msb(false,true,false,false,false),
-              hvd = Hvd(false),
-              asp = Asp(false),
-              tcsp = Tcsp(false),
-              eab = Eab(false),
-              bpsp = Bpsp(false),
-              tditpsp = Tditpsp(false),
-              amp = Amp(false),
-              startDate = None
+          OwnBusinessPremisesDetails(
+            tradingName = Some("trade3"),
+            businessAddress = Address(
+              addressLine1 = "add3",
+              addressLine2 = "add3d",
+              addressLine3 = None,
+              addressLine4 = None,
+              country = "GB",
+              postcode = Some("e3 4rg")
             ),
-            startDate = Some("2017-01-12"),
-            dateChangeFlag = Some(false),
-            status = Some("Added")
-          )))
+            residential = false,
+            msb = Msb(true, false, false, false, false),
+            hvd = Hvd(false),
+            asp = Asp(false),
+            tcsp = Tcsp(false),
+            eab = Eab(false),
+            bpsp = Bpsp(false),
+            tditpsp = Tditpsp(false),
+            amp = Amp(false),
+            startDate = "2018-02-01",
+            endDate = Some("9999-12-31"),
+            status = Some("Added"),
+            dateChangeFlag = Some(false)
+          )
         ))
-      ),
-      bankAccountDetails = None,
-      msb = None,
-      hvd = None,
-      asp = None,
-      aspOrTcsp = None,
-      tcspAll = None,
-      tcspTrustCompFormationAgt = None,
-      eabAll = None,
-      eabResdEstAgncy = None,
-      responsiblePersons = None,
-      amp = None,
-      lettingAgents = None,
-      extraFields = ExtraFields(
-        declaration = Declaration(true),
-        filingIndividual = AboutYouRelease7(None, true, None, None),
-        etmpFields = None
-      )
+      )),
+      agentBusinessPremises = Some(AgentBusinessPremises(
+        agentBusinessPremises = true,
+        agentDetails = Some(Seq(AgentDetails(
+          agentLegalEntity = "Partnership",
+          agentLegalEntityName = Some("test partner"),
+          dateOfBirth = None,
+          agentPremises = AgentPremises(
+            tradingName = "trade2",
+            businessAddress = Address(
+              addressLine1 = "add2",
+              addressLine2 = "add2",
+              addressLine3 = None,
+              addressLine4 = None,
+              country = "GB",
+              postcode = Some("gr4 5th")
+            ),
+            residential = false,
+            msb = Msb(false, true, false, false, false),
+            hvd = Hvd(false),
+            asp = Asp(false),
+            tcsp = Tcsp(false),
+            eab = Eab(false),
+            bpsp = Bpsp(false),
+            tditpsp = Tditpsp(false),
+            amp = Amp(false),
+            startDate = None
+          ),
+          startDate = Some("2017-01-12"),
+          dateChangeFlag = Some(false),
+          status = Some("Added")
+        )))
+      ))
+    ),
+    bankAccountDetails = None,
+    msb = None,
+    hvd = None,
+    asp = None,
+    aspOrTcsp = None,
+    tcspAll = None,
+    tcspTrustCompFormationAgt = None,
+    eabAll = None,
+    eabResdEstAgncy = None,
+    responsiblePersons = None,
+    amp = None,
+    lettingAgents = None,
+    extraFields = ExtraFields(
+      declaration = Declaration(true),
+      filingIndividual = AboutYouRelease7(None, true, None, None),
+      etmpFields = None
     )
+  )
 
-    "AmendVariationResponse for renewalAmendment" must {
-      "convert a DES response to a AmendVariationResponse" in {
+  "AmendVariationResponse for renewalAmendment" must {
+    "convert a DES response to a AmendVariationResponse" in {
 
-        val fpFee = 100
-        val fpFeeRate = 100
-        val premiseFYFeeRate = 115
-        val premiseFee = 345
-        val totalFees = 445
-        val difference = 330
-        val premiseHYFeeRate = 57.5
+      val fpFee = 100
+      val fpFeeRate = 100
+      val premiseFYFeeRate = 115
+      val premiseFee = 345
+      val totalFees = 445
+      val difference = 330
+      val premiseHYFeeRate = 57.5
 
-        val paymentReference = "XY002610108134"
-        val etmpFormBundleNumber = "082000004607"
-        val processingDate = "2017-07-18T09:49:25Z"
+      val paymentReference = "XY002610108134"
+      val etmpFormBundleNumber = "082000004607"
+      val processingDate = "2017-07-18T09:49:25Z"
 
-        val testapprovalCheckNumbers = Some(10)
-        val testApprovalFeeRate = Some(BigDecimal(20))
-        val testApprovalCheckFee = Some(BigDecimal(30))
+      val testapprovalCheckNumbers = Some(10)
+      val testApprovalFeeRate = Some(BigDecimal(20))
+      val testApprovalCheckFee = Some(BigDecimal(30))
 
 
-        AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
-          processingDate = processingDate,
-          etmpFormBundleNumber = etmpFormBundleNumber,
-          fpNumbers = Some(1),
-          fpFeeRate = Some(fpFeeRate),
-          fpFee = Some(fpFee),
-          responsiblePersonNotCharged = Some(1),
-          premiseFYNumber = Some(3),
-          premiseFYFeeRate = Some(premiseFYFeeRate),
-          premiseHYFeeRate = Some(premiseHYFeeRate),
-          premiseFee = Some(premiseFee),
-          totalFees = Some(totalFees),
-          paymentReference = Some(paymentReference),
-          difference = Some(difference),
-          registrationFee = None,
-          premiseFYTotal = None,
-          premiseHYNumber = None,
-          premiseHYTotal = None,
-          approvalCheckNumbers = testapprovalCheckNumbers,
-          approvalCheckFeeRate = testApprovalFeeRate,
-          approvalCheckFee = testApprovalCheckFee
+      AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
+        processingDate = processingDate,
+        etmpFormBundleNumber = etmpFormBundleNumber,
+        fpNumbers = Some(1),
+        fpFeeRate = Some(fpFeeRate),
+        fpFee = Some(fpFee),
+        responsiblePersonNotCharged = Some(1),
+        premiseFYNumber = Some(3),
+        premiseFYFeeRate = Some(premiseFYFeeRate),
+        premiseHYFeeRate = Some(premiseHYFeeRate),
+        premiseFee = Some(premiseFee),
+        totalFees = Some(totalFees),
+        paymentReference = Some(paymentReference),
+        difference = Some(difference),
+        registrationFee = None,
+        premiseFYTotal = None,
+        premiseHYNumber = None,
+        premiseHYTotal = None,
+        approvalCheckNumbers = testapprovalCheckNumbers,
+        approvalCheckFeeRate = testApprovalFeeRate,
+        approvalCheckFee = testApprovalCheckFee
 
-        )) mustBe AmendVariationResponse(
-          processingDate = processingDate,
-          etmpFormBundleNumber = etmpFormBundleNumber,
-          registrationFee = 0,
-          fpFee = Some(fpFee),
-          fpFeeRate = Some(fpFeeRate),
-          premiseFee = premiseFee,
-          premiseFeeRate = Some(premiseFYFeeRate),
-          totalFees = totalFees,
-          paymentReference = Some(paymentReference),
-          difference = Some(difference),
-          addedResponsiblePeople = 11,
-          addedFullYearTradingPremises = 3,
-          addedResponsiblePeopleFitAndProper = 1,
-          addedResponsiblePeopleApprovalCheck = 10,
-          approvalCheckNumbers = testapprovalCheckNumbers,
-          approvalCheckFeeRate = testApprovalFeeRate,
-          approvalCheckFee = testApprovalCheckFee
-         )
-      }
+      )) mustBe AmendVariationResponse(
+        processingDate = processingDate,
+        etmpFormBundleNumber = etmpFormBundleNumber,
+        registrationFee = 0,
+        fpFee = Some(fpFee),
+        fpFeeRate = Some(fpFeeRate),
+        premiseFee = premiseFee,
+        premiseFeeRate = Some(premiseFYFeeRate),
+        totalFees = totalFees,
+        paymentReference = Some(paymentReference),
+        difference = Some(difference),
+        addedResponsiblePeople = 11,
+        addedFullYearTradingPremises = 3,
+        addedResponsiblePeopleFitAndProper = 1,
+        addedResponsiblePeopleApprovalCheck = 10,
+        approvalCheckNumbers = testapprovalCheckNumbers,
+        approvalCheckFeeRate = testApprovalFeeRate,
+        approvalCheckFee = testApprovalCheckFee
+      )
     }
+  }
 }

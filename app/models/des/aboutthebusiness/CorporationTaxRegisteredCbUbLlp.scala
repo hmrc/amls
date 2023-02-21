@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails.{CorporationTaxRegisteredNo, CorporationTaxRegisteredYes, CorporationTaxRegistered}
 import play.api.libs.json.Json
 
-case class CorporationTaxRegisteredCbUbLlp (cotaxRegistered: Boolean, ctutr: Option[String])
+case class CorporationTaxRegisteredCbUbLlp(cotaxRegistered: Boolean, ctutr: Option[String])
 
 object CorporationTaxRegisteredCbUbLlp {
 
-  implicit val format =  Json.format[CorporationTaxRegisteredCbUbLlp]
+  implicit val format = Json.format[CorporationTaxRegisteredCbUbLlp]
 
-  implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp]  = {
+  implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp] = {
 
     atb.corporationTaxRegistered match {
       case Some(data) => data

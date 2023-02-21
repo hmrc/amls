@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ package models.des.businessactivities
 import models.fe.businessactivities.WhoIsYourAccountant
 import play.api.libs.json.Json
 
-case class MlrAdvisorDetails(advisorNameAddress: Option[AdvisorNameAddress],
-                             agentDealsWithHmrc: Boolean,
-                             hmrcAgentRefNo: Option[String])
+case class MlrAdvisorDetails(advisorNameAddress: Option[AdvisorNameAddress], agentDealsWithHmrc: Boolean, hmrcAgentRefNo: Option[String])
 
 object MlrAdvisorDetails {
   implicit val format = Json.format[MlrAdvisorDetails]
@@ -50,8 +48,8 @@ object MlrAdvisor {
   implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisor] = {
     bact.accountantForAMLSRegulations match {
       case Some(x) => Some(MlrAdvisor(x.accountantForAMLSRegulations, bact))
-        // have to keep sending for now as is required in API4 - a defect has been raised
-      case _  => Some(MlrAdvisor(false))
+      // have to keep sending for now as is required in API4 - a defect has been raised
+      case _ => Some(MlrAdvisor(false))
 
     }
   }

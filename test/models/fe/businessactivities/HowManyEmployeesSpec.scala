@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ class HowManyEmployeesSpec extends PlaySpec {
     "convert des ro frontend model successfully" in {
 
       val all = BusinessActivitiesAll(
-        None,None,Some(false),
+        None, None, Some(false),
         BusinessActivityDetails(false, None),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),
@@ -75,7 +75,7 @@ class HowManyEmployeesSpec extends PlaySpec {
     "convert des ro frontend model successfully when inputs are none" in {
 
       val all = BusinessActivitiesAll(
-        None,None,Some(false),
+        None, None, Some(false),
         BusinessActivityDetails(false, None),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         None,

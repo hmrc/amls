@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,24 +24,25 @@ import play.api.libs.json.{JsSuccess, Json}
 
 class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
-  val json = Json.parse("""{
-               |  "processingDate": "2017-07-18T09:49:18Z",
-               |  "formBundleStatus": "Approved",
-               |  "currentRegYearStartDate": "2017-06-01",
-               |  "currentRegYearEndDate": "2018-12-31",
-               |  "renewalConFlag": true,
-               |  "renewalSubmissionFlag": true,
-               |  "currentAMLSOutstandingBalance": "0.00",
-               |  "safeId": "XY0000100095375"
-               |}""".stripMargin)
+  val json = Json.parse(
+    """{
+      |  "processingDate": "2017-07-18T09:49:18Z",
+      |  "formBundleStatus": "Approved",
+      |  "currentRegYearStartDate": "2017-06-01",
+      |  "currentRegYearEndDate": "2018-12-31",
+      |  "renewalConFlag": true,
+      |  "renewalSubmissionFlag": true,
+      |  "currentAMLSOutstandingBalance": "0.00",
+      |  "safeId": "XY0000100095375"
+      |}""".stripMargin)
 
   val model = ReadStatusResponse(
-    processingDate = new LocalDateTime(2017,7,18, 9,49,18),
+    processingDate = new LocalDateTime(2017, 7, 18, 9, 49, 18),
     formBundleStatus = "Approved",
     statusReason = None,
-    deRegistrationDate = None ,
-    currentRegYearStartDate = Some(new LocalDate(2017,6,1)),
-    currentRegYearEndDate = Some(new LocalDate(2018,12,31)),
+    deRegistrationDate = None,
+    currentRegYearStartDate = Some(new LocalDate(2017, 6, 1)),
+    currentRegYearEndDate = Some(new LocalDate(2018, 12, 31)),
     renewalConFlag = true,
     renewalSubmissionFlag = Some(true),
     currentAMLSOutstandingBalance = Some("0.00"),
@@ -61,15 +62,15 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneApp
 
     "confirm isRenewalPeriod" when {
       "date today is day after renewal period began" in {
-        model.isRenewalPeriod(new LocalDate(2018,12,2)) mustBe false
+        model.isRenewalPeriod(new LocalDate(2018, 12, 2)) mustBe false
       }
       "date today is same day as renweal period begins" in {
-        model.isRenewalPeriod(new LocalDate(2018,12,1)) mustBe true
+        model.isRenewalPeriod(new LocalDate(2018, 12, 1)) mustBe true
       }
     }
     "deny isRenewalPeriod" when {
       "date today is date before renewal period begins" in {
-        model.isRenewalPeriod(new LocalDate(2018,11,30)) mustBe true
+        model.isRenewalPeriod(new LocalDate(2018, 11, 30)) mustBe true
       }
     }
   }

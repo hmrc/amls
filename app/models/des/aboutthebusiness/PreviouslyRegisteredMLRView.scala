@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,17 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails.{PreviouslyRegisteredYes, PreviouslyRegisteredNo, BusinessDetails}
 import play.api.libs.json.Json
 
-case class PreviouslyRegisteredMLRView(amlsRegistered:Boolean,
-                                       mlrRegNumber:Option[String],
-                                       prevRegForMlr:Boolean,
-                                       prevMlrRegNumber:Option[String])
+case class PreviouslyRegisteredMLRView(amlsRegistered: Boolean, mlrRegNumber: Option[String], prevRegForMlr: Boolean, prevMlrRegNumber: Option[String])
 
-object PreviouslyRegisteredMLRView{
+object PreviouslyRegisteredMLRView {
   implicit val format = Json.format[PreviouslyRegisteredMLRView]
 
-  implicit def convert(businessDetails:BusinessDetails):Option[PreviouslyRegisteredMLRView] ={
-    businessDetails.previouslyRegistered match{
-      case x:PreviouslyRegisteredYes
-        if(x.value.getOrElse("").length == 15)=> Some(PreviouslyRegisteredMLRView(false, None, true, x.value))
-      case x:PreviouslyRegisteredYes
-        if(x.value.getOrElse("").length == 8) => Some(PreviouslyRegisteredMLRView(true, x.value, false, None))
+  implicit def convert(businessDetails: BusinessDetails): Option[PreviouslyRegisteredMLRView] = {
+    businessDetails.previouslyRegistered match {
+      case x: PreviouslyRegisteredYes
+        if (x.value.getOrElse("").length == 15) => Some(PreviouslyRegisteredMLRView(false, None, true, x.value))
+      case x: PreviouslyRegisteredYes
+        if (x.value.getOrElse("").length == 8) => Some(PreviouslyRegisteredMLRView(true, x.value, false, None))
 
       case PreviouslyRegisteredYes(None) => Some(PreviouslyRegisteredMLRView(true, None, false, None))
       case PreviouslyRegisteredNo => Some(PreviouslyRegisteredMLRView(false, None, false, None))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ object AccountantForAMLSRegulations {
     * the frontend. In this case, ETMP will not return any data for this question. In that case, if the business is not an ASP and there is no data
     * for that question, then it can be assumed that the user answered 'no'.
     * If the business IS an ASP, then None should be returned for this question (in this scenario, the user is never asked to complete that question).
-    * @param maybeAdvisor The MLR Advisor object to convert
+    *
+    * @param maybeAdvisor    The MLR Advisor object to convert
     * @param maybeActivities The MLR activities supplied as part of the application
     * @return
     */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package models.fe.businessactivities
 import models.des.businessactivities.BusinessActivitiesAll
 import play.api.libs.json.Json
 
-case class CustomersOutsideUK(isOutside:Boolean ,countries: Option[Seq[String]])
+case class CustomersOutsideUK(isOutside: Boolean, countries: Option[Seq[String]])
 
 object CustomersOutsideUK {
 
   implicit val format = Json.format[CustomersOutsideUK]
 
-  def conv(des: BusinessActivitiesAll) : Option[CustomersOutsideUK] = {
+  def conv(des: BusinessActivitiesAll): Option[CustomersOutsideUK] = {
     des.nonUkResidentCustDetails.whichCountries match {
       case Some(countries) => Some(CustomersOutsideUK(true, Some(countries)))
       case _ => Some(CustomersOutsideUK(false, None))

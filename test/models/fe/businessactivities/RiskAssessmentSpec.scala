@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class RiskAssessmentSpec extends PlaySpec with MockitoSugar {
       }
 
       "fail when on invalid data" in {
-        Json.fromJson[RiskAssessmentPolicy](Json.obj("hasPolicy" -> true,"riskassessments" -> Seq("01","03"))) mustBe a[JsError]
+        Json.fromJson[RiskAssessmentPolicy](Json.obj("hasPolicy" -> true, "riskassessments" -> Seq("01", "03"))) mustBe a[JsError]
       }
 
       "write valid data in using json write" in {

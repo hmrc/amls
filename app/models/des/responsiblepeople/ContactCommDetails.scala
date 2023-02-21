@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,15 @@ package models.des.responsiblepeople
 import play.api.libs.json.Json
 import models.fe.responsiblepeople.ContactDetails
 
-case class ContactCommDetails (contactEmailAddress: String,
-                           primaryTeleNo: String,
-                           secondaryTeleNo: Option[String])
+case class ContactCommDetails(contactEmailAddress: String, primaryTeleNo: String, secondaryTeleNo: Option[String])
 
 object ContactCommDetails {
   implicit val format = Json.format[ContactCommDetails]
 
- implicit def conv(dtls: Option[ContactDetails]): Option[ContactCommDetails] = {
-   dtls match {
-     case Some(data) => Some(ContactCommDetails(data.emailAddress, data.phoneNumber, None))
-     case _ => None
-   }
+  implicit def conv(dtls: Option[ContactDetails]): Option[ContactCommDetails] = {
+    dtls match {
+      case Some(data) => Some(ContactCommDetails(data.emailAddress, data.phoneNumber, None))
+      case _ => None
+    }
   }
 }

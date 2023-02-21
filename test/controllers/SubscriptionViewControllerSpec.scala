@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ import org.scalatest.concurrent.IntegrationPatience
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatience with IterateeHelpers {
+class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatience {
 
   val authAction: AuthAction = SuccessfulAuthAction
 

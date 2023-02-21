@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,25 +82,25 @@ class ExpectedBusinessTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des to frontend model successfully when involved in other is false with other value" in {
-      val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£0-£15k","£250k-£1m")))))
+      val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£0-£15k", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel) must be(Some(First))
 
-      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£15k-50k","£250k-£1m")))))
+      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£15k-50k", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel1) must be(Some(Second))
 
-      val desModel2 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£50k-£100k","£250k-£1m")))))
+      val desModel2 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£50k-£100k", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel2) must be(Some(Third))
 
-      val desModel3 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£100k-£250k","£250k-£1m")))))
+      val desModel3 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£100k-£250k", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel3) must be(Some(Fourth))
 
-      val desModel4 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£250k-£1m","£250k-£1m")))))
+      val desModel4 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£250k-£1m", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel4) must be(Some(Fifth))
 
-      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£1m-10m","£250k-£1m")))))
+      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£1m-10m", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel5) must be(Some(Sixth))
 
-      val desModel6 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("","£10m+","£250k-£1m")))))
+      val desModel6 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "£10m+", "£250k-£1m")))))
       ExpectedBusinessTurnover.conv(desModel6) must be(Some(Seventh))
 
     }

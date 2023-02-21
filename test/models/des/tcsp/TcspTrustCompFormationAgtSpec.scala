@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,25 +30,14 @@ class TcspTrustCompFormationAgtSpec extends PlaySpec {
         RegisteredOfficeEtc,
         CompanyFormationAgent))
 
-      val TcspSection = Some(Tcsp(
-        Some(DefaultCompanyServiceProviders),
-        Some(OnlyOffTheShelfCompsSoldYes),
-        Some(ComplexCorpStructureCreationYes),
-        None,
-        None)
-      )
+      val TcspSection = Some(Tcsp(Some(DefaultCompanyServiceProviders), Some(OnlyOffTheShelfCompsSoldYes),
+        Some(ComplexCorpStructureCreationYes), None, None))
 
       TcspTrustCompFormationAgt.conv(TcspSection) must be(TcspTrustCompFormationAgt(true, true))
     }
 
     "convert frontend model to Des when frontend model is none" in {
-      val TcspSection = Some(Tcsp(
-        None,
-        None,
-        None,
-        None,
-        None)
-      )
+      val TcspSection = Some(Tcsp(None, None, None, None, None))
 
       TcspTrustCompFormationAgt.conv(TcspSection) must be(TcspTrustCompFormationAgt(false, false))
     }

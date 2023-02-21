@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ package models.des.supervision
 import models.fe.supervision.{AnotherBodyNo, AnotherBodyYes, AnotherBody}
 import play.api.libs.json.Json
 
-case class SupervisionDetails (prevSupervisedByMlsRegs: Boolean = false,
-                               supervisorDetails: Option[SupervisorDetails]
-                              )
+case class SupervisionDetails(prevSupervisedByMlsRegs: Boolean = false, supervisorDetails: Option[SupervisorDetails])
 
 object SupervisionDetails {
 
@@ -36,10 +34,11 @@ object SupervisionDetails {
       case _ => None
     }
   }
+
   implicit def conv1(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
     anotherBody match {
       case Some(AnotherBodyYes(supervisorName, startDate, endDate, endingReason)) =>
-        Some(SupervisionDetails(prevSupervisedByMlsRegs = true,supervisorDetails = Some(SupervisorDetails(nameOfLastSupervisor = supervisorName, supervisionStartDate = startDate.toString, supervisionEndDate = endDate.toString, dateChangeFlag = None, supervisionEndingReason = endingReason))))
+        Some(SupervisionDetails(prevSupervisedByMlsRegs = true, supervisorDetails = Some(SupervisorDetails(nameOfLastSupervisor = supervisorName, supervisionStartDate = startDate.toString, supervisionEndDate = endDate.toString, dateChangeFlag = None, supervisionEndingReason = endingReason))))
       case Some(AnotherBodyNo) => Some(SupervisionDetails(false, None))
       case _ => None
     }

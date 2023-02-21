@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ import models.des.DesConstants
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.libs.json.Json
 
-class HowWillYouSellGoodsSpec extends WordSpec with MustMatchers{
+class HowWillYouSellGoodsSpec extends WordSpec with MustMatchers {
 
   val fullData = HowWillYouSellGoods(Seq(Wholesale, Retail, Auction))
-  val fullForm = Map (
-    "salesChannels[]" -> Seq("Wholesale","Retail","Auction")
+  val fullForm = Map(
+    "salesChannels[]" -> Seq("Wholesale", "Retail", "Auction")
   )
 
   "How will You Sell Goods" should {

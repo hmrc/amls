@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@ package models.des.bankdetails
 import models.fe.bankdetails._
 import play.api.libs.json.Json
 
-case class BankAccountView(accountName: String,
-                           accountType: String,
-                           doYouHaveUkBankAccount: Boolean,
-                           bankAccountDetails: AccountView)
+case class BankAccountView(accountName: String, accountType: String, doYouHaveUkBankAccount: Boolean, bankAccountDetails: AccountView)
 
 object BankAccountView {
 
@@ -31,26 +28,9 @@ object BankAccountView {
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccountView] = {
     bankdetails map { x =>
       x.bankAccount match {
-        case uk: UKAccount => BankAccountView(
-          x.accountName,
-          convertType(x.bankAccountType),
-          true,
-          ukAccountView(uk.sortCode, uk.accountNumber)
-        )
-
-        case nonukacc: NonUKAccountNumber => BankAccountView(
-          x.accountName,
-          convertType(x.bankAccountType),
-          false,
-          AccountNumberView(nonukacc.accountNumber)
-        )
-
-        case nonukiban: NonUKIBANNumber => BankAccountView(
-          x.accountName,
-          convertType(x.bankAccountType),
-          false,
-          IBANNumberView(nonukiban.IBANNumber)
-        )
+        case uk: UKAccount => BankAccountView(x.accountName, convertType(x.bankAccountType), true, ukAccountView(uk.sortCode, uk.accountNumber))
+        case nonukacc: NonUKAccountNumber => BankAccountView(x.accountName, convertType(x.bankAccountType), false, AccountNumberView(nonukacc.accountNumber))
+        case nonukiban: NonUKIBANNumber => BankAccountView(x.accountName, convertType(x.bankAccountType), false, IBANNumberView(nonukiban.IBANNumber))
       }
     }
   }

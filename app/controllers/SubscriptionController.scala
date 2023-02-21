@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 package controllers
 
- import exceptions.{DuplicateSubscriptionException, HttpStatusException}
+import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 
- import javax.inject.{Inject, Singleton}
- import models.des.{RequestType, SubscriptionRequest}
- import models.fe
- import models.fe.SubscriptionErrorResponse
- import play.api.{Logger, Logging}
- import play.api.libs.json._
- import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
- import services.SubscriptionService
- import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
- import utils.{ApiRetryHelper, AuthAction}
+import javax.inject.{Inject, Singleton}
+import models.des.{RequestType, SubscriptionRequest}
+import models.fe
+import models.fe.SubscriptionErrorResponse
+import play.api.{Logger, Logging}
+import play.api.libs.json._
+import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
+import services.SubscriptionService
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import utils.{ApiRetryHelper, AuthAction}
 
- import scala.concurrent.ExecutionContext.Implicits.global
- import scala.concurrent.Future
- import scala.util.matching.Regex
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.matching.Regex
 
 @Singleton
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,

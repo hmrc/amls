@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,7 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.json.Json
 
-case class PreviousNameDetails (nameEverChanged: Boolean,
-                                previousName: Option[PersonName],
-                                dateOfChange: Option[String],
-                                dateChangeFlag: Option[Boolean]
-                               )
+case class PreviousNameDetails(nameEverChanged: Boolean, previousName: Option[PersonName], dateOfChange: Option[String], dateChangeFlag: Option[Boolean])
 
 object PreviousNameDetails {
   implicit val format = Json.format[PreviousNameDetails]
@@ -35,7 +31,7 @@ object PreviousNameDetails {
       case false => None
     }
     (person.legalName, person.legalNameChangeDate) match {
-      case (Some(name), date) if name.hasPreviousName => Some(PreviousNameDetails(true, name, date.map(_.toString),dateChangeFlag))
+      case (Some(name), date) if name.hasPreviousName => Some(PreviousNameDetails(true, name, date.map(_.toString), dateChangeFlag))
       case _ => Some(PreviousNameDetails(false, None, None, dateChangeFlag))
     }
   }

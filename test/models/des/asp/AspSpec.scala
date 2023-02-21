@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,26 +27,19 @@ class AspSpec extends PlaySpec {
     "When given otherBusinessTaxMattersYes convert to frontend model with value true" in {
       val otherBusinessTax = OtherBusinessTaxMattersYes
 
-      val model = FEAsp(
-        None,
-        Some(otherBusinessTax)
-      )
-      Asp.conv(Some(model)) must be(Some(Asp(true,None)))
+      val model = FEAsp(None, Some(otherBusinessTax))
+      Asp.conv(Some(model)) must be(Some(Asp(true, None)))
     }
 
     "When given otherBusinessTaxMattersNo convert to frontend model with value false" in {
       val otherBusinessTax = OtherBusinessTaxMattersNo
 
-      val model = FEAsp(
-        None,
-        Some(otherBusinessTax)
-      )
+      val model = FEAsp(None, Some(otherBusinessTax))
       Asp.conv(Some(model)) must be(Some(Asp(false, None)))
     }
 
     "converting the des subscription where no asp must yield None" in {
-      Asp.conv(DesConstants.SubscriptionViewModelNoAsp) must
-        be(None)
+      Asp.conv(DesConstants.SubscriptionViewModelNoAsp) must be(None)
     }
   }
 }

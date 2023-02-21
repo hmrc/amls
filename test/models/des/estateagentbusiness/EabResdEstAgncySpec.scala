@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class EabResdEstAgncySpec extends PlaySpec {
 
     val services = List("residential", "commercial", "auctioneering")
 
-    val eabResdEstModel = EabResdEstAgncy(false,None)
+    val eabResdEstModel = EabResdEstAgncy(false, None)
 
     val eab = Eab(
       EabData(
@@ -67,7 +67,7 @@ class EabResdEstAgncySpec extends PlaySpec {
     )
 
     "serialise eabresdestagency model " in {
-      EabResdEstAgncy.format.writes(eabResdEstModel) must be(Json.obj("regWithRedressScheme"->false))
+      EabResdEstAgncy.format.writes(eabResdEstModel) must be(Json.obj("regWithRedressScheme" -> false))
     }
 
     "successfully convert frontend eab to des model" in {

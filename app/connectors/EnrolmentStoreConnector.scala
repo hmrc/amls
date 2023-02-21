@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,15 +39,13 @@ class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: Http
                                         private[connectors] val mac: AuditConnector,
                                         private[connectors] val config: ApplicationConfig) extends HttpResponseHelper with Logging {
 
-  def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
-                                                                            headerCarrier: HeaderCarrier,
+  def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {
     addKnownFactsFunction(enrolmentKey, knownFacts)
   }
 
-  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
-                                                                            headerCarrier: HeaderCarrier,
-                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
+  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit headerCarrier: HeaderCarrier,
+                                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
 
     val url = s"${config.enrolmentStoreUrl}/tax-enrolments/enrolments/${enrolmentKey.key}"
 

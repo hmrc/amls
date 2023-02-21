@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,17 @@ sealed trait ExpectedBusinessTurnover
 object ExpectedBusinessTurnover {
 
   case object First extends ExpectedBusinessTurnover
+
   case object Second extends ExpectedBusinessTurnover
+
   case object Third extends ExpectedBusinessTurnover
+
   case object Fourth extends ExpectedBusinessTurnover
+
   case object Fifth extends ExpectedBusinessTurnover
+
   case object Sixth extends ExpectedBusinessTurnover
+
   case object Seventh extends ExpectedBusinessTurnover
 
   implicit val jsonReads = {
@@ -56,7 +62,7 @@ object ExpectedBusinessTurnover {
     case Seventh => Json.obj("expectedBusinessTurnover" -> "07")
   }
 
-  def conv(activityDtls: BusinessActivityDetails) : Option[ExpectedBusinessTurnover] = {
+  def conv(activityDtls: BusinessActivityDetails): Option[ExpectedBusinessTurnover] = {
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
       case Some(data) => data.otherBusActivitiesCarriedOut match {
         case Some(other) => other.anticipatedTotBusinessTurnover
@@ -68,15 +74,15 @@ object ExpectedBusinessTurnover {
 
   implicit def convertTurnover(to: String): Option[ExpectedBusinessTurnover] = {
 
-      to match {
-        case "£0-£15k" => Some(First)
-        case "£15k-50k" => Some(Second)
-        case "£50k-£100k" => Some(Third)
-        case "£100k-£250k" => Some(Fourth)
-        case "£250k-£1m" => Some(Fifth)
-        case "£1m-10m" => Some(Sixth)
-        case "£10m+" => Some(Seventh)
-        case  _ => None
-      }
+    to match {
+      case "£0-£15k" => Some(First)
+      case "£15k-50k" => Some(Second)
+      case "£50k-£100k" => Some(Third)
+      case "£100k-£250k" => Some(Fourth)
+      case "£250k-£1m" => Some(Fifth)
+      case "£1m-10m" => Some(Sixth)
+      case "£10m+" => Some(Seventh)
+      case _ => None
     }
+  }
 }

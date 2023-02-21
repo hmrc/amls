@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,15 +72,9 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
 
       "successfully evaluate api5 and api6 data BusinessReferencesAll" in {
 
-        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          false,
-          None)
+        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, false, None)
 
-        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          false,
-          None)
+        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, false, None)
 
         viewBusinessReferencesAll.equals(desBusinessReferencesAll) must be(true)
 
@@ -88,15 +82,9 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
 
       "successfully evaluate api5 and api6 data BusinessReferencesAll when data is changed" in {
 
-        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          false,
-          None)
+        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, false, None)
 
-        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          true,
-          Some("123456789456321"))
+        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, true, Some("123456789456321"))
 
         viewBusinessReferencesAll.equals(desBusinessReferencesAll) must be(false)
 
@@ -104,15 +92,9 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
 
       "successfully evaluate api5 and api6 data BusinessReferencesAll when data is changed1" in {
 
-        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          true,
-          Some("123212312456877"))
+        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, true, Some("123212312456877"))
 
-        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          true,
-          Some("123456789456321"))
+        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, true, Some("123456789456321"))
 
         viewBusinessReferencesAll.equals(desBusinessReferencesAll) must be(false)
 
@@ -120,15 +102,9 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
 
       "successfully evaluate api5 and api6 data BusinessReferencesAll when data is changed2" in {
 
-        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(true,
-          None,
-          true,
-          Some("123212312456877"))
+        val viewBusinessReferencesAll = PreviouslyRegisteredMLRView(true, None, true, Some("123212312456877"))
 
-        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false,
-          None,
-          true,
-          Some("123456789456321"))
+        val desBusinessReferencesAll = PreviouslyRegisteredMLRView(false, None, true, Some("123456789456321"))
 
         viewBusinessReferencesAll.equals(desBusinessReferencesAll) must be(false)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,9 @@ package models.des
 import models.des.aboutyou.AboutYouRelease7
 import play.api.libs.json._
 
-case class ExtraFields(declaration: Declaration,
-                       filingIndividual: AboutYouRelease7,
-                       etmpFields: Option[EtmpFields]) {
+case class ExtraFields(declaration: Declaration, filingIndividual: AboutYouRelease7, etmpFields: Option[EtmpFields]) {
 
-  def setEtmpFields(viewEtmpFields: Option[EtmpFields]) : ExtraFields = {
+  def setEtmpFields(viewEtmpFields: Option[EtmpFields]): ExtraFields = {
     this.copy(etmpFields = viewEtmpFields)
   }
 }

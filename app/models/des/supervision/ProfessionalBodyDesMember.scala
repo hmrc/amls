@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,13 @@ package models.des.supervision
 import models.fe.supervision.{ProfessionalBodyMemberNo, ProfessionalBodyMemberYes, Supervision}
 import play.api.libs.json.Json
 
-case class ProfessionalBodyDesMember (professionalBodyMember: Boolean,
-                                      professionalBodyDetails: Option[MemberOfProfessionalBody]
-                                     )
+case class ProfessionalBodyDesMember(professionalBodyMember: Boolean, professionalBodyDetails: Option[MemberOfProfessionalBody])
 
 object ProfessionalBodyDesMember {
 
-  implicit val format =  Json.format[ProfessionalBodyDesMember]
+  implicit val format = Json.format[ProfessionalBodyDesMember]
 
-  implicit def conv(supervision: Supervision) : Option[ProfessionalBodyDesMember] = {
+  implicit def conv(supervision: Supervision): Option[ProfessionalBodyDesMember] = {
     (supervision.professionalBodyMember, supervision.professionalBodies) match {
       case (Some(ProfessionalBodyMemberYes), Some(businessTypes)) => Some(ProfessionalBodyDesMember(true, businessTypes))
       case (Some(ProfessionalBodyMemberNo), _) => Some(ProfessionalBodyDesMember(false, None))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,15 +61,15 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
 
 
   private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
-    case ex@HttpStatusException(BAD_REQUEST, _) => {
+    case ex @ HttpStatusException(BAD_REQUEST, _) => {
       ex.jsonBody map {
         case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
           amlsRegistrationNumberRegex
             .findFirstIn(body.reason)
             .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
-            amlsRegNo => {
-                  logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
-                  failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
+              amlsRegNo => {
+                logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
+                failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
             }
         case body =>
@@ -77,7 +77,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
       }
     }.getOrElse(Future.failed(ex))
 
-    case e@HttpStatusException(status, Some(body)) =>
+    case e @ HttpStatusException(status, Some(body)) =>
       logger.warn(s" - Status: $status, Message: $body")
       Future.failed(e)
   }

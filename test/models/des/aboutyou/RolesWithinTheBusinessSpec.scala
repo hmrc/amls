@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,7 @@ class RolesWithinTheBusinessSpec extends PlaySpec with MockitoSugar {
 
       val frontendModel = RoleWithinBusiness(Set.empty)
 
-      val desModel = RolesWithinBusiness(
-        false, false, false, false, false, false, false, false, None
-      )
+      val desModel = RolesWithinBusiness(false, false, false, false, false, false, false, false, None)
 
       RolesWithinBusiness.convertWithinBusiness(frontendModel) must be(desModel)
 
@@ -40,9 +38,7 @@ class RolesWithinTheBusinessSpec extends PlaySpec with MockitoSugar {
 
       val frontendModel = RoleWithinBusiness(Set(BeneficialShareholder))
 
-      val desModel = RolesWithinBusiness(
-        true, false, false, false, false, false, false, false, None
-      )
+      val desModel = RolesWithinBusiness(true, false, false, false, false, false, false, false, None)
 
       RolesWithinBusiness.convertWithinBusiness(frontendModel) must be(desModel)
 
@@ -60,9 +56,7 @@ class RolesWithinTheBusinessSpec extends PlaySpec with MockitoSugar {
         DesignatedMember,
         Other("Some other text")))
 
-      val desModel = RolesWithinBusiness(
-        true, true, true, true, true, true, true, true, Some("Some other text")
-      )
+      val desModel = RolesWithinBusiness(true, true, true, true, true, true, true, true, Some("Some other text"))
 
       RolesWithinBusiness.convertWithinBusiness(frontendModel) must be(desModel)
 

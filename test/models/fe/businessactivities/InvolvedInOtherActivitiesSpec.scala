@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an `Yes` value" in {
 
-      val json = Json.obj("involvedInOther" -> true, "details" ->"test")
+      val json = Json.obj("involvedInOther" -> true, "details" -> "test")
 
       Json.fromJson[InvolvedInOther](json) must
         be(JsSuccess(InvolvedInOtherYes("test"), JsPath \ "details"))
@@ -65,7 +65,7 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with MockitoSugar {
   }
 
   "convert des to frontend model successfully when involved in other is false with other value" in {
-    val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("involve in other text","","99999")))))
+    val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("involve in other text", "", "99999")))))
     InvolvedInOther.conv(desModel) must be(Some(InvolvedInOtherYes("involve in other text")))
   }
 

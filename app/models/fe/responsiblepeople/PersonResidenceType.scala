@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,7 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.NationalityDetails
 import play.api.libs.json.{Reads, Writes}
 
-case class PersonResidenceType(
-                                isUKResidence: ResidenceType,
-                                countryOfBirth: String,
-                                nationality: String
-                              )
+case class PersonResidenceType(isUKResidence: ResidenceType, countryOfBirth: String, nationality: String)
 
 object PersonResidenceType {
 
@@ -58,8 +54,8 @@ object PersonResidenceType {
     details.idDetails match {
       case Some(idDetail) => {
 
-        val ukResidence:Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
-        val nonUKResidence:Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
+        val ukResidence: Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
+        val nonUKResidence: Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
 
         val residenceType = details.areYouUkResident match {
           case true => ukResidence

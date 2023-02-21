@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
         case Some(_) => {
           Json.fromJson[DeregisterSubscriptionRequest](request.body) match {
-            case JsSuccess(body,_) =>
+            case JsSuccess(body, _) =>
               deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, body) map {
                 response =>
                   Ok(Json.toJson(response))

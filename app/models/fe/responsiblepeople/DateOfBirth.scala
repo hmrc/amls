@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ object DateOfBirth {
       idDetail.dateOfBirth
     )
 
-    if(!ukDob.isEmpty) {
+    if (!ukDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))
     } else if (!nonUkDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(nonUkDob.getOrElse(""))))

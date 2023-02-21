@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.fe.hvd
 
 import play.api.libs.json._
-import models.des.hvd.{Hvd=> DesHvd}
+import models.des.hvd.{Hvd => DesHvd}
 
 sealed trait PercentageOfCashPaymentOver15000
 
@@ -29,9 +29,13 @@ object PercentageOfCashPaymentOver15000 {
   val `hundred` = 100
 
   case object First extends PercentageOfCashPaymentOver15000
+
   case object Second extends PercentageOfCashPaymentOver15000
+
   case object Third extends PercentageOfCashPaymentOver15000
+
   case object Fourth extends PercentageOfCashPaymentOver15000
+
   case object Fifth extends PercentageOfCashPaymentOver15000
 
   implicit val jsonReads = {

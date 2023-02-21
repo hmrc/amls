@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,22 @@ import utils.CommonMethods
 
 sealed trait BusinessActivity
 
-object BusinessActivity{
+object BusinessActivity {
 
   case object AccountancyServices extends BusinessActivity
+
   case object ArtMarketParticipant extends BusinessActivity
-  case object BillPaymentServices extends  BusinessActivity
+
+  case object BillPaymentServices extends BusinessActivity
+
   case object EstateAgentBusinessService extends BusinessActivity
+
   case object HighValueDealing extends BusinessActivity
+
   case object MoneyServiceBusiness extends BusinessActivity
+
   case object TrustAndCompanyServices extends BusinessActivity
+
   case object TelephonePaymentService extends BusinessActivity
 
   implicit val jsonActivityReads: Reads[BusinessActivity] = Reads {
@@ -58,20 +65,19 @@ object BusinessActivity{
 }
 
 
-
-case class WhatDoesYourBusinessDo(activities : Set[BusinessActivity], dateOfChange: Option[String] = None)
+case class WhatDoesYourBusinessDo(activities: Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 object WhatDoesYourBusinessDo {
   implicit val format = Json.format[WhatDoesYourBusinessDo]
 
   def convMsb(msb: Msb): Option[BusinessActivity] = {
     msb match {
-      case Msb(false,false,false,false,false) => None
-      case Msb(_,_,_,_,_) => Some(BusinessActivity.MoneyServiceBusiness)
+      case Msb(false, false, false, false, false) => None
+      case Msb(_, _, _, _, _) => Some(BusinessActivity.MoneyServiceBusiness)
     }
   }
 
-  implicit def conv(agentPremises: AgentPremises) : WhatDoesYourBusinessDo = {
+  implicit def conv(agentPremises: AgentPremises): WhatDoesYourBusinessDo = {
 
     val businessActivities = Set(CommonMethods.getSpecificType[BusinessActivity](agentPremises.asp.asp, BusinessActivity.AccountancyServices),
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.bpsp.bpsp, BusinessActivity.BillPaymentServices),
@@ -86,7 +92,7 @@ object WhatDoesYourBusinessDo {
     WhatDoesYourBusinessDo(businessActivities)
   }
 
-  implicit def conv(ownPremises: OwnBusinessPremisesDetails) : WhatDoesYourBusinessDo = {
+  implicit def conv(ownPremises: OwnBusinessPremisesDetails): WhatDoesYourBusinessDo = {
 
     val businessActivities = Set(CommonMethods.getSpecificType[BusinessActivity](ownPremises.asp.asp, BusinessActivity.AccountancyServices),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.bpsp.bpsp, BusinessActivity.BillPaymentServices),

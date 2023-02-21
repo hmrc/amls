@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class HvdFromUnseenCustDetailsSpec extends PlaySpec {
       )
 
       HvdFromUnseenCustDetails.conv(fe) must be(
-        Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo"))))))
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))
     }
 
     "successfully convert frontend model to des model when frontend model is none" in {
@@ -39,7 +39,7 @@ class HvdFromUnseenCustDetailsSpec extends PlaySpec {
       )
 
       HvdFromUnseenCustDetails.conv(fe) must be(
-        Some(HvdFromUnseenCustDetails(false,None)))
+        Some(HvdFromUnseenCustDetails(false, None)))
     }
 
     "successfully convert frontend model to des model when frontend model is none1" in {

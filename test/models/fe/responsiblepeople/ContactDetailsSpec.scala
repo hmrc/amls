@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class ContactDetailsSpec extends PlaySpec with MockitoSugar {
 
     "convert des model to frontend model successfully" in {
 
-      val desModel = ContactCommDetails("adg@gmail.com","123456789",Some("1234567788"))
+      val desModel = ContactCommDetails("adg@gmail.com", "123456789", Some("1234567788"))
       ContactDetails.conv(Some(desModel)) must be(Some(ContactDetails("123456789", "adg@gmail.com")))
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("AD"),
         Some("AD")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence,"AD","AD"))
+      val feModel = Some(PersonResidenceType(NonUKResidence, "AD", "AD"))
       PersonResidenceType.conv(desModel) must be(feModel)
     }
 
@@ -76,14 +76,14 @@ class PersonResidenceTypeSpec extends PlaySpec {
             true,
             Some(PassportDetail(
               false,
-              PassportNum(None,Some("AA1111111"))
+              PassportNum(None, Some("AA1111111"))
             ))
           ))
         )),
         Some("AA"),
         Some("BB")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence,"AA","BB"))
+      val feModel = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }
@@ -103,7 +103,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("AA"),
         Some("BB")
       ))
-      val feModel = Some(PersonResidenceType(NonUKResidence,"AA","BB"))
+      val feModel = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }
@@ -117,7 +117,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
         Some("JJ"),
         Some("GG")
       ))
-      val feModel = Some(PersonResidenceType(UKResidence("AA1111111"),"JJ","GG"))
+      val feModel = Some(PersonResidenceType(UKResidence("AA1111111"), "JJ", "GG"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }

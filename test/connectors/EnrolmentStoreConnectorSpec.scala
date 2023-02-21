@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
         mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "")))
 
-        whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
+        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual BAD_REQUEST
             body.getOrElse("").isEmpty mustEqual true
@@ -93,7 +93,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
         mockResponse(Future.failed(new Exception("message")))
 
-        whenReady (connector.addKnownFacts(enrolKey, knownFacts).failed) {
+        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual INTERNAL_SERVER_ERROR
             body mustEqual Some("message")

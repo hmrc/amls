@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,23 @@
 
 package models.payments
 
+import models.payapi.PaymentStatus.Created
+import models.payapi.{Payment => PayApiPayment, _}
+import org.bson.types.ObjectId
+import play.api.libs.json.Json
+
 import java.time.LocalDateTime
 
-import models.payapi.PaymentStatuses.Created
-import models.payapi.{Payment => PayApiPayment, _}
-import play.api.libs.json.Json
-import reactivemongo.bson.BSONObjectID
-import utils.EnumFormat
-
 case class Payment(_id: String,
-                    amlsRefNo: String,
-                    safeId: String,
-                    reference: String,
-                    description: Option[String],
-                    amountInPence: Int,
-                    status: PaymentStatus,
-                    createdAt: LocalDateTime,
-                    isBacs: Option[Boolean] = None,
-                    updatedAt: Option[LocalDateTime] = None
+                   amlsRefNo: String,
+                   safeId: String,
+                   reference: String,
+                   description: Option[String],
+                   amountInPence: Int,
+                   status: PaymentStatus,
+                   createdAt: LocalDateTime,
+                   isBacs: Option[Boolean] = None,
+                   updatedAt: Option[LocalDateTime] = None
                   )
 
 object Payment {
@@ -51,7 +50,7 @@ object Payment {
     )
 
   def apply(bacsPaymentRequest: CreateBacsPaymentRequest): Payment =
-    Payment(BSONObjectID.generate.stringify,
+    Payment(new ObjectId().toString,
       bacsPaymentRequest.amlsReference,
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,
@@ -62,6 +61,5 @@ object Payment {
       isBacs = Some(true)
     )
 
-  implicit val statusFormat = EnumFormat(PaymentStatuses)
   implicit val format = Json.format[Payment]
 }

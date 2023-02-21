@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,8 @@ import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetailsR7
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class WhichCurrencies(currencies: Seq[String],
-                           usesForeignCurrencies: Option[Boolean],
-                           bankMoneySource: Option[BankMoneySource],
-                           wholesalerMoneySource: Option[WholesalerMoneySource],
-                           customerMoneySource: Boolean)
+case class WhichCurrencies(currencies: Seq[String], usesForeignCurrencies: Option[Boolean], bankMoneySource: Option[BankMoneySource],
+                           wholesalerMoneySource: Option[WholesalerMoneySource], customerMoneySource: Boolean)
 
 object WhichCurrencies {
 

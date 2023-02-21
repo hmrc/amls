@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,8 @@ package models.des.tradingpremises
 
 import play.api.libs.json.Json
 
-case class Address (addressLine1: String,
-                    addressLine2 : String,
-                    addressLine3 : Option[String],
-                    addressLine4 : Option[String],
-                    country : String,
-                    postcode : Option[String],
-                    addressChangeDate: Option[String] = None
-                   )
+case class Address(addressLine1: String, addressLine2: String, addressLine3: Option[String], addressLine4: Option[String], country: String,
+                   postcode: Option[String], addressChangeDate: Option[String] = None)
 
 object Address {
   implicit val format = Json.format[Address]
@@ -33,8 +27,8 @@ object Address {
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 
   private def convertEmptyOrInvalidToNone(str: String) = {
-    (str.nonEmpty,str.matches(postcodeRegex))   match {
-      case (true,true) => Some(str)
+    (str.nonEmpty, str.matches(postcodeRegex)) match {
+      case (true, true) => Some(str)
       case _ => None
     }
   }
@@ -44,9 +38,10 @@ object Address {
   private def removeAmpersands(address: Address): Address = {
     def removeFromLine(addressLine: Option[String]) = {
       addressLine map {
-        line => line.replaceAll("&","and").take(maxAddressLineLength)
+        line => line.replaceAll("&", "and").take(maxAddressLineLength)
       }
     }
+
     address.copy(addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
       addressLine2 = removeFromLine(Some(address.addressLine2)).getOrElse(""),
       addressLine3 = removeFromLine(address.addressLine3),

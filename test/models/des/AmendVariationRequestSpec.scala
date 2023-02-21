@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,6 +103,7 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       }
     }
   }
+
   def feSubscriptionReq = {
     import models.fe.SubscriptionRequest
     SubscriptionRequest(
@@ -163,6 +164,7 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
   val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
   val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
+
   def newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
 
   def updateAmendVariationRequest = AmendVariationRequest(

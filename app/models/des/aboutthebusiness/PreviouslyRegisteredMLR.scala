@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails.{BusinessDetails, PreviouslyRegisteredNo, PreviouslyRegisteredYes}
 import play.api.libs.json.Json
 
-case class PreviouslyRegisteredMLR(amlsRegistered:Boolean,
-                                   mlrRegNumber8Long:Option[String],
-                                   prevRegForMlr:Boolean,
-                                   prevMlrRegNumber:Option[String]
+case class PreviouslyRegisteredMLR(amlsRegistered: Boolean,
+                                   mlrRegNumber8Long: Option[String],
+                                   prevRegForMlr: Boolean,
+                                   prevMlrRegNumber: Option[String]
                                   )
 
-object PreviouslyRegisteredMLR{
+object PreviouslyRegisteredMLR {
   implicit val format = Json.format[PreviouslyRegisteredMLR]
 
-  implicit def convert(businessDetails:BusinessDetails):Option[PreviouslyRegisteredMLR] =
+  implicit def convert(businessDetails: BusinessDetails): Option[PreviouslyRegisteredMLR] =
     businessDetails.previouslyRegistered match {
       case x: PreviouslyRegisteredYes
         if (x.value.getOrElse("").length == 15) => Some(PreviouslyRegisteredMLR(false, None, true, x.value))

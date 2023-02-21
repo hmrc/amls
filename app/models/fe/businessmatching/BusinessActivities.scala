@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ object BusinessActivities {
 
   implicit val formats = Json.format[BusinessActivities]
 
-  def getActivity[A  <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] = {
+  def getActivity[A <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] = {
     if (present) {
       Some(activity)
     } else {
@@ -81,14 +81,14 @@ object BusinessActivities {
   implicit def conv(activities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
     activities match {
       case Some(mlrActivitiesAppliedFor) => BusinessActivities(Set(
-          getActivity(MoneyServiceBusiness, mlrActivitiesAppliedFor.msb),
-          getActivity(HighValueDealing, mlrActivitiesAppliedFor.hvd),
-          getActivity(AccountancyServices, mlrActivitiesAppliedFor.asp),
-          getActivity(TrustAndCompanyServices, mlrActivitiesAppliedFor.tcsp),
-          getActivity(EstateAgentBusinessService, mlrActivitiesAppliedFor.eab),
-          getActivity(BillPaymentServices, mlrActivitiesAppliedFor.bpsp),
-          getActivity(TelephonePaymentService, mlrActivitiesAppliedFor.tditpsp),
-          getActivity(ArtMarketParticipant, mlrActivitiesAppliedFor.amp))
+        getActivity(MoneyServiceBusiness, mlrActivitiesAppliedFor.msb),
+        getActivity(HighValueDealing, mlrActivitiesAppliedFor.hvd),
+        getActivity(AccountancyServices, mlrActivitiesAppliedFor.asp),
+        getActivity(TrustAndCompanyServices, mlrActivitiesAppliedFor.tcsp),
+        getActivity(EstateAgentBusinessService, mlrActivitiesAppliedFor.eab),
+        getActivity(BillPaymentServices, mlrActivitiesAppliedFor.bpsp),
+        getActivity(TelephonePaymentService, mlrActivitiesAppliedFor.tditpsp),
+        getActivity(ArtMarketParticipant, mlrActivitiesAppliedFor.amp))
         .flatten)
       case _ => BusinessActivities(Set.empty)
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,7 @@ class TcspTypesSpec extends PlaySpec {
     "Json Validation" must {
 
       "successfully validate given values with option CompanyDirectorEtc" in {
-        val json =  Json.obj(
-          "serviceProviders" -> Seq("01","02","03","04", "05")
-        )
+        val json = Json.obj("serviceProviders" -> Seq("01", "02", "03", "04", "05"))
 
         Json.fromJson[TcspTypes](json) must
           be(JsSuccess(Services))
