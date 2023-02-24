@@ -18,7 +18,10 @@ package models
 
 import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import play.custom.JsPathSupport._
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
@@ -93,5 +96,36 @@ object Fees {
       LocalDateTime.now(UTC))
   }
 
-  implicit val format: OFormat[Fees] = Json.format[Fees]
+  implicit lazy val reads: Reads[Fees] =
+    (
+      (__ \ "responseType").read[ResponseType] and
+        (__ \ "amlsReferenceNumber").read[String] and
+        (__ \ "registrationFee").read[BigDecimal] and
+        (__ \ "fpFee").readNullable[BigDecimal] and
+        (__ \ "premiseFee").read[BigDecimal] and
+        (__ \ "totalFees").read[BigDecimal] and
+        (__ \ "paymentReference").readNullable[String] and
+        (__ \ "difference").readNullable[BigDecimal] and
+        (__ \ "approvalCheckFeeRate").readNullable[BigDecimal] and
+        (__ \ "approvalCheckFee").readNullable[BigDecimal] and
+        (__ \ "createdAt").readLocalDateTime
+      ) (Fees.apply _)
+
+
+  implicit lazy val writes: OWrites[Fees] =
+    (
+      (__ \ "responseType").write[ResponseType] and
+        (__ \ "amlsReferenceNumber").write[String] and
+        (__ \ "registrationFee").write[BigDecimal] and
+        (__ \ "fpFee").writeNullable[BigDecimal] and
+        (__ \ "premiseFee").write[BigDecimal] and
+        (__ \ "totalFees").write[BigDecimal] and
+        (__ \ "paymentReference").writeNullable[String] and
+        (__ \ "difference").writeNullable[BigDecimal] and
+        (__ \ "approvalCheckFeeRate").writeNullable[BigDecimal] and
+        (__ \ "approvalCheckFee").writeNullable[BigDecimal] and
+        (__ \ "createdAt").write[LocalDateTime](MongoJavatimeFormats.localDateTimeWrites)
+      ) (unlift(Fees.unapply))
+
+  implicit val format: OFormat[Fees] = OFormat(reads, writes)
 }
