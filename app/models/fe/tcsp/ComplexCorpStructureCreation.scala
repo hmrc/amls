@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,17 @@ package models.fe.tcsp
 import models.des.SubscriptionView
 
 sealed trait ComplexCorpStructureCreation
-
 case object ComplexCorpStructureCreationYes extends ComplexCorpStructureCreation
-
 case object ComplexCorpStructureCreationNo extends ComplexCorpStructureCreation
 
 object ComplexCorpStructureCreation {
-
   import play.api.libs.json._
   import play.api.libs.json.Reads._
 
-  implicit val jsonReads: Reads[ComplexCorpStructureCreation] = {
+  implicit val jsonReads: Reads[ComplexCorpStructureCreation] =  {
     (__ \ "complexCorpStructureCreation").read[Boolean] map {
       case true => ComplexCorpStructureCreationYes
-      case false => ComplexCorpStructureCreationNo
+      case false  => ComplexCorpStructureCreationNo
     }
   }
 
@@ -44,7 +41,7 @@ object ComplexCorpStructureCreation {
   implicit def conv(view: SubscriptionView): Option[ComplexCorpStructureCreation] = {
     view.businessActivities.tcspServicesOffered.map(b => b.trustOrCompFormAgent) match {
       case Some(true) =>
-        (view.tcspTrustCompFormationAgt.map(b => b.complexCorpStructureCreation)) match {
+        (view.tcspTrustCompFormationAgt.map(b =>b. complexCorpStructureCreation)) match {
           case Some(true) => Some(ComplexCorpStructureCreationYes)
           case _ => Some(ComplexCorpStructureCreationNo)
         }

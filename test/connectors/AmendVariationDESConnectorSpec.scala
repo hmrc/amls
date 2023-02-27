@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](eqTo(url), any(), any())(any(), any(), any(),any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -158,12 +158,12 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       } thenReturn Future.successful(auditResult)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) { _ =>
-        val subscriptionEvent = AmendmentEvent(amlsRegistrationNumber, testRequest, successModel)
-        verify(testConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
-        val capturedEvent: ExtendedDataEvent = captor.getValue
-        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-        capturedEvent.auditType mustEqual subscriptionEvent.auditType
-        capturedEvent.detail mustEqual subscriptionEvent.detail
+          val subscriptionEvent = AmendmentEvent(amlsRegistrationNumber, testRequest, successModel)
+          verify(testConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent: ExtendedDataEvent = captor.getValue
+          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+          capturedEvent.auditType mustEqual subscriptionEvent.auditType
+          capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
 

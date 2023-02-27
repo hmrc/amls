@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,22 +36,15 @@ sealed trait TcspService {
 }
 
 case object PhonecallHandling extends TcspService
-
 case object EmailHandling extends TcspService
-
 case object EmailServer extends TcspService
-
 case object SelfCollectMailboxes extends TcspService
-
 case object MailForwarding extends TcspService
-
 case object Receptionist extends TcspService
-
 case object ConferenceRooms extends TcspService
-
 case class Other(details: String) extends TcspService
 
-case class ProvidedServices(services: Set[TcspService])
+case class  ProvidedServices(services: Set[TcspService])
 
 object ProvidedServices {
 

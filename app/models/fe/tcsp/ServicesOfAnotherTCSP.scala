@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ object ServicesOfAnotherTCSP {
 
   implicit val jsonWrites = Writes[ServicesOfAnotherTCSP] {
     case ServicesOfAnotherTCSPYes(value) => Json.obj(
-      "servicesOfAnotherTCSP" -> true,
-      "mlrRefNumber" -> value
+          "servicesOfAnotherTCSP" -> true,
+          "mlrRefNumber" -> value
     )
     case ServicesOfAnotherTCSPNo => Json.obj("servicesOfAnotherTCSP" -> false)
 
@@ -62,7 +62,7 @@ object ServicesOfAnotherTCSP {
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
-    desView.tcspAll match {
+    desView.tcspAll match{
       case Some(tcsp) => tcsp.anotherTcspServiceProvider match {
         case true if mlrExists(tcsp.tcspMlrRef) =>
           Some(ServicesOfAnotherTCSPYes(mlrNo(tcsp.tcspMlrRef)))

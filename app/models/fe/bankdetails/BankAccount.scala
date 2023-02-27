@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ sealed trait Account
 
 object Account {
 
-  implicit val jsonReads: Reads[Account] = {
+ implicit val jsonReads: Reads[Account] = {
     import play.api.libs.functional.syntax._
     import play.api.libs.json._
     (__ \ "isUK").read[Boolean] flatMap {
@@ -34,8 +34,8 @@ object Account {
 
       case false =>
         (__ \ "isIBAN").read[Boolean] flatMap {
-          case true => (__ \ "IBANNumber").read[String] fmap NonUKIBANNumber.apply
-          case false => (__ \ "nonUKAccountNumber").read[String] fmap NonUKAccountNumber.apply
+          case true => (__ \ "IBANNumber").read[String] fmap  NonUKIBANNumber.apply
+          case false =>  (__ \ "nonUKAccountNumber").read[String] fmap  NonUKAccountNumber.apply
         }
     }
   }
@@ -63,7 +63,7 @@ object Account {
 
   implicit def convBankAccount(bankDtls: BankAccountView): Account = {
 
-    bankDtls.bankAccountDetails match {
+     bankDtls.bankAccountDetails match {
       case ukAccountView(sortCode, accountNumber) => UKAccount(accountNumber, sortCode)
       case AccountNumberView(acctNumber) => NonUKAccountNumber(acctNumber)
       case IBANNumberView(iban) => NonUKIBANNumber(iban)
@@ -71,7 +71,10 @@ object Account {
   }
 }
 
-case class UKAccount(accountNumber: String, sortCode: String) extends Account
+case class UKAccount(
+                      accountNumber: String,
+                      sortCode: String
+                    ) extends Account
 
 sealed trait NonUKAccount extends Account
 

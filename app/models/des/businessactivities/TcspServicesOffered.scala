@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,35 @@ package models.des.businessactivities
 import models.fe.tcsp._
 import play.api.libs.json.Json
 
-case class TcspServicesOffered(nomineeShareholders: Boolean, trusteeProvider: Boolean, regOffBusinessAddrVirtualOff: Boolean,
-                               compDirSecPartnerProvider: Boolean, trustOrCompFormAgent: Boolean)
+case class TcspServicesOffered (
+                                nomineeShareholders : Boolean,
+                                trusteeProvider : Boolean,
+                                regOffBusinessAddrVirtualOff : Boolean,
+                                compDirSecPartnerProvider : Boolean,
+                                trustOrCompFormAgent : Boolean
+                              )
 
 object TcspServicesOffered {
 
   implicit val format = Json.format[TcspServicesOffered]
 
-  implicit def covn(tcsp: Option[Tcsp]): Option[TcspServicesOffered] = {
+  implicit def covn(tcsp: Option[Tcsp]): Option[TcspServicesOffered]  = {
     tcsp match {
-      case Some(data) => data.tcspTypes.fold[Set[ServiceProvider]](Set.empty)(x => x.serviceProviders)
+      case Some(data) => data.tcspTypes.fold[Set[ServiceProvider]](Set.empty)(x=> x.serviceProviders)
       case _ => None
     }
   }
 
-  implicit def conv1(serviceProviders: Set[ServiceProvider]): Option[TcspServicesOffered] = {
+  implicit def conv1(serviceProviders : Set[ServiceProvider]) : Option[TcspServicesOffered] = {
 
-    val tcspServicesOffered = serviceProviders.foldLeft[TcspServicesOffered](TcspServicesOffered(false, false, false, false, false))((result, service) =>
-      service match {
-        case NomineeShareholdersProvider => result.copy(nomineeShareholders = true)
-        case TrusteeProvider => result.copy(trusteeProvider = true)
-        case RegisteredOfficeEtc => result.copy(regOffBusinessAddrVirtualOff = true)
-        case CompanyDirectorEtc => result.copy(compDirSecPartnerProvider = true)
-        case CompanyFormationAgent => result.copy(trustOrCompFormAgent = true)
-      })
+    val tcspServicesOffered = serviceProviders.foldLeft[TcspServicesOffered](TcspServicesOffered(false, false,false, false,false))((result, service) =>
+      service match  {
+      case NomineeShareholdersProvider => result.copy(nomineeShareholders = true)
+      case TrusteeProvider => result.copy(trusteeProvider = true)
+      case RegisteredOfficeEtc => result.copy(regOffBusinessAddrVirtualOff = true)
+      case CompanyDirectorEtc => result.copy(compDirSecPartnerProvider = true)
+      case CompanyFormationAgent => result.copy(trustOrCompFormAgent = true)
+    })
     Some(tcspServicesOffered)
   }
 }

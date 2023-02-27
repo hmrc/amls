@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,18 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
                                                private[connectors] val httpClient: HttpClient,
                                                private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-  def status(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier,
-                                             apiRetryHelper: ApiRetryHelper): Future[ReadStatusResponse] = {
+  def status(amlsRegistrationNumber: String)
+  (
+    implicit ec: ExecutionContext,
+    wr: Writes[ReadStatusResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[ReadStatusResponse] = {
     apiRetryHelper.doWithBackoff(() => statusFunction(amlsRegistrationNumber))
   }
 
   private def statusFunction(amlsRegistrationNumber: String)
-                            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
+            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
 
     val prefix = "[DESConnector][readstatus]"
     val bodyParser = JsonParsed[ReadStatusResponse]
@@ -59,7 +64,7 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
-    } flatMap {
+    }flatMap {
       case _ @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
         metrics.success(API9)
         audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))

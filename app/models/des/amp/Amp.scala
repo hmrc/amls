@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@ package models.des.amp
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Amp(transactionsAccptOvrThrshld: TransactionsAccptOvrThrshld,
-               sysAutoIdOfLinkedTransactions: Boolean,
-               ampPercentageTurnover: Int)
+case class Amp (  transactionsAccptOvrThrshld: TransactionsAccptOvrThrshld,
+                  sysAutoIdOfLinkedTransactions: Boolean,
+                  ampPercentageTurnover: Int)
 
-case class TransactionsAccptOvrThrshld(transactionsAccptOvrThrshldAnswer: Boolean,
-                                       dateOfTheFirst: Option[String])
+case class TransactionsAccptOvrThrshld ( transactionsAccptOvrThrshldAnswer: Boolean,
+                                         dateOfTheFirst: Option[String] )
 
 object Amp {
 
   implicit val format: OFormat[Amp] = Json.format[Amp]
 
-  def getPercentage(percentage: Option[String]): Int = {
+  def getPercentage(percentage:Option[String]): Int = {
     percentage match {
       case Some("zeroToTwenty") => 20
       case Some("twentyOneToForty") => 40
@@ -40,14 +40,15 @@ object Amp {
     }
   }
 
-  implicit def conv(ampOpt: Option[models.fe.amp.Amp]): Option[Amp] = {
-    ampOpt.map(amp => amp.data).map(amp => {
-      Amp(transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld(amp.soldOverThreshold,
-        amp.dateTransactionOverThreshold),
-        sysAutoIdOfLinkedTransactions = amp.identifyLinkedTransactions,
-        ampPercentageTurnover = getPercentage(amp.percentageExpectedTurnover)
-      )
-    })
+  implicit def conv(ampOpt: Option[models.fe.amp.Amp]): Option[Amp] =
+  {
+      ampOpt.map(amp => amp.data).map(amp => {
+        Amp( transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld( amp.soldOverThreshold,
+                                                                        amp.dateTransactionOverThreshold),
+             sysAutoIdOfLinkedTransactions = amp.identifyLinkedTransactions,
+             ampPercentageTurnover = getPercentage(amp.percentageExpectedTurnover)
+        )
+      })
   }
 }
 

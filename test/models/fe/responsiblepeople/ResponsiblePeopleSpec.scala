@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ trait ResponsiblePeopleValues {
     val approvalFlags = ApprovalFlags(Some(false), Some(true))
 
 
+
     val convertedModel: Option[List[ResponsiblePeople]] = Some(List(
       ResponsiblePeople(
         personName = Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
@@ -121,15 +122,14 @@ trait ResponsiblePeopleValues {
       )))
 
     val convertedModelPhase2: Option[List[ResponsiblePeople]] = convertedModel.map {
-      responsiblePersonSeq =>
-        List(
-          responsiblePersonSeq(0).copy(
-            approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
-          ),
-          responsiblePersonSeq(1).copy(
-            dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
-            approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false))
-          ))
+      responsiblePersonSeq => List(
+        responsiblePersonSeq(0).copy(
+          approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
+        ),
+        responsiblePersonSeq(1).copy(
+          dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+          approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false))
+        ))
     }
 
   }
@@ -206,7 +206,7 @@ trait ResponsiblePeopleValues {
     "dateOfBirth" -> Json.obj(
       "dateOfBirth" -> "2001-01-01"
     ),
-    "approvalFlags" -> Json.obj(
+    "approvalFlags"  -> Json.obj(
       "hasAlreadyPassedFitAndProper" -> false,
       "hasAlreadyPaidApprovalCheck" -> true
     ),

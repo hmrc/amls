@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,13 @@ import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
 import utils._
 
 object SubscriptionEvent {
-  def apply(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
-           (implicit hc: HeaderCarrier, reqW: Writes[SubscriptionRequest], resW: Writes[SubscriptionResponse]): ExtendedDataEvent = {
+  def apply
+  (safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest],
+   resW: Writes[SubscriptionResponse]
+  ): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,
       auditType = "applicationSubmitted",
@@ -42,8 +47,12 @@ object SubscriptionEvent {
 }
 
 object SubscriptionFailedEvent {
-  def apply(safeId: String, request: SubscriptionRequest, ex: HttpStatusException)
-           (implicit hc: HeaderCarrier, reqW: Writes[SubscriptionRequest]): ExtendedDataEvent = {
+  def apply
+  (safeId: String, request: SubscriptionRequest, ex: HttpStatusException)
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest]
+  ): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,
       auditType = "applicationSubmissionFailed",
@@ -57,8 +66,12 @@ object SubscriptionFailedEvent {
 }
 
 object SubscriptionValidationFailedEvent {
-  def apply(safeId: String, request: SubscriptionRequest, validationResults: Seq[JsObject])
-           (implicit hc: HeaderCarrier, reqW: Writes[SubscriptionRequest]): ExtendedDataEvent = {
+  def apply
+  (safeId: String, request: SubscriptionRequest, validationResults: Seq[JsObject])
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[SubscriptionRequest]
+  ): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,
       auditType = "applicationSubmissionFailedValidation",
@@ -73,13 +86,14 @@ object SubscriptionValidationFailedEvent {
 }
 
 object AmendmentEvent {
-  def apply(amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
-           (implicit hc: HeaderCarrier): ExtendedDataEvent = {
+  def apply
+  (amlsRegistrationNumber: String, request: AmendVariationRequest, response: AmendVariationResponse)
+  (implicit hc: HeaderCarrier): ExtendedDataEvent = {
 
     val inputAuditType = request.amlsMessageType match {
       case "Amendment" => "amendmentSubmitted"
       case "Variation" => "variationSubmitted"
-      case "Renewal" => "renewalSubmitted"
+      case "Renewal"  => "renewalSubmitted"
       case "Renewal Amendment" => "renewalAmendmentSubmitted"
       case _ => throw new Exception("Amls Message type is missing")
     }
@@ -104,13 +118,14 @@ object AmendmentEvent {
 }
 
 object AmendmentEventFailed {
-  def apply(amlsRegistrationNumber: String, request: AmendVariationRequest, ex: HttpStatusException)
-           (implicit hc: HeaderCarrier): ExtendedDataEvent = {
+  def apply
+  (amlsRegistrationNumber: String, request: AmendVariationRequest, ex: HttpStatusException)
+  (implicit hc: HeaderCarrier): ExtendedDataEvent = {
 
     val inputAuditType = request.amlsMessageType match {
       case "Amendment" => "amendmentFailed"
       case "Variation" => "variationFailed"
-      case "Renewal" => "renewalFailed"
+      case "Renewal"  => "renewalFailed"
       case "Renewal Amendment" => "renewalAmendmentfailed"
       case _ => throw new Exception("Amls Message type is missing")
     }
@@ -128,8 +143,12 @@ object AmendmentEventFailed {
 }
 
 object AmendVariationValidationFailedEvent {
-  def apply(amlsReferenceNumber: String, request: AmendVariationRequest, validationResults: Seq[JsObject])
-           (implicit hc: HeaderCarrier, reqW: Writes[AmendVariationRequest]) = {
+  def apply
+  (amlsReferenceNumber: String, request: AmendVariationRequest, validationResults: Seq[JsObject])
+  (implicit
+   hc: HeaderCarrier,
+   reqW: Writes[AmendVariationRequest]
+  ) = {
     ExtendedDataEvent(
       // NOTE: Use auditSource and auditType when searching splunk for failures.
       auditSource = AuditHelper.appName,
@@ -138,16 +157,18 @@ object AmendVariationValidationFailedEvent {
       detail = Json.toJson(hc.toAuditDetails()).as[JsObject] ++
         Json.obj(
           "request" -> request,
-          "validationResults" -> validationResults,
-          "amlsRefNo" -> amlsReferenceNumber
-        )
+        "validationResults" -> validationResults,
+        "amlsRefNo" -> amlsReferenceNumber
+      )
     )
   }
 }
 
 object WithdrawSubscriptionEvent {
-  def apply(amlsRegistrationNumber: String, request: WithdrawSubscriptionRequest, response: WithdrawSubscriptionResponse)
-           (implicit hc: HeaderCarrier): DataEvent =
+  def apply
+  (amlsRegistrationNumber: String, request: WithdrawSubscriptionRequest, response: WithdrawSubscriptionResponse)
+  (implicit
+   hc: HeaderCarrier): DataEvent =
     DataEvent(
       auditSource = AuditHelper.appName,
       auditType = "OutboundCall",
@@ -160,8 +181,10 @@ object WithdrawSubscriptionEvent {
 }
 
 object DeregisterSubscriptionEvent {
-  def apply(amlsRegistrationNumber: String, request: DeregisterSubscriptionRequest, response: DeregisterSubscriptionResponse)
-           (implicit hc: HeaderCarrier): DataEvent =
+  def apply
+  (amlsRegistrationNumber: String, request: DeregisterSubscriptionRequest, response: DeregisterSubscriptionResponse)
+  (implicit
+   hc: HeaderCarrier): DataEvent =
     DataEvent(
       auditSource = AuditHelper.appName,
       auditType = "OutboundCall",

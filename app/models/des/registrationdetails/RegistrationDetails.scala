@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,9 @@ package models.des.registrationdetails
 import play.api.libs.json._
 
 sealed trait OrganisationType
-
 case object Partnership extends OrganisationType
-
 case object LLP extends OrganisationType
-
 case object CorporateBody extends OrganisationType
-
 case object UnincorporatedBody extends OrganisationType
 
 object OrganisationType {
@@ -56,8 +52,7 @@ object OrganisationType {
 
 sealed trait OrganisationBodyDetails
 
-case class Organisation(organisationName: String, isAGroup: Option[Boolean] = None, organisationType: Option[OrganisationType] = None)
-  extends OrganisationBodyDetails
+case class Organisation(organisationName: String, isAGroup: Option[Boolean] = None, organisationType: Option[OrganisationType] = None) extends OrganisationBodyDetails
 
 object Organisation {
   implicit val format = Json.format[Organisation]
@@ -70,7 +65,6 @@ object Individual {
 }
 
 object OrganisationBodyDetails {
-
   import play.api.libs.json._
 
   implicit val reads: Reads[OrganisationBodyDetails] = {
@@ -91,7 +85,6 @@ object OrganisationBodyDetails {
 case class RegistrationDetails(isAnIndividual: Boolean, bodyDetails: OrganisationBodyDetails)
 
 object RegistrationDetails {
-
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
@@ -99,13 +92,13 @@ object RegistrationDetails {
     (
       (__ \ "isAnIndividual").read[Boolean] and
         __.read[OrganisationBodyDetails]
-      ) (RegistrationDetails.apply _)
+    )(RegistrationDetails.apply _)
   }
 
   implicit val writes: Writes[RegistrationDetails] = {
     (
       (__ \ "isAnIndividual").write[Boolean] and
-        __.write[OrganisationBodyDetails]
-      ) (unlift(RegistrationDetails.unapply))
+      __.write[OrganisationBodyDetails]
+      )(unlift(RegistrationDetails.unapply))
   }
 }

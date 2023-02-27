@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,13 @@ package models.des.responsiblepeople
 
 import play.api.libs.json.Json
 
-case class IdDetail(ukResident: Option[UkResident] = None, nonUkResident: Option[NonUkResident] = None, dateOfBirth: Option[String] = None)
+case class IdDetail( ukResident: Option[UkResident] = None,
+                     nonUkResident: Option[NonUkResident] = None,
+                     dateOfBirth: Option[String] = None
+                   )
 
 object IdDetail {
+
   implicit val format = Json.format[IdDetail]
+
 }

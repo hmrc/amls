@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import models.des.aboutthebusiness.Address
 import models.fe.businessactivities.{NonUkAccountantsAddress, UkAccountantsAddress}
 import play.api.libs.json.Json
 
-case class AdvisorNameAddress(name: String, tradingName: Option[String], address: Address)
+case class AdvisorNameAddress(name: String,
+                              tradingName: Option[String],
+                              address: Address)
 
-object AdvisorNameAddress {
+object AdvisorNameAddress{
   implicit val format = Json.format[AdvisorNameAddress]
 
   implicit def convert(accountant: models.fe.businessactivities.WhoIsYourAccountant): Option[AdvisorNameAddress] = {
@@ -30,10 +32,10 @@ object AdvisorNameAddress {
     Some(AdvisorNameAddress(accountant.accountantsName, accountant.accountantsTradingName, accountant.address))
   }
 
-  implicit def convert(address: models.fe.businessactivities.AccountantsAddress): Address = {
-    address match {
-      case UkAccountantsAddress(lin1, lin2, lin3, lin4, code) => Address(lin1, lin2, lin3, lin4, "GB", Some(code))
-      case NonUkAccountantsAddress(lin1, lin2, lin3, lin4, country) => Address(lin1, lin2, lin3, lin4, country, None)
+  implicit def convert(address: models.fe.businessactivities.AccountantsAddress): Address ={
+    address match{
+      case UkAccountantsAddress(lin1, lin2, lin3, lin4, code) => Address(lin1,lin2,lin3,lin4,"GB", Some(code))
+      case NonUkAccountantsAddress(lin1, lin2, lin3, lin4, country) => Address(lin1,lin2,lin3,lin4, country, None)
     }
   }
 }

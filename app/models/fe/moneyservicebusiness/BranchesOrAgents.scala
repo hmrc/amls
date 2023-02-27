@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package models.fe.moneyservicebusiness
 import models.des.msb.MsbAllDetails
 import play.api.libs.json.Json
 
-case class BranchesOrAgents(hasCountries: Boolean, countries: Option[Seq[String]])
+case class BranchesOrAgents(hasCountries:Boolean, countries: Option[Seq[String]])
 
 object BranchesOrAgents {
 

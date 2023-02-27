@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,24 @@ import play.api.libs.json._
 sealed trait BankAccountType
 
 case object PersonalAccount extends BankAccountType
-
 case object BelongsToBusiness extends BankAccountType
-
 case object BelongsToOtherBusiness extends BankAccountType
 
 object BankAccountType {
 
-  implicit val jsonReads: Reads[BankAccountType] = {
+  implicit val jsonReads : Reads[BankAccountType] = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "bankAccountType").read[String] flatMap {
       case "01" => Reads(_ => JsSuccess(PersonalAccount))
       case "02" => Reads(_ => JsSuccess(BelongsToBusiness))
       case "03" => Reads(_ => JsSuccess(BelongsToOtherBusiness))
       case _ =>
-        Reads(_ => JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites = Writes[BankAccountType] {
-    case PersonalAccount => Json.obj("bankAccountType" -> "01")
+    case PersonalAccount => Json.obj("bankAccountType"->"01")
     case BelongsToBusiness => Json.obj("bankAccountType" -> "02")
     case BelongsToOtherBusiness => Json.obj("bankAccountType" -> "03")
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Director"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Director"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -166,7 +173,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Partner"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Partner"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -181,7 +195,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Internal Accountant"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Internal Accountant"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -196,7 +217,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Sole Proprietor"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Sole Proprietor"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -206,13 +234,19 @@ class AboutYouRelease7Spec extends PlaySpec {
 
         AboutYouRelease7.convertToRelease7(oldModel) must be(release7Model)
       }
-
       "given a Nominated Officer" in {
 
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Nominated Officer"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Nominated Officer"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -227,7 +261,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Designated Member"), None, None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Designated Member"),
+          None,
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,
@@ -242,7 +283,14 @@ class AboutYouRelease7Spec extends PlaySpec {
         val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
         val employedWithinBusiness = false
-        val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Other"), Some("Some other text"), None, None)
+        val oldModel = Aboutyou(
+          individualDetails,
+          employedWithinBusiness,
+          Some("Other"),
+          Some("Some other text"),
+          None,
+          None
+        )
 
         val release7Model = AboutYouRelease7(individualDetails,
           employedWithinBusiness,

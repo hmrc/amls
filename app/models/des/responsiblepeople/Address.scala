@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,26 @@ package models.des.responsiblepeople
 
 import play.api.libs.json.Json
 
-case class Address (addressLine1: String, addressLine2 : String, addressLine3 : Option[String], addressLine4 : Option[String],
-                    country : String, postcode : Option[String])
+case class Address (addressLine1: String,
+                    addressLine2 : String,
+                    addressLine3 : Option[String],
+                    addressLine4 : Option[String],
+                    country : String,
+                    postcode : Option[String]
+                   )
 
 object Address {
   implicit val format = Json.format[Address]
 }
 
-case class AddressWithChangeDate(addressLine1: String, addressLine2 : String, addressLine3 : Option[String], addressLine4 : Option[String],
-                                 country : String, postcode : Option[String], addressChangeDate : Option[String] = None)
+case class AddressWithChangeDate(addressLine1: String,
+                                 addressLine2 : String,
+                                 addressLine3 : Option[String],
+                                 addressLine4 : Option[String],
+                                 country : String,
+                                 postcode : Option[String],
+                                 addressChangeDate : Option[String] = None
+                                )
 
 object AddressWithChangeDate {
   implicit val format = Json.format[AddressWithChangeDate]

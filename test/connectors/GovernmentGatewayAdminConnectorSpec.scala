@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
 
-class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
+class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator{
 
   trait Fixture {
 
@@ -64,7 +64,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
         testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.addKnownFacts(knownFacts)) {
+      whenReady (testConnector.addKnownFacts(knownFacts)) {
         _ mustEqual response
       }
     }
@@ -77,7 +77,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
         testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.addKnownFacts(knownFacts).failed) {
+      whenReady (testConnector.addKnownFacts(knownFacts).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
           body.getOrElse("").isEmpty mustEqual true
@@ -90,7 +90,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
         testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(testConnector.addKnownFacts(knownFacts).failed) {
+      whenReady (testConnector.addKnownFacts(knownFacts).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

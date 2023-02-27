@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,20 @@ import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
 
-case class AgentPremises(tradingName:String, businessAddress: Address, residential:Boolean, msb: Msb, hvd: Hvd, asp: Asp, tcsp: Tcsp,
-                         eab: Eab, bpsp: Bpsp, tditpsp: Tditpsp, amp: Amp, startDate : Option[String], sectorChangeDate: Option[String] = None)
+case class AgentPremises(tradingName:String,
+                         businessAddress: Address,
+                         residential:Boolean,
+                         msb: Msb,
+                         hvd: Hvd,
+                         asp: Asp,
+                         tcsp: Tcsp,
+                         eab: Eab,
+                         bpsp: Bpsp,
+                         tditpsp: Tditpsp,
+                         amp: Amp,
+                         startDate : Option[String],
+                         sectorChangeDate: Option[String] = None
+                        )
 
 object AgentPremises {
   implicit val jsonReads: Reads[AgentPremises] = {
@@ -71,7 +83,16 @@ object AgentPremises {
     val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities
     AgentPremises(ytp.tradingName, ytp.tradingPremisesAddress,
       ytp.isResidential,
-      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices), z, z, z, z, z, z, z, startDate,
-      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange)
+      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
+      z,
+      z,
+      z,
+      z,
+      z,
+      z,
+      z,
+      startDate,
+      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange
+    )
   }
 }

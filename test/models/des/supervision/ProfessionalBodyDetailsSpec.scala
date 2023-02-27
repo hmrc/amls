@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,19 @@ package models.des.supervision
 import models.fe.supervision.{ProfessionalBodyYes, Supervision}
 import org.scalatestplus.play.PlaySpec
 
-class ProfessionalBodyDetailsSpec extends PlaySpec {
+class ProfessionalBodyDetailsSpec extends  PlaySpec {
 
   "ProfessionalBodyDetails" should {
 
     "convert frontend supervision model correctly to des ProfessionalBodyDetails" in {
-      val model = Supervision(None, None, None, Some(ProfessionalBodyYes("details")))
+      val model = Supervision(
+        None,
+        None,
+        None,
+        Some(ProfessionalBodyYes("details"))
+      )
 
-      ProfessionalBodyDetails.conv(model) must be(Some(ProfessionalBodyDetails(true, Some("details"), None)))
+      ProfessionalBodyDetails.conv(model) must be (Some(ProfessionalBodyDetails(true,Some("details"),None)))
     }
   }
 

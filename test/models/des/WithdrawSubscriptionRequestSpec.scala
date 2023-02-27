@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
     "successfully read json" when {
 
       withdrawalReasons foreach {
-        case (str, md) => {
+        case (str,md) => {
           s"withdrawalReason is $str" in {
             val inputRequest = Json.obj(
               "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
@@ -62,7 +62,7 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
       "withdrawalReasonOthers is none" in {
 
-        val inputRequest = Json.obj(
+        val inputRequest  = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
           "withdrawalDate" -> "2015-08-23",
           "withdrawalReason" -> "Out of scope"
@@ -106,7 +106,7 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
       "withdrawalReasonOthers is none" in {
 
-        val json = Json.obj(
+        val json  = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
           "withdrawalDate" -> "2015-08-23",
           "withdrawalReason" -> "Out of scope"
@@ -120,13 +120,13 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
     "throw error on invalid data" when {
       "withdrawalReason is invalid" in {
-        val inputRequest = Json.obj(
+        val inputRequest  = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
           "withdrawalDate" -> "2015-08-23",
           "withdrawalReason" -> "invalid"
         )
 
-        WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \ "withdrawalReason" \ "withdrawalReason",
+        WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \"withdrawalReason" \"withdrawalReason",
           List(JsonValidationError(List("error.invalid"))))))
         )
       }

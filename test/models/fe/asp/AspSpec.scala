@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,11 +139,11 @@ class AspSpec extends PlaySpec with MockitoSugar with AspValues {
     }
 
     "convert to None given view.asp = None" in {
-      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None, businessActivities = models.des.businessactivities.BusinessActivities())) must be(None)
+      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None,businessActivities = models.des.businessactivities.BusinessActivities())) must be(None)
     }
 
     "convert to Some given view.asp = None but asp activities supplied" in {
-      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None)) must be(Some(Asp(DesConstants.SubscriptionViewModel.businessActivities, Some(OtherBusinessTaxMattersNo))))
+      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None)) must be(Some(Asp(DesConstants.SubscriptionViewModel.businessActivities,Some(OtherBusinessTaxMattersNo))))
     }
 
   }

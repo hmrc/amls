@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import utils.CommonMethods
 
 final case class Amp(data: AmpData)
 
-object Amp {
+object Amp  {
 
   implicit val format = Json.format[Amp]
 
   implicit def conv(view: SubscriptionView): Option[Amp] = {
     view match {
-      case SubscriptionView(_, _, _, _, _, _, ba, _, _, _, _, _, _, _, _, _, _, _, Some(amp), _, _) => Some(
+      case SubscriptionView(_,_,_,_,_,_, ba,_,_,_,_,_,_,_,_,_,_,_, Some(amp), _, _) => Some(
         Amp(AmpData(
           view.businessActivities.ampServicesCarriedOut,
           ba.ampServicesCarriedOut.flatMap(s => s.other.specifyOther),
@@ -42,7 +42,7 @@ object Amp {
     }
   }
 
-  def getPercentage(percentage: Int): Option[String] = {
+  def getPercentage(percentage:Int): Option[String] = {
     percentage match {
       case 20 => Some("zeroToTwenty")
       case 40 => Some("twentyOneToForty")

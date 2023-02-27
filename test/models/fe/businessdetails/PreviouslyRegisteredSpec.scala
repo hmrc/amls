@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an `Yes` value" in {
 
-      val json = Json.obj("previouslyRegistered" -> true, "prevMLRRegNo" -> "12345678")
+      val json = Json.obj("previouslyRegistered" -> true, "prevMLRRegNo" ->"12345678")
 
       Json.fromJson[PreviouslyRegistered](json) must
         be(JsSuccess(PreviouslyRegisteredYes(Some("12345678")), JsPath \ "prevMLRRegNo"))

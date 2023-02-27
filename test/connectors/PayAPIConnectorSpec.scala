@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
         testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.getPayment(testPaymentId)) {
+      whenReady (testConnector.getPayment(testPaymentId)) {
         _ mustEqual testPayment
       }
     }
@@ -77,7 +77,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
         testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.getPayment(testPaymentId).failed) {
+      whenReady (testConnector.getPayment(testPaymentId).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual BAD_REQUEST
           body.getOrElse("").isEmpty mustEqual true
@@ -90,7 +90,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
         testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(testConnector.getPayment(testPaymentId).failed) {
+      whenReady (testConnector.getPayment(testPaymentId).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

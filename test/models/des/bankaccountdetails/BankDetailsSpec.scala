@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ class BankDetailsSpec extends PlaySpec with MockitoSugar {
 
     "serialise BankDetails model " in {
       BankDetails.format.writes(bankDetailsModel) must be(Json.obj("noOfMlrBankAccounts" -> "1",
-        "bankAccounts" -> Json.arr(Json.obj(
-          "accountName" -> "Personal", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> true,
-          "bankAccountDetails" -> Json.obj("ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233"))))))
+        "bankAccounts"->Json.arr(Json.obj(
+        "accountName"->"Personal","accountType"->"Personal","doYouHaveUkBankAccount"->true,
+        "bankAccountDetails"->Json.obj("ukAccount"-> Json.obj("accountNumber"->"12345678","sortCode"->"112233"))))))
 
     }
 
@@ -42,17 +42,17 @@ class BankDetailsSpec extends PlaySpec with MockitoSugar {
 
     "serialise BankDetails model with multiple accounts " in {
       BankDetails.format.writes(multiAccountModel) must be(Json.obj("noOfMlrBankAccounts" -> "2",
-        "bankAccounts" -> Json.arr(Json.obj(
-          "accountName" -> "Personal account", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> true,
-          "bankAccountDetails" -> Json.obj("ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233"))),
+        "bankAccounts"->Json.arr(Json.obj(
+          "accountName"->"Personal account","accountType"->"Personal","doYouHaveUkBankAccount"->true,
+          "bankAccountDetails"->Json.obj("ukAccount"->Json.obj("accountNumber"->"12345678","sortCode"->"112233"))),
           Json.obj(
-            "accountName" -> "Business account", "accountType" -> "This business's", "doYouHaveUkBankAccount" -> false,
-            "bankAccountDetails" -> Json.obj("nonUkAccount" -> Json.obj("accountHasIban" -> false, "accountNumber" -> Json.obj("bankAccountNumber" -> "12345678")))))))
+            "accountName"->"Business account","accountType"->"This business's","doYouHaveUkBankAccount"->false,
+            "bankAccountDetails"->Json.obj("nonUkAccount"->Json.obj("accountHasIban" -> false,"accountNumber"->Json.obj("bankAccountNumber"->"12345678")))))))
 
     }
 
     "convert frontend to des successfully" in {
-      BankDetails.convert(Seq.empty) must be(BankDetails("0", None))
+      BankDetails.convert(Seq.empty) must be(BankDetails("0",None))
     }
 
     "convert frontend to dev successfully with a list of bank accounts" in {

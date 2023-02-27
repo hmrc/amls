@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,16 @@ class RegistrationDetailsDesConnector @Inject()(private[connectors] val appConfi
                                                 private[connectors] val ac: AuditConnector,
                                                 private[connectors] val httpClient: HttpClient) extends DESConnector(appConfig, ac) {
 
-  def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext,
-                                             apiRetryHelper: ApiRetryHelper): Future[RegistrationDetails] = {
-    apiRetryHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
-  }
+    def getRegistrationDetails(safeId: String)(
+      implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      apiRetryHelper: ApiRetryHelper
+    ): Future[RegistrationDetails] = {
+      apiRetryHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
+    }
 
-  private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
+    private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
 
     httpClient.GET[HttpResponse](url, headers = desHeaders)(implicitly, hc, ec) map {

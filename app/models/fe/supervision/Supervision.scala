@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@ object Supervision {
     * we know that the user must have selected 'no' for all of the Supervision questions.
     * Otherwise, either the converted model should be returned, or None if there's no Supervision data to convert from
     * and the activites don't include either ASP or TCSP.
-    *
-    * @param maybeAspOrTcsp  The ETMP supervision model
+    * @param maybeAspOrTcsp The ETMP supervision model
     * @param maybeActivities The activities that have been applied for as part of the submission data
     * @return The Supervision model after having been converted from ETMP's supervision model
     */

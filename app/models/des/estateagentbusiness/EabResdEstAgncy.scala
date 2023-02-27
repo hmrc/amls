@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ package models.des.estateagentbusiness
 import models.fe.eab.Eab
 import play.api.libs.json.Json
 
-case class EabResdEstAgncy(regWithRedressScheme: Boolean, whichRedressScheme: Option[String])
+case class EabResdEstAgncy(regWithRedressScheme:Boolean,
+                           whichRedressScheme:Option[String]
+                          )
 
 object EabResdEstAgncy {
   implicit val format = Json.format[EabResdEstAgncy]
@@ -33,9 +35,9 @@ object EabResdEstAgncy {
 
   implicit def convert(eab: Eab): Option[EabResdEstAgncy] = {
     eab.data.redressScheme match {
-      case Some("propertyOmbudsman") => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited")))
+      case Some("propertyOmbudsman")     => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited")))
       case Some("propertyRedressScheme") => Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
-      case Some("notRegistered") => Some(EabResdEstAgncy(false, None))
+      case Some("notRegistered")         => Some(EabResdEstAgncy(false, None))
       case _ => None
     }
   }

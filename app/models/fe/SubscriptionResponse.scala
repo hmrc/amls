@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,22 +34,22 @@ object SubscriptionResponse {
   implicit val format = Json.format[SubscriptionResponse]
 
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
-    SubscriptionResponse(desResponse.etmpFormBundleNumber,
-      desResponse.amlsRefNo,
-      desResponse.fpNumbers.getOrElse(0) + desResponse.approvalCheckNumbers.getOrElse(0),
-      desResponse.fpNumbers.getOrElse(0),
-      desResponse.approvalCheckNumbers.getOrElse(0),
-      desResponse.premiseFYNumber.getOrElse(0),
-      Some(SubscriptionFees(desResponse.paymentReference,
-        desResponse.registrationFee.getOrElse(0),
-        desResponse.fpFee,
-        desResponse.fpFeeRate,
-        desResponse.premiseFee,
-        desResponse.premiseFeeRate,
-        desResponse.totalFees,
-        desResponse.approvalCheckFeeRate,
-        desResponse.approvalCheckFee)
+      SubscriptionResponse(desResponse.etmpFormBundleNumber,
+        desResponse.amlsRefNo,
+        desResponse.fpNumbers.getOrElse(0) + desResponse.approvalCheckNumbers.getOrElse(0),
+        desResponse.fpNumbers.getOrElse(0),
+        desResponse.approvalCheckNumbers.getOrElse(0),
+        desResponse.premiseFYNumber.getOrElse(0),
+        Some(SubscriptionFees(desResponse.paymentReference,
+          desResponse.registrationFee.getOrElse(0),
+          desResponse.fpFee,
+          desResponse.fpFeeRate,
+          desResponse.premiseFee,
+          desResponse.premiseFeeRate,
+          desResponse.totalFees,
+          desResponse.approvalCheckFeeRate,
+          desResponse.approvalCheckFee)
+        )
       )
-    )
   }
 }

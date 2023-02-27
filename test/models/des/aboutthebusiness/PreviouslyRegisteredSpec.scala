@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,42 +20,42 @@ import models.fe.businessdetails._
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class PreviouslyRegisteredSpec extends PlaySpec {
+class PreviouslyRegisteredSpec extends PlaySpec{
 
-  "PreviouslyRegistered" must {
+    "PreviouslyRegistered" must {
 
-    val Contact = ContactingYou("123456789", "afa@test.com")
-    val Office = RegisteredOfficeUK("1", "2", None, None, "NE3 0QQ")
+      val Contact = ContactingYou("123456789", "afa@test.com")
+      val Office = RegisteredOfficeUK("1", "2", None, None, "NE3 0QQ")
 
-    "serialise PreviouslyRegistered model with option yes" in {
-      val mlr = PreviouslyRegisteredMLR(true, Some("12345678"), false, None)
-      PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered" -> true,
-        "mlrRegNumber8Long" -> "12345678", "prevRegForMlr" -> false))
+      "serialise PreviouslyRegistered model with option yes" in {
+        val mlr = PreviouslyRegisteredMLR(true, Some("12345678"), false, None)
+        PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered"->true,
+          "mlrRegNumber8Long" -> "12345678", "prevRegForMlr" -> false))
+      }
+
+      "serialise PreviouslyRegistered model with option no" in {
+        val mlr = PreviouslyRegisteredMLR(false, None, true, Some("123456789123654"))
+        PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered"->false,
+         "prevRegForMlr" -> true,
+         "prevMlrRegNumber" -> "123456789123654"))
+      }
+
+      "convert front end model to PreviouslyRegisteredMLRYes8" in {
+        val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+
+        PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(true, Some("12345678"), false, None)))
+      }
+
+      "convert front end model to PreviouslyRegisteredMLR15" in {
+        val from = BusinessDetails(PreviouslyRegisteredYes(Some("123456789123456")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+
+        PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456"))))
+      }
+
+      "convert front end model to PreviouslyRegisteredNo" in {
+        val from = BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+
+        PreviouslyRegisteredMLR.convert(from) must be (Some(PreviouslyRegisteredMLR(false,None,false,None)))
+      }
     }
-
-    "serialise PreviouslyRegistered model with option no" in {
-      val mlr = PreviouslyRegisteredMLR(false, None, true, Some("123456789123654"))
-      PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered" -> false,
-        "prevRegForMlr" -> true,
-        "prevMlrRegNumber" -> "123456789123654"))
-    }
-
-    "convert front end model to PreviouslyRegisteredMLRYes8" in {
-      val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
-
-      PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(true, Some("12345678"), false, None)))
-    }
-
-    "convert front end model to PreviouslyRegisteredMLR15" in {
-      val from = BusinessDetails(PreviouslyRegisteredYes(Some("123456789123456")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
-
-      PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456"))))
-    }
-
-    "convert front end model to PreviouslyRegisteredNo" in {
-      val from = BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
-
-      PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(false, None, false, None)))
-    }
-  }
 }

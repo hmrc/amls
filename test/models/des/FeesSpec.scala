@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,21 @@
 package models.des
 
 import models.{AmendOrVariationResponseType, Fees, des}
+import org.joda.time.{DateTime, DateTimeUtils, DateTimeZone}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset.UTC
-import java.time.temporal.ChronoUnit
-
 
 class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
+
+  override def beforeAll {
+    DateTimeUtils.setCurrentMillisFixed(1000000)
+  }
+
+  override def afterAll: Unit = {
+    DateTimeUtils.setCurrentMillisSystem()
+  }
 
   "FeeResponse" when {
 
@@ -35,13 +40,11 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
         val response = AmendVariationResponse(
           processingDate = "2016-09-17T09:30:47Z",
           etmpFormBundleNumber = "111111",
-          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(100), Some(100.0), Some(100.0)
+          None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,Some(100), Some(100.0), Some(100.0)
         )
 
-        val fees = Fees.convertAmendmentVariation(response, "test")
-        val newFees = fees.copy(createdAt = fees.createdAt.truncatedTo(ChronoUnit.SECONDS))
-        newFees must be(Fees(AmendOrVariationResponseType, "test", 0, None,
-          0, 0, None, None, Some(100.0), Some(100.0), LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)))
+        Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",0,None,
+          0,0,None,None, Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
       }
     }
 
@@ -69,10 +72,8 @@ class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
         Some(100.0)
       )
 
-      val fees = Fees.convertAmendmentVariation(response, "test")
-      val newFees = fees.copy(createdAt = fees.createdAt.truncatedTo(ChronoUnit.SECONDS))
-      newFees must be(Fees(AmendOrVariationResponseType, "test", 1301737.96, Some(231.42),
-        870458.0, 2172427.38, Some("string"), Some(3456.12), Some(100.0), Some(100.0), LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)))
+      Fees.convertAmendmentVariation(response, "test") must be (Fees(AmendOrVariationResponseType,"test",1301737.96,Some(231.42),
+        870458.0,2172427.38,Some("string"),Some(3456.12), Some(100.0), Some(100.0), DateTime.now(DateTimeZone.UTC)))
 
     }
 

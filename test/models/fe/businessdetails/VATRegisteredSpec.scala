@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class VATRegisteredSpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an `Yes` value" in {
 
-      val json = Json.obj("registeredForVAT" -> true, "vrnNumber" -> "12345678")
+      val json = Json.obj("registeredForVAT" -> true, "vrnNumber" ->"12345678")
 
       Json.fromJson[VATRegistered](json) must
         be(JsSuccess(VATRegisteredYes("12345678"), JsPath \ "vrnNumber"))

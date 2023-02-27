@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ object PreviouslyRegistered {
     case PreviouslyRegisteredNo => Json.obj("previouslyRegistered" -> false)
   }
 
-  implicit def convert(prevMLR: Option[PreviouslyRegisteredMLRView]): PreviouslyRegistered = {
+  implicit def convert(prevMLR:Option[PreviouslyRegisteredMLRView]) : PreviouslyRegistered = {
     prevMLR match {
       case Some(prevReg) => {
         (prevReg.amlsRegistered, prevReg.prevRegForMlr) match {
@@ -55,7 +55,7 @@ object PreviouslyRegistered {
   }
 
   def getStringOption(value: String): Option[String] = {
-    if (value.isEmpty) {
+    if(value.isEmpty) {
       None
     } else {
       Some(value)

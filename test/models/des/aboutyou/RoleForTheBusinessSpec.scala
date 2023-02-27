@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,9 @@ class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
 
       val frontendModel = RoleWithinBusiness(Set.empty)
 
-      val desModel = RoleForTheBusiness(false, false, None)
+      val desModel = RoleForTheBusiness(
+        false, false, None
+      )
 
       RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
 
@@ -40,7 +42,9 @@ class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
 
       val frontendModel = RoleWithinBusiness(Set(ExternalAccountant))
 
-      val desModel = RoleForTheBusiness(true, false, None)
+      val desModel = RoleForTheBusiness(
+        true, false, None
+      )
 
       RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
 
@@ -50,7 +54,9 @@ class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
 
       val frontendModel = RoleWithinBusiness(Set(ExternalAccountant, Other("Some other text")))
 
-      val desModel = RoleForTheBusiness(true, true, Some("Some other text"))
+      val desModel = RoleForTheBusiness(
+        true, true, Some("Some other text")
+      )
 
       RoleForTheBusiness.convertForBusiness(frontendModel) must be(desModel)
 

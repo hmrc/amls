@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,93 +17,64 @@
 package repositories
 
 import exceptions.PaymentException
-import models.payapi.PaymentStatus
-import models.payments.Payment
-import org.mongodb.scala.model._
-import org.mongodb.scala.result.{InsertOneResult, UpdateResult}
-import play.api.Logging
-import uk.gov.hmrc.mongo.MongoComponent
-import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 
 import javax.inject.{Inject, Singleton}
+import models.payments.Payment
+import play.api.Logger
+import play.api.libs.json.Json
+import reactivemongo.api.DefaultDB
+import reactivemongo.api.commands.{UpdateWriteResult, WriteResult}
+import reactivemongo.api.indexes.{Index, IndexType}
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
+import uk.gov.hmrc.mongo.ReactiveRepository
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import utils.MongoUtils._
 
 @Singleton
-class PaymentRepository @Inject()(mongoC: MongoComponent)
-  extends PlayMongoRepository[Payment](
-    mongoComponent = mongoC,
-    collectionName = "payments",
-    domainFormat = Payment.format,
-    indexes = Seq(
-      IndexModel(
-        Indexes.ascending("createdAt"),
-        IndexOptions().name("paymentDetailsExpiry")
+class PaymentRepository @Inject()(mongo: () => DefaultDB) extends ReactiveRepository[Payment, BSONObjectID]("payments", mongo, Payment.format) {
+
+  lazy val log: Logger = Logger(this.getClass)
+
+  override def indexes: Seq[Index] = {
+    Seq(
+      Index(
+        key = Seq("createdAt" -> IndexType.Ascending),
+        name = Some("paymentDetailsExpiry")
       ),
-      IndexModel(
-        Indexes.ascending("amlsRefNo"),
-        IndexOptions().name("amlsRefNoIndex")
+      Index(
+        key = Seq("amlsRefNo" -> IndexType.Ascending),
+        name = Some("amlsRefNoIndex")
       ),
-      IndexModel(
-        Indexes.compoundIndex(Indexes.ascending("reference"), Indexes.descending("createdAt")),
-        IndexOptions().name("reference lookup")
+      Index(
+        key = Seq("reference" -> IndexType.Ascending, "createdAt" -> IndexType.Descending),
+        name = Some("reference lookup")
       )
-    ),
-    extraCodecs = Codecs.playFormatSumCodecs(PaymentStatus.formats)
-  ) with Logging {
-
-  def insert(newPayment: Payment): Future[Payment] = {
-    collection
-      .insertOne(newPayment)
-      .toFuture()
-      .flatMap {
-        case res: InsertOneResult if !res.wasAcknowledged() => Future.failed(PaymentException(None, res.toString))
-        case _ => Future.successful(newPayment)
-      }
+    )
   }
 
-  def update(payment: Payment): Future[UpdateResult] = {
-    val updates = Seq(
-      Updates.set("amlsRefNo", payment.amlsRefNo),
-      Updates.set("safeId", payment.safeId),
-      Updates.set("reference", payment.reference),
-      Updates.set("amountInPence", payment.amountInPence),
-      Updates.set("status", payment.status),
-      Updates.set("createdAt", payment.createdAt)
-    )
+  def insert(newPayment: Payment): Future[Payment] =
+    collection.insert(ordered = false).one(newPayment).flatMap(checkSuccessfulAndReturn(newPayment))
 
-    if (payment.isBacs.isDefined) {
-      updates :+ Updates.set("isBacs", payment.isBacs)
-    }
-
-
-    if (payment.description.isDefined) {
-      updates :+ Updates.set("description", payment.description)
-    }
-
-
-    if (payment.updatedAt.isDefined) {
-      updates :+ Updates.set("updatedAt", payment.updatedAt)
-    }
-
-    collection.updateOne(
-      filter = Filters.eq("_id", payment._id),
-      update = Updates.combine(updates: _*)
-    )
-      .toFuture()
-  }
+  def update(payment: Payment): Future[UpdateWriteResult] =
+    collection.update(ordered = false).one(Json.obj("_id" -> payment._id), payment)
 
   def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] = {
-    collection
-      .find(Filters.eq("amlsRefNo", amlsReferenceNumber))
-      .sort(Sorts.descending("createdAt"))
-      .headOption()
+    collection.find(Json.obj("amlsRefNo" -> amlsReferenceNumber), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Payment]
   }
 
-  def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] = {
-    collection
-      .find(Filters.eq("reference", paymentReference))
-      .sort(Sorts.descending("createdAt"))
-      .headOption()
+  def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] =
+    collection.find(Json.obj("reference" -> paymentReference), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Payment]
+
+  private def checkSuccessfulAndReturn(payment: Payment): WriteResult => Future[Payment] = {
+    case writeResult: WriteResult if isError(writeResult) => {
+      log.debug(s"[PaymentsMongoRepository][insert] paymentDetails: $payment, result: ${writeResult.ok}, errors: ${writeResult.writeErrors.getMessages}")
+      Future.failed(PaymentException(None, writeResult.writeErrors.getMessages))
+    }
+    case _ => Future.successful(payment)
   }
+
+  private def isError(writeResult: WriteResult) = !writeResult.ok || writeResult.writeErrors.nonEmpty
 }

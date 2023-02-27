@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class ProfessionalBodySpec extends PlaySpec with MockitoSugar {
 
     "successfully validate given an `Yes` value" in {
 
-      val json = Json.obj("penalised" -> true, "professionalBody" -> "details")
+      val json = Json.obj("penalised" -> true, "professionalBody" ->"details")
 
       Json.fromJson[ProfessionalBody](json) must
         be(JsSuccess(ProfessionalBodyYes("details"), JsPath \ "professionalBody"))

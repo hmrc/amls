@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import models.des.businessactivities.MlrAdvisor
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, Writes, __}
 
-case class WhoIsYourAccountant(accountantsName: String, accountantsTradingName: Option[String], address: AccountantsAddress)
+case class WhoIsYourAccountant(accountantsName: String,
+                               accountantsTradingName: Option[String],
+                               address: AccountantsAddress)
 
 object WhoIsYourAccountant {
 

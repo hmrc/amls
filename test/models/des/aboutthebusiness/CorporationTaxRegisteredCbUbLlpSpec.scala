@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
 
     "convert correctly for corporate tax Yes" in {
       val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         Some(regForCorpTax),
@@ -40,7 +40,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
 
     "convert correctly for corporate tax No" in {
       val regForCorpTax = CorporationTaxRegisteredNo
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         Some(regForCorpTax),
@@ -54,7 +54,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
     }
 
     "convert correctly for corporate tax model is none" in {
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val businessDetails  =  BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         None,

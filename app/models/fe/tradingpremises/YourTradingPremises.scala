@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,13 @@ import play.api.libs.json.{Reads, Writes}
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 
-case class YourTradingPremises(tradingName: String, tradingPremisesAddress: Address, startDate: LocalDate,
-                               isResidential: Boolean, tradingNameChangeDate: Option[String] = None)
+case class YourTradingPremises(
+                                tradingName: String,
+                                tradingPremisesAddress: Address,
+                                startDate: LocalDate,
+                                isResidential: Boolean,
+                                tradingNameChangeDate: Option[String] = None
+                              )
 
 object YourTradingPremises {
 

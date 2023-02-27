@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@ package models.des.businessactivities
 import models.fe.businessactivities.CustomersOutsideUK
 import play.api.libs.json.Json
 
-case class NonUkResidentCustDetails(nonUkResidentCustomers: Boolean, whichCountries: Option[Seq[String]] = None)
+case class NonUkResidentCustDetails(nonUkResidentCustomers: Boolean,
+                                    whichCountries: Option[Seq[String]] = None)
 
-object NonUkResidentCustDetails {
+object NonUkResidentCustDetails{
   implicit val format = Json.format[NonUkResidentCustDetails]
 
-  implicit def convert(nonUKCust: Option[models.fe.businessactivities.CustomersOutsideUK]): NonUkResidentCustDetails = {
+  implicit def convert(nonUKCust:Option[models.fe.businessactivities.CustomersOutsideUK]):NonUkResidentCustDetails ={
     nonUKCust match {
-      case Some(x@CustomersOutsideUK(boolean, Some(countries))) => NonUkResidentCustDetails(boolean, Some(countries))
+      case Some(x @ CustomersOutsideUK(boolean, Some(countries))) => NonUkResidentCustDetails(boolean, Some(countries))
       case _ => NonUkResidentCustDetails(false)
     }
   }

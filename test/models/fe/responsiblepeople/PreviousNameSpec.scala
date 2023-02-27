@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,12 @@ class PreviousNameSpec extends PlaySpec {
 
     "convert des name details to frontend" in {
 
-      val previousNameDetails = Some(PreviousNameDetails(true, Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
-        Some("2001-01-01"), None))
+      val previousNameDetails = Some(PreviousNameDetails(
+        true,
+        Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
+        Some("2001-01-01"),
+        None
+      ))
 
       val previousName = PreviousName(true, Some("first name"), Some("middle name"), Some("last name"))
       PreviousName.conv(previousNameDetails) must be(Some(previousName))
@@ -42,7 +46,12 @@ class PreviousNameSpec extends PlaySpec {
     }
 
     "convert des name details to frontend when previousNameDetails has none values" in {
-      val previousNameDetails = Some(PreviousNameDetails(false, None, None, None))
+      val previousNameDetails = Some(PreviousNameDetails(
+        false,
+        None,
+        None,
+        None
+      ))
 
       PreviousName.conv(previousNameDetails) mustBe Some(PreviousName.noPreviousName)
     }

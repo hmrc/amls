@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import play.api.libs.json._
 
 sealed trait CorporationTaxRegistered
 
-case class CorporationTaxRegisteredYes(corporationTaxReference: String) extends CorporationTaxRegistered
-
+case class CorporationTaxRegisteredYes(corporationTaxReference : String) extends CorporationTaxRegistered
 case object CorporationTaxRegisteredNo extends CorporationTaxRegistered
 
 
@@ -42,7 +41,7 @@ object CorporationTaxRegistered {
     case CorporationTaxRegisteredNo => Json.obj("registeredForCorporationTax" -> false)
   }
 
-  implicit def conv(corpTax: Option[CorporationTaxRegisteredCbUbLlp]): Option[CorporationTaxRegistered] = {
+  implicit def conv(corpTax: Option[CorporationTaxRegisteredCbUbLlp]) : Option[CorporationTaxRegistered] = {
     corpTax match {
       case Some(data) => data.cotaxRegistered match {
         case true => Some(CorporationTaxRegisteredYes(data.ctutr.getOrElse("")))

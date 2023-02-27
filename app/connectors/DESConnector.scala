@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
 @Singleton
-class DESConnector @Inject()(applicationConfig: ApplicationConfig, val auditConnector: AuditConnector) extends HttpResponseHelper with Logging {
+class DESConnector @Inject()(applicationConfig: ApplicationConfig,
+                             val auditConnector: AuditConnector) extends HttpResponseHelper with Logging {
 
   private[connectors] val baseUrl: String = applicationConfig.desUrl
   private[connectors] val token: String = s"Bearer ${applicationConfig.desToken}"

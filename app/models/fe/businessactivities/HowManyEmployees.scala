@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@ package models.fe.businessactivities
 import models.des.businessactivities.BusinessActivitiesAll
 import play.api.libs.json.Json
 
-case class HowManyEmployees(employeeCount: String, employeeCountAMLSSupervision: String)
+case class HowManyEmployees(employeeCount: String,
+                            employeeCountAMLSSupervision: String)
 
 
 object HowManyEmployees {
 
   implicit val formats = Json.format[HowManyEmployees]
 
-  def conv(activityDtls: BusinessActivitiesAll): Option[HowManyEmployees] = {
+  def conv(activityDtls: BusinessActivitiesAll) : Option[HowManyEmployees] = {
     (activityDtls.noOfEmployees, activityDtls.noOfEmployeesForMlr) match {
       case (Some(noOfEmployees), Some(noOfEmployeesForMlr)) => Some(HowManyEmployees(noOfEmployees, noOfEmployeesForMlr))
       case _ => None

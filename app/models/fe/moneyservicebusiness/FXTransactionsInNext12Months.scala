@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package models.fe.moneyservicebusiness
 import models.des.msb.MsbFxDetails
 import play.api.libs.json.Json
 
-case class FXTransactionsInNext12Months(fxTransaction: String)
+case class FXTransactionsInNext12Months (fxTransaction: String)
 
 object FXTransactionsInNext12Months {
 
-  implicit val format = Json.format[FXTransactionsInNext12Months]
+    implicit val format = Json.format[FXTransactionsInNext12Months]
 
-  implicit def convMsbFx(msbFx: Option[MsbFxDetails]): Option[FXTransactionsInNext12Months] = {
-    msbFx flatMap (msbDtls => Some(FXTransactionsInNext12Months(msbDtls.anticipatedNoOfTransactions)))
-  }
+    implicit def convMsbFx(msbFx: Option[MsbFxDetails]): Option[FXTransactionsInNext12Months] = {
+        msbFx flatMap (msbDtls => Some(FXTransactionsInNext12Months(msbDtls.anticipatedNoOfTransactions)))
+    }
 }

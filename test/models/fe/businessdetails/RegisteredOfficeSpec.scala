@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class RegisteredOfficeSpec extends PlaySpec {
       val data = RegisteredOfficeUK("38B", "Longbenton", Some("line 1"), None, "NE7 7DX")
 
       Json.toJson(data: RegisteredOffice) must
-        be(Json.obj(
+        be( Json.obj(
           "addressLine1" -> "38B",
           "addressLine2" -> "Longbenton",
           "addressLine3" -> "line 1",
@@ -69,7 +69,7 @@ class RegisteredOfficeSpec extends PlaySpec {
       val data = RegisteredOfficeNonUK("38B", "some place", Some("line 1"), None, "AR")
 
       Json.toJson(data: RegisteredOffice) must
-        be(Json.obj(
+        be( Json.obj(
           "addressLineNonUK1" -> "38B",
           "addressLineNonUK2" -> "some place",
           "addressLineNonUK3" -> "line 1",
@@ -80,7 +80,7 @@ class RegisteredOfficeSpec extends PlaySpec {
 
     "convert des model to frontend ATB model" in {
       val desModel = DesAddress("addr1", "addr2", None, None, "UK", None)
-      RegisteredOffice.conv(desModel) must be(RegisteredOfficeNonUK("addr1", "addr2", None, None, "UK"))
+      RegisteredOffice.conv(desModel) must be(RegisteredOfficeNonUK("addr1","addr2",None,None,"UK"))
     }
   }
 }

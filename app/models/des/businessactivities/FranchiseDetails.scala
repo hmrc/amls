@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package models.des.businessactivities
 import play.api.libs.json.Json
 import models.fe.businessactivities._
 
-case class FranchiseDetails(isBusinessAFranchise: Boolean, franchiserName: Option[Seq[String]])
+case class FranchiseDetails(isBusinessAFranchise: Boolean,
+                            franchiserName: Option[Seq[String]])
 
 object FranchiseDetails{
   implicit val format = Json.format[FranchiseDetails]

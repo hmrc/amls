@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,19 @@ package models.fe.businesscustomer
 import models.des.aboutthebusiness.{Address => DesAddress}
 import play.api.libs.json.Json
 
-case class Address(line_1: String, line_2: String, line_3: Option[String], line_4: Option[String], postcode: Option[String], country: String)
+case class Address(
+                    line_1: String,
+                    line_2: String,
+                    line_3: Option[String],
+                    line_4: Option[String],
+                    postcode: Option[String],
+                    country: String
+                  )
 
 object Address {
   implicit val format = Json.format[Address]
 
-  implicit def conv(addr: DesAddress): Address = {
+  implicit def conv(addr: DesAddress) : Address = {
     Address(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.postcode, addr.country)
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class ActivityStartDateSpec extends PlaySpec {
   "ActivityStartDate" must {
 
     "Json" should {
-      // scalastyle:off
+        // scalastyle:off
       "Read and write successfully" in {
 
         ActivityStartDate.format.reads(ActivityStartDate.format.writes(ActivityStartDate(new LocalDate(1990, 2, 24)))) must be(
@@ -34,7 +34,7 @@ class ActivityStartDateSpec extends PlaySpec {
       }
 
       "write successfully" in {
-        ActivityStartDate.format.writes(ActivityStartDate(new LocalDate(1990, 2, 24))) must be(Json.obj("startDate" -> "1990-02-24"))
+        ActivityStartDate.format.writes(ActivityStartDate(new LocalDate(1990, 2, 24))) must be(Json.obj("startDate" ->"1990-02-24"))
       }
     }
 
@@ -46,7 +46,7 @@ class ActivityStartDateSpec extends PlaySpec {
     "des to frontend conversion when activitiesCommenceDate is none" in {
 
       val desModel = Some(BusinessActivitiesAll(
-        None, None, Some(false),
+        None,None,Some(false),
         BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("11122233344")))),
         Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
         Some("12345678901"),
@@ -62,4 +62,4 @@ class ActivityStartDateSpec extends PlaySpec {
 
     }
   }
-}
+ }

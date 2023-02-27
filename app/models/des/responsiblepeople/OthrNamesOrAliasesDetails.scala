@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.json.Json
 
-case class OthrNamesOrAliasesDetails(otherNamesOrAliases: Boolean, aliases: Option[Seq[String]])
+case class OthrNamesOrAliasesDetails (otherNamesOrAliases: Boolean,
+                                      aliases:Option[Seq[String]])
 
 object OthrNamesOrAliasesDetails {
   implicit val format = Json.format[OthrNamesOrAliasesDetails]

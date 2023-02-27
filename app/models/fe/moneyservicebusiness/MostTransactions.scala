@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,14 @@ case class MostTransactions(mostTransactionsCountries: Seq[String])
 
 object MostTransactions {
 
-  implicit val format = Json.format[MostTransactions]
+ implicit val format = Json.format[MostTransactions]
+
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[MostTransactions] = {
-    msbMt flatMap { m =>
-      m.countriesLrgstTranscsSentTo.fold[Option[MostTransactions]] {
-        None
-      } {
+    msbMt flatMap {m =>
+      m.countriesLrgstTranscsSentTo.fold[Option[MostTransactions]] {None} {
         case CountriesList(Nil) => None
-        case CountriesList(countries) => Some(MostTransactions(countries))
-      }
+        case CountriesList(countries) => Some(MostTransactions(countries))}
     }
   }
 }

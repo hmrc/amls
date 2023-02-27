@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,9 @@ sealed trait BusinessType
 object BusinessType {
 
   case object SoleProprietor extends BusinessType
-
   case object LimitedCompany extends BusinessType
-
   case object Partnership extends BusinessType
-
   case object LPrLLP extends BusinessType
-
   case object UnincorporatedBody extends BusinessType
 
   implicit val writes = Writes[BusinessType] {

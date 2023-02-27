@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,18 @@ class AboutYouSpec extends PlaySpec {
       val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
       val employedWithinBusiness = false
-      val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Beneficial Shareholder"), None, Some("External Accountant"), None)
+      val oldModel = Aboutyou(
+        individualDetails,
+        employedWithinBusiness,
+        Some("Beneficial Shareholder"),
+        None,
+        Some("External Accountant"),
+        None
+      )
 
       val release7Model = AboutYouRelease7(individualDetails,
         employedWithinBusiness,
-        Some(RolesWithinBusiness(beneficialShareholder = true, false, false, false, false, false, false, false, None)),
+        Some(RolesWithinBusiness(beneficialShareholder = true, false,false,false,false,false,false,false,None)),
         Some(RoleForTheBusiness(externalAccountant = true, false, None))
       )
 

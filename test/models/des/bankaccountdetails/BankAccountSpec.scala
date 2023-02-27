@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,15 @@ class BankAccountSpec extends PlaySpec {
     val bankAccountModel = BankAccount("Personal", "Personal", true, ukAccount("112233", "12345678"))
 
     "serialise bankAccount model with UK Account " in {
-      BankAccount.format.writes(bankAccountModel) must be(Json.obj("accountName" -> "Personal", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> true,
-        "bankAccountDetails" -> Json.obj("ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233"))))
+      BankAccount.format.writes(bankAccountModel) must be(Json.obj("accountName"->"Personal","accountType"->"Personal","doYouHaveUkBankAccount"->true,
+        "bankAccountDetails"->Json.obj("ukAccount"-> Json.obj("accountNumber"->"12345678","sortCode"->"112233"))))
     }
 
     val nonUkAccountModel = BankAccount("Personal", "Personal", false, AccountNumber(accountNumber = "12345678"))
 
     "serialise bankAccount model with non UK Account " in {
-      BankAccount.format.writes(nonUkAccountModel) must be(Json.obj("accountName" -> "Personal", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> false,
-        "bankAccountDetails" -> Json.obj("nonUkAccount" -> Json.obj("accountHasIban" -> false, "accountNumber" -> Json.obj("bankAccountNumber" -> "12345678")))))
+      BankAccount.format.writes(nonUkAccountModel) must be(Json.obj("accountName"->"Personal","accountType"->"Personal","doYouHaveUkBankAccount"->false,
+        "bankAccountDetails"->Json.obj("nonUkAccount"-> Json.obj("accountHasIban" -> false,"accountNumber"-> Json.obj("bankAccountNumber" ->"12345678")))))
 
     }
 

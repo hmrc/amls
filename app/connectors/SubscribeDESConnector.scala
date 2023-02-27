@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,16 +37,26 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
                                       private[connectors] val httpClient: HttpClient,
                                       private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-  def subscribe(safeId: String, data: des.SubscriptionRequest)
-               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest],
-                wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper
-               ): Future[des.SubscriptionResponse] = {
+  def subscribe
+  (safeId: String, data: des.SubscriptionRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.SubscriptionRequest],
+   wr2: Writes[des.SubscriptionResponse],
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
+  ): Future[des.SubscriptionResponse] = {
     apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
   }
 
-  private def subscribeFunction(safeId: String, data: des.SubscriptionRequest)
-                               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest], wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier
-                               ): Future[des.SubscriptionResponse] = {
+  private def subscribeFunction
+  (safeId: String, data: des.SubscriptionRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.SubscriptionRequest],
+   wr2: Writes[des.SubscriptionResponse],
+   hc: HeaderCarrier
+  ): Future[des.SubscriptionResponse] = {
     val prefix = "[DESConnector][subscribe]"
     val bodyParser = JsonParsed[des.SubscriptionResponse]
     val timer = metrics.timer(API4)
@@ -61,14 +71,14 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
+      case r@status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Future.successful(body)
-      case r @ status(s) =>
+      case r@status(s) =>
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

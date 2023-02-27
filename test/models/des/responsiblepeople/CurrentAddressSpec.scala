@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class CurrentAddressSpec extends PlaySpec {
           OneToThreeYears,
           Some("2017-1-1"))
 
-        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", "line2", None, None, "GB", Some("AB1 2CD"), Some("2017-1-1")))
+        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", "line2", None, None, "GB", Some("AB1 2CD"),Some("2017-1-1")))
 
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
@@ -49,7 +49,7 @@ class CurrentAddressSpec extends PlaySpec {
           OneToThreeYears,
           Some("2017-1-1"))
 
-        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", "line2", None, None, "GB", None, Some("2017-1-1")))
+        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", "line2", None, None, "GB", None,Some("2017-1-1")))
 
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
@@ -57,7 +57,7 @@ class CurrentAddressSpec extends PlaySpec {
 
       "convert from uk registered address replacing ampersands" in {
 
-        val address = CurrentAddress(AddressWithChangeDate(
+        val address = CurrentAddress(AddressWithChangeDate (
           "Hodaway, Hodaway, Hodaway and Hodaw",
           "addressLine2",
           Some("addressLine3"),
@@ -72,7 +72,7 @@ class CurrentAddressSpec extends PlaySpec {
           "addressLine2",
           Some("addressLine3"),
           Some("Tyne & Wear"),
-          "AB1 2CD"), OneToThreeYears,
+          "AB1 2CD"),OneToThreeYears,
           Some("2016-1-1")
         )
 

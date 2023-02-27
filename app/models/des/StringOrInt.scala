@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package models.des
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-case class StringOrInt(data: Either[Int, String]) {
+case class StringOrInt (data: Either[Int, String]) {
 
   override def canEqual(a: Any) = a.isInstanceOf[StringOrInt]
 
-  override def equals(that: Any): Boolean = {
+  override def equals(that:Any):Boolean = {
     that match {
       case that: StringOrInt => that.canEqual(this) && that.hashCode == this.hashCode
       case _ => false
@@ -46,8 +46,8 @@ object StringOrInt {
   implicit def apply(strData: String): StringOrInt = StringOrInt(Right(strData))
 
   implicit val reads: Reads[StringOrInt] =
-    (__ \ "lineId").read[Int].map(intData => StringOrInt(Left(intData))) orElse
-      (__ \ "lineId").read[String].map(strData => StringOrInt(Right(strData.replaceFirst("^0+(?!$)", ""))))
+  (__ \ "lineId").read[Int].map(intData => StringOrInt(Left(intData))) orElse
+    (__ \ "lineId").read[String].map(strData => StringOrInt(Right(strData.replaceFirst("^0+(?!$)", ""))))
 
   implicit val writes: Writes[StringOrInt] = new Writes[StringOrInt] {
     override def writes(o: StringOrInt): JsValue = Json.obj(

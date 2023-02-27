@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,29 +22,64 @@ class AddressSpec extends PlaySpec {
 
   "convert to fe address to des Address when post code is empty" in {
 
-    val desAddress = Address("addressLine1", "addressLine2", Some("addressLine3"), Some("addressLine4"), "GB", None)
+    val desAddress = Address (
+      "addressLine1",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("addressLine4"),
+      "GB",
+      None
+    )
 
-    val feAddress = models.fe.tradingpremises.Address("addressLine1", "addressLine2", Some("addressLine3"), Some("addressLine4"), "")
-
+    val feAddress = models.fe.tradingpremises.Address(
+      "addressLine1",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("addressLine4"),
+      ""
+    )
     Address.convert(feAddress) must be(desAddress)
   }
 
   "convert to fe address to des Address when post code is not empty" in {
 
-    val desAddress = Address("addressLine1", "addressLine2", Some("addressLine3"), Some("addressLine4"), "GB", Some("AA1 1AA"))
+    val desAddress = Address (
+      "addressLine1",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("addressLine4"),
+      "GB",
+      Some("AA1 1AA")
+    )
 
-    val feAddress = models.fe.tradingpremises.Address("addressLine1", "addressLine2", Some("addressLine3"), Some("addressLine4"), "AA1 1AA")
-
+    val feAddress = models.fe.tradingpremises.Address(
+      "addressLine1",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("addressLine4"),
+      "AA1 1AA"
+    )
     Address.convert(feAddress) must be(desAddress)
   }
 
   "convert to fe address to des Address replacing ampersands" in {
 
-    val desAddress = Address("Hodaway, Hodaway, Hodaway and Hodaw", "addressLine2", Some("addressLine3"), Some("Tyne and Wear"), "GB", Some("AA1 1AA"))
+    val desAddress = Address (
+      "Hodaway, Hodaway, Hodaway and Hodaw",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("Tyne and Wear"),
+      "GB",
+      Some("AA1 1AA")
+    )
 
-    val feAddress = models.fe.tradingpremises.Address("Hodaway, Hodaway, Hodaway & Hodaway", "addressLine2", Some("addressLine3"), Some("Tyne & Wear"),
-      "AA1 1AA")
-
+    val feAddress = models.fe.tradingpremises.Address(
+      "Hodaway, Hodaway, Hodaway & Hodaway",
+      "addressLine2",
+      Some("addressLine3"),
+      Some("Tyne & Wear"),
+      "AA1 1AA"
+    )
     Address.convert(feAddress) must be(desAddress)
   }
 

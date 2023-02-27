@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ trait DateOfChangeUpdateHelper {
     val supervisorFromDesRequest = getSupervisorStartDate(getSupervisorDetails(desRequest.aspOrTcsp))
     val supervisorFromViewResponse = getSupervisorStartDate(getSupervisorDetails(viewResponse.aspOrTcsp))
 
-    val supervisorDateChangeFlag = (supervisorFromDesRequest, supervisorFromViewResponse) match {
+    val supervisorDateChangeFlag = (supervisorFromDesRequest, supervisorFromViewResponse) match{
       case (Some(cached), Some(request)) => !cached.equals(request)
       case _ => false
     }
@@ -55,7 +55,7 @@ trait DateOfChangeUpdateHelper {
     }
     desRequest.copy(
       aspOrTcsp = desRequest.aspOrTcsp.fold[Option[AspOrTcsp]](None) { at =>
-        Some(at.copy(supervisionDetails = at.supervisionDetails.fold[Option[SupervisionDetails]](None) { sd =>
+        Some(at.copy(supervisionDetails = at.supervisionDetails.fold[Option[SupervisionDetails]](None){ sd =>
           Some(sd.copy(supervisorDetails = supervisorWithDateChangeFlag))
         }))
       }
@@ -63,7 +63,7 @@ trait DateOfChangeUpdateHelper {
   }
 
   def updateWithBusinessActivitiesDateOfChangeFlag(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
-    val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false) {
+    val businessActivitiesCommenceDateChangeFlag = desRequest.businessActivities.all.fold(false){
       !_.activitiesCommenceDate.equals(viewResponse.businessActivities.all.fold[Option[String]](None)(_.activitiesCommenceDate))
     }
     val businessActivitiesWithFlag = desRequest.businessActivities.all match {

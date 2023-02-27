@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +26,43 @@ class TcspAllSpec extends PlaySpec {
 
       val servicesOfAnother = ServicesOfAnotherTCSPYes("12345678")
 
-      val TcspSection = Some(Tcsp(None, None, None, None, Some(true), Some(servicesOfAnother)))
-      val tcspAllSection = TcspAll(true, Some("12345678"))
-      TcspAll.conv(TcspSection) must be(tcspAllSection)
+      val TcspSection = Some(Tcsp(
+        None,
+        None,
+        None,
+        None,
+        Some(true),
+        Some(servicesOfAnother))
+      )
+      val tcspAllSection  = TcspAll(true,Some("12345678"))
+      TcspAll.conv(TcspSection) must be (tcspAllSection)
     }
 
     "convert frontend model to Des with No" in {
 
-      val TcspSection = Some(Tcsp(None, None, None, None, Some(false), None))
-      val tcspAllSection = TcspAll(false, None)
-      TcspAll.conv(TcspSection) must be(tcspAllSection)
+      val TcspSection = Some(Tcsp(
+        None,
+        None,
+        None,
+        None,
+        Some(false),
+        None
+      ))
+      val tcspAllSection  = TcspAll(false, None)
+      TcspAll.conv(TcspSection) must be (tcspAllSection)
     }
 
     "convert frontend model to Des when frontened model holds no data" in {
 
-      val TcspSection = Some(Tcsp(None, None, None, None, None))
-      val tcspAllSection = TcspAll(false, None)
-      TcspAll.conv(TcspSection) must be(tcspAllSection)
+      val TcspSection = Some(Tcsp(
+        None,
+        None,
+        None,
+        None,
+        None)
+      )
+      val tcspAllSection  = TcspAll(false, None)
+      TcspAll.conv(TcspSection) must be (tcspAllSection)
     }
   }
 

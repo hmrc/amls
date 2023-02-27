@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,11 @@ package models.fe.declaration
 
 import models.des.aboutyou.AboutYouRelease7
 
-case class AddPerson(firstName: String, middleName: Option[String], lastName: String, roleWithinBusiness: models.fe.declaration.RoleWithinBusiness)
+case class AddPerson(firstName: String,
+                     middleName: Option[String],
+                     lastName: String,
+                     roleWithinBusiness: models.fe.declaration.RoleWithinBusiness
+                            )
 
 object AddPerson {
 
@@ -53,8 +57,20 @@ object AddPerson {
   implicit def convert(aboutYou: AboutYouRelease7): AddPerson = {
 
     aboutYou.individualDetails match {
-      case Some(details) => AddPerson(details.firstName, details.middleName, details.lastName, models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
-      case None => AddPerson("", None, "", models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
+      case Some(details) => {
+        AddPerson(
+          details.firstName,
+          details.middleName,
+          details.lastName,
+          models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
+      }
+      case None =>
+        AddPerson(
+          "",
+          None,
+          "",
+          models.fe.declaration.RoleWithinBusiness.convert(aboutYou)
+        )
     }
   }
 }

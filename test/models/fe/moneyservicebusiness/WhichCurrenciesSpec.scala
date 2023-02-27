@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
 
   "WhichCurrencies" must {
 
@@ -35,11 +35,11 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       val expectedJson = Json.obj(
         "currencies" -> Seq("USD", "MNO", "PQR"),
-        "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
-        "moneySources" -> Json.obj(
-          "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
-          "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
-          "customerMoneySource" -> "Yes"))
+          "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
+      "moneySources" -> Json.obj(
+        "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
+        "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
+        "customerMoneySource" -> "Yes"))
 
       Json.toJson(input) must be(expectedJson)
     }
@@ -94,7 +94,7 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     }
 
     "convert des model to frontend model" in {
-      val msbCe = MsbCeDetailsR7(Some(true),
+      val msbCe = MsbCeDetailsR7( Some(true),
         Some(CurrencySourcesR7(
           None,
           Some(CurrencyWholesalerDetails(
@@ -116,7 +116,7 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     "convert des model to frontend model" when {
 
       "CurrSupplyToCust empty" in {
-        val msbCe = MsbCeDetailsR7(Some(true),
+        val msbCe = MsbCeDetailsR7( Some(true),
           Some(CurrencySourcesR7(
             None,
             Some(CurrencyWholesalerDetails(
@@ -136,7 +136,7 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       "dealInPhysCurrencies is missing, but contains data" in {
 
-        val msbCe = MsbCeDetailsR7(None,
+        val msbCe = MsbCeDetailsR7( None,
           Some(CurrencySourcesR7(
             None,
             Some(CurrencyWholesalerDetails(
@@ -156,7 +156,7 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       "dealInPhysCurrencies is missing and contains no data" in {
 
-        val msbCe = MsbCeDetailsR7(None,
+        val msbCe = MsbCeDetailsR7( None,
           Some(CurrencySourcesR7(
             None,
             None,
@@ -178,9 +178,9 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     }
 
     "convert des model to frontend model when bankNames empty" in {
-      val desModel = Some(MSBBankDetails(
+       val desModel = Some(MSBBankDetails(
         false,
-        Some(List.empty)
+         Some(List.empty)
       ))
       WhichCurrencies.convMSBBankDetails(desModel) must be(None)
     }
@@ -196,7 +196,7 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     "convert des model to frontend model when valid input is supplied" in {
       val desModel = Some(MSBBankDetails(
         true,
-        Some(Seq("bank1", "bank2"))
+        Some(Seq("bank1","bank2"))
       ))
       WhichCurrencies.convMSBBankDetails(desModel) must be(Some(BankMoneySource("bank1")))
     }
@@ -217,5 +217,5 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
       ))
       WhichCurrencies.convWholesalerDetails(desModel) must be(None)
     }
-  }
+ }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,12 @@ import models.des.SubscriptionView
 import models.fe.businessmatching.BusinessType
 import play.api.libs.json.Json
 
-case class ReviewDetails(businessName: String, businessType: BusinessType, businessAddress: Address, safeId: String)
+case class ReviewDetails(
+                          businessName: String,
+                          businessType: BusinessType,
+                          businessAddress: Address,
+                          safeId: String
+                        )
 
 object ReviewDetails {
   implicit val format = Json.format[ReviewDetails]

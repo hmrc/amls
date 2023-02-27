@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class BusinessMatchingSpec extends PlaySpec with MockitoSugar {
 
     val jsonBusinessMatching = Json.obj(
       "businessActivities" -> Seq("05", "06", "07"),
-      "msbServices" -> Seq("01", "02", "03", "04"),
+      "msbServices"-> Seq("01","02","03","04"),
       "businessName" -> "BusinessName",
       "businessType" -> "Unincorporated Body",
       "businessAddress" -> Json.obj(

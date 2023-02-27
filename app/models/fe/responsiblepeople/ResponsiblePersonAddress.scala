@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 
 package models.fe.responsiblepeople
 
-case class ResponsiblePersonAddress(personAddress: PersonAddress, timeAtAddress: TimeAtAddress)
+case class ResponsiblePersonAddress(personAddress: PersonAddress,
+                                    timeAtAddress: TimeAtAddress)
 
 object ResponsiblePersonAddress {
 
@@ -24,13 +25,15 @@ object ResponsiblePersonAddress {
 
   implicit val format = Json.format[ResponsiblePersonAddress]
 
-  implicit def convertToCurrent(address: ResponsiblePersonAddress): ResponsiblePersonCurrentAddress = {
+  implicit def convertToCurrent(address:ResponsiblePersonAddress) : ResponsiblePersonCurrentAddress= {
     ResponsiblePersonCurrentAddress(address.personAddress, address.timeAtAddress, dateOfChange = None)
   }
 
 }
 
-case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress, timeAtAddress: TimeAtAddress, dateOfChange: Option[String] = None)
+case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress,
+                                           timeAtAddress: TimeAtAddress,
+                                           dateOfChange: Option[String] = None)
 
 object ResponsiblePersonCurrentAddress {
 

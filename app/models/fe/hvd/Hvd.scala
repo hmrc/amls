@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ import models.des.SubscriptionView
 import play.api.libs.json.Json
 
 
-case class Hvd(cashPayment: Option[CashPayment] = None,
-               products: Option[Products] = None,
-               exciseGoods: Option[ExciseGoods] = None,
-               howWillYouSellGoods: Option[HowWillYouSellGoods] = None,
-               percentageOfCashPaymentOver15000: Option[PercentageOfCashPaymentOver15000] = None,
-               receiveCashPayments: Option[Boolean] = None,
-               cashPaymentMethods: Option[PaymentMethods] = None,
-               linkedCashPayment: Option[LinkedCashPayments] = None,
-               dateOfChange: Option[String] = None
-              ) {
+case class Hvd (cashPayment: Option[CashPayment] = None,
+                products: Option[Products] = None,
+                exciseGoods:  Option[ExciseGoods] = None,
+                howWillYouSellGoods: Option[HowWillYouSellGoods] = None,
+                percentageOfCashPaymentOver15000: Option[PercentageOfCashPaymentOver15000] = None,
+                receiveCashPayments: Option[Boolean] = None,
+                cashPaymentMethods: Option[PaymentMethods] = None,
+                linkedCashPayment: Option[LinkedCashPayments] = None,
+                dateOfChange: Option[String] = None
+               ) {
 }
 
 object Hvd {

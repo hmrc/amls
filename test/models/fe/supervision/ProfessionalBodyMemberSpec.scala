@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,37 +25,37 @@ class ProfessionalBodyMemberSpec extends PlaySpec with MockitoSugar {
 
   "JSON validation" must {
 
-    "validate given option Yes" in {
-      val json = Json.obj("isAMember" -> true)
+      "validate given option Yes" in {
+        val json =  Json.obj("isAMember" -> true)
 
-      Json.fromJson[ProfessionalBodyMember](json) must
-        be(JsSuccess(ProfessionalBodyMemberYes))
-    }
+        Json.fromJson[ProfessionalBodyMember](json) must
+          be(JsSuccess(ProfessionalBodyMemberYes))
+      }
 
-    "validate given values with option No" in {
-      val json = Json.obj("isAMember" -> false)
+      "validate given values with option No" in {
+        val json =  Json.obj("isAMember" -> false)
 
-      Json.fromJson[ProfessionalBodyMember](json) must
-        be(JsSuccess(ProfessionalBodyMemberNo))
-    }
+        Json.fromJson[ProfessionalBodyMember](json) must
+          be(JsSuccess(ProfessionalBodyMemberNo))
+      }
 
-    "fail when on path is missing" in {
-      Json.fromJson[ProfessionalBodyMember](Json.obj()) must
-        be(JsError((JsPath \ "isAMember") -> JsonValidationError("error.path.missing")))
-    }
+      "fail when on path is missing" in {
+        Json.fromJson[ProfessionalBodyMember](Json.obj()) must
+          be(JsError((JsPath \ "isAMember") -> JsonValidationError("error.path.missing")))
+      }
 
-    "fail when on invalid data" in {
-      Json.fromJson[ProfessionalBodyMember](Json.obj("isAMember" -> "")) must
-        be(JsError((JsPath \ "isAMember") -> JsonValidationError("error.expected.jsboolean")))
-    }
+      "fail when on invalid data" in {
+        Json.fromJson[ProfessionalBodyMember](Json.obj("isAMember" -> "")) must
+          be(JsError((JsPath \ "isAMember") -> JsonValidationError("error.expected.jsboolean")))
+      }
 
-    "write valid data in using json write" in {
-      Json.toJson[ProfessionalBodyMember](ProfessionalBodyMemberYes) must be(Json.obj("isAMember" -> true))
-    }
+      "write valid data in using json write" in {
+        Json.toJson[ProfessionalBodyMember](ProfessionalBodyMemberYes) must be (Json.obj("isAMember" -> true))
+      }
 
-    "write valid data in using json write with Option No" in {
-      Json.toJson[ProfessionalBodyMember](ProfessionalBodyMemberNo) must be(Json.obj("isAMember" -> false))
-    }
+      "write valid data in using json write with Option No" in {
+        Json.toJson[ProfessionalBodyMember](ProfessionalBodyMemberNo) must be (Json.obj("isAMember" -> false))
+      }
 
   }
 

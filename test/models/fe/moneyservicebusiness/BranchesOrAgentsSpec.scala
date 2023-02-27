@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,18 +37,26 @@ class BranchesOrAgentsSpec extends PlaySpec {
 
     "convMsbAll: return Branches or agents with no countries when countriesList is empty" in {
 
-      val data = Some(MsbAllDetails(Some("999999"), true, Some(CountriesList(List.empty)), true))
-
+      val data = Some(MsbAllDetails(
+        Some("999999"),
+        true,
+        Some(CountriesList(List.empty)),
+        true)
+      )
       BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(true, Some(Seq.empty[String]))))
     }
 
     "convMsbAll: return Branches or agents with no countries when countriesList is missing" in {
 
-      val data = Some(MsbAllDetails(Some("999999"), true, None, true))
-
+      val data = Some(MsbAllDetails(
+        Some("999999"),
+        true,
+        None,
+        true)
+      )
       BranchesOrAgents.convMsbAll(data) must be(Some(BranchesOrAgents(false, None)))
     }
-  }
+ }
 
   "Branches or agents Json Serialisation" when {
     "BranchesOrAgents form writes" when {

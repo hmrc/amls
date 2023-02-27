@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,30 @@ class BusinessDetailsSpec extends PlaySpec {
 
     "be convertible to BusinessDetails DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", FE.LPrLLP, Address("line_1", "line_2", None, None, None, "UK"), "safeId")
+      val reviewDetails = ReviewDetails("businessName",
+        FE.LPrLLP,
+        Address("line_1", "line_2", None, None, None, "UK"),
+        "safeId"
+      )
 
       val tp = TypeOfBusiness("LP")
 
       val companyRegistrationNumber = CompanyRegistrationNumber("123456789")
 
-      val businessMatching = BusinessMatching(reviewDetails, BusinessActivities(Set.empty), None, Some(tp), Some(companyRegistrationNumber), None)
+      val businessMatching = BusinessMatching(
+        reviewDetails,
+        BusinessActivities(Set.empty),
+        None,
+        Some(tp),
+        Some(companyRegistrationNumber),
+        None
+      )
 
       BusinessDetails.convert(businessMatching) must be(
-        BusinessDetails(DES.LPrLLP, Some(CorpAndBodyLlps("businessName", "123456789")), Some(UnincorpBody("businessName", "LP")))
+        BusinessDetails(
+          DES.LPrLLP,
+          Some(CorpAndBodyLlps("businessName", "123456789")),
+          Some(UnincorpBody("businessName", "LP")))
       )
     }
 
@@ -54,9 +68,12 @@ class BusinessDetailsSpec extends PlaySpec {
     }
 
     "successfully evaluate equals1" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
+      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
+        None,
+        Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")),
+      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor,
+        Some(CorpAndBodyLlps("CompanyName", "12345678")),
         Some(UnincorpBody("CompanyName1", "TypeOfBusiness")))
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
@@ -64,25 +81,37 @@ class BusinessDetailsSpec extends PlaySpec {
 
 
     "successfully evaluate equals2" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
+      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
+        None,
+        Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")), None)
+      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor,
+        Some(CorpAndBodyLlps("CompanyName", "12345678")),
+        None)
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
     }
 
     "successfully evaluate equals3" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, None)
+      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
+        None,
+        None)
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, None, None)
+      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor,
+        None,
+        None)
 
       testBusinessDetails.equals(testBusinessDetails1) must be(true)
     }
 
     "successfully evaluate equals4" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.LimitedCompany, None, None)
+      val testBusinessDetails = BusinessDetails(BusinessType.LimitedCompany,
+        None,
+        None)
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, None, None)
+      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor,
+        None,
+        None)
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
     }

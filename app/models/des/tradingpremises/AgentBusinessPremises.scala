@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ import models.des.RequestType
 import play.api.libs.json.Json
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
-case class AgentBusinessPremises(agentBusinessPremises: Boolean, agentDetails: Option[Seq[AgentDetails]])
+case class AgentBusinessPremises(
+                                  agentBusinessPremises: Boolean,
+                                  agentDetails: Option[Seq[AgentDetails]]
+                                )
 
 object AgentBusinessPremises {
 
@@ -29,8 +32,10 @@ object AgentBusinessPremises {
   implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): AgentBusinessPremises = {
     val `empty` = Seq.empty[FETradingPremises]
     tradingPremises match {
-      case `empty` => AgentBusinessPremises(false, None)
-      case _ => AgentBusinessPremises(true, Some(tradingPremises))
+      case `empty` =>
+        AgentBusinessPremises(false, None)
+      case _ =>
+        AgentBusinessPremises(true, Some(tradingPremises))
     }
   }
 }

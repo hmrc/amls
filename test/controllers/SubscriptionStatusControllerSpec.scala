@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
+import utils.{AmlsBaseSpec, AuthAction, IterateeHelpers, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
+class SubscriptionStatusControllerSpec extends AmlsBaseSpec with IterateeHelpers with AmlsReferenceNumberGenerator {
 
   lazy val ssConn = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
   val authAction: AuthAction = SuccessfulAuthAction
@@ -73,7 +73,7 @@ class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNu
         Controller.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(Controller.get("test", "test", amlsRegistrationNumber)(request).failed) {
+      whenReady (Controller.get("test", "test", amlsRegistrationNumber)(request).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
           body mustEqual Some("message")

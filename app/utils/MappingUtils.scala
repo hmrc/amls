@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ trait MappingUtils {
     /*
    * Json reads implicits
    */
-
     import play.api.libs.json.{JsError, JsSuccess, Reads}
 
     implicit def toReadsSuccess[A, B <: A](b: B): Reads[A] =

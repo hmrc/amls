@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,16 @@ package models.des.tradingpremises
 
 import play.api.libs.json.Json
 
-case class AgentDetailsView(agentLegalEntity: String, agentUtr: String, agentUtrType: String, agentLegalEntityName: String, agentPremises: AgentPremises)
+case class AgentDetailsView(
+                         agentLegalEntity:String,
+                         agentUtr: String,
+                         agentUtrType: String,
+                         agentLegalEntityName : String,
+                         agentPremises: AgentPremises
+                       )
 
 object AgentDetailsView {
+
   implicit val format = Json.format[AgentDetailsView]
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,57 +16,53 @@
 
 package repositories
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Provider, Singleton}
 import models.Fees
-import org.mongodb.scala.model._
-import org.mongodb.scala.result.InsertOneResult
-import play.api.Logging
-import repositories.FeesRepository.feesResponseExpiryTimeSeconds
-import uk.gov.hmrc.mongo.MongoComponent
-import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import play.api.{Logger, Logging}
+import play.api.libs.json.Json
+import play.modules.reactivemongo.ReactiveMongoComponent
+import reactivemongo.api.DefaultDB
+import reactivemongo.api.indexes.{Index, IndexType}
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
+import uk.gov.hmrc.mongo.ReactiveRepository
+import utils.MongoUtils._
 
-import java.util.concurrent.TimeUnit.SECONDS
-import javax.inject.Singleton
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+trait FeesRepository extends ReactiveRepository[Fees, BSONObjectID] {
+  def insert(feeResponse: Fees):Future[Boolean]
+  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]]
+}
+
 @Singleton
-class FeesRepository @Inject()(mongoC: MongoComponent)
-  extends PlayMongoRepository[Fees](
-    mongoComponent = mongoC,
-    collectionName = "fees",
-    domainFormat = Fees.format,
-    indexes = Seq(
-      IndexModel(
-        Indexes.ascending("createdAt"),
-        IndexOptions().name("feeResponseExpiry").expireAfter(feesResponseExpiryTimeSeconds, SECONDS)
-      ),
-      IndexModel(
-        Indexes.descending("amlsReferenceNumber"),
-        IndexOptions().name("amlsRefNumber")
-      )
-    )
-  ) with Logging {
+class FeesRepositoryProvider @Inject() (component: ReactiveMongoComponent) extends Provider[FeesRepository] with Logging {
 
-  def insert(feeResponse: Fees): Future[Boolean] = {
-    collection
-      .insertOne(feeResponse)
-      .toFuture()
-      .map { writeRes: InsertOneResult =>
-        logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result id: ${writeRes.getInsertedId}," +
-          s"acknowledged: ${writeRes.getInsertedId}")
-        writeRes.wasAcknowledged()
-      }
+  override def get(): FeesRepository =
+    new FeesMongoRepository()(component.mongoConnector.db)
+}
+
+class FeesMongoRepository()(implicit mongo: () => DefaultDB) extends ReactiveRepository[Fees, BSONObjectID]("fees", mongo, Fees.format)
+  with FeesRepository{
+
+  override def indexes: Seq[Index] = {
+    import reactivemongo.bson.DefaultBSONHandlers._
+
+    Seq(Index(Seq("createdAt" -> IndexType.Ascending), name = Some("feeResponseExpiry"),
+      options = BSONDocument("expireAfterSeconds" -> 31536000)))
   }
 
-  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] = {
-    collection
-      .find(Filters.eq("amlsReferenceNumber", amlsReferenceNumber))
-      .sort(Sorts.descending("createdAt"))
-      .headOption()
+  override def insert(feeResponse: Fees): Future[Boolean] = {
+    collection.insert(ordered = false).one(feeResponse) map { lastError =>
+      logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result: ${lastError.ok}, errors: ${lastError.writeErrors.getMessages}")
+      lastError.ok
+    }
+  }
+
+  override def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] = {
+    collection.find(Json.obj("amlsReferenceNumber" -> amlsReferenceNumber), Option.empty).sort(Json.obj("createdAt" -> -1)).one[Fees]
   }
 }
 
-object FeesRepository {
-  val feesResponseExpiryTimeSeconds = 31536000
-}
+

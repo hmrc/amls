@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,22 @@ sealed abstract class TaxType extends EnumEntry
 
 object TaxTypes extends Enum[TaxType] {
   case object `self-assessment` extends TaxType
-
   case object `vat` extends TaxType
-
   case object `epaye` extends TaxType
-
   case object `p11d` extends TaxType
-
   case object `other` extends TaxType
-
   case object `stamp-duty` extends TaxType
-
   case object `corporation-tax` extends TaxType
 
   override def values = findValues
 }
 
-case class Payment(id: String, taxType: TaxType, reference: String, description: Option[String], amountInPence: Int, status: PaymentStatus)
+case class Payment( id: String,
+                    taxType: TaxType,
+                    reference: String,
+                    description: Option[String],
+                    amountInPence: Int,
+                    status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)

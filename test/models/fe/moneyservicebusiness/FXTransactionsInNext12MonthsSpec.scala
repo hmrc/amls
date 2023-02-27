@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,20 @@ import play.api.libs.json.JsSuccess
 
 class FXTransactionsInNext12MonthsSpec extends PlaySpec {
 
-  "FXTransactionsInNext12Months" should {
+    "FXTransactionsInNext12Months" should {
 
-    "Json Validation" must {
+        "Json Validation" must {
 
-      "Successfully read/write Json data" in {
+            "Successfully read/write Json data" in {
 
-        FXTransactionsInNext12Months.format.reads(FXTransactionsInNext12Months.format.writes(
-          FXTransactionsInNext12Months("12345678963"))) must be(JsSuccess(FXTransactionsInNext12Months("12345678963")))
+                FXTransactionsInNext12Months.format.reads(FXTransactionsInNext12Months.format.writes(
+                    FXTransactionsInNext12Months("12345678963"))) must be(JsSuccess(FXTransactionsInNext12Months("12345678963")))
 
-      }
+            }
+        }
+
+        "return none when input is none" in {
+            FXTransactionsInNext12Months.convMsbFx(None) must be(None)
+        }
     }
-
-    "return none when input is none" in {
-      FXTransactionsInNext12Months.convMsbFx(None) must be(None)
-    }
-  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,8 +134,8 @@ class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       val desModel = AboutYouRelease7(
         Some(IndividualDetails("firstName", None, "lastName")),
         true,
-        Some(RolesWithinBusiness(true, true, true, true, true, true, true, false, None)),
-        Some(RoleForTheBusiness(true, true, Some("Some other text")))
+        Some(RolesWithinBusiness(true,true,true,true,true,true,true,false,None)),
+        Some(RoleForTheBusiness(true,true,Some("Some other text")))
       )
 
       val feModel = RoleWithinBusiness(Set(

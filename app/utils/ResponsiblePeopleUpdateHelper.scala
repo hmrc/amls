@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,10 @@ trait ResponsiblePeopleUpdateHelper {
 
     val updatedStatus = desResponsiblePeople.extra.status.getOrElse(
       if (desResponsiblePeople.equals(viewRp)) {
-        StatusConstants.Unchanged
-      } else {
-        StatusConstants.Updated
-      })
+      StatusConstants.Unchanged
+    } else {
+      StatusConstants.Updated
+    })
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
     val updatedStatusRp = desResponsiblePeople.copy(extra = statusExtraField)

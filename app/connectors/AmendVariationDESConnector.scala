@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,15 +37,26 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
                                            private[connectors] val httpClient: HttpClient,
                                            private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
 
-  def amend(amlsRegistrationNumber: String, data: des.AmendVariationRequest)
-           (implicit ec: ExecutionContext, wr1: Writes[des.AmendVariationRequest], wr2: Writes[des.AmendVariationResponse],
-            hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper): Future[des.AmendVariationResponse] = {
+  def amend
+  (amlsRegistrationNumber: String, data: des.AmendVariationRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.AmendVariationRequest],
+   wr2: Writes[des.AmendVariationResponse],
+   hc: HeaderCarrier,
+   apiRetryHelper: ApiRetryHelper
+  ): Future[des.AmendVariationResponse] = {
     apiRetryHelper.doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
   }
 
-  private def amendFunction(amlsRegistrationNumber: String, data: des.AmendVariationRequest)
-                           (implicit ec: ExecutionContext, wr1: Writes[des.AmendVariationRequest],
-                            wr2: Writes[des.AmendVariationResponse], hc: HeaderCarrier): Future[des.AmendVariationResponse] = {
+  private def amendFunction
+  (amlsRegistrationNumber: String, data: des.AmendVariationRequest)
+  (implicit
+   ec: ExecutionContext,
+   wr1: Writes[des.AmendVariationRequest],
+   wr2: Writes[des.AmendVariationResponse],
+   hc: HeaderCarrier
+  ): Future[des.AmendVariationResponse] = {
     val prefix = "[DESConnector][amend]"
     val bodyParser = JsonParsed[des.AmendVariationResponse]
     val timer = metrics.timer(API6)
@@ -53,21 +64,21 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
+    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc,ec) map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
+      case r@status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         auditConnector.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Future.successful(body)
-      case r @ status(s) =>
+      case r@status(s) =>
         metrics.failed(API6)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

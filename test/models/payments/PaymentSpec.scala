@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.payments
 
 import java.time.LocalDateTime
 import generators.PaymentGenerator
-import models.payapi.PaymentStatus.{Created, Successful}
+import models.payapi.PaymentStatuses.{Created, Successful}
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,23 @@ package models.des.businessactivities
 import models.fe.tcsp._
 import play.api.libs.json.Json
 
-case class ServicesforRegOff(
-                              callHandling: Boolean = false,
-                              emailHandling: Boolean = false,
-                              emailServer: Boolean = false,
-                              selfCollectMailboxes: Boolean = false,
-                              mailForwarding: Boolean = false,
-                              receptionist: Boolean = false,
-                              conferenceRooms: Boolean = false,
-                              other: Boolean = false,
-                              specifyOther: Option[String] = None
-                            )
+case class ServicesforRegOff (
+                               callHandling : Boolean = false,
+                               emailHandling : Boolean = false,
+                               emailServer : Boolean = false,
+                               selfCollectMailboxes : Boolean = false,
+                               mailForwarding : Boolean = false,
+                               receptionist : Boolean = false,
+                               conferenceRooms : Boolean = false,
+                               other : Boolean = false,
+                               specifyOther : Option[String] = None
+                             )
 
 object ServicesforRegOff {
 
-  implicit val format = Json.format[ServicesforRegOff]
+  implicit val format =  Json.format[ServicesforRegOff]
 
-  implicit def conv(tcsp: Option[Tcsp]): Option[ServicesforRegOff] = {
+  implicit def conv(tcsp: Option[Tcsp]) : Option[ServicesforRegOff] = {
     tcsp match {
       case Some(data) =>
         lazy val serviceProviders = tcsp.tcspTypes.fold[Set[ServiceProvider]](Set.empty)(x => x.serviceProviders)
@@ -49,20 +49,20 @@ object ServicesforRegOff {
     }
   }
 
-  implicit def conv1(svcs: Set[TcspService]): Option[ServicesforRegOff] = {
-    val servicesforRegOff = svcs.foldLeft[ServicesforRegOff](ServicesforRegOff(false, false, false, false, false, false, false, false, None))((x, y) =>
-      y match {
-        case PhonecallHandling => x.copy(callHandling = true)
-        case EmailHandling => x.copy(emailHandling = true)
-        case EmailServer => x.copy(emailServer = true)
-        case SelfCollectMailboxes => x.copy(selfCollectMailboxes = true)
-        case MailForwarding => x.copy(mailForwarding = true)
-        case Receptionist => x.copy(receptionist = true)
-        case ConferenceRooms => x.copy(conferenceRooms = true)
-        case Other(dtls) => x.copy(other = true, specifyOther = Some(dtls))
+  implicit def conv1(svcs: Set[TcspService]) : Option[ServicesforRegOff] = {
+      val servicesforRegOff = svcs.foldLeft[ServicesforRegOff](ServicesforRegOff(false, false, false,false,false,false,false,false, None)) ((x, y) =>
+        y match {
+          case PhonecallHandling => x.copy(callHandling = true)
+          case EmailHandling => x.copy(emailHandling = true)
+          case EmailServer => x.copy(emailServer = true)
+          case SelfCollectMailboxes => x.copy(selfCollectMailboxes = true)
+          case MailForwarding => x.copy(mailForwarding = true)
+          case Receptionist => x.copy(receptionist = true)
+          case ConferenceRooms => x.copy(conferenceRooms = true)
+          case Other(dtls) => x.copy(other = true, specifyOther = Some(dtls))
 
-      }
-    )
-    Some(servicesforRegOff)
+        }
+      )
+      Some(servicesforRegOff)
   }
 }

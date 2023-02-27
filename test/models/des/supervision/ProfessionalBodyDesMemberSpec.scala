@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,13 +39,13 @@ class ProfessionalBodyDesMemberSpec extends PlaySpec with MockitoSugar {
       )
 
       ProfessionalBodyDesMember.conv(from) must
-        be(Some(ProfessionalBodyDesMember(true, Some(MemberOfProfessionalBody(false, true, false, false, true, false, false, true, true, false, true, true, false, false, None)))))
+        be(Some(ProfessionalBodyDesMember(true,Some(MemberOfProfessionalBody(false,true,false,false,true,false,false,true,true,false,true,true,false,false,None)))))
     }
 
     "convert front end model to ProfessionalBodyDesMember false" in {
       val from = Supervision(professionalBodyMember = Some(ProfessionalBodyMemberNo))
 
-      ProfessionalBodyDesMember.conv(from) must be(Some(ProfessionalBodyDesMember(false, None)))
+      ProfessionalBodyDesMember.conv(from) must be (Some(ProfessionalBodyDesMember(false,None)))
     }
   }
 }

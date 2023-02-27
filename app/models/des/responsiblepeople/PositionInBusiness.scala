@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ trait OtherDetails {
   val otherDetails: Option[String]
 }
 
-case class PositionInBusiness(soleProprietor: Option[SoleProprietor], partnership: Option[Partnership],
+case class PositionInBusiness(soleProprietor: Option[SoleProprietor],
+                              partnership: Option[Partnership],
                               corpBodyOrUnInCorpBodyOrLlp: Option[CorpBodyOrUnInCorpBodyOrLlp])
 
 object PositionInBusiness {
   implicit val format = Json.format[PositionInBusiness]
 
-  implicit def conv(positions: Option[Positions], bm: fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
+  implicit def conv(positions: Option[Positions], bm:fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
     positions match {
       case Some(data) => convPositions(data, bm)
       case _ => None
@@ -40,33 +41,52 @@ object PositionInBusiness {
   }
 
   private def getPositionAsflags(positions: Positions) = {
-    positions.positions.foldLeft((false, false, false, false, false, false, false, false)) {
-      (pos, p) =>
-        p match {
-          case BeneficialOwner => pos.copy(_1 = true)
-          case Director => pos.copy(_2 = true)
-          case NominatedOfficer => pos.copy(_4 = true)
-          case Partner => pos.copy(_5 = true)
-          case FeSoleProprietor => pos.copy(_6 = true)
-          case DesignatedMember => pos.copy(_7 = true)
-          case Other(_) => pos.copy(_8 = true)
-          case _ => throw new MatchError(this)
-        }
+    positions.positions.foldLeft((false, false, false, false, false, false, false, false)){
+      (pos, p) => p match {
+        case BeneficialOwner => pos.copy(_1 = true)
+        case Director => pos.copy(_2 = true)
+        case NominatedOfficer => pos.copy(_4 = true)
+        case Partner => pos.copy(_5 = true)
+        case FeSoleProprietor => pos.copy(_6 = true)
+        case DesignatedMember => pos.copy(_7 = true)
+        case Other(_) => pos.copy(_8 = true)
+        case _ => throw new MatchError(this)
+      }
     }
   }
 
   implicit def convPositions(positions: Positions, bm: fe.businessmatching.BusinessMatching): Option[PositionInBusiness] = {
-    val (beneficialOwner, director, _, nominatedOfficer, partner, soleProprietor, designatedMember, other) = getPositionAsflags(positions)
+    val (
+      beneficialOwner,
+      director,
+      _,
+      nominatedOfficer,
+      partner,
+      soleProprietor,
+      designatedMember,
+      other
+      ) = getPositionAsflags(positions)
 
     val assignOther = Some(other)
     val otherVal = positions.positions.collectFirst { case Other(v) => v }
     val r7DesignatedMember = Some(designatedMember)
 
     bm.reviewDetails.businessType match {
-      case BusinessType.SoleProprietor => Some(PositionInBusiness(Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther, otherVal)), None, None))
-      case BusinessType.Partnership => Some(PositionInBusiness(None, Some(Partnership(partner, nominatedOfficer, assignOther, otherVal)), None))
-      case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(None, None,
-        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, r7DesignatedMember, assignOther, otherVal))))
+      case BusinessType.SoleProprietor => Some(PositionInBusiness(
+        Some(SoleProprietor(soleProprietor, nominatedOfficer, assignOther, otherVal)),
+        None,
+        None
+      ))
+      case BusinessType.Partnership => Some(PositionInBusiness(
+        None,
+        Some(Partnership(partner, nominatedOfficer, assignOther, otherVal)),
+        None
+      ))
+      case BusinessType.LPrLLP | BusinessType.LimitedCompany | BusinessType.UnincorporatedBody => Some(PositionInBusiness(
+        None,
+        None,
+        Some(CorpBodyOrUnInCorpBodyOrLlp(director, beneficialOwner, nominatedOfficer, r7DesignatedMember, assignOther, otherVal))
+      ))
     }
 
   }

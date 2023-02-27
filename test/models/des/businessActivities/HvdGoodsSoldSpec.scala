@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ class HvdGoodsSoldSpec extends PlaySpec {
 
     "successfully convert hvd frontend model to HvdGoodsSold" in {
 
-      HvdGoodsSold.conv(Some(HvdModel)) must be(Some(HvdGoodsSold(true, true, false, false,
-        false, false, false, false, false, false, false, true, Some("Details"), Some(HowGoodsAreSold(true, true, true)))))
+      HvdGoodsSold.conv(Some(HvdModel)) must be(Some(HvdGoodsSold(true, true,false,false,
+        false,false,false,false,false,false,false,true, Some("Details"), Some(HowGoodsAreSold(true,true,true)))))
     }
 
     "successfully convert hvd frontend model to HvdGoodsSold when HowWillYouSellGoods id none" in {
@@ -52,11 +52,11 @@ class HvdGoodsSoldSpec extends PlaySpec {
         howWillYouSellGoods = None
       )
 
-      HvdGoodsSold.conv(Some(HvdModel)) must be(Some(HvdGoodsSold(false, false, false, false, true, true, false, false, true, true, true, false, None, None)))
+      HvdGoodsSold.conv(Some(HvdModel)) must be(Some(HvdGoodsSold(false,false,false,false,true,true,false,false,true,true,true,false,None,None)))
     }
 
     "successfully convert the data model" in {
-      HvdGoodsSold.conv(Some(Hvd())) must be(Some(HvdGoodsSold(false, false, false, false, false, false, false, false, false, false, false, false, None, None)))
+      HvdGoodsSold.conv(Some(Hvd())) must be(Some(HvdGoodsSold(false,false,false,false,false,false,false,false,false,false,false,false,None,None)))
     }
 
   }

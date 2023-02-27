@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class MsbServicesSpec extends PlaySpec {
 
     "fail when on invalid data" in {
       Json.fromJson[MsbServices](Json.obj("msbServices" -> Seq("40"))) must
-        be(JsError((JsPath \ "msbServices") (0) -> JsonValidationError("error.invalid")))
+        be(JsError((JsPath \ "msbServices") (0)  -> JsonValidationError("error.invalid")))
     }
 
     "convert msb des model to frontend model" in {

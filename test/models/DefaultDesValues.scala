@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,17 +56,17 @@ object DefaultDesValues {
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
   private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
   private val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
-  private val desallActivitiesModel = Some(BusinessActivitiesAll(None, Some("1990-02-24"), Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
+  private val desallActivitiesModel = Some(BusinessActivitiesAll(None,Some("1990-02-24"), Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
     formalRiskAssessmentDetails, mlrAdvisor))
-  private val tcspServicesOffered = Some(TcspServicesOffered(true, true, true, true, true))
-  private val servicesforRegOff = Some(ServicesforRegOff(true, false, false, false, false, false, false, true, Some("other service")))
-  private val aspServicesOffered = Some(AspServicesOffered(true, false, false, true, true))
+  private val tcspServicesOffered = Some(TcspServicesOffered(true,true,true,true,true))
+  private val servicesforRegOff = Some(ServicesforRegOff(true,false,false,false,false,false,false,true,Some("other service")))
+  private val aspServicesOffered =  Some(AspServicesOffered(true, false, false, true, true))
   private val ampServices = Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service"))))
-  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true, true, true, false, false, false, false, false))
-  private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true, true, false, true, false))
-  private val hvdGoodsSold = Some(HvdGoodsSold(true, true, true, true, true, false, false, false, false, false, false, true, Some("Details"),
-    Some(HowGoodsAreSold(true, false, true))))
+  private val mlrActivitiesAppliedFor = Some(MlrActivitiesAppliedFor(true,true,true, false, false,false,false,false))
+  private val msbServicesCarriedOut = Some(MsbServicesCarriedOut(true,true,false,true,false))
+  private val hvdGoodsSold = Some(HvdGoodsSold(true,true,true,true,true,false,false,false,false,false,false,true,Some("Details"),
+    Some(HowGoodsAreSold(true,false,true))))
   private val hvdAlcoholTobacco = Some(HvdAlcoholTobacco(true))
 
   val BusinessActivitiesSection = DesBusinessActivities(mlrActivitiesAppliedFor, msbServicesCarriedOut, hvdGoodsSold, hvdAlcoholTobacco, aspServicesOffered,
@@ -126,7 +126,6 @@ object DefaultDesValues {
     Some("2008-01-01"))
 
   private def agentDetails = AgentDetails("Sole Proprietor", None, None, Some("entity name"), agentPremises)
-
   private def agentDetails1 = AgentDetails(agentLegalEntity = "Sole Proprietor", companyRegNo = None, dateOfBirth = Some("1970-01-01"), agentLegalEntityName = Some("entity name"), agentPremises = agentPremises)
 
   private val agentBusinessPremises = AgentBusinessPremises(true, Some(Seq(agentDetails)))
@@ -161,12 +160,12 @@ object DefaultDesValues {
   private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
   private val extraAdditional = Some(AddressUnderThreeYears(RPAddress("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
-  private val positionInBusinessForRelease7 = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false))), None, None))
-  private val positionInBusiness = Some(PositionInBusiness(Some(DesSoleProprietor(true, true)),
+  private val positionInBusinessForRelease7 = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false))),None, None))
+  private val positionInBusiness= Some(PositionInBusiness(Some(DesSoleProprietor(true, true)),
     None, None))
 
-  val tcspAllSection = Some(TcspAll(true, Some("12345678")))
-  val tcspTrustCompFormationAgtSection = Some(TcspTrustCompFormationAgt(true, true))
+  val tcspAllSection  = Some(TcspAll(true,Some("12345678")))
+  val tcspTrustCompFormationAgtSection = Some(TcspTrustCompFormationAgt(true,true))
 
   val ResponsiblePersonsSection = Some(Seq(ResponsiblePersons(
     nameDetails = nameDtls,
@@ -289,13 +288,13 @@ object DefaultDesValues {
 
   val AmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19 16:58:06.259Z")), true, 60))
 
-  val AspSection = Some(Asp(true, None))
+  val AspSection =  Some(Asp(true, None))
 
-  private val supervisionDetails = SupervisionDetails(true, Some(SupervisorDetails("Company A", "1993-08-25", "1999-08-25", Some(false), "Ending reason")))
-  private val supervisionDetails1 = SupervisionDetails(true, Some(SupervisorDetails("Company A", "1993-08-25", "1999-08-25", None, "Ending reason")))
-  private val professionalBodyDetails = ProfessionalBodyDetails(true, Some("details"),
+  private val supervisionDetails = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",Some(false),"Ending reason")))
+  private val supervisionDetails1 = SupervisionDetails(true,Some(SupervisorDetails("Company A","1993-08-25","1999-08-25",None,"Ending reason")))
+  private val professionalBodyDetails = ProfessionalBodyDetails(true,Some("details"),
     Some(ProfessionalBodyDesMember(true,
-      Some(MemberOfProfessionalBody(true, true, false, false, false, false, false, false, false, false, false, false, false, true, Some("test"))))))
+      Some(MemberOfProfessionalBody(true,true,false,false,false,false,false,false,false,false,false,false,false,true,Some("test"))))))
 
   val AspOrTcspSection = Some(AspOrTcsp(Some(supervisionDetails),
     Some(professionalBodyDetails)))
@@ -306,27 +305,27 @@ object DefaultDesValues {
 
   val msbSection = Some(
     MoneyServiceBusiness(
-      Some(MsbAllDetails(Some("499999"), true, Some(CountriesList(List("GB"))), true)),
-      Some(MsbMtDetails(true, Some("123456"),
-        IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+      Some(MsbAllDetails(Some("499999"),true,Some(CountriesList(List("GB"))),true)),
+      Some(MsbMtDetails(true,Some("123456"),
+        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
         true,
-        Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))))),
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))))),
       Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
 
   val msbSectionR6 = Some(
     MoneyServiceBusiness(
-      Some(MsbAllDetails(Some("499999"), true, Some(CountriesList(List("GB"))), true)),
-      Some(MsbMtDetails(true, Some("123456"),
-        IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+      Some(MsbAllDetails(Some("499999"),true,Some(CountriesList(List("GB"))),true)),
+      Some(MsbMtDetails(true,Some("123456"),
+        IpspServicesDetails(true,Some(Seq(IpspDetails("name","123456789123456")))),
         true,
-        Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))), None)),
+        Some("12345678963"),Some(CountriesList(List("GB"))),Some(CountriesList(List("LA","LV"))), None)),
       Some(MsbCeDetailsR7(None, Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
         Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
   )
   // scalastyle:off magic.number
-  val hvdSection = Some(DesHvd(true, Some("1978-02-15"), Some(false), true, Some(40), Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
-  val hvdSection1 = Some(DesHvd(true, Some("1978-02-15"), None, true, Some(40), Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+  val hvdSection = Some(DesHvd(true,Some("1978-02-15"),Some(false),true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
+  val hvdSection1 = Some(DesHvd(true,Some("1978-02-15"), None,true,Some(40),Some(HvdFromUnseenCustDetails(true,Some(ReceiptMethods(true,true,true,Some("foo")))))))
 
 }

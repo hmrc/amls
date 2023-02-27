@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -517,6 +517,7 @@ object DesConstants {
   )
 
 
+
   val agentDetailsAPI62 = AgentDetails(
     "Sole Proprietor",
     None,
@@ -1005,7 +1006,7 @@ object DesConstants {
     Some("AgentLegalEntityName"),
     Some("1970-01-01"),
     amenStatusAgentPremises1,
-    None, None,
+    None,None,
     Some(StatusConstants.Added),
     None
   )
@@ -1154,7 +1155,7 @@ object DesConstants {
     ))
 
   val tradingPremisesAPI6Release7 = TradingPremises(
-    Some(OwnBusinessPremises(false, None)),
+    Some(OwnBusinessPremises(false,None)),
     Some(AgentBusinessPremises(
       true,
       Some(Seq(agentPremisesapi6Release7))
@@ -1246,7 +1247,7 @@ object DesConstants {
       Some(CountriesList(List("AD", "GB"))),
       Some(false)
     )),
-    Some(MsbCeDetailsR7(Some(true),
+    Some(MsbCeDetailsR7( Some(true),
       Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,
@@ -1284,7 +1285,7 @@ object DesConstants {
       Some(CountriesList(List("AD", "GB"))),
       None
     )),
-    Some(MsbCeDetailsR7(None,
+    Some(MsbCeDetailsR7( None,
       Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,
@@ -1321,7 +1322,7 @@ object DesConstants {
       Some(CountriesList(List("GB", "AD"))),
       Some(CountriesList(List("AD", "GB")))
     )),
-    Some(MsbCeDetailsR7(Some(true),
+    Some(MsbCeDetailsR7( Some(true),
       Some(CurrencySourcesR7(
         Some(MSBBankDetails(
           true,

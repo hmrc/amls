@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@
 package services
 
 import cats.implicits._
-import com.mongodb.client.result.UpdateResult
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
-import models.payapi.PaymentStatus
+import models.payapi.PaymentStatuses
 import models.payments.{Payment, PaymentStatusResult}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -30,11 +29,12 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
+import reactivemongo.api.commands.{UpdateWriteResult, Upserted, WriteError}
 import repositories.PaymentRepository
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
 
@@ -47,11 +47,19 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
   val testPayment = Payment(amlsRefNoGen.sample.get, safeId, testPayApiPayment)
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
-  val updateResult = mock[UpdateResult]
-  when(updateResult.wasAcknowledged()) thenReturn true
+  val successWriteResult = mock[UpdateWriteResult]
+  when(successWriteResult.ok) thenReturn true
 
-
-  def errorResult() = UpdateResult.unacknowledged()
+  def errorWriteResult(error: String): UpdateWriteResult = UpdateWriteResult(
+    ok = false,
+    0,
+    0,
+    Seq.empty[Upserted],
+    Seq.empty[WriteError],
+    None,
+    None,
+    Some(error)
+  )
 
   before {
     Seq(testPayAPIConnector, testPaymentRepo, testPayAPIConnector).foreach(reset(_))
@@ -167,7 +175,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
         when {
           testPaymentRepo.update(any())
-        } thenReturn Future.successful(updateResult)
+        } thenReturn Future.successful(successWriteResult)
 
         whenReady(testPaymentService.updatePayment(updatedPayment)) { result =>
           result mustBe true
@@ -184,7 +192,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
         when {
           testPaymentRepo.update(any())
-        } thenReturn Future.successful(errorResult())
+        } thenReturn Future.successful(errorWriteResult("Could not write the payment"))
 
         intercept[Exception] {
           whenReady(testPaymentService.updatePayment(updatedPayment)) { _ =>
@@ -198,8 +206,8 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       "refresh the status" in {
         val paymentRef = paymentRefGen.sample.get
         val paymentId = paymentIdGen.sample.get
-        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatus.Created)
-        val payApiPayment = testPayApiPayment.copy(status = PaymentStatus.Successful)
+        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatuses.Created)
+        val payApiPayment = testPayApiPayment.copy(status = PaymentStatuses.Successful)
         val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
 
         when {
@@ -215,7 +223,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         } thenReturn Future.successful(payApiPayment)
 
         testPaymentService.refreshStatus(paymentRef) map { result =>
-          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatus.Successful)
+          result mustBe PaymentStatusResult(paymentRef, paymentId, PaymentStatuses.Successful)
           verify(testPaymentRepo).insert(updatedPayment)
         }
       }
@@ -261,7 +269,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
       when {
         testPaymentRepo.update(any())
-      } thenReturn Future.successful(updateResult)
+      } thenReturn Future.successful(successWriteResult)
 
       whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { result =>
         result mustBe payment.copy(isBacs = Some(true))

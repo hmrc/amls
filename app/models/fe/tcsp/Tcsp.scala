@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package models.fe.tcsp
 
 import models.des.SubscriptionView
 
-case class Tcsp(tcspTypes: Option[TcspTypes] = None,
-                onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
-                complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
-                providedServices: Option[ProvidedServices] = None,
-                doesServicesOfAnotherTCSP: Option[Boolean] = None,
-                servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None) {
+case class Tcsp (tcspTypes: Option[TcspTypes] = None,
+                 onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
+                 complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
+                 providedServices: Option[ProvidedServices] = None,
+                 doesServicesOfAnotherTCSP: Option[Boolean] = None,
+                 servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None) {
 
   def tcspTypes(trust: TcspTypes): Tcsp =
     this.copy(tcspTypes = Some(trust))
@@ -49,7 +49,6 @@ object Tcsp {
   def convBool(tcsp: models.des.tcsp.TcspAll): Option[Boolean] = {
     Some(tcsp.anotherTcspServiceProvider)
   }
-
   import play.api.libs.json._
 
   val key = "tcsp"

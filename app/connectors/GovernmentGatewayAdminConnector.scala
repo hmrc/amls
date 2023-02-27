@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,21 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
-  def addKnownFacts(knownFacts: KnownFactsForService)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  def addKnownFacts
+  (knownFacts: KnownFactsForService)
+  (implicit
+   headerCarrier: HeaderCarrier,
+   writes: Writes[KnownFactsForService]
+  ): Future[HttpResponse] = {
     addKnownFactsFunction(knownFacts)
   }
 
-  private def addKnownFactsFunction(knownFacts: KnownFactsForService)
-                                   (implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  private def addKnownFactsFunction
+  (knownFacts: KnownFactsForService)
+  (implicit
+   headerCarrier: HeaderCarrier,
+   writes: Writes[KnownFactsForService]
+  ): Future[HttpResponse] = {
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
     val timer = metrics.timer(GGAdmin)
     logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")

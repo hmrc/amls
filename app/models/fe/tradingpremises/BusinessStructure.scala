@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,9 @@ sealed trait BusinessStructure
 object BusinessStructure {
 
   case object SoleProprietor extends BusinessStructure
-
   case object LimitedLiabilityPartnership extends BusinessStructure
-
   case object Partnership extends BusinessStructure
-
   case object IncorporatedBody extends BusinessStructure
-
   case object UnincorporatedBody extends BusinessStructure
 
 
@@ -41,7 +37,7 @@ object BusinessStructure {
       case "04" => Reads(_ => JsSuccess(IncorporatedBody))
       case "05" => Reads(_ => JsSuccess(UnincorporatedBody))
       case _ =>
-        Reads(_ => JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
+        Reads(_ =>JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,41 +44,43 @@ object ResponsiblePersonAddressHistory {
       case "7-12 months" => SixToElevenMonths
       case "1-3 years" => OneToThreeYears
       case "3+ years" => ThreeYearsPlus
-      case "" => Empty
+      case  "" => Empty
     }
   }
 
   def convAddress(addr: Address): PersonAddress = {
     addr.postcode match {
-      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
-      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
+      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2,addr.addressLine3,addr.addressLine4, postcode)
+      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2,addr.addressLine3,addr.addressLine4, addr.country)
     }
   }
 
   def convAddress(addr: AddressWithChangeDate): PersonAddress = {
     addr.postcode match {
-      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
-      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
+      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2,addr.addressLine3,addr.addressLine4, postcode)
+      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2,addr.addressLine3,addr.addressLine4, addr.country)
     }
   }
 
   def getAddressAndTime(addressDetails: Option[AddressUnderThreeYears], timeAtAddress: Option[String]): Option[ResponsiblePersonAddress] = {
     val address = addressDetails.map(x => convAddress(x.address))
-    val timeAt = timeAtAddress.map(x => convTimeAtAddress(x))
+    val timeAt = timeAtAddress.map(x =>convTimeAtAddress(x))
     (address, timeAt) match {
-      case (Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
+      case(Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
       case _ => None
     }
   }
 
   def getAddressAndTimeForCurrentAddress(addressDetails: Option[CurrentAddress], timeAtAddress: Option[String]): Option[ResponsiblePersonCurrentAddress] = {
     val address = addressDetails.map(x => convAddress(x.address))
-    val timeAt = timeAtAddress.map(x => convTimeAtAddress(x))
+    val timeAt = timeAtAddress.map(x =>convTimeAtAddress(x))
     (address, timeAt) match {
-      case (Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
+      case(Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
       case _ => None
     }
   }
+
+
 
 
   implicit def conv(rp: ResponsiblePersons): Option[ResponsiblePersonAddressHistory] = {

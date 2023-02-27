@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package models.des.supervision
 import models.fe.supervision.Supervision
 import play.api.libs.json.Json
 
-case class AspOrTcsp(supervisionDetails: Option[SupervisionDetails], professionalBodyDetails: Option[ProfessionalBodyDetails])
+case class AspOrTcsp (supervisionDetails: Option[SupervisionDetails],
+                      professionalBodyDetails: Option[ProfessionalBodyDetails])
 
 object AspOrTcsp {
 
@@ -31,7 +32,6 @@ object AspOrTcsp {
       case _ => None
     }
   }
-
   def conv1(supervision: Option[Supervision]): Option[AspOrTcsp] = {
     supervision match {
       case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv1(x.anotherBody), ProfessionalBodyDetails.conv(x)))

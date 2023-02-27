@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,13 +61,13 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
     "convert des msb to frontend msb model" in {
 
       val convertedMsb = Some(MoneyServiceBusiness(
-        Some(Third), Some(BusinessUseAnIPSPYes("IPSPName1", "IPSPMLRRegNo1")),
+        Some(Third),Some(BusinessUseAnIPSPYes("IPSPName1","IPSPMLRRegNo1")),
         Some(IdentifyLinkedTransactions(true)),
-        Some(SendMoneyToOtherCountry(true)), Some(FundsTransfer(true)),
+        Some(SendMoneyToOtherCountry(true)),Some(FundsTransfer(true)),
         Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
         Some(TransactionsInNext12Months("11111111111")),
         Some(CETransactionsInNext12Months("11234567890")),
-        Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)),
+        Some(SendTheLargestAmountsOfMoney("GB",Some("AD"), None)),
         Some(MostTransactions(List("AD", "GB"))),
         Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
         Some(FXTransactionsInNext12Months("234234234"))
@@ -131,20 +131,20 @@ trait MoneyServiceBusinessTestData {
   val emptyModel = MoneyServiceBusiness(None)
 
   val completeJson = Json.obj(
-    "throughput" -> Json.obj("throughput" -> "02"),
-    "businessUseAnIPSP" -> Json.obj("useAnIPSP" -> true,
+      "throughput" -> Json.obj("throughput" -> "02"),
+      "businessUseAnIPSP" -> Json.obj("useAnIPSP" -> true,
       "name" -> "name",
       "referenceNumber" -> "123456789123456"),
-    "identifyLinkedTransactions" -> Json.obj("linkedTxn" -> true),
-    "sendMoneyToOtherCountry" -> Json.obj("money" -> true),
-    "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
-    "branchesOrAgents" -> Json.obj("hasCountries" -> true, "countries" -> Json.arr("GB")),
-    "transactionsInNext12Months" -> Json.obj("txnAmount" -> "12345678963"),
-    "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
-    "mostTransactions" -> Json.obj("mostTransactionsCountries" -> Seq("GB")),
-    "sendTheLargestAmountsOfMoney" -> Json.obj("country_1" -> "GB"),
-    "ceTransactionsInNext12Months" -> Json.obj("ceTransaction" -> "12345678963"),
-    "fxTransactionsInNext12Months" -> Json.obj("fxTransaction" -> "987654321")
+      "identifyLinkedTransactions" -> Json.obj("linkedTxn" -> true),
+      "sendMoneyToOtherCountry" -> Json.obj("money" -> true),
+      "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
+      "branchesOrAgents" -> Json.obj("hasCountries" -> true,"countries" ->Json.arr("GB")),
+      "transactionsInNext12Months" -> Json.obj("txnAmount" -> "12345678963"),
+      "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
+      "mostTransactions" -> Json.obj("mostTransactionsCountries" -> Seq("GB")),
+      "sendTheLargestAmountsOfMoney" -> Json.obj("country_1" ->"GB"),
+      "ceTransactionsInNext12Months" -> Json.obj("ceTransaction" -> "12345678963"),
+      "fxTransactionsInNext12Months" -> Json.obj("fxTransaction" -> "987654321")
   )
 
   val emptyJson = Json.obj("msbServices" -> Json.arr())

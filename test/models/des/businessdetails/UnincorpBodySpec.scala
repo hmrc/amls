@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,11 @@ class UnincorpBodySpec extends PlaySpec {
 
     "be convertible to UnincorpBody DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", LimitedCompany, Address("line_1", "line_2", None, None, None, "UK"), "safeId")
+      val reviewDetails = ReviewDetails("businessName",
+        LimitedCompany,
+        Address("line_1", "line_2", None, None, None, "UK"),
+        "safeId"
+      )
 
       val typeOfBusiness = TypeOfBusiness("LTD")
 

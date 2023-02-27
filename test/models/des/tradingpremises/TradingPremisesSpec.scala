@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -208,8 +208,8 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
         FETradingPremises(Some(
           RegisteringAgentPremises(false)),
           YourTradingPremises("string",
-            FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA", Some("1999-05-01"))
-            , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
+          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA", Some("1999-05-01"))
+          , new LocalDate(2010, 1, 1), false, Some("1999-04-01")),
           None, None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices), Some("2009-01-01")),
           Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
@@ -239,12 +239,12 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
 
       converted.agentBusinessPremises match {
         case Some(x: AgentBusinessPremises) => x.agentDetails match {
-          case Some(details: Seq[AgentDetails]) =>
-            details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
-            details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
+           case Some(details: Seq[AgentDetails]) =>
+             details.head.agentDetailsChangeDate must be(agentBusinessPremises.get.agentDetails.get.head.agentDetailsChangeDate)
+             details.head.agentPremises.sectorChangeDate must be(Some("2003-04-05"))
 
-          case _ => throw new RuntimeException("Invalid Agent details")
-        }
+           case _ => throw new RuntimeException("Invalid Agent details")
+         }
         case _ => throw new RuntimeException("Invalid Agent Business Premises")
       }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "Deserialise from phase2 json successfully" in {
-      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be(JsSuccess(RPValues.modelPhase2))
+      ResponsiblePersons.jsonReads.reads(RPValues.jsonExpectedFromWritePhase2) must be (JsSuccess(RPValues.modelPhase2))
     }
 
     "convert FE model to DES model for phase 2" in {
@@ -49,7 +49,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         BusinessMatchingSection.emptyModel,
         false
       )
-      responsiblePersonPhase2 must be(RPValues.modelPhase3)
+      responsiblePersonPhase2 must be (RPValues.modelPhase3)
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - F&P should return Some(false)" in {
@@ -66,7 +66,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         false
       )
 
-      responsiblePersonPhase2.passedFitAndProperTest must be(Some(false))
+      responsiblePersonPhase2.passedFitAndProperTest must be (Some(false))
     }
 
     "The dateChangeFlag field value of ResponsiblePersons should be None for non-amend journey" in {
@@ -75,7 +75,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         BusinessMatchingSection.emptyModel,
         false
       )
-      responsiblePersons.dateChangeFlag must be(None)
+      responsiblePersons.dateChangeFlag must be (None)
     }
 
     "The dateChangeFlag field value of ResponsiblePersons should be Some(false) for amend journey" in {
@@ -84,7 +84,7 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
         BusinessMatchingSection.emptyModel,
         true
       )
-      responsiblePersons.dateChangeFlag must be(Some(false))
+      responsiblePersons.dateChangeFlag must be (Some(false))
     }
 
     "REMOVE WHEN FRONTEND IMPLEMENTED FOR PHASE 2 - Approval should return Some(false)" in {
@@ -97,13 +97,13 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val responsiblePersonPhase2 =
 
-        ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
-          respPeoplePhase2,
-          BusinessMatchingSection.emptyModel,
-          false
-        )
+          ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
+        respPeoplePhase2,
+        BusinessMatchingSection.emptyModel,
+            false
+      )
 
-      responsiblePersonPhase2.passedApprovalCheck must be(Some(false))
+      responsiblePersonPhase2.passedApprovalCheck must be (Some(false))
     }
   }
 }

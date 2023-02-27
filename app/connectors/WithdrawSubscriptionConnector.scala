@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,30 +47,33 @@ class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig:
     apiRetryHelper.doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
   }
 
-  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)
-                                (implicit ec: ExecutionContext, wr1: Writes[WithdrawSubscriptionRequest], wr2: Writes[WithdrawSubscriptionResponse],
-                                 hc: HeaderCarrier): Future[WithdrawSubscriptionResponse] = {
+  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(
+    implicit ec: ExecutionContext,
+    wr1: Writes[WithdrawSubscriptionRequest],
+    wr2: Writes[WithdrawSubscriptionResponse],
+    hc: HeaderCarrier
+  ): Future[WithdrawSubscriptionResponse] = {
     val prefix = "[DESConnector][withdrawal]"
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]
     val timer = metrics.timer(API8)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
-    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
+    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1,implicitly[HttpReads[HttpResponse]],hc,ec) map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case r @ status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
+      case r@status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
         metrics.success(API8)
         audit.sendDataEvent(WithdrawSubscriptionEvent(amlsRegistrationNumber, data, body))
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r@status(s) =>
         metrics.failed(API8)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")

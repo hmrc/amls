@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,25 @@ package models.des.businessactivities
 import models.fe.asp._
 import play.api.libs.json.Json
 
-case class AspServicesOffered(accountant: Boolean, payrollServiceProvider: Boolean, bookKeeper: Boolean, auditor: Boolean, financialOrTaxAdvisor: Boolean)
+case class AspServicesOffered (accountant: Boolean,
+                               payrollServiceProvider : Boolean,
+                               bookKeeper: Boolean,
+                               auditor: Boolean,
+                               financialOrTaxAdvisor:Boolean
+                              )
 
 object AspServicesOffered {
 
-  implicit val format = Json.format[AspServicesOffered]
+  implicit val format =  Json.format[AspServicesOffered]
 
-  implicit def conv(asp: Option[Asp]): Option[AspServicesOffered] = {
+  implicit def conv(asp: Option[Asp]) : Option[AspServicesOffered] = {
     asp match {
-      case Some(data) => data.services.fold[Set[Service]](Set.empty)(x => x.services)
+      case Some(data) => data.services.fold[Set[Service]](Set.empty)(x=> x.services)
       case _ => None
     }
   }
 
-  implicit def conv1(svcs: Set[Service]): Option[AspServicesOffered] = {
+  implicit def conv1(svcs: Set[Service]) : Option[AspServicesOffered] = {
     val (accountant, payrollServiceProvider, bookKeeper,
     auditor, financialOrTaxAdvisor) = svcs.foldLeft[(Boolean, Boolean, Boolean, Boolean, Boolean)]((false, false, false, false, false))((x, y) =>
       y match {
@@ -43,7 +48,7 @@ object AspServicesOffered {
         case FinancialOrTaxAdvice => x.copy(_5 = true)
       }
     )
-    Some(AspServicesOffered(accountant, payrollServiceProvider, bookKeeper,
-      auditor, financialOrTaxAdvisor))
+     Some(AspServicesOffered(accountant, payrollServiceProvider, bookKeeper,
+       auditor, financialOrTaxAdvisor ))
   }
 }

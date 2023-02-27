@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import play.api.libs.json._
 
 sealed trait ProfessionalBody
 
-case class ProfessionalBodyYes(value: String) extends ProfessionalBody
-
+case class ProfessionalBodyYes(value : String) extends ProfessionalBody
 case object ProfessionalBodyNo extends ProfessionalBody
 
 
@@ -30,9 +29,9 @@ object ProfessionalBody {
 
   implicit val jsonReads: Reads[ProfessionalBody] =
     (__ \ "penalised").read[Boolean] flatMap {
-      case true => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply _
-      case false => Reads(_ => JsSuccess(ProfessionalBodyNo))
-    }
+    case true => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply _
+    case false => Reads(_ => JsSuccess(ProfessionalBodyNo))
+  }
 
   implicit val jsonWrites = Writes[ProfessionalBody] {
     case ProfessionalBodyYes(value) => Json.obj(
@@ -42,10 +41,10 @@ object ProfessionalBody {
     case ProfessionalBodyNo => Json.obj("penalised" -> false)
   }
 
-  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBody] = {
+  implicit def conv(supDtls: Option[ProfessionalBodyDetails] ): Option[ProfessionalBody] = {
     supDtls match {
       case Some(data) => data.prevWarnedWRegToAspActivities match {
-        case true => Some(ProfessionalBodyYes(data.detailsIfFinedWarned.getOrElse("")))
+        case true => Some(ProfessionalBodyYes(data.detailsIfFinedWarned.getOrElse ("")))
         case false => Some(ProfessionalBodyNo)
       }
       case None => Some(ProfessionalBodyNo)

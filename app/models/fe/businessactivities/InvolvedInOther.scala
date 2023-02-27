@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ object InvolvedInOther {
 
   implicit val jsonWrites = Writes[InvolvedInOther] {
     case InvolvedInOtherYes(details) => Json.obj(
-      "involvedInOther" -> true,
-      "details" -> details
-    )
+                                          "involvedInOther" -> true,
+                                          "details" -> details
+                                        )
     case involvedInOtherNo => Json.obj("involvedInOther" -> false)
   }
 
-  def conv(activityDtls: BusinessActivityDetails): Option[InvolvedInOther] = {
+  def conv(activityDtls: BusinessActivityDetails) : Option[InvolvedInOther] = {
     activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
       case true => Some(InvolvedInOtherNo)
       case false => activityDtls.respActvtsBusRegForOnlyActvtsCarOut.fold[Option[InvolvedInOther]](None)(x => x.otherBusActivitiesCarriedOut match {

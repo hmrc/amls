@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ package models.des.businessactivities
 import play.api.libs.json.Json
 
 case class EabServices(
-                        residentialEstateAgency: Boolean,
-                        commercialEstateAgency: Boolean,
-                        auctioneer: Boolean,
-                        relocationAgent: Boolean,
-                        businessTransferAgent: Boolean,
-                        assetManagementCompany: Boolean,
-                        landManagementAgent: Boolean,
-                        developmentCompany: Boolean,
-                        socialHousingProvider: Boolean,
-                        lettingAgents: Option[Boolean] = None
+                        residentialEstateAgency : Boolean,
+                        commercialEstateAgency : Boolean,
+                        auctioneer : Boolean,
+                        relocationAgent : Boolean,
+                        businessTransferAgent : Boolean,
+                        assetManagementCompany : Boolean,
+                        landManagementAgent : Boolean,
+                        developmentCompany : Boolean,
+                        socialHousingProvider : Boolean,
+                        lettingAgents : Option[Boolean] = None
                       )
 
 object EabServices {
@@ -38,7 +38,7 @@ object EabServices {
     EabServices(false, false, false, false, false, false, false, false, false, Some(false))
   }
 
-  implicit def convert(eab: Option[models.fe.eab.Eab]): Option[EabServices] = {
+  implicit def convert(eab : Option[models.fe.eab.Eab]) : Option[EabServices] = {
 
     eab match {
       case Some(eab) => {
@@ -49,7 +49,7 @@ object EabServices {
 
   }
 
-  implicit def convServices(services: List[String]): Option[EabServices] = {
+  implicit def convServices(services: List[String]) : Option[EabServices] = {
     val eabServices = services.foldLeft[EabServices](default)((eabServices: EabServices, service) => service match {
       case "residential" => eabServices.copy(residentialEstateAgency = true)
       case "commercial" => eabServices.copy(commercialEstateAgency = true)
