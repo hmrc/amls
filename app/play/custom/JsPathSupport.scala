@@ -16,6 +16,7 @@
 
 package play.custom
 
+import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.{JsPath, Reads}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
@@ -26,15 +27,27 @@ object JsPathSupport {
   implicit class RichJsPath(path: JsPath) {
 
     def readLocalDateTime: Reads[LocalDateTime] = {
-      Reads
-        .at[String](path \ "$date")
-        .map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-        .orElse {
-          Reads.at[String](path).map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+      (path \ "$date").read[Long].map { dateTime =>
+        val jdt = new DateTime(dateTime, DateTimeZone.UTC).toLocalDateTime
+        LocalDateTime.of(jdt.getYear, jdt.getMonthOfYear, jdt.getDayOfMonth, jdt.getHourOfDay,
+          jdt.getMinuteOfHour, jdt.getSecondOfMinute, jdt.getMillisOfSecond)
+      } orElse {
+        path.read[Long].map { dateTime =>
+          val jdt = new DateTime(dateTime, DateTimeZone.UTC).toLocalDateTime
+          LocalDateTime.of(jdt.getYear, jdt.getMonthOfYear, jdt.getDayOfMonth, jdt.getHourOfDay,
+            jdt.getMinuteOfHour, jdt.getSecondOfMinute, jdt.getMillisOfSecond)
         }
-        .orElse {
-          Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
-        }
+      }.orElse {
+        Reads
+          .at[String](path \ "$date")
+          .map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+          .orElse {
+            Reads.at[String](path).map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+          }
+          .orElse {
+            Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
+          }
+      }
     }
   }
 }
