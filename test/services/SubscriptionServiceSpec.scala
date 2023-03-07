@@ -40,6 +40,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -203,10 +204,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           when(connector.feeResponseRepository.insert(any())).thenReturn(Future.successful(true))
 
-          when{
+          when {
             connector.feeResponseRepository.findLatestByAmlsReference(any())
           } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000,
-            Some("PaymentRef"), None, Some(BigDecimal(20)), Some(BigDecimal(30)), new DateTime())))
+            Some("PaymentRef"), None, Some(BigDecimal(20)), Some(BigDecimal(30)), LocalDateTime.now())))
 
           when(request.responsiblePersons).thenReturn(None)
           when(request.tradingPremises).thenReturn(mock[TradingPremises])

@@ -18,7 +18,7 @@ package models.payments
 
 import java.time.LocalDateTime
 import generators.PaymentGenerator
-import models.payapi.PaymentStatuses.{Created, Successful}
+import models.payapi.PaymentStatus.{Created, Successful}
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}

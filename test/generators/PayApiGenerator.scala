@@ -19,7 +19,7 @@ package generators
 import java.time.LocalDateTime
 
 import models.payapi.Payment
-import models.payapi.PaymentStatuses._
+import models.payapi.PaymentStatus._
 import models.payapi.TaxTypes._
 import org.scalacheck.Gen
 

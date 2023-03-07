@@ -16,18 +16,9 @@
 
 package modules
 
-import com.google.inject.{AbstractModule, Provides}
-import javax.inject.Singleton
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.api.DefaultDB
-import repositories.{FeesRepository, FeesRepositoryProvider}
+import com.google.inject.AbstractModule
 
 class Module extends AbstractModule {
   override def configure() = {
-    bind(classOf[FeesRepository]).toProvider(classOf[FeesRepositoryProvider])
   }
-
-  @Provides
-  @Singleton
-  def mongoDB(reactiveMongoComponent: ReactiveMongoComponent): () => DefaultDB = reactiveMongoComponent.mongoConnector.db
 }

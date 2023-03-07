@@ -18,14 +18,18 @@ package models
 
 import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
-import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
-import org.joda.time.{DateTime, DateTimeZone}
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import play.custom.JsPathSupport._
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 
 sealed trait ResponseType
 
 case object SubscriptionResponseType extends ResponseType
+
 case object AmendOrVariationResponseType extends ResponseType
 
 object ResponseType {
@@ -37,7 +41,7 @@ object ResponseType {
     case AmendOrVariationResponseType => JsString("AmendOrVariationResponse")
   }
 
-  implicit val jsonReads : Reads[ResponseType] = {
+  implicit val jsonReads: Reads[ResponseType] = {
     import play.api.libs.json.Reads.StringReads
     (__).read[String] flatMap {
       case "SubscriptionReponse" => SubscriptionResponseType
@@ -58,22 +62,23 @@ case class Fees(responseType: ResponseType,
                 difference: Option[BigDecimal],
                 approvalCheckFeeRate: Option[BigDecimal] = None,
                 approvalCheckFee: Option[BigDecimal] = None,
-                createdAt: DateTime)
+                createdAt: LocalDateTime)
 
 object Fees {
   def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
     subscriptionResponse.subscriptionFees map {
-      feesResponse =>  Fees(SubscriptionResponseType,
-        subscriptionResponse.amlsRefNo,
-        feesResponse.registrationFee,
-        feesResponse.fpFee,
-        feesResponse.premiseFee,
-        feesResponse.totalFees,
-        Some(feesResponse.paymentReference),
-        None,
-        feesResponse.approvalCheckFeeRate,
-        feesResponse.approvalCheckFee,
-        DateTime.now(DateTimeZone.UTC))
+      feesResponse =>
+        Fees(SubscriptionResponseType,
+          subscriptionResponse.amlsRefNo,
+          feesResponse.registrationFee,
+          feesResponse.fpFee,
+          feesResponse.premiseFee,
+          feesResponse.totalFees,
+          Some(feesResponse.paymentReference),
+          None,
+          feesResponse.approvalCheckFeeRate,
+          feesResponse.approvalCheckFee,
+          LocalDateTime.now(UTC))
     }
   }
 
@@ -88,12 +93,39 @@ object Fees {
       amendVariationResponse.difference,
       amendVariationResponse.approvalCheckFeeRate,
       amendVariationResponse.approvalCheckFee,
-      DateTime.now(DateTimeZone.UTC))
+      LocalDateTime.now(UTC))
   }
 
-  val dateTimeFormat: DateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
+  implicit lazy val reads: Reads[Fees] =
+    (
+      (__ \ "responseType").read[ResponseType] and
+        (__ \ "amlsReferenceNumber").read[String] and
+        (__ \ "registrationFee").read[BigDecimal] and
+        (__ \ "fpFee").readNullable[BigDecimal] and
+        (__ \ "premiseFee").read[BigDecimal] and
+        (__ \ "totalFees").read[BigDecimal] and
+        (__ \ "paymentReference").readNullable[String] and
+        (__ \ "difference").readNullable[BigDecimal] and
+        (__ \ "approvalCheckFeeRate").readNullable[BigDecimal] and
+        (__ \ "approvalCheckFee").readNullable[BigDecimal] and
+        (__ \ "createdAt").readLocalDateTime
+      ) (Fees.apply _)
 
-  implicit val dateFormat: Format[DateTime] = ReactiveMongoFormats.dateTimeFormats
 
-  implicit val format: OFormat[Fees] = Json.format[Fees]
+  implicit lazy val writes: OWrites[Fees] =
+    (
+      (__ \ "responseType").write[ResponseType] and
+        (__ \ "amlsReferenceNumber").write[String] and
+        (__ \ "registrationFee").write[BigDecimal] and
+        (__ \ "fpFee").writeNullable[BigDecimal] and
+        (__ \ "premiseFee").write[BigDecimal] and
+        (__ \ "totalFees").write[BigDecimal] and
+        (__ \ "paymentReference").writeNullable[String] and
+        (__ \ "difference").writeNullable[BigDecimal] and
+        (__ \ "approvalCheckFeeRate").writeNullable[BigDecimal] and
+        (__ \ "approvalCheckFee").writeNullable[BigDecimal] and
+        (__ \ "createdAt").write[LocalDateTime](MongoJavatimeFormats.localDateTimeWrites)
+      ) (unlift(Fees.unapply))
+
+  implicit val format: OFormat[Fees] = OFormat(reads, writes)
 }
