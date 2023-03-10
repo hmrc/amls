@@ -19,7 +19,10 @@ package models.payments
 import models.payapi.PaymentStatus.Created
 import models.payapi.{Payment => PayApiPayment, _}
 import org.bson.types.ObjectId
-import play.api.libs.json.Json
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{OFormat, OWrites, Reads, __}
+import play.custom.JsPathSupport.RichJsPath
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.LocalDateTime
 
@@ -61,5 +64,33 @@ object Payment {
       isBacs = Some(true)
     )
 
-  implicit val format = Json.format[Payment]
+  implicit val reads: Reads[Payment] =
+    (
+      (__ \ "_id").read[String] and
+        (__ \ "amlsRefNo").read[String] and
+        (__ \ "safeId").read[String] and
+        (__ \ "reference").read[String] and
+        (__ \ "description").readNullable[String] and
+        (__ \ "amountInPence").read[Int] and
+        (__ \ "status").read[PaymentStatus] and
+        (__ \ "createdAt").readCreatedDate and
+        (__ \ "isBacs").readNullable[Boolean] and
+        (__ \ "updatedAt").readNullable[LocalDateTime]
+      ) (Payment(_, _, _, _, _, _, _, _, _, _))
+
+  implicit val writes: OWrites[Payment] =
+    (
+      (__ \ "_id").write[String] and
+        (__ \ "amlsRefNo").write[String] and
+        (__ \ "safeId").write[String] and
+        (__ \ "reference").write[String] and
+        (__ \ "description").writeNullable[String] and
+        (__ \ "amountInPence").write[Int] and
+        (__ \ "status").write[PaymentStatus] and
+        (__ \ "createdAt").write[LocalDateTime](MongoJavatimeFormats.localDateTimeWrites) and
+        (__ \ "isBacs").writeNullable[Boolean] and
+        (__ \ "updatedAt").writeNullable[LocalDateTime]
+      ) (unlift(Payment.unapply))
+
+  implicit val format: OFormat[Payment] = OFormat(reads, writes)
 }
