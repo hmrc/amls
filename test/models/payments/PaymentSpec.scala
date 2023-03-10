@@ -16,12 +16,16 @@
 
 package models.payments
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneOffset}
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus.{Created, Successful}
 import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+
+import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.SECONDS
 
 //noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
@@ -39,7 +43,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         None,
         10000,
         Successful,
-        now,
+        now.truncatedTo(SECONDS),
         isBacs = Some(true),
         Some(now.plusDays(1))
       )
@@ -52,7 +56,7 @@ class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
-        "createdAt" -> now,
+        "createdAt" -> Json.obj("$date" -> Json.obj("$numberLong" -> now.truncatedTo(SECONDS).toInstant(UTC).toEpochMilli.toString)),
         "updatedAt" -> now.plusDays(1)
       )
 
