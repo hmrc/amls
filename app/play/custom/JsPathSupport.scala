@@ -17,6 +17,7 @@
 package play.custom
 
 import org.joda.time.{DateTime, DateTimeZone}
+import play.api.Logger
 import play.api.libs.json.{JsPath, Reads}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
@@ -27,6 +28,7 @@ import scala.util.{Failure, Success, Try}
 
 object JsPathSupport {
   implicit class RichJsPath(path: JsPath) {
+    val logger: Logger = Logger(this.getClass())
 
     def readLocalDateTime: Reads[LocalDateTime] = {
       (path \ "$date").read[Long].map { dateTime =>
@@ -58,6 +60,8 @@ object JsPathSupport {
       */
     val readCreatedDate: Reads[LocalDateTime] = {
       path.read[String].map(localDateTimeStr => {
+        println(s"\nattempting to read created at date: $localDateTimeStr\n")
+        logger.debug(s"\nattempting to read created at date: $localDateTimeStr\n")
           Try(LocalDateTime.parse(localDateTimeStr, ofPattern("uuuu-dd-MM HH:mm:ss.SSSX")))
         })
         .flatMap {
