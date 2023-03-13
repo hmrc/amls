@@ -22,6 +22,8 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.{ISO_LOCAL_DATE_TIME, ofPattern}
+import scala.util.{Failure, Success, Try}
 
 object JsPathSupport {
   implicit class RichJsPath(path: JsPath) {
@@ -48,6 +50,26 @@ object JsPathSupport {
             Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
           }
       }
+    }
+
+    /**
+      * TODO For whatever reason we are ending up with dates like this in the database ...
+      * TODO further investigation is needed, but for the sake of deploying this custom formatter is written
+      */
+    val readCreatedDate: Reads[LocalDateTime] = {
+      path.read[String].map(localDateTimeStr => {
+          Try(LocalDateTime.parse(localDateTimeStr, ofPattern("uuuu-dd-MM HH:mm:ss.SSSX")))
+        })
+        .flatMap {
+          case Success(v) => Reads.pure(v)
+          case Failure(exception) => Reads.failed[LocalDateTime](exception.getMessage)
+        }
+        .orElse {
+          Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
+        }
+        .orElse {
+          Reads.at[String](path).map(dateTimeStr => LocalDateTime.parse(dateTimeStr, ISO_LOCAL_DATE_TIME))
+        }
     }
   }
 }
