@@ -19,7 +19,6 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{CorpBodyOrUnInCorpBodyOrLlp, Partnership, PositionInBusiness, RPExtra, ResponsiblePersons, SoleProprietor => DesSoleProprietor}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
-
 import java.time.LocalDate
 
 class PositionWithinBusinessSpec extends PlaySpec {

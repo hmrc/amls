@@ -17,11 +17,10 @@
 package utils
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
-class AuditHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with GuiceOneAppPerSuite {
+class AuditHelperSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
 
   "AuditHelper" must {
 

@@ -17,10 +17,9 @@
 package models.des.supervision
 
 import models.fe.supervision._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-class ProfessionalBodyDesMemberSpec extends PlaySpec with MockitoSugar {
+class ProfessionalBodyDesMemberSpec extends PlaySpec {
 
 
   "ProfessionalBodyDesMember" must {

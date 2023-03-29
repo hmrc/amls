@@ -19,6 +19,7 @@ package connectors
 import audit.SubscriptionStatusEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import metrics.{API9, Metrics}
 import models.des
@@ -28,7 +29,8 @@ import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.play.audit.model.Audit
+import utils.{ApiRetryHelper, AuditHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
                                                private[connectors] val ac: AuditConnector,
                                                private[connectors] val httpClient: HttpClient,
-                                               private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
+                                               private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
 
   def status(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier,
                                              apiRetryHelper: ApiRetryHelper): Future[ReadStatusResponse] = {
@@ -50,6 +52,8 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
     val bodyParser = JsonParsed[ReadStatusResponse]
     val timer = metrics.timer(API9)
     logger.debug(s"$prefix - reg no: $amlsRegistrationNumber")
+
+    val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 

@@ -5,12 +5,15 @@ import models.payments.Payment
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.test.Helpers
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.LocalDateTime
+import scala.concurrent.ExecutionContext
 
 class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Payment] with IntegrationPatience {
 
+  implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
   override lazy val repository = new PaymentRepository(mongoComponent)
 
   "Payment Repository" - {

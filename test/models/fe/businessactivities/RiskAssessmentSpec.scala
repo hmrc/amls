@@ -17,11 +17,10 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.{FormalRiskAssessmentDetails, RiskAssessmentFormat}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 
-class RiskAssessmentSpec extends PlaySpec with MockitoSugar {
+class RiskAssessmentSpec extends PlaySpec {
 
   "RiskAssessmentSpec" must {
 

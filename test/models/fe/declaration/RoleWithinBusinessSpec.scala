@@ -17,12 +17,12 @@
 package models.fe.declaration
 
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import utils.AmlsBaseSpec
 
-class RoleWithinBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
+class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneAppPerSuite {
 
   "JSON" must {
 

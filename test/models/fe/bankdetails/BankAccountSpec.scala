@@ -17,12 +17,10 @@
 package models.fe.bankdetails
 
 import models.des.bankdetails.{IBANNumberView, AccountNumberView, ukAccountView, BankAccountView}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
 
-
-class BankAccountSpec extends PlaySpec with MockitoSugar {
+class BankAccountSpec extends PlaySpec {
 
   "For the Account" must {
 

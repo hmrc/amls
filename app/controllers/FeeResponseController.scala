@@ -16,37 +16,35 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import models.Fees
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json.Json
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import repositories.FeesRepository
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.AuthAction
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeeResponseController @Inject()(authAction: AuthAction,
-                                      val cc: ControllerComponents)(implicit val repository: FeesRepository) extends BackendController(cc) with Logging {
+                                      val cc: ControllerComponents)
+                                     (implicit val repository: FeesRepository, executionContext: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def get(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async {
       {
         repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
-          case Some(feeResponse) => {
+          case Some(feeResponse) =>
             logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
             Ok(Json.toJson[Fees](feeResponse))
-          }
           case None => NotFound
         }
       }.recoverWith {
-        case e: Throwable => {
+        case e: Throwable =>
           logger.error(s"[FeeResponseController - get] ", e)
           Future.successful(InternalServerError)
-        }
       }
     }
 }

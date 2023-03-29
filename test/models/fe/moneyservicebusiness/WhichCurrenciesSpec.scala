@@ -17,12 +17,11 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "WhichCurrencies" must {
 

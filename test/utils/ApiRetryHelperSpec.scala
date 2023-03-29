@@ -16,14 +16,12 @@
 
 package utils
 
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-
 import exceptions.HttpStatusException
 import org.scalatest.time.{Seconds, Span}
 import play.api.test.Helpers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import scala.concurrent.Future
 
 class ApiRetryHelperSpec extends AmlsBaseSpec {

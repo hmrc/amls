@@ -18,11 +18,10 @@ package utils
 
 import models.des.DesConstants
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
-class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with GuiceOneAppPerSuite {
+class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
 
   val testResponsiblePeopleUpdateHelper = new ResponsiblePeopleUpdateHelper {}
 

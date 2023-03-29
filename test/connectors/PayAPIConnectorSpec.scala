@@ -20,7 +20,8 @@ import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.PayApiGenerator
 import metrics.PayAPI
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.http.Status.OK
 import play.api.libs.json.Json
@@ -46,7 +47,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     val mockTimer = mock[Timer.Context]
 
     when {
-      testConnector.metrics.timer(eqTo(PayAPI))
+      testConnector.metrics.timer(ArgumentMatchers.eq(PayAPI))
     } thenReturn mockTimer
   }
 
@@ -61,7 +62,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       )
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.getPayment(testPaymentId)) {
@@ -74,7 +75,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.getPayment(testPaymentId).failed) {
@@ -87,7 +88,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.GET[HttpResponse](eqTo(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testConnector.getPayment(testPaymentId).failed) {

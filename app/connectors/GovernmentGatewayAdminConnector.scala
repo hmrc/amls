@@ -19,11 +19,9 @@ package connectors
 import audit.KnownFactsEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
-
-import javax.inject.Inject
 import metrics.{GGAdmin, Metrics}
 import models.KnownFactsForService
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http._
@@ -31,13 +29,14 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
                                                 private[connectors] val auditConnector: AuditConnector,
                                                 private[connectors] val httpClient: HttpClient,
-                                                private[connectors] val metrics: Metrics) extends HttpResponseHelper with Logging {
+                                                private[connectors] val metrics: Metrics)
+                                               (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
 
   private[connectors] val serviceURL = applicationConfig.ggUrl
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)

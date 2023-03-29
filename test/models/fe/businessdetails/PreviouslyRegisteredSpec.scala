@@ -17,11 +17,11 @@
 package models.fe.businessdetails
 
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
+import utils.AmlsBaseSpec
 
-class PreviouslyRegisteredSpec extends PlaySpec with MockitoSugar {
+class PreviouslyRegisteredSpec extends PlaySpec with AmlsBaseSpec {
 
   "JSON validation" must {
 

@@ -16,14 +16,12 @@
 
 package models.des
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
-
 import java.time.{LocalDate, LocalDateTime}
 
-class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
+class ReadStatusResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val json = Json.parse(
     """{

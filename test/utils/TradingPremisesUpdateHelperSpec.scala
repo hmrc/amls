@@ -19,11 +19,10 @@ package utils
 import models.des.tradingpremises._
 import models.des.{DesConstants, StringOrInt}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
-class TradingPremisesUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
+class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
 
   val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
 

@@ -19,11 +19,9 @@ package connectors
 import audit.KnownFactsEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
-
-import javax.inject.Inject
 import metrics.{EnrolmentStoreKnownFacts, Metrics}
 import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -31,13 +29,14 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: HttpClient,
                                         private[connectors] val metrics: Metrics,
                                         private[connectors] val mac: AuditConnector,
-                                        private[connectors] val config: ApplicationConfig) extends HttpResponseHelper with Logging {
+                                        private[connectors] val config: ApplicationConfig)
+                                       (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
 
   def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit headerCarrier: HeaderCarrier,
                                                                             writes: Writes[KnownFacts]): Future[HttpResponse] = {

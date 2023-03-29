@@ -16,7 +16,7 @@
 
 package models.des.bankdetails
 
-import models.fe.bankdetails._
+import models.fe.bankdetails.{UKAccount, NonUKIBANNumber, NonUKAccountNumber, PersonalAccount, BelongsToBusiness, BelongsToOtherBusiness, BankAccountType}
 import play.api.libs.json.Json
 
 case class BankAccount(accountName: String, accountType: String, doYouHaveUkBankAccount: Boolean, bankAccountDetails: Account)

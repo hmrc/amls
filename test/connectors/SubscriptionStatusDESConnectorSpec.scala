@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -24,15 +23,14 @@ import metrics.API9
 import models.des
 
 import java.time.LocalDateTime
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfterAll
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfterAll with AmlsReferenceNumberGenerator {
@@ -43,7 +41,6 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
 
@@ -55,7 +52,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
     val url = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber/status"
 
     when {
-      testDESConnector.metrics.timer(eqTo(API9))
+      testDESConnector.metrics.timer(ArgumentMatchers.eq(API9))
     } thenReturn mockTimer
   }
 
@@ -70,7 +67,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
       )
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber)) {
@@ -86,7 +83,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
         headers = Map.empty
       )
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
@@ -105,25 +102,25 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
       )
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual OK
-          body mustEqual Some("\"message\"")
+          body mustBe Some("\"message\"")
       }
     }
 
     "return a failed future (exception)" in new Fixture {
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
+          body mustBe Some("message")
       }
     }
   }

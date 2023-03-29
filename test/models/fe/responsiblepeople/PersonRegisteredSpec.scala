@@ -16,10 +16,9 @@
 
 package models.fe.responsiblepeople
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-class PersonRegisteredSpec extends PlaySpec with MockitoSugar {
+class PersonRegisteredSpec extends PlaySpec {
 
   "PersonRegistered" must {
     "read and write Json" in {

@@ -17,13 +17,13 @@
 package models.fe.businessdetails
 
 import models.des.DesConstants
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNull, Json}
+import utils.AmlsBaseSpec
 
 import java.time.LocalDate
 
-class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
+class BusinessDetailsSpec extends PlaySpec with AmlsBaseSpec {
 
   val previouslyRegistered = PreviouslyRegisteredYes(Some("12345678"))
 

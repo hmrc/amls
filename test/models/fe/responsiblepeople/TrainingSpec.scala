@@ -15,12 +15,10 @@
  */
 
 package models.fe.responsiblepeople
-
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-class TrainingSpec extends PlaySpec with MockitoSugar {
+class TrainingSpec extends PlaySpec {
 
   "JSON validation" must {
     "successfully validate given an enum value" in {

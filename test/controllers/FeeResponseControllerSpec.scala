@@ -18,7 +18,7 @@ package controllers
 
 import generators.AmlsReferenceNumberGenerator
 import models.{Fees, SubscriptionResponseType}
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.test.FakeRequest

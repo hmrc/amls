@@ -17,11 +17,11 @@
 package models.fe.businessmatching
 
 import models.des.businessdetails.BusinessDetails
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+import utils.AmlsBaseSpec
 
-class CompanyRegistrationNumberSpec extends PlaySpec with MockitoSugar {
+class CompanyRegistrationNumberSpec extends PlaySpec with AmlsBaseSpec {
 
   "CompanyRegistrationNumber" must {
 

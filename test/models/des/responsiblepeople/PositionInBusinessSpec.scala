@@ -20,13 +20,12 @@ import models.des.responsiblepeople.{SoleProprietor => DesSoleProprietor}
 import models.fe.businesscustomer.{ReviewDetails, Address => BMAddress}
 import models.fe.businessmatching._
 import models.fe.responsiblepeople.{SoleProprietor => FESoleProprietor, _}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
 import java.time.LocalDate
 
-class PositionInBusinessSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
+class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val today = LocalDate.now()
 

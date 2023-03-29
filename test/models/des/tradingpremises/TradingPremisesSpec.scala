@@ -19,20 +19,20 @@ package models.des.tradingpremises
 import models.des.{DesConstants, RequestType, StringOrInt}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 import models.fe.{tradingpremises => FETradingPremisesPkg}
+import models.des.tradingpremises.{Address => DESAddress}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
-import org.scalatestplus.mockito.MockitoSugar
 
 import java.time.LocalDate
 
-class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "TradingPremises" must {
 
     val premises = OwnBusinessPremisesDetails(
       tradingName = Some("string"),
-      businessAddress = Address("string",
+      businessAddress = DESAddress("string",
         "string",
         Some("string"),
         Some("string"),
@@ -62,7 +62,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
     val ownBusinessPremises1 = Some(OwnBusinessPremises(true, Some(Seq(premises1))))
 
-    val agentPremises = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA"), Some("2002-03-11")), true,
+    val agentPremises = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA"), Some("2002-03-11")), true,
       Msb(true, false, false, false, false),
       Hvd(false),
       Asp(false),
@@ -74,7 +74,8 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
       Some("2008-01-01"),
       Some("2003-04-05")
     )
-    val agentPremises1 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
+
+    val agentPremises1 = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
       Msb(false, false, false, false, false),
       Hvd(true),
       Asp(true),
@@ -84,7 +85,8 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite with Mockito
       Tditpsp(false),
       Amp(false),
       Some("2008-01-01"))
-    val agentPremises2 = AgentPremises("string", Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
+
+    val agentPremises2 = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
       Msb(false, false, false, false, false),
       Hvd(false),
       Asp(false),

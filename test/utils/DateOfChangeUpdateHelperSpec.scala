@@ -19,12 +19,10 @@ package utils
 import models.des.DesConstants
 import models.des.DesConstants.datePattern
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-
 import java.time.LocalDate
 
-class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
+class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with IntegrationPatience {
 
   val testDateOfChangeFlagUpdatedHelper = new DateOfChangeUpdateHelper {}
 

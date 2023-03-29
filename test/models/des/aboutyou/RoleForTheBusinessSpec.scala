@@ -17,13 +17,12 @@
 package models.des.aboutyou
 
 import models.fe.declaration.{ExternalAccountant, Other, RoleWithinBusiness}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 /**
   * Created by NicoleAvison on 03/02/2017.
   */
-class RoleForTheBusinessSpec extends PlaySpec with MockitoSugar {
+class RoleForTheBusinessSpec extends PlaySpec {
 
   "Des release 7 model" must {
     "convert from frontend model when given an empty set" in {

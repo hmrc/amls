@@ -17,10 +17,9 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{PreviousNameDetails, OthrNamesOrAliasesDetails, PersonName => DesPersonName, NameDetails}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-class PersonNameSpec extends PlaySpec with MockitoSugar {
+class PersonNameSpec extends PlaySpec {
 
   "PersonName" must {
     "Read/Write Json" in {

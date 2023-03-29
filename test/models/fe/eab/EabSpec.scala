@@ -17,11 +17,11 @@
 package models.fe.eab
 
 import models.EabSection
-import models.des.{DesConstants}
-import org.scalatestplus.mockito.MockitoSugar
+import models.des.DesConstants
 import org.scalatestplus.play.PlaySpec
+import utils.AmlsBaseSpec
 
-class EabSpec extends PlaySpec with MockitoSugar {
+class EabSpec extends PlaySpec with AmlsBaseSpec {
 
   "conv" when {
 

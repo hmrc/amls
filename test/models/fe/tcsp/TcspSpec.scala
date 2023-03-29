@@ -17,10 +17,10 @@
 package models.fe.tcsp
 
 import models.des.{DesConstants, SubscriptionView}
-import models.des.tcsp.{TcspTrustCompFormationAgt}
-import org.scalatestplus.mockito.MockitoSugar
+import models.des.tcsp.TcspTrustCompFormationAgt
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
+import utils.AmlsBaseSpec
 
 trait TcspValues {
 
@@ -76,7 +76,7 @@ trait TcspValues {
   )
 }
 
-class TcspSpec extends PlaySpec with MockitoSugar with TcspValues {
+class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
 
   "Tcsp" must {
 

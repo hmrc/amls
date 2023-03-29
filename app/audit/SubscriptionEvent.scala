@@ -57,7 +57,7 @@ object SubscriptionFailedEvent {
 }
 
 object SubscriptionValidationFailedEvent {
-  def apply(safeId: String, request: SubscriptionRequest, validationResults: Seq[JsObject])
+  def apply(safeId: String, request: SubscriptionRequest, validationResults: scala.collection.Seq[JsObject])
            (implicit hc: HeaderCarrier, reqW: Writes[SubscriptionRequest]): ExtendedDataEvent = {
     ExtendedDataEvent(
       auditSource = AuditHelper.appName,

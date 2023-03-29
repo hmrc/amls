@@ -17,11 +17,10 @@
 package models.fe
 
 import generators.AmlsReferenceNumberGenerator
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class SubscriptionErrorResponseSpec extends PlaySpec with MustMatchers with AmlsReferenceNumberGenerator {
+class SubscriptionErrorResponseSpec extends PlaySpec with AmlsReferenceNumberGenerator {
 
   "Serializing" must {
     "produce the correct JSON" in {

@@ -16,10 +16,10 @@
 
 package models.fe.tcsp
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import utils.AmlsBaseSpec
 
-class TcspServiceSpec extends PlaySpec with MockitoSugar {
+class TcspServiceSpec extends PlaySpec with AmlsBaseSpec {
 
   "TcspService" should {
 

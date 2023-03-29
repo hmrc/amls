@@ -18,7 +18,7 @@ package utils
 
 import play.api.libs.json.JsonValidationError
 
-import scala.collection.TraversableLike
+import scala.collection.Iterable
 
 trait MappingUtils {
 
@@ -42,7 +42,7 @@ trait MappingUtils {
     import play.api.libs.json.Reads
     import play.api.libs.json.Reads._
 
-    def nonEmpty[M](implicit reads: Reads[M], p: M => TraversableLike[_, M]) =
+    def nonEmpty[M](implicit reads: Reads[M], p: M => Iterable[M]) =
       filter[M](JsonValidationError("error.required"))(_.isEmpty)
   }
 

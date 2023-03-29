@@ -16,70 +16,88 @@
 
 package utils
 
-import models.des.amp.Amp
+import models.des.aboutthebusiness.{Address, BusinessContactDetails}
+import models.des.aboutyou.AboutYouRelease7
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp.Asp
-import models.des.businessactivities.{AmpServices, BusinessActivities, MlrActivitiesAppliedFor}
+import models.des.businessactivities.{BusinessActivities, MlrActivitiesAppliedFor}
+import models.des.businessdetails.{BusinessDetails, BusinessType}
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import models.des.hvd.Hvd
 import models.des.msb.{MoneyServiceBusiness, MsbAllDetails}
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.{AmendVariationRequest, SubscriptionView}
-import org.mockito.Mockito._
+import models.des.tradingpremises.{Tcsp, TradingPremises}
+import models.des.{AmendVariationRequest, ChangeIndicators, Declaration, ExtraFields, SubscriptionView}
 
 class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper {
 
   "ChangeIndicatorHelper" must {
     "set change indicators correctly" must {
-      val api5 = mock[SubscriptionView]
-      val api6 = mock[AmendVariationRequest]
-      val businessActivities = mock[BusinessActivities]
+      val businessActivities = BusinessActivities(None, None, None, None, None, None, None, None, None, None)
+
+      val api5 = SubscriptionView(
+        "formbundlenumber",
+        BusinessDetails(BusinessType.LimitedCompany, None, None),
+        BusinessContactDetails(Address("line1", "line2", None, None, "uk", None, None), false, None, "telNo", "email"),
+        None,
+        None,
+        None,
+        businessActivities,
+        TradingPremises(None, None),
+        None, Some(MoneyServiceBusiness(None, None, None, None)), None, None, None, None, None, None, None, None, None, None,
+        ExtraFields(Declaration(false), AboutYouRelease7(employedWithinBusiness = false), None)
+      )
+
+      val api6 = AmendVariationRequest(
+        "ref",
+        ChangeIndicators(),
+        "messageType",
+        BusinessDetails(BusinessType.LimitedCompany, None, None),
+        BusinessContactDetails(Address("line1", "line2", None, None, "uk", None, None), false, None, "telNo", "email"),
+        None,
+        None,
+        None,
+        businessActivities,
+        TradingPremises(None, None),
+        None, Some(MoneyServiceBusiness(None, None, None, None)), None, None, None, None, None, None, None, None, None, None,
+        ExtraFields(Declaration(false), AboutYouRelease7(employedWithinBusiness = false), None)
+      )
 
       // MSB
       "msb" when {
-        val msbSection = mock[MoneyServiceBusiness]
 
         "user does not have msb" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val noMsb = mlrActivities.copy(amp = true)
-
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(noMsb)
+          val noMsb = MlrActivitiesAppliedFor(false, false, false, false, false, false, false, true)
+          val api5WithoutMsb = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(noMsb)))
 
           "msb section has not changed" must {
             "not set msb change indicator" in {
-              when(api5.msb) thenReturn Some(msbSection)
-              when(api6.msb) thenReturn Some(msbSection)
-              msbChangedIndicator(api5, api6) mustBe (false)
+              msbChangedIndicator(api5WithoutMsb, api6) mustBe false
             }
           }
           "msb section has changed" must {
-            val updatedMsbSection = msbSection.copy(msbAllDetails = Some(mock[MsbAllDetails]))
+            val api6WithMsbAllDetails = api6.copy(msb = Some(api6.msb.get.copy(msbAllDetails = Some(MsbAllDetails(None, true, None, true)))))
 
             "set msb change indicator" in {
-              when(api6.msb) thenReturn Some(updatedMsbSection)
-              msbChangedIndicator(api5, api6) mustBe (true)
+              msbChangedIndicator(api5WithoutMsb, api6WithMsbAllDetails) mustBe true
             }
           }
         }
+
         "user has msb" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val hasMsb = mlrActivities.copy(msb = true)
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(hasMsb)
+          val msbApplies = MlrActivitiesAppliedFor(false, true, false, false, false, false, false, false)
+          val api5WithMsb = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(msbApplies)))
 
           "msb section has not changed" must {
             "not set msb change indicator" in {
-              when(api5.msb) thenReturn Some(msbSection)
-              when(api6.msb) thenReturn Some(msbSection)
-              msbChangedIndicator(api5, api6) mustBe (false)
+              msbChangedIndicator(api5WithMsb, api6) mustBe false
             }
           }
           "msb section has changed" must {
-            val updatedMsbSection = msbSection.copy(msbAllDetails = Some(mock[MsbAllDetails]))
+            val api6WithMsbAllDetails = api6.copy(msb = Some(api6.msb.get.copy(msbAllDetails = Some(MsbAllDetails(None, true, None, true)))))
 
             "set msb change indicator" in {
-              when(api6.msb) thenReturn Some(updatedMsbSection)
-              msbChangedIndicator(api5, api6) mustBe (true)
+              msbChangedIndicator(api5WithMsb, api6WithMsbAllDetails) mustBe true
             }
           }
         }
@@ -87,50 +105,41 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
 
       // HVD
       "hvd" when {
-        val hvdSection = mock[Hvd]
 
         "user does not have hvd" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val noHvd = mlrActivities.copy(amp = true)
-
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(noHvd)
+          val noHvd = MlrActivitiesAppliedFor(false, false, false, false, false, false, false, true)
+          val api5WithoutHvd = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(noHvd)))
 
           "section has not changed" must {
             "not set hvd change indicator" in {
-              when(api5.hvd) thenReturn Some(hvdSection)
-              when(api6.hvd) thenReturn Some(hvdSection)
-              hvdChangedIndicator(api5, api6) mustBe (false)
+              hvdChangedIndicator(api5WithoutHvd, api6) mustBe false
             }
           }
+
           "section has changed" must {
-            val updatedHvdSection = hvdSection.copy(cashPaymentsAccptOvrThrshld = true)
+            val api6WithHvd = api6.copy(hvd = Some(Hvd(true, None, None, true, None, None)))
 
             "set hvd change indicator" in {
-              when(api6.hvd) thenReturn Some(updatedHvdSection)
-              hvdChangedIndicator(api5, api6) mustBe (true)
+              hvdChangedIndicator(api5WithoutHvd, api6WithHvd) mustBe true
             }
           }
         }
+
         "user has hvd" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val hasHvd = mlrActivities.copy(hvd = true)
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(hasHvd)
+          val hvdApply = MlrActivitiesAppliedFor(false, true, false, false, false, false, false, false)
+          val api5WithHvd = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(hvdApply)))
 
           "section has not changed" must {
             "not set hvd change indicator" in {
-              when(api5.hvd) thenReturn Some(hvdSection)
-              when(api6.hvd) thenReturn Some(hvdSection)
-              hvdChangedIndicator(api5, api6) mustBe (false)
+              hvdChangedIndicator(api5WithHvd, api6) mustBe false
             }
           }
+
           "section has changed" must {
-            val updatedHvdSection = hvdSection.copy(cashPaymentsAccptOvrThrshld = true)
+            val api6WithHvd = api6.copy(hvd = Some(Hvd(true, None, None, true, None, None)))
 
             "set hvd change indicator" in {
-              when(api6.hvd) thenReturn Some(updatedHvdSection)
-              hvdChangedIndicator(api5, api6) mustBe (true)
+              hvdChangedIndicator(api5WithHvd, api6WithHvd) mustBe true
             }
           }
         }
@@ -138,112 +147,83 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
 
       // AMP
       "amp" when {
-        val ampSection = mock[Amp]
-        val ampServices = mock[AmpServices]
 
-        "section has not changed" must {
-          "not set amp change indicator" in {
-            val ampServices = mock[AmpServices]
-            val businessActivities = mock[BusinessActivities]
+        "user does not have amp" when {
+          val noAmp = MlrActivitiesAppliedFor(true, false, false, false, false, false, false, false)
+          val api5WithoutAmp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(noAmp)))
 
-            when(api5.amp) thenReturn Some(ampSection)
-            when(api6.amp) thenReturn Some(ampSection)
+          "section has not changed" must {
+            "not set amp change indicator" in {
+              ampChangeIndicator(api5WithoutAmp, api6) mustBe false
+            }
+          }
 
-            when(api5.businessActivities) thenReturn businessActivities
-            when(api6.businessActivities) thenReturn businessActivities
+          "section has changed" must {
+            val api6WithAmpDetails = api6.copy(amp = Some(Amp(TransactionsAccptOvrThrshld(true, None), true, 10: Int)))
 
-            when(api5.businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
-            when(api6.businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
-
-            ampChangeIndicator(api5, api6) mustBe (false)
+            "set amp change indicator" in {
+              ampChangeIndicator(api5, api6WithAmpDetails) mustBe true
+            }
           }
         }
 
-        "section has changed" must {
-          "set amp change indicator" in {
-            val updatedAmpSection = ampSection.copy(sysAutoIdOfLinkedTransactions = true)
-            val ampServices = mock[AmpServices]
-            val businessActivities = mock[BusinessActivities]
+        "user has amp" when {
+          val ampApply = MlrActivitiesAppliedFor(false, false, false, false, false, false, false, true)
+          val api5WithAmp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(ampApply)))
 
-            when(api5.amp) thenReturn Some(ampSection)
-            when(api6.amp) thenReturn Some(updatedAmpSection)
-
-            when(api5.businessActivities) thenReturn businessActivities
-            when(api6.businessActivities) thenReturn businessActivities
-
-            when(api5.businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
-            when(api6.businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
-
-            ampChangeIndicator(api5, api6) mustBe (true)
+          "section has not changed" must {
+            "not set amp change indicator" in {
+              ampChangeIndicator(api5WithAmp, api6) mustBe false
+            }
           }
-        }
 
-        "section not changed amp services have changed" must {
-          "set amp change indicator" in {
-            val updatedAmpServices = ampServices.copy(privateDealer = true)
-            val businessActivities = mock[BusinessActivities]
-            val updatedBusinessActivities = mock[BusinessActivities]
+          "section has changed" must {
+            val api6WithAmpDetails = api6.copy(amp = Some(Amp(TransactionsAccptOvrThrshld(true, None), true, 10: Int)))
 
-            when(api5.amp) thenReturn Some(ampSection)
-            when(api6.amp) thenReturn Some(ampSection)
-
-            when(api5.businessActivities) thenReturn businessActivities
-            when(api6.businessActivities) thenReturn updatedBusinessActivities
-
-            when(businessActivities.ampServicesCarriedOut) thenReturn Some(ampServices)
-            when(updatedBusinessActivities.ampServicesCarriedOut) thenReturn Some(updatedAmpServices)
-
-            ampChangeIndicator(api5, api6) mustBe (false)
+            "set hvd change indicator" in {
+              ampChangeIndicator(api5WithAmp, api6WithAmpDetails) mustBe (true)
+            }
           }
         }
       }
 
       // ASP
       "asp" when {
-        val aspSection = mock[Asp]
 
         "user does not have asp" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val noAsp = mlrActivities.copy(amp = true)
+          val noAsp = MlrActivitiesAppliedFor(true, false, false, false, false, false, false, false)
+          val api5WithoutAsp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(noAsp)))
 
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(noAsp)
-
-          "asp section has not changed" must {
+          "section has not changed" must {
             "not set asp change indicator" in {
-              when(api5.asp) thenReturn Some(aspSection)
-              when(api6.asp) thenReturn Some(aspSection)
-              aspChangedIndicator(api5, api6) mustBe (false)
+              aspChangedIndicator(api5WithoutAsp, api6) mustBe false
             }
           }
-          "asp section has changed" must {
-            val updatedAspSection = aspSection.copy(regHmrcAgtRegSchTax = true)
+
+          "section has changed" must {
+            val api6WithoutRegHmrcAgtRegSchTax = api6.copy(asp = Some(Asp(false, None)))
 
             "set asp change indicator" in {
-              when(api6.asp) thenReturn Some(updatedAspSection)
-              msbChangedIndicator(api5, api6) mustBe (true)
+              aspChangedIndicator(api5WithoutAsp, api6WithoutRegHmrcAgtRegSchTax) mustBe true
             }
           }
         }
-        "user has asp" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val hasAsp = mlrActivities.copy(asp = true)
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(hasAsp)
 
-          "asp section has not changed" must {
+        "user has asp" when {
+          val aspApply = MlrActivitiesAppliedFor(false, false, true, false, false, false, false, false)
+          val api5WithAsp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(aspApply)))
+
+          "section has not changed" must {
             "not set asp change indicator" in {
-              when(api5.asp) thenReturn Some(aspSection)
-              when(api6.asp) thenReturn Some(aspSection)
-              aspChangedIndicator(api5, api6) mustBe (false)
+              aspChangedIndicator(api5WithAsp, api6) mustBe false
             }
           }
-          "asp section has changed" must {
-            val updatedAspSection = aspSection.copy(regHmrcAgtRegSchTax = true)
+
+          "section has changed" must {
+            val api6WithRegHmrcAgtRegSchTax = api6.copy(asp = Some(Asp(false, None)))
 
             "set asp change indicator" in {
-              when(api6.asp) thenReturn Some(updatedAspSection)
-              msbChangedIndicator(api5, api6) mustBe (true)
+              aspChangedIndicator(api5WithAsp, api6WithRegHmrcAgtRegSchTax) mustBe (true)
             }
           }
         }
@@ -251,176 +231,132 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
 
       // TCSP
       "tcsp" when {
-        val tcspSection = mock[TcspAll]
-        val tcspTrustCompFormationAgt = mock[TcspTrustCompFormationAgt]
-        val fullTcspTrustCompFormationAgt = tcspTrustCompFormationAgt.copy(onlyOffTheShelfCompsSold = true,
-          complexCorpStructureCreation = true)
 
         "user does not have tcsp" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val noTcsp = mlrActivities.copy(amp = true)
-
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(noTcsp)
-          when(api5.tcspTrustCompFormationAgt) thenReturn Some(fullTcspTrustCompFormationAgt)
-          when(api6.tcspTrustCompFormationAgt) thenReturn Some(fullTcspTrustCompFormationAgt)
+          val noTcsp = MlrActivitiesAppliedFor(true, false, false, false, false, false, false, false)
+          val api5WithoutTcsp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(noTcsp)))
 
           "tcsp section has not changed" must {
             "not set tcsp change indicator" in {
-              when(api5.tcspAll) thenReturn Some(tcspSection)
-              when(api6.tcspAll) thenReturn Some(tcspSection)
-
-              tcspChangedIndicator(api5, api6) mustBe (false)
+              tcspChangedIndicator(api5WithoutTcsp, api6) mustBe false
             }
           }
 
           "tcsp section has changed" must {
-            val updatedTcspSection = tcspSection.copy(anotherTcspServiceProvider = true)
+            val api6WithAnotherTcspServiceProvider = api6.copy(tcspAll = Some(TcspAll(true, None)))
 
             "set tcsp change indicator" in {
-              when(api5.tcspAll) thenReturn Some(tcspSection)
-              when(api6.tcspAll) thenReturn Some(updatedTcspSection)
-              tcspChangedIndicator(api5, api6) mustBe (true)
-            }
-          }
-
-          "tcsp formation agent section has changed" must {
-            val updatedTcspTrustCompFormationAgt = tcspTrustCompFormationAgt.copy(onlyOffTheShelfCompsSold = true)
-
-            "set tcsp change indicator" in {
-              when(api6.tcspTrustCompFormationAgt) thenReturn Some(updatedTcspTrustCompFormationAgt)
-              tcspChangedIndicator(api5, api6) mustBe (true)
+              tcspChangedIndicator(api5WithoutTcsp, api6WithAnotherTcspServiceProvider) mustBe true
             }
           }
         }
 
         "user has tcsp" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val hasTcsp = mlrActivities.copy(tcsp = true)
+          val tcspApply = MlrActivitiesAppliedFor(false, false, false, true, false, false, false, false)
+          val api5WithTcsp = api5.copy(businessActivities = api5.businessActivities.copy(mlrActivitiesAppliedFor = Some(tcspApply)))
+          val api6WithAnotherTcspServiceProvider = api6.copy(tcspAll = Some(TcspAll(true, None)))
+          val api6WithoutAnotherTcspServiceProvider = api6.copy(tcspAll = Some(TcspAll(false, None)))
 
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(hasTcsp)
-          when(api5.tcspTrustCompFormationAgt) thenReturn Some(fullTcspTrustCompFormationAgt)
-          when(api6.tcspTrustCompFormationAgt) thenReturn Some(fullTcspTrustCompFormationAgt)
-
-          "tcsp section has not changed" must {
+          "section has not changed" must {
             "not set tcsp change indicator" in {
-              when(api5.tcspAll) thenReturn Some(tcspSection)
-              when(api6.tcspAll) thenReturn Some(tcspSection)
-              tcspChangedIndicator(api5, api6) mustBe (false)
+              tcspChangedIndicator(api5WithTcsp, api6WithoutAnotherTcspServiceProvider) mustBe false
             }
           }
 
-          "tcsp section has changed" must {
-            val updatedTcspSection = tcspSection.copy(anotherTcspServiceProvider = true)
-
+          "section has changed" must {
             "set tcsp change indicator" in {
-              when(api5.tcspAll) thenReturn Some(tcspSection)
-              when(api6.tcspAll) thenReturn Some(updatedTcspSection)
-              tcspChangedIndicator(api5, api6) mustBe (true)
+              tcspChangedIndicator(api5WithTcsp, api6WithAnotherTcspServiceProvider) mustBe true
             }
           }
+
           "tcsp formation agent section has changed" must {
-            val updatedTcspTrustCompFormationAgt = tcspTrustCompFormationAgt.copy(onlyOffTheShelfCompsSold = true)
+            val api6WithOnlyOffTheShelfCompsSold = api6.copy(tcspTrustCompFormationAgt = Some(TcspTrustCompFormationAgt(onlyOffTheShelfCompsSold = true)))
 
             "set tcsp change indicator" in {
-              when(api6.tcspTrustCompFormationAgt) thenReturn Some(updatedTcspTrustCompFormationAgt)
-              tcspChangedIndicator(api5, api6) mustBe (true)
+              tcspChangedIndicator(api5WithTcsp, api6WithOnlyOffTheShelfCompsSold) mustBe true
             }
           }
         }
       }
 
-      // EAB
-      "eab" when {
-        val eabSection = mock[EabAll]
-        val eabResdEstAgncy = mock[EabResdEstAgncy]
-        val eabLettingAgents = mock[LettingAgents]
-        val fullEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true, whichRedressScheme = Some("foo"))
+        // EAB
+        "eab" when {
 
-        "user does not have eab" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val noEab = mlrActivities.copy(amp = true)
+          "user does not have eab" when {
+            val noEabApplies = MlrActivitiesAppliedFor(true, false, false, false, false, false, false, false)
+            val api5WithNoEabAndEstAgncyRedressApplies = api5.copy(businessActivities = api5.businessActivities.copy(
+              mlrActivitiesAppliedFor = Some(noEabApplies)), eabResdEstAgncy = Some(EabResdEstAgncy(true, None)))
+            val api6WithResdEstAgncy = api6.copy(eabResdEstAgncy = Some(EabResdEstAgncy(true, None)))
 
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(noEab)
-          when(api5.eabResdEstAgncy) thenReturn Some(fullEabResdEstAgncy)
-          when(api6.eabResdEstAgncy) thenReturn Some(fullEabResdEstAgncy)
+            "eab section has not changed" must {
+              "not set eab change indicator" in {
+                eabChangedIndicator(api5WithNoEabAndEstAgncyRedressApplies, api6WithResdEstAgncy) mustBe false
+              }
+            }
 
-          "eab section has not changed" must {
-            "not set eab change indicator" in {
-              when(api5.eabAll) thenReturn Some(eabSection)
-              when(api6.eabAll) thenReturn Some(eabSection)
-              eabChangedIndicator(api5, api6) mustBe (false)
+            "eab section has changed" must {
+              val api6WithEstAgncActProhibProvideDetails = api6WithResdEstAgncy.copy(eabAll = Some(EabAll(true, None, false, None)))
+
+              "set eab change indicator" in {
+                eabChangedIndicator(api5WithNoEabAndEstAgncyRedressApplies, api6WithEstAgncActProhibProvideDetails) mustBe true
+              }
+            }
+
+            "eab residential estate agency section has changed" must {
+              val api6WithNoEabAndEstAgncyRedressApplies = api6WithResdEstAgncy.copy(eabResdEstAgncy = Some(EabResdEstAgncy(true, Some("scheme"))))
+
+              "set eab change indicator" in {
+                eabChangedIndicator(api5WithNoEabAndEstAgncyRedressApplies, api6WithNoEabAndEstAgncyRedressApplies) mustBe true
+              }
+            }
+
+            "eab letting agents section has changed" must {
+              val api6WithClientMoneyProtection = api6.copy(lettingAgents = Some(LettingAgents(clientMoneyProtection = Some(true))))
+
+              "set eab change indicator" in {
+                eabChangedIndicator(api5WithNoEabAndEstAgncyRedressApplies, api6WithClientMoneyProtection) mustBe true
+              }
             }
           }
 
-          "section has changed" must {
-            val updatedEabSection = eabSection.copy(estateAgencyActProhibition = true)
+          "user has eab" when {
+            val eabApplies = MlrActivitiesAppliedFor(false, false, false, false, true, false, false, false)
+            val api5WithEabDetails = api5.copy(businessActivities = api5.businessActivities.copy(
+              mlrActivitiesAppliedFor =
+                Some(eabApplies)), eabResdEstAgncy = Some(EabResdEstAgncy(true, Some("scheme"))))
+            val api6WithEabDetails = api6.copy(eabAll = Some(EabAll(false, None, false, None)))
 
-            "set tcsp change indicator" in {
-              when(api5.eabAll) thenReturn Some(eabSection)
-              when(api6.eabAll) thenReturn Some(updatedEabSection)
-              eabChangedIndicator(api5, api6) mustBe (true)
+            "section has not changed" must {
+              "not set eab change indicator" in {
+                eabChangedIndicator(api5WithEabDetails, api6WithEabDetails) mustBe false
+              }
             }
-          }
 
-          "eab residential estate agency section has changed" must {
-            val updatedEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true)
+            "section has changed" must {
+              val api6WithEstAgncyActProhibProvideDetails = api6WithEabDetails.copy(eabAll = Some(EabAll(true, None, false, None)))
 
-            "set tcsp change indicator" in {
-              when(api6.eabResdEstAgncy) thenReturn Some(updatedEabResdEstAgncy)
-              eabChangedIndicator(api5, api6) mustBe (true)
+              "set eab change indicator" in {
+                eabChangedIndicator(api5, api6WithEstAgncyActProhibProvideDetails) mustBe true
+              }
             }
-          }
 
-          "eab letting agents section has changed" must {
-            val updatedEabLettingAgent = eabLettingAgents.copy(clientMoneyProtection = Some(true))
+            "eab residential estate agency section has changed" must {
+              val api6WithNoEabAndEstAgncyRedressApplies = api6WithEabDetails.copy(eabResdEstAgncy = Some(EabResdEstAgncy(true, Some("address"))))
 
-            "set tcsp change indicator" in {
-              when(api6.lettingAgents) thenReturn Some(updatedEabLettingAgent)
-              eabChangedIndicator(api5, api6) mustBe (true)
+              "set eab change indicator" in {
+                eabChangedIndicator(api5WithEabDetails, api6WithNoEabAndEstAgncyRedressApplies) mustBe true
+              }
             }
-          }
-        }
 
-        "user has eab" when {
-          val mlrActivities = mock[MlrActivitiesAppliedFor]
-          val hasEab = mlrActivities.copy(eab = true)
+            "eab letting agents section has changed" must {
+              val api6WithClientMoneyProtection = api6.copy(lettingAgents = Some(LettingAgents(clientMoneyProtection = Some(true))))
 
-          when(api5.businessActivities) thenReturn businessActivities
-          when(businessActivities.mlrActivitiesAppliedFor) thenReturn Some(hasEab)
-          when(api5.eabResdEstAgncy) thenReturn Some(fullEabResdEstAgncy)
-          when(api6.eabResdEstAgncy) thenReturn Some(fullEabResdEstAgncy)
-
-          "section has not changed" must {
-            "not set eab change indicator" in {
-              when(api5.eabAll) thenReturn Some(eabSection)
-              when(api6.eabAll) thenReturn Some(eabSection)
-              eabChangedIndicator(api5, api6) mustBe (false)
-            }
-          }
-
-          "section has changed" must {
-            val updatedEabSection = eabSection.copy(estateAgencyActProhibition = true)
-
-            "set tcsp change indicator" in {
-              when(api5.eabAll) thenReturn Some(eabSection)
-              when(api6.eabAll) thenReturn Some(updatedEabSection)
-              eabChangedIndicator(api5, api6) mustBe (true)
-            }
-          }
-
-          "eab residential estate agency section has changed" must {
-            val updatedEabResdEstAgncy = eabResdEstAgncy.copy(regWithRedressScheme = true)
-
-            "set tcsp change indicator" in {
-              when(api6.eabResdEstAgncy) thenReturn Some(updatedEabResdEstAgncy)
-              eabChangedIndicator(api5, api6) mustBe (true)
+              "set eab change indicator" in {
+                eabChangedIndicator(api5WithEabDetails, api6WithClientMoneyProtection) mustBe true
+              }
             }
           }
         }
       }
     }
   }
-}

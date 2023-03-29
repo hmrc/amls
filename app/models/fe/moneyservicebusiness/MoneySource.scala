@@ -27,8 +27,8 @@ case object BankMoneySource {
   implicit val jsonReads: Reads[Option[BankMoneySource]] = {
     import play.api.libs.functional.syntax._
 
-    ((__ \ "moneySources" \ 'bankMoneySource).readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ 'bankNames).readNullable[String].orElse(Reads.pure(None))) ((bankMoney: Option[String], names: Option[String]) => {
+    ((__ \ "moneySources" \ "bankMoneySource").readNullable[String].orElse(Reads.pure(None)) and
+      (__ \ "moneySources" \ "bankNames").readNullable[String].orElse(Reads.pure(None))) ((bankMoney: Option[String], names: Option[String]) => {
       (bankMoney, names) match {
         case (Some(_), Some(n)) => Some(BankMoneySource(n))
         case _ => None
@@ -50,8 +50,8 @@ object WholesalerMoneySource {
   import play.api.libs.functional.syntax._
 
   implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
-    ((__ \ "moneySources" \ 'wholesalerMoneySource).readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ 'wholesalerNames).readNullable[String].orElse(Reads.pure(None))) ((wholesalerMoney: Option[String], names: Option[String]) => {
+    ((__ \ "moneySources" \ "wholesalerMoneySource").readNullable[String].orElse(Reads.pure(None)) and
+      (__ \ "moneySources" \ "wholesalerNames").readNullable[String].orElse(Reads.pure(None))) ((wholesalerMoney: Option[String], names: Option[String]) => {
       (wholesalerMoney, names) match {
         case (Some(_), Some(n)) => Some(WholesalerMoneySource(n))
         case _ => None

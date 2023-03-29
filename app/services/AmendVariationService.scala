@@ -16,24 +16,24 @@
 
 package services
 
-import java.io.InputStream
 import audit.AmendVariationValidationFailedEvent
+import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.ApplicationConfig
 import connectors._
-
-import javax.inject.Inject
 import models.Fees
 import models.des.{AmendVariationResponse => DesAmendVariationResponse, _}
 import models.fe.AmendVariationResponse
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json.Json
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.{ApiRetryHelper, DateOfChangeUpdateHelper, ResponsiblePeopleUpdateHelper, TradingPremisesUpdateHelper}
+import utils._
 
+import java.io.InputStream
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
@@ -125,7 +125,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
           )
         }
         logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
-        auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects))
+        auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, resultObjects.toIndexedSeq))
       }, valid = identity)
     } else {
       logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
@@ -171,7 +171,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
     // $COVERAGE-OFF$
     val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
 
-    val lines = scala.io.Source.fromInputStream(stream).getLines
+    val lines = scala.io.Source.fromInputStream(stream).getLines()
     val linesString = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
 
     validator.validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))

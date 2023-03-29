@@ -27,15 +27,14 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(avs: AmendVariationService,
-                                         authAction: AuthAction,
-                                         bodyParsers: PlayBodyParsers,
-                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
-  extends BackendController(cc) with Logging with ControllerHelper {
+class AmendVariationController @Inject()(avs: AmendVariationService, authAction: AuthAction, bodyParsers: PlayBodyParsers,
+                                         val cc: ControllerComponents)
+                                        (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+                                        extends BackendController(cc) with Logging with ControllerHelper {
 
   private[controllers] def service: AmendVariationService = avs
 
@@ -61,7 +60,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService,
                     Future.failed(e)
                 }
             }
-          case JsError(errors) =>
+          case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
             Future.successful(BadRequest(toError(errors)))
         }
       case _ =>

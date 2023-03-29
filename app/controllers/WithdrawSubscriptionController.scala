@@ -17,22 +17,22 @@
 package controllers
 
 import connectors.WithdrawSubscriptionConnector
-import javax.inject.{Inject, Singleton}
 import models.des.WithdrawSubscriptionRequest
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionConnector,
                                                authAction: AuthAction,
                                                bodyParsers: PlayBodyParsers,
                                                val cc: ControllerComponents)
-                                              (implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with ControllerHelper {
+                                              (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+                                               extends BackendController(cc) with ControllerHelper {
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
@@ -44,7 +44,7 @@ class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionCo
                 response =>
                   Ok(Json.toJson(response))
               }
-            case JsError(errors) =>
+            case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
               Future.successful(BadRequest(toError(errors)))
           }
         }

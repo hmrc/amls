@@ -20,7 +20,7 @@ import connectors.DeregisterSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.DeregisterSubscriptionResponse
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
@@ -83,9 +83,9 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
         "errors" -> Seq(
           Json.obj("path" -> "obj.acknowledgementReference",
             "error" -> "error.path.missing"),
-          Json.obj("path" -> "obj.deregistrationDate",
-            "error" -> "error.path.missing"),
           Json.obj("path" -> "obj.deregistrationReason",
+            "error" -> "error.path.missing"),
+          Json.obj("path" -> "obj.deregistrationDate",
             "error" -> "error.path.missing")
         ))
 

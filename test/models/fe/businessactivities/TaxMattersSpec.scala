@@ -16,10 +16,12 @@
 
 package models.fe.businessactivities
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+import utils.AmlsBaseSpec
 
-class TaxMattersSpec extends WordSpec with Matchers {
+class TaxMattersSpec extends PlaySpec with AmlsBaseSpec {
 
   "DoesAccountantalsoDealWithTax" must {
     "Serialise yes to json correctly" in {

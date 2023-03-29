@@ -23,11 +23,11 @@ import exceptions.{HttpStatusException, PaymentException}
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus
 import models.payments.{Payment, PaymentStatusResult}
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
 import repositories.PaymentRepository
@@ -36,18 +36,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
+class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
-  val testPayAPIConnector = mock[PayAPIConnector]
-  val testPaymentRepo = mock[PaymentRepository]
+  val testPayAPIConnector = mock(classOf[PayAPIConnector])
+  val testPaymentRepo = mock(classOf[PaymentRepository])
   val testPayApiPayment = payApiPaymentGen.sample.get
   val safeId = amlsRefNoGen.sample.get
   val testPayment = Payment(amlsRefNoGen.sample.get, safeId, testPayApiPayment)
   val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
-  val updateResult = mock[UpdateResult]
+  val updateResult = mock(classOf[UpdateResult])
   when(updateResult.wasAcknowledged()) thenReturn true
 
 
@@ -61,7 +61,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
     "createPayment is called" must {
       "respond with payment if call to connector is successful" in {
         when {
-          testPayAPIConnector.getPayment(eqTo(testPayApiPayment.id))(any())
+          testPayAPIConnector.getPayment(ArgumentMatchers.eq(testPayApiPayment.id))(any())
         } thenReturn {
           Future.successful(testPayApiPayment)
         }
@@ -131,7 +131,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         val payment = testPayment.copy(reference = paymentRef)
 
         when {
-          testPaymentRepo.findLatestByPaymentReference(eqTo(paymentRef))
+          testPaymentRepo.findLatestByPaymentReference(ArgumentMatchers.eq(paymentRef))
         } thenReturn Future.successful(Some(payment))
 
         whenReady(testPaymentService.getPaymentByPaymentReference(paymentRef)) {
@@ -146,7 +146,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         val payment = testPayment.copy(amlsRefNo = amlsRef)
 
         when {
-          testPaymentRepo.findLatestByAmlsReference(eqTo(amlsRef))
+          testPaymentRepo.findLatestByAmlsReference(ArgumentMatchers.eq(amlsRef))
         } thenReturn Future.successful(Some(payment))
 
         whenReady(testPaymentService.getPaymentByAmlsReference(amlsRef)) {
@@ -171,7 +171,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
         whenReady(testPaymentService.updatePayment(updatedPayment)) { result =>
           result mustBe true
-          verify(testPaymentRepo).update(eqTo(updatedPayment))
+          verify(testPaymentRepo).update(ArgumentMatchers.eq(updatedPayment))
         }
       }
 
@@ -188,7 +188,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
         intercept[Exception] {
           whenReady(testPaymentService.updatePayment(updatedPayment)) { _ =>
-            verify(testPaymentRepo).update(eqTo(updatedPayment))
+            verify(testPaymentRepo).update(ArgumentMatchers.eq(updatedPayment))
           }
         }
       }
@@ -211,7 +211,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
         } thenReturn Future.successful(updatedPayment)
 
         when {
-          testPayAPIConnector.getPayment(eqTo(paymentId))(any())
+          testPayAPIConnector.getPayment(ArgumentMatchers.eq(paymentId))(any())
         } thenReturn Future.successful(payApiPayment)
 
         testPaymentService.refreshStatus(paymentRef) map { result =>
@@ -244,7 +244,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
 
       when {
         testPaymentRepo.insert(any())
-      } thenReturn Future.successful(mock[Payment])
+      } thenReturn Future.successful(mock(classOf[Payment]))
 
       whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { _ =>
         verify(testPaymentRepo).insert(any[Payment])
@@ -256,7 +256,7 @@ class PaymentServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures wi
       val payment = paymentGen.sample.get.copy(reference = bacsPaymentRequest.paymentReference)
 
       when {
-        testPaymentRepo.findLatestByPaymentReference(eqTo(bacsPaymentRequest.paymentReference))
+        testPaymentRepo.findLatestByPaymentReference(ArgumentMatchers.eq(bacsPaymentRequest.paymentReference))
       } thenReturn Future.successful(Some(payment))
 
       when {

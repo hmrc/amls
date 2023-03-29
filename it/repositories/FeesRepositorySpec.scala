@@ -4,12 +4,15 @@ import models.{AmendOrVariationResponseType, Fees}
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.test.Helpers
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.LocalDateTime
+import scala.concurrent.ExecutionContext
 
 class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Fees] with IntegrationPatience {
 
+  implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
   override lazy val repository = new FeesRepository(mongoComponent)
 
   "Fees Repository" - {

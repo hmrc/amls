@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.RegistrationDetailsDesConnector
+
 import javax.inject.{Inject, Singleton}
 import models.fe.registrationdetails.RegistrationDetails
 import play.api.libs.json.Json
@@ -24,12 +25,13 @@ import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction}
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RegistrationDetailsController @Inject()(connector: RegistrationDetailsDesConnector,
                                               authAction: AuthAction,
-                                              val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) {
+                                              val cc: ControllerComponents)
+                                             (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext) extends BackendController(cc) {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
 

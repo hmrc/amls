@@ -21,7 +21,8 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.GGAdmin
 import models.{KnownFact, KnownFactsForService}
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
@@ -47,7 +48,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     val mockTimer = mock[Timer.Context]
 
     when {
-      testConnector.metrics.timer(eqTo(GGAdmin))
+      testConnector.metrics.timer(ArgumentMatchers.eq(GGAdmin))
     } thenReturn mockTimer
   }
 
@@ -61,7 +62,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       val response = HttpResponse(status = OK, body = "message")
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.addKnownFacts(knownFacts)) {
@@ -74,7 +75,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.addKnownFacts(knownFacts).failed) {
@@ -87,7 +88,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testConnector.addKnownFacts(knownFacts).failed) {

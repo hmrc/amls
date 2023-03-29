@@ -28,16 +28,16 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.util.matching.Regex
 
 @Singleton
-class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
-                                       authAction: AuthAction,
-                                       bodyParsers: PlayBodyParsers,
-                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
-  extends BackendController(cc) with Logging with ControllerHelper {
+class SubscriptionController @Inject()(val subscriptionService: SubscriptionService, authAction: AuthAction, bodyParsers: PlayBodyParsers,
+                                       val cc: ControllerComponents)
+                                      (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+                                      extends BackendController(cc) with Logging with ControllerHelper {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
@@ -65,7 +65,8 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
                     logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
-              case JsError(errors) => Future.successful(BadRequest(toError(errors)))
+              case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+                Future.successful(BadRequest(toError(errors)))
             }
           case _ =>
             Future.successful {

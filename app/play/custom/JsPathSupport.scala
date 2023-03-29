@@ -55,7 +55,6 @@ object JsPathSupport {
       */
     val readCreatedDate: Reads[LocalDateTime] = {
       path.read[String].map(localDateTimeStr => {
-        println(s"\nattempting to read created at date: $localDateTimeStr\n")
         logger.debug(s"\nattempting to read created at date: $localDateTimeStr\n")
           Try(LocalDateTime.parse(localDateTimeStr, ofPattern("uuuu-dd-MM HH:mm:ss.SSSX")))
         })

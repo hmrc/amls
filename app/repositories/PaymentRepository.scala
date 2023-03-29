@@ -26,12 +26,12 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentRepository @Inject()(mongoC: MongoComponent)
-  extends PlayMongoRepository[Payment](
+                                 (implicit executionContext: ExecutionContext)
+                                 extends PlayMongoRepository[Payment](
     mongoComponent = mongoC,
     collectionName = "payments",
     domainFormat = Payment.format,

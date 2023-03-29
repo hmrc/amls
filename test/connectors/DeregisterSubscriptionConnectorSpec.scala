@@ -23,15 +23,14 @@ import generators.AmlsReferenceNumberGenerator
 import metrics.API10
 import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse, DeregistrationReason}
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.time.{Seconds, Span}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
@@ -42,13 +41,12 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
     }
 
     val mockTimer = mock[Timer.Context]
     when {
-      testConnector.metrics.timer(eqTo(API10))
+      testConnector.metrics.timer(ArgumentMatchers.eq(API10))
     } thenReturn mockTimer
 
     implicit val hc = HeaderCarrier()
@@ -71,7 +69,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       when {
         testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -88,7 +86,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       when {
         testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
@@ -102,7 +100,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       when {
         testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(

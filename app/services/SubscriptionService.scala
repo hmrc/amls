@@ -16,26 +16,26 @@
 
 package services
 
-import java.io.InputStream
 import audit.SubscriptionValidationFailedEvent
+import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.ApplicationConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
-
-import javax.inject.Inject
 import models.des.SubscriptionRequest
 import models.enrolment.AmlsEnrolmentKey
 import models.fe.SubscriptionResponse
 import models.{Fees, KnownFact, KnownFactsForService}
-import play.api.{Logger, Logging}
-import play.api.libs.json.{JsResult, JsValue, Json}
+import play.api.Logging
+import play.api.libs.json.{JsObject, JsResult, JsValue, Json}
 import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, SubscriptionRequestValidator}
 
+import java.io.InputStream
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class SubscriptionService @Inject()(private[services] val desConnector: SubscribeDESConnector,
@@ -73,7 +73,7 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
   def subscribe(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext,
                                                               apiRetryHelper: ApiRetryHelper): Future[SubscriptionResponse] = {
 
-    val validationResult = subscriptionRequestValidator.validateRequest(request)
+    val validationResult: Either[collection.Seq[JsObject], SubscriptionRequest] = subscriptionRequestValidator.validateRequest(request)
 
     validationResult match {
       case Left(errors) =>

@@ -21,7 +21,8 @@ import cats.implicits._
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus
 import models.payments._
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
@@ -116,7 +117,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByPaymentReference(eqTo(paymentRef))
+          testPaymentService.getPaymentByPaymentReference(ArgumentMatchers.eq(paymentRef))
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByRef(accountType, accountRef, paymentRef)(request)
@@ -143,7 +144,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val payment = paymentGen.sample.get
 
         when {
-          testPaymentService.getPaymentByAmlsReference(eqTo(amlsRef))
+          testPaymentService.getPaymentByAmlsReference(ArgumentMatchers.eq(amlsRef))
         } thenReturn Future.successful(Some(payment))
 
         val result = testController.getPaymentByAmlsRef(accountType, accountRef, amlsRef)(request)
@@ -172,7 +173,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(refreshRequest))
 
         when {
-          testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
+          testPaymentService.refreshStatus(ArgumentMatchers.eq(paymentRef))(any(), any())
         } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(statusResult.some))
 
         val result = testController.refreshStatus(accountType, accountRef)(putRequest)
@@ -187,7 +188,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(refreshRequest))
 
         when {
-          testPaymentService.refreshStatus(eqTo(paymentRef))(any(), any())
+          testPaymentService.refreshStatus(ArgumentMatchers.eq(paymentRef))(any(), any())
         } thenReturn OptionT[Future, PaymentStatusResult](Future.successful(None))
 
         val result = testController.refreshStatus(accountType, accountRef)(putRequest)
@@ -209,7 +210,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
-          testController.paymentService.getPaymentByPaymentReference(eqTo(payment.reference))
+          testController.paymentService.getPaymentByPaymentReference(ArgumentMatchers.eq(payment.reference))
         } thenReturn Future.successful(Some(payment))
 
         when {
@@ -221,7 +222,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val result = testController.updateBacsFlag(accountType, accountRef, payment.reference)(putRequest)
 
         status(result) mustBe NO_CONTENT
-        verify(testController.paymentService).updatePayment(eqTo(payment.copy(isBacs = Some(true))))(any())
+        verify(testController.paymentService).updatePayment(ArgumentMatchers.eq(payment.copy(isBacs = Some(true))))(any())
       }
 
       "return 404 Not Found if the payment was not found" in new Fixture {
@@ -245,7 +246,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
       val payment = Payment(createBacsRequest)
 
       when {
-        testController.paymentService.createBacsPayment(eqTo(createBacsRequest))(any())
+        testController.paymentService.createBacsPayment(ArgumentMatchers.eq(createBacsRequest))(any())
       } thenReturn Future.successful(payment)
 
       val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.toJson(createBacsRequest))

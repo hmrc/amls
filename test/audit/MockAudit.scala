@@ -38,6 +38,6 @@ import uk.gov.hmrc.play.audit.model.{Audit, DataEvent}
 // the `sendDataEvent` method of the `Audit` class
 // scalastyle:off null
 object MockAudit extends Audit("mockApp", null) {
-  override def sendDataEvent: (DataEvent) => Unit =
+  def sendDataEvent: (DataEvent) => Unit =
     _ => {}
 }

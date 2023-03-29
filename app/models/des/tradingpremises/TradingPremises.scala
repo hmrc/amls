@@ -28,6 +28,7 @@ object TradingPremises {
 
   implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): TradingPremises = {
     val (agent, own) = tradingPremises.partition(_.registeringAgentPremises.fold(false)(x => x.agentPremises))
+
     TradingPremises(Some(own), Some(agent))
   }
 

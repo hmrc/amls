@@ -19,9 +19,8 @@ package controllers
 import connectors.RegistrationDetailsDesConnector
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails => DesRegistrationDetails}
 import models.fe.registrationdetails.RegistrationDetails
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
-import org.scalatest.MustMatchers
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,7 +28,7 @@ import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
 import scala.concurrent.Future
 
-class RegistrationDetailsControllerSpec extends AmlsBaseSpec with MustMatchers {
+class RegistrationDetailsControllerSpec extends AmlsBaseSpec {
 
   val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
   val authAction: AuthAction = SuccessfulAuthAction
@@ -44,14 +43,14 @@ class RegistrationDetailsControllerSpec extends AmlsBaseSpec with MustMatchers {
       val feDetails = RegistrationDetails("Test Company", isIndividual = false)
 
       when {
-        controller.registrationDetailsConnector.getRegistrationDetails(eqTo(safeId))(any(), any(), any())
+        controller.registrationDetailsConnector.getRegistrationDetails(ArgumentMatchers.eq(safeId))(any(), any(), any())
       } thenReturn Future.successful(desDetails)
 
       val response = controller.get("account", "ref", safeId)(FakeRequest())
 
       status(response) mustBe OK
       contentAsJson(response) mustBe Json.toJson(feDetails)
-      verify(controller.registrationDetailsConnector).getRegistrationDetails(eqTo(safeId))(any(), any(), any())
+      verify(controller.registrationDetailsConnector).getRegistrationDetails(ArgumentMatchers.eq(safeId))(any(), any(), any())
     }
   }
 

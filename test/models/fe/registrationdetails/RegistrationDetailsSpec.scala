@@ -17,10 +17,9 @@
 package models.fe.registrationdetails
 
 import models.des.registrationdetails.{Individual, LLP, Organisation, RegistrationDetails => DesRegistrationDetails}
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 
-class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
+class RegistrationDetailsSpec extends PlaySpec {
 
   "The RegistrationDetails model" must {
     "serialise to Json" when {
