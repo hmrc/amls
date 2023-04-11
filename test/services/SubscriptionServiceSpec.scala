@@ -21,12 +21,10 @@ import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, Sub
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
 import generators.AmlsReferenceNumberGenerator
 import models._
-import models.des.SubscriptionRequest
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises.TradingPremises
 import models.fe.SubscriptionResponse
-import org.joda.time.DateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -38,7 +36,7 @@ import play.api.test.Helpers._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, SubscriptionRequestValidator}
 
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,7 +44,6 @@ import scala.concurrent.Future
 
 trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
 
-  val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
   val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
   class MockSubscriptionService extends SubscriptionService(
@@ -55,10 +52,9 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
     mock[EnrolmentStoreConnector],
     mock[AuditConnector],
     mock[ApplicationConfig],
+    mock[SubscriptionRequestValidator],
     mock[FeesRepository]
-  ) {
-    override private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = successValidate
-  }
+  )
 
   val connector = new MockSubscriptionService
 
@@ -81,7 +77,6 @@ trait TestFixture extends MockitoSugar with AmlsReferenceNumberGenerator {
 
   when(contactDetails.businessAddress) thenReturn address
   when(address.postcode) thenReturn Some(businessAddressPostcode)
-  when(successValidate.isSuccess) thenReturn true
 
   val request = mock[des.SubscriptionRequest]
   when(request.businessContactDetails) thenReturn contactDetails
@@ -109,8 +104,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           reset(connector.ggConnector)
 
           when {
-            successValidate.isSuccess
-          } thenReturn true
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
@@ -141,6 +136,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
+
+          when {
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
@@ -181,8 +180,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           val jsonBody = Json.obj("reason" -> (duplicateSubscriptionMessage + " " + amlsRegistrationNumber)).toString
 
           when {
-            successValidate.isSuccess
-          } thenReturn false
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
@@ -235,6 +234,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           val jsonBody = Json.obj("reason" -> duplicateSubscriptionMessage).toString
 
           when {
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
+
+          when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
@@ -252,6 +255,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           reset(connector.ggConnector)
 
           when {
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
+
+          when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, None))
 
@@ -267,6 +274,10 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
       "another exception is returned" in new TestFixture {
 
         reset(connector.ggConnector)
+
+        when {
+          connector.subscriptionRequestValidator.validateRequest(request)
+        } thenReturn Right(request)
 
         when {
           connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())
@@ -297,8 +308,8 @@ class SubscriptionServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
           reset(connector.ggConnector)
 
           when {
-            successValidate.isSuccess
-          } thenReturn true
+            connector.subscriptionRequestValidator.validateRequest(request)
+          } thenReturn Right(request)
 
           when {
             connector.desConnector.subscribe(eqTo(safeId), eqTo(request))(any(), any(), any(), any(), any())

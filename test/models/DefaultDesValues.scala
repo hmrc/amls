@@ -45,7 +45,7 @@ object DefaultDesValues {
   private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
     true, false, true, false, false, false, false, Some(true)))
 
-  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("14999"))))
+  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k"))))
   private val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name"))))
   private val noOfEmployees = Some("10")
   private val noOfEmployeesForMlr = Some("5")

@@ -610,6 +610,30 @@ object DesConstants {
     )
   ))))
 
+  val subscriptionRequestOwnBusinessPremisesDetails =
+    OwnBusinessPremisesDetails(
+      Some("ABCDEFGHIJK ABCDE & LETTINGS LTD"),
+      TradingPremisesAddress("ABC 1234, ABCDEFGHIJ, CLYDE",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      false,
+      Msb(false, false, false, false, false),
+      Hvd(false),
+      Asp(false),
+      Tcsp(true),
+      Eab(true),
+      Bpsp(true),
+      Tditpsp(false),
+      TradingPremisesAmp(true),
+      "2001-01-01",
+      None,
+      Some(StringOrInt(444444)),
+      Some(StatusConstants.Unchanged)
+    )
+
   val amendStatusOwnBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
