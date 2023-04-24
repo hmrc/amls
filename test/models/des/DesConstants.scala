@@ -30,16 +30,20 @@ import models.des.responsiblepeople.{Address, PersonName, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Address => TradingPremisesAddress, Amp => TradingPremisesAmp, _}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import utils.{AckRefGenerator, StatusConstants}
 
+import java.time.format.DateTimeFormatter
+
 object DesConstants {
+  val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   val testChangeIndicators = ChangeIndicators(false)
   val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
     Some(CorpAndBodyLlps("CompanyName", "12345678")),
     Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
 
-  val today = new LocalDate().toString("yyyy-MM-dd")
+  val today = LocalDate.now.toString()
 
   val testViewBusinessContactDetails = BusinessContactDetails(
     AboutTheBusinessAddress(

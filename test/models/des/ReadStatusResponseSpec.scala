@@ -16,11 +16,12 @@
 
 package models.des
 
-import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+
+import java.time.{LocalDate, LocalDateTime}
 
 class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite {
 
@@ -37,12 +38,12 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       |}""".stripMargin)
 
   val model = ReadStatusResponse(
-    processingDate = new LocalDateTime(2017, 7, 18, 9, 49, 18),
+    processingDate = LocalDateTime.of(2017, 7, 18, 9, 49, 18),
     formBundleStatus = "Approved",
     statusReason = None,
     deRegistrationDate = None,
-    currentRegYearStartDate = Some(new LocalDate(2017, 6, 1)),
-    currentRegYearEndDate = Some(new LocalDate(2018, 12, 31)),
+    currentRegYearStartDate = Some(LocalDate.of(2017, 6, 1)),
+    currentRegYearEndDate = Some(LocalDate.of(2018, 12, 31)),
     renewalConFlag = true,
     renewalSubmissionFlag = Some(true),
     currentAMLSOutstandingBalance = Some("0.00"),
@@ -62,15 +63,15 @@ class ReadStatusResponseSpec extends PlaySpec with MockitoSugar with GuiceOneApp
 
     "confirm isRenewalPeriod" when {
       "date today is day after renewal period began" in {
-        model.isRenewalPeriod(new LocalDate(2018, 12, 2)) mustBe false
+        model.isRenewalPeriod(LocalDate.of(2018, 12, 2)) mustBe false
       }
       "date today is same day as renweal period begins" in {
-        model.isRenewalPeriod(new LocalDate(2018, 12, 1)) mustBe true
+        model.isRenewalPeriod(LocalDate.of(2018, 12, 1)) mustBe true
       }
     }
     "deny isRenewalPeriod" when {
       "date today is date before renewal period begins" in {
-        model.isRenewalPeriod(new LocalDate(2018, 11, 30)) mustBe true
+        model.isRenewalPeriod(LocalDate.of(2018, 11, 30)) mustBe true
       }
     }
   }

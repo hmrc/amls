@@ -17,14 +17,15 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
+
+import java.time.LocalDate
 
 class UkResidentSpec extends PlaySpec {
 
   "UkResident" should {
     "convert frontend model to des model for UkResidence with DOB" in {
-      UkResident.convert(UKResidence("nino"), Some(DateOfBirth(new LocalDate(1990, 2, 24)))) must be(
+      UkResident.convert(UKResidence("nino"), Some(DateOfBirth(LocalDate.of(1990, 2, 24)))) must be(
         Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24"))))
     }
 

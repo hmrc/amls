@@ -16,12 +16,11 @@
 
 package play.custom
 
-import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
 import play.api.libs.json.{JsPath, Reads}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime, ZoneOffset}
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.{ISO_LOCAL_DATE_TIME, ofPattern}
 import scala.util.{Failure, Success, Try}
@@ -32,14 +31,10 @@ object JsPathSupport {
 
     def readLocalDateTime: Reads[LocalDateTime] = {
       (path \ "$date").read[Long].map { dateTime =>
-        val jdt = new DateTime(dateTime, DateTimeZone.UTC).toLocalDateTime
-        LocalDateTime.of(jdt.getYear, jdt.getMonthOfYear, jdt.getDayOfMonth, jdt.getHourOfDay,
-          jdt.getMinuteOfHour, jdt.getSecondOfMinute, jdt.getMillisOfSecond)
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneOffset.UTC)
       } orElse {
         path.read[Long].map { dateTime =>
-          val jdt = new DateTime(dateTime, DateTimeZone.UTC).toLocalDateTime
-          LocalDateTime.of(jdt.getYear, jdt.getMonthOfYear, jdt.getDayOfMonth, jdt.getHourOfDay,
-            jdt.getMinuteOfHour, jdt.getSecondOfMinute, jdt.getMillisOfSecond)
+          LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneOffset.UTC)
         }
       }.orElse {
         Reads

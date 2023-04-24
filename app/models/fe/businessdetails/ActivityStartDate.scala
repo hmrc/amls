@@ -17,10 +17,10 @@
 package models.fe.businessdetails
 
 import models.des.businessactivities.BusinessActivitiesAll
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import play.api.libs.json.Json
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+
 
 case class ActivityStartDate(startDate: LocalDate)
 

@@ -17,10 +17,12 @@
 package utils
 
 import models.des.DesConstants
-import org.joda.time.LocalDate
+import models.des.DesConstants.datePattern
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+
+import java.time.LocalDate
 
 class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience {
 
@@ -35,7 +37,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToHvd = DesConstants.testHvd.copy(
-          dateOfTheFirst = Some(new LocalDate(1900, 1, 1).toString("yyyy-MM-dd"))
+          dateOfTheFirst = Some(LocalDate.of(1900, 1, 1).format(datePattern))
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(
@@ -61,7 +63,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToSupervisor = DesConstants.testSupervisorDetails.copy(
-          supervisionStartDate = new LocalDate(1900, 1, 1).toString("yyyy-MM-dd")
+          supervisionStartDate = LocalDate.of(1900, 1, 1).format(datePattern)
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(
@@ -94,7 +96,7 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with MockitoSugar with Scala
         val viewModel = DesConstants.SubscriptionViewModelAPI5
 
         val changeToBusinessActivitiesAll = DesConstants.testBusinessActivitiesAll.copy(
-          activitiesCommenceDate = Some(new LocalDate(1900, 1, 1).toString("yyyy-MM-dd"))
+          activitiesCommenceDate = Some(LocalDate.of(1900, 1, 1).format(datePattern))
         )
 
         val request = DesConstants.AmendVariationRequestModel.copy(

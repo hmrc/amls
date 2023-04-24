@@ -22,6 +22,8 @@ import models.fe.responsiblepeople.TimeAtAddress._
 import models.fe.responsiblepeople._
 import play.api.libs.json.{Reads, Writes}
 
+import java.time.format.DateTimeFormatter
+
 case class ResponsiblePersons(nameDetails: Option[NameDetails],
                               nationalityDetails: Option[NationalityDetails],
                               contactCommDetails: Option[ContactCommDetails],
@@ -109,7 +111,8 @@ object ResponsiblePersons {
     responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None,
       extra = RPExtra(None)))
 
-  implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean): Option[Seq[ResponsiblePersons]] = {
+  implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean):
+  Option[Seq[ResponsiblePersons]] = {
     responsiblePeople match {
       case Some(data) =>
         Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm, amendVariation)))
@@ -120,7 +123,7 @@ object ResponsiblePersons {
   implicit def convStartDate(startDate: Option[Positions]): Option[String] = {
     startDate match {
       case Some(data) => data.startDate map {
-        date => date.toString("yyyy-MM-dd")
+        date => date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
       }
       case _ => None
     }

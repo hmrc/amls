@@ -22,7 +22,8 @@ import models.fe.amp.{Amp, AmpData}
 import models.fe.declaration.{RoleWithinBusiness, Other => DeclarationOther}
 import models.fe.eab.{Eab, EabData}
 import models.fe.responsiblepeople.TimeAtAddress.ThreeYearsPlus
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import utils.StatusConstants
 
 object ASPTCSPSection {
@@ -87,8 +88,8 @@ object SupervisionSection {
 
   private val supervisor = "Company A"
   //scalastyle:off magic.number
-  private val start = new LocalDate(1993, 8, 25)
-  private val end = new LocalDate(1999, 8, 25)
+  private val start = LocalDate.of(1993, 8, 25)
+  private val end = LocalDate.of(1999, 8, 25)
   //scalastyle:off magic.number
   private val reason = "Ending reason"
   private val anotherBody = AnotherBodyYes(supervisor, start, end, reason)
@@ -104,7 +105,7 @@ object SupervisionSection {
   ))
 
   val modelForView = Some(Supervision(
-    Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason")),
+    Some(AnotherBodyYes("NameOfLastSupervisor", LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 1), "SupervisionEndingReason")),
     Some(ProfessionalBodyMemberYes),
     Some(BusinessTypes(Set(
       AccountantsIreland,
@@ -584,14 +585,14 @@ object TradingPremisesSection {
   import models.fe.tradingpremises._
 
   val model = Some(Seq(TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("string",
-    Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2010, 1, 1), false),
+    Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2010, 1, 1), false),
     None, None, None, None,
     WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices, BusinessActivity.MoneyServiceBusiness,
       BusinessActivity.ArtMarketParticipant)),
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))
   ),
     TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-      Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
+      Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
       Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
       WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices,
         BusinessActivity.ArtMarketParticipant))
@@ -599,7 +600,7 @@ object TradingPremisesSection {
   ))
 
   val modelForView = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("aaaaaaaaaaaa",
-    Address("a", "a", Some("a"), Some("a"), "AA1 1AA"), new LocalDate(1967, 8, 13), true), Some(BusinessStructure.SoleProprietor),
+    Address("a", "a", Some("a"), Some("a"), "AA1 1AA"), LocalDate.of(1967, 8, 13), true), Some(BusinessStructure.SoleProprietor),
     Some(AgentName("AgentLegalEntityName", None, Some("1970-01-01"))),
     None, None,
     WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
@@ -613,7 +614,7 @@ object TradingPremisesSection {
     Some(MsbServices(Set(TransmittingMoney, CurrencyExchange))), Some(111111), Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
-        new LocalDate(1967, 8, 13), true),
+        LocalDate.of(1967, 8, 13), true),
       Some(BusinessStructure.SoleProprietor),
       Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
       None,
@@ -630,7 +631,7 @@ object TradingPremisesSection {
     TradingPremises(Some(RegisteringAgentPremises(true)),
       YourTradingPremises("TradingName",
         Address("AgentAddressLine1", "AgentAddressLine2", Some("AgentAddressLine3"), Some("AgentAddressLine4"), "XX1 1XX"),
-        new LocalDate(2001, 1, 1), true),
+        LocalDate.of(2001, 1, 1), true),
       Some(BusinessStructure.SoleProprietor), Some(AgentName("AgentLegalEntityName2", None, Some("1970-01-01"))),
       None,
       None,
@@ -645,7 +646,7 @@ object TradingPremisesSection {
       Some(MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal))), None, Some("Added")),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName",
       Address("OwnBusinessAddressLine1", "OwnBusinessAddressLine2", Some("OwnBusinessAddressLine3"), Some("OwnBusinessAddressLine4"), "YY1 1YY"),
-      new LocalDate(2001, 5, 5), false),
+      LocalDate.of(2001, 5, 5), false),
       None, None, None, None,
       WhatDoesYourBusinessDo(Set(
         BusinessActivity.EstateAgentBusinessService,
@@ -654,7 +655,7 @@ object TradingPremisesSection {
         BusinessActivity.TrustAndCompanyServices)), None, Some(444444), Some(StatusConstants.Unchanged)),
     TradingPremises(Some(RegisteringAgentPremises(false)), YourTradingPremises("OwnBusinessTradingName1",
       Address("OB11AddressLine1", "OB1AddressLine2", Some("OB1AddressLine3"), Some("OB1AddressLine4"), "XX1 1XX"),
-      new LocalDate(2001, 1, 1), false), None, None, None, None, WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
+      LocalDate.of(2001, 1, 1), false), None, None, None, None, WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
       BusinessActivity.AccountancyServices,
       BusinessActivity.EstateAgentBusinessService,
       BusinessActivity.BillPaymentServices,
@@ -667,7 +668,7 @@ object TradingPremisesSection {
 
   val tradingPremisesOnlyAgentModel = Some(List(TradingPremises(Some(RegisteringAgentPremises(true)),
     YourTradingPremises("aaaaaaaaaaaa", Address("a", "a", Some("a"), Some("a"), "AA1 1AA"),
-      new LocalDate(1967, 8, 13), true),
+      LocalDate.of(1967, 8, 13), true),
     Some(BusinessStructure.SoleProprietor),
     Some(AgentName("aaaaaaaaaaa", None, Some("1970-01-01"))),
     None,
@@ -758,7 +759,7 @@ object AboutTheBusinessSection {
   private val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
   // scalastyle:off magic.number
   val model = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-    Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+    Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
     Some(VATRegisteredYes("123456789")),
     Some(regForCorpTax),
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
@@ -769,7 +770,7 @@ object AboutTheBusinessSection {
       Some("Street"), Some("city"), "EE1 1EE"))
   )
 
-  val modelForView = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+  val modelForView = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(LocalDate.of(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567891")),
     ContactingYou("07000111222", "BusinessEmail"),
@@ -808,7 +809,7 @@ object ResponsiblePeopleSection {
   )
 
   private val otherNames = Some(KnownBy(true, Some("Doc")))
-  private val nameDateOfChange = new LocalDate(1990, 2, 24)
+  private val nameDateOfChange = LocalDate.of(1990, 2, 24)
   private val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
   private val saRegistered = SaRegisteredYes("0123456789")
   private val contactDetails = ContactDetails("07000001122", "test@test.com")
@@ -816,7 +817,7 @@ object ResponsiblePeopleSection {
   private val vatRegistered = VATRegisteredNo
   private val training = TrainingYes("test")
   private val experienceTraining = ExperienceTrainingYes("Some training")
-  private val positions = Positions(Set(SoleProprietor, NominatedOfficer), Some(new LocalDate()))
+  private val positions = Positions(Set(SoleProprietor, NominatedOfficer), Some(LocalDate.now))
 
   private val ukPassport = UKPassportYes("87654321")
   private val nonUKPassport = NonUKPassportYes("87654321")
@@ -848,7 +849,7 @@ object ResponsiblePeopleSection {
     personResidenceType = Some(personResidenceType),
     ukPassport = Some(ukPassport),
     nonUKPassport = Some(nonUKPassport),
-    dateOfBirth = Some(DateOfBirth(new LocalDate(1970, 1, 1))),
+    dateOfBirth = Some(DateOfBirth(LocalDate.of(1970, 1, 1))),
     contactDetails = Some(contactDetails),
     addressHistory = Some(addressHistory),
     positions = Some(positions),
@@ -863,12 +864,12 @@ object ResponsiblePeopleSection {
     ResponsiblePeople(
       Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
       Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-      Some(new LocalDate(2001, 1, 1)),
+      Some(LocalDate.of(2001, 1, 1)),
       Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       Some(NoPassport),
-      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+      Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
@@ -877,7 +878,7 @@ object ResponsiblePeopleSection {
         None,
         None
       )),
-      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
       Some(SaRegisteredYes("1234567890")),
       Some(VATRegisteredYes("123456789")),
       Some(ExperienceTrainingNo),
@@ -889,7 +890,7 @@ object ResponsiblePeopleSection {
     ResponsiblePeople(
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
       Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-      Some(new LocalDate(1967, 8, 13)),
+      Some(LocalDate.of(1967, 8, 13)),
       Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
       ukPassport = None,
@@ -900,7 +901,7 @@ object ResponsiblePeopleSection {
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-      positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
       saRegistered = Some(SaRegisteredYes("1111111111")),
       vatRegistered = Some(VATRegisteredYes("111111111")),
       experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
@@ -913,12 +914,12 @@ object ResponsiblePeopleSection {
     ResponsiblePeople(
       Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
       Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-      Some(new LocalDate(2001, 1, 1)),
+      Some(LocalDate.of(2001, 1, 1)),
       Some(KnownBy(true, Some("Aliases1"))),
       Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
       Some(UKPassportYes("AA1111111")),
       Some(NoPassport),
-      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+      Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
@@ -927,7 +928,7 @@ object ResponsiblePeopleSection {
         None,
         None
       )),
-      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
       Some(SaRegisteredYes("1234567890")),
       Some(VATRegisteredYes("123456789")),
       Some(ExperienceTrainingNo),
@@ -939,17 +940,17 @@ object ResponsiblePeopleSection {
     ResponsiblePeople(
       Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
       Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-      Some(new LocalDate(1967, 8, 13)),
+      Some(LocalDate.of(1967, 8, 13)),
       Some(KnownBy(true, Some("bbbbbbbbbbb"))),
       Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
       None, None,
-      Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+      Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
       None,
       Some(ResponsiblePersonAddressHistory(
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
         Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+      Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
       Some(SaRegisteredYes("1111111111")),
       Some(VATRegisteredYes("111111111")),
       Some(ExperienceTrainingYes("bbbbbbbbbb")),
@@ -964,7 +965,7 @@ object HvdSection {
   import models.fe.hvd.PercentageOfCashPaymentOver15000.Second
   import models.fe.hvd._
 
-  private val DefaultCashPayment = CashPaymentYes(new LocalDate(1978, 2, 15))
+  private val DefaultCashPayment = CashPaymentYes(LocalDate.of(1978, 2, 15))
   private val DefaultProducts = Products(Set(Antiques, Cars, OtherMotorVehicles, Other("Details"), Alcohol, Tobacco))
   private val DefaultExciseGoods = ExciseGoods(true)
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
@@ -983,7 +984,7 @@ object HvdSection {
   ))
 
   val modelForView = Some(Hvd(
-    Some(CashPaymentYes(new LocalDate(2001, 1, 1))),
+    Some(CashPaymentYes(LocalDate.of(2001, 1, 1))),
     Some(Products(Set(MobilePhones, Clothing, Jewellery, ScrapMetals, Alcohol, Caravans, Gold, Other("SpecifyOther"), Tobacco, Antiques, Cars, OtherMotorVehicles))),
     Some(ExciseGoods(true)), Some(HowWillYouSellGoods(List(Retail, Wholesale, Auction))),
     None,

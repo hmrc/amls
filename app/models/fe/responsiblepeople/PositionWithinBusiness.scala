@@ -17,11 +17,10 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.{OtherDetails, PositionInBusiness, ResponsiblePersons}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import play.api.libs.json._
 import utils.CommonMethods
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 case class Positions(positions: Set[PositionWithinBusiness], startDate: Option[LocalDate])
 

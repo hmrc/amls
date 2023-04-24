@@ -18,10 +18,11 @@ package models.fe.responsiblepeople
 
 import models.des.DesConstants
 import models.fe.responsiblepeople.TimeAtAddress.{SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
-import org.joda.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
+
+import java.time.LocalDate
 
 class ResponsiblePeopleSpec extends PlaySpec with GuiceOneAppPerSuite with ResponsiblePeopleValues {
 
@@ -70,7 +71,7 @@ trait ResponsiblePeopleValues {
     val vatRegistered = VATRegisteredNo
     val training = TrainingYes("test")
     val experienceTraining = ExperienceTrainingYes("Some training")
-    val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(new LocalDate()))
+    val positions = Positions(Set(BeneficialOwner, InternalAccountant), Some(LocalDate.now))
     val ukPassport = UKPassportYes("87654321")
     val approvalFlags = ApprovalFlags(Some(false), Some(true))
 
@@ -79,17 +80,17 @@ trait ResponsiblePeopleValues {
       ResponsiblePeople(
         personName = Some(PersonName("FirstName", Some("MiddleName"), "LastName")),
         legalName = Some(PreviousName(true, Some("FirstName"), Some("MiddleName"), Some("LastName"))),
-        legalNameChangeDate = Some(new LocalDate(2001, 1, 1)),
+        legalNameChangeDate = Some(LocalDate.of(2001, 1, 1)),
         knownBy = Some(KnownBy(true, Some("Aliases1"))),
         personResidenceType = Some(PersonResidenceType(NonUKResidence, "AA", "AA")),
         ukPassport = Some(UKPassportYes("AA1111111")),
         nonUKPassport = Some(NoPassport),
-        dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+        dateOfBirth = Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
         contactDetails = None,
         addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
           "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
           ThreeYearsPlus)), None, None)),
-        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))),
+        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
         saRegistered = Some(SaRegisteredYes("1234567890")),
         vatRegistered = Some(VATRegisteredYes("123456789")),
         experienceTraining = Some(ExperienceTrainingNo),
@@ -101,7 +102,7 @@ trait ResponsiblePeopleValues {
       ResponsiblePeople(
         personName = Some(PersonName("bbbbbbbbbbbb", Some("bbbbbbbbbbb"), "bbbbbbbbbbb")),
         legalName = Some(PreviousName(true, Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"), Some("bbbbbbbbbbbb"))),
-        legalNameChangeDate = Some(new LocalDate(1967, 8, 13)),
+        legalNameChangeDate = Some(LocalDate.of(1967, 8, 13)),
         knownBy = Some(KnownBy(true, Some("bbbbbbbbbbb"))),
         personResidenceType = Some(PersonResidenceType(UKResidence("BB000000A"), "GB", "GB")),
         ukPassport = None,
@@ -112,7 +113,7 @@ trait ResponsiblePeopleValues {
           PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
           Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
-        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(new LocalDate()))), saRegistered = Some(SaRegisteredYes("1111111111")),
+        positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))), saRegistered = Some(SaRegisteredYes("1111111111")),
         vatRegistered = Some(VATRegisteredYes("111111111")),
         experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
         training = Some(TrainingNo),
@@ -127,7 +128,7 @@ trait ResponsiblePeopleValues {
             approvalFlags = responsiblePersonSeq(0).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(false), hasAlreadyPaidApprovalCheck = Some(true))
           ),
           responsiblePersonSeq(1).copy(
-            dateOfBirth = Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+            dateOfBirth = Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
             approvalFlags = responsiblePersonSeq(1).approvalFlags.copy(hasAlreadyPassedFitAndProper = Some(true), hasAlreadyPaidApprovalCheck = Some(false))
           ))
     }
@@ -151,7 +152,7 @@ trait ResponsiblePeopleValues {
     val personResidenceType = PersonResidenceType(residence, residenceCountry, residenceNationality)
     val saRegistered = SaRegisteredNo
     val vatRegistered = VATRegisteredYes("12345678")
-    val positions = Positions(Set(Director, SoleProprietor), Some(new LocalDate()))
+    val positions = Positions(Set(Director, SoleProprietor), Some(LocalDate.now))
     val experienceTraining = ExperienceTrainingNo
     val training = TrainingNo
 
@@ -160,12 +161,12 @@ trait ResponsiblePeopleValues {
   val CompleteResponsiblePeople = ResponsiblePeople(
     Some(DefaultValues.personName),
     Some(DefaultValues.previousName),
-    Some(new LocalDate(1990, 2, 24)),
+    Some(LocalDate.of(1990, 2, 24)),
     Some(KnownBy(true, Some("Doc"))),
     Some(DefaultValues.personResidenceType),
     Some(DefaultValues.ukPassport),
     None,
-    Some(DateOfBirth(new LocalDate(2001, 1, 1))),
+    Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
     Some(DefaultValues.contactDetails),
     Some(DefaultValues.addressHistory),
     Some(DefaultValues.positions),
@@ -175,8 +176,6 @@ trait ResponsiblePeopleValues {
     Some(DefaultValues.training),
     DefaultValues.approvalFlags
   )
-
-  import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
   val CompleteJson = Json.obj(
     "personName" -> Json.obj(
@@ -238,7 +237,7 @@ trait ResponsiblePeopleValues {
     ),
     "positions" -> Json.obj(
       "positions" -> Seq("01", "03"),
-      "startDate" -> new LocalDate()
+      "startDate" -> LocalDate.now()
     ),
     "saRegistered" -> Json.obj(
       "saRegistered" -> true,

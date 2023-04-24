@@ -16,9 +16,11 @@
 
 package generators.supervision
 
+import models.des.DesConstants.datePattern
 import models.des.businessactivities.MlrActivitiesAppliedFor
 import models.des.supervision._
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -29,7 +31,7 @@ trait SupervisionGenerators {
     endDate <- Gen.const(LocalDate.now())
     dateChange <- arbitrary[Option[Boolean]]
     reason <- arbitrary[String]
-  } yield SupervisorDetails(name, startDate.toString("yyyy-MM-dd"), endDate.toString("yyyy-MM-dd"), dateChange, reason)
+  } yield SupervisorDetails(name, startDate.format(datePattern), endDate.format(datePattern), dateChange, reason)
 
   val supervisionDetailsGen: Gen[SupervisionDetails] = for {
     supervised <- arbitrary[Boolean]

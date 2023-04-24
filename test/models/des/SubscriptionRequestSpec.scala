@@ -24,7 +24,8 @@ import models.des.businessactivities._
 import models.des.msb.{CurrSupplyToCust, _}
 import models.fe.businessactivities.ExpectedBusinessTurnover
 import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.PlaySpec
@@ -152,7 +153,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
   }
 
   val businessDetailsModel = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-    Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+    Some(ActivityStartDate(LocalDate.of(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
@@ -660,7 +661,7 @@ class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAp
   "SubscriptionRequestSpec" must {
     val businessDetailsModel = BusinessDetails(
       PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+      Some(ActivityStartDate(LocalDate.of(2001, 1, 1))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),

@@ -17,9 +17,10 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+
+import java.time.LocalDate
 
 class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
@@ -28,7 +29,7 @@ class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       val rp = ResponsiblePeople(
         personResidenceType = Some(PersonResidenceType(UKResidence("nino"), "GB", "GB")),
         ukPassport = Some(UKPassportYes("AA111111A")),
-        dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+        dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
       NationalityDetails.convert(rp) must be(Some(NationalityDetails(true,
         Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))),
@@ -46,7 +47,7 @@ class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       val rp = ResponsiblePeople(
         personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
         ukPassport = Some(UKPassportYes("AA111111A")),
-        dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+        dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
       NationalityDetails.convert(rp) must be(Some(NationalityDetails(false,
         Some(IdDetail(nonUkResident = Some(NonUkResident(Some("1990-02-24"), true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),

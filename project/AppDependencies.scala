@@ -11,7 +11,6 @@ private object AppDependencies {
     "com.eclipsesource"   %% "play-json-schema-validator" % "0.9.4",
     "com.beachape"        %% "enumeratum"                 % "1.7.0",
     "uk.gov.hmrc"         %% "bootstrap-backend-play-28"  % "5.12.0",
-    "com.typesafe.play"   %% "play-json-joda"             % "2.7.4",
     "com.github.ghik"     %  "silencer-lib"               % "1.7.11" % Provided cross CrossVersion.full,
     compilerPlugin("com.github.ghik" % "silencer-plugin"  % "1.7.11" cross CrossVersion.full)
   )

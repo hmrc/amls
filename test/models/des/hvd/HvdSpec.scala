@@ -17,8 +17,9 @@
 package models.des.hvd
 
 import models.fe.hvd.{Hvd => FEHvd, _}
-import models.fe.hvd.PercentageOfCashPaymentOver15000.{Fifth, Fourth, Third, First}
-import org.joda.time.LocalDate
+import models.fe.hvd.PercentageOfCashPaymentOver15000.{Fifth, First, Fourth, Third}
+
+import java.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 
 class HvdSpec extends PlaySpec {
@@ -27,7 +28,7 @@ class HvdSpec extends PlaySpec {
 
     "successfully convert frontend model to valid des model" in {
       // scalastyle:off magic.number
-      val DefaultCashPayment = CashPaymentYes(new LocalDate(1956, 2, 15))
+      val DefaultCashPayment = CashPaymentYes(LocalDate.of(1956, 2, 15))
       val DefaultExciseGoods = ExciseGoods(true)
       val DefaultLinkedCashPayment = LinkedCashPayments(true)
       val DefaultPercentageOfCashPaymentOver15000 = Third

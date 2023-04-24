@@ -17,7 +17,8 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
@@ -26,7 +27,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
 
   "CashPaymentSpec" should {
     // scalastyle:off
-    val DefaultCashPaymentYes = CashPaymentYes(new LocalDate(1990, 2, 24))
+    val DefaultCashPaymentYes = CashPaymentYes(LocalDate.of(1990, 2, 24))
 
     "JSON validation" must {
 
@@ -41,7 +42,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
         val json = Json.obj("acceptedAnyPayment" -> true, "paymentDate" -> "1990-02-24")
 
         Json.fromJson[CashPayment](json) must
-          be(JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "paymentDate"))
+          be(JsSuccess(CashPaymentYes(LocalDate.of(1990, 2, 24)), JsPath \ "paymentDate"))
       }
 
       "fail to validate when given an empty `Yes` value" in {
@@ -55,11 +56,10 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
       "Successfully read and write Json data" in {
 
         CashPayment.jsonReads.reads(CashPayment.jsonWrites.writes(DefaultCashPaymentYes)) must be(
-          JsSuccess(CashPaymentYes(new LocalDate(1990, 2, 24)), JsPath \ "paymentDate"))
+          JsSuccess(CashPaymentYes(LocalDate.of(1990, 2, 24)), JsPath \ "paymentDate"))
       }
 
       "write the correct value" in {
-        import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
         Json.toJson(CashPaymentNo: CashPayment) must
           be(Json.obj("acceptedAnyPayment" -> false))
@@ -67,7 +67,7 @@ class CashPaymentSpec extends PlaySpec with MockitoSugar {
         Json.toJson(DefaultCashPaymentYes: CashPayment) must
           be(Json.obj(
             "acceptedAnyPayment" -> true,
-            "paymentDate" -> new LocalDate(1990, 2, 24)
+            "paymentDate" -> LocalDate.of(1990, 2, 24)
           ))
       }
 

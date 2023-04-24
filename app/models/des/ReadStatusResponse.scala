@@ -16,11 +16,10 @@
 
 package models.des
 
-import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{DateTimeZone, LocalDate, LocalDateTime}
 import play.api.libs.json._
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
 case class ReadStatusResponse(
                                processingDate: LocalDateTime,
@@ -41,7 +40,7 @@ case class ReadStatusResponse(
     val renewalWindow = 30
 
     currentRegYearEndDate match {
-      case Some(endDate) => !dateTime.toDateTimeAtStartOfDay.isAfter(endDate.toDateTimeAtStartOfDay.minusDays(renewalWindow))
+      case Some(endDate) => !dateTime.atStartOfDay().isAfter(endDate.atStartOfDay().minusDays(renewalWindow))
       case _ => false
     }
 
@@ -51,16 +50,16 @@ case class ReadStatusResponse(
 
 object ReadStatusResponse {
 
-  val dateTimeFormat = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC
+  val dateTimeFormat = DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
 
-  implicit val readsJodaLocalDateTime = Reads[LocalDateTime](js =>
+  implicit val readsLocalDateTime = Reads[LocalDateTime](js =>
     js.validate[String].map[LocalDateTime](dtString =>
       LocalDateTime.parse(dtString, dateTimeFormat)
     )
   )
 
   implicit val localDateTimeWrite: Writes[LocalDateTime] = new Writes[LocalDateTime] {
-    def writes(dateTime: LocalDateTime): JsValue = JsString(dateTimeFormat.print(dateTime.toDateTime(DateTimeZone.UTC)))
+    def writes(dateTime: LocalDateTime): JsValue = JsString(dateTimeFormat.format(dateTime.atOffset(ZoneOffset.UTC)))
   }
 
   implicit val format = Json.format[ReadStatusResponse]

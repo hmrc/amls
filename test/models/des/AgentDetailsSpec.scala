@@ -18,7 +18,8 @@ package models.des
 
 import models.des.tradingpremises.{AgentDetails, AgentPremises, Amp, Asp, Bpsp, Eab, Hvd, Msb, Tcsp, Tditpsp, Address => DesAddress}
 import models.fe.tradingpremises._
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
@@ -29,7 +30,7 @@ class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       implicit val requestType = RequestType.Amendment
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
@@ -43,7 +44,7 @@ class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       implicit val requestType = RequestType.Subscription
 
       val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), new LocalDate(2008, 1, 1), true),
+        Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
         Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )

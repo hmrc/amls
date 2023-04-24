@@ -18,9 +18,11 @@ package models.des.businessactivities
 
 import models.fe
 import models.fe.businessdetails.ActivityStartDate
-import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime, ZoneOffset}
+import java.time.format.DateTimeFormatter
 
 case class BusinessActivitiesAll(
                                   busActivitiesChangeDate:Option[String],
@@ -62,7 +64,7 @@ object BusinessActivitiesAll{
                       eabSection: Option[models.fe.eab.Eab],
                       hvdSection: Option[models.fe.hvd.Hvd],
                       businessMatchingSection: models.fe.businessmatching.BusinessMatching):Option[String] = {
-    implicit def ord: Ordering[DateTime] = Ordering.by(_.getMillis)
+    implicit def ord: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
 
     val aspDate = aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
     val eabDate = eabSection.fold[Option[String]](None)(_.data.dateOfChange)
@@ -70,7 +72,8 @@ object BusinessActivitiesAll{
     val baDate =  businessMatchingSection.activities.dateOfChange
     val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
 
-    dateLst.map(x => DateTime.parse(x)).sorted(ord).headOption.map(_.toString("yyyy-MM-dd"))
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd['T'HH:mm:ss]")
+    dateLst.map(x => LocalDate.parse(x, formatter)).sorted(ord).headOption.map(_.format(DateTimeFormatter.ISO_LOCAL_DATE))
   }
 
   implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
