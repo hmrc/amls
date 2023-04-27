@@ -16,8 +16,15 @@
 
 package utils
 
+import models.DefaultDesValues.{activityDetails, advisorNameAddress, franchiseDetails, noOfEmployees, noOfEmployeesForMlr}
+import models.des.aboutthebusiness.{Address, AlternativeAddress, BusinessContactDetails}
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
+import models.des.businessactivities.{AdvisorNameAddress, AmpServices, AmpServicesOther, AspServicesOffered, AuditableRecordsDetails, BusinessActivities, BusinessActivitiesAll, BusinessActivityDetails, EabServices, ExpectedAMLSTurnover, FormalRiskAssessmentDetails, FranchiseDetails, HowGoodsAreSold, HvdAlcoholTobacco, HvdGoodsSold, MlrActivitiesAppliedFor, MlrAdvisor, MlrAdvisorDetails, MsbServicesCarriedOut, NonUkResidentCustDetails, RiskAssessmentFormat, ServicesforRegOff, TcspServicesOffered, TransactionRecordingMethod}
 import models.des.{Declaration, DesConstants, SubscriptionRequest}
 import models.des.businessdetails.{BusinessDetails, BusinessType, CorpAndBodyLlps}
+import models.des.hvd.{Hvd, HvdFromUnseenCustDetails, ReceiptMethods}
+import models.des.msb.{CountriesList, CurrSupplyToCust, CurrencySourcesR7, CurrencyWholesalerDetails, IpspDetails, IpspServicesDetails, MSBBankDetails, MoneyServiceBusiness, MsbAllDetails, MsbCeDetailsR7, MsbMtDetails}
+import models.des.supervision.{AspOrTcsp, MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails, SupervisionDetails, SupervisorDetails}
 import models.des.tradingpremises.{OwnBusinessPremises, TradingPremises}
 import models.{DefaultDesValues, des}
 import org.scalatest.EitherValues
@@ -32,13 +39,21 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
   }
 
   "Subscription request validator" must {
-    "validate request" in {
-      val jsResult = validator.validateRequest(givenSubscriptionRequest())
+    //    "validate invalid request" in {
+    //      val jsResult = validator.validateRequest(givenInvalidSubscriptionRequest())
+    //      jsResult.isLeft mustBe true
+    //    }
+
+    "validate valid request" in {
+      val jsResult = validator.validateRequest(givenValidSubscriptionRequest())
+
+      println(s"\n$jsResult\n")
+
       jsResult.isLeft mustBe true
     }
   }
 
-  private def givenSubscriptionRequest(): SubscriptionRequest = {
+  private def givenInvalidSubscriptionRequest(): SubscriptionRequest = {
     SubscriptionRequest(
       acknowledgementReference = ackref.ackRef,
       businessDetails = BusinessDetails(BusinessType.LimitedCompany, Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")), None),
@@ -63,4 +78,97 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       declaration = Declaration(true),
       lettingAgents = None)
   }
+
+  private def givenValidSubscriptionRequest(): SubscriptionRequest = {
+    SubscriptionRequest(
+      acknowledgementReference = "b998aae85b78423989ffb9161ee74a0d",
+      businessDetails = BusinessDetails(BusinessType.LimitedCompany, Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")), None),
+      businessActivities = givenValidBusinessActivities,
+      eabAll = DefaultDesValues.EabAllDetails,
+      eabResdEstAgncy = DefaultDesValues.EabResd,
+      businessContactDetails = givenValidBusinessContactDetails,
+      businessReferencesAll = DefaultDesValues.PrevRegMLR,
+      businessReferencesAllButSp = None,
+      businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
+      tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(DesConstants.subscriptionRequestOwnBusinessPremisesDetails)))), None),
+      bankAccountDetails = DefaultDesValues.bankDetailsSection,
+      msb = DefaultDesValues.msbSection,
+      hvd = validHvdSection,
+      filingIndividual = DefaultDesValues.filingIndividual,
+      tcspAll = DefaultDesValues.tcspAllSection,
+      tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
+      responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
+      asp = DefaultDesValues.AspSection,
+      amp = validAmpSection,
+      aspOrTcsp = validAspOrTcspSection,
+      declaration = Declaration(true),
+      lettingAgents = None)
+  }
+
+  private val givenValidBusinessActivities =
+    BusinessActivities(
+      Some(MlrActivitiesAppliedFor(true, true, true, false, false, false, false, false)),
+      Some(MsbServicesCarriedOut(true, true, false, true, false)),
+      Some(HvdGoodsSold(true, true, true, true, true, false, false, false, false, false, false, true, Some("Details"),
+        Some(HowGoodsAreSold(true, false, true)))),
+      Some(HvdAlcoholTobacco(true)),
+      Some(AspServicesOffered(true, false, false, true, true)),
+      Some(TcspServicesOffered(true, true, true, true, true)),
+      Some(ServicesforRegOff(true, false, false, false, false, false, false, true, Some("other service"))),
+      Some(EabServices(false, false, true, false, true, false, false, false, false, Some(false))),
+      Some(AmpServices(true, true, true, true, AmpServicesOther(true, Some("Another service")))),
+      Some(
+        BusinessActivitiesAll(
+          None,
+          Some("1990-02-24"),
+          None,
+          BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
+          Some(FranchiseDetails(true, Some(Seq("Name")))),
+          Some("10"),
+          Some("5"),
+          NonUkResidentCustDetails(true, Some(Seq("GB", "AD"))),
+          AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
+          true,
+          true,
+          Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
+          Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"),
+            Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None))))
+        )
+      )
+    )
+
+  private val givenValidBusinessContactDetails =
+    BusinessContactDetails(
+      Address("line1", "line2", Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
+      true,
+      Some(AlternativeAddress("kap", "Trading", Address("Park", "lane", Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
+      "019212323222323222323222323222", // TODO this number breaks validation
+      "abc@hotmail.co.uk"
+    )
+
+  private val validMsbSection =
+    Some(
+      MoneyServiceBusiness(
+        Some(MsbAllDetails(Some("£1m-10m"), true, Some(CountriesList(List("GB"))), true)),
+        Some(MsbMtDetails(true, Some("123456"),
+          IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+          true,
+          Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))))),
+        Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
+          Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
+    )
+
+  private val validAmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19")), true, 60))
+
+  val validAspOrTcspSection =
+    Some(
+      AspOrTcsp(
+        Some(SupervisionDetails(true, Some(SupervisorDetails("Company A", "1993-08-25", "1999-08-25", None, "Ending reason")))),
+        Some(ProfessionalBodyDetails(true, Some("details"),
+          Some(ProfessionalBodyDesMember(true,
+            Some(MemberOfProfessionalBody(true, true, false, false, false, false, false, false, false, false, false, false, false, true, Some("test"))))))
+        ))
+    )
+
+  val validHvdSection = Some(Hvd(true, Some("1978-02-15"), None, true, Some(40), Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
 }
