@@ -22,14 +22,15 @@ import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp._
 import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
 import models.des.businessdetails.BusinessDetails
-import models.des.businessdetails.BusinessType.SoleProprietor
+import models.des.businessdetails.BusinessType.{LimitedCompany, SoleProprietor}
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
 import models.des.msb._
+import models.des.responsiblepeople
 import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => DesSoleProprietor, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Asp => TPAsp, TradingPremises => DesTradingPremises, Amp => AmpTradingPremises, _}
+import models.des.tradingpremises.{Amp => AmpTradingPremises, Asp => TPAsp, TradingPremises => DesTradingPremises, _}
 import org.joda.time.LocalDate
 
 object DefaultDesValues {
@@ -45,7 +46,7 @@ object DefaultDesValues {
   private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
     true, false, true, false, false, false, false, Some(true)))
 
-  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("14999"))))
+  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k"))))
   private val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name"))))
   private val noOfEmployees = Some("10")
   private val noOfEmployeesForMlr = Some("5")
@@ -168,7 +169,7 @@ object DefaultDesValues {
   val tcspAllSection = Some(TcspAll(true, Some("12345678")))
   val tcspTrustCompFormationAgtSection = Some(TcspTrustCompFormationAgt(true, true))
 
-  val ResponsiblePersonsSection = Some(Seq(ResponsiblePersons(
+  private val responsiblePersons: ResponsiblePersons = ResponsiblePersons(
     nameDetails = nameDtls,
     nationalityDetails = nationalDtls,
     contactCommDetails = contactDtls,
@@ -189,7 +190,20 @@ object DefaultDesValues {
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
-  ))
+
+  val ResponsiblePersonsSection = Some(Seq(responsiblePersons))
+
+  val validResponsiblePersons = Some(Seq(responsiblePersons.copy(
+    nationalityDetails = Some(NationalityDetails(true, None, None, None)),
+    passedFitAndProperTest = Some(true),
+    passedApprovalCheck = Some(true),
+    dateChangeFlag = None,
+    positionInBusiness = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false), None)), None, None)),
+    nameDetails = Some(NameDetails(PersonName(Some("Jack"), None, Some("Humphrey")),
+      Some(OthrNamesOrAliasesDetails(false, None)), Some(PreviousNameDetails(false, None, None, None)))),
+    msbOrTcsp = None
+  )))
+
   val ResponsiblePersonsSection1 = Some(Seq(ResponsiblePersons(
     nameDetails = nameDtls,
     nationalityDetails = nationalDtls,

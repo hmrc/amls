@@ -34,7 +34,7 @@ import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{ApiRetryHelper, SubscriptionRequestValidator}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,22 +43,10 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
                                     private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
                                     private[services] val auditConnector: AuditConnector,
                                     private[services] val config: ApplicationConfig,
+                                    val subscriptionRequestValidator: SubscriptionRequestValidator,
                                     val feeResponseRepository: FeesRepository) extends Logging {
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
-
-  private[services] def validateResult(request: SubscriptionRequest): JsResult[JsValue] = {
-
-    // $COVERAGE-OFF$
-
-    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
-
-    val lines = scala.io.Source.fromInputStream(stream).getLines
-    val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
-
-    SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
-  }
-
 
   private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
     case ex @ HttpStatusException(BAD_REQUEST, _) => {
@@ -82,15 +70,18 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
       Future.failed(e)
   }
 
-  def subscribe
-  (safeId: String, request: SubscriptionRequest)
-  (implicit
-   hc: HeaderCarrier,
-   ec: ExecutionContext,
-   apiRetryHelper: ApiRetryHelper
-  ): Future[SubscriptionResponse] = {
+  def subscribe(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext,
+                                                              apiRetryHelper: ApiRetryHelper): Future[SubscriptionResponse] = {
 
-    validateRequest(safeId, request)
+    val validationResult = subscriptionRequestValidator.validateRequest(request)
+
+    validationResult match {
+      case Left(errors) =>
+        logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
+        auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, errors))
+      case Right(_) =>
+        logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
+    }
 
     for {
       response <- desConnector.subscribe(safeId, request)
@@ -118,32 +109,6 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
       KnownFactsForService(facts :+ KnownFact("POSTCODE", request.businessContactDetails.businessAddress.postcode.get))
     } else {
       KnownFactsForService(facts)
-    }
-  }
-
-  private def validateRequest(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
-    val result = validateResult(request)
-    if (!result.isSuccess) {
-      result.fold(invalid = { errors =>
-        errors.foldLeft[String]("") {
-          (a, b) => a + "," + b._1.toJsonString
-        }
-      }, valid = identity)
-
-      result.fold(invalid = validationResult => {
-        val resultObjects = validationResult.map {
-          case (path, messages) => Json.obj(
-            "path" -> path.toJsonString,
-            "messages" -> messages.map(_.messages)
-          )
-        }
-
-        logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
-        auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, resultObjects))
-      }, valid = identity)
-
-    } else {
-      logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
   }
 
