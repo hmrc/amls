@@ -16,17 +16,16 @@
 
 package utils
 
-import models.DefaultDesValues.{activityDetails, advisorNameAddress, franchiseDetails, noOfEmployees, noOfEmployeesForMlr}
+import models.DefaultDesValues
 import models.des.aboutthebusiness.{Address, AlternativeAddress, BusinessContactDetails}
 import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
-import models.des.businessactivities.{AdvisorNameAddress, AmpServices, AmpServicesOther, AspServicesOffered, AuditableRecordsDetails, BusinessActivities, BusinessActivitiesAll, BusinessActivityDetails, EabServices, ExpectedAMLSTurnover, FormalRiskAssessmentDetails, FranchiseDetails, HowGoodsAreSold, HvdAlcoholTobacco, HvdGoodsSold, MlrActivitiesAppliedFor, MlrAdvisor, MlrAdvisorDetails, MsbServicesCarriedOut, NonUkResidentCustDetails, RiskAssessmentFormat, ServicesforRegOff, TcspServicesOffered, TransactionRecordingMethod}
-import models.des.{Declaration, DesConstants, SubscriptionRequest}
+import models.des.businessactivities._
 import models.des.businessdetails.{BusinessDetails, BusinessType, CorpAndBodyLlps}
 import models.des.hvd.{Hvd, HvdFromUnseenCustDetails, ReceiptMethods}
-import models.des.msb.{CountriesList, CurrSupplyToCust, CurrencySourcesR7, CurrencyWholesalerDetails, IpspDetails, IpspServicesDetails, MSBBankDetails, MoneyServiceBusiness, MsbAllDetails, MsbCeDetailsR7, MsbMtDetails}
-import models.des.supervision.{AspOrTcsp, MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails, SupervisionDetails, SupervisorDetails}
-import models.des.tradingpremises.{OwnBusinessPremises, TradingPremises}
-import models.{DefaultDesValues, des}
+import models.des.msb._
+import models.des.supervision._
+import models.des.tradingpremises.{AgentBusinessPremises, OwnBusinessPremises, OwnBusinessPremisesDetails, TradingPremises}
+import models.des.{Declaration, DesConstants, SubscriptionRequest, tradingpremises}
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
 
@@ -39,17 +38,14 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
   }
 
   "Subscription request validator" must {
-    //    "validate invalid request" in {
-    //      val jsResult = validator.validateRequest(givenInvalidSubscriptionRequest())
-    //      jsResult.isLeft mustBe true
-    //    }
+        "validate invalid request" in {
+          val jsResult = validator.validateRequest(givenInvalidSubscriptionRequest())
+          jsResult.isLeft mustBe true
+        }
 
     "validate valid request" in {
       val jsResult = validator.validateRequest(givenValidSubscriptionRequest())
-
-      println(s"\n$jsResult\n")
-
-      jsResult.isLeft mustBe true
+      jsResult.isRight mustBe true
     }
   }
 
@@ -90,14 +86,15 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       businessReferencesAll = DefaultDesValues.PrevRegMLR,
       businessReferencesAllButSp = None,
       businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
-      tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(DesConstants.subscriptionRequestOwnBusinessPremisesDetails)))), None),
+      tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(validOwnBusinessPremisesDetails)))),
+        Some(AgentBusinessPremises(false, None))),
       bankAccountDetails = DefaultDesValues.bankDetailsSection,
-      msb = DefaultDesValues.msbSection,
+      msb = validMsbSection,
       hvd = validHvdSection,
       filingIndividual = DefaultDesValues.filingIndividual,
       tcspAll = DefaultDesValues.tcspAllSection,
       tcspTrustCompFormationAgt = DefaultDesValues.tcspTrustCompFormationAgtSection,
-      responsiblePersons = DefaultDesValues.ResponsiblePersonsSection,
+      responsiblePersons = DefaultDesValues.validResponsiblePersons,
       asp = DefaultDesValues.AspSection,
       amp = validAmpSection,
       aspOrTcsp = validAspOrTcspSection,
@@ -142,7 +139,7 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       Address("line1", "line2", Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
       true,
       Some(AlternativeAddress("kap", "Trading", Address("Park", "lane", Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
-      "019212323222323222323222323222", // TODO this number breaks validation
+      "078 6353 4828",
       "abc@hotmail.co.uk"
     )
 
@@ -170,5 +167,33 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
         ))
     )
 
-  val validHvdSection = Some(Hvd(true, Some("1978-02-15"), None, true, Some(40), Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+  val validHvdSection = Some(Hvd(true, Some("1978-02-15"), None, true, Some(40),
+    Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+
+  val validOwnBusinessPremisesDetails =
+    OwnBusinessPremisesDetails(
+      tradingName = Some("ABCDEFGHIJK ABCDE & LETTINGS LTD"),
+      businessAddress = tradingpremises.Address("ABC 1234, ABCDEFGHIJ, CLYDE",
+        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine3"),
+        Some("OwnBusinessAddressLine4"),
+        "GB",
+        Some("YY1 1YY")),
+      residential = false,
+      msb = models.des.tradingpremises.Msb(false, false, false, false, false),
+      hvd = models.des.tradingpremises.Hvd(false),
+      asp = models.des.tradingpremises.Asp(false),
+      tcsp = models.des.tradingpremises.Tcsp(true),
+      eab = models.des.tradingpremises.Eab(true),
+      bpsp = models.des.tradingpremises.Bpsp(true),
+      tditpsp = models.des.tradingpremises.Tditpsp(false),
+      amp = models.des.tradingpremises.Amp(true),
+      startDate = "2001-01-01",
+      endDate = None,
+      lineId = None,
+      status = None,
+      sectorDateChange = None,
+      dateChangeFlag = None,
+      tradingNameChangeDate = None
+    )
 }
