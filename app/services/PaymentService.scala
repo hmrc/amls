@@ -67,8 +67,17 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymen
     futureOptPayment
   }
 
-  def getPaymentByPaymentReference(paymentReference: String): Future[Option[Payment]] =
-    paymentsRepository.findLatestByPaymentReference(paymentReference)
+  def getPaymentByPaymentReference(paymentReference: String): Future[Option[Payment]] = {
+    logger.debug(s"Searching for payment by payment reference $paymentReference ...")
+    val futureOptPayment = paymentsRepository.findLatestByPaymentReference(paymentReference)
+
+    futureOptPayment.foreach {
+      case Some(payment) => Some(payment)
+      case None => logger.error(s"unable to find payment in database for payment reference $paymentReference");None
+    }
+
+    futureOptPayment
+  }
 
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext): Future[Boolean] =
     paymentsRepository.update(payment) map {
