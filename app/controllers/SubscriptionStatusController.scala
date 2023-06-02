@@ -18,31 +18,25 @@ package controllers
 
 import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
-
-import javax.inject.{Inject, Singleton}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json._
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import utils.{ApiRetryHelper, AuthAction}
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class SubscriptionStatusController @Inject()(ssConn: SubscriptionStatusDESConnector,
                                              authAction: AuthAction,
-                                             val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
+                                             val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
+  extends BackendController(cc) with Logging with ControllerHelper {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 
-  val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
   val prefix = "[SubscriptionStatusController][get]"
-
-  private def toError(message: String): JsObject =
-    Json.obj(
-      "errors" -> Seq(message)
-    )
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async {

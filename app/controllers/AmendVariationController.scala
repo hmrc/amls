@@ -17,17 +17,16 @@
 package controllers
 
 import exceptions.HttpStatusException
-
-import javax.inject.{Inject, Singleton}
-import models.des.{RequestType, _}
+import models.des._
 import models.fe
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import utils.{ApiRetryHelper, AuthAction}
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -35,28 +34,10 @@ import scala.concurrent.Future
 class AmendVariationController @Inject()(avs: AmendVariationService,
                                          authAction: AuthAction,
                                          bodyParsers: PlayBodyParsers,
-                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
+                                         val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
+  extends BackendController(cc) with Logging with ControllerHelper {
 
   private[controllers] def service: AmendVariationService = avs
-
-  val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
-
-  private def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]): JsObject =
-    Json.obj(
-      "errors" -> (errors map {
-        case (path, error) =>
-          Json.obj(
-            "path" -> path.toJsonString,
-            "error" -> error.head.message
-          )
-      })
-    )
-
-  private def toError(message: String): JsObject =
-    Json.obj(
-      "errors" -> Seq(message)
-    )
-
 
   def update(amlsRegistrationNumber: String,
              messageType: AmlsMessageType,
