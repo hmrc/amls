@@ -17,18 +17,17 @@
 package controllers
 
 import exceptions.{DuplicateSubscriptionException, HttpStatusException}
-
-import javax.inject.{Inject, Singleton}
 import models.des.{RequestType, SubscriptionRequest}
 import models.fe
 import models.fe.SubscriptionErrorResponse
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json._
 import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
 import services.SubscriptionService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import utils.{ApiRetryHelper, AuthAction}
+import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.matching.Regex
@@ -37,26 +36,11 @@ import scala.util.matching.Regex
 class SubscriptionController @Inject()(val subscriptionService: SubscriptionService,
                                        authAction: AuthAction,
                                        bodyParsers: PlayBodyParsers,
-                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper) extends BackendController(cc) with Logging {
+                                       val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
+  extends BackendController(cc) with Logging with ControllerHelper {
 
   val safeIdRegex: Regex = "^X[A-Z]000[0-9]{10}$".r
   val prefix = "[SubscriptionController][subscribe]"
-
-  private def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]): JsObject =
-    Json.obj(
-      "errors" -> (errors map {
-        case (path, error) =>
-          Json.obj(
-            "path" -> path.toJsonString,
-            "error" -> error.head.message
-          )
-      })
-    )
-
-  private def toError(message: String): JsObject =
-    Json.obj(
-      "errors" -> Seq(message)
-    )
 
   def subscribe(accountType: String, ref: String, safeId: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
