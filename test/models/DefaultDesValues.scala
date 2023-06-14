@@ -16,7 +16,6 @@
 
 package models
 
-import models.des.DesConstants.datePattern
 import models.des.aboutthebusiness.{Address => ATBAddress, _}
 import models.des.aboutyou.{Aboutyou, IndividualDetails}
 import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
@@ -31,7 +30,6 @@ import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => Des
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Amp => AmpTradingPremises, Asp => TPAsp, TradingPremises => DesTradingPremises, _}
-
 import java.time.LocalDate
 
 object DefaultDesValues {
@@ -47,7 +45,7 @@ object DefaultDesValues {
   private val deseabServiceModelLA = Some(des.businessactivities.EabServices(false, false,
     true, false, true, false, false, false, false, Some(true)))
 
-  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("14999"))))
+  private val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k"))))
   private val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name"))))
   private val noOfEmployees = Some("10")
   private val noOfEmployeesForMlr = Some("5")
@@ -170,7 +168,7 @@ object DefaultDesValues {
   val tcspAllSection = Some(TcspAll(true, Some("12345678")))
   val tcspTrustCompFormationAgtSection = Some(TcspTrustCompFormationAgt(true, true))
 
-  val ResponsiblePersonsSection = Some(Seq(ResponsiblePersons(
+  private val responsiblePersons: ResponsiblePersons = ResponsiblePersons(
     nameDetails = nameDtls,
     nationalityDetails = nationalDtls,
     contactCommDetails = contactDtls,
@@ -191,7 +189,20 @@ object DefaultDesValues {
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
   )
-  ))
+
+  val ResponsiblePersonsSection = Some(Seq(responsiblePersons))
+
+  val validResponsiblePersons = Some(Seq(responsiblePersons.copy(
+    nationalityDetails = Some(NationalityDetails(true, None, None, None)),
+    passedFitAndProperTest = Some(true),
+    passedApprovalCheck = Some(true),
+    dateChangeFlag = None,
+    positionInBusiness = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false), None)), None, None)),
+    nameDetails = Some(NameDetails(PersonName(Some("Jack"), None, Some("Humphrey")),
+      Some(OthrNamesOrAliasesDetails(false, None)), Some(PreviousNameDetails(false, None, None, None)))),
+    msbOrTcsp = None
+  )))
+
   val ResponsiblePersonsSection1 = Some(Seq(ResponsiblePersons(
     nameDetails = nameDtls,
     nationalityDetails = nationalDtls,

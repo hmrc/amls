@@ -40,7 +40,7 @@ object TaxTypes extends Enum[TaxType] {
   override def values = findValues
 }
 
-case class Payment(id: String, taxType: TaxType, reference: String, description: Option[String], amountInPence: Int, status: PaymentStatus)
+case class Payment(id: String, taxType: TaxType, reference: Option[String], description: Option[String], amountInPence: Option[Int], status: PaymentStatus)
 
 object Payment {
   implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)

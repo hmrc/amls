@@ -45,9 +45,9 @@ object Payment {
       apiPayment.id,
       amlsRegNo,
       safeId,
-      apiPayment.reference,
+      apiPayment.reference.getOrElse(""),
       apiPayment.description,
-      apiPayment.amountInPence,
+      apiPayment.amountInPence.getOrElse(0),
       apiPayment.status,
       LocalDateTime.now
     )
