@@ -17,7 +17,8 @@
 package generators.supervision
 
 import models.des.businessactivities.MlrActivitiesAppliedFor
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 

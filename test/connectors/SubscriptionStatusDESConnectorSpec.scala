@@ -22,7 +22,8 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.API9
 import models.des
-import org.joda.time.{DateTimeUtils, LocalDateTime}
+
+import java.time.LocalDateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterAll
@@ -35,14 +36,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfterAll with AmlsReferenceNumberGenerator {
-
-  override def beforeAll {
-    DateTimeUtils.setCurrentMillisFixed(1000)
-  }
-
-  override def afterAll: Unit = {
-    DateTimeUtils.setCurrentMillisSystem()
-  }
 
   trait Fixture {
 

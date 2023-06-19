@@ -24,7 +24,6 @@ import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
 import models.fe.AmendVariationResponse
-import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -37,6 +36,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
+import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -105,7 +105,7 @@ class AmendVariationServiceSpec extends PlaySpec
     Some(100.0)
   )
 
-  val statusResponse = ReadStatusResponse(new LocalDateTime(), "Approved", None, None, None, Some(new LocalDate(2017, 4, 30)), false)
+  val statusResponse = ReadStatusResponse(LocalDateTime.now, "Approved", None, None, None, Some(LocalDate.of(2017, 4, 30)), false)
 
   val unchangedExtra: RPExtra = RPExtra(status = Some("Unchanged"))
   val addedExtra: RPExtra = RPExtra(status = Some("Added"))

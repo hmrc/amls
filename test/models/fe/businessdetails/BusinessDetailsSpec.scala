@@ -17,10 +17,11 @@
 package models.fe.businessdetails
 
 import models.des.DesConstants
-import org.joda.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsNull, Json}
+
+import java.time.LocalDate
 
 class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
@@ -29,9 +30,9 @@ class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
   val regForVAT = VATRegisteredYes("123456789")
 
   // scalastyle:off
-  val activityStartDate = ActivityStartDate(new LocalDate(1990, 2, 24))
+  val activityStartDate = ActivityStartDate(LocalDate.of(1990, 2, 24))
 
-  val newActivityStartDate = ActivityStartDate(new LocalDate(1990, 2, 24))
+  val newActivityStartDate = ActivityStartDate(LocalDate.of(1990, 2, 24))
 
   val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
 
@@ -104,7 +105,7 @@ class BusinessDetailsSpec extends PlaySpec with MockitoSugar {
 
       val atb = BusinessDetails(
         previouslyRegistered = PreviouslyRegisteredNo,
-        activityStartDate = Some(ActivityStartDate(new LocalDate(2001, 1, 1))),
+        activityStartDate = Some(ActivityStartDate(LocalDate.of(2001, 1, 1))),
         vatRegistered = Some(VATRegisteredYes("123456789")),
         corporationTaxRegistered = Some(CorporationTaxRegisteredYes("1234567891")),
         contactingYou = ContactingYou("07000111222", "BusinessEmail"),

@@ -20,7 +20,8 @@ import connectors.SubscriptionStatusDESConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des
-import org.joda.time.LocalDateTime
+
+import java.time.LocalDateTime
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import play.api.libs.json.Json

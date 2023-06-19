@@ -26,7 +26,8 @@ import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBus
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.{des, fe}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
@@ -69,7 +70,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
         ),
       eabSection = None,
       tradingPremisesSection = None,
-      businessDetailsSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(new LocalDate(1990, 2, 24))), Some(VATRegisteredNo),
+      businessDetailsSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(LocalDate.of(1990, 2, 24))), Some(VATRegisteredNo),
         Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"), altCorrespondenceAddress = false),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
       aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),

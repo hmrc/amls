@@ -17,7 +17,8 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 
 class NonUkResidentSpec extends PlaySpec {
@@ -28,7 +29,7 @@ class NonUkResidentSpec extends PlaySpec {
       val rp = ResponsiblePeople(
         personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
         ukPassport = Some(UKPassportYes("AA111111A")),
-        dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+        dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
         true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))))
@@ -38,7 +39,7 @@ class NonUkResidentSpec extends PlaySpec {
       val rp = ResponsiblePeople(
         personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
         nonUKPassport = Some(NonUKPassportYes("1234612124646")),
-        dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+        dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
       NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
         true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
@@ -59,7 +60,7 @@ class NonUkResidentSpec extends PlaySpec {
         val rp = ResponsiblePeople(
           personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
           nonUKPassport = Some(NoPassport),
-          dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+          dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
         )
 
         NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"), false, None)))))
@@ -69,7 +70,7 @@ class NonUkResidentSpec extends PlaySpec {
         val rp = ResponsiblePeople(
           personResidenceType = Some(PersonResidenceType(NonUKResidence, "GB", "GB")),
           nonUKPassport = None,
-          dateOfBirth = Some(DateOfBirth(new LocalDate(1990, 2, 24)))
+          dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
         )
 
         NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"), false, None)))))

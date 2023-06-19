@@ -19,10 +19,11 @@ package models.des.responsiblepeople
 import models.DefaultDesValues.{nameDtls, nameDtls1}
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
 import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSection}
-import org.joda.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
+
+import java.time.LocalDate
 
 class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
 

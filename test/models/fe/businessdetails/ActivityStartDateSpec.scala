@@ -17,9 +17,10 @@
 package models.fe.businessdetails
 
 import models.des.businessactivities._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
+
+import java.time.LocalDate
 
 class ActivityStartDateSpec extends PlaySpec {
   "ActivityStartDate" must {
@@ -28,13 +29,13 @@ class ActivityStartDateSpec extends PlaySpec {
       // scalastyle:off
       "Read and write successfully" in {
 
-        ActivityStartDate.format.reads(ActivityStartDate.format.writes(ActivityStartDate(new LocalDate(1990, 2, 24)))) must be(
-          JsSuccess(ActivityStartDate(new LocalDate(1990, 2, 24))))
+        ActivityStartDate.format.reads(ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24)))) must be(
+          JsSuccess(ActivityStartDate(LocalDate.of(1990, 2, 24))))
 
       }
 
       "write successfully" in {
-        ActivityStartDate.format.writes(ActivityStartDate(new LocalDate(1990, 2, 24))) must be(Json.obj("startDate" -> "1990-02-24"))
+        ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24))) must be(Json.obj("startDate" -> "1990-02-24"))
       }
     }
 

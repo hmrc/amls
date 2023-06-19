@@ -17,9 +17,10 @@
 package models.fe.tradingpremises
 
 import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
-import org.joda.time.LocalDate
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import java.time.LocalDate
 
 class YourTradingPremisesSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
 
@@ -50,9 +51,9 @@ class YourTradingPremisesSpec extends WordSpec with MustMatchers with GuiceOneAp
 
       val feModel = YourTradingPremises("TradingName",
         Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
-        new LocalDate(2001, 1, 1), true)
+        LocalDate.of(2001, 1, 1), true)
 
-      YourTradingPremises.conv(agentDetail) must be(feModel)
+      YourTradingPremises.conv(agentDetail) mustBe feModel
 
     }
   }

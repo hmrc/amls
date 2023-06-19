@@ -18,7 +18,8 @@ package models.des.aboutthebusiness
 
 import models.fe.businessdetails._
 import models.des
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -159,7 +160,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
   "convert BusinessContactDetails correctly with Registered office and alternate address are in UK" in {
     // scalastyle:off magic.number
     val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
@@ -180,7 +181,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "convert BusinessContactDetails correctly with registered office non UK and alternate Address non UK" in {
     val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
@@ -201,7 +202,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "convert BusinessContactDetails correctly with registered office UK and alternate Address non UK" in {
     val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
@@ -223,7 +224,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
   "convert BusinessContactDetails correctly when Registered office is non UK and alternate address is UK" in {
 
     val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
@@ -245,7 +246,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
   "convert BusinessContactDetails correctly when Registered office is non UK and alternate address is none" in {
 
     val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),

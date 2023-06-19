@@ -18,14 +18,15 @@ package models.fe.hvd
 
 import models.des.DesConstants
 import models.fe.hvd.PercentageOfCashPaymentOver15000.First
-import org.joda.time.LocalDate
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
+import java.time.LocalDate
+
 class HvdSpec extends PlaySpec with TableDrivenPropertyChecks {
 
-  private val DefaultCashPayment = CashPaymentYes(new LocalDate(1956, 2, 15))
+  private val DefaultCashPayment = CashPaymentYes(LocalDate.of(1956, 2, 15))
   private val DefaultProducts = Products(Set(Other("Details")))
   private val DefaultExciseGoods = ExciseGoods(true)
   private val DefaultLinkedCashPayment = LinkedCashPayments(true)
@@ -39,12 +40,11 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks {
   val NewLinkedCashPayment = LinkedCashPayments(true)
 
   "hvd" must {
-    import play.api.libs.json.JodaWrites.DefaultJodaLocalDateWrites
 
     val completeJson = Json.obj(
       "cashPayment" -> Json.obj(
         "acceptedAnyPayment" -> true,
-        "paymentDate" -> new LocalDate(1956, 2, 15)),
+        "paymentDate" -> LocalDate.of(1956, 2, 15)),
       "products" -> Json.obj(
         "products" -> Json.arr("12"),
         "otherDetails" -> "Details"),
@@ -78,7 +78,7 @@ class HvdSpec extends PlaySpec with TableDrivenPropertyChecks {
 
     "converting the des subscription model with values must yield a frontend Hvd model with values" in {
       val testHvd = Hvd(
-        cashPayment = Some(CashPaymentYes(new LocalDate(2001, 1, 1))),
+        cashPayment = Some(CashPaymentYes(LocalDate.of(2001, 1, 1))),
         products = DesConstants.testBusinessActivities,
         exciseGoods = DesConstants.testBusinessActivities,
         howWillYouSellGoods = DesConstants.testBusinessActivities,

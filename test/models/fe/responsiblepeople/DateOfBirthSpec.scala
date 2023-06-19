@@ -17,14 +17,15 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
-import org.joda.time.LocalDate
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
+import java.time.LocalDate
+
 class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  val date = new LocalDate(1990, 2, 24)
+  val date = LocalDate.of(1990, 2, 24)
 
   "DateOfBirth" must {
     "read JSON successfully" when {
@@ -58,7 +59,7 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
         )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, Some(false), None, extra = RPExtra()
       )
 
-      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990, 3, 23))))
+      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(LocalDate.of(1990, 3, 23))))
     }
 
     "convert from des ResponsiblePerson to fe DateOfBirth - UkResident" in {
@@ -70,7 +71,7 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
         )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, Some(false), None, extra = RPExtra()
       )
 
-      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(new LocalDate(1990, 2, 24))))
+      DateOfBirth.conv(desModel) must be(Some(DateOfBirth(LocalDate.of(1990, 2, 24))))
     }
   }
 }

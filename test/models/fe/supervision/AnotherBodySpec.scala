@@ -17,10 +17,11 @@
 package models.fe.supervision
 
 import models.des.supervision.{SupervisionDetails, SupervisorDetails}
-import org.joda.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+
+import java.time.LocalDate
 
 class AnotherBodySpec extends PlaySpec with MockitoSugar {
 
@@ -34,8 +35,8 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
 
       "Serialise AnotherBodyYes service as expected" in {
 
-        val start = new LocalDate(1990, 2, 24) //scalastyle:off magic.number
-        val end = new LocalDate(1998, 2, 24) //scalastyle:off magic.number
+        val start = LocalDate.of(1990, 2, 24) //scalastyle:off magic.number
+        val end = LocalDate.of(1998, 2, 24) //scalastyle:off magic.number
         val input = AnotherBodyYes("Name", start, end, "Reason")
 
         val expectedJson = Json.obj(
@@ -65,8 +66,8 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
           "endingReason" -> Json.obj("supervisionEndingReason" -> "Reason")
         )
 
-        val start = new LocalDate(1990, 2, 24) //scalastyle:off magic.number
-        val end = new LocalDate(1998, 2, 24) //scalastyle:off magic.number
+        val start = LocalDate.of(1990, 2, 24) //scalastyle:off magic.number
+        val end = LocalDate.of(1998, 2, 24) //scalastyle:off magic.number
         val expected = AnotherBodyYes("Name", start, end, "Reason")
 
         Json.fromJson[AnotherBody](input) must be(JsSuccess(expected))
@@ -91,7 +92,7 @@ class AnotherBodySpec extends PlaySpec with MockitoSugar {
         )
       ))
 
-      val convertedModel = Some(AnotherBodyYes("NameOfLastSupervisor", new LocalDate(2001, 1, 1), new LocalDate(2001, 1, 1), "SupervisionEndingReason"))
+      val convertedModel = Some(AnotherBodyYes("NameOfLastSupervisor", LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 1), "SupervisionEndingReason"))
       AnotherBody.conv(desModel) must be(convertedModel)
     }
 

@@ -26,7 +26,8 @@ import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessdetails._
 import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -65,7 +66,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
     tradingPremisesSection = None,
     businessDetailsSection = BusinessDetails(
       PreviouslyRegisteredNo,
-      Some(ActivityStartDate(new LocalDate(1990, 2, 24))),
+      Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
       Some(VATRegisteredNo),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("123456789", "asas@gmail.com"),

@@ -22,16 +22,15 @@ import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.asp._
 import models.des.businessactivities.{BusinessActivities => DesBusinessActivities, _}
 import models.des.businessdetails.BusinessDetails
-import models.des.businessdetails.BusinessType.{LimitedCompany, SoleProprietor}
+import models.des.businessdetails.BusinessType.SoleProprietor
 import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy}
 import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
 import models.des.msb._
-import models.des.responsiblepeople
 import models.des.responsiblepeople.{Address => RPAddress, SoleProprietor => DesSoleProprietor, _}
 import models.des.supervision._
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.{Amp => AmpTradingPremises, Asp => TPAsp, TradingPremises => DesTradingPremises, _}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 
 object DefaultDesValues {
 
@@ -185,7 +184,7 @@ object DefaultDesValues {
     descOfPrevExperience = Some("Some training"),
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
-    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    startDate = Some(LocalDate.now.toString),
     dateChangeFlag = Some(false),
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
@@ -220,7 +219,7 @@ object DefaultDesValues {
     descOfPrevExperience = Some("Some training"),
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
-    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    startDate = Some(LocalDate.now.toString),
     dateChangeFlag = None,
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
@@ -244,7 +243,7 @@ object DefaultDesValues {
     Some("Some training"),
     true,
     Some("test"),
-    Some((new LocalDate()).toString("yyyy-MM-dd")),
+    Some(LocalDate.now.toString),
     Some(false),
     None,
     Some(false),
@@ -268,7 +267,7 @@ object DefaultDesValues {
     descOfPrevExperience = Some("Some training"),
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
-    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    startDate = Some(LocalDate.now.toString),
     dateChangeFlag = Some(false),
     msbOrTcsp = Some(MsbOrTcsp(true)),
     extra = RPExtra()
@@ -290,7 +289,7 @@ object DefaultDesValues {
     descOfPrevExperience = Some("Some training"),
     amlAndCounterTerrFinTraining = true,
     trainingDetails = Some("test"),
-    startDate = Some((new LocalDate()).toString("yyyy-MM-dd")),
+    startDate = Some(LocalDate.now.toString),
     dateChangeFlag = None,
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),

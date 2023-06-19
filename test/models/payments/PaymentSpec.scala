@@ -16,19 +16,17 @@
 
 package models.payments
 
-import java.time.{LocalDateTime, ZoneOffset}
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus.{Created, Successful}
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
+import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
-import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.SECONDS
 
 //noinspection ScalaStyle
-class PaymentSpec extends PlaySpec with MustMatchers with PaymentGenerator {
+class PaymentSpec extends PlaySpec with PaymentGenerator {
 
   "The Payment model without description" when {
     "serialising" must {

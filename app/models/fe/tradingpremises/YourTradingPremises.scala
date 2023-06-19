@@ -18,10 +18,9 @@ package models.fe.tradingpremises
 
 
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
 
 case class YourTradingPremises(tradingName: String, tradingPremisesAddress: Address, startDate: LocalDate,
                                isResidential: Boolean, tradingNameChangeDate: Option[String] = None)

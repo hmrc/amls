@@ -16,9 +16,10 @@
 
 package models.fe.hvd
 
-import org.joda.time.{LocalDate}
-import models.des.hvd.{Hvd=> DesHvd}
+import models.des.hvd.{Hvd => DesHvd}
 import play.api.libs.json.Reads
+
+import java.time.LocalDate
 
 sealed trait CashPayment
 
@@ -31,7 +32,6 @@ object CashPayment {
   implicit val jsonReads: Reads[CashPayment] = {
     import play.api.libs.json.Reads._
     import play.api.libs.json._
-    import play.api.libs.json.JodaReads.DefaultJodaLocalDateReads
 
     (__ \ "acceptedAnyPayment").read[Boolean] flatMap {
       case true => (__ \ "paymentDate").read[LocalDate] map CashPaymentYes.apply
@@ -54,7 +54,7 @@ object CashPayment {
 
   implicit def conv(hvd: DesHvd): Option[CashPayment] = {
     hvd.cashPaymentsAccptOvrThrshld match {
-      case true => Some(CashPaymentYes(new LocalDate(hvd.dateOfTheFirst.getOrElse(""))))
+      case true => Some(CashPaymentYes(LocalDate.parse(hvd.dateOfTheFirst.getOrElse(""))))
       case false => Some(CashPaymentNo)
     }
   }
