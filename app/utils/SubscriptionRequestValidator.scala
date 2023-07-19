@@ -34,13 +34,14 @@ class SubscriptionRequestValidator {
 
   def validateRequest(request: SubscriptionRequest): Either[collection.Seq[JsObject], SubscriptionRequest] = {
 
-    val stream = scala.io.Source.fromResource("api4_schema_release_5.1.0.json").mkString
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
+    val lines = scala.io.Source.fromInputStream(stream).getLines.mkString
 
     lazy val jsonMapper = new ObjectMapper()
     lazy val jsonFactory = jsonMapper.getFactory
     val schemaMapper = new ObjectMapper()
     val factory = schemaMapper.getFactory
-    val schemaParser: JsonParser = factory.createParser(stream)
+    val schemaParser: JsonParser = factory.createParser(lines)
     val schemaJson: JsonNode = schemaMapper.readTree(schemaParser)
     val schema = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
     val jsonParser = jsonFactory.createParser(Json.toJson(request).toString())
@@ -50,7 +51,7 @@ class SubscriptionRequestValidator {
 
     result match {
       case false =>
-      val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(stream)).get, Json.toJson(request)).asEither
+      val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(lines)).get, Json.toJson(request)).asEither
 
         val reasons: collection.Seq[JsObject] = validationResult match {
           case Left(validationErrors) => validationErrors.map {
