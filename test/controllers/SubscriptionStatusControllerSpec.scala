@@ -22,8 +22,8 @@ import generators.AmlsReferenceNumberGenerator
 import models.des
 
 import java.time.LocalDateTime
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -60,7 +60,7 @@ class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNu
         None, None, None, None, false)
 
       when {
-        Controller.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
+        Controller.connector.status(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       val result = Controller.get("test", "test", amlsRegistrationNumber)(request)
@@ -71,7 +71,7 @@ class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNu
 
     "return an invalid response when the service fails" in {
       when {
-        Controller.connector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
+        Controller.connector.status(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady(Controller.get("test", "test", amlsRegistrationNumber)(request).failed) {

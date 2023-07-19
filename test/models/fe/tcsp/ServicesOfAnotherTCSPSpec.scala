@@ -16,11 +16,11 @@
 
 package models.fe.tcsp
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import utils.AmlsBaseSpec
 
-class ServicesOfAnotherTCSPSpec extends PlaySpec with MockitoSugar {
+class ServicesOfAnotherTCSPSpec extends PlaySpec with AmlsBaseSpec {
 
   "ServicesOfAnotherTCSP" must {
 

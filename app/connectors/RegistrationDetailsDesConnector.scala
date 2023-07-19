@@ -27,8 +27,7 @@ import utils.ApiRetryHelper
 import scala.concurrent.{ExecutionContext, Future}
 
 class RegistrationDetailsDesConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                                private[connectors] val ac: AuditConnector,
-                                                private[connectors] val httpClient: HttpClient) extends DESConnector(appConfig, ac) {
+                                                private[connectors] val httpClient: HttpClient) extends DESConnector(appConfig) {
 
   def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext,
                                              apiRetryHelper: ApiRetryHelper): Future[RegistrationDetails] = {

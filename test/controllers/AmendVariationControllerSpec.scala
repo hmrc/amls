@@ -28,9 +28,9 @@ import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBus
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 
 import java.time.LocalDate
-import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
@@ -122,7 +122,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          testController.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
+          testController.service.update(ArgumentMatchers.eq(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.successful(feResponse)
 
         val result = testController.amend("test", "orgRef", amlsRegistrationNumber)(postRequest)
@@ -137,7 +137,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          testController.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
+          testController.service.update(ArgumentMatchers.eq(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
         whenReady(testController.amend("test", "OrgRef", amlsRegistrationNumber)(postRequest).failed) {
@@ -152,15 +152,15 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.aboutYouSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
               "path" -> "obj.businessActivitiesSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessMatchingSection",
+              "path" -> "obj.aboutYouSection",
+              "error" -> "error.path.missing"
+            ),
+            Json.obj(
+              "path" -> "obj.bankDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
@@ -168,7 +168,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.bankDetailsSection",
+              "path" -> "obj.businessMatchingSection",
               "error" -> "error.path.missing"
             )
           )
@@ -192,7 +192,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
+          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Amendment")
         }
       }
@@ -215,7 +215,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          testController.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
+          testController.service.update(ArgumentMatchers.eq(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.successful(feResponse)
 
         val result = testController.variation("test", "orgRef", amlsRegistrationNumber)(postRequest)
@@ -230,7 +230,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
           .thenReturn(Future.successful(mock[AmendVariationRequest]))
 
         when {
-          testController.service.update(eqTo(amlsRegistrationNumber), any())(any(), any(), any())
+          testController.service.update(ArgumentMatchers.eq(amlsRegistrationNumber), any())(any(), any(), any())
         } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
         whenReady(testController.variation("test", "OrgRef", amlsRegistrationNumber)(postRequest).failed) {
@@ -245,15 +245,15 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.aboutYouSection",
-              "error" -> "error.path.missing"
-            ),
-            Json.obj(
               "path" -> "obj.businessActivitiesSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessMatchingSection",
+              "path" -> "obj.aboutYouSection",
+              "error" -> "error.path.missing"
+            ),
+            Json.obj(
+              "path" -> "obj.bankDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
@@ -261,7 +261,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.bankDetailsSection",
+              "path" -> "obj.businessMatchingSection",
               "error" -> "error.path.missing"
             )
           )
@@ -285,7 +285,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
+          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Variation")
         }
       }
@@ -302,7 +302,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
+          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal")
         }
       }
@@ -319,7 +319,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.renewalAmendment("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(eqTo("XTML00000565656"), eqTo(mockRequest))(any(), any(), any())
+          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal Amendment")
         }
       }

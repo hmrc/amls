@@ -22,14 +22,13 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import metrics.API5
 import models.des._
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
@@ -39,7 +38,6 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
 
@@ -55,7 +53,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
 
   "DESConnector" must {
 
-    "return a succesful future" in new Fixture {
+    "return a successful future" in new Fixture {
 
       val response = HttpResponse(
         status = OK,
@@ -63,7 +61,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         headers = Map.empty
       )
 
-      when(testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any()))
+      when(testDESConnector.httpClient.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
@@ -102,7 +100,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
-        case HttpStatusException(status, body) =>
+        case HttpStatusException(status, _) =>
           status mustEqual INTERNAL_SERVER_ERROR
       }
     }
@@ -116,7 +114,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
+          body mustBe Some("message")
       }
     }
   }

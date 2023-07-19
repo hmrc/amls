@@ -16,11 +16,10 @@
 
 package models.fe.responsiblepeople
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 
-class TimeAtAddressSpec extends PlaySpec with MockitoSugar {
+class TimeAtAddressSpec extends PlaySpec {
 
   val FieldName = "timeAtAddress"
 

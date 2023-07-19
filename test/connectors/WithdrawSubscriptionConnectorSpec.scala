@@ -22,15 +22,14 @@ import exceptions.HttpStatusException
 import metrics.API8
 import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse, WithdrawalReason}
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.time.{Millis, Seconds, Span}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
@@ -42,14 +41,13 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
     }
 
     val mockTimer = mock[Timer.Context]
 
     when {
-      withdrawSubscriptionConnector.metrics.timer(eqTo(API8))
+      withdrawSubscriptionConnector.metrics.timer(ArgumentMatchers.eq(API8))
     } thenReturn mockTimer
 
     val amlsRegistrationNumber = "1121212UUUI"
@@ -73,7 +71,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
       when {
         withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest)) {
@@ -90,7 +88,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
       when {
         withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
@@ -103,7 +101,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
     "return failed response on exception" in new Fixture {
       when {
         withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {

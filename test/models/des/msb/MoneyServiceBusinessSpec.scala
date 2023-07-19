@@ -57,75 +57,75 @@ class MoneyServiceBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), None, None, None))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), None, None, None))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on business matching msb services selection of ChequeCashingNotScrapMetal and Transmitting Money" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), None, None))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), None, None))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on selection of ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), Some(msbCeDetails), None))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), Some(msbCeDetails), None))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on selection of ForeignExchange" in {
       val msbService1 = MsbServices(Set(ForeignExchange))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), None, None, Some(msbFxDetails)))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), None, None, Some(msbFxDetails)))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on selection of ForeignExchange, CurrencyExchange" in {
       val msbService1 = MsbServices(Set(ForeignExchange, CurrencyExchange))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), None, Some(msbCeDetails), Some(msbFxDetails)))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), None, Some(msbCeDetails), Some(msbFxDetails)))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on selection of ForeignExchange, TransmittingMoney" in {
       val msbService1 = MsbServices(Set(ForeignExchange, TransmittingMoney))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), None, Some(msbFxDetails)))
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(Some(msbAllDetails), Some(msbMtDetails), None, Some(msbFxDetails)))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "convert MSB data based on selection of all the option of msb services" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal, ForeignExchange))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(
         Some(msbAllDetails),
         Some(msbMtDetails),
         Some(msbCeDetails),
         Some(msbFxDetails)
       ))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = true) must be(convertedModel)
     }
 
     "send None for psrRefChangeFlag if the submission is not an amendment or variation" in {
       val msbService1 = MsbServices(Set(ChequeCashingNotScrapMetal, TransmittingMoney, CurrencyExchange, ChequeCashingScrapMetal, ForeignExchange))
       val feBusinessMatching = BusinessMatchingSection.model.copy(msbServices = Some(msbService1))
 
-      val convertedModel = Some(MoneyServiceBusiness(
+      val convertedModel = Some(models.des.msb.MoneyServiceBusiness(
         Some(msbAllDetails),
         Some(MsbMtDetails(true, Some("123456"), IpspServicesDetails(true, Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1")))),
           true, Some("11111111111"), Some(CountriesList(List("GB", "AD"))),
@@ -134,7 +134,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some(msbFxDetails)
       ))
 
-      MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = false) must be(convertedModel)
+      models.des.msb.MoneyServiceBusiness.conv(feMSb, feBusinessMatching, amendVariation = false) must be(convertedModel)
     }
   }
 

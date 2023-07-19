@@ -20,7 +20,7 @@ import connectors.WithdrawSubscriptionConnector
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
@@ -71,11 +71,11 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
 
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj("errors" -> Seq(
-        Json.obj("path" -> "obj.acknowledgementReference",
+          Json.obj("path" -> "obj.withdrawalReason",
           "error" -> "error.path.missing"),
-        Json.obj("path" -> "obj.withdrawalDate",
+          Json.obj("path" -> "obj.acknowledgementReference",
           "error" -> "error.path.missing"),
-        Json.obj("path" -> "obj.withdrawalReason",
+          Json.obj("path" -> "obj.withdrawalDate",
           "error" -> "error.path.missing")
       ))
 

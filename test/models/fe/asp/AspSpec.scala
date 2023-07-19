@@ -17,7 +17,6 @@
 package models.fe.asp
 
 import models.des.DesConstants
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -51,7 +50,7 @@ trait AspValues {
 
 }
 
-class AspSpec extends PlaySpec with MockitoSugar with AspValues {
+class AspSpec extends PlaySpec with AspValues {
 
   "Asp" must {
 

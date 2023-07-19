@@ -18,26 +18,24 @@ package connectors
 
 import audit.MockAudit
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfter
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
 
   trait Fixture {
 
-    val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockAuditConnector, mockHttpClient) {
+    val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient) {
       override private[connectors] val baseUrl = "baseUrl"
       override private[connectors] val env = "ist0"
       override private[connectors] val token = "token"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }
   }
@@ -49,7 +47,7 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
       val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        connector.httpClient.GET[HttpResponse](eqTo(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"), any(), any())(any(), any(), any())
+        connector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"), any(), any())(any(), any(), any())
       } thenReturn Future.successful(HttpResponse(status = OK, json = Json.toJson(details), headers = Map.empty))
 
       whenReady(connector.getRegistrationDetails(safeId)) {

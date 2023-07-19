@@ -17,11 +17,10 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.OthrNamesOrAliasesDetails
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class KnownBySpec extends PlaySpec with MustMatchers {
+class KnownBySpec extends PlaySpec {
 
   "The KnownBy model" must {
     "convert to the correct frontend model" when {

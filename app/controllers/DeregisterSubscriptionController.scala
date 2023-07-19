@@ -17,21 +17,21 @@
 package controllers
 
 import connectors.DeregisterSubscriptionConnector
-import javax.inject.Inject
 import models.des.DeregisterSubscriptionRequest
 import play.api.libs.json._
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
                                                  implicit val apiRetryHelper: ApiRetryHelper,
                                                  authAction: AuthAction,
                                                  bodyParsers: PlayBodyParsers,
-                                                 val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper {
+                                                 val cc: ControllerComponents)
+                                                (implicit executionContext: ExecutionContext) extends BackendController(cc) with ControllerHelper {
 
   def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
     implicit request =>
@@ -43,7 +43,7 @@ class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector
                 response =>
                   Ok(Json.toJson(response))
               }
-            case JsError(errors) =>
+            case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
               Future.successful(BadRequest(toError(errors)))
           }
         }

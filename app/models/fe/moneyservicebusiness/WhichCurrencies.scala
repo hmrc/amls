@@ -31,7 +31,7 @@ object WhichCurrencies {
         (__ \ "usesForeignCurrencies" \ "foreignCurrencies").readNullable[Boolean] and
         BankMoneySource.jsonReads and
         __.read(WholesalerMoneySource.jsonReads) and
-        (__ \ "moneySources" \ 'customerMoneySource).readNullable[String].orElse(Reads.pure(None)).flatMap {
+        (__ \ "moneySources" \ "customerMoneySource").readNullable[String].orElse(Reads.pure(None)).flatMap {
           case Some("Yes") => Reads(_ => JsSuccess(true))
           case _ => Reads(_ => JsSuccess(false))
         }

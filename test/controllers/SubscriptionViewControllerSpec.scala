@@ -23,7 +23,8 @@ import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurno
 import models.des.msb.{CountriesList, MsbAllDetails}
 import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.{SubscriptionViewModel, des}
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.IntegrationPatience
 import play.api.libs.json.Json
@@ -86,7 +87,7 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
     "return a valid response when the amls registration number is valid" in {
 
       when {
-        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        Controller.connector.view(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(subscriptionViewModelPhase2)
 
       val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
@@ -99,7 +100,7 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
     "return an invalid response when the service fails" in {
 
       when {
-        Controller.connector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        Controller.connector.view(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady(Controller.view("test", "test", amlsRegistrationNumber)(request).failed) {

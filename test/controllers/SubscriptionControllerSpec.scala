@@ -26,10 +26,10 @@ import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBus
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.{des, fe}
-
-import java.time.LocalDate
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import java.time.LocalDate
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -114,7 +114,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       )
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
+        controller.subscriptionService.subscribe(ArgumentMatchers.eq(safeId), any())(any(), any(), any())
       } thenReturn Future.successful(SubscriptionResponse.convert(response))
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
@@ -126,7 +126,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
     "return an invalid response when the service fails" in {
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
+        controller.subscriptionService.subscribe(ArgumentMatchers.eq(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(new HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
       whenReady(controller.subscribe("test", "OrgRef", safeId)(postRequest).failed) {
@@ -141,15 +141,15 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       val response = Json.obj(
         "errors" -> Seq(
           Json.obj(
-            "path" -> "obj.aboutYouSection",
-            "error" -> "error.path.missing"
-          ),
-          Json.obj(
             "path" -> "obj.businessActivitiesSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.businessMatchingSection",
+            "path" -> "obj.aboutYouSection",
+            "error" -> "error.path.missing"
+          ),
+          Json.obj(
+            "path" -> "obj.bankDetailsSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
@@ -157,7 +157,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.bankDetailsSection",
+            "path" -> "obj.businessMatchingSection",
             "error" -> "error.path.missing"
           )
         )
@@ -173,7 +173,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       val reason = s"Business Partner already has an active AMLS Subscription with $amlsRegistrationNumber"
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
+        controller.subscriptionService.subscribe(ArgumentMatchers.eq(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(DuplicateSubscriptionException(HttpStatusException(BAD_REQUEST, Some(reason)), amlsRegistrationNumber, reason))
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
@@ -186,7 +186,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       val errorBody = "This isn't json"
 
       when {
-        controller.subscriptionService.subscribe(eqTo(safeId), any())(any(), any(), any())
+        controller.subscriptionService.subscribe(ArgumentMatchers.eq(safeId), any())(any(), any(), any())
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(errorBody)))
 
       whenReady(controller.subscribe("test", "orgRef", safeId)(postRequest).failed) {

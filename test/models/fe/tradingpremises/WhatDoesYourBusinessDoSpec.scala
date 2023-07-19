@@ -17,10 +17,11 @@
 package models.fe.tradingpremises
 
 import models.des.DesConstants
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import utils.AmlsBaseSpec
 
-class WhatDoesYourBusinessDoSpec extends WordSpec with MustMatchers {
+class WhatDoesYourBusinessDoSpec extends PlaySpec with AmlsBaseSpec {
   val model = WhatDoesYourBusinessDo(
     Set(
       BusinessActivity.BillPaymentServices,

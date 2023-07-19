@@ -17,11 +17,9 @@
 package models.des.aboutyou
 
 import models.fe.declaration._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-
-class RolesWithinTheBusinessSpec extends PlaySpec with MockitoSugar {
+class RolesWithinTheBusinessSpec extends PlaySpec {
 
   "Des release 7 model" must {
     "convert from frontend model when given an empty set" in {

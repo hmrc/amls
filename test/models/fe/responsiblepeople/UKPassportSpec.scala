@@ -17,11 +17,10 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-class UKPassportSpec extends PlaySpec with MockitoSugar {
+class UKPassportSpec extends PlaySpec {
 
   "UKPassport" should {
 

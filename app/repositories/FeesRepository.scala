@@ -27,12 +27,12 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeesRepository @Inject()(mongoC: MongoComponent)
-  extends PlayMongoRepository[Fees](
+                              (implicit executionContext: ExecutionContext)
+                              extends PlayMongoRepository[Fees](
     mongoComponent = mongoC,
     collectionName = "fees",
     domainFormat = Fees.format,

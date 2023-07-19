@@ -17,10 +17,10 @@
 package models.fe.tcsp
 
 import models.des.DesConstants
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
+import utils.AmlsBaseSpec
 
-class ComplexCorpStructureCreationSpec extends PlaySpec with MustMatchers {
+class ComplexCorpStructureCreationSpec extends PlaySpec with AmlsBaseSpec {
 
   "The ComplexCorpStructureCreation model" when {
     "given a valid model" must {

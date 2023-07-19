@@ -16,11 +16,10 @@
 
 package models.des.registrationdetails
 
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsString, JsSuccess, Json}
 
-class RegistrationDetailsSpec extends PlaySpec with MustMatchers {
+class RegistrationDetailsSpec extends PlaySpec {
 
   "The RegistrationDetails model" when {
 

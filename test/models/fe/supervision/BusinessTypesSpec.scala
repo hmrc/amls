@@ -17,11 +17,11 @@
 package models.fe.supervision
 
 import models.des.supervision.{MemberOfProfessionalBody, ProfessionalBodyDesMember, ProfessionalBodyDetails}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import utils.AmlsBaseSpec
 
-class BusinessTypesSpec extends PlaySpec with MockitoSugar {
+class BusinessTypesSpec extends PlaySpec with AmlsBaseSpec {
 
   "JSON reads" must {
 

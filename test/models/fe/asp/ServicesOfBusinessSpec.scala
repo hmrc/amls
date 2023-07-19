@@ -16,11 +16,10 @@
 
 package models.fe.asp
 
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 
-class ServicesOfBusinessSpec extends PlaySpec with MockitoSugar {
+class ServicesOfBusinessSpec extends PlaySpec {
 
   "JSON validation" must {
     val businessServices: Set[Service] = Set(Accountancy, PayrollServices, BookKeeping, Auditing, FinancialOrTaxAdvice)

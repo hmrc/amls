@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubscribeDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
                                       private[connectors] val ac: AuditConnector,
                                       private[connectors] val httpClient: HttpClient,
-                                      private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
+                                      private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
 
   def subscribe(safeId: String, data: des.SubscriptionRequest)
                (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest],
@@ -66,26 +66,26 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
-        auditConnector.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
+        ac.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Future.successful(body)
       case r @ status(s) =>
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         val httpEx = HttpStatusException(s, Option(r.body))
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
+        ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
         Future.failed(httpEx)
     } recoverWith {
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
+        ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
         Future.failed(e)
       case e =>
         timer.stop()
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure: Exception", e)
         val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
-        auditConnector.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
+        ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
         Future.failed(httpEx)
     }
   }

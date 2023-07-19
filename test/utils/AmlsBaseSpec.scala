@@ -18,9 +18,8 @@ package utils
 
 import config.ApplicationConfig
 import metrics.Metrics
-import org.mockito.Mockito.when
+import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.{ControllerComponents, PlayBodyParsers}
@@ -29,23 +28,27 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.http.HttpClient
 
-trait AmlsBaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
+import scala.concurrent.ExecutionContext
 
-  val mockRunModeConf = mock[Configuration]
-  val mockEnvironment = mock[Environment]
-  val mockAppConfig = mock[ApplicationConfig]
-  val mockAuditConnector = mock[AuditConnector]
-  val mockHttpClient = mock[HttpClient]
-  val mockCC = mock[ControllerComponents]
-  val mockBodyParsers = mock[PlayBodyParsers]
-  val mockMetrics = mock[Metrics]
+trait AmlsBaseSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite with MockitoSugar {
+
+  val mockRunModeConf: Configuration = mock[Configuration]
+  val mockEnvironment: Environment = mock[Environment]
+  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockHttpClient: HttpClient = mock[HttpClient]
+  val mockCC: ControllerComponents = mock[ControllerComponents]
+  val mockBodyParsers: PlayBodyParsers = mock[PlayBodyParsers]
+  val mockMetrics: Metrics = mock[Metrics]
 
   val maxRetries = 10
   val initialWaitMs = 10
   val waitFactor: Float = 1.5f
 
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+
 
   when {
     mockAppConfig.maxAttempts

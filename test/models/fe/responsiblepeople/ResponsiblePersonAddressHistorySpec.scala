@@ -19,11 +19,10 @@ package models.fe.responsiblepeople
 import models.des.DesConstants
 import models.des.responsiblepeople.{SoleProprietor => DesSoleProprietor, _}
 import models.fe.responsiblepeople.TimeAtAddress.{OneToThreeYears, SixToElevenMonths, ThreeYearsPlus, ZeroToFiveMonths}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class ResponsiblePersonAddressHistorySpec extends PlaySpec with MockitoSugar {
+class ResponsiblePersonAddressHistorySpec extends PlaySpec {
 
 
   "ResponsiblePersonAddressHistory" must {

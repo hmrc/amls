@@ -17,10 +17,11 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
+import utils.AmlsBaseSpec
 
-class HowWillYouSellGoodsSpec extends WordSpec with MustMatchers {
+class HowWillYouSellGoodsSpec extends PlaySpec with AmlsBaseSpec {
 
   val fullData = HowWillYouSellGoods(Seq(Wholesale, Retail, Auction))
   val fullForm = Map(

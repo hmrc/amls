@@ -19,6 +19,7 @@ package connectors
 import audit.DeregisterSubscriptionEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import metrics.{API10, Metrics}
 import models.des
@@ -28,7 +29,8 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.play.audit.model.Audit
+import utils.{ApiRetryHelper, AuditHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
                                                 private[connectors] val ac: AuditConnector,
                                                 private[connectors] val httpClient: HttpClient,
-                                                private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
+                                                private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
 
   def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
                     (implicit ec: ExecutionContext, wr1: Writes[DeregisterSubscriptionRequest], wr2: Writes[DeregisterSubscriptionResponse],
@@ -52,6 +54,8 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]
     val timer = metrics.timer(API10)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
+
+    val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
     httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {

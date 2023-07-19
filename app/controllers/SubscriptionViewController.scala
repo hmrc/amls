@@ -20,20 +20,21 @@ import connectors.ViewDESConnector
 import exceptions.HttpStatusException
 import models.fe.SubscriptionView
 import play.api.Logging
-import play.api.libs.json.Json
+
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
                                            authAction: AuthAction,
-                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
-  extends BackendController(cc) with Logging with ControllerHelper {
+                                           val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+                                           extends BackendController(cc) with Logging with ControllerHelper {
 
   private[controllers] def connector: ViewDESConnector = vdc
 

@@ -25,14 +25,15 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubscriptionStatusController @Inject()(ssConn: SubscriptionStatusDESConnector,
                                              authAction: AuthAction,
-                                             val cc: ControllerComponents)(implicit val apiRetryHelper: ApiRetryHelper)
-  extends BackendController(cc) with Logging with ControllerHelper {
+                                             val cc: ControllerComponents)
+                                            (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+                                            extends BackendController(cc) with Logging with ControllerHelper {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 

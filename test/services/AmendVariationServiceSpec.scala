@@ -24,10 +24,10 @@ import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 import models.des.tradingpremises._
 import models.des.{AmendVariationRequest, DesConstants, ReadStatusResponse}
 import models.fe.AmendVariationResponse
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsResult, JsValue}
@@ -42,12 +42,11 @@ import scala.concurrent.Future
 
 class AmendVariationServiceSpec extends PlaySpec
   with GuiceOneAppPerSuite
-  with MockitoSugar
   with ScalaFutures
   with IntegrationPatience
   with AmlsReferenceNumberGenerator {
 
-  val successValidate: JsResult[JsValue] = mock[JsResult[JsValue]]
+  val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
   val feAmendVariationResponse = AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -62,15 +61,15 @@ class AmendVariationServiceSpec extends PlaySpec
     None
   )
 
-  val feeRepo: FeesRepository = mock[FeesRepository]
+  val feeRepo: FeesRepository = mock(classOf[FeesRepository])
 
   class TestAmendVariationService extends AmendVariationService(
-    mock[AmendVariationDESConnector],
-    mock[SubscriptionStatusDESConnector],
-    mock[ViewDESConnector],
-    mock[AuditConnector],
+    mock(classOf[AmendVariationDESConnector]),
+    mock(classOf[SubscriptionStatusDESConnector]),
+    mock(classOf[ViewDESConnector]),
+    mock(classOf[AuditConnector]),
     feeRepo,
-    mock[ApplicationConfig]
+    mock(classOf[ApplicationConfig])
   ) {
     override private[services] def validateResult(request: AmendVariationRequest) = successValidate
 
@@ -146,18 +145,17 @@ class AmendVariationServiceSpec extends PlaySpec
     } thenReturn true
 
     when {
-      avs.viewStatusDesConnector.status(eqTo(amlsRegistrationNumber))(any(), any(), any(), any())
+      avs.viewStatusDesConnector.status(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any(), any())
     } thenReturn Future.successful(statusResponse)
 
-    val premises: Option[AgentBusinessPremises] = Some(mock[AgentBusinessPremises])
+    val premises: Option[AgentBusinessPremises] = Some(mock(classOf[AgentBusinessPremises]))
 
     when {
       premises.get.agentDetails
     } thenReturn None
 
     "return a successful response" in {
-
-      val request = mock[des.AmendVariationRequest]
+      val request = mock(classOf[des.AmendVariationRequest])
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
       when {
@@ -169,15 +167,15 @@ class AmendVariationServiceSpec extends PlaySpec
       } thenReturn tradingPremises
 
       when {
-        avs.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
-        avs.amendVariationDesConnector.amend(eqTo(amlsRegistrationNumber), eqTo(request))(any(), any(), any(), any(), any())
+        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
         avs.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 
-      whenReady(avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock[ApiRetryHelper])) {
+      whenReady(avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))) {
         result =>
           result mustEqual feAmendVariationResponse
       }
@@ -192,7 +190,7 @@ class AmendVariationServiceSpec extends PlaySpec
       val viewModel = DesConstants.SubscriptionViewModelAPI5
 
       when {
-        avs.viewDesConnector.view(eqTo(amlsRegistrationNumber))(any(), any(), any())
+        avs.viewDesConnector.view(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any())
       } thenReturn Future.successful(viewModel)
 
       val testRequest = DesConstants.updateAmendVariationCompleteRequest1.copy(
@@ -202,7 +200,7 @@ class AmendVariationServiceSpec extends PlaySpec
       )
 
       whenReady(avs.compareAndUpdate(
-        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock[ApiRetryHelper])
+        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock(classOf[ApiRetryHelper]))
       ) {
         updatedRequest =>
           updatedRequest must be(testRequest)

@@ -19,11 +19,10 @@ package models.fe.hvd
 import models.des.DesConstants
 
 import java.time.LocalDate
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-class CashPaymentSpec extends PlaySpec with MockitoSugar {
+class CashPaymentSpec extends PlaySpec {
 
   "CashPaymentSpec" should {
     // scalastyle:off

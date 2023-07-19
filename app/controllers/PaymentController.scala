@@ -27,14 +27,15 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
 class PaymentController @Inject()(private[controllers] val paymentService: PaymentService,
                                   authAction: AuthAction,
                                   bodyParsers: PlayBodyParsers,
-                                  val cc: ControllerComponents) extends BackendController(cc) with ControllerHelper with Logging {
+                                  val cc: ControllerComponents)
+                                 (implicit executionContext: ExecutionContext) extends BackendController(cc) with ControllerHelper with Logging {
 
   def createBacsPayment(accountType: String, accountRef: String) = authAction.async(bodyParsers.json) {
     implicit request =>

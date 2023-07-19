@@ -26,7 +26,6 @@ import models.fe.businessactivities.ExpectedBusinessTurnover
 import models.fe.businessdetails.{RegisteredOfficeUK, UKCorrespondenceAddress, _}
 
 import java.time.LocalDate
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -34,7 +33,7 @@ import play.api.Application
 import play.api.libs.json._
 import utils.AckRefGenerator
 
-class SubscriptionRequestSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerTest {
+class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()

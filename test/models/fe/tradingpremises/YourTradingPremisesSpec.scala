@@ -17,12 +17,11 @@
 package models.fe.tradingpremises
 
 import models.des.tradingpremises.{Address => TradingPremisesAddress, _}
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
 import java.time.LocalDate
 
-class YourTradingPremisesSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
+class YourTradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "YourTradingPremises" must {
 

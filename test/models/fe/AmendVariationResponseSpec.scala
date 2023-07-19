@@ -19,11 +19,10 @@ package models.fe
 import models.des._
 import models.des.aboutyou.AboutYouRelease7
 import models.des.tradingpremises._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
-class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val amendvariationRequest = AmendVariationRequest(
     acknowledgementReference = "ackRef",
@@ -164,7 +163,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
       val testApprovalCheckFee = Some(BigDecimal(30))
 
 
-      AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
+      models.fe.AmendVariationResponse.convert(amendvariationRequest, true, models.des.AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
         fpNumbers = Some(1),
@@ -186,7 +185,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite with 
         approvalCheckFeeRate = testApprovalFeeRate,
         approvalCheckFee = testApprovalCheckFee
 
-      )) mustBe AmendVariationResponse(
+      )) mustBe models.fe.AmendVariationResponse(
         processingDate = processingDate,
         etmpFormBundleNumber = etmpFormBundleNumber,
         registrationFee = 0,

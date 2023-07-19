@@ -18,22 +18,21 @@ package connectors
 
 import config.ApplicationConfig
 import exceptions.HttpStatusException
-
-import javax.inject.Inject
 import metrics.{Metrics, PayAPI}
 import models.payapi.Payment
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import utils.HttpResponseHelper
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class PayAPIConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
                                 private[connectors] val httpClient: HttpClient,
-                                private[connectors] val metrics: Metrics) extends HttpResponseHelper with Logging {
+                                private[connectors] val metrics: Metrics)
+                               (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
 
   private[connectors] val paymentUrl = applicationConfig.payAPIUrl
 

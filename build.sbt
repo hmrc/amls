@@ -46,10 +46,14 @@ lazy val scoverageSettings = {
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala,  SbtDistributablesPlugin) ++ plugins: _*)
+  .settings(
+    // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
+    libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always)
+  )
   .settings(majorVersion := 4)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(scalaVersion := "2.12.13")
+  .settings(scalaVersion := "2.13.8")
   .settings(defaultSettings(): _*)
   .settings(
     libraryDependencies ++= appDependencies,
@@ -66,7 +70,6 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / parallelExecution := false
    )
   .disablePlugins(JUnitXmlReportPlugin)
-  .settings(resolvers += "third-party-maven-releases" at "https://artefacts.tax.service.gov.uk/artifactory/third-party-maven-releases/")
   .settings(scalacOptions += "-P:silencer:pathFilters=routes")
   .settings(scalacOptions += "-P:silencer:globalFilters=Unused import")
 

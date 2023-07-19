@@ -17,13 +17,12 @@
 package models.fe.supervision
 
 import models.des.supervision.{SupervisionDetails, SupervisorDetails}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import play.api.libs.json._
 
 import java.time.LocalDate
 
-class AnotherBodySpec extends PlaySpec with MockitoSugar {
+class AnotherBodySpec extends PlaySpec {
 
   "AnotherBody" should {
 

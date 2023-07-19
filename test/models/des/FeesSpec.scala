@@ -18,7 +18,6 @@ package models.des
 
 import models.{AmendOrVariationResponseType, Fees, des}
 import org.scalatest.BeforeAndAfterAll
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 import java.time.LocalDateTime
@@ -26,7 +25,7 @@ import java.time.ZoneOffset.UTC
 import java.time.temporal.ChronoUnit
 
 
-class FeesSpec extends PlaySpec with MockitoSugar with BeforeAndAfterAll {
+class FeesSpec extends PlaySpec with BeforeAndAfterAll {
 
   "FeeResponse" when {
 

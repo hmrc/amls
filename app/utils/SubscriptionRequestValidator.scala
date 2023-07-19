@@ -16,35 +16,53 @@
 
 package utils
 
+import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 import models.des.SubscriptionRequest
 import play.api.libs.json.{JsObject, JsResult, JsValue, Json}
 
 import java.io.InputStream
 import javax.inject.Singleton
+import scala.util.Using
+import scala.io.Source
 
 @Singleton
 class SubscriptionRequestValidator {
 
-  def validateRequest(request: SubscriptionRequest): Either[Seq[JsObject], SubscriptionRequest] = {
+  def validateRequest(request: SubscriptionRequest): Either[collection.Seq[JsObject], SubscriptionRequest] = {
 
-    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
+    val stream = scala.io.Source.fromResource("api4_schema_release_5.1.0.json").mkString
 
-    val lines = scala.io.Source.fromInputStream(stream).getLines
-    val linesString: String = lines.foldLeft[String]("")((x, y) => x.trim ++ y.trim)
+    lazy val jsonMapper = new ObjectMapper()
+    lazy val jsonFactory = jsonMapper.getFactory
+    val schemaMapper = new ObjectMapper()
+    val factory = schemaMapper.getFactory
+    val schemaParser: JsonParser = factory.createParser(stream)
+    val schemaJson: JsonNode = schemaMapper.readTree(schemaParser)
+    val schema = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
+    val jsonParser = jsonFactory.createParser(Json.toJson(request).toString())
+    val jsonNode: JsonNode = jsonMapper.readTree(jsonParser)
+    val result = schema.validate(jsonNode).isSuccess
 
-    val result: JsResult[JsValue] = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(linesString.trim)).get, Json.toJson(request))
 
-    result.asEither match {
-      case Left(validationErrors) =>
-        val reasons = validationErrors.map {
-          case (path, messages) => Json.obj(
-            "path" -> path.toJsonString,
-            "messages" -> messages.map(_.messages)
-          )
+    result match {
+      case false =>
+      val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(stream)).get, Json.toJson(request)).asEither
+
+        val reasons: collection.Seq[JsObject] = validationResult match {
+          case Left(validationErrors) => validationErrors.map {
+            case (path, messages) => Json.obj(
+              "path" -> path.toJsonString,
+              "messages" -> messages.map(_.messages)
+            )
+          }
+          case Right(_) => collection.Seq[JsObject]()
         }
         Left(reasons)
-      case Right(_) => Right(request)
+      case true => Right(request)
     }
   }
 }

@@ -23,9 +23,8 @@ import generators.AmlsReferenceNumberGenerator
 import metrics.API6
 import models.des
 import models.des.AmendVariationRequest
-import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import org.scalatest.BeforeAndAfter
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -35,7 +34,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.AmlsBaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with BeforeAndAfter {
@@ -49,7 +47,6 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       override private[connectors] val baseUrl: String = "baseUrl"
       override private[connectors] val token: String = "token"
       override private[connectors] val env: String = "ist0"
-      override private[connectors] val audit = MockAudit
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
 
@@ -78,13 +75,13 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
     val mockTimer = mock[Timer.Context]
 
     when {
-      testConnector.metrics.timer(eqTo(API6))
+      testConnector.metrics.timer(ArgumentMatchers.eq(API6))
     } thenReturn mockTimer
   }
 
   "DESConnector" must {
 
-    "return a succesful future" in new Fixture {
+    "return a successful future" in new Fixture {
 
       val response = HttpResponse(
         status = OK,
@@ -94,7 +91,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -116,11 +113,11 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest).failed) {
@@ -128,8 +125,8 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
           status mustEqual BAD_REQUEST
           body.getOrElse("").isEmpty mustEqual true
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
-          verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent = captor.getValue
+          verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent: ExtendedDataEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
           capturedEvent.detail mustEqual subscriptionEvent.detail
@@ -150,16 +147,16 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) { _ =>
         val subscriptionEvent = AmendmentEvent(amlsRegistrationNumber, testRequest, successModel)
-        verify(testConnector.auditConnector, times(1)).sendExtendedEvent(any())(any(), any())
+        verify(testConnector.ac, times(1)).sendExtendedEvent(any())(any(), any())
         val capturedEvent: ExtendedDataEvent = captor.getValue
         capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
         capturedEvent.auditType mustEqual subscriptionEvent.auditType
@@ -181,20 +178,20 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       when {
-        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual OK
-          body mustEqual Some("\"message\"")
+          body mustBe Some("\"message\"")
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
-          verify(testConnector.auditConnector, times(2)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent = captor.getValue
+          verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent: ExtendedDataEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
           capturedEvent.detail mustEqual subscriptionEvent.detail
@@ -209,20 +206,20 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
       when {
         testConnector.httpClient.PUT[des.AmendVariationRequest,
-          HttpResponse](eqTo(url), any(), any())(any(), any(), any(), any())
+          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       when {
-        testConnector.auditConnector.sendExtendedEvent(captor.capture())(any(), any())
+        testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
+          body mustBe Some("message")
           val subscriptionEvent = AmendmentEventFailed(amlsRegistrationNumber, testRequest, HttpStatusException(status, body))
-          verify(testConnector.auditConnector, times(maxRetries)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent = captor.getValue
+          verify(testConnector.ac, times(maxRetries)).sendExtendedEvent(any())(any(), any())
+          val capturedEvent: ExtendedDataEvent = captor.getValue
           capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
           capturedEvent.auditType mustEqual subscriptionEvent.auditType
           capturedEvent.detail mustEqual subscriptionEvent.detail

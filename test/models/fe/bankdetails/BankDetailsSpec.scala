@@ -18,10 +18,9 @@ package models.fe.bankdetails
 
 import models.des.DesConstants
 import models.des.bankdetails.BankDetailsView
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-class BankDetailsSpec extends PlaySpec with MockitoSugar {
+class BankDetailsSpec extends PlaySpec {
 
   val accountType = PersonalAccount
 

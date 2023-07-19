@@ -19,6 +19,7 @@ package connectors
 import audit.WithdrawSubscriptionEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import metrics.{API8, Metrics}
 import models.des
@@ -28,7 +29,8 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.play.audit.model.Audit
+import utils.{ApiRetryHelper, AuditHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
                                               private[connectors] val ac: AuditConnector,
                                               private[connectors] val httpClient: HttpClient,
-                                              private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
+                                              private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
                                                                                     wr1: Writes[WithdrawSubscriptionRequest],
@@ -54,6 +56,8 @@ class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig:
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]
     val timer = metrics.timer(API8)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
+
+    val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
     httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {

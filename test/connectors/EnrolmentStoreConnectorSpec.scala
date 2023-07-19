@@ -21,20 +21,19 @@ import exceptions.HttpStatusException
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
 import metrics.EnrolmentStoreKnownFacts
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
-import org.mockito.Matchers.{eq => eqTo, _}
-import org.mockito.Mockito.{verify, when}
-import org.scalatest.MustMatchers
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{mock, verify, when}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with AmlsReferenceNumberGenerator with BaseGenerator {
+class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with BaseGenerator {
 
   trait Fixture {
 
-    implicit val ec = mock[ExecutionContext]
     val mockTimer = mock[Timer.Context]
 
     val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
@@ -50,7 +49,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
     ))
 
     when {
-      connector.metrics.timer(eqTo(EnrolmentStoreKnownFacts))
+      connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
     } thenReturn mockTimer
 
     when {
@@ -74,7 +73,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](eqTo(url), eqTo(knownFacts), any())(any(), any(), any(), any())
+          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
         }
       }
 
@@ -96,7 +95,7 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with MustMatchers with Am
         whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) {
           case HttpStatusException(status, body) =>
             status mustEqual INTERNAL_SERVER_ERROR
-            body mustEqual Some("message")
+            body mustBe Some("message")
         }
       }
     }

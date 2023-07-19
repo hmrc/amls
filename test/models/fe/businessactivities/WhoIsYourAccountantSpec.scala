@@ -18,10 +18,12 @@ package models.fe.businessactivities
 
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities.{AdvisorNameAddress, MlrAdvisor, MlrAdvisorDetails}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.JsSuccess
+import utils.AmlsBaseSpec
 
-class WhoIsYourAccountantSpec extends WordSpec with Matchers {
+class WhoIsYourAccountantSpec extends PlaySpec with AmlsBaseSpec {
 
   val DefaultName = "Default Name"
   val DefaultTradingName = Some("Default Trading Name")
@@ -64,7 +66,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
         Some("01234567890")
       ))))
 
-      WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant(
+      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(WhoIsYourAccountant(
         "Name",
         Some("TradingName"),
         UkAccountantsAddress("AdvisorAddressLine1", "AdvisorAddressLine2", Some("AdvisorAddressLine3"), Some("AdvisorAddressLine4"), "AA1 1AA")))
@@ -83,7 +85,7 @@ class WhoIsYourAccountantSpec extends WordSpec with Matchers {
         None
       ))))
 
-      WhoIsYourAccountant.conv(mlrAdvisor) shouldBe Some(WhoIsYourAccountant("Name", Some("TradingName"),
+      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(WhoIsYourAccountant("Name", Some("TradingName"),
         NonUkAccountantsAddress("line1", "line2", Some("line3"), Some("line4"), "GB")))
     }
 

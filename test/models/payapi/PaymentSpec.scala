@@ -19,11 +19,10 @@ package models.payapi
 import java.time.LocalDateTime
 import generators.AmlsReferenceNumberGenerator
 import models.payapi.TaxTypes.`other`
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsResult, Json}
 
-class PaymentSpec extends PlaySpec with MockitoSugar with AmlsReferenceNumberGenerator {
+class PaymentSpec extends PlaySpec with AmlsReferenceNumberGenerator {
 
   val id = "biuh98huiu"
   val ref = Some("ref")

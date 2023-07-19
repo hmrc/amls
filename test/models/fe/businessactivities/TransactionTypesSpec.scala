@@ -16,11 +16,10 @@
 
 package models.fe.businessactivities
 
-import org.scalatest.MustMatchers
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
-class TransactionTypesSpec extends PlaySpec with MustMatchers {
+class TransactionTypesSpec extends PlaySpec {
 
   "The TransactionTypes model" must {
 

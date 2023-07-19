@@ -19,6 +19,7 @@ package connectors
 import audit.SubscriptionViewEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
+
 import javax.inject.{Inject, Singleton}
 import metrics.{API5, Metrics}
 import models.des.SubscriptionView
@@ -27,7 +28,8 @@ import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import uk.gov.hmrc.play.audit.model.Audit
+import utils.{ApiRetryHelper, AuditHelper}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
                                  private[connectors] val ac: AuditConnector,
                                  private[connectors] val httpClient: HttpClient,
-                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig, ac) {
+                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
 
   def view(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, hc: HeaderCarrier,
                                            apiRetryHelper: ApiRetryHelper): Future[SubscriptionView] = {
@@ -49,6 +51,8 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
     val prefix = "[DESConnector][view]"
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
+
+    val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
