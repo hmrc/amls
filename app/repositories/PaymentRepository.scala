@@ -25,6 +25,8 @@ import play.api.Logging
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,7 +40,7 @@ class PaymentRepository @Inject()(mongoC: MongoComponent)
     indexes = Seq(
       IndexModel(
         Indexes.ascending("createdAt"),
-        IndexOptions().name("paymentDetailsExpiry")
+        IndexOptions().name("paymentDetailsExpiry").expireAfter(3650L, TimeUnit.DAYS)
       ),
       IndexModel(
         Indexes.ascending("amlsRefNo"),

@@ -8,7 +8,7 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc.mongo"    %% "hmrc-mongo-play-28"         % "0.74.0",
+    "uk.gov.hmrc.mongo"    %% "hmrc-mongo-play-28"         % "1.3.0",
     "org.typelevel"        %% "cats-core"                  % "2.9.0",
     "com.github.fge"       %  "json-schema-validator"      % "2.2.14",
     "com.eclipsesource"    %% "play-json-schema-validator" % "0.9.5",
@@ -35,7 +35,6 @@ private object AppDependencies {
         "org.scalatestplus"       %% "scalacheck-1-17"           % "3.2.15.0"               % scope,
         "uk.gov.hmrc"             %% "bootstrap-test-play-28"    % bootstrapVersion         % scope,
         "com.vladsch.flexmark"    %  "flexmark-all"              % "0.64.0"                 % scope
-
       )
     }.test
   }
@@ -46,7 +45,7 @@ private object AppDependencies {
       override lazy val scope: String = "it"
 
       override lazy val test = Seq(
-        "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28" % "0.74.0"                 % scope,
+        "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28" % "1.3.0"                  % scope,
         "uk.gov.hmrc"             %% "bootstrap-test-play-28"  % bootstrapVersion         % scope
 
       )

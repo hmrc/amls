@@ -21,8 +21,7 @@ import models.payapi.{Payment => PayApiPayment, _}
 import org.bson.types.ObjectId
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{OFormat, OWrites, Reads, __}
-import play.custom.JsPathSupport.RichJsPath
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import play.custom.JsPathSupport.{localDateTimeWrites, readLocalDateTime}
 
 import java.time.LocalDateTime
 
@@ -73,7 +72,7 @@ object Payment {
         (__ \ "description").readNullable[String] and
         (__ \ "amountInPence").read[Int] and
         (__ \ "status").read[PaymentStatus] and
-        (__ \ "createdAt").readCreatedDate and
+        (__ \ "createdAt").read[LocalDateTime](readLocalDateTime) and
         (__ \ "isBacs").readNullable[Boolean] and
         (__ \ "updatedAt").readNullable[LocalDateTime]
       ) (Payment(_, _, _, _, _, _, _, _, _, _))
@@ -87,7 +86,7 @@ object Payment {
         (__ \ "description").writeNullable[String] and
         (__ \ "amountInPence").write[Int] and
         (__ \ "status").write[PaymentStatus] and
-        (__ \ "createdAt").write[LocalDateTime](MongoJavatimeFormats.localDateTimeWrites) and
+        (__ \ "createdAt").write[LocalDateTime](localDateTimeWrites) and
         (__ \ "isBacs").writeNullable[Boolean] and
         (__ \ "updatedAt").writeNullable[LocalDateTime]
       ) (unlift(Payment.unapply))

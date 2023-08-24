@@ -20,8 +20,8 @@ import models.des.AmendVariationResponse
 import models.fe.SubscriptionResponse
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import play.custom.JsPathSupport
 import play.custom.JsPathSupport._
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
@@ -108,7 +108,7 @@ object Fees {
         (__ \ "difference").readNullable[BigDecimal] and
         (__ \ "approvalCheckFeeRate").readNullable[BigDecimal] and
         (__ \ "approvalCheckFee").readNullable[BigDecimal] and
-        (__ \ "createdAt").readLocalDateTime
+        (__ \ "createdAt").read[LocalDateTime](readLocalDateTime)
       ) (Fees.apply _)
 
 
@@ -124,7 +124,7 @@ object Fees {
         (__ \ "difference").writeNullable[BigDecimal] and
         (__ \ "approvalCheckFeeRate").writeNullable[BigDecimal] and
         (__ \ "approvalCheckFee").writeNullable[BigDecimal] and
-        (__ \ "createdAt").write[LocalDateTime](MongoJavatimeFormats.localDateTimeWrites)
+        (__ \ "createdAt").write[LocalDateTime](JsPathSupport.localDateTimeWrites)
       ) (unlift(Fees.unapply))
 
   implicit val format: OFormat[Fees] = OFormat(reads, writes)
