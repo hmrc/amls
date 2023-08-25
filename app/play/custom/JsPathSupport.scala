@@ -26,13 +26,13 @@ object JsPathSupport {
   val logger: Logger = Logger(this.getClass())
 
   final val readLocalDateTime: Reads[LocalDateTime] = {
-      (__ \ "$date").read[String].map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-        .orElse {
-          Reads.at[String](__).map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
-        }
-        .orElse {
-          Reads.at[String](__ \ "$date" \ "$numberLong").map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
-        }
+    (__ \ "$date").read[String].map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+      .orElse {
+        Reads.at[String](__).map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
+      }
+      .orElse {
+        Reads.at[String](__ \ "$date" \ "$numberLong").map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
+      }
   }
 
   final val localDateTimeWrites: Writes[LocalDateTime] =
