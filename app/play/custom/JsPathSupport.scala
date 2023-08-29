@@ -17,57 +17,25 @@
 package play.custom
 
 import play.api.Logger
-import play.api.libs.json.{JsPath, Reads}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import play.api.libs.json.{Reads, Writes, __}
 
-import java.time.{Instant, LocalDateTime, ZoneOffset}
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.{ISO_LOCAL_DATE_TIME, ofPattern}
-import scala.util.{Failure, Success, Try}
+import java.time.{Instant, LocalDateTime, ZoneOffset}
 
 object JsPathSupport {
-  implicit class RichJsPath(path: JsPath) {
-    val logger: Logger = Logger(this.getClass())
+  val logger: Logger = Logger(this.getClass())
 
-    def readLocalDateTime: Reads[LocalDateTime] = {
-      (path \ "$date").read[Long].map { dateTime =>
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneOffset.UTC)
-      } orElse {
-        path.read[Long].map { dateTime =>
-          LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime), ZoneOffset.UTC)
-        }
-      }.orElse {
-        Reads
-          .at[String](path \ "$date")
-          .map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-          .orElse {
-            Reads.at[String](path).map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-          }
-          .orElse {
-            Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
-          }
+  final val readLocalDateTime: Reads[LocalDateTime] = {
+    (__ \ "$date").read[String].map(dateTimeStr => LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+      .orElse {
+        Reads.at[String](__).map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
       }
-    }
-
-    /**
-      * TODO For whatever reason we are ending up with dates like this in the database ...
-      * TODO further investigation is needed, but for the sake of deploying this custom formatter is written
-      */
-    val readCreatedDate: Reads[LocalDateTime] = {
-      path.read[String].map(localDateTimeStr => {
-        logger.debug(s"\nattempting to read created at date: $localDateTimeStr\n")
-          Try(LocalDateTime.parse(localDateTimeStr, ofPattern("uuuu-dd-MM HH:mm:ss.SSSX")))
-        })
-        .flatMap {
-          case Success(v) => Reads.pure(v)
-          case Failure(exception) => Reads.failed[LocalDateTime](exception.getMessage)
-        }
-        .orElse {
-          Reads.at[LocalDateTime](path)(MongoJavatimeFormats.localDateTimeReads)
-        }
-        .orElse {
-          Reads.at[String](path).map(dateTimeStr => LocalDateTime.parse(dateTimeStr, ISO_LOCAL_DATE_TIME))
-        }
-    }
+      .orElse {
+        Reads.at[String](__ \ "$date" \ "$numberLong").map(dateTime => Instant.ofEpochMilli(dateTime.toLong).atZone(ZoneOffset.UTC).toLocalDateTime)
+      }
   }
+
+  final val localDateTimeWrites: Writes[LocalDateTime] =
+    Writes.at[String](__ \ "$date" \ "$numberLong")
+      .contramap(_.toInstant(ZoneOffset.UTC).toEpochMilli.toString)
 }

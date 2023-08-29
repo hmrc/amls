@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PaymentRepository @Inject()(mongoC: MongoComponent)
                                  (implicit executionContext: ExecutionContext)
-                                 extends PlayMongoRepository[Payment](
+  extends PlayMongoRepository[Payment](
     mongoComponent = mongoC,
     collectionName = "payments",
     domainFormat = Payment.format,
@@ -51,6 +51,12 @@ class PaymentRepository @Inject()(mongoC: MongoComponent)
     ),
     extraCodecs = Codecs.playFormatSumCodecs(PaymentStatus.formats)
   ) with Logging {
+
+  /**
+    * Records of successful/failed payments are not something that we want to lose. These payments are not audited
+    * by the application either so these are the only records that we have of them.
+    */
+  override lazy val requiresTtlIndex = false
 
   def insert(newPayment: Payment): Future[Payment] = {
     collection
