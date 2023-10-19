@@ -19,6 +19,7 @@ package models.payments
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus.{Created, Successful}
 import org.scalatestplus.play.PlaySpec
+import play.api.libs
 import play.api.libs.json.{JsSuccess, Json}
 
 import java.time.LocalDateTime
@@ -31,7 +32,7 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
   "The Payment model without description" when {
     "serialising" must {
 
-      val now = LocalDateTime.now
+      val date = LocalDateTime.parse("2020-01-01T00:00:05.555")
 
       val model = Payment(
         "123456789",
@@ -41,9 +42,9 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
         None,
         10000,
         Successful,
-        now.truncatedTo(SECONDS),
+        date,
         isBacs = Some(true),
-        Some(now.plusDays(1))
+        Some(date.plusDays(1))
       )
 
       val json = Json.obj(
@@ -54,8 +55,8 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
-        "createdAt" -> Json.obj("$date" -> Json.obj("$numberLong" -> now.truncatedTo(SECONDS).toInstant(UTC).toEpochMilli.toString)),
-        "updatedAt" -> now.plusDays(1)
+        "createdAt" -> Json.obj("$date" -> Json.obj("$numberLong" -> date.toInstant(UTC).toEpochMilli.toString)),
+        "updatedAt" -> date.plusDays(1)
       )
 
       "serialise to Json" in {
@@ -64,6 +65,21 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
 
       "deserialise from Json" in {
         Json.fromJson[Payment](json) mustBe JsSuccess(model)
+      }
+
+      "deserialise from Json (old String date format)" in {
+        val oldDateFormatJson = Json.obj(
+          "_id" -> "123456789",
+          "amlsRefNo" -> "X12345678",
+          "safeId" -> "X73289473",
+          "reference" -> "X987654321",
+          "amountInPence" -> 10000,
+          "status" -> "Successful",
+          "isBacs" -> true,
+          "createdAt" -> "2020-01-01T00:00:05.555"
+        )
+
+        Json.fromJson[Payment](oldDateFormatJson) mustBe JsSuccess(model.copy(updatedAt = None))
       }
     }
 
