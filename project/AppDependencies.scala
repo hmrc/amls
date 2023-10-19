@@ -1,12 +1,11 @@
-import sbt._
+import sbt.*
 
 private object AppDependencies {
-  import play.sbt.PlayImport._
-  import play.core.PlayVersion
+  import play.sbt.PlayImport.*
 
   val bootstrapVersion = "7.19.0"
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc.mongo"    %% "hmrc-mongo-play-28"         % "1.3.0",
     "org.typelevel"        %% "cats-core"                  % "2.9.0",
@@ -19,8 +18,8 @@ private object AppDependencies {
   )
 
   trait TestDependencies {
-    lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = ???
+    val scope: String = "test"
+    val test : Seq[ModuleID]
   }
 
   private val scalatestVersion = "3.2.15"
@@ -30,7 +29,7 @@ private object AppDependencies {
 
   object Test {
     def apply() = new TestDependencies {
-      override lazy val test = Seq(
+      override val test: Seq[sbt.ModuleID] = Seq(
         "org.mockito"             %% "mockito-scala"             % "1.17.12"                % scope,
         "org.scalatestplus"       %% "scalacheck-1-17"           % "3.2.15.0"               % scope,
         "uk.gov.hmrc"             %% "bootstrap-test-play-28"    % bootstrapVersion         % scope,
@@ -42,15 +41,14 @@ private object AppDependencies {
   object IntegrationTest {
     def apply() = new TestDependencies {
 
-      override lazy val scope: String = "it"
+      override val scope: String = "it"
 
-      override lazy val test = Seq(
+      override val test: Seq[sbt.ModuleID] = Seq(
         "uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28" % "1.3.0"                  % scope,
         "uk.gov.hmrc"             %% "bootstrap-test-play-28"  % bootstrapVersion         % scope
-
       )
     }.test
   }
 
-  def apply() = compile ++ Test() ++ IntegrationTest()
+  def apply(): Seq[sbt.ModuleID] = compile ++ Test() ++ IntegrationTest()
 }
