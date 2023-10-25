@@ -69,40 +69,16 @@ class PaymentRepository @Inject()(mongoC: MongoComponent)
   }
 
   def update(payment: Payment): Future[UpdateResult] = {
-    val updates = Seq(
-      Updates.set("amlsRefNo", payment.amlsRefNo),
-      Updates.set("safeId", payment.safeId),
-      Updates.set("reference", payment.reference),
-      Updates.set("amountInPence", payment.amountInPence),
-      Updates.set("status", payment.status),
-      Updates.set("createdAt", payment.createdAt)
-    )
-
-    if (payment.isBacs.isDefined) {
-      updates :+ Updates.set("isBacs", payment.isBacs)
-    }
-
-
-    if (payment.description.isDefined) {
-      updates :+ Updates.set("description", payment.description)
-    }
-
-
-    if (payment.updatedAt.isDefined) {
-      updates :+ Updates.set("updatedAt", payment.updatedAt)
-    }
-
-    val futureUpdateResult = collection.updateOne(
+    val futureUpdateResult = collection.replaceOne(
       filter = Filters.eq("_id", payment._id),
-      update = Updates.combine(updates: _*)
-    )
-      .toFuture()
-
+      replacement = payment
+    ).toFuture()
+    
     futureUpdateResult
       .filter(_.getModifiedCount == 0)
-      .foreach(updateResult => logger.error(
-        s"""failed to update payment with reference: ${payment.reference}
-           |for amls reference number: ${payment.amlsRefNo}, modified count is: ${updateResult.getModifiedCount}""".stripMargin))
+      .foreach(_ => logger.error(
+        s"[PaymentRepository][update] - failed to update payment with reference: ${payment.reference} for amls " +
+          s"reference number: ${payment.amlsRefNo}, modified count is 0"))
 
     futureUpdateResult
   }
