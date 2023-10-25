@@ -3,7 +3,7 @@ import sbt.*
 private object AppDependencies {
   import play.sbt.PlayImport.*
 
-  val bootstrapVersion = "7.19.0"
+  val bootstrapVersion = "7.22.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -22,13 +22,8 @@ private object AppDependencies {
     val test : Seq[ModuleID]
   }
 
-  private val scalatestVersion = "3.2.15"
-  private val scalatestPlusPlayVersion = "5.1.0"
-  private val pegdownVersion = "1.6.0"
-  private val scalacheckVersion = "1.17.0"
-
   object Test {
-    def apply() = new TestDependencies {
+    def apply(): Seq[sbt.ModuleID] = new TestDependencies {
       override val test: Seq[sbt.ModuleID] = Seq(
         "org.mockito"             %% "mockito-scala"             % "1.17.12"                % scope,
         "org.scalatestplus"       %% "scalacheck-1-17"           % "3.2.15.0"               % scope,
@@ -39,7 +34,7 @@ private object AppDependencies {
   }
 
   object IntegrationTest {
-    def apply() = new TestDependencies {
+    def apply(): Seq[sbt.ModuleID] = new TestDependencies {
 
       override val scope: String = "it"
 
