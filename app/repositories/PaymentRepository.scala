@@ -68,20 +68,11 @@ class PaymentRepository @Inject()(mongoC: MongoComponent)
       }
   }
 
-  def update(payment: Payment): Future[UpdateResult] = {
-    val futureUpdateResult = collection.replaceOne(
+  def update(payment: Payment): Future[UpdateResult] =
+    collection.replaceOne(
       filter = Filters.eq("_id", payment._id),
       replacement = payment
     ).toFuture()
-    
-    futureUpdateResult
-      .filter(_.getModifiedCount == 0)
-      .foreach(_ => logger.error(
-        s"[PaymentRepository][update] - failed to update payment with reference: ${payment.reference} for amls " +
-          s"reference number: ${payment.amlsRefNo}, modified count is 0"))
-
-    futureUpdateResult
-  }
 
   def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] = {
     collection
