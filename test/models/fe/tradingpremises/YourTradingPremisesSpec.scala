@@ -29,7 +29,7 @@ class YourTradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val agentPremises = AgentPremises("TradingName",
         TradingPremisesAddress("AddressLine1",
-          "AddressLine2",
+          Some("AddressLine2"),
           Some("AddressLine3"),
           Some("AddressLine4"),
           "AD",
@@ -49,7 +49,7 @@ class YourTradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
       val agentDetail = AgentDetails("", None, None, None, agentPremises, Some("2001-01-01"))
 
       val feModel = YourTradingPremises("TradingName",
-        Address("AddressLine1", "AddressLine2", Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
+        Address("AddressLine1", Some("AddressLine2"), Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
         LocalDate.of(2001, 1, 1), true)
 
       YourTradingPremises.conv(agentDetail) mustBe feModel

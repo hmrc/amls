@@ -30,7 +30,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         None,
         Some(regForCorpTax),
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", "line2",
+        RegisteredOfficeUK("line1", Some("line2"),
           Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None
@@ -45,7 +45,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         None,
         Some(regForCorpTax),
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", "line2",
+        RegisteredOfficeUK("line1", Some("line2"),
           Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None
@@ -59,7 +59,7 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
         None,
         None,
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", "line2",
+        RegisteredOfficeUK("line1", Some("line2"),
           Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None

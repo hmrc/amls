@@ -38,12 +38,12 @@ class BusinessDetailsSpec extends PlaySpec with AmlsBaseSpec {
 
   val contactingYou = ContactingYou("07000111222", "test@test.com")
 
-  val regOfficeOrMainPlaceUK = RegisteredOfficeUK("38B", "Longbenton", None, None, "AA1 1AA")
+  val regOfficeOrMainPlaceUK = RegisteredOfficeUK("38B", Some("Longbenton"), None, None, "AA1 1AA")
 
   val uKCorrespondenceAddress = UKCorrespondenceAddress("Name",
     "Business Name",
     "address 1",
-    "address 2",
+    Some("address 2"),
     Some("address 3"),
     Some("address 4"),
     "BB1 1BB")
@@ -109,10 +109,10 @@ class BusinessDetailsSpec extends PlaySpec with AmlsBaseSpec {
         vatRegistered = Some(VATRegisteredYes("123456789")),
         corporationTaxRegistered = Some(CorporationTaxRegisteredYes("1234567891")),
         contactingYou = ContactingYou("07000111222", "BusinessEmail"),
-        registeredOffice = RegisteredOfficeUK("BusinessAddressLine1", "BusinessAddressLine2", Some("BusinessAddressLine3"),
+        registeredOffice = RegisteredOfficeUK("BusinessAddressLine1", Some("BusinessAddressLine2"), Some("BusinessAddressLine3"),
           Some("BusinessAddressLine4"), "AA1 1AA"),
         altCorrespondenceAddress = true,
-        correspondenceAddress = Some(UKCorrespondenceAddress("Name", "TradingName", "AlternativeAddressLine1", "AlternativeAddressLine2",
+        correspondenceAddress = Some(UKCorrespondenceAddress("Name", "TradingName", "AlternativeAddressLine1", Some("AlternativeAddressLine2"),
           Some("AlternativeAddressLine3"),
           Some("AlternativeAddressLine4"), "AA1 1AA"))
       )

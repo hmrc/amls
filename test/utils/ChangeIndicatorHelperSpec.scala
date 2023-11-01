@@ -38,7 +38,7 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
       val api5 = SubscriptionView(
         "formbundlenumber",
         BusinessDetails(BusinessType.LimitedCompany, None, None),
-        BusinessContactDetails(Address("line1", "line2", None, None, "uk", None, None), false, None, "telNo", "email"),
+        BusinessContactDetails(Address("line1", Some("line2"), None, None, "uk", None, None), false, None, "telNo", "email"),
         None,
         None,
         None,
@@ -53,7 +53,7 @@ class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper 
         ChangeIndicators(),
         "messageType",
         BusinessDetails(BusinessType.LimitedCompany, None, None),
-        BusinessContactDetails(Address("line1", "line2", None, None, "uk", None, None), false, None, "telNo", "email"),
+        BusinessContactDetails(Address("line1", Some("line2"), None, None, "uk", None, None), false, None, "telNo", "email"),
         None,
         None,
         None,

@@ -60,7 +60,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
           reviewDetails = ReviewDetails(
             "", BT.SoleProprietor, Address(
               line_1 = "",
-              line_2 = "",
+              line_2 = None,
               line_3 = None,
               line_4 = None,
               postcode = None,
@@ -71,7 +71,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       eabSection = None,
       tradingPremisesSection = None,
       businessDetailsSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(LocalDate.of(1990, 2, 24))), Some(VATRegisteredNo),
-        Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"), altCorrespondenceAddress = false),
+        Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", Some("2"), None, None, "AA1 1AA"), altCorrespondenceAddress = false),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
       aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),
       businessActivitiesSection = BusinessActivities(None),

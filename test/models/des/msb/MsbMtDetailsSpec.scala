@@ -27,7 +27,7 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
   "MsbMtDetails" should {
 
     val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-    val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+    val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
     val BusinessActivitiesModel = BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
     val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
 

@@ -28,7 +28,7 @@ class BusinessDetailsSpec extends PlaySpec {
 
     "be convertible to BusinessDetails DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", FE.LPrLLP, Address("line_1", "line_2", None, None, None, "UK"), "safeId")
+      val reviewDetails = ReviewDetails("businessName", FE.LPrLLP, Address("line_1", Some("line_2"), None, None, None, "UK"), "safeId")
 
       val tp = TypeOfBusiness("LP")
 

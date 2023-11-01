@@ -156,10 +156,10 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
-    RegisteredOfficeUK("line1", "line2",
+    RegisteredOfficeUK("line1", Some("line2"),
       Some("some street"), Some("some city"), "EE1 1EE"),
     true,
-    Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
+    Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"),
       Some("Street"), Some("city"), "EE1 1EE"))
   )
 
@@ -178,7 +178,7 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
     NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
     true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
-      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
+      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
 
   val desSubscriptionReq =
     des.SubscriptionRequest(
@@ -664,10 +664,10 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
-      RegisteredOfficeUK("line1", "line2",
+      RegisteredOfficeUK("line1", Some("line2"),
         Some("some street"), Some("some city"), "EE1 1EE"),
       true,
-      Some(UKCorrespondenceAddress("kap", "Trading", "Park", "lane",
+      Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"),
         Some("Street"), Some("city"), "EE1 1EE"))
     )
 
@@ -698,7 +698,7 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       nationalCrimeAgencyRegistered = true,
       formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
       mlrAdvisor = Some(MlrAdvisor(true,
-        Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
+        Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
 
     val desSubscriptionReq =
       des.SubscriptionRequest(

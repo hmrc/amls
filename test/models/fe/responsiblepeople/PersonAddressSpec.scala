@@ -22,7 +22,7 @@ import play.api.libs.json.{JsSuccess, Json}
 class PersonAddressSpec extends PlaySpec {
 
   val DefaultAddressLine1 = "Default Line 1"
-  val DefaultAddressLine2 = "Default Line 2"
+  val DefaultAddressLine2 = Some("Default Line 2")
   val DefaultAddressLine3 = Some("Default Line 3")
   val DefaultAddressLine4 = Some("Default Line 4")
   val DefaultPostcode = "AA1 1AA"

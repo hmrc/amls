@@ -43,7 +43,7 @@ object CurrentAddress {
     }
 
     currentAddress.copy(address = currentAddress.address.copy(addressLine1 = removeFromLine(Some(currentAddress.address.addressLine1)).getOrElse(""),
-      addressLine2 = removeFromLine(Some(currentAddress.address.addressLine2)).getOrElse(""),
+      addressLine2 = removeFromLine(currentAddress.address.addressLine2),
       addressLine3 = removeFromLine(currentAddress.address.addressLine3),
       addressLine4 = removeFromLine(currentAddress.address.addressLine4))
     )

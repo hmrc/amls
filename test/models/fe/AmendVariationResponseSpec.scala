@@ -44,7 +44,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
             tradingName = Some("COMPANY NAME 925"),
             businessAddress = Address(
               addressLine1 = "M House 0002",
-              addressLine2 = "Grange 0002",
+              addressLine2 = Some("Grange 0002"),
               addressLine3 = Some("Telford 0002"),
               addressLine4 = Some("Shropshire"),
               country = "GB",
@@ -69,7 +69,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
             tradingName = Some("trade3"),
             businessAddress = Address(
               addressLine1 = "add3",
-              addressLine2 = "add3d",
+              addressLine2 = Some("add3d"),
               addressLine3 = None,
               addressLine4 = None,
               country = "GB",
@@ -101,7 +101,7 @@ class AmendVariationResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
             tradingName = "trade2",
             businessAddress = Address(
               addressLine1 = "add2",
-              addressLine2 = "add2",
+              addressLine2 = Some("add2"),
               addressLine3 = None,
               addressLine4 = None,
               country = "GB",

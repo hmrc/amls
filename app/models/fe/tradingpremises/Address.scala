@@ -20,7 +20,7 @@ import play.api.libs.json.{Reads, Writes}
 
 case class Address(
                     addressLine1: String,
-                    addressLine2: String,
+                    addressLine2: Option[String],
                     addressLine3: Option[String],
                     addressLine4: Option[String],
                     postcode: String,
@@ -34,7 +34,7 @@ object Address {
     import play.api.libs.json._
     (
       (__ \ "addressLine1").read[String] and
-        (__ \ "addressLine2").read[String] and
+        (__ \ "addressLine2").readNullable[String] and
         (__ \ "addressLine3").readNullable[String] and
         (__ \ "addressLine4").readNullable[String] and
         (__ \ "postcode").read[String] and
@@ -47,7 +47,7 @@ object Address {
     import play.api.libs.json._
     (
       (__ \ "addressLine1").write[String] and
-        (__ \ "addressLine2").write[String] and
+        (__ \ "addressLine2").writeNullable[String] and
         (__ \ "addressLine3").writeNullable[String] and
         (__ \ "addressLine4").writeNullable[String] and
         (__ \ "postcode").write[String] and
