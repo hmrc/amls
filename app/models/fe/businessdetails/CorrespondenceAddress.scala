@@ -25,7 +25,7 @@ case class UKCorrespondenceAddress(
                                     yourName: String,
                                     businessName: String,
                                     addressLine1: String,
-                                    addressLine2: String,
+                                    addressLine2: Option[String],
                                     addressLine3: Option[String],
                                     addressLine4: Option[String],
                                     postCode: String
@@ -35,7 +35,7 @@ case class NonUKCorrespondenceAddress(
                                        yourName: String,
                                        businessName: String,
                                        addressLineNonUK1: String,
-                                       addressLineNonUK2: String,
+                                       addressLineNonUK2: Option[String],
                                        addressLineNonUK3: Option[String],
                                        addressLineNonUK4: Option[String],
                                        country: String
@@ -51,7 +51,7 @@ object CorrespondenceAddress {
       ((__ \ "yourName").read[String] and
         (__ \ "businessName").read[String] and
         (__ \ "correspondenceAddressLine1").read[String] and
-        (__ \ "correspondenceAddressLine2").read[String] and
+        (__ \ "correspondenceAddressLine2").readNullable[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
         (__ \ "correspondencePostCode").read[String]) (UKCorrespondenceAddress.apply _) map identity[CorrespondenceAddress]
@@ -59,7 +59,7 @@ object CorrespondenceAddress {
       ((__ \ "yourName").read[String] and
         (__ \ "businessName").read[String] and
         (__ \ "correspondenceAddressLine1").read[String] and
-        (__ \ "correspondenceAddressLine2").read[String] and
+        (__ \ "correspondenceAddressLine2").readNullable[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
         (__ \ "correspondenceCountry").read[String]) (NonUKCorrespondenceAddress.apply _)
@@ -76,7 +76,7 @@ object CorrespondenceAddress {
           (__ \ "yourName").write[String] and
             (__ \ "businessName").write[String] and
             (__ \ "correspondenceAddressLine1").write[String] and
-            (__ \ "correspondenceAddressLine2").write[String] and
+            (__ \ "correspondenceAddressLine2").writeNullable[String] and
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondencePostCode").write[String]
@@ -86,7 +86,7 @@ object CorrespondenceAddress {
           (__ \ "yourName").write[String] and
             (__ \ "businessName").write[String] and
             (__ \ "correspondenceAddressLine1").write[String] and
-            (__ \ "correspondenceAddressLine2").write[String] and
+            (__ \ "correspondenceAddressLine2").writeNullable[String] and
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondenceCountry").write[String]

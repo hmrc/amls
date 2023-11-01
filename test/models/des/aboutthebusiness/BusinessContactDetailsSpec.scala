@@ -29,10 +29,10 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
     "seralize model with uk registered office and uk alternate address " in {
       val desBusinesContact = BusinessContactDetails(
-        Address("doornumber", "some street", None, None, "GB", Some("AA1 1AA")),
+        Address("doornumber", Some("some street"), None, None, "GB", Some("AA1 1AA")),
         true,
         Some(AlternativeAddress("Some Name", "Some business",
-          Address("alt 1", "alt 2", None, None, "GB", Some("BB1 1BB")))),
+          Address("alt 1", Some("alt 2"), None, None, "GB", Some("BB1 1BB")))),
         "07000111222",
         "test@gmail.com")
 
@@ -57,10 +57,10 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "seralize model with uk registered office and non uk alternate address" in {
     val desBusinesContact = BusinessContactDetails(
-      Address("number", "some street", None, None, "GB", Some("AA1 1AA")),
+      Address("number", Some("some street"), None, None, "GB", Some("AA1 1AA")),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "GB", None))),
+        Address("alt 1", Some("alt 2"), None, None, "GB", None))),
       "07000111222",
       "test@gmail.com")
 
@@ -85,7 +85,7 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "seralize model with uk registered office and alternate address none" in {
     val desBusinesContact = BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "GB", Some("AA1 1AA")),
+      Address("doornumber", Some("some street"), None, None, "GB", Some("AA1 1AA")),
       false,
       None,
       "07000111222",
@@ -106,10 +106,10 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "seralize model with non uk registered office and non uk alternate address" in {
     val desBusinesContact = BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "GB", None),
+      Address("doornumber", Some("some street"), None, None, "GB", None),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "GB", None))),
+        Address("alt 1", Some("alt 2"), None, None, "GB", None))),
       "07000111222",
       "test@gmail.com")
 
@@ -132,10 +132,10 @@ class BusinessContactDetailsSpec extends PlaySpec {
 
   "seralize model with non uk registered office and uk alternate address" in {
     val desBusinesContact = BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "GB", None),
+      Address("doornumber", Some("some street"), None, None, "GB", None),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "GB", Some("BB1 1BB")))),
+        Address("alt 1", Some("alt 2"), None, None, "GB", Some("BB1 1BB")))),
       "07000111222",
       "test@gmail.com")
 
@@ -164,15 +164,15 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
-      RegisteredOfficeUK("doornumber", "some street", None, None, "AA1 1AA"),
+      RegisteredOfficeUK("doornumber", Some("some street"), None, None, "AA1 1AA"),
       true,
-      Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "BB1 1BB")))
+      Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", Some("alt 2"), None, None, "BB1 1BB")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "GB", Some("AA1 1AA")),
+      Address("doornumber", Some("some street"), None, None, "GB", Some("AA1 1AA")),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "GB", Some("BB1 1BB")))),
+        Address("alt 1", Some("alt 2"), None, None, "GB", Some("BB1 1BB")))),
       "07000111222",
       "test@gmail.com")
 
@@ -185,15 +185,15 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
-      RegisteredOfficeNonUK("doornumber", "some street", None, None, "AG"),
+      RegisteredOfficeNonUK("doornumber", Some("some street"), None, None, "AG"),
       true,
-      Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "AR")))
+      Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", Some("alt 2"), None, None, "AR")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "AG", None),
+      Address("doornumber", Some("some street"), None, None, "AG", None),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "AR", None))),
+        Address("alt 1", Some("alt 2"), None, None, "AR", None))),
       "07000111222",
       "test@gmail.com")
 
@@ -206,15 +206,15 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
-      RegisteredOfficeUK("doornumber", "some street", None, None, "BB1 1BB"),
+      RegisteredOfficeUK("doornumber", Some("some street"), None, None, "BB1 1BB"),
       true,
-      Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "AR")))
+      Some(NonUKCorrespondenceAddress("Some Name", "Some business", "alt 1", Some("alt 2"), None, None, "AR")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "GB", Some("BB1 1BB")),
+      Address("doornumber", Some("some street"), None, None, "GB", Some("BB1 1BB")),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "AR", None))),
+        Address("alt 1", Some("alt 2"), None, None, "AR", None))),
       "07000111222",
       "test@gmail.com")
 
@@ -228,15 +228,15 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
-      RegisteredOfficeNonUK("doornumber", "some street", None, None, "AB"),
+      RegisteredOfficeNonUK("doornumber", Some("some street"), None, None, "AB"),
       true,
-      Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", "alt 2", None, None, "BB1 1BB")))
+      Some(UKCorrespondenceAddress("Some Name", "Some business", "alt 1", Some("alt 2"), None, None, "BB1 1BB")))
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "AB", None),
+      Address("doornumber", Some("some street"), None, None, "AB", None),
       true,
       Some(AlternativeAddress("Some Name", "Some business",
-        Address("alt 1", "alt 2", None, None, "GB", Some("BB1 1BB")))),
+        Address("alt 1", Some("alt 2"), None, None, "GB", Some("BB1 1BB")))),
       "07000111222",
       "test@gmail.com")
 
@@ -250,12 +250,12 @@ class BusinessContactDetailsSpec extends PlaySpec {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("07000111222", "test@gmail.com"),
-      RegisteredOfficeNonUK("doornumber", "some street", None, None, "AB"),
+      RegisteredOfficeNonUK("doornumber", Some("some street"), None, None, "AB"),
       false,
       None)
 
     val desBusinesContact = des.aboutthebusiness.BusinessContactDetails(
-      Address("doornumber", "some street", None, None, "AB", None),
+      Address("doornumber", Some("some street"), None, None, "AB", None),
       false,
       None,
       "07000111222",

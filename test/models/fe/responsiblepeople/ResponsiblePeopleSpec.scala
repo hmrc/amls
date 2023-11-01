@@ -52,9 +52,9 @@ trait ResponsiblePeopleValues {
     private val residence = UKResidence("AA1111111")
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
-    private val currentPersonAddress = PersonAddressUK("Line 1", "Line 2", None, None, "AA1 1AA")
+    private val currentPersonAddress = PersonAddressUK("Line 1", Some("Line 2"), None, None, "AA1 1AA")
     private val currentAddress = ResponsiblePersonAddress(currentPersonAddress, ZeroToFiveMonths)
-    private val additionalPersonAddress = PersonAddressUK("Line 1", "Line 2", None, None, "BB1 1BB")
+    private val additionalPersonAddress = PersonAddressUK("Line 1", Some("Line 2"), None, None, "BB1 1BB")
     private val additionalAddress = ResponsiblePersonAddress(additionalPersonAddress, ZeroToFiveMonths)
     val previousName = PreviousName(true, Some("ABCD"), Some("XYZ"), Some("Fly"))
 
@@ -88,7 +88,7 @@ trait ResponsiblePeopleValues {
         dateOfBirth = Some(DateOfBirth(LocalDate.of(2001, 1, 1))),
         contactDetails = None,
         addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(PersonAddressUK("CurrentAddressLine1",
-          "CurrentAddressLine2", Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
+          Some("CurrentAddressLine2"), Some("CurrentAddressLine3"), Some("CurrentAddressLine4"), "AA1 1AA"),
           ThreeYearsPlus)), None, None)),
         positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))),
         saRegistered = Some(SaRegisteredYes("1234567890")),
@@ -110,9 +110,9 @@ trait ResponsiblePeopleValues {
         dateOfBirth = None,
         contactDetails = None,
         addressHistory = Some(ResponsiblePersonAddressHistory(Some(ResponsiblePersonCurrentAddress(
-          PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
-          Some(ResponsiblePersonAddress(PersonAddressUK("b", "b", Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
-          Some(ResponsiblePersonAddress(PersonAddressUK("a", "a", Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
+          PersonAddressUK("b", Some("b"), Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+          Some(ResponsiblePersonAddress(PersonAddressUK("b", Some("b"), Some("b"), Some("b"), "AA1 1AA"), ZeroToFiveMonths)),
+          Some(ResponsiblePersonAddress(PersonAddressUK("a", Some("a"), Some("a"), Some("a"), "AA1 1AA"), SixToElevenMonths)))),
         positions = Some(Positions(Set(NominatedOfficer, SoleProprietor), Some(LocalDate.now))), saRegistered = Some(SaRegisteredYes("1111111111")),
         vatRegistered = Some(VATRegisteredYes("111111111")),
         experienceTraining = Some(ExperienceTrainingYes("bbbbbbbbbb")),
@@ -140,8 +140,8 @@ trait ResponsiblePeopleValues {
     private val residence = NonUKResidence
     private val residenceCountry = "GB"
     private val residenceNationality = "GB"
-    private val newPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "ES")
-    private val newAdditionalPersonAddress = PersonAddressNonUK("Line 1", "Line 2", None, None, "FR")
+    private val newPersonAddress = PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "ES")
+    private val newAdditionalPersonAddress = PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "FR")
     private val currentAddress = ResponsiblePersonAddress(newPersonAddress, ZeroToFiveMonths)
     private val additionalAddress = ResponsiblePersonAddress(newAdditionalPersonAddress, ZeroToFiveMonths)
 

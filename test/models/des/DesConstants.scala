@@ -48,7 +48,7 @@ object DesConstants {
   val testViewBusinessContactDetails = BusinessContactDetails(
     AboutTheBusinessAddress(
       "BusinessAddressLine1",
-      "BusinessAddressLine2",
+      Some("BusinessAddressLine2"),
       Some("BusinessAddressLine3"),
       Some("BusinessAddressLine4"),
       "GB",
@@ -57,7 +57,7 @@ object DesConstants {
     Some(AlternativeAddress(
       "Name", "TradingName",
       AboutTheBusinessAddress("AlternativeAddressLine1",
-        "AlternativeAddressLine2",
+        Some("AlternativeAddressLine2"),
         Some("AlternativeAddressLine3"),
         Some("AlternativeAddressLine4"),
         "GB",
@@ -68,7 +68,7 @@ object DesConstants {
   val testAmendViewBusinessContactDetails1 = BusinessContactDetails(
     AboutTheBusinessAddress(
       "new address",
-      "BusinessAddressLine2",
+      Some("BusinessAddressLine2"),
       Some("BusinessAddressLine3"),
       Some("BusinessAddressLine4"),
       "GB",
@@ -114,7 +114,7 @@ object DesConstants {
     mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
       Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
         "AdvisorAddressLine1",
-        "AdvisorAddressLine2",
+        Some("AdvisorAddressLine2"),
         Some("AdvisorAddressLine3"),
         Some("AdvisorAddressLine4"),
         "GB",
@@ -141,7 +141,7 @@ object DesConstants {
     Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
       Some(AdvisorNameAddress("Name", Some("TradingName"), AboutTheBusinessAddress(
         "AdvisorAddressLine1",
-        "AdvisorAddressLine2",
+        Some("AdvisorAddressLine2"),
         Some("AdvisorAddressLine3"),
         Some("AdvisorAddressLine4"),
         "GB",
@@ -268,7 +268,7 @@ object DesConstants {
 
   val AgentPremisesModel1 = AgentPremises("TradingName",
     TradingPremisesAddress("AddressLine1",
-      "AddressLine2",
+      Some("AddressLine2"),
       Some("AddressLine3"),
       Some("AddressLine4"),
       "AD",
@@ -287,7 +287,7 @@ object DesConstants {
 
   val AgentPremisesModel2 = AgentPremises("TradingName",
     TradingPremisesAddress("AddressLine1",
-      "AddressLine2",
+      Some("AddressLine2"),
       Some("AddressLine3"),
       Some("AddressLine4"),
       "AD",
@@ -306,7 +306,7 @@ object DesConstants {
 
   val AgentPremisesModel3 = AgentPremises("TradingName",
     TradingPremisesAddress("AddressLine1",
-      "AddressLine2",
+      Some("AddressLine2"),
       Some("AddressLine3"),
       Some("AddressLine4"),
       "AD",
@@ -325,7 +325,7 @@ object DesConstants {
 
   val agentPremisesapi51 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -358,7 +358,7 @@ object DesConstants {
 
   val agentPremisesapi52 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -391,7 +391,7 @@ object DesConstants {
 
   val agentPremisesapi53 = AgentPremises("TradingName",
     TradingPremisesAddress("AgentAddressLine1",
-      "AgentAddressLine2",
+      Some("AgentAddressLine2"),
       Some("AgentAddressLine3"),
       Some("AgentAddressLine4"),
       "GB",
@@ -425,7 +425,7 @@ object DesConstants {
 
   val agentPremisesapi61 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -457,7 +457,7 @@ object DesConstants {
 
   val agentPremisesapi61Release7 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -502,7 +502,7 @@ object DesConstants {
 
   val agentPremisesapi62 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -536,7 +536,7 @@ object DesConstants {
 
   val agentPremisesapi63 = AgentPremises("TradingName",
     TradingPremisesAddress("AgentAddressLine1",
-      "AgentAddressLine2",
+      Some("AgentAddressLine2"),
       Some("AgentAddressLine3"),
       Some("AgentAddressLine4"),
       "GB",
@@ -571,7 +571,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       tradingName = Some("OwnBusinessTradingName"),
       businessAddress = TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -593,7 +593,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -618,7 +618,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("ABCDEFGHIJK ABCDE & LETTINGS LTD"),
       TradingPremisesAddress("ABC 1234, ABCDEFGHIJ, CLYDE",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -642,7 +642,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -664,7 +664,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -689,7 +689,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -712,7 +712,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -738,7 +738,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -760,7 +760,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -785,7 +785,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -808,7 +808,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -834,7 +834,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName"),
       TradingPremisesAddress("OwnBusinessAddressLine1",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
@@ -856,7 +856,7 @@ object DesConstants {
     OwnBusinessPremisesDetails(
       Some("OwnBusinessTradingName1"),
       TradingPremisesAddress("OB11AddressLine1",
-        "OB1AddressLine2",
+        Some("OB1AddressLine2"),
         Some("OB1AddressLine3"),
         Some("OB1AddressLine4"),
         "GB",
@@ -880,7 +880,7 @@ object DesConstants {
 
   val viewStatusAgentPremises1 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -910,7 +910,7 @@ object DesConstants {
 
   val viewStatusAgentPremises2 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -943,7 +943,7 @@ object DesConstants {
 
   val viewStatusAgentPremises3 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -976,7 +976,7 @@ object DesConstants {
 
   val viewStatusAgentPremises4 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -1009,7 +1009,7 @@ object DesConstants {
 
   val amenStatusAgentPremises1 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -1040,7 +1040,7 @@ object DesConstants {
 
   val amendStatusAgentPremises2 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -1073,7 +1073,7 @@ object DesConstants {
 
   val amendStatusAgentPremises3 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -1106,7 +1106,7 @@ object DesConstants {
 
   val amendStatusAgentPremises4 = AgentPremises("aaaaaaaaaaaa",
     TradingPremisesAddress("a",
-      "a",
+      Some("a"),
       Some("a"),
       Some("a"),
       "GB",
@@ -1492,12 +1492,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+      AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1541,12 +1541,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+      AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1590,12 +1590,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+      AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1639,12 +1639,12 @@ object DesConstants {
     )),
     None,
     Some(CurrentAddress(
-      AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+      AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
     )),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
     Some("0-6 months"),
-    Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
+    Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "AD", Some("AA1 1AA")))),
     Some("0-6 months"),
     Some(PositionInBusiness(
       Some(SoleProprietor(true, true)),
@@ -1698,7 +1698,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -1768,7 +1768,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -1837,7 +1837,7 @@ object DesConstants {
     Some(CurrentAddress(
       AddressWithChangeDate(
         "CurrentAddressLine1",
-        "CurrentAddressLine2",
+        Some("CurrentAddressLine2"),
         Some("CurrentAddressLine3"),
         Some("CurrentAddressLine4"),
         "GB",
@@ -1920,7 +1920,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -1980,12 +1980,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -2042,7 +2042,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -2102,12 +2102,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -2165,7 +2165,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -2225,12 +2225,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -2287,7 +2287,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -2344,12 +2344,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true)),
@@ -2404,7 +2404,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -2461,12 +2461,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true, Some(false))),
@@ -2521,7 +2521,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",
@@ -2581,12 +2581,12 @@ object DesConstants {
       )),
       None,
       Some(CurrentAddress(
-        AddressWithChangeDate("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA"))
+        AddressWithChangeDate("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA"))
       )),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("b", "b", Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("b", Some("b"), Some("b"), Some("b"), "GB", Some("AA1 1AA")))),
       Some("0-6 months"),
-      Some(AddressUnderThreeYears(Address("a", "a", Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
+      Some(AddressUnderThreeYears(Address("a", Some("a"), Some("a"), Some("a"), "GB", Some("AA1 1AA")))),
       Some("7-12 months"),
       Some(PositionInBusiness(
         Some(SoleProprietor(true, true, Some(false))),
@@ -3062,7 +3062,7 @@ object DesConstants {
     Some(CurrentAddress(
       AddressWithChangeDate(
         "CurrentAddressLine1",
-        "CurrentAddressLine2",
+        Some("CurrentAddressLine2"),
         Some("CurrentAddressLine3"),
         Some("CurrentAddressLine4"),
         "GB",
@@ -3333,7 +3333,7 @@ object DesConstants {
       Some(CurrentAddress(
         AddressWithChangeDate(
           "CurrentAddressLine1",
-          "CurrentAddressLine2",
+          Some("CurrentAddressLine2"),
           Some("CurrentAddressLine3"),
           Some("CurrentAddressLine4"),
           "GB",

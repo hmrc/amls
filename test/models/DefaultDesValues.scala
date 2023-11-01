@@ -54,7 +54,7 @@ object DefaultDesValues {
   private val suspiciousActivityGuidance = true
   private val nationalCrimeAgencyRegistered = true
   private val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
-  private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
+  private val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), ATBAddress("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))
   private val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
   private val desallActivitiesModel = Some(BusinessActivitiesAll(None, Some("1990-02-24"), Some(false), activityDetails, franchiseDetails, noOfEmployees, noOfEmployeesForMlr,
     nonUkResidentCustDetails, auditableRecordsDetails, suspiciousActivityGuidance, nationalCrimeAgencyRegistered,
@@ -80,10 +80,10 @@ object DefaultDesValues {
   val EabResd = Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
 
   val AboutTheBusinessSection = BusinessContactDetails(
-    ATBAddress("line1", "line2",
+    ATBAddress("line1", Some("line2"),
       Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
     true,
-    Some(AlternativeAddress("kap", "Trading", ATBAddress("Park", "lane",
+    Some(AlternativeAddress("kap", "Trading", ATBAddress("Park", Some("lane"),
       Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
     "019212323222323222323222323222",
     "abc@hotmail.co.uk")
@@ -94,7 +94,7 @@ object DefaultDesValues {
   private val premises = OwnBusinessPremisesDetails(
     Some("string"),
     des.tradingpremises.Address("string",
-      "string",
+      Some("string"),
       Some("string"),
       Some("string"),
       "GB",
@@ -114,7 +114,7 @@ object DefaultDesValues {
   private val ownBusinessPremises = OwnBusinessPremises(true, Some(Seq(premises)))
 
   private val agentPremises = AgentPremises("string",
-    des.tradingpremises.Address("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
+    des.tradingpremises.Address("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
     Msb(false, false, false, false, false),
     models.des.tradingpremises.Hvd(false),
     TPAsp(false),
@@ -157,9 +157,9 @@ object DefaultDesValues {
   private val nationalDtls = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None)), Some("GB"), Some("GB")))
   private val nationalDtlsPhase2 = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1970-01-01"))), Some("GB"), Some("GB")))
   private val contactDtls = Some(ContactCommDetails("test@test.com", "07000001122", None))
-  private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", "ccLine 2", None, None, "GB", Some("AA1 1AA"))))
-  private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", "Line 2", None, None, "GB", Some("BB1 1BB"))))
-  private val extraAdditional = Some(AddressUnderThreeYears(RPAddress("e Line 1", "e Line 2", Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
+  private val currentDesAddress = Some(CurrentAddress(AddressWithChangeDate("ccLine 1", Some("ccLine 2"), None, None, "GB", Some("AA1 1AA"))))
+  private val additionalDesAddress = Some(AddressUnderThreeYears(RPAddress("Line 1", Some("Line 2"), None, None, "GB", Some("BB1 1BB"))))
+  private val extraAdditional = Some(AddressUnderThreeYears(RPAddress("e Line 1", Some("e Line 2"), Some("e Line 3"), Some("e Line 4"), "GB", Some("CC1 1CC"))))
   private val regDtls = Some(RegDetails(false, None, true, Some("0123456789")))
   private val positionInBusinessForRelease7 = Some(PositionInBusiness(Some(DesSoleProprietor(true, true, Some(false))), None, None))
   private val positionInBusiness = Some(PositionInBusiness(Some(DesSoleProprietor(true, true)),

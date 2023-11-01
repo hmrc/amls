@@ -33,7 +33,7 @@ class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert frontend model to des model successfully for SoleProprietor" in {
 
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.SoleProprietor, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.SoleProprietor, BMAddress("BusinessAddressLine1", Some("BusinessAddressLine2"),
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
@@ -52,7 +52,7 @@ class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert frontend model to des model  successfully for LimitedCompany" in {
 
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", Some("BusinessAddressLine2"),
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
@@ -71,7 +71,7 @@ class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert frontend model to des model  successfully for Partnership" in {
 
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", Some("BusinessAddressLine2"),
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
@@ -89,7 +89,7 @@ class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert frontend model to des model successfully when user has no data selected" in {
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.Partnership, BMAddress("BusinessAddressLine1", Some("BusinessAddressLine2"),
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),
@@ -107,7 +107,7 @@ class PositionInBusinessSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des model to frontend model successfully when input is none" in {
-      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", "BusinessAddressLine2",
+      val bm = BusinessMatching(ReviewDetails("CompanyName", BusinessType.LimitedCompany, BMAddress("BusinessAddressLine1", Some("BusinessAddressLine2"),
         Some("BusinessAddressLine3"), Some("BusinessAddressLine4"),
         Some("AA1 1AA"), "AD"), ""),
         BusinessActivities(Set(HighValueDealing)),

@@ -129,16 +129,16 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
           true,
           Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
           Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"),
-            Address("Line1", "Line2", Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None))))
+            Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None))))
         )
       )
     )
 
   private val givenValidBusinessContactDetails =
     BusinessContactDetails(
-      Address("line1", "line2", Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
+      Address("line1", Some("line2"), Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
       true,
-      Some(AlternativeAddress("kap", "Trading", Address("Park", "lane", Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
+      Some(AlternativeAddress("kap", "Trading", Address("Park", Some("lane"), Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
       "078 6353 4828",
       "abc@hotmail.co.uk"
     )
@@ -174,7 +174,7 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
     OwnBusinessPremisesDetails(
       tradingName = Some("ABCDEFGHIJK ABCDE & LETTINGS LTD"),
       businessAddress = tradingpremises.Address("ABC 1234, ABCDEFGHIJ, CLYDE",
-        "OwnBusinessAddressLine2",
+        Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",

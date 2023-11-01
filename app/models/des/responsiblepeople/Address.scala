@@ -18,14 +18,14 @@ package models.des.responsiblepeople
 
 import play.api.libs.json.Json
 
-case class Address (addressLine1: String, addressLine2 : String, addressLine3 : Option[String], addressLine4 : Option[String],
+case class Address (addressLine1: String, addressLine2 : Option[String], addressLine3 : Option[String], addressLine4 : Option[String],
                     country : String, postcode : Option[String])
 
 object Address {
   implicit val format = Json.format[Address]
 }
 
-case class AddressWithChangeDate(addressLine1: String, addressLine2 : String, addressLine3 : Option[String], addressLine4 : Option[String],
+case class AddressWithChangeDate(addressLine1: String, addressLine2 : Option[String], addressLine3 : Option[String], addressLine4 : Option[String],
                                  country : String, postcode : Option[String], addressChangeDate : Option[String] = None)
 
 object AddressWithChangeDate {

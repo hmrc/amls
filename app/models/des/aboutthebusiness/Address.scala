@@ -21,7 +21,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 
 case class Address(addressLine1: String,
-                   addressLine2: String,
+                   addressLine2: Option[String],
                    addressLine3: Option[String],
                    addressLine4: Option[String],
                    country: String,
@@ -55,7 +55,7 @@ object Address {
     }
 
     address.copy(addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
-      addressLine2 = removeFromLine(Some(address.addressLine2)).getOrElse(""),
+      addressLine2 = removeFromLine(address.addressLine2),
       addressLine3 = removeFromLine(address.addressLine3),
       addressLine4 = removeFromLine(address.addressLine4)
     )
@@ -77,6 +77,6 @@ object Address {
       case Some(NonUKCorrespondenceAddress(_, _, addressLine1, addressLine2, addressLine3, addressLine4, country)) =>
         removeAmpersands(Address(addressLine1, addressLine2, addressLine3, addressLine4, country, None))
       case None =>
-        Address("", "", None, None, "", None)
+        Address("", None, None, None, "", None)
     }
 }

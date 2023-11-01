@@ -33,7 +33,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
     val premises = OwnBusinessPremisesDetails(
       tradingName = Some("string"),
       businessAddress = DESAddress("string",
-        "string",
+        Some("string"),
         Some("string"),
         Some("string"),
         "GB",
@@ -62,7 +62,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
     val ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(premises))))
     val ownBusinessPremises1 = Some(OwnBusinessPremises(true, Some(Seq(premises1))))
 
-    val agentPremises = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA"), Some("2002-03-11")), true,
+    val agentPremises = AgentPremises("string", DESAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA"), Some("2002-03-11")), true,
       Msb(true, false, false, false, false),
       Hvd(false),
       Asp(false),
@@ -75,7 +75,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
       Some("2003-04-05")
     )
 
-    val agentPremises1 = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
+    val agentPremises1 = AgentPremises("string", DESAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
       Msb(false, false, false, false, false),
       Hvd(true),
       Asp(true),
@@ -86,7 +86,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
       Amp(false),
       Some("2008-01-01"))
 
-    val agentPremises2 = AgentPremises("string", DESAddress("string", "string", Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
+    val agentPremises2 = AgentPremises("string", DESAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA")), true,
       Msb(false, false, false, false, false),
       Hvd(false),
       Asp(false),
@@ -211,26 +211,26 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
         FETradingPremises(Some(
           RegisteringAgentPremises(false)),
           YourTradingPremises("string",
-            FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA", Some("1999-05-01"))
+            FETradingPremisesPkg.Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA", Some("1999-05-01"))
             , LocalDate.of(2010, 1, 1), false, Some("1999-04-01")),
           None, None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.TrustAndCompanyServices), Some("2009-01-01")),
           Some(MsbServices(Set(ChequeCashingNotScrapMetal, ChequeCashingScrapMetal)))),
 
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA", Some("2002-03-11")), LocalDate.of(2008, 1, 1), true),
+          FETradingPremisesPkg.Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA", Some("2002-03-11")), LocalDate.of(2008, 1, 1), true),
           Some(BusinessStructure.LimitedLiabilityPartnership), Some(AgentName("test name", Some("2009-05-03"), None)), Some(AgentCompanyDetails("LLP Partnership", None)), None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices), Some("2003-04-05")),
           Some(MsbServices(Set(TransmittingMoney))), Some(11223344), Some("Deleted"),
           Some(ActivityEndDate(LocalDate.of(1999, 1, 1)))),
 
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
+          FETradingPremisesPkg.Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
           Some(BusinessStructure.Partnership), None, None, Some(AgentPartnership("Partnership")),
           WhatDoesYourBusinessDo(Set(BusinessActivity.AccountancyServices, BusinessActivity.HighValueDealing))),
 
         FETradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-          FETradingPremisesPkg.Address("string", "string", Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
+          FETradingPremisesPkg.Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
           Some(BusinessStructure.UnincorporatedBody), None, None, None,
           WhatDoesYourBusinessDo(Set(BusinessActivity.TrustAndCompanyServices, BusinessActivity.TelephonePaymentService)))
       ))
@@ -279,7 +279,7 @@ class TradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val tradingPremises = Some(Seq(FETradingPremises(
         registeringAgentPremises = Some(RegisteringAgentPremises(true)),
-        yourTradingPremises = YourTradingPremises("Test", FETradingPremisesPkg.Address("Addr 1", "Addr 2", None, None, "TEST"), LocalDate.of(2002, 1, 2), true),
+        yourTradingPremises = YourTradingPremises("Test", FETradingPremisesPkg.Address("Addr 1", Some("Addr 2"), None, None, "TEST"), LocalDate.of(2002, 1, 2), true),
         whatDoesYourBusinessDoAtThisAddress = WhatDoesYourBusinessDo(Set.empty[BusinessActivity]),
         removalReason = Some("Other"),
         removalReasonOther = Some("Some other reason"))))

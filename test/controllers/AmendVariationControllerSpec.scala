@@ -54,7 +54,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         reviewDetails = ReviewDetails(
           "", BT.SoleProprietor, Address(
             line_1 = "",
-            line_2 = "",
+            line_2 = None,
             line_3 = None,
             line_4 = None,
             postcode = None,
@@ -70,7 +70,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
       Some(VATRegisteredNo),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("123456789", "asas@gmail.com"),
-      RegisteredOfficeUK("1", "2", None, None, "AA1 1AA"),
+      RegisteredOfficeUK("1", Some("2"), None, None, "AA1 1AA"),
       altCorrespondenceAddress = false
     ),
     bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),

@@ -37,7 +37,7 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
       )
     )
     val BusinessActivitiesModel = BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService))
-    val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+    val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
     val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "AA0001234567890")
     val TypeOfBusinessModel = TypeOfBusiness("test")
     val CompanyRegistrationNumberModel = CompanyRegistrationNumber("12345678")
@@ -84,7 +84,7 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
     "Convert des model to frontend Business matching" in {
 
       val bmModel = BusinessMatching(
-        ReviewDetails("CompanyName", SoleProprietor, Address("BusinessAddressLine1", "BusinessAddressLine2", Some("BusinessAddressLine3"),
+        ReviewDetails("CompanyName", SoleProprietor, Address("BusinessAddressLine1", Some("BusinessAddressLine2"), Some("BusinessAddressLine3"),
           Some("BusinessAddressLine4"), Some("AA1 1AA"), "GB"), ""),
         BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
           BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, ArtMarketParticipant, TrustAndCompanyServices)),

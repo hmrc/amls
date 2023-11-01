@@ -22,14 +22,14 @@ sealed trait PersonAddress
 
 case class PersonAddressUK(
                             addressLine1: String,
-                            addressLine2: String,
+                            addressLine2: Option[String],
                             addressLine3: Option[String],
                             addressLine4: Option[String],
                             postCode: String) extends PersonAddress
 
 case class PersonAddressNonUK(
                                addressLineNonUK1: String,
-                               addressLineNonUK2: String,
+                               addressLineNonUK2: Option[String],
                                addressLineNonUK3: Option[String],
                                addressLineNonUK4: Option[String],
                                country: String) extends PersonAddress
@@ -43,14 +43,14 @@ object PersonAddress {
     (__ \ "personAddressPostCode").read[String] andKeep (
       (
         (__ \ "personAddressLine1").read[String] and
-          (__ \ "personAddressLine2").read[String] and
+          (__ \ "personAddressLine2").readNullable[String] and
           (__ \ "personAddressLine3").readNullable[String] and
           (__ \ "personAddressLine4").readNullable[String] and
           (__ \ "personAddressPostCode").read[String]) (PersonAddressUK.apply _) map identity[PersonAddress]
       ) orElse
       (
         (__ \ "personAddressLine1").read[String] and
-          (__ \ "personAddressLine2").read[String] and
+          (__ \ "personAddressLine2").readNullable[String] and
           (__ \ "personAddressLine3").readNullable[String] and
           (__ \ "personAddressLine4").readNullable[String] and
           (__ \ "personAddressCountry").read[String]) (PersonAddressNonUK.apply _)
@@ -64,7 +64,7 @@ object PersonAddress {
       case a: PersonAddressUK =>
         (
           (__ \ "personAddressLine1").write[String] and
-            (__ \ "personAddressLine2").write[String] and
+            (__ \ "personAddressLine2").writeNullable[String] and
             (__ \ "personAddressLine3").writeNullable[String] and
             (__ \ "personAddressLine4").writeNullable[String] and
             (__ \ "personAddressPostCode").write[String]
@@ -72,7 +72,7 @@ object PersonAddress {
       case a: PersonAddressNonUK =>
         (
           (__ \ "personAddressLine1").write[String] and
-            (__ \ "personAddressLine2").write[String] and
+            (__ \ "personAddressLine2").writeNullable[String] and
             (__ \ "personAddressLine3").writeNullable[String] and
             (__ \ "personAddressLine4").writeNullable[String] and
             (__ \ "personAddressCountry").write[String]

@@ -23,7 +23,7 @@ sealed trait RegisteredOffice
 
 case class RegisteredOfficeUK(
                                addressLine1: String,
-                               addressLine2: String,
+                               addressLine2: Option[String] = None,
                                addressLine3: Option[String] = None,
                                addressLine4: Option[String] = None,
                                postCode: String,
@@ -32,7 +32,7 @@ case class RegisteredOfficeUK(
 
 case class RegisteredOfficeNonUK(
                                   addressLine1: String,
-                                  addressLine2: String,
+                                  addressLine2: Option[String] = None,
                                   addressLine3: Option[String] = None,
                                   addressLine4: Option[String] = None,
                                   country: String,
@@ -49,7 +49,7 @@ object RegisteredOffice {
       (__ \ "postCode").read[String] andKeep
         (
           (__ \ "addressLine1").read[String] and
-            (__ \ "addressLine2").read[String] and
+            (__ \ "addressLine2").readNullable[String] and
             (__ \ "addressLine3").readNullable[String] and
             (__ \ "addressLine4").readNullable[String] and
             (__ \ "postCode").read[String] and
@@ -58,7 +58,7 @@ object RegisteredOffice {
       ) orElse
       (
         (__ \ "addressLineNonUK1").read[String] and
-          (__ \ "addressLineNonUK2").read[String] and
+          (__ \ "addressLineNonUK2").readNullable[String] and
           (__ \ "addressLineNonUK3").readNullable[String] and
           (__ \ "addressLineNonUK4").readNullable[String] and
           (__ \ "country").read[String] and

@@ -27,7 +27,7 @@ class CorpAndBodyLlpsSpec extends PlaySpec {
 
     "be convertible to CorpAndBodyLlps DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", SoleProprietor, Address("line_1", "line_2", None, None, None, "UK"), "safeId")
+      val reviewDetails = ReviewDetails("businessName", SoleProprietor, Address("line_1", Some("line_2"), None, None, None, "UK"), "safeId")
 
       val companyRegistrationNumber = CompanyRegistrationNumber("123456789")
 

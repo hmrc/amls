@@ -34,7 +34,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
       val data = OwnBusinessPremisesDetails(
         Some("OwnBusinessTradingName"),
         Address("OwnBusinessAddressLine1",
-          "OwnBusinessAddressLine2",
+          Some("OwnBusinessAddressLine2"),
           Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),
           "GB",
@@ -106,7 +106,7 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
       val data = OwnBusinessPremisesDetails(
         Some("OwnBusinessTradingName"),
         Address("OwnBusinessAddressLine1",
-          "OwnBusinessAddressLine2",
+          Some("OwnBusinessAddressLine2"),
           Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),
           "GB",

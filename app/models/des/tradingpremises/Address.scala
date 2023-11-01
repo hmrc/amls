@@ -18,7 +18,7 @@ package models.des.tradingpremises
 
 import play.api.libs.json.Json
 
-case class Address(addressLine1: String, addressLine2: String, addressLine3: Option[String], addressLine4: Option[String], country: String,
+case class Address(addressLine1: String, addressLine2: Option[String], addressLine3: Option[String], addressLine4: Option[String], country: String,
                    postcode: Option[String], addressChangeDate: Option[String] = None)
 
 object Address {
@@ -43,7 +43,7 @@ object Address {
     }
 
     address.copy(addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
-      addressLine2 = removeFromLine(Some(address.addressLine2)).getOrElse(""),
+      addressLine2 = removeFromLine(address.addressLine2),
       addressLine3 = removeFromLine(address.addressLine3),
       addressLine4 = removeFromLine(address.addressLine4)
     )

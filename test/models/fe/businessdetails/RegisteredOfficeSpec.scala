@@ -26,7 +26,7 @@ class RegisteredOfficeSpec extends PlaySpec {
 
     "json read the given UK address" in {
 
-      val data = RegisteredOfficeUK("38B", "Longbenton", Some("line 1"), None, "NE7 7DX")
+      val data = RegisteredOfficeUK("38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
       val jsonObj = Json.obj(
         "addressLine1" -> "38B",
         "addressLine2" -> "Longbenton",
@@ -40,7 +40,7 @@ class RegisteredOfficeSpec extends PlaySpec {
 
     "json read the given non UK address" in {
 
-      val data = RegisteredOfficeNonUK("38B", "some place", Some("line 1"), None, "AR")
+      val data = RegisteredOfficeNonUK("38B", Some("some place"), Some("line 1"), None, "AR")
       val jsonObj = Json.obj(
         "addressLineNonUK1" -> "38B",
         "addressLineNonUK2" -> "some place",
@@ -53,7 +53,7 @@ class RegisteredOfficeSpec extends PlaySpec {
     }
 
     "write correct value to json" in {
-      val data = RegisteredOfficeUK("38B", "Longbenton", Some("line 1"), None, "NE7 7DX")
+      val data = RegisteredOfficeUK("38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
 
       Json.toJson(data: RegisteredOffice) must
         be(Json.obj(
@@ -66,7 +66,7 @@ class RegisteredOfficeSpec extends PlaySpec {
     }
 
     "write correct value to json for NonUk Registered office" in {
-      val data = RegisteredOfficeNonUK("38B", "some place", Some("line 1"), None, "AR")
+      val data = RegisteredOfficeNonUK("38B", Some("some place"), Some("line 1"), None, "AR")
 
       Json.toJson(data: RegisteredOffice) must
         be(Json.obj(
@@ -79,8 +79,8 @@ class RegisteredOfficeSpec extends PlaySpec {
     }
 
     "convert des model to frontend ATB model" in {
-      val desModel = DesAddress("addr1", "addr2", None, None, "UK", None)
-      RegisteredOffice.conv(desModel) must be(RegisteredOfficeNonUK("addr1", "addr2", None, None, "UK"))
+      val desModel = DesAddress("addr1", Some("addr2"), None, None, "UK", None)
+      RegisteredOffice.conv(desModel) must be(RegisteredOfficeNonUK("addr1", Some("addr2"), None, None, "UK"))
     }
   }
 }

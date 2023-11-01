@@ -121,7 +121,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   "current address:convert des model to frontend model for a UK address" in {
 
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
-      PersonAddressUK("CurrentAddressLine1", "CurrentAddressLine2",
+      PersonAddressUK("CurrentAddressLine1", Some("CurrentAddressLine2"),
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
         "AA1 1AA"), ThreeYearsPlus)), None, None)
     ResponsiblePersonAddressHistory.conv(responsiblePersonsCurrent) must be(Some(convertedModel))
@@ -129,7 +129,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   "current address:convert des model to frontend model for a non-UK address" in {
 
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
-      PersonAddressNonUK("CurrentAddressLine1", "CurrentAddressLine2",
+      PersonAddressNonUK("CurrentAddressLine1", Some("CurrentAddressLine2"),
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
         "AD"), ThreeYearsPlus)), None, None)
     ResponsiblePersonAddressHistory.conv(responsiblePersonsCurrentNonUK) must be(Some(convertedModel))
@@ -138,13 +138,13 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   "additional address:convert des model to frontend model" in {
 
     val convertedModel = ResponsiblePersonAddressHistory(Some(ResponsiblePersonAddress(
-      PersonAddressUK("CurrentAddressLine1", "CurrentAddressLine2",
+      PersonAddressUK("CurrentAddressLine1", Some("CurrentAddressLine2"),
         Some("CurrentAddressLine3"), Some("CurrentAddressLine4"),
         "AA1 1AA"), SixToElevenMonths)), Some(ResponsiblePersonAddress(
-      PersonAddressUK("AdditionalAddressLine1", "AdditionalAddressLine2",
+      PersonAddressUK("AdditionalAddressLine1", Some("AdditionalAddressLine2"),
         Some("AdditionalAddressLine3"), Some("AdditionalAddressLine4"),
         "AdditionalAddressPostcode"), ZeroToFiveMonths)), Some(ResponsiblePersonAddress(
-      PersonAddressNonUK("AdditionalExtraAddressLine1", "AdditionalExtraAddressLine2",
+      PersonAddressNonUK("AdditionalExtraAddressLine1", Some("AdditionalExtraAddressLine2"),
         Some("AdditionalExtraAddressLine3"), Some("AdditionalExtraAddressLine4"),
         "AD"), OneToThreeYears)))
 
@@ -156,18 +156,18 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
     ResponsiblePersonAddressHistory.conv(responsiblePersonsNone) must be(None)
   }
 
-  val DefaultCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressUK("Line 1", "Line 2", None, None, "AA1 1AA"), ZeroToFiveMonths)
-  val DefaultAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "ES"), SixToElevenMonths)
-  val DefaultAdditionalExtraAddress = ResponsiblePersonAddress(PersonAddressUK("Line 1", "Line 2", None, None, "NE1234"), OneToThreeYears)
+  val DefaultCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressUK("Line 1", Some("Line 2"), None, None, "AA1 1AA"), ZeroToFiveMonths)
+  val DefaultAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "ES"), SixToElevenMonths)
+  val DefaultAdditionalExtraAddress = ResponsiblePersonAddress(PersonAddressUK("Line 1", Some("Line 2"), None, None, "NE1234"), OneToThreeYears)
 
-  val NewCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "ES"), ZeroToFiveMonths, None)
-  val NewAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "FR"), ZeroToFiveMonths)
-  val NewAdditionalExtraAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", "Line 2", None, None, "UK"), SixToElevenMonths)
+  val NewCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "ES"), ZeroToFiveMonths, None)
+  val NewAdditionalAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "FR"), ZeroToFiveMonths)
+  val NewAdditionalExtraAddress = ResponsiblePersonAddress(PersonAddressNonUK("Line 1", Some("Line 2"), None, None, "UK"), SixToElevenMonths)
 
   val currentAddressDetails = CurrentAddress(
     AddressWithChangeDate(
       "CurrentAddressLine1",
-      "CurrentAddressLine2",
+      Some("CurrentAddressLine2"),
       Some("CurrentAddressLine3"),
       Some("CurrentAddressLine4"),
       "AD",
@@ -177,7 +177,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   val currentAddressDetailsNonUK = CurrentAddress(
     AddressWithChangeDate(
       "CurrentAddressLine1",
-      "CurrentAddressLine2",
+      Some("CurrentAddressLine2"),
       Some("CurrentAddressLine3"),
       Some("CurrentAddressLine4"),
       "AD",
@@ -188,7 +188,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   val AdditionalAddressDetails = AddressUnderThreeYears(
     Address(
       "AdditionalAddressLine1",
-      "AdditionalAddressLine2",
+      Some("AdditionalAddressLine2"),
       Some("AdditionalAddressLine3"),
       Some("AdditionalAddressLine4"),
       "AD",
@@ -199,7 +199,7 @@ class ResponsiblePersonAddressHistorySpec extends PlaySpec {
   val AdditionalExtraAddressDetails = AddressUnderThreeYears(
     Address(
       "AdditionalExtraAddressLine1",
-      "AdditionalExtraAddressLine2",
+      Some("AdditionalExtraAddressLine2"),
       Some("AdditionalExtraAddressLine3"),
       Some("AdditionalExtraAddressLine4"),
       "AD",

@@ -30,7 +30,7 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
 
       val businessActivities = BusinessActivities(Set(MoneyServiceBusiness,
         TrustAndCompanyServices, TelephonePaymentService, EstateAgentBusinessService, BillPaymentServices))
-      val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+      val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
       val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
       val model = BusinessMatching(reviewDetails, businessActivities, None, None)
 
@@ -39,7 +39,7 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
 
     "convert when no front model is empty" in {
       val businessActivities = BusinessActivities(Set.empty)
-      val businessAddress = Address("line1", "line2", Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+      val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
       val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
       val model = BusinessMatching(reviewDetails, businessActivities, None, None)
 

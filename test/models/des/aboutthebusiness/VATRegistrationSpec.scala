@@ -25,7 +25,7 @@ class VATRegistrationSpec extends PlaySpec {
   "VATRegistration" must {
 
     val Contact = ContactingYou("123456789", "afa@test.com")
-    val Office = RegisteredOfficeUK("1", "2", None, None, "NE3 0QQ")
+    val Office = RegisteredOfficeUK("1", Some("2"), None, None, "NE3 0QQ")
 
     "serialise VATRegistration model with option yes" in {
       val vat = VATRegistration(true, Some("12345678"))
