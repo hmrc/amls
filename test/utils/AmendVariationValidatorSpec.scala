@@ -17,17 +17,18 @@
 package utils
 
 import models.DefaultDesValues
+import models.des.tradingpremises._
+import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.aboutthebusiness.{Address, AlternativeAddress, BusinessContactDetails, PreviouslyRegisteredMLRView}
 import models.des.aboutyou.{AboutYouRelease7, IndividualDetails, RoleForTheBusiness, RolesWithinBusiness}
-import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
 import models.des.bankdetails.{BankAccountView, BankDetailsView, ukAccountView}
-import models.des.businessactivities._
+import models.des.businessactivities.{AdvisorNameAddress, AmpServices, AmpServicesOther, AspServicesOffered, AuditableRecordsDetails, BusinessActivities, BusinessActivitiesAll, BusinessActivityDetails, EabServices, ExpectedAMLSTurnover, FormalRiskAssessmentDetails, FranchiseDetails, HowGoodsAreSold, HvdAlcoholTobacco, HvdGoodsSold, MlrActivitiesAppliedFor, MlrAdvisor, MlrAdvisorDetails, MsbServicesCarriedOut, NonUkResidentCustDetails, RiskAssessmentFormat, ServicesforRegOff, TcspServicesOffered, TransactionRecordingMethod}
 import models.des.businessdetails.{BusinessDetails, BusinessType}
 import models.des.hvd.{Hvd, HvdFromUnseenCustDetails, ReceiptMethods}
-import models.des.msb._
-import models.des.responsiblepeople._
-import models.des.tradingpremises._
-import models.des._
+import models.des.msb.{CountriesList, CurrSupplyToCust, CurrencySourcesR7, CurrencyWholesalerDetails, IpspServicesDetails, MSBBankDetails, MoneyServiceBusiness, MsbAllDetails, MsbCeDetailsR7, MsbMtDetails}
+import models.des.responsiblepeople.{AddressWithChangeDate, ContactCommDetails, CurrentAddress, IdDetail, NameDetails, NationalityDetails, PersonName, PositionInBusiness, RPExtra, RegDetails, ResponsiblePersons, SoleProprietor, UkResident}
+import models.des.tradingpremises.{Msb, OwnBusinessPremises, OwnBusinessPremisesDetails, TradingPremises}
+import models.des.{AmendVariationRequest, ChangeIndicators, Declaration, DesConstants, ExtraFields}
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
 
