@@ -25,10 +25,10 @@ import models.des.AmendVariationRequest
 import play.api.libs.json.{JsObject, Json}
 
 import java.io.InputStream
+import javax.inject.Singleton
 
+@Singleton
 class AmendVariationValidator {
-
-  val validator: SchemaValidator = SchemaValidator()
 
   def validateResult(request: AmendVariationRequest): Either[collection.Seq[JsObject], AmendVariationRequest] = {
     // $COVERAGE-OFF$
@@ -48,7 +48,7 @@ class AmendVariationValidator {
 
     result match {
       case false =>
-        val validationResult = validator.validate(Json.fromJson[SchemaType](Json.parse(lines)).get, Json.toJson(request)).asEither
+        val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(lines)).get, Json.toJson(request)).asEither
 
         val reasons: collection.Seq[JsObject] = validationResult match {
           case Left(validationErrors) => validationErrors.map {
