@@ -21,20 +21,18 @@ import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
-import models.des.SubscriptionRequest
-import play.api.libs.json.{JsObject, JsResult, JsValue, Json}
+import models.des.AmendVariationRequest
+import play.api.libs.json.{JsObject, Json}
 
 import java.io.InputStream
 import javax.inject.Singleton
-import scala.util.Using
-import scala.io.Source
 
 @Singleton
-class SubscriptionRequestValidator {
+class AmendVariationValidator {
 
-  def validateRequest(request: SubscriptionRequest): Either[collection.Seq[JsObject], SubscriptionRequest] = {
-
-    val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
+  def validateResult(request: AmendVariationRequest): Either[collection.Seq[JsObject], AmendVariationRequest] = {
+    // $COVERAGE-OFF$
+    val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
     val lines = scala.io.Source.fromInputStream(stream).getLines.mkString
 
     lazy val jsonMapper = new ObjectMapper()
@@ -50,7 +48,7 @@ class SubscriptionRequestValidator {
 
     result match {
       case false =>
-      val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(lines)).get, Json.toJson(request)).asEither
+        val validationResult = SchemaValidator().validate(Json.fromJson[SchemaType](Json.parse(lines)).get, Json.toJson(request)).asEither
 
         val reasons: collection.Seq[JsObject] = validationResult match {
           case Left(validationErrors) => validationErrors.map {

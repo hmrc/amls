@@ -34,7 +34,7 @@ import play.api.libs.json.{JsResult, JsValue}
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.ApiRetryHelper
+import utils.{AmendVariationValidator, ApiRetryHelper}
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -48,7 +48,7 @@ class AmendVariationServiceSpec extends PlaySpec
 
   val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
-  val feAmendVariationResponse = AmendVariationResponse(
+  val feAmendVariationResponse: AmendVariationResponse = AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
     etmpFormBundleNumber = "111111",
     1301737.96,
@@ -68,10 +68,11 @@ class AmendVariationServiceSpec extends PlaySpec
     mock(classOf[SubscriptionStatusDESConnector]),
     mock(classOf[ViewDESConnector]),
     mock(classOf[AuditConnector]),
+    mock(classOf[AmendVariationValidator]),
     feeRepo,
     mock(classOf[ApplicationConfig])
   ) {
-    override private[services] def validateResult(request: AmendVariationRequest) = successValidate
+    def validateResult: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
     override private[services] def amendVariationResponse(
                                                            request: AmendVariationRequest,
@@ -138,11 +139,11 @@ class AmendVariationServiceSpec extends PlaySpec
   implicit val hc = HeaderCarrier()
 
   "AmendVariationService" must {
-
+    val request = mock(classOf[des.AmendVariationRequest])
 
     when {
-      successValidate.isSuccess
-    } thenReturn true
+      avs.amendVariationValidator.validateResult(request)
+    } thenReturn Right(request)
 
     when {
       avs.viewStatusDesConnector.status(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any(), any())
@@ -155,7 +156,6 @@ class AmendVariationServiceSpec extends PlaySpec
     } thenReturn None
 
     "return a successful response" in {
-      val request = mock(classOf[des.AmendVariationRequest])
       val tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, None)), premises)
 
       when {
