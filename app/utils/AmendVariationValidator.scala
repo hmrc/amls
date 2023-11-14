@@ -16,14 +16,13 @@
 
 package utils
 
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
+import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import models.des.AmendVariationRequest
 import play.api.libs.json.{JsObject, Json}
-import scalaz.Scalaz.ToFunctorOpsUnapply
 
 import java.io.InputStream
 
