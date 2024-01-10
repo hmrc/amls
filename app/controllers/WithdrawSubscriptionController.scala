@@ -19,7 +19,7 @@ package controllers
 import connectors.WithdrawSubscriptionConnector
 import models.des.WithdrawSubscriptionRequest
 import play.api.libs.json._
-import play.api.mvc.{ControllerComponents, PlayBodyParsers}
+import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
@@ -34,20 +34,19 @@ class WithdrawSubscriptionController @Inject()(connector: WithdrawSubscriptionCo
                                               (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
                                                extends BackendController(cc) with ControllerHelper {
 
-  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
+  def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] = authAction.async(bodyParsers.json) {
     implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-        case Some(_) => {
+        case Some(_) =>
           Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
             case JsSuccess(body, _) =>
               connector.withdrawal(amlsRegistrationNumber, body) map {
                 response =>
                   Ok(Json.toJson(response))
               }
-            case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+            case JsError(errors) =>
               Future.successful(BadRequest(toError(errors)))
           }
-        }
         case None =>
           Future.successful {
             BadRequest(toError("Invalid amlsRegistrationNumber"))

@@ -16,7 +16,7 @@
 
 package models.des
 
-import play.api.libs.json.Reads
+import play.api.libs.json.Format
 
 case class ChangeIndicators(businessDetails: Boolean = false,
                             businessAddress: Boolean = false,
@@ -37,7 +37,7 @@ case class ChangeIndicators(businessDetails: Boolean = false,
 
 object ChangeIndicators {
 
-  implicit def format = {
+  implicit def format: Format[ChangeIndicators] = {
 
       import play.api.libs.functional.syntax._
       import play.api.libs.json.Reads._
@@ -74,7 +74,7 @@ object ChangeIndicators {
           (__ \ "eab" \ "eab").write[Boolean] and
           (__ \ "amp" \ "amp").write[Boolean] and
           (__ \ "responsiblePersons").write[Boolean] and
-          (__ \ "filingIndividual").write[Boolean])(unlift(ChangeIndicators.unapply _))
+          (__ \ "filingIndividual").write[Boolean])(unlift(ChangeIndicators.unapply))
 
       Format(jsonReads,jsonWrites)
     }

@@ -17,8 +17,6 @@
 package services
 
 import audit.SubscriptionValidationFailedEvent
-import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import config.ApplicationConfig
 import connectors.{EnrolmentStoreConnector, GovernmentGatewayAdminConnector, SubscribeDESConnector}
 import exceptions.{DuplicateSubscriptionException, HttpExceptionBody, HttpStatusException}
@@ -27,14 +25,13 @@ import models.enrolment.AmlsEnrolmentKey
 import models.fe.SubscriptionResponse
 import models.{Fees, KnownFact, KnownFactsForService}
 import play.api.Logging
-import play.api.libs.json.{JsObject, JsResult, JsValue, Json}
+import play.api.libs.json.JsObject
 import play.mvc.Http.Status._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, SubscriptionRequestValidator}
 
-import java.io.InputStream
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 

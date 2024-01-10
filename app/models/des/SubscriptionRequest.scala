@@ -64,7 +64,7 @@ object SubscriptionRequest {
   final type Outgoing = SubscriptionRequest
   final type Incoming = fe.SubscriptionRequest
 
-  implicit def format =
+  implicit def format: OFormat[Outgoing] =
     Json.format[SubscriptionRequest]
 
   // scalastyle:off

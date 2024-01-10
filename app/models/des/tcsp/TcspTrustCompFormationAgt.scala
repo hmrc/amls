@@ -17,13 +17,13 @@
 package models.des.tcsp
 
 import models.fe.tcsp._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class TcspTrustCompFormationAgt(onlyOffTheShelfCompsSold: Boolean = false, complexCorpStructureCreation: Boolean = false)
 
 object TcspTrustCompFormationAgt {
 
-  implicit val format = Json.format[TcspTrustCompFormationAgt]
+  implicit val format: OFormat[TcspTrustCompFormationAgt] = Json.format[TcspTrustCompFormationAgt]
 
   implicit def conv(tcsp: Tcsp): TcspTrustCompFormationAgt = {
 

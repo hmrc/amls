@@ -17,13 +17,13 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.{CountriesList, MsbMtDetails}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class MostTransactions(mostTransactionsCountries: Seq[String])
 
 object MostTransactions {
 
-  implicit val format = Json.format[MostTransactions]
+  implicit val format: OFormat[MostTransactions] = Json.format[MostTransactions]
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[MostTransactions] = {
     msbMt flatMap { m =>

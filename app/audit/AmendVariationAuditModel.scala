@@ -18,7 +18,7 @@ package audit
 
 import models.des.{AmendVariationRequest, AmendVariationResponse, ChangeIndicators}
 import models.des.businessdetails.BusinessType
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AmendVariationAuditModel(amlsRegistrationNumber: String,
                                     response: AmendVariationResponse,
@@ -29,6 +29,6 @@ case class AmendVariationAuditModel(amlsRegistrationNumber: String,
 
 object AmendVariationAuditModel {
 
-  implicit val format = Json.format[AmendVariationAuditModel]
+  implicit val format: OFormat[AmendVariationAuditModel] = Json.format[AmendVariationAuditModel]
 
 }

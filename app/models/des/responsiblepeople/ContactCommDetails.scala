@@ -16,13 +16,13 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import models.fe.responsiblepeople.ContactDetails
 
 case class ContactCommDetails(contactEmailAddress: String, primaryTeleNo: String, secondaryTeleNo: Option[String])
 
 object ContactCommDetails {
-  implicit val format = Json.format[ContactCommDetails]
+  implicit val format: OFormat[ContactCommDetails] = Json.format[ContactCommDetails]
 
   implicit def conv(dtls: Option[ContactDetails]): Option[ContactCommDetails] = {
     dtls match {

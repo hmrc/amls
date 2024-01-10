@@ -30,7 +30,7 @@ import models.fe.tradingpremises.TradingPremises
 import models.fe.businessdetails.BusinessDetails
 import models.fe.bankdetails.BankDetails
 import models.fe.eab.Eab
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionRequest(
                                 businessMatchingSection: BusinessMatching,
@@ -51,6 +51,6 @@ case class SubscriptionRequest(
 
 object SubscriptionRequest {
 
-  implicit val format = Json.format[SubscriptionRequest]
+  implicit val format: OFormat[SubscriptionRequest] = Json.format[SubscriptionRequest]
 
 }

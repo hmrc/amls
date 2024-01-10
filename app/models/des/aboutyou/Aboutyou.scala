@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
                     employedWithinBusiness: Boolean,
@@ -28,7 +28,7 @@ case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
 }
 
 object Aboutyou {
-  implicit val format = Json.format[Aboutyou]
+  implicit val format: OFormat[Aboutyou] = Json.format[Aboutyou]
 
   implicit def convertFromRelease7(aboutYouRelease7: AboutYouRelease7): Aboutyou = {
 

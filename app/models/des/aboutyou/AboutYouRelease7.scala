@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AboutYouRelease7(individualDetails: Option[IndividualDetails] = None,
                             employedWithinBusiness: Boolean,
@@ -24,7 +24,7 @@ case class AboutYouRelease7(individualDetails: Option[IndividualDetails] = None,
                             roleForTheBusiness: Option[RoleForTheBusiness] = None)
 
 object AboutYouRelease7 {
-  implicit val format = Json.format[AboutYouRelease7]
+  implicit val format: OFormat[AboutYouRelease7] = Json.format[AboutYouRelease7]
 
 
   private def rolesWithinBusinessConvert(person: models.fe.declaration.AddPerson): models.des.aboutyou.RolesWithinBusiness = {

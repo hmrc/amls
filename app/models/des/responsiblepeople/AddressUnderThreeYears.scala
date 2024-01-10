@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AddressUnderThreeYears(address: Address)
 
 object AddressUnderThreeYears {
-  implicit val format = Json.format[AddressUnderThreeYears]
+  implicit val format: OFormat[AddressUnderThreeYears] = Json.format[AddressUnderThreeYears]
 
   implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonAddress]): Option[AddressUnderThreeYears] = {
     addrHistory match {

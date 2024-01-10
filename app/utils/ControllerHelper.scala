@@ -22,7 +22,7 @@ trait ControllerHelper {
 
   val amlsRegNoRegex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  def toError(errors: Seq[(JsPath, Seq[JsonValidationError])]) = Json.obj(
+  def toError(errors: collection.Seq[(JsPath, collection.Seq[JsonValidationError])]) = Json.obj(
     "errors" -> (errors map {
       case (path, error) =>
         Json.obj(

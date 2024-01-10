@@ -17,13 +17,13 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.{MlrActivitiesAppliedFor, MlrAdvisor}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AccountantForAMLSRegulations(accountantForAMLSRegulations: Boolean)
 
 object AccountantForAMLSRegulations {
 
-  implicit val formats = Json.format[AccountantForAMLSRegulations]
+  implicit val formats: OFormat[AccountantForAMLSRegulations] = Json.format[AccountantForAMLSRegulations]
 
   /**
     * Converts an MLR Advisor instance into AccountantForAMLSRegulations.
@@ -42,5 +42,6 @@ object AccountantForAMLSRegulations {
       case (None, Some(activities)) if !activities.asp => Some(AccountantForAMLSRegulations(false))
       case (None, Some(activities)) if activities.asp => None
       case (Some(advisor), _) => Some(AccountantForAMLSRegulations(advisor.doYouHaveMlrAdvisor))
+      case _ => None
     }
 }

@@ -50,9 +50,9 @@ case class ReadStatusResponse(
 
 object ReadStatusResponse {
 
-  val dateTimeFormat = DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
+  val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
 
-  implicit val readsLocalDateTime = Reads[LocalDateTime](js =>
+  implicit val readsLocalDateTime: Reads[LocalDateTime] = Reads[LocalDateTime](js =>
     js.validate[String].map[LocalDateTime](dtString =>
       LocalDateTime.parse(dtString, dateTimeFormat)
     )
@@ -62,6 +62,6 @@ object ReadStatusResponse {
     def writes(dateTime: LocalDateTime): JsValue = JsString(dateTimeFormat.format(dateTime.atOffset(ZoneOffset.UTC)))
   }
 
-  implicit val format = Json.format[ReadStatusResponse]
+  implicit val format: OFormat[ReadStatusResponse] = Json.format[ReadStatusResponse]
 
 }

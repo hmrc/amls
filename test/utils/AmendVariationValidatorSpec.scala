@@ -36,7 +36,7 @@ class AmendVariationValidatorSpec extends PlaySpec with EitherValues {
 
   val amendVariationValidator = new AmendVariationValidator
 
-  implicit val ackref = new AckRefGenerator {
+  implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 

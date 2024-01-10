@@ -17,7 +17,7 @@
 package models.des.businessactivities
 
 import models.fe
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BusinessActivities(
                                mlrActivitiesAppliedFor: Option[MlrActivitiesAppliedFor] = None,
@@ -32,7 +32,7 @@ case class BusinessActivities(
                                all: Option[BusinessActivitiesAll] = None)
 
 object BusinessActivities {
-  implicit val format = Json.format[BusinessActivities]
+  implicit val format: OFormat[BusinessActivities] = Json.format[BusinessActivities]
 
   implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
     BusinessActivities(

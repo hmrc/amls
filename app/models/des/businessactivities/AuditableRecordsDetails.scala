@@ -17,12 +17,12 @@
 package models.des.businessactivities
 
 import models.fe.businessactivities.{BusinessActivities => FEBusinessActivities, _}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class TransactionRecordingMethod(manual: Boolean = false, spreadsheet: Boolean = false, commercialPackage: Boolean = false, commercialPackageName: Option[String] = None)
 
 object TransactionRecordingMethod {
-  implicit val format = Json.format[TransactionRecordingMethod]
+  implicit val format: OFormat[TransactionRecordingMethod] = Json.format[TransactionRecordingMethod]
 
   implicit def convert(record: Set[TransactionType]): Option[TransactionRecordingMethod] = {
     val (digiTrType, value) = record.foldLeft[(Boolean, Option[String])]((false, None)) {
@@ -39,7 +39,7 @@ case class AuditableRecordsDetails(detailedRecordsKept: String, transactionRecor
 
 object AuditableRecordsDetails {
 
-  implicit val format = Json.format[AuditableRecordsDetails]
+  implicit val format: OFormat[AuditableRecordsDetails] = Json.format[AuditableRecordsDetails]
 
   def boolToString(b: Option[Boolean]): String = if (b.getOrElse(false)) "Yes" else "No"
 

@@ -2993,7 +2993,7 @@ object DesConstants {
 
   val valViewModelNoEabSection = testBusinessActivitiesNoEab
 
-  implicit val ackref = new AckRefGenerator {
+  implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 

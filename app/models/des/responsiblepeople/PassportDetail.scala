@@ -16,10 +16,10 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PassportDetail (ukPassport: Boolean, passportNumber: PassportNum)
 
 object PassportDetail {
-  implicit val format = Json.format[PassportDetail]
+  implicit val format: OFormat[PassportDetail] = Json.format[PassportDetail]
 }

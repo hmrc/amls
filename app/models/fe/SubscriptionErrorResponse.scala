@@ -16,10 +16,10 @@
 
 package models.fe
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionErrorResponse(amlsRegNumber: String, message: String)
 
 object SubscriptionErrorResponse {
-  implicit val format = Json.format[SubscriptionErrorResponse]
+  implicit val format: OFormat[SubscriptionErrorResponse] = Json.format[SubscriptionErrorResponse]
 }

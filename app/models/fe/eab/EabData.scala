@@ -16,7 +16,7 @@
 
 package models.fe.eab
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class EabData(eabServicesProvided: List[String],
                          dateOfChange: Option[String],
@@ -29,5 +29,5 @@ final case class EabData(eabServicesProvided: List[String],
 }
 
 object EabData {
-  implicit val format = Json.format[EabData]
+  implicit val format: OFormat[EabData] = Json.format[EabData]
 }

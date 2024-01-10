@@ -17,7 +17,7 @@
 package models.fe.hvd
 
 import models.des.SubscriptionView
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 
 case class Hvd(cashPayment: Option[CashPayment] = None,
@@ -34,7 +34,7 @@ case class Hvd(cashPayment: Option[CashPayment] = None,
 
 object Hvd {
 
-  implicit val format = Json.format[Hvd]
+  implicit val format: OFormat[Hvd] = Json.format[Hvd]
 
   implicit def default(hvd: Option[Hvd]): Hvd =
     hvd.getOrElse(Hvd())

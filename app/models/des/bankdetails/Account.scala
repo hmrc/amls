@@ -16,7 +16,7 @@
 
 package models.des.bankdetails
 
-import play.api.libs.json.{Reads, Writes, Json}
+import play.api.libs.json.{Json, Reads, Writes}
 
 sealed trait Account
 
@@ -31,14 +31,13 @@ object Account {
 
         ) (ukAccount.apply _)
 
-      case false => {
+      case false =>
         (__ \ "iban").read[String] fmap IBANNumber.apply
         (__ \ "bankAccountNumber").read[String] fmap AccountNumber.apply
-      }
     }
   }
 
-  implicit val jsonWrites = Writes[Account] {
+  implicit val jsonWrites: Writes[Account] = Writes[Account] {
     case m: ukAccount =>
       Json.obj(
         "ukAccount" -> Json.obj(

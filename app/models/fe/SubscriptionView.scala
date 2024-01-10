@@ -30,7 +30,7 @@ import models.fe.responsiblepeople.ResponsiblePeople
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionView(
                              etmpFormBundleNumber: String,
@@ -53,7 +53,7 @@ case class SubscriptionView(
 
 object SubscriptionView {
 
-  implicit val format = Json.format[SubscriptionView]
+  implicit val format: OFormat[Outgoing] = Json.format[SubscriptionView]
 
   final type Outgoing = SubscriptionView
   final type Incoming = models.des.SubscriptionView

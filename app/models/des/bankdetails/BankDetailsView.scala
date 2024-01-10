@@ -16,13 +16,13 @@
 
 package models.des.bankdetails
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BankDetailsView(noOfMlrBankAccounts: Option[String], bankAccounts: Option[Seq[BankAccountView]])
 
 object BankDetailsView {
 
-  implicit val format = Json.format[BankDetailsView]
+  implicit val format: OFormat[BankDetailsView] = Json.format[BankDetailsView]
 
   def emptyToOption(seq: Seq[BankAccountView]): Option[Seq[BankAccountView]] =
     seq match {

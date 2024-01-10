@@ -16,10 +16,10 @@
 
 package models.des
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Declaration(declarationFlag: Boolean)
 
 object Declaration {
-  implicit val format = Json.format[Declaration]
+  implicit val format: OFormat[Declaration] = Json.format[Declaration]
 }

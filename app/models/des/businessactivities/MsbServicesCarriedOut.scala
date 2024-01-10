@@ -17,13 +17,13 @@
 package models.des.businessactivities
 
 import models.fe.businessmatching._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class MsbServicesCarriedOut (mt: Boolean, ce: Boolean, smdcc: Boolean, nonSmdcc: Boolean, fx: Boolean)
 
 object MsbServicesCarriedOut {
 
-  implicit val format =  Json.format[MsbServicesCarriedOut]
+  implicit val format: OFormat[MsbServicesCarriedOut] =  Json.format[MsbServicesCarriedOut]
 
   implicit def conv(feModel: BusinessMatching): Option[MsbServicesCarriedOut] = {
     feModel.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices)

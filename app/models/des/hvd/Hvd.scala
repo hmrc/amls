@@ -19,7 +19,6 @@ package models.des.hvd
 import models.fe.hvd.PercentageOfCashPaymentOver15000._
 import models.fe.hvd._
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
 
 case class Hvd(
                 cashPaymentsAccptOvrThrshld: Boolean,
@@ -32,7 +31,7 @@ case class Hvd(
 
 object Hvd {
 
-  implicit val format = Json.format[Hvd]
+  implicit val format: OFormat[Hvd] = Json.format[Hvd]
 
   private val Zero = 0
   private val Twenty = 20

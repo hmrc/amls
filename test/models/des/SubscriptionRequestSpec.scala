@@ -39,7 +39,7 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
   }
 
-  implicit val ackref = new AckRefGenerator {
+  implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 

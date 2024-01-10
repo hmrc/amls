@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
 final case class ApprovalFlags(hasAlreadyPassedFitAndProper: Option[Boolean] = None, hasAlreadyPaidApprovalCheck: Option[Boolean] = None)
 
@@ -42,5 +42,5 @@ object ApprovalFlags {
       ) (unlift(ApprovalFlags.unapply))
   }
 
-  implicit val format = Json.format[ApprovalFlags]
+  implicit val format: OFormat[ApprovalFlags] = Json.format[ApprovalFlags]
 }

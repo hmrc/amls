@@ -16,14 +16,14 @@
 
 package models.des.msb
 
-import models.fe.moneyservicebusiness.{BusinessUseAnIPSPNo, BusinessUseAnIPSPYes, BusinessUseAnIPSP}
-import play.api.libs.json.Json
+import models.fe.moneyservicebusiness.{BusinessUseAnIPSP, BusinessUseAnIPSPNo, BusinessUseAnIPSPYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class IpspServicesDetails(ipspServicesUsed: Boolean, ipspDetails: Option[Seq[IpspDetails]])
 
 object IpspServicesDetails {
 
-  implicit val format = Json.format[IpspServicesDetails]
+  implicit val format: OFormat[IpspServicesDetails] = Json.format[IpspServicesDetails]
 
   implicit def convIpsp(ipsp: Option[BusinessUseAnIPSP]): IpspServicesDetails = {
 

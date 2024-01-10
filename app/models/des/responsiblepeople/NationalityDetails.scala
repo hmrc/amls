@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.{NonUKResidence, ResponsiblePeople, UKResidence}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class NationalityDetails(areYouUkResident: Boolean, idDetails: Option[IdDetail], countryOfBirth: Option[String], nationality: Option[String])
 
 object NationalityDetails {
-  implicit val format = Json.format[NationalityDetails]
+  implicit val format: OFormat[NationalityDetails] = Json.format[NationalityDetails]
 
   implicit def convert(rp: ResponsiblePeople): Option[NationalityDetails] = {
     rp.personResidenceType map { residenceType =>

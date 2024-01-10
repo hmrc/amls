@@ -16,13 +16,13 @@
 
 package models.des.businessactivities
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import models.fe.businessactivities._
 
 case class FranchiseDetails(isBusinessAFranchise: Boolean, franchiserName: Option[Seq[String]])
 
 object FranchiseDetails{
-  implicit val format = Json.format[FranchiseDetails]
+  implicit val format: OFormat[FranchiseDetails] = Json.format[FranchiseDetails]
 
   implicit def convert(franchise:Option[BusinessFranchise]): Option[FranchiseDetails] = {
     franchise match{

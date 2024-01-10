@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -24,6 +24,6 @@ case class ActivityEndDate(endDate: LocalDate)
 
 object ActivityEndDate {
 
-  implicit val format = Json.format[ActivityEndDate]
+  implicit val format: OFormat[ActivityEndDate] = Json.format[ActivityEndDate]
 
 }

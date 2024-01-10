@@ -16,10 +16,10 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class MsbOrTcsp(passedFitAndProperTest: Boolean)
 
 object MsbOrTcsp {
-  implicit val format = Json.format[MsbOrTcsp]
+  implicit val format: OFormat[MsbOrTcsp] = Json.format[MsbOrTcsp]
 }

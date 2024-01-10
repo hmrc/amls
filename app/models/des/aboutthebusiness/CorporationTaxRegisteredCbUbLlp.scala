@@ -16,14 +16,14 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.businessdetails.{CorporationTaxRegisteredNo, CorporationTaxRegisteredYes, CorporationTaxRegistered}
-import play.api.libs.json.Json
+import models.fe.businessdetails.{CorporationTaxRegistered, CorporationTaxRegisteredNo, CorporationTaxRegisteredYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class CorporationTaxRegisteredCbUbLlp(cotaxRegistered: Boolean, ctutr: Option[String])
 
 object CorporationTaxRegisteredCbUbLlp {
 
-  implicit val format = Json.format[CorporationTaxRegisteredCbUbLlp]
+  implicit val format: OFormat[CorporationTaxRegisteredCbUbLlp] = Json.format[CorporationTaxRegisteredCbUbLlp]
 
   implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp] = {
 

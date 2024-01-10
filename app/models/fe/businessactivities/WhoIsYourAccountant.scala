@@ -18,7 +18,6 @@ package models.fe.businessactivities
 
 import models.des.businessactivities.MlrAdvisor
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, Writes, __}
 
 case class WhoIsYourAccountant(accountantsName: String, accountantsTradingName: Option[String], address: AccountantsAddress)
 

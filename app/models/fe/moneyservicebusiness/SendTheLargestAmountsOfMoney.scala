@@ -17,13 +17,13 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.MsbMtDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SendTheLargestAmountsOfMoney(country_1: String, country_2: Option[String] = None, country_3: Option[String] = None)
 
 object SendTheLargestAmountsOfMoney {
 
-  implicit val format = Json.format[SendTheLargestAmountsOfMoney]
+  implicit val format: OFormat[SendTheLargestAmountsOfMoney] = Json.format[SendTheLargestAmountsOfMoney]
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[SendTheLargestAmountsOfMoney] = {
     msbMt match {

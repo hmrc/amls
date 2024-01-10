@@ -25,7 +25,7 @@ final case class Amp(data: AmpData)
 
 object Amp {
 
-  implicit val format = Json.format[Amp]
+  implicit val format: OFormat[Amp] = Json.format[Amp]
 
   implicit def conv(view: SubscriptionView): Option[Amp] = {
     view match {

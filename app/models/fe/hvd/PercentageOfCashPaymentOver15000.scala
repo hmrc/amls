@@ -38,7 +38,7 @@ object PercentageOfCashPaymentOver15000 {
 
   case object Fifth extends PercentageOfCashPaymentOver15000
 
-  implicit val jsonReads = {
+  implicit val jsonReads: Reads[PercentageOfCashPaymentOver15000] = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "percentage").read[String].flatMap[PercentageOfCashPaymentOver15000] {
       case "01" => Reads(_ => JsSuccess(First))
@@ -51,7 +51,7 @@ object PercentageOfCashPaymentOver15000 {
     }
   }
 
-  implicit val jsonWrites = Writes[PercentageOfCashPaymentOver15000] {
+  implicit val jsonWrites: Writes[PercentageOfCashPaymentOver15000] = Writes[PercentageOfCashPaymentOver15000] {
     case First => Json.obj("percentage" -> "01")
     case Second => Json.obj("percentage" -> "02")
     case Third => Json.obj("percentage" -> "03")

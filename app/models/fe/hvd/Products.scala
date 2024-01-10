@@ -88,7 +88,7 @@ object Products {
         case "10" => Reads(_ => JsSuccess(MobilePhones)) map identity[ItemType]
         case "11" => Reads(_ => JsSuccess(Clothing)) map identity[ItemType]
         case "12" =>
-          val test = (JsPath \ "otherDetails").read[String].map(Other.apply _)
+          val test = (JsPath \ "otherDetails").read[String].map(Other.apply)
           test map identity[ItemType]
         case _ =>
           Reads(_ => JsError((JsPath \ "products") -> JsonValidationError("error.invalid")))
@@ -104,7 +104,7 @@ object Products {
       }
     } map Products.apply
 
-  implicit val jsonWrite = Writes[Products] {
+  implicit val jsonWrite: Writes[Products] = Writes[Products] {
     case Products(transactions) =>
       Json.obj(
         "products" -> (transactions map {

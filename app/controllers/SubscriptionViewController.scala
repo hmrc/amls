@@ -20,14 +20,12 @@ import connectors.ViewDESConnector
 import exceptions.HttpStatusException
 import models.fe.SubscriptionView
 import play.api.Logging
-
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.ControllerComponents
+import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -40,7 +38,7 @@ class SubscriptionViewController @Inject()(vdc: ViewDESConnector,
 
   val prefix = "[SubscriptionViewController][get]"
 
-  def view(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def view(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async {
       implicit request =>
         logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")

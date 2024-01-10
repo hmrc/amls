@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import metrics.API8
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 
 class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
     val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {

@@ -43,7 +43,7 @@ class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector
                 response =>
                   Ok(Json.toJson(response))
               }
-            case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+            case JsError(errors) =>
               Future.successful(BadRequest(toError(errors)))
           }
         }

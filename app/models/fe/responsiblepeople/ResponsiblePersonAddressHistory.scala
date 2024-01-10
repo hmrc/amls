@@ -18,7 +18,7 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
 import models.fe.responsiblepeople.TimeAtAddress._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePersonCurrentAddress] = None,
                                            additionalAddress: Option[ResponsiblePersonAddress] = None,
@@ -36,7 +36,7 @@ case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePer
 
 object ResponsiblePersonAddressHistory {
 
-  implicit val format = Json.format[ResponsiblePersonAddressHistory]
+  implicit val format: OFormat[ResponsiblePersonAddressHistory] = Json.format[ResponsiblePersonAddressHistory]
 
   def convTimeAtAddress(timeAt: String): TimeAtAddress = {
     timeAt match {

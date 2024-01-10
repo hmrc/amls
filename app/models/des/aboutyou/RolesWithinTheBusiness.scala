@@ -17,7 +17,7 @@
 package models.des.aboutyou
 
 import models.fe.declaration._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RolesWithinBusiness(beneficialShareholder: Boolean,
                                director: Boolean,
@@ -31,7 +31,7 @@ case class RolesWithinBusiness(beneficialShareholder: Boolean,
                               )
 
 object RolesWithinBusiness {
-  implicit val format = Json.format[RolesWithinBusiness]
+  implicit val format: OFormat[RolesWithinBusiness] = Json.format[RolesWithinBusiness]
 
   def convertWithinBusiness(frontendModel: RoleWithinBusiness): RolesWithinBusiness = {
 

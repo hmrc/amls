@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.ResponsiblePeople
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class OthrNamesOrAliasesDetails(otherNamesOrAliases: Boolean, aliases: Option[Seq[String]])
 
 object OthrNamesOrAliasesDetails {
-  implicit val format = Json.format[OthrNamesOrAliasesDetails]
+  implicit val format: OFormat[OthrNamesOrAliasesDetails] = Json.format[OthrNamesOrAliasesDetails]
 
   def from(person: ResponsiblePeople): Option[OthrNamesOrAliasesDetails] = {
     person.knownBy match {

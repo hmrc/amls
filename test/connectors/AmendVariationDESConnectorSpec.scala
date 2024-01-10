@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.{AmendmentEvent, AmendmentEventFailed, MockAudit}
+import audit.{AmendmentEvent, AmendmentEventFailed}
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator

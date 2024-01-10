@@ -16,7 +16,7 @@
 
 package connectors
 
-import audit.{MockAudit, SubscriptionFailedEvent}
+import audit.SubscriptionFailedEvent
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator

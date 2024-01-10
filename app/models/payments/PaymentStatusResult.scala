@@ -17,10 +17,10 @@
 package models.payments
 
 import models.payapi.PaymentStatus
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OWrites}
 
 case class PaymentStatusResult(amlsRef: String, paymentId: String, currentStatus: PaymentStatus)
 
 object PaymentStatusResult {
-  implicit val writes = Json.writes[PaymentStatusResult]
+  implicit val writes: OWrites[PaymentStatusResult] = Json.writes[PaymentStatusResult]
 }

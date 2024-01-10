@@ -35,7 +35,7 @@ object SalesChannel {
       case _ => JsError((JsPath \ "salesChannels") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonServiceWrites =
+  implicit val jsonServiceWrites: Writes[SalesChannel] =
     Writes[SalesChannel] {
       case Retail => JsString("Retail")
       case Wholesale => JsString("Wholesale")

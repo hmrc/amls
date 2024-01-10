@@ -17,12 +17,12 @@
 package models.fe.businessmatching
 
 import models.des.businessdetails.BusinessDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class TypeOfBusiness(typeOfBusiness: String)
 
 object TypeOfBusiness {
-  implicit val format = Json.format[TypeOfBusiness]
+  implicit val format: OFormat[TypeOfBusiness] = Json.format[TypeOfBusiness]
 
   implicit def conv(desBusinessDetails: BusinessDetails): Option[TypeOfBusiness] = {
     desBusinessDetails.unincorpBody match {

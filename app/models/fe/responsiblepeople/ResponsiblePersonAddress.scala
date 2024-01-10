@@ -22,7 +22,7 @@ object ResponsiblePersonAddress {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[ResponsiblePersonAddress]
+  implicit val format: OFormat[ResponsiblePersonAddress] = Json.format[ResponsiblePersonAddress]
 
   implicit def convertToCurrent(address: ResponsiblePersonAddress): ResponsiblePersonCurrentAddress = {
     ResponsiblePersonCurrentAddress(address.personAddress, address.timeAtAddress, dateOfChange = None)
@@ -36,5 +36,5 @@ object ResponsiblePersonCurrentAddress {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[ResponsiblePersonCurrentAddress]
+  implicit val format: OFormat[ResponsiblePersonCurrentAddress] = Json.format[ResponsiblePersonCurrentAddress]
 }

@@ -61,7 +61,7 @@ object AccountView {
   }
 
 
-  implicit val jsonWrites = Writes[AccountView] {
+  implicit val jsonWrites: Writes[AccountView] = Writes[AccountView] {
     case m: ukAccountView =>
       Json.obj(
         "ukAccount" -> Json.obj(

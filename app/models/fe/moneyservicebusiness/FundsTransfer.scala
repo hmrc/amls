@@ -17,13 +17,13 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.MsbMtDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class FundsTransfer(transferWithoutFormalSystems: Boolean)
 
 object FundsTransfer {
 
-  implicit val formats = Json.format[FundsTransfer]
+  implicit val formats: OFormat[FundsTransfer] = Json.format[FundsTransfer]
 
   implicit def convMsbAll(msbAll: Option[MsbMtDetails]): Option[FundsTransfer] = {
     msbAll match {

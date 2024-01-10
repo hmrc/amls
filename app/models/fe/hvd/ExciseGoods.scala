@@ -17,13 +17,13 @@
 package models.fe.hvd
 
 import models.des.businessactivities.{BusinessActivities, HvdGoodsSold}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ExciseGoods(exciseGoods: Boolean)
 
 object ExciseGoods {
 
-  implicit val format = Json.format[ExciseGoods]
+  implicit val format: OFormat[ExciseGoods] = Json.format[ExciseGoods]
 
   implicit def conv(ba: BusinessActivities): Option[ExciseGoods] = {
     ba.hvdAlcoholTobacco match {

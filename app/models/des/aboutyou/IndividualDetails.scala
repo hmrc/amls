@@ -16,13 +16,13 @@
 
 package models.des.aboutyou
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class IndividualDetails(firstName: String, middleName: Option[String], lastName: String)
 
 object IndividualDetails {
 
-  implicit val formats = Json.format[IndividualDetails]
+  implicit val formats: OFormat[IndividualDetails] = Json.format[IndividualDetails]
 
   implicit def convert(person: models.fe.declaration.AddPerson): Option[IndividualDetails] = {
     person.firstName match {

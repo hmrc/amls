@@ -33,7 +33,7 @@ object BusinessDetails {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[BusinessDetails]
+  implicit val format: OFormat[BusinessDetails] = Json.format[BusinessDetails]
 
   implicit def conv(view: SubscriptionView): BusinessDetails = {
     val bcDetails = view.businessContactDetails

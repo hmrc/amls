@@ -28,7 +28,7 @@ object Supervision {
 
   import play.api.libs.json._
 
-  implicit val formats = Json.format[Supervision]
+  implicit val formats: OFormat[Supervision] = Json.format[Supervision]
 
   /**
     * Converts from the ETMP 'supervision' model to our frontend model.

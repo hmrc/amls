@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.ResponsiblePeople
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PreviousNameDetails(nameEverChanged: Boolean, previousName: Option[PersonName], dateOfChange: Option[String], dateChangeFlag: Option[Boolean])
 
 object PreviousNameDetails {
-  implicit val format = Json.format[PreviousNameDetails]
+  implicit val format: OFormat[PreviousNameDetails] = Json.format[PreviousNameDetails]
 
 
   def from(person: ResponsiblePeople, amendVariation: Boolean): Option[PreviousNameDetails] = {

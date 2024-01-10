@@ -16,13 +16,13 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.businessdetails.{NonUKCorrespondenceAddress, UKCorrespondenceAddress, CorrespondenceAddress}
-import play.api.libs.json.Json
+import models.fe.businessdetails.{CorrespondenceAddress, NonUKCorrespondenceAddress, UKCorrespondenceAddress}
+import play.api.libs.json.{Json, OFormat}
 
 case class AlternativeAddress(name: String, tradingName: String, address: Address)
 
 object AlternativeAddress {
-  implicit val format = Json.format[AlternativeAddress]
+  implicit val format: OFormat[AlternativeAddress] = Json.format[AlternativeAddress]
 
   implicit def convert(alternativeAddress: Option[CorrespondenceAddress]): Option[AlternativeAddress] = {
     alternativeAddress match {

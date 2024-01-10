@@ -19,13 +19,13 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class DateOfBirth(dateOfBirth: LocalDate)
 
 object DateOfBirth {
 
-  implicit val format = Json.format[DateOfBirth]
+  implicit val format: OFormat[DateOfBirth] = Json.format[DateOfBirth]
 
   implicit def conv(responsiblePeople: ResponsiblePersons): Option[DateOfBirth] = {
     val idDetail: Option[IdDetail] = for {

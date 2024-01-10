@@ -25,7 +25,7 @@ object PersonName {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[PersonName]
+  implicit val format: OFormat[PersonName] = Json.format[PersonName]
 
   implicit def conv(desNameDtls: Option[NameDetails]): Option[PersonName] = {
     desNameDtls match {

@@ -22,7 +22,6 @@ import generators.PayApiGenerator
 import metrics.PayAPI
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._

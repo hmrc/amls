@@ -19,16 +19,15 @@ package connectors
 import audit.{SubscriptionEvent, SubscriptionFailedEvent}
 import config.ApplicationConfig
 import exceptions.HttpStatusException
-import javax.inject.{Inject, Singleton}
 import metrics.{API4, Metrics}
 import models.des
-import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

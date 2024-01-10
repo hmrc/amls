@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CurrencySources(
                             bankDetails: Option[MSBBankDetails] = None,
@@ -27,7 +27,7 @@ case class CurrencySources(
                           )
 
 object CurrencySources {
-  implicit val format = Json.format[CurrencySources]
+  implicit val format: OFormat[CurrencySources] = Json.format[CurrencySources]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): CurrencySources = {
     msb.whichCurrencies match {

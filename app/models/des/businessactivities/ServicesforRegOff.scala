@@ -17,7 +17,7 @@
 package models.des.businessactivities
 
 import models.fe.tcsp._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ServicesforRegOff(
                               callHandling: Boolean = false,
@@ -33,7 +33,7 @@ case class ServicesforRegOff(
 
 object ServicesforRegOff {
 
-  implicit val format = Json.format[ServicesforRegOff]
+  implicit val format: OFormat[ServicesforRegOff] = Json.format[ServicesforRegOff]
 
   implicit def conv(tcsp: Option[Tcsp]): Option[ServicesforRegOff] = {
     tcsp match {

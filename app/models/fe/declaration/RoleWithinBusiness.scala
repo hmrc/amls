@@ -86,7 +86,7 @@ object RoleWithinBusiness {
       }
     } map RoleWithinBusiness.apply
 
-  implicit val jsonWrite = Writes[RoleWithinBusiness] {
+  implicit val jsonWrite: Writes[RoleWithinBusiness] = Writes[RoleWithinBusiness] {
     case RoleWithinBusiness(roles) =>
       Json.obj(
         "roleWithinBusiness" -> (roles map {

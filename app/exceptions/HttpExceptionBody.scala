@@ -16,14 +16,14 @@
 
 package exceptions
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import scala.util.Try
 
 case class HttpExceptionBody(reason: String)
 
 object HttpExceptionBody {
-  implicit val format = Json.format[HttpExceptionBody]
+  implicit val format: OFormat[HttpExceptionBody] = Json.format[HttpExceptionBody]
 
   def fromJson(json: String): Option[HttpExceptionBody] = Try { Json.parse(json).asOpt[HttpExceptionBody] } getOrElse None
 }

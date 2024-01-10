@@ -28,7 +28,7 @@ case class ExtraFields(declaration: Declaration, filingIndividual: AboutYouRelea
 
 object ExtraFields {
 
-  implicit def format =
+  implicit def format: OFormat[ExtraFields] =
     Json.format[ExtraFields]
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {

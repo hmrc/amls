@@ -18,12 +18,12 @@ package models.fe.businesscustomer
 
 import models.des.SubscriptionView
 import models.fe.businessmatching.BusinessType
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ReviewDetails(businessName: String, businessType: BusinessType, businessAddress: Address, safeId: String)
 
 object ReviewDetails {
-  implicit val format = Json.format[ReviewDetails]
+  implicit val format: OFormat[ReviewDetails] = Json.format[ReviewDetails]
 
   implicit def conv1(desView: SubscriptionView): ReviewDetails = {
     ReviewDetails(

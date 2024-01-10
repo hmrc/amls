@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CurrentAddress(address: AddressWithChangeDate)
 
 object CurrentAddress {
-  implicit val format = Json.format[CurrentAddress]
+  implicit val format: OFormat[CurrentAddress] = Json.format[CurrentAddress]
 
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 

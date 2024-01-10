@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
                                         beneficialOwner: Boolean = false,
@@ -27,5 +27,5 @@ case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
 
 object CorpBodyOrUnInCorpBodyOrLlp {
 
-  implicit val format = Json.format[CorpBodyOrUnInCorpBodyOrLlp]
+  implicit val format: OFormat[CorpBodyOrUnInCorpBodyOrLlp] = Json.format[CorpBodyOrUnInCorpBodyOrLlp]
 }

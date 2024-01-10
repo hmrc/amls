@@ -31,7 +31,7 @@ case class SubscriptionResponse(
                                )
 
 object SubscriptionResponse {
-  implicit val format = Json.format[SubscriptionResponse]
+  implicit val format: OFormat[SubscriptionResponse] = Json.format[SubscriptionResponse]
 
   def convert(desResponse: DesSubscriptionResponse): SubscriptionResponse = {
     SubscriptionResponse(desResponse.etmpFormBundleNumber,

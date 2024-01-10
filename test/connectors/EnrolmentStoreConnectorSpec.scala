@@ -23,12 +23,11 @@ import metrics.EnrolmentStoreKnownFacts
 import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{mock, verify, when}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
 import utils.AmlsBaseSpec
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with BaseGenerator {
 

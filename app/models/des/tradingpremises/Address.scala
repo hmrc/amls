@@ -16,13 +16,13 @@
 
 package models.des.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Address(addressLine1: String, addressLine2: Option[String], addressLine3: Option[String], addressLine4: Option[String], country: String,
                    postcode: Option[String], addressChangeDate: Option[String] = None)
 
 object Address {
-  implicit val format = Json.format[Address]
+  implicit val format: OFormat[Address] = Json.format[Address]
 
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 

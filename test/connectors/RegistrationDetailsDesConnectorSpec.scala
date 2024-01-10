@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any

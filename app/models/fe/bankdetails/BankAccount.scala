@@ -40,7 +40,7 @@ object Account {
     }
   }
 
-  implicit val jsonWrites = Writes[Account] {
+  implicit val jsonWrites: Writes[Account] = Writes[Account] {
     case m: UKAccount =>
       Json.obj(
         "isUK" -> true,

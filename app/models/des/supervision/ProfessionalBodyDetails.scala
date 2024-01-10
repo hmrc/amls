@@ -17,13 +17,13 @@
 package models.des.supervision
 
 import models.fe.supervision.{ProfessionalBodyNo, ProfessionalBodyYes, Supervision}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ProfessionalBodyDetails (prevWarnedWRegToAspActivities: Boolean, detailsIfFinedWarned: Option[String], professionalBody: Option[ProfessionalBodyDesMember])
 
 object ProfessionalBodyDetails {
 
-  implicit val format = Json.format[ProfessionalBodyDetails]
+  implicit val format: OFormat[ProfessionalBodyDetails] = Json.format[ProfessionalBodyDetails]
 
   implicit def conv(supervision: Supervision): Option[ProfessionalBodyDetails] = {
 

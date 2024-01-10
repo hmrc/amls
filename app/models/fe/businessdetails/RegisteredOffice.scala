@@ -66,7 +66,7 @@ object RegisteredOffice {
         ) (RegisteredOfficeNonUK.apply _)
   }
 
-  implicit val jsonWrites = Writes[RegisteredOffice] {
+  implicit val jsonWrites: Writes[RegisteredOffice] = Writes[RegisteredOffice] {
     case m: RegisteredOfficeUK =>
       Json.obj(
         "addressLine1" -> m.addressLine1,

@@ -49,7 +49,7 @@ object AnotherBody {
     }
   }
 
-  implicit val jsonWrites = Writes[AnotherBody] {
+  implicit val jsonWrites: Writes[AnotherBody] = Writes[AnotherBody] {
     case a: AnotherBodyYes => Json.obj(
       "anotherBody" -> true,
       "supervisorName" -> a.supervisorName,

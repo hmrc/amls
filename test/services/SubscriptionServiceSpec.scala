@@ -85,7 +85,7 @@ trait TestFixture extends AmlsReferenceNumberGenerator {
 
   val safeId = "safeId"
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 }
 
 class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {

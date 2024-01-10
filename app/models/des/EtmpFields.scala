@@ -16,10 +16,10 @@
 
 package models.des
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class EtmpFields(dateOfSubmission: Option[String], financeDocNumber: Option[String], currentPeriodKey: Option[String], renewalDueDate: Option[String])
 
 object EtmpFields {
-  implicit val format = Json.format[EtmpFields]
+  implicit val format: OFormat[EtmpFields] = Json.format[EtmpFields]
 }

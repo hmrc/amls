@@ -17,12 +17,12 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.OthrNamesOrAliasesDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class KnownBy(hasOtherNames: Boolean, otherNames: Option[String] = None)
 
 object KnownBy {
-  implicit val format = Json.format[KnownBy]
+  implicit val format: OFormat[KnownBy] = Json.format[KnownBy]
 
   val noOtherNames = KnownBy(hasOtherNames = false)
 

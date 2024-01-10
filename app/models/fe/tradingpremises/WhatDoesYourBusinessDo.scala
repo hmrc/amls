@@ -52,7 +52,7 @@ object BusinessActivity {
     case _ => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
   }
 
-  implicit val jsonActivityWrite = Writes[BusinessActivity] {
+  implicit val jsonActivityWrite: Writes[BusinessActivity] = Writes[BusinessActivity] {
     case AccountancyServices => JsString("01")
     case BillPaymentServices => JsString("02")
     case EstateAgentBusinessService => JsString("03")
@@ -68,7 +68,7 @@ object BusinessActivity {
 case class WhatDoesYourBusinessDo(activities: Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 object WhatDoesYourBusinessDo {
-  implicit val format = Json.format[WhatDoesYourBusinessDo]
+  implicit val format: OFormat[WhatDoesYourBusinessDo] = Json.format[WhatDoesYourBusinessDo]
 
   def convMsb(msb: Msb): Option[BusinessActivity] = {
     msb match {

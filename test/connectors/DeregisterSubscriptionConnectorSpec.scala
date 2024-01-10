@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -49,7 +48,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       testConnector.metrics.timer(ArgumentMatchers.eq(API10))
     } thenReturn mockTimer
 
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val url = s"${testConnector.fullUrl}/$amlsRegistrationNumber/deregistration"
   }

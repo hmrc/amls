@@ -25,7 +25,6 @@ import models.des.tradingpremises.{AgentBusinessPremises, AgentDetails}
 import models.{SubscriptionViewModel, des}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import org.scalatest.concurrent.IntegrationPatience
 import play.api.libs.json.Json
 import play.api.test.FakeRequest

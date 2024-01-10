@@ -28,7 +28,7 @@ case class MoneyServiceBusiness(msbAllDetails: Option[MsbAllDetails],
 
 object MoneyServiceBusiness {
 
-  implicit def format = Json.format[MoneyServiceBusiness]
+  implicit def format: OFormat[MoneyServiceBusiness] = Json.format[MoneyServiceBusiness]
 
 
   implicit def conv(msbOpt: Option[models.fe.moneyservicebusiness.MoneyServiceBusiness],

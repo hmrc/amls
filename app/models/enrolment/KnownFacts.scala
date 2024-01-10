@@ -17,18 +17,18 @@
 package models.enrolment
 
 import models.KnownFactsForService
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class KnownFact(key: String, value: String)
 
 case class KnownFacts(verifiers: Set[KnownFact])
 
 object KnownFact {
-  implicit val format = Json.format[KnownFact]
+  implicit val format: OFormat[KnownFact] = Json.format[KnownFact]
 }
 
 object KnownFacts {
-  implicit val format = Json.format[KnownFacts]
+  implicit val format: OFormat[KnownFacts] = Json.format[KnownFacts]
 
   implicit def conv(knownFactsForService: KnownFactsForService): KnownFacts = {
     val knownFacts = knownFactsForService.facts

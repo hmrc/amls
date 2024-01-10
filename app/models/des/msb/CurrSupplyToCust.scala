@@ -16,13 +16,13 @@
 
 package models.des.msb
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CurrSupplyToCust(currency: Seq[String])
 
 object CurrSupplyToCust {
 
-  implicit val format = Json.format[CurrSupplyToCust]
+  implicit val format: OFormat[CurrSupplyToCust] = Json.format[CurrSupplyToCust]
 
   implicit def conv(countryList: Seq[String]): Option[CurrSupplyToCust] = {
     Some(CurrSupplyToCust(countryList))

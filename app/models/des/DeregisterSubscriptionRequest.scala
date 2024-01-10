@@ -42,7 +42,7 @@ object DeregistrationReason {
       case _ => JsError((JsPath \ "deregistrationReason") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonServiceWrites =
+  implicit val jsonServiceWrites: Writes[DeregistrationReason] =
     Writes[DeregistrationReason] {
       case Ceasedtrading => JsString("Ceased Trading")
       case HVDPolicyOfNotAcceptingHighValueCashPayments => JsString("HVD - policy of not accepting high value cash payments")
@@ -62,5 +62,5 @@ case class DeregisterSubscriptionRequest (acknowledgementReference: String,
 
 object DeregisterSubscriptionRequest {
 
-  implicit val format = Json.format[DeregisterSubscriptionRequest]
+  implicit val format: OFormat[DeregisterSubscriptionRequest] = Json.format[DeregisterSubscriptionRequest]
 }

@@ -38,7 +38,7 @@ object WithdrawalReason {
       case _ => JsError((JsPath \ "withdrawalReason") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonServiceWrites =
+  implicit val jsonServiceWrites: Writes[WithdrawalReason] =
     Writes[WithdrawalReason] {
       case OutOfscope => JsString("Out of scope")
       case NotTradingInOwnRight => JsString("Not trading in own right")
@@ -56,5 +56,5 @@ case class WithdrawSubscriptionRequest (acknowledgementReference: String,
 
 object WithdrawSubscriptionRequest {
 
-  implicit val format = Json.format[WithdrawSubscriptionRequest]
+  implicit val format: OFormat[WithdrawSubscriptionRequest] = Json.format[WithdrawSubscriptionRequest]
 }

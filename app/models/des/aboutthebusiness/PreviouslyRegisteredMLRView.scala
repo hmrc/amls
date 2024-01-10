@@ -16,13 +16,13 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.businessdetails.{PreviouslyRegisteredYes, PreviouslyRegisteredNo, BusinessDetails}
-import play.api.libs.json.Json
+import models.fe.businessdetails.{BusinessDetails, PreviouslyRegisteredNo, PreviouslyRegisteredYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class PreviouslyRegisteredMLRView(amlsRegistered: Boolean, mlrRegNumber: Option[String], prevRegForMlr: Boolean, prevMlrRegNumber: Option[String])
 
 object PreviouslyRegisteredMLRView {
-  implicit val format = Json.format[PreviouslyRegisteredMLRView]
+  implicit val format: OFormat[PreviouslyRegisteredMLRView] = Json.format[PreviouslyRegisteredMLRView]
 
   implicit def convert(businessDetails: BusinessDetails): Option[PreviouslyRegisteredMLRView] = {
     businessDetails.previouslyRegistered match {

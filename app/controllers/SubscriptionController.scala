@@ -65,7 +65,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
                     logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
-              case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+              case JsError(errors) =>
                 Future.successful(BadRequest(toError(errors)))
             }
           case _ =>

@@ -105,7 +105,7 @@ object BusinessTypes {
     } map BusinessTypes.apply
   }
 
-  implicit val jsonWrites = Writes[BusinessTypes] { businessTypes =>
+  implicit val jsonWrites: Writes[BusinessTypes] = Writes[BusinessTypes] { businessTypes =>
     Json.obj(
       "businessType" -> (businessTypes.businessType map {
         _.value

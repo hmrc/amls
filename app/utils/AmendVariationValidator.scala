@@ -33,7 +33,7 @@ class AmendVariationValidator {
   def validateResult(request: AmendVariationRequest): Either[collection.Seq[JsObject], AmendVariationRequest] = {
     // $COVERAGE-OFF$
     val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
-    val lines = scala.io.Source.fromInputStream(stream).getLines.mkString
+    val lines = scala.io.Source.fromInputStream(stream).getLines().mkString
 
     lazy val jsonMapper = new ObjectMapper()
     lazy val jsonFactory = jsonMapper.getFactory

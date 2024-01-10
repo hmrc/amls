@@ -44,7 +44,7 @@ object TimeAtAddress {
     }
   }
 
-  implicit val jsonWrites = Writes[TimeAtAddress] {
+  implicit val jsonWrites: Writes[TimeAtAddress] = Writes[TimeAtAddress] {
     case Empty => JsNull
     case ZeroToFiveMonths => Json.obj("timeAtAddress" -> "01")
     case SixToElevenMonths => Json.obj("timeAtAddress" -> "02")

@@ -32,8 +32,6 @@ object PaymentStatus {
 
   case object Cancelled extends PaymentStatus
 
-  implicit val writes: Writes[PaymentStatus] = Writes { paymentStatus => Json.toJson(paymentStatus.toString) }
-
   implicit val formats: Format[PaymentStatus] = new Format[PaymentStatus] {
     override def reads(json: JsValue): JsResult[PaymentStatus] = json match {
       case JsString("Created") => JsSuccess(Created)

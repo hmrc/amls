@@ -16,10 +16,10 @@
 
 package models.des.msb
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class IpspDetails(ipspName: String, ipspMlrRegNo: String)
 
 object IpspDetails {
-  implicit val format = Json.format[IpspDetails]
+  implicit val format: OFormat[IpspDetails] = Json.format[IpspDetails]
 }

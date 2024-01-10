@@ -16,7 +16,7 @@
 
 package models.des.businessactivities
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class EabServices(
                         residentialEstateAgency: Boolean,
@@ -32,22 +32,26 @@ case class EabServices(
                       )
 
 object EabServices {
-  implicit val format = Json.format[EabServices]
+  implicit val format: OFormat[EabServices] = Json.format[EabServices]
 
-  def default = {
-    EabServices(false, false, false, false, false, false, false, false, false, Some(false))
+  def default: EabServices = {
+    EabServices(residentialEstateAgency = false,
+      commercialEstateAgency = false,
+      auctioneer = false,
+      relocationAgent = false,
+      businessTransferAgent = false,
+      assetManagementCompany = false,
+      landManagementAgent = false,
+      developmentCompany = false,
+      socialHousingProvider = false,
+      Some(false))
   }
 
-  implicit def convert(eab: Option[models.fe.eab.Eab]): Option[EabServices] = {
-
-    eab match {
-      case Some(eab) => {
+  implicit def convert(eab: Option[models.fe.eab.Eab]): Option[EabServices] = eab match {
+      case Some(eab) =>
         convServices(eab.data.eabServicesProvided)
-      }
       case _ => None
     }
-
-  }
 
   implicit def convServices(services: List[String]): Option[EabServices] = {
     val eabServices = services.foldLeft[EabServices](default)((eabServices: EabServices, service) => service match {

@@ -38,7 +38,7 @@ object MoneyServiceBusiness {
 
   val key = "msb"
 
-  implicit val format = Json.format[MoneyServiceBusiness]
+  implicit val format: OFormat[MoneyServiceBusiness] = Json.format[MoneyServiceBusiness]
 
   implicit def default(value: Option[MoneyServiceBusiness]): MoneyServiceBusiness = {
     value.getOrElse(MoneyServiceBusiness())

@@ -16,7 +16,7 @@
 
 package models.des
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AmendVariationResponse(
                                    processingDate: String,
@@ -42,5 +42,5 @@ case class AmendVariationResponse(
                                  )
 
 object AmendVariationResponse {
-  implicit val format = Json.format[AmendVariationResponse]
+  implicit val format: OFormat[AmendVariationResponse] = Json.format[AmendVariationResponse]
 }

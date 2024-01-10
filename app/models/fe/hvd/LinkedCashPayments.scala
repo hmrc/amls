@@ -17,13 +17,13 @@
 package models.fe.hvd
 
 import models.des.hvd.{Hvd => DesHvd}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class LinkedCashPayments(linkedCashPayments: Boolean)
 
 object LinkedCashPayments {
 
-  implicit val format = Json.format[LinkedCashPayments]
+  implicit val format: OFormat[LinkedCashPayments] = Json.format[LinkedCashPayments]
 
   implicit def conv(hvd: DesHvd): Option[LinkedCashPayments] = {
     Some(LinkedCashPayments(hvd.sysAutoIdOfLinkedCashPymts))

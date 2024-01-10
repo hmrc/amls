@@ -17,12 +17,12 @@
 package models.fe.hvd
 
 import models.des.hvd.ReceiptMethods
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PaymentMethods(courier: Boolean, direct: Boolean, other: Boolean, details: Option[String])
 
 object PaymentMethods {
-  implicit val format = Json.format[PaymentMethods]
+  implicit val format: OFormat[PaymentMethods] = Json.format[PaymentMethods]
 
   implicit def conv(method: Option[ReceiptMethods]): Option[PaymentMethods] = {
 

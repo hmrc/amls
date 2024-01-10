@@ -17,12 +17,12 @@
 package models.fe.businesscustomer
 
 import models.des.aboutthebusiness.{Address => DesAddress}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Address(line_1: String, line_2: Option[String], line_3: Option[String], line_4: Option[String], postcode: Option[String], country: String)
 
 object Address {
-  implicit val format = Json.format[Address]
+  implicit val format: OFormat[Address] = Json.format[Address]
 
   implicit def conv(addr: DesAddress): Address = {
     Address(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.postcode, addr.country)

@@ -32,7 +32,7 @@ object BusinessType {
 
   case object UnincorporatedBody extends BusinessType
 
-  implicit val writes = Writes[BusinessType] {
+  implicit val writes: Writes[BusinessType] = Writes[BusinessType] {
     case LimitedCompany => JsString("Corporate Body")
     case SoleProprietor => JsString("Sole Trader")
     case Partnership => JsString("Partnership")
@@ -40,7 +40,7 @@ object BusinessType {
     case UnincorporatedBody => JsString("Unincorporated Body")
   }
 
-  implicit val reads = Reads[BusinessType] {
+  implicit val reads: Reads[BusinessType] = Reads[BusinessType] {
     case JsString("Corporate Body") => JsSuccess(LimitedCompany)
     case JsString("Sole Trader") => JsSuccess(SoleProprietor)
     case JsString("Partnership") => JsSuccess(Partnership)

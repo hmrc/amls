@@ -17,14 +17,14 @@
 package models.des.businessactivities
 
 import models.fe.tcsp._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class TcspServicesOffered(nomineeShareholders: Boolean, trusteeProvider: Boolean, regOffBusinessAddrVirtualOff: Boolean,
                                compDirSecPartnerProvider: Boolean, trustOrCompFormAgent: Boolean)
 
 object TcspServicesOffered {
 
-  implicit val format = Json.format[TcspServicesOffered]
+  implicit val format: OFormat[TcspServicesOffered] = Json.format[TcspServicesOffered]
 
   implicit def covn(tcsp: Option[Tcsp]): Option[TcspServicesOffered] = {
     tcsp match {

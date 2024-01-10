@@ -16,11 +16,11 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SoleProprietor(soleProprietor: Boolean = false, nominatedOfficer: Boolean = false, other: Option[Boolean] = None,
                           otherDetails: Option[String] = None) extends OtherDetails
 
 object SoleProprietor {
-  implicit val format = Json.format[SoleProprietor]
+  implicit val format: OFormat[SoleProprietor] = Json.format[SoleProprietor]
 }

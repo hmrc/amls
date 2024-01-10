@@ -26,7 +26,7 @@ final case class Eab(data: EabData)
 
 object Eab {
 
-  implicit val format = Json.format[Eab]
+  implicit val format: OFormat[Eab] = Json.format[Eab]
 
   implicit def conv(view: SubscriptionView): Option[Eab] = {
 
@@ -37,8 +37,7 @@ object Eab {
 
   }
 
-  private implicit def eabSection(ba: BusinessActivities, eabAll: Option[EabAll], eabResdEA: Option[EabResdEstAgncy], la: Option[LettingAgents]) = {
-
+  private implicit def eabSection(ba: BusinessActivities, eabAll: Option[EabAll], eabResdEA: Option[EabResdEstAgncy], la: Option[LettingAgents]): Option[Eab] = {
     Some(
       Eab(
         EabData(
@@ -77,7 +76,7 @@ object Eab {
 
   private implicit def getRedressScheme(eab: EabResdEstAgncy): Option[String] = {
     eab.regWithRedressScheme match {
-      case true => {
+      case true =>
         val redressOption = eab.whichRedressScheme.getOrElse("")
         redressOption match {
           case "The Property Ombudsman Limited" => Some("propertyOmbudsman")
@@ -86,19 +85,18 @@ object Eab {
           case "Other" => Some("other")
           case _ => None
         }
-      }
       case false => Some("notRegistered")
     }
   }
 
-  private implicit def hasEabSector(response: SubscriptionView) = {
+  private implicit def hasEabSector(response: SubscriptionView): Boolean = {
     response.businessActivities.mlrActivitiesAppliedFor match {
       case Some(MlrActivitiesAppliedFor(_, _, _, _, true, _, _, _)) => true
       case _ => false
     }
   }
 
-  private implicit def redressSchemeApplies(businessActivities: BusinessActivities) = {
+  private implicit def redressSchemeApplies(businessActivities: BusinessActivities): Boolean = {
     businessActivities.eabServicesCarriedOut match {
       case Some(EabServices(true, _, _, _, _, _, _, _, _, _)) => true
       case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
@@ -106,7 +104,7 @@ object Eab {
     }
   }
 
-  private implicit def lettingAgentApplies(businessActivities: BusinessActivities) = {
+  private implicit def lettingAgentApplies(businessActivities: BusinessActivities): Boolean = {
     businessActivities.eabServicesCarriedOut match {
       case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
       case _ => false

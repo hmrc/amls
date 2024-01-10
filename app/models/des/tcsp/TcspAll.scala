@@ -16,14 +16,14 @@
 
 package models.des.tcsp
 
-import models.fe.tcsp.{ServicesOfAnotherTCSP, ServicesOfAnotherTCSPYes, ServicesOfAnotherTCSPNo, Tcsp}
-import play.api.libs.json.Json
+import models.fe.tcsp.{ServicesOfAnotherTCSP, ServicesOfAnotherTCSPNo, ServicesOfAnotherTCSPYes, Tcsp}
+import play.api.libs.json.{Json, OFormat}
 
 case class TcspAll(anotherTcspServiceProvider: Boolean, tcspMlrRef: Option[String])
 
 object TcspAll {
 
-  implicit val format = Json.format[TcspAll]
+  implicit val format: OFormat[TcspAll] = Json.format[TcspAll]
 
   implicit def conv(tcsp: Tcsp): TcspAll = {
 

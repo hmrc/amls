@@ -19,14 +19,14 @@ package models.fe.businessdetails
 import models.des.businessactivities.BusinessActivitiesAll
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 
 case class ActivityStartDate(startDate: LocalDate)
 
 object ActivityStartDate {
 
-  implicit val format = Json.format[ActivityStartDate]
+  implicit val format: OFormat[ActivityStartDate] = Json.format[ActivityStartDate]
 
   implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] = {
 

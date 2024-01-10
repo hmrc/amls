@@ -33,7 +33,7 @@ object PreviouslyRegistered {
       case false => Reads(_ => JsSuccess(PreviouslyRegisteredNo))
     }
 
-  implicit val jsonWrites = Writes[PreviouslyRegistered] {
+  implicit val jsonWrites: Writes[PreviouslyRegistered] = Writes[PreviouslyRegistered] {
     case PreviouslyRegisteredYes(value) => Json.obj(
       "previouslyRegistered" -> true,
       "prevMLRRegNo" -> value

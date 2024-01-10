@@ -33,7 +33,7 @@ object Asp {
 
   val key = "asp"
 
-  implicit val format = Json.format[Asp]
+  implicit val format: OFormat[Asp] = Json.format[Asp]
 
   implicit def default(details: Option[Asp]): Asp =
     details.getOrElse(Asp())

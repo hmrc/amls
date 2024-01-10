@@ -23,7 +23,7 @@ case class AgentName(agentName: String, dateOfChange: Option[String] = None, age
 
 object AgentName {
 
-  implicit val formats = Json.format[AgentName]
+  implicit val formats: OFormat[AgentName] = Json.format[AgentName]
 
   implicit def conv(agentDetails: AgentDetails): Option[AgentName] = {
 

@@ -16,14 +16,14 @@
 
 package models.des.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
 case class OwnBusinessPremises(ownBusinessPremises: Boolean, ownBusinessPremisesDetails: Option[Seq[OwnBusinessPremisesDetails]])
 
 object OwnBusinessPremises {
 
-  implicit val format = Json.format[OwnBusinessPremises]
+  implicit val format: OFormat[OwnBusinessPremises] = Json.format[OwnBusinessPremises]
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): OwnBusinessPremises = {
     val `empty` = Seq.empty[FETradingPremises]

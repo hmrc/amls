@@ -16,11 +16,11 @@
 
 package models.des.supervision
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SupervisorDetails(nameOfLastSupervisor: String, supervisionStartDate: String, supervisionEndDate: String, dateChangeFlag: Option[Boolean],
                              supervisionEndingReason: String)
 
 object SupervisorDetails {
-  implicit val format = Json.format[SupervisorDetails]
+  implicit val format: OFormat[SupervisorDetails] = Json.format[SupervisorDetails]
 }

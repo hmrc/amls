@@ -17,13 +17,13 @@
 package models.des.bankdetails
 
 import models.fe.bankdetails._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BankAccountView(accountName: String, accountType: String, doYouHaveUkBankAccount: Boolean, bankAccountDetails: AccountView)
 
 object BankAccountView {
 
-  implicit val format = Json.format[BankAccountView]
+  implicit val format: OFormat[BankAccountView] = Json.format[BankAccountView]
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccountView] = {
     bankdetails map { x =>

@@ -88,7 +88,7 @@ object ProvidedServices {
       }
     } map ProvidedServices.apply
 
-  implicit val jsonWrites = Writes[ProvidedServices] { ps =>
+  implicit val jsonWrites: Writes[ProvidedServices] = Writes[ProvidedServices] { ps =>
     Json.obj(
       "services" -> (ps.services map {
         _.value

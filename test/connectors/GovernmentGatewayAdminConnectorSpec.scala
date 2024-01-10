@@ -23,7 +23,6 @@ import metrics.GGAdmin
 import models.{KnownFact, KnownFactsForService}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import utils.AmlsBaseSpec

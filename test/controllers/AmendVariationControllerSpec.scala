@@ -26,10 +26,7 @@ import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessdetails._
 import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
-
-import java.time.LocalDate
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
@@ -38,6 +35,7 @@ import play.api.test.Helpers._
 import services.AmendVariationService
 import utils._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {

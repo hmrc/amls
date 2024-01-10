@@ -29,11 +29,11 @@ object BusinessFranchise {
 
   implicit val jsonReads: Reads[BusinessFranchise] =
     (__ \ "businessFranchise").read[Boolean] flatMap {
-      case true => (__ \ "franchiseName").read[String] map (BusinessFranchiseYes.apply _)
+      case true => (__ \ "franchiseName").read[String] map BusinessFranchiseYes.apply
       case false => Reads(_ => JsSuccess(BusinessFranchiseNo))
     }
 
-  implicit val jsonWrites = Writes[BusinessFranchise] {
+  implicit val jsonWrites: Writes[BusinessFranchise] = Writes[BusinessFranchise] {
     case BusinessFranchiseYes(value) => Json.obj(
       "businessFranchise" -> true,
       "franchiseName" -> value

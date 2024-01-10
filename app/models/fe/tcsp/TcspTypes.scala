@@ -70,7 +70,7 @@ object TcspTypes {
     }
   }
 
-  implicit val jsonWrite = Writes[TcspTypes] {
+  implicit val jsonWrite: Writes[TcspTypes] = Writes[TcspTypes] {
     case TcspTypes(services) =>
       Json.obj(
         "serviceProviders" -> (services map {

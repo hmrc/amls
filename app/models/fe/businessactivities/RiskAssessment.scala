@@ -41,7 +41,7 @@ object RiskAssessmentType {
       case _ => JsError((JsPath \ "riskassessments") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonRiskAssessmentWrites =
+  implicit val jsonRiskAssessmentWrites: Writes[RiskAssessmentType] =
     Writes[RiskAssessmentType] {
       case PaperBased => JsString("01")
       case Digital => JsString("02")
@@ -55,11 +55,11 @@ object RiskAssessmentPolicy {
   implicit def jsonReads: Reads[RiskAssessmentPolicy] =
     (__ \ "hasPolicy").read[Boolean] flatMap {
       case true =>
-        (__ \ "riskassessments").read[Set[RiskAssessmentType]].flatMap(RiskAssessmentPolicyYes.apply _)
+        (__ \ "riskassessments").read[Set[RiskAssessmentType]].flatMap(RiskAssessmentPolicyYes.apply)
       case false => Reads(_ => JsSuccess(RiskAssessmentPolicyNo))
     }
 
-  implicit def jsonWrites = Writes[RiskAssessmentPolicy] {
+  implicit def jsonWrites: Writes[RiskAssessmentPolicy] = Writes[RiskAssessmentPolicy] {
     case RiskAssessmentPolicyYes(data) =>
       Json.obj("hasPolicy" -> true,
         "riskassessments" -> data)

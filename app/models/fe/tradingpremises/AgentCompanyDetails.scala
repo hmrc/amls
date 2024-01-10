@@ -23,7 +23,7 @@ case class AgentCompanyDetails(agentCompanyName: String, companyRegistrationNumb
 
 object AgentCompanyDetails {
 
-  implicit val formats = Json.format[AgentCompanyDetails]
+  implicit val formats: OFormat[AgentCompanyDetails] = Json.format[AgentCompanyDetails]
 
   implicit def conv(agentDetails: AgentDetails): Option[AgentCompanyDetails] = {
     agentDetails.agentLegalEntityName map {

@@ -16,13 +16,13 @@
 
 package models.des.businessactivities
 
-import models.fe.hvd.{HowWillYouSellGoods, Auction, Wholesale, Retail}
-import play.api.libs.json.Json
+import models.fe.hvd.{Auction, HowWillYouSellGoods, Retail, Wholesale}
+import play.api.libs.json.{Json, OFormat}
 
 case class HowGoodsAreSold(retail: Boolean, wholesale: Boolean, auction: Boolean)
 
 object HowGoodsAreSold {
-  implicit val format = Json.format[HowGoodsAreSold]
+  implicit val format: OFormat[HowGoodsAreSold] = Json.format[HowGoodsAreSold]
 
   implicit def conv(model: Option[HowWillYouSellGoods]): Option[HowGoodsAreSold] = {
     model match {

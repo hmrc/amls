@@ -33,12 +33,12 @@ object InvolvedInOther {
       case false => Reads(_ => JsSuccess(InvolvedInOtherNo))
     }
 
-  implicit val jsonWrites = Writes[InvolvedInOther] {
+  implicit val jsonWrites: Writes[InvolvedInOther] = Writes[InvolvedInOther] {
     case InvolvedInOtherYes(details) => Json.obj(
       "involvedInOther" -> true,
       "details" -> details
     )
-    case involvedInOtherNo => Json.obj("involvedInOther" -> false)
+    case _ => Json.obj("involvedInOther" -> false)
   }
 
   def conv(activityDtls: BusinessActivityDetails): Option[InvolvedInOther] = {

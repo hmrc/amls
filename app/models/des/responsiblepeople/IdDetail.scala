@@ -16,10 +16,10 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class IdDetail(ukResident: Option[UkResident] = None, nonUkResident: Option[NonUkResident] = None, dateOfBirth: Option[String] = None)
 
 object IdDetail {
-  implicit val format = Json.format[IdDetail]
+  implicit val format: OFormat[IdDetail] = Json.format[IdDetail]
 }

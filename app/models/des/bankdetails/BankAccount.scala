@@ -16,13 +16,13 @@
 
 package models.des.bankdetails
 
-import models.fe.bankdetails.{UKAccount, NonUKIBANNumber, NonUKAccountNumber, PersonalAccount, BelongsToBusiness, BelongsToOtherBusiness, BankAccountType}
-import play.api.libs.json.Json
+import models.fe.bankdetails.{BankAccountType, BelongsToBusiness, BelongsToOtherBusiness, NonUKAccountNumber, NonUKIBANNumber, PersonalAccount, UKAccount}
+import play.api.libs.json.{Json, OFormat}
 
 case class BankAccount(accountName: String, accountType: String, doYouHaveUkBankAccount: Boolean, bankAccountDetails: Account)
 
 object BankAccount {
-  implicit val format = Json.format[BankAccount]
+  implicit val format: OFormat[BankAccount] = Json.format[BankAccount]
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccount] = {
     bankdetails map { x =>

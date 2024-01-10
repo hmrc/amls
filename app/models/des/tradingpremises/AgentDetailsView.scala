@@ -16,10 +16,10 @@
 
 package models.des.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AgentDetailsView(agentLegalEntity: String, agentUtr: String, agentUtrType: String, agentLegalEntityName: String, agentPremises: AgentPremises)
 
 object AgentDetailsView {
-  implicit val format = Json.format[AgentDetailsView]
+  implicit val format: OFormat[AgentDetailsView] = Json.format[AgentDetailsView]
 }

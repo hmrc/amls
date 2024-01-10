@@ -18,8 +18,8 @@ package models.des
 
 import models._
 import models.des.aboutthebusiness.PreviouslyRegisteredMLRView
-import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover}
-import models.des.msb.{CountriesList, MsbAllDetails}
+import models.des.businessactivities.{BusinessActivities, BusinessActivityDetails, ExpectedAMLSTurnover}
+import models.des.msb.{CountriesList, MoneyServiceBusiness, MsbAllDetails}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
@@ -32,37 +32,37 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
   }
 
-  implicit val ackref = new AckRefGenerator {
+  implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 
-  val release7BusinessActivities = DesConstants.testBusinessActivities.copy(
+  val release7BusinessActivities: BusinessActivities = DesConstants.testBusinessActivities.copy(
     all = Some(DesConstants.testBusinessActivitiesAll1.copy(
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
   )
 
-  val businessActivitiesLA = DesConstants.testBusinessActivitiesLA.copy(
+  val businessActivitiesLA: BusinessActivities = DesConstants.testBusinessActivitiesLA.copy(
     all = Some(DesConstants.testBusinessActivitiesAll.copy(
       dateChangeFlag = Some(false),
       businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
     ))
   )
 
-  val release7Msb = DesConstants.testMsb.copy(
+  val release7Msb: MoneyServiceBusiness = DesConstants.testMsb.copy(
     msbAllDetails = Some(MsbAllDetails(
       Some("£50k-£100k"),
-      true,
+      otherCntryBranchesOrAgents = true,
       Some(CountriesList(List("AD", "GB"))),
-      true)
+      sysLinkedTransIdentification = true)
     )
   )
   "Phase 2 toggle is on" when {
     "Trust or company formation agent" when {
 
       "convert frontend model to des model for amendment" in {
-        implicit val mt = Amendment
-        implicit val requestType = RequestType.Amendment
+        implicit val mt: AmlsMessageType = Amendment
+        implicit val requestType: RequestType = RequestType.Amendment
         AmendVariationRequest.convert(feSubscriptionReq.copy(
           tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)
         ) must be(
@@ -71,16 +71,16 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       }
 
       "convert frontend model to des model for variation" in {
-        implicit val mt = Variation
-        implicit val requestType = RequestType.Variation
+        implicit val mt: AmlsMessageType = Variation
+        implicit val requestType: RequestType = RequestType.Variation
         AmendVariationRequest.convert(feSubscriptionReq) must be(
           convertedDesModelRelease7.copy(amlsMessageType = "Variation")
         )
       }
 
       "convert frontend model with Letting Agent to des model with Letting Agent for variation" in {
-        implicit val mt = Variation
-        implicit val requestType = RequestType.Variation
+        implicit val mt: AmlsMessageType = Variation
+        implicit val requestType: RequestType = RequestType.Variation
         AmendVariationRequest.convert(feSubscriptionReqLA) must be(
           convertedDesModelLA.copy(amlsMessageType = "Variation")
         )
@@ -89,22 +89,22 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
     "Not trust or company formation agent" when {
       "convert without tcspTrustCompFormationAgt for amendment" in {
-        implicit val mt = Amendment
-        implicit val requestType = RequestType.Amendment
+        implicit val mt: AmlsMessageType = Amendment
+        implicit val requestType: RequestType = RequestType.Amendment
         AmendVariationRequest.convert(feSubscriptionReqNoFormationAgt.copy(
           tradingPremisesSection = TradingPremisesSection.tradingPremisesOnlyAgentModel)
         ).tcspTrustCompFormationAgt must be(None)
       }
 
       "convert without tcspTrustCompFormationAgt for variation" in {
-        implicit val mt = Variation
-        implicit val requestType = RequestType.Variation
+        implicit val mt: AmlsMessageType = Variation
+        implicit val requestType: RequestType = RequestType.Variation
         AmendVariationRequest.convert(feSubscriptionReqNoFormationAgt).tcspTrustCompFormationAgt must be(None)
       }
     }
   }
 
-  def feSubscriptionReq = {
+  def feSubscriptionReq: fe.SubscriptionRequest = {
     import models.fe.SubscriptionRequest
     SubscriptionRequest(
       BusinessMatchingSection.modelForView,
@@ -124,19 +124,19 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     )
   }
 
-  def feSubscriptionReqLA = feSubscriptionReq.copy(eabSection = EabSection.modelForViewLA)
+  def feSubscriptionReqLA: fe.SubscriptionRequest = feSubscriptionReq.copy(eabSection = EabSection.modelForViewLA)
 
-  def feSubscriptionReqNoFormationAgt = feSubscriptionReq.copy(tcspSection = ASPTCSPSection.TcspModelForViewNoCompanyFormationAgent)
+  def feSubscriptionReqNoFormationAgt: fe.SubscriptionRequest = feSubscriptionReq.copy(tcspSection = ASPTCSPSection.TcspModelForViewNoCompanyFormationAgent)
 
-  def convertedDesModelRelease7 = AmendVariationRequest(
+  def convertedDesModelRelease7: AmendVariationRequest = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     changeIndicators = DesConstants.testChangeIndicators,
     amlsMessageType = "Amendment",
     businessDetails = DesConstants.testBusinessDetails,
     businessContactDetails = DesConstants.testViewBusinessContactDetails,
-    businessReferencesAll = Some(PreviouslyRegisteredMLRView(false,
+    businessReferencesAll = Some(PreviouslyRegisteredMLRView(amlsRegistered = false,
       None,
-      false,
+      prevRegForMlr = false,
       None)),
     businessReferencesAllButSp = Some(DesConstants.testbusinessReferencesAllButSp),
     businessReferencesCbUbLlp = Some(DesConstants.testBusinessReferencesCbUbLlp),
@@ -162,20 +162,28 @@ class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     businessActivities = businessActivitiesLA
   )
 
-  val newEtmpField = Some(EtmpFields(Some("2016-09-17T09:30:47Z"), Some("2016-10-17T09:30:47Z"), Some("2016-11-17T09:30:47Z"), Some("2016-12-17T09:30:47Z")))
-  val newChangeIndicator = ChangeIndicators(true, true, true, false, false)
+  val newEtmpField: Option[EtmpFields] = Some(EtmpFields(Some("2016-09-17T09:30:47Z"),
+    Some("2016-10-17T09:30:47Z"),
+    Some("2016-11-17T09:30:47Z"),
+    Some("2016-12-17T09:30:47Z")))
 
-  def newExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
+  val newChangeIndicator: ChangeIndicators = ChangeIndicators(businessDetails = true,
+    businessAddress = true,
+    businessReferences = true,
+    tradingPremises = false,
+    businessActivities = false)
 
-  def updateAmendVariationRequest = AmendVariationRequest(
+  def newExtraFields: ExtraFields = ExtraFields(DesConstants.testDeclaration, DesConstants.testFilingIndividual, newEtmpField)
+
+  def updateAmendVariationRequest(): AmendVariationRequest = AmendVariationRequest(
     acknowledgementReference = ackref.ackRef,
     newChangeIndicator,
     "Amendment",
     DesConstants.testBusinessDetails,
     DesConstants.testViewBusinessContactDetails,
-    Some(PreviouslyRegisteredMLRView(false,
+    Some(PreviouslyRegisteredMLRView(amlsRegistered = false,
       None,
-      false,
+      prevRegForMlr = false,
       None)),
     Some(DesConstants.testbusinessReferencesAllButSp),
     Some(DesConstants.testBusinessReferencesCbUbLlp),

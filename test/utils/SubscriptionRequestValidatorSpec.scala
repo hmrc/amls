@@ -33,7 +33,7 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
 
   val validator = new SubscriptionRequestValidator
 
-  implicit val ackref = new AckRefGenerator {
+  implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
   }
 

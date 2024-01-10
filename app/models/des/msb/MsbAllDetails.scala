@@ -18,7 +18,7 @@ package models.des.msb
 
 import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class MsbAllDetails(anticipatedTotThrputNxt12Mths: Option[String],
                          otherCntryBranchesOrAgents: Boolean,
@@ -27,7 +27,7 @@ case class MsbAllDetails(anticipatedTotThrputNxt12Mths: Option[String],
 
 object MsbAllDetails {
 
-  implicit val format = Json.format[MsbAllDetails]
+  implicit val format: OFormat[MsbAllDetails] = Json.format[MsbAllDetails]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbAllDetails] = {
 

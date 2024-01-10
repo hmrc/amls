@@ -17,14 +17,14 @@
 package models.fe.businessactivities
 
 import models.des.businessactivities.BusinessActivitiesAll
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class HowManyEmployees(employeeCount: String, employeeCountAMLSSupervision: String)
 
 
 object HowManyEmployees {
 
-  implicit val formats = Json.format[HowManyEmployees]
+  implicit val formats: OFormat[HowManyEmployees] = Json.format[HowManyEmployees]
 
   def conv(activityDtls: BusinessActivitiesAll): Option[HowManyEmployees] = {
     (activityDtls.noOfEmployees, activityDtls.noOfEmployeesForMlr) match {

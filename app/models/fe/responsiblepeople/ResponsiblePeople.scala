@@ -19,7 +19,7 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, ResponsiblePersons}
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ResponsiblePeople(
                               personName: Option[PersonName] = None,
@@ -45,9 +45,9 @@ case class ResponsiblePeople(
 
 object ResponsiblePeople {
 
-  implicit val format = Json.format[ResponsiblePeople]
+  implicit val format: OFormat[ResponsiblePeople] = Json.format[ResponsiblePeople]
 
-  def legalNameChangeDate(maybeDetails: Option[NameDetails]) = for {
+  def legalNameChangeDate(maybeDetails: Option[NameDetails]): Option[LocalDate] = for {
     details <- maybeDetails
     name <- details.previousNameDetails
     date <- name.dateOfChange

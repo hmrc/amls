@@ -16,8 +16,8 @@
 
 package utils
 
-import models.des.{AmendVariationRequest, SubscriptionView}
 import models.des.businessactivities.MlrActivitiesAppliedFor
+import models.des.{AmendVariationRequest, SubscriptionView}
 import models.fe.amp.Amp
 import models.fe.asp.Asp
 import models.fe.businessactivities.BusinessActivities
@@ -28,7 +28,7 @@ import models.fe.hvd.Hvd
 import models.fe.moneyservicebusiness.MoneyServiceBusiness
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
-import play.api.{Logger, Logging}
+import play.api.Logging
 
 trait ChangeIndicatorHelper extends Logging {
 

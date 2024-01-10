@@ -17,13 +17,13 @@
 package models.des.businessactivities
 
 import models.fe.hvd.{Alcohol, ItemType, Tobacco}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class HvdAlcoholTobacco (dutySuspExAtGoods: Boolean)
 
 object HvdAlcoholTobacco {
 
-  implicit val format = Json.format[HvdAlcoholTobacco]
+  implicit val format: OFormat[HvdAlcoholTobacco] = Json.format[HvdAlcoholTobacco]
 
   implicit def covn(model: Option[models.fe.hvd.Hvd]): Option[HvdAlcoholTobacco] = {
 

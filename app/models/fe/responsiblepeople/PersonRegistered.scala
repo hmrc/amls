@@ -16,10 +16,10 @@
 
 package models.fe.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PersonRegistered(registerAnotherPerson: Boolean)
 
 object PersonRegistered {
-  implicit val formats = Json.format[PersonRegistered]
+  implicit val formats: OFormat[PersonRegistered] = Json.format[PersonRegistered]
 }

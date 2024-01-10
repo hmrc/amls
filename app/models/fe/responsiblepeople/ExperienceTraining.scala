@@ -31,11 +31,11 @@ object ExperienceTraining {
 
   implicit val jsonReads: Reads[ExperienceTraining] =
     (__ \ "experienceTraining").read[Boolean] flatMap {
-      case true => (__ \ "experienceInformation").read[String] map (ExperienceTrainingYes.apply _)
+      case true => (__ \ "experienceInformation").read[String] map ExperienceTrainingYes.apply
       case false => Reads(_ => JsSuccess(ExperienceTrainingNo))
     }
 
-  implicit val jsonWrites = Writes[ExperienceTraining] {
+  implicit val jsonWrites: Writes[ExperienceTraining] = Writes[ExperienceTraining] {
     case ExperienceTrainingYes(information) => Json.obj(
       "experienceTraining" -> true,
       "experienceInformation" -> information

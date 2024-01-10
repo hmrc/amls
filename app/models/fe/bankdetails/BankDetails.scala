@@ -24,7 +24,7 @@ object BankDetails {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[BankDetails]
+  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 
   def convBankAccount(bankDtls: BankAccountView): BankDetails = {
     BankDetails(bankDtls.accountType, bankDtls.accountName, bankDtls)

@@ -17,12 +17,12 @@
 package models.des.estateagentbusiness
 
 import models.fe.eab.Eab
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class EabResdEstAgncy(regWithRedressScheme: Boolean, whichRedressScheme: Option[String])
 
 object EabResdEstAgncy {
-  implicit val format = Json.format[EabResdEstAgncy]
+  implicit val format: OFormat[EabResdEstAgncy] = Json.format[EabResdEstAgncy]
 
   implicit def conv(eabOpt: Option[Eab]): Option[EabResdEstAgncy] = {
     eabOpt match {

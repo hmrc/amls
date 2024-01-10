@@ -17,7 +17,7 @@
 package models.des.supervision
 
 import models.fe.supervision._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class MemberOfProfessionalBody(
                                      associationofAccountingTechnicians: Boolean,
@@ -39,7 +39,7 @@ case class MemberOfProfessionalBody(
 
 object MemberOfProfessionalBody {
 
-  implicit val format = Json.format[MemberOfProfessionalBody]
+  implicit val format: OFormat[MemberOfProfessionalBody] = Json.format[MemberOfProfessionalBody]
 
   // scalastyle:off
 

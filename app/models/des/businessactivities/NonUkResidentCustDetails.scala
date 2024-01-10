@@ -17,12 +17,12 @@
 package models.des.businessactivities
 
 import models.fe.businessactivities.CustomersOutsideUK
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class NonUkResidentCustDetails(nonUkResidentCustomers: Boolean, whichCountries: Option[Seq[String]] = None)
 
 object NonUkResidentCustDetails {
-  implicit val format = Json.format[NonUkResidentCustDetails]
+  implicit val format: OFormat[NonUkResidentCustDetails] = Json.format[NonUkResidentCustDetails]
 
   implicit def convert(nonUKCust: Option[models.fe.businessactivities.CustomersOutsideUK]): NonUkResidentCustDetails = {
     nonUKCust match {

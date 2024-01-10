@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RegDetails(vatRegistered: Boolean, vrnNumber: Option[String], saRegistered: Boolean, saUtr: Option[String])
 
 object RegDetails {
-  implicit val format = Json.format[RegDetails]
+  implicit val format: OFormat[RegDetails] = Json.format[RegDetails]
 
   implicit def conv(rp: ResponsiblePeople): Option[RegDetails] = {
     val (vat, vatNum) = convVat(rp.vatRegistered)

@@ -16,7 +16,7 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import models.fe.responsiblepeople.ResponsiblePeople
 
 case class NameDetails(personName: PersonName,
@@ -24,7 +24,7 @@ case class NameDetails(personName: PersonName,
                        previousNameDetails: Option[PreviousNameDetails]) //it is not optional
 
 object NameDetails {
-  implicit val format = Json.format[NameDetails]
+  implicit val format: OFormat[NameDetails] = Json.format[NameDetails]
 
   def from(maybePerson: Option[ResponsiblePeople], amendVariation: Boolean): Option[NameDetails] = {
     maybePerson match {

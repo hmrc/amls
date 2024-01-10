@@ -16,13 +16,13 @@
 
 package models.des.aboutyou
 
-import models.fe.declaration.{Other, ExternalAccountant, RoleType, RoleWithinBusiness}
-import play.api.libs.json.Json
+import models.fe.declaration.{ExternalAccountant, Other, RoleType, RoleWithinBusiness}
+import play.api.libs.json.{Json, OFormat}
 
 case class RoleForTheBusiness(externalAccountant: Boolean, other: Boolean, specifyOtherRoleForBusiness: Option[String])
 
 object RoleForTheBusiness {
-  implicit val format = Json.format[RoleForTheBusiness]
+  implicit val format: OFormat[RoleForTheBusiness] = Json.format[RoleForTheBusiness]
 
   def convertForBusiness(frontendModel:RoleWithinBusiness): RoleForTheBusiness = {
 

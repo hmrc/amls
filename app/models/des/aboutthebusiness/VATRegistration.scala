@@ -23,7 +23,7 @@ case class VATRegistration(vatRegistered: Boolean, vrnNumber: Option[String])
 
 object VATRegistration {
 
-  implicit val format = Json.format[VATRegistration]
+  implicit val format: OFormat[VATRegistration] = Json.format[VATRegistration]
 
   implicit def convert(businessDetails: BusinessDetails): Option[VATRegistration] = {
 

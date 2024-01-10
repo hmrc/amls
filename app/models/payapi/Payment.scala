@@ -37,12 +37,12 @@ object TaxTypes extends Enum[TaxType] {
 
   case object `corporation-tax` extends TaxType
 
-  override def values = findValues
+  override def values: IndexedSeq[TaxType] = findValues
 }
 
 case class Payment(id: String, taxType: TaxType, reference: Option[String], description: Option[String], amountInPence: Option[Int], status: PaymentStatus)
 
 object Payment {
-  implicit val taxTypeTypeFormat = EnumFormat(TaxTypes)
-  implicit val format = Json.format[Payment]
+  implicit val taxTypeTypeFormat: Format[TaxType] = EnumFormat(TaxTypes)
+  implicit val format: OFormat[Payment] = Json.format[Payment]
 }

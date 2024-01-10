@@ -17,7 +17,7 @@
 package models.des.businessactivities
 
 import models.fe.hvd._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 
 case class HvdGoodsSold(alcohol: Boolean,
@@ -36,7 +36,7 @@ case class HvdGoodsSold(alcohol: Boolean,
                         howGoodsAreSold: Option[HowGoodsAreSold])
 
 object HvdGoodsSold {
-  implicit val format = Json.format[HvdGoodsSold]
+  implicit val format: OFormat[HvdGoodsSold] = Json.format[HvdGoodsSold]
 
   implicit def conv(hvd: Option[models.fe.hvd.Hvd]): Option[HvdGoodsSold] = {
     hvd match {
@@ -51,7 +51,20 @@ object HvdGoodsSold {
     val products = hvd.products.fold[Set[ItemType]](Set.empty)(x => x.items)
 
     val hvdGoodsSold = products.foldLeft(
-      HvdGoodsSold(false, false, false, false, false, false, false, false, false, false, false, false, None, None)) {
+      HvdGoodsSold(alcohol = false,
+        tobacco = false,
+        antiques = false,
+        cars = false,
+        otherMotorVehicles = false,
+        caravans = false,
+        jewellery = false,
+        gold = false,
+        scrapMetals = false,
+        mobilePhones = false,
+        clothing = false,
+        other = false,
+        None,
+        None)) {
       (result, productType) =>
         productType match {
           case Alcohol => result.copy(alcohol = true)

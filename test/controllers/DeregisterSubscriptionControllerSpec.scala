@@ -21,7 +21,6 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.DeregisterSubscriptionResponse
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsJson, _}
