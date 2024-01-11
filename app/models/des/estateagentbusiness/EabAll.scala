@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.des.estateagentbusiness
 
 import models.fe.eab.Eab
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class EabAll(
                    estateAgencyActProhibition: Boolean,
@@ -27,7 +27,7 @@ case class EabAll(
 
 
 object EabAll {
-  implicit val format = Json.format[EabAll]
+  implicit val format: OFormat[EabAll] = Json.format[EabAll]
 
   implicit def convert(eab: Eab): EabAll = {
     val (penalised, penalisedDesc) = convData(eab.data.penalisedEstateAgentsAct, eab.data.penalisedEstateAgentsActDetail)

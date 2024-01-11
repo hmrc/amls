@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ package models.fe.businessdetails
 import models.des.businessactivities.BusinessActivitiesAll
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 
 case class ActivityStartDate(startDate: LocalDate)
 
 object ActivityStartDate {
 
-  implicit val format = Json.format[ActivityStartDate]
+  implicit val format: OFormat[ActivityStartDate] = Json.format[ActivityStartDate]
 
   implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] = {
 

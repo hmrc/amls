@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ object Asp {
 
   val key = "asp"
 
-  implicit val format = Json.format[Asp]
+  implicit val format: OFormat[Asp] = Json.format[Asp]
 
   implicit def default(details: Option[Asp]): Asp =
     details.getOrElse(Asp())

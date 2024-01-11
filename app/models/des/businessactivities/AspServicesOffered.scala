@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.des.businessactivities
 
 import models.fe.asp._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AspServicesOffered(accountant: Boolean, payrollServiceProvider: Boolean, bookKeeper: Boolean, auditor: Boolean, financialOrTaxAdvisor: Boolean)
 
 object AspServicesOffered {
 
-  implicit val format = Json.format[AspServicesOffered]
+  implicit val format: OFormat[AspServicesOffered] = Json.format[AspServicesOffered]
 
   implicit def conv(asp: Option[Asp]): Option[AspServicesOffered] = {
     asp match {

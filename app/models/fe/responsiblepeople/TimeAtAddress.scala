@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ object TimeAtAddress {
     }
   }
 
-  implicit val jsonWrites = Writes[TimeAtAddress] {
+  implicit val jsonWrites: Writes[TimeAtAddress] = Writes[TimeAtAddress] {
     case Empty => JsNull
     case ZeroToFiveMonths => Json.obj("timeAtAddress" -> "01")
     case SixToElevenMonths => Json.obj("timeAtAddress" -> "02")

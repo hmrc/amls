@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.ContactCommDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ContactDetails(phoneNumber: String, emailAddress: String)
 
 object ContactDetails {
 
-  implicit val formats = Json.format[ContactDetails]
+  implicit val formats: OFormat[ContactDetails] = Json.format[ContactDetails]
 
   implicit def conv(contactDetails: Option[ContactCommDetails]): Option[ContactDetails] = {
     contactDetails match {

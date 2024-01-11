@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models.des.tradingpremises
 
 import models.fe.tradingpremises._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Msb(mt: Boolean, ce: Boolean, smdcc: Boolean, nonSmdcc: Boolean, fx: Boolean)
 
 object Msb {
-  implicit val format = Json.format[Msb]
+  implicit val format: OFormat[Msb] = Json.format[Msb]
 
   implicit def convert(services: Set[MsbService]): Msb = {
 
@@ -41,7 +41,7 @@ object Msb {
 case class Hvd(hvd: Boolean)
 
 object Hvd {
-  implicit val format = Json.format[Hvd]
+  implicit val format: OFormat[Hvd] = Json.format[Hvd]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Hvd = {
     Hvd(businessActivity.contains(BusinessActivity.HighValueDealing))
@@ -51,7 +51,7 @@ object Hvd {
 case class Asp(asp: Boolean)
 
 object Asp {
-  implicit val format = Json.format[Asp]
+  implicit val format: OFormat[Asp] = Json.format[Asp]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Asp = {
     Asp(businessActivity.contains(BusinessActivity.AccountancyServices))
@@ -61,7 +61,7 @@ object Asp {
 case class Tcsp(tcsp: Boolean)
 
 object Tcsp {
-  implicit val format = Json.format[Tcsp]
+  implicit val format: OFormat[Tcsp] = Json.format[Tcsp]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Tcsp = {
     Tcsp(businessActivity.contains(BusinessActivity.TrustAndCompanyServices))
@@ -71,7 +71,7 @@ object Tcsp {
 case class Eab(eab: Boolean)
 
 object Eab {
-  implicit val format = Json.format[Eab]
+  implicit val format: OFormat[Eab] = Json.format[Eab]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Eab = {
     Eab(businessActivity.contains(BusinessActivity.EstateAgentBusinessService))
@@ -81,7 +81,7 @@ object Eab {
 case class Bpsp(bpsp: Boolean)
 
 object Bpsp {
-  implicit val format = Json.format[Bpsp]
+  implicit val format: OFormat[Bpsp] = Json.format[Bpsp]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Bpsp = {
     Bpsp(businessActivity.contains(BusinessActivity.BillPaymentServices))
@@ -91,7 +91,7 @@ object Bpsp {
 case class Tditpsp(tditpsp: Boolean)
 
 object Tditpsp {
-  implicit val format = Json.format[Tditpsp]
+  implicit val format: OFormat[Tditpsp] = Json.format[Tditpsp]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Tditpsp = {
     Tditpsp(businessActivity.contains(BusinessActivity.TelephonePaymentService))
@@ -101,7 +101,7 @@ object Tditpsp {
 case class Amp(amp: Boolean)
 
 object Amp {
-  implicit val format = Json.format[Amp]
+  implicit val format: OFormat[Amp] = Json.format[Amp]
 
   implicit def convert(businessActivity: Set[BusinessActivity]): Amp = {
     Amp(businessActivity.contains(BusinessActivity.ArtMarketParticipant))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ object Tcsp {
 
   val key = "tcsp"
 
-  implicit val formats = Json.format[Tcsp]
+  implicit val formats: OFormat[Tcsp] = Json.format[Tcsp]
 
   implicit def default(tcsp: Option[Tcsp]): Tcsp =
     tcsp.getOrElse(Tcsp())
@@ -62,7 +62,7 @@ object Tcsp {
   implicit def conv(view: SubscriptionView): Option[Tcsp] = {
     (view.tcspAll, view.businessActivities.tcspServicesOffered) match {
       case (Some(tcspAll), _) => Some(Tcsp(view, view, view, view.businessActivities, convBool(tcspAll), view))
-      case (None, Some(tcspServicesOffered)) => Some(Tcsp(view, view, view, view.businessActivities, None, view))
+      case (None, Some(_)) => Some(Tcsp(view, view, view, view.businessActivities, None, view))
       case (None, None) => None
       case _ => None
     }

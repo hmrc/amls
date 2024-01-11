@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.des.supervision
 
 import models.fe.supervision.Supervision
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AspOrTcsp(supervisionDetails: Option[SupervisionDetails], professionalBodyDetails: Option[ProfessionalBodyDetails])
 
 object AspOrTcsp {
 
-  implicit val format = Json.format[AspOrTcsp]
+  implicit val format: OFormat[AspOrTcsp] = Json.format[AspOrTcsp]
 
   def conv(supervision: Option[Supervision]): Option[AspOrTcsp] = {
     supervision match {

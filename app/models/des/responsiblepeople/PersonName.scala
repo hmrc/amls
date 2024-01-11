@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models.des.responsiblepeople
 
-import play.api.libs.json.Json
-import models.fe.responsiblepeople.{PersonName => FEPersonName, PreviousName}
+import play.api.libs.json.{Json, OFormat}
+import models.fe.responsiblepeople.{PreviousName, PersonName => FEPersonName}
 
 case class PersonName(firstName: Option[String], middleName: Option[String], lastName: Option[String])
 
 case object PersonName {
-  implicit val format = Json.format[PersonName]
+  implicit val format: OFormat[PersonName] = Json.format[PersonName]
 
   implicit def convert(maybePerson: Option[FEPersonName]): PersonName = maybePerson match {
     case Some(person) => PersonName(Some(person.firstName), person.middleName, Some(person.lastName))

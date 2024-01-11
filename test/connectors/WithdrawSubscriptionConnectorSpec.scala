@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import metrics.API8
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 
 class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
     val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {

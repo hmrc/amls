@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import models.fe.businessdetails.ActivityStartDate
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-import java.time.{LocalDate, LocalDateTime, OffsetDateTime, ZoneOffset}
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 case class BusinessActivitiesAll(
@@ -41,8 +41,8 @@ case class BusinessActivitiesAll(
 
 object BusinessActivitiesAll{
 
-  implicit val format = Json.format[BusinessActivitiesAll]
-  val jsonRead = {
+  implicit val format: OFormat[BusinessActivitiesAll] = Json.format[BusinessActivitiesAll]
+  val jsonRead: Reads[BusinessActivitiesAll] = {
     (
       (__ \ "busActivitiesChangeDate").readNullable[String] and
         (__ \ "activitiesCommenceDate").readNullable[String] and
@@ -101,8 +101,6 @@ object BusinessActivitiesAll{
       )
     )
   }
-
-
 
   def convert(atb:models.fe.businessdetails.BusinessDetails,
               activities: models.fe.businessactivities.BusinessActivities,

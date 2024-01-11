@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
 import models.des.WithdrawSubscriptionResponse
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

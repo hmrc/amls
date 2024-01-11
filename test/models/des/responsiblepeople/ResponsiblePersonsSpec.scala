@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package models.des.responsiblepeople
 
-import models.DefaultDesValues.{nameDtls, nameDtls1}
+import models.DefaultDesValues.nameDtls1
 import models.fe.responsiblepeople.{SoleProprietor => RPSoleProprietor, _}
 import models.{BusinessMatchingSection, DefaultDesValues, ResponsiblePeopleSection}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{JsBoolean, JsString, JsSuccess, Json}
 
 import java.time.LocalDate

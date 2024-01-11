@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import models.fe.responsiblepeople.ResponsiblePeople
 import models.fe.supervision.Supervision
 import models.fe.tcsp.Tcsp
 import models.fe.tradingpremises.TradingPremises
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionView(
                              etmpFormBundleNumber: String,
@@ -53,7 +53,7 @@ case class SubscriptionView(
 
 object SubscriptionView {
 
-  implicit val format = Json.format[SubscriptionView]
+  implicit val format: OFormat[Outgoing] = Json.format[SubscriptionView]
 
   final type Outgoing = SubscriptionView
   final type Incoming = models.des.SubscriptionView

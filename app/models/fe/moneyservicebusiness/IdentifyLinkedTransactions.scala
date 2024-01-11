@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.MsbAllDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class IdentifyLinkedTransactions(linkedTxn: Boolean)
 
 object IdentifyLinkedTransactions {
 
-  implicit val format = Json.format[IdentifyLinkedTransactions]
+  implicit val format: OFormat[IdentifyLinkedTransactions] = Json.format[IdentifyLinkedTransactions]
 
   implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[IdentifyLinkedTransactions] = {
     msbAll match {

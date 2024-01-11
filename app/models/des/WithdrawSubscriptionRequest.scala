@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ object WithdrawalReason {
       case _ => JsError((JsPath \ "withdrawalReason") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonServiceWrites =
+  implicit val jsonServiceWrites: Writes[WithdrawalReason] =
     Writes[WithdrawalReason] {
       case OutOfscope => JsString("Out of scope")
       case NotTradingInOwnRight => JsString("Not trading in own right")
@@ -56,5 +56,5 @@ case class WithdrawSubscriptionRequest (acknowledgementReference: String,
 
 object WithdrawSubscriptionRequest {
 
-  implicit val format = Json.format[WithdrawSubscriptionRequest]
+  implicit val format: OFormat[WithdrawSubscriptionRequest] = Json.format[WithdrawSubscriptionRequest]
 }

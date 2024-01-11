@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.{IdDetail, ResponsiblePersons}
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class DateOfBirth(dateOfBirth: LocalDate)
 
 object DateOfBirth {
 
-  implicit val format = Json.format[DateOfBirth]
+  implicit val format: OFormat[DateOfBirth] = Json.format[DateOfBirth]
 
   implicit def conv(responsiblePeople: ResponsiblePersons): Option[DateOfBirth] = {
     val idDetail: Option[IdDetail] = for {

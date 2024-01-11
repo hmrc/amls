@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ object TransactionTypes {
 
   import play.api.libs.json.Reads._
 
-  implicit val typesReader = new Reads[Set[TransactionType]] {
-    override def reads(json: JsValue) = {
+  implicit val typesReader: Reads[Set[TransactionType]] = new Reads[Set[TransactionType]] {
+    override def reads(json: JsValue): JsResult[Set[TransactionType]] = {
       val t = (json \ "types").asOpt[Set[String]]
       val n = (json \ "software").asOpt[String]
       val validValues = Set("01", "02", "03")
@@ -59,7 +59,7 @@ object TransactionTypes {
     }
   }
 
-  implicit val jsonWrites = Writes[TransactionTypes] { t =>
+  implicit val jsonWrites: Writes[TransactionTypes] = Writes[TransactionTypes] { t =>
     val softwareName = t.types.collectFirst {
       case DigitalSoftware(name) => Json.obj("software" -> name)
     }.getOrElse(Json.obj())

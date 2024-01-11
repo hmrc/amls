@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ object UKPassport {
       case false => Reads(_ => JsSuccess(UKPassportNo))
     }
 
-  implicit val jsonWrites = Writes[UKPassport] {
+  implicit val jsonWrites: Writes[UKPassport] = Writes[UKPassport] {
     case UKPassportYes(value) => Json.obj(
       "ukPassport" -> true,
       "ukPassportNumber" -> value

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object ExpectedAMLSTurnover {
 
   case object Seventh extends ExpectedAMLSTurnover
 
-  implicit val jsonReads = {
+  implicit val jsonReads: Reads[ExpectedAMLSTurnover] = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "expectedAMLSTurnover").read[String].flatMap[ExpectedAMLSTurnover] {
       case "01" => Reads(_ => JsSuccess(First))
@@ -54,7 +54,7 @@ object ExpectedAMLSTurnover {
     }
   }
 
-  implicit val jsonWrites = Writes[ExpectedAMLSTurnover] {
+  implicit val jsonWrites: Writes[ExpectedAMLSTurnover] = Writes[ExpectedAMLSTurnover] {
     case First => Json.obj("expectedAMLSTurnover" -> "01")
     case Second => Json.obj("expectedAMLSTurnover" -> "02")
     case Third => Json.obj("expectedAMLSTurnover" -> "03")

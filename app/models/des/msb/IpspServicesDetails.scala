@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package models.des.msb
 
-import models.fe.moneyservicebusiness.{BusinessUseAnIPSPNo, BusinessUseAnIPSPYes, BusinessUseAnIPSP}
-import play.api.libs.json.Json
+import models.fe.moneyservicebusiness.{BusinessUseAnIPSP, BusinessUseAnIPSPNo, BusinessUseAnIPSPYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class IpspServicesDetails(ipspServicesUsed: Boolean, ipspDetails: Option[Seq[IpspDetails]])
 
 object IpspServicesDetails {
 
-  implicit val format = Json.format[IpspServicesDetails]
+  implicit val format: OFormat[IpspServicesDetails] = Json.format[IpspServicesDetails]
 
   implicit def convIpsp(ipsp: Option[BusinessUseAnIPSP]): IpspServicesDetails = {
 

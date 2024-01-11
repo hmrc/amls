@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ object ProvidedServices {
       }
     } map ProvidedServices.apply
 
-  implicit val jsonWrites = Writes[ProvidedServices] { ps =>
+  implicit val jsonWrites: Writes[ProvidedServices] = Writes[ProvidedServices] { ps =>
     Json.obj(
       "services" -> (ps.services map {
         _.value

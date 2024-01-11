@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models.des.msb
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CountriesList(listOfCountries: Seq[String])
 
 object CountriesList {
 
-  implicit val format = Json.format[CountriesList]
+  implicit val format: OFormat[CountriesList] = Json.format[CountriesList]
 
   implicit def conv(countryList: Seq[String]): Option[CountriesList] = {
     Some(CountriesList(countryList))

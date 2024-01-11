@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ object MsbService {
       case _ => JsError(JsPath -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonW = Writes[MsbService] {
+  implicit val jsonW: Writes[MsbService] = Writes[MsbService] {
     case TransmittingMoney => JsString("01")
     case CurrencyExchange => JsString("02")
     case ChequeCashingNotScrapMetal => JsString("03")
@@ -57,7 +57,7 @@ object MsbService {
 
 object MsbServices {
 
-  implicit val formats = Json.format[MsbServices]
+  implicit val formats: OFormat[MsbServices] = Json.format[MsbServices]
 
   implicit def convMsb(msb: Msb): Option[MsbServices] = {
     val `empty` = Set.empty[MsbService]

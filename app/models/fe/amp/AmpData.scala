@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.fe.amp
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class AmpData(typeOfParticipant: List[String],
                          typeOfParticipantDetail: Option[String],
@@ -26,5 +26,5 @@ final case class AmpData(typeOfParticipant: List[String],
                          percentageExpectedTurnover: Option[String])
 
 object AmpData {
-  implicit val format = Json.format[AmpData]
+  implicit val format: OFormat[AmpData] = Json.format[AmpData]
 }

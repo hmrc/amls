@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ case class VATRegistration(vatRegistered: Boolean, vrnNumber: Option[String])
 
 object VATRegistration {
 
-  implicit val format = Json.format[VATRegistration]
+  implicit val format: OFormat[VATRegistration] = Json.format[VATRegistration]
 
   implicit def convert(businessDetails: BusinessDetails): Option[VATRegistration] = {
 

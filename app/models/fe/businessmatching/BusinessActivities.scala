@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ object BusinessActivity {
     case _ => JsError((JsPath \ "businessActivities") -> JsonValidationError("error.invalid"))
   }
 
-  implicit val jsonActivityWrite = Writes[BusinessActivity] {
+  implicit val jsonActivityWrite: Writes[BusinessActivity] = Writes[BusinessActivity] {
     case AccountancyServices => JsString("01")
     case ArtMarketParticipant => JsString("08")
     case BillPaymentServices => JsString("02")
@@ -68,7 +68,7 @@ object BusinessActivity {
 
 object BusinessActivities {
 
-  implicit val formats = Json.format[BusinessActivities]
+  implicit val formats: OFormat[BusinessActivities] = Json.format[BusinessActivities]
 
   def getActivity[A <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] = {
     if (present) {

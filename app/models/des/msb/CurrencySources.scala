@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.des.msb
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CurrencySources(
                             bankDetails: Option[MSBBankDetails] = None,
@@ -27,7 +27,7 @@ case class CurrencySources(
                           )
 
 object CurrencySources {
-  implicit val format = Json.format[CurrencySources]
+  implicit val format: OFormat[CurrencySources] = Json.format[CurrencySources]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): CurrencySources = {
     msb.whichCurrencies match {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models.des.aboutyou
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class IndividualDetails(firstName: String, middleName: Option[String], lastName: String)
 
 object IndividualDetails {
 
-  implicit val formats = Json.format[IndividualDetails]
+  implicit val formats: OFormat[IndividualDetails] = Json.format[IndividualDetails]
 
   implicit def convert(person: models.fe.declaration.AddPerson): Option[IndividualDetails] = {
     person.firstName match {

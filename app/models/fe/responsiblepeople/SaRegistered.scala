@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ object SaRegistered {
 
   implicit val jsonReads: Reads[SaRegistered] =
     (__ \ "saRegistered").read[Boolean] flatMap {
-      case true => (__ \ "utrNumber").read[String] map (SaRegisteredYes.apply _)
+      case true => (__ \ "utrNumber").read[String] map SaRegisteredYes.apply
       case false => Reads(_ => JsSuccess(SaRegisteredNo))
     }
 
-  implicit val jsonWrites = Writes[SaRegistered] {
+  implicit val jsonWrites: Writes[SaRegistered] = Writes[SaRegistered] {
     case SaRegisteredYes(value) => Json.obj(
       "saRegistered" -> true,
       "utrNumber" -> value

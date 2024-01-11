@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ object BusinessStructure {
   case object UnincorporatedBody extends BusinessStructure
 
 
-  implicit val jsonReadsBusinessStructure = {
+  implicit val jsonReadsBusinessStructure: Reads[BusinessStructure] = {
     (__ \ "agentsBusinessStructure").read[String].flatMap[BusinessStructure] {
       case "01" => Reads(_ => JsSuccess(SoleProprietor))
       case "02" => Reads(_ => JsSuccess(LimitedLiabilityPartnership))
@@ -45,7 +45,7 @@ object BusinessStructure {
     }
   }
 
-  implicit val jsonWritesBusinessStructure = Writes[BusinessStructure] {
+  implicit val jsonWritesBusinessStructure: Writes[BusinessStructure] = Writes[BusinessStructure] {
     case SoleProprietor => Json.obj("agentsBusinessStructure" -> "01")
     case LimitedLiabilityPartnership => Json.obj("agentsBusinessStructure" -> "02")
     case Partnership => Json.obj("agentsBusinessStructure" -> "03")

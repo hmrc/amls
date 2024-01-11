@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import models.des._
 import models.fe
 import play.api.Logging
 import play.api.libs.json._
-import play.api.mvc.{ControllerComponents, PlayBodyParsers, Request}
+import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers, Request, Result}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
@@ -40,15 +40,15 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
 
   def update(amlsRegistrationNumber: String,
              messageType: AmlsMessageType,
-             requestType: RequestType)(implicit request: Request[JsValue]) = {
+             requestType: RequestType)(implicit request: Request[JsValue]): Future[Result] = {
 
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>
         Json.fromJson[fe.SubscriptionRequest](request.body) match {
           case JsSuccess(body, _) =>
-            implicit val mt = messageType
-            implicit val requestType = RequestType.Amendment
+            implicit val mt: AmlsMessageType = messageType
+            implicit val requestType: RequestType = RequestType.Amendment
             service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
                 service.update(amlsRegistrationNumber, updatedAmendRequest) map {
@@ -60,7 +60,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
                     Future.failed(e)
                 }
             }
-          case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+          case JsError(errors) =>
             Future.successful(BadRequest(toError(errors)))
         }
       case _ =>
@@ -71,7 +71,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
 
   }
 
-  def amend(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def amend(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][amend]"
@@ -79,7 +79,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
         update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 
-  def variation(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def variation(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][variation]"
@@ -87,7 +87,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
         update(amlsRegistrationNumber, Variation, RequestType.Variation)
     }
 
-  def renewal(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def renewal(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewal]"
@@ -95,7 +95,7 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
         update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
     }
 
-  def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String) =
+  def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) {
       implicit request =>
         val prefix = "[AmendVariationController][renewalAmendment]"

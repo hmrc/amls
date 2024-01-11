@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.fe.businessmatching
 
 import models.des.businessdetails.BusinessDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CompanyRegistrationNumber(companyRegistrationNumber: String)
 
 object CompanyRegistrationNumber {
 
-  implicit val formats = Json.format[CompanyRegistrationNumber]
+  implicit val formats: OFormat[CompanyRegistrationNumber] = Json.format[CompanyRegistrationNumber]
 
   implicit def conv(desBusinessDetails: BusinessDetails): Option[CompanyRegistrationNumber] = {
     desBusinessDetails.corpAndBodyLlps match {

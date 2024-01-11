@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package models.des.businessactivities
 
 import models.des.aboutthebusiness.Address
 import models.fe.businessactivities.{NonUkAccountantsAddress, UkAccountantsAddress}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AdvisorNameAddress(name: String, tradingName: Option[String], address: Address)
 
 object AdvisorNameAddress {
-  implicit val format = Json.format[AdvisorNameAddress]
+  implicit val format: OFormat[AdvisorNameAddress] = Json.format[AdvisorNameAddress]
 
   implicit def convert(accountant: models.fe.businessactivities.WhoIsYourAccountant): Option[AdvisorNameAddress] = {
 

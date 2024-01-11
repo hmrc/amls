@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ object InvolvedInOther {
       case false => Reads(_ => JsSuccess(InvolvedInOtherNo))
     }
 
-  implicit val jsonWrites = Writes[InvolvedInOther] {
+  implicit val jsonWrites: Writes[InvolvedInOther] = Writes[InvolvedInOther] {
     case InvolvedInOtherYes(details) => Json.obj(
       "involvedInOther" -> true,
       "details" -> details
     )
-    case involvedInOtherNo => Json.obj("involvedInOther" -> false)
+    case _ => Json.obj("involvedInOther" -> false)
   }
 
   def conv(activityDtls: BusinessActivityDetails): Option[InvolvedInOther] = {

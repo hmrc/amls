@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.des.aboutthebusiness
 
 import models.fe.businessdetails._
 import play.api.Logger
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Address(addressLine1: String,
                    addressLine2: Option[String],
@@ -30,8 +30,8 @@ case class Address(addressLine1: String,
                   )
 
 object Address {
-  implicit val format = Json.format[Address]
-  lazy val logger = Logger(this.getClass)
+  implicit val format: OFormat[Address] = Json.format[Address]
+  lazy val logger: Logger = Logger(this.getClass)
 
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 

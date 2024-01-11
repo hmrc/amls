@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package utils
 
+import models.des._
 import models.des.aboutthebusiness.{Address, BusinessContactDetails}
 import models.des.aboutyou.AboutYouRelease7
 import models.des.amp.{Amp, TransactionsAccptOvrThrshld}
@@ -26,8 +27,7 @@ import models.des.estateagentbusiness.{EabAll, EabResdEstAgncy, LettingAgents}
 import models.des.hvd.Hvd
 import models.des.msb.{MoneyServiceBusiness, MsbAllDetails}
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
-import models.des.tradingpremises.{Tcsp, TradingPremises}
-import models.des.{AmendVariationRequest, ChangeIndicators, Declaration, ExtraFields, SubscriptionView}
+import models.des.tradingpremises.TradingPremises
 
 class ChangeIndicatorHelperSpec extends AmlsBaseSpec with ChangeIndicatorHelper {
 

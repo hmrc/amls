@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.fe.hvd
 
 import models.des.hvd.{Hvd => DesHvd}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class LinkedCashPayments(linkedCashPayments: Boolean)
 
 object LinkedCashPayments {
 
-  implicit val format = Json.format[LinkedCashPayments]
+  implicit val format: OFormat[LinkedCashPayments] = Json.format[LinkedCashPayments]
 
   implicit def conv(hvd: DesHvd): Option[LinkedCashPayments] = {
     Some(LinkedCashPayments(hvd.sysAutoIdOfLinkedCashPymts))

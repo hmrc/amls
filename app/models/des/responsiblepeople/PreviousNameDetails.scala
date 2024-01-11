@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models.des.responsiblepeople
 
 import models.fe.responsiblepeople.ResponsiblePeople
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PreviousNameDetails(nameEverChanged: Boolean, previousName: Option[PersonName], dateOfChange: Option[String], dateChangeFlag: Option[Boolean])
 
 object PreviousNameDetails {
-  implicit val format = Json.format[PreviousNameDetails]
+  implicit val format: OFormat[PreviousNameDetails] = Json.format[PreviousNameDetails]
 
 
   def from(person: ResponsiblePeople, amendVariation: Boolean): Option[PreviousNameDetails] = {

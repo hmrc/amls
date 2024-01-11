@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models.des.bankdetails
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BankDetails(noOfMlrBankAccounts: String, bankAccounts: Option[Seq[BankAccount]])
 
 object BankDetails {
 
-  implicit val format = Json.format[BankDetails]
+  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 
   def emptyToOption(seq: Seq[BankAccount]): Option[Seq[BankAccount]] =
     seq match {

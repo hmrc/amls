@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ object PositionWithinBusiness {
       case _ => JsError((JsPath \ "positions") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonWrites = Writes[PositionWithinBusiness] {
+  implicit val jsonWrites: Writes[PositionWithinBusiness] = Writes[PositionWithinBusiness] {
     case BeneficialOwner => JsString("01")
     case Director => JsString("02")
     case InternalAccountant => JsString("03")
@@ -70,7 +70,7 @@ object PositionWithinBusiness {
 }
 
 object Positions {
-  implicit val formats = Json.format[Positions]
+  implicit val formats: OFormat[Positions] = Json.format[Positions]
 
   implicit def conv(desRp: ResponsiblePersons): Option[Positions] = {
 

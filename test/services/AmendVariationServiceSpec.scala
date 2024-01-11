@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,9 +134,9 @@ class AmendVariationServiceSpec extends PlaySpec
     extra = unchangedExtra
   )
 
-  val amlsRegForHalfYears = amlsRefNoGen.sample.get
+  val amlsRegForHalfYears: String = amlsRefNoGen.sample.get
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "AmendVariationService" must {
     val request = mock(classOf[des.AmendVariationRequest])

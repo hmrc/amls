@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ object RoleWithinBusiness {
       }
     } map RoleWithinBusiness.apply
 
-  implicit val jsonWrite = Writes[RoleWithinBusiness] {
+  implicit val jsonWrite: Writes[RoleWithinBusiness] = Writes[RoleWithinBusiness] {
     case RoleWithinBusiness(roles) =>
       Json.obj(
         "roleWithinBusiness" -> (roles map {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 package models.des.businessactivities
 
 import models.fe.businessactivities.{InvolvedInOtherNo, InvolvedInOtherYes}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class OtherBusinessActivities(otherBusinessActivities: String, anticipatedTotBusinessTurnover: String, mlrActivityTurnover: String)
 
 object OtherBusinessActivities {
-  implicit val format = Json.format[OtherBusinessActivities]
+  implicit val format: OFormat[OtherBusinessActivities] = Json.format[OtherBusinessActivities]
 }
 
 case class ExpectedAMLSTurnover(mlrActivityTurnover: Option[String] = None, otherBusActivitiesCarriedOut: Option[OtherBusinessActivities] = None)
 
 //noinspection ScalaStyle
 object ExpectedAMLSTurnover {
-  implicit val format = Json.format[ExpectedAMLSTurnover]
+  implicit val format: OFormat[ExpectedAMLSTurnover] = Json.format[ExpectedAMLSTurnover]
 
   implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[ExpectedAMLSTurnover] = {
     bact.involvedInOther match {

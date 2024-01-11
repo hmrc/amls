@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.des.bankdetails
 
-import play.api.libs.json.{Reads, Writes, Json}
+import play.api.libs.json.{Json, Reads, Writes}
 
 sealed trait Account
 
@@ -31,14 +31,13 @@ object Account {
 
         ) (ukAccount.apply _)
 
-      case false => {
+      case false =>
         (__ \ "iban").read[String] fmap IBANNumber.apply
         (__ \ "bankAccountNumber").read[String] fmap AccountNumber.apply
-      }
     }
   }
 
-  implicit val jsonWrites = Writes[Account] {
+  implicit val jsonWrites: Writes[Account] = Writes[Account] {
     case m: ukAccount =>
       Json.obj(
         "ukAccount" -> Json.obj(

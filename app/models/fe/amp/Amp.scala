@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ final case class Amp(data: AmpData)
 
 object Amp {
 
-  implicit val format = Json.format[Amp]
+  implicit val format: OFormat[Amp] = Json.format[Amp]
 
   implicit def conv(view: SubscriptionView): Option[Amp] = {
     view match {

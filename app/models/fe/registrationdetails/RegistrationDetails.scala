@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models.fe.registrationdetails
 
 import models.des.registrationdetails.{Individual, Organisation, RegistrationDetails => DesRegistrationDetails}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OWrites}
 
 case class RegistrationDetails(companyName: String, isIndividual: Boolean)
 
 object RegistrationDetails {
-  implicit val writes = Json.writes[RegistrationDetails]
+  implicit val writes: OWrites[RegistrationDetails] = Json.writes[RegistrationDetails]
 
   implicit def convert(details: DesRegistrationDetails): RegistrationDetails = details match {
     case DesRegistrationDetails(x@true, details: Individual) => RegistrationDetails(s"${details.firstName} ${details.lastName}", x)

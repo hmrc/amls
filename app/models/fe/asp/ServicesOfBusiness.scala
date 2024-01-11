@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ object Service {
       case _ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
     }
 
-  implicit val jsonServiceWrites = Writes[Service] {
+  implicit val jsonServiceWrites: Writes[Service] = Writes[Service] {
     case Accountancy => JsString("01")
     case PayrollServices => JsString("02")
     case BookKeeping => JsString("03")
@@ -56,7 +56,7 @@ object Service {
 }
 
 object ServicesOfBusiness {
-  implicit val formats = Json.format[ServicesOfBusiness]
+  implicit val formats: OFormat[ServicesOfBusiness] = Json.format[ServicesOfBusiness]
 
   implicit def conv(ba: BusinessActivities): Option[ServicesOfBusiness] = {
     val services: Option[Set[Service]] = ba.aspServicesOffered match {

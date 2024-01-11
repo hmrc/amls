@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ object BusinessTypes {
     } map BusinessTypes.apply
   }
 
-  implicit val jsonWrites = Writes[BusinessTypes] { businessTypes =>
+  implicit val jsonWrites: Writes[BusinessTypes] = Writes[BusinessTypes] { businessTypes =>
     Json.obj(
       "businessType" -> (businessTypes.businessType map {
         _.value

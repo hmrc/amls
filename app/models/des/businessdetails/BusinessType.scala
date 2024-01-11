@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object BusinessType {
       case BT.UnincorporatedBody => UnincorporatedBody
     }
 
-  implicit val reads = Reads[BusinessType] {
+  implicit val reads: Reads[BusinessType] = Reads[BusinessType] {
     case JsString("Sole Proprietor") => JsSuccess(SoleProprietor)
     case JsString("Limited Liability Partnership") => JsSuccess(LPrLLP)
     case JsString("Partnership") => JsSuccess(Partnership)
@@ -49,7 +49,7 @@ object BusinessType {
       JsError(JsonValidationError("error.invalid"))
   }
 
-  implicit val writes = Writes[BusinessType] {
+  implicit val writes: Writes[BusinessType] = Writes[BusinessType] {
     case SoleProprietor => JsString("Sole Proprietor")
     case LPrLLP => JsString("Limited Liability Partnership")
     case Partnership => JsString("Partnership")

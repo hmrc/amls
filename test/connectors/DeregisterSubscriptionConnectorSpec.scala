@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package connectors
 
-import audit.MockAudit
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import generators.AmlsReferenceNumberGenerator
@@ -49,7 +48,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       testConnector.metrics.timer(ArgumentMatchers.eq(API10))
     } thenReturn mockTimer
 
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val url = s"${testConnector.fullUrl}/$amlsRegistrationNumber/deregistration"
   }

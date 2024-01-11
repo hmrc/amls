@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.fe.hvd
 
 import models.des.hvd.{Hvd => DesHvd}
-import play.api.libs.json.Reads
+import play.api.libs.json.{Reads, Writes}
 
 import java.time.LocalDate
 
@@ -39,7 +39,7 @@ object CashPayment {
     }
   }
 
-  implicit val jsonWrites = {
+  implicit val jsonWrites: Writes[CashPayment] = {
     import play.api.libs.json.Writes._
     import play.api.libs.json._
 

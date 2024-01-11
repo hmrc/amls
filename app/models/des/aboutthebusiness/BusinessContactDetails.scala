@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package models.des.aboutthebusiness
 
 import models.fe.businessdetails._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BusinessContactDetails(businessAddress: Address,
                                   altCorrespondenceAddress: Boolean,
@@ -26,7 +26,7 @@ case class BusinessContactDetails(businessAddress: Address,
                                   businessEmail: String)
 
 object BusinessContactDetails {
-  implicit val format = Json.format[BusinessContactDetails]
+  implicit val format: OFormat[BusinessContactDetails] = Json.format[BusinessContactDetails]
 
   implicit def convert(businessDetails: BusinessDetails): BusinessContactDetails = {
     BusinessContactDetails(

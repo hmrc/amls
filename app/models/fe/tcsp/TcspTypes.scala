@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ object TcspTypes {
     }
   }
 
-  implicit val jsonWrite = Writes[TcspTypes] {
+  implicit val jsonWrite: Writes[TcspTypes] = Writes[TcspTypes] {
     case TcspTypes(services) =>
       Json.obj(
         "serviceProviders" -> (services map {

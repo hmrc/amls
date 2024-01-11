@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.des.msb
 
 import models.fe.moneyservicebusiness.WholesalerMoneySource
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CurrencyWholesalerDetails(currencyWholesalers: Boolean, currencyWholesalersNames: Option[Seq[String]])
 
 object CurrencyWholesalerDetails {
 
-  implicit val format = Json.format[CurrencyWholesalerDetails]
+  implicit val format: OFormat[CurrencyWholesalerDetails] = Json.format[CurrencyWholesalerDetails]
 
   implicit def conv(moneySource: Option[WholesalerMoneySource]): Option[CurrencyWholesalerDetails] = {
 

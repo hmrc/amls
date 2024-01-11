@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package models.des.aboutyou
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
                     employedWithinBusiness: Boolean,
@@ -28,7 +28,7 @@ case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
 }
 
 object Aboutyou {
-  implicit val format = Json.format[Aboutyou]
+  implicit val format: OFormat[Aboutyou] = Json.format[Aboutyou]
 
   implicit def convertFromRelease7(aboutYouRelease7: AboutYouRelease7): Aboutyou = {
 

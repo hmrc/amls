@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package models.fe.responsiblepeople
 
 import models.des.responsiblepeople._
 import models.fe.responsiblepeople.TimeAtAddress._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePersonCurrentAddress] = None,
                                            additionalAddress: Option[ResponsiblePersonAddress] = None,
@@ -36,7 +36,7 @@ case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePer
 
 object ResponsiblePersonAddressHistory {
 
-  implicit val format = Json.format[ResponsiblePersonAddressHistory]
+  implicit val format: OFormat[ResponsiblePersonAddressHistory] = Json.format[ResponsiblePersonAddressHistory]
 
   def convTimeAtAddress(timeAt: String): TimeAtAddress = {
     timeAt match {

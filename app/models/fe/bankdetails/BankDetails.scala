@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ object BankDetails {
 
   import play.api.libs.json._
 
-  implicit val format = Json.format[BankDetails]
+  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 
   def convBankAccount(bankDtls: BankAccountView): BankDetails = {
     BankDetails(bankDtls.accountType, bankDtls.accountName, bankDtls)

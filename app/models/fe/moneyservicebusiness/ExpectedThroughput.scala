@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ object ExpectedThroughput {
 
   case object Seventh extends ExpectedThroughput
 
-  implicit val jsonReads = {
+  implicit val jsonReads: Reads[ExpectedThroughput] = {
     import play.api.libs.json.Reads.StringReads
     (__ \ "throughput").read[String].flatMap[ExpectedThroughput] {
       case "01" => Reads(_ => JsSuccess(First))
@@ -52,7 +52,7 @@ object ExpectedThroughput {
     }
   }
 
-  implicit val jsonWrites = Writes[ExpectedThroughput] {
+  implicit val jsonWrites: Writes[ExpectedThroughput] = Writes[ExpectedThroughput] {
     case First => Json.obj("throughput" -> "01")
     case Second => Json.obj("throughput" -> "02")
     case Third => Json.obj("throughput" -> "03")

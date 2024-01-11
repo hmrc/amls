@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class KnownFact(`type`: String, value: String)
 
 object KnownFact {
-  implicit val formats = Json.format[KnownFact]
+  implicit val formats: OFormat[KnownFact] = Json.format[KnownFact]
 }
 
 
 case class KnownFactsForService(facts: Seq[KnownFact])
 
 object KnownFactsForService {
-  implicit val formats = Json.format[KnownFactsForService]
+  implicit val formats: OFormat[KnownFactsForService] = Json.format[KnownFactsForService]
 }

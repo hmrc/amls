@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package models.des.tcsp
 
-import models.fe.tcsp.{ServicesOfAnotherTCSP, ServicesOfAnotherTCSPYes, ServicesOfAnotherTCSPNo, Tcsp}
-import play.api.libs.json.Json
+import models.fe.tcsp.{ServicesOfAnotherTCSP, ServicesOfAnotherTCSPNo, ServicesOfAnotherTCSPYes, Tcsp}
+import play.api.libs.json.{Json, OFormat}
 
 case class TcspAll(anotherTcspServiceProvider: Boolean, tcspMlrRef: Option[String])
 
 object TcspAll {
 
-  implicit val format = Json.format[TcspAll]
+  implicit val format: OFormat[TcspAll] = Json.format[TcspAll]
 
   implicit def conv(tcsp: Tcsp): TcspAll = {
 

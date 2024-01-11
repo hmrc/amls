@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ object OnlyOffTheShelfCompsSold {
     }
   }
 
-  implicit val jsonWrite = Writes[OnlyOffTheShelfCompsSold] {
+  implicit val jsonWrite: Writes[OnlyOffTheShelfCompsSold] = Writes[OnlyOffTheShelfCompsSold] {
     case OnlyOffTheShelfCompsSoldYes => Json.obj("onlyOffTheShelfCompsSold" -> true)
     case OnlyOffTheShelfCompsSoldNo => Json.obj("onlyOffTheShelfCompsSold" -> false)
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package models.des.businessdetails
 
 import models.fe.businessmatching.BusinessMatching
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class UnincorpBody(companyName: String, typeOfBusiness: String)
 
 
 object UnincorpBody {
 
-  implicit val format = Json.format[UnincorpBody]
+  implicit val format: OFormat[UnincorpBody] = Json.format[UnincorpBody]
 
   implicit def convert(businessMatching: BusinessMatching): Option[UnincorpBody] =
     businessMatching.typeOfBusiness.map {

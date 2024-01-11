@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,10 @@ package models.payments
 import generators.PaymentGenerator
 import models.payapi.PaymentStatus.{Created, Successful}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs
 import play.api.libs.json.{JsSuccess, Json}
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
-import java.time.temporal.ChronoUnit.SECONDS
 
 //noinspection ScalaStyle
 class PaymentSpec extends PlaySpec with PaymentGenerator {
@@ -55,7 +53,7 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
         "amountInPence" -> 10000,
         "status" -> "Successful",
         "isBacs" -> true,
-        "createdAt" -> Json.obj("$date" -> Json.obj("$numberLong" -> date.toInstant(UTC).toEpochMilli.toString)),
+        "createdAt" -> Json.obj(s"$$date" -> Json.obj("$numberLong" -> date.toInstant(UTC).toEpochMilli.toString)),
         "updatedAt" -> date.plusDays(1)
       )
 

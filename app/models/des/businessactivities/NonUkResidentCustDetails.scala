@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models.des.businessactivities
 
 import models.fe.businessactivities.CustomersOutsideUK
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class NonUkResidentCustDetails(nonUkResidentCustomers: Boolean, whichCountries: Option[Seq[String]] = None)
 
 object NonUkResidentCustDetails {
-  implicit val format = Json.format[NonUkResidentCustDetails]
+  implicit val format: OFormat[NonUkResidentCustDetails] = Json.format[NonUkResidentCustDetails]
 
   implicit def convert(nonUKCust: Option[models.fe.businessactivities.CustomersOutsideUK]): NonUkResidentCustDetails = {
     nonUKCust match {

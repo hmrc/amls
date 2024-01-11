@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,6 @@ object PaymentStatus {
   case object Failed extends PaymentStatus
 
   case object Cancelled extends PaymentStatus
-
-  implicit val writes: Writes[PaymentStatus] = Writes { paymentStatus => Json.toJson(paymentStatus.toString) }
 
   implicit val formats: Format[PaymentStatus] = new Format[PaymentStatus] {
     override def reads(json: JsValue): JsResult[PaymentStatus] = json match {

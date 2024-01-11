@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,13 @@ import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.{des, fe}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
-import java.time.LocalDate
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SubscriptionService
 import utils.{AmlsBaseSpec, AuthAction, SuccessfulAuthAction}
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {

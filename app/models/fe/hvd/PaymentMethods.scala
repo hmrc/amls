@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models.fe.hvd
 
 import models.des.hvd.ReceiptMethods
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PaymentMethods(courier: Boolean, direct: Boolean, other: Boolean, details: Option[String])
 
 object PaymentMethods {
-  implicit val format = Json.format[PaymentMethods]
+  implicit val format: OFormat[PaymentMethods] = Json.format[PaymentMethods]
 
   implicit def conv(method: Option[ReceiptMethods]): Option[PaymentMethods] = {
 

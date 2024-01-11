@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package models.fe.moneyservicebusiness
 
 import models.des.msb.MsbMtDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class SendMoneyToOtherCountry(money: Boolean)
 
 object SendMoneyToOtherCountry {
 
-  implicit val format = Json.format[SendMoneyToOtherCountry]
+  implicit val format: OFormat[SendMoneyToOtherCountry] = Json.format[SendMoneyToOtherCountry]
 
   implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[SendMoneyToOtherCountry] = {
     msbMt match {

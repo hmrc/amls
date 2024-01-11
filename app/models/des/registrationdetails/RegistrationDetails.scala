@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,24 +30,24 @@ case object UnincorporatedBody extends OrganisationType
 
 object OrganisationType {
 
-  val orgTypeToString = Map[OrganisationType, String](
+  val orgTypeToString: Map[OrganisationType, String] = Map[OrganisationType, String](
     Partnership -> "Partnership",
     LLP -> "LLP",
     CorporateBody -> "Corporate body",
     UnincorporatedBody -> "Unincorporated body"
   )
 
-  val stringToOrgType = orgTypeToString.map(_.swap)
+  val stringToOrgType: Map[String, OrganisationType] = orgTypeToString.map(_.swap)
 
-  implicit val reads = new Reads[OrganisationType] {
-    override def reads(json: JsValue) = json match {
+  implicit val reads: Reads[OrganisationType] = new Reads[OrganisationType] {
+    override def reads(json: JsValue): JsResult[OrganisationType] with Serializable = json match {
       case JsString(x) if stringToOrgType.isDefinedAt(x) => JsSuccess(stringToOrgType(x))
       case x => JsError(s"Unable to parse the organisation type value: $x")
     }
   }
 
-  implicit val writes = new Writes[OrganisationType] {
-    override def writes(o: OrganisationType) = o match {
+  implicit val writes: Writes[OrganisationType] = new Writes[OrganisationType] {
+    override def writes(o: OrganisationType): JsString = o match {
       case org if orgTypeToString.isDefinedAt(org) => JsString(orgTypeToString(org))
       case _ => throw new Exception("Unable to convert org type to string")
     }
@@ -60,13 +60,13 @@ case class Organisation(organisationName: String, isAGroup: Option[Boolean] = No
   extends OrganisationBodyDetails
 
 object Organisation {
-  implicit val format = Json.format[Organisation]
+  implicit val format: OFormat[Organisation] = Json.format[Organisation]
 }
 
 case class Individual(firstName: String, middleName: Option[String], lastName: String) extends OrganisationBodyDetails
 
 object Individual {
-  implicit val format = Json.format[Individual]
+  implicit val format: OFormat[Individual] = Json.format[Individual]
 }
 
 object OrganisationBodyDetails {
@@ -80,8 +80,8 @@ object OrganisationBodyDetails {
     }
   }
 
-  implicit val writes = new Writes[OrganisationBodyDetails] {
-    override def writes(o: OrganisationBodyDetails) = o match {
+  implicit val writes: Writes[OrganisationBodyDetails] = new Writes[OrganisationBodyDetails] {
+    override def writes(o: OrganisationBodyDetails): JsObject = o match {
       case x: Organisation => Json.obj("organisation" -> Organisation.format.writes(x))
       case x: Individual => Json.obj("individual" -> Individual.format.writes(x))
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,14 @@ case class TaxMatters(manageYourTaxAffairs: Boolean)
 
 object TaxMatters {
 
-  implicit val formats = Json.format[TaxMatters]
+  implicit val formats: OFormat[TaxMatters] = Json.format[TaxMatters]
 
   implicit val jsonReads: Reads[TaxMatters] =
     (__ \ "manageYourTaxAffairs").read[Boolean] flatMap {
       case bool => Reads(_ => JsSuccess(TaxMatters(bool)))
     }
 
-  implicit val jsonWrites = Writes[TaxMatters] {
+  implicit val jsonWrites: Writes[TaxMatters] = Writes[TaxMatters] {
     case TaxMatters(bool) => Json.obj("manageYourTaxAffairs" -> bool)
   }
 

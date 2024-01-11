@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ object ProfessionalBody {
 
   implicit val jsonReads: Reads[ProfessionalBody] =
     (__ \ "penalised").read[Boolean] flatMap {
-      case true => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply _
+      case true => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply
       case false => Reads(_ => JsSuccess(ProfessionalBodyNo))
     }
 
-  implicit val jsonWrites = Writes[ProfessionalBody] {
+  implicit val jsonWrites: Writes[ProfessionalBody] = Writes[ProfessionalBody] {
     case ProfessionalBodyYes(value) => Json.obj(
       "penalised" -> true,
       "professionalBody" -> value

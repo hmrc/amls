@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object BankAccountType {
     }
   }
 
-  implicit val jsonWrites = Writes[BankAccountType] {
+  implicit val jsonWrites: Writes[BankAccountType] = Writes[BankAccountType] {
     case PersonalAccount => Json.obj("bankAccountType" -> "01")
     case BelongsToBusiness => Json.obj("bankAccountType" -> "02")
     case BelongsToOtherBusiness => Json.obj("bankAccountType" -> "03")

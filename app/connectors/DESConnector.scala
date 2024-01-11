@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@ package connectors
 
 import config.ApplicationConfig
 import play.api.Logging
-
-import javax.inject.{Inject, Singleton}
 import play.mvc.Http.HeaderNames
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.Audit
 import utils._
+
+import javax.inject.Singleton
 
 @Singleton
 class DESConnector(applicationConfig: ApplicationConfig) extends HttpResponseHelper with Logging {
@@ -34,7 +32,7 @@ class DESConnector(applicationConfig: ApplicationConfig) extends HttpResponseHel
   private[connectors] val requestUrl = "anti-money-laundering/subscription"
   private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
 
-  protected def desHeaders = Seq(
+  protected def desHeaders: Seq[(String, String)] = Seq(
     "Authorization" -> token,
     "Environment" -> env,
     HeaderNames.ACCEPT -> "application/json",

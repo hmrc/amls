@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,10 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import models.des.SubscriptionRequest
-import play.api.libs.json.{JsObject, JsResult, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 
 import java.io.InputStream
 import javax.inject.Singleton
-import scala.util.Using
-import scala.io.Source
 
 @Singleton
 class SubscriptionRequestValidator {
@@ -35,7 +33,7 @@ class SubscriptionRequestValidator {
   def validateRequest(request: SubscriptionRequest): Either[collection.Seq[JsObject], SubscriptionRequest] = {
 
     val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
-    val lines = scala.io.Source.fromInputStream(stream).getLines.mkString
+    val lines = scala.io.Source.fromInputStream(stream).getLines().mkString
 
     lazy val jsonMapper = new ObjectMapper()
     lazy val jsonFactory = jsonMapper.getFactory

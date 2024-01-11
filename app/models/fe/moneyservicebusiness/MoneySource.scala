@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ case object BankMoneySource {
     })
   }
 
-  implicit val jsonWrites = Writes[Option[BankMoneySource]] {
+  implicit val jsonWrites: Writes[Option[BankMoneySource]] = Writes[Option[BankMoneySource]] {
     case Some(bankNames) => Json.obj("bankMoneySource" -> "Yes", "bankNames" -> bankNames.bankNames)
     case _ => Json.obj()
   }
@@ -59,7 +59,7 @@ object WholesalerMoneySource {
     })
   }
 
-  implicit val jsonWrites = Writes[Option[WholesalerMoneySource]] {
+  implicit val jsonWrites: Writes[Option[WholesalerMoneySource]] = Writes[Option[WholesalerMoneySource]] {
     case Some(source) => Json.obj("wholesalerMoneySource" -> "Yes", "wholesalerNames" -> source.wholesalerNames)
     case _ => Json.obj()
   }

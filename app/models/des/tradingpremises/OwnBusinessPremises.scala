@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package models.des.tradingpremises
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
 case class OwnBusinessPremises(ownBusinessPremises: Boolean, ownBusinessPremisesDetails: Option[Seq[OwnBusinessPremisesDetails]])
 
 object OwnBusinessPremises {
 
-  implicit val format = Json.format[OwnBusinessPremises]
+  implicit val format: OFormat[OwnBusinessPremises] = Json.format[OwnBusinessPremises]
 
   implicit def convert(tradingPremises: Seq[FETradingPremises]): OwnBusinessPremises = {
     val `empty` = Seq.empty[FETradingPremises]

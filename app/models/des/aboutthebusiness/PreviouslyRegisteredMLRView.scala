@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models.des.aboutthebusiness
 
-import models.fe.businessdetails.{PreviouslyRegisteredYes, PreviouslyRegisteredNo, BusinessDetails}
-import play.api.libs.json.Json
+import models.fe.businessdetails.{BusinessDetails, PreviouslyRegisteredNo, PreviouslyRegisteredYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class PreviouslyRegisteredMLRView(amlsRegistered: Boolean, mlrRegNumber: Option[String], prevRegForMlr: Boolean, prevMlrRegNumber: Option[String])
 
 object PreviouslyRegisteredMLRView {
-  implicit val format = Json.format[PreviouslyRegisteredMLRView]
+  implicit val format: OFormat[PreviouslyRegisteredMLRView] = Json.format[PreviouslyRegisteredMLRView]
 
   implicit def convert(businessDetails: BusinessDetails): Option[PreviouslyRegisteredMLRView] = {
     businessDetails.previouslyRegistered match {

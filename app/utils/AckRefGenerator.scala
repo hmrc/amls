@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package utils
 import java.util.UUID
 
 trait AckRefGenerator {
-  def ackRef =
+  def ackRef: String =
     UUID.randomUUID().toString.replaceAll("-", "")
 }
 
 object AckRefGenerator {
-  implicit val instance = new AckRefGenerator {}
+  implicit val instance: AckRefGenerator = new AckRefGenerator {}
 }

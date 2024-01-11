@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ object ProfessionalBodyMember {
     }
   }
 
-  implicit val jsonWrites = Writes[ProfessionalBodyMember] {
+  implicit val jsonWrites: Writes[ProfessionalBodyMember] = Writes[ProfessionalBodyMember] {
     case ProfessionalBodyMemberYes => Json.obj("isAMember" -> true)
     case ProfessionalBodyMemberNo => Json.obj("isAMember" -> false)
   }

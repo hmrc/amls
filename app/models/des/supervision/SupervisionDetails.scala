@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package models.des.supervision
 
-import models.fe.supervision.{AnotherBodyNo, AnotherBodyYes, AnotherBody}
-import play.api.libs.json.Json
+import models.fe.supervision.{AnotherBody, AnotherBodyNo, AnotherBodyYes}
+import play.api.libs.json.{Json, OFormat}
 
 case class SupervisionDetails(prevSupervisedByMlsRegs: Boolean = false, supervisorDetails: Option[SupervisorDetails])
 
 object SupervisionDetails {
 
-  implicit val format = Json.format[SupervisionDetails]
+  implicit val format: OFormat[SupervisionDetails] = Json.format[SupervisionDetails]
 
   implicit def conv(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
 

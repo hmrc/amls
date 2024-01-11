@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ object BusinessActivity {
     case _ => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
   }
 
-  implicit val jsonActivityWrite = Writes[BusinessActivity] {
+  implicit val jsonActivityWrite: Writes[BusinessActivity] = Writes[BusinessActivity] {
     case AccountancyServices => JsString("01")
     case BillPaymentServices => JsString("02")
     case EstateAgentBusinessService => JsString("03")
@@ -68,7 +68,7 @@ object BusinessActivity {
 case class WhatDoesYourBusinessDo(activities: Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 object WhatDoesYourBusinessDo {
-  implicit val format = Json.format[WhatDoesYourBusinessDo]
+  implicit val format: OFormat[WhatDoesYourBusinessDo] = Json.format[WhatDoesYourBusinessDo]
 
   def convMsb(msb: Msb): Option[BusinessActivity] = {
     msb match {

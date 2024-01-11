@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package exceptions
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import scala.util.Try
 
 case class HttpExceptionBody(reason: String)
 
 object HttpExceptionBody {
-  implicit val format = Json.format[HttpExceptionBody]
+  implicit val format: OFormat[HttpExceptionBody] = Json.format[HttpExceptionBody]
 
   def fromJson(json: String): Option[HttpExceptionBody] = Try { Json.parse(json).asOpt[HttpExceptionBody] } getOrElse None
 }

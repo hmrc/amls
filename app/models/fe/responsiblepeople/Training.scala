@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ object Training {
 
   implicit val jsonReads: Reads[Training] =
     (__ \ "training").read[Boolean] flatMap {
-      case true => (__ \ "information").read[String] map (TrainingYes.apply _)
+      case true => (__ \ "information").read[String] map TrainingYes.apply
       case false => Reads(_ => JsSuccess(TrainingNo))
     }
 
-  implicit val jsonWrites = Writes[Training] {
+  implicit val jsonWrites: Writes[Training] = Writes[Training] {
     case TrainingYes(information) => Json.obj(
       "training" -> true,
       "information" -> information

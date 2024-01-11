@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ case class ExtraFields(declaration: Declaration, filingIndividual: AboutYouRelea
 
 object ExtraFields {
 
-  implicit def format =
+  implicit def format: OFormat[ExtraFields] =
     Json.format[ExtraFields]
 
   implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {

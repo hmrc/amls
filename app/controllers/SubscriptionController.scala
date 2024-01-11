@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ class SubscriptionController @Inject()(val subscriptionService: SubscriptionServ
                     logger.warn(s"$prefix - Status: $status, Message: $body")
                     Future.failed(e)
                 }
-              case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) =>
+              case JsError(errors) =>
                 Future.successful(BadRequest(toError(errors)))
             }
           case _ =>
