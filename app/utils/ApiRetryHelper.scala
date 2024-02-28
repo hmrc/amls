@@ -16,8 +16,8 @@
 
 package utils
 
-import akka.actor.ActorSystem
-import akka.pattern.Patterns.after
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.pattern.Patterns.after
 import config.ApplicationConfig
 import exceptions.HttpStatusException
 

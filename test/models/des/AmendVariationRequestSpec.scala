@@ -29,7 +29,7 @@ import utils.AckRefGenerator
 class AmendVariationRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
   override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false)).build()
+    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false, "metrics.enabled" -> false)).build()
   }
 
   implicit val ackref: AckRefGenerator = new AckRefGenerator {
