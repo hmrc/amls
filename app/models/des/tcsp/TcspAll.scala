@@ -35,7 +35,7 @@ object TcspAll {
 
   implicit def conv1(x: (Boolean, ServicesOfAnotherTCSP)): TcspAll = {
     (x._1, x._2) match {
-      case (true, ServicesOfAnotherTCSPYes(dtls)) => TcspAll(true, Some(dtls))
+      case (true, ServicesOfAnotherTCSPYes(dtls)) => TcspAll(true, dtls)
       case (true, ServicesOfAnotherTCSPNo) => TcspAll(true, None)
       case (false, _) => TcspAll(false, None)
     }

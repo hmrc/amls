@@ -32,7 +32,7 @@ trait TcspValues {
       CompanyDirectorEtc,
       CompanyFormationAgent))
     val DefaultDoServicesOfAnotherTCSP = true
-    val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes("12345678")
+    val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes(Some("12345678"))
 
   }
 
@@ -169,7 +169,7 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
           Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(true),
-          Some(ServicesOfAnotherTCSPYes("111111111111111")))))
+          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
   }
 
   "converting the des subscription model must yield a frontend TCSP model where empty mlr number" in {
@@ -222,7 +222,7 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
           Some(ComplexCorpStructureCreationNo),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(true),
-          Some(ServicesOfAnotherTCSPYes("111111111111111")))))
+          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
   }
 
   "converting the des subscription model must yield a frontend TCSP model (CompanyFormationAgent variation 2)" in {
@@ -258,7 +258,7 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
           Some(ComplexCorpStructureCreationYes),
           Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
           Some(true),
-          Some(ServicesOfAnotherTCSPYes("111111111111111")))))
+          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
   }
 
 

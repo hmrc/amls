@@ -24,7 +24,7 @@ class TcspAllSpec extends PlaySpec {
 
     "convert frontend model to Des with Yes" in {
 
-      val servicesOfAnother = ServicesOfAnotherTCSPYes("12345678")
+      val servicesOfAnother = ServicesOfAnotherTCSPYes(Some("12345678"))
 
       val TcspSection = Some(Tcsp(None, None, None, None, Some(true), Some(servicesOfAnother)))
       val tcspAllSection = TcspAll(true, Some("12345678"))
