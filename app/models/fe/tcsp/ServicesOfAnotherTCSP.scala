@@ -20,7 +20,7 @@ import play.api.libs.json._
 
 sealed trait ServicesOfAnotherTCSP
 
-case class ServicesOfAnotherTCSPYes(mlrRefNumber: String) extends ServicesOfAnotherTCSP
+case class ServicesOfAnotherTCSPYes(mlrRefNumber: Option[String]) extends ServicesOfAnotherTCSP
 
 case object ServicesOfAnotherTCSPNo extends ServicesOfAnotherTCSP
 
@@ -28,7 +28,7 @@ object ServicesOfAnotherTCSP {
 
   implicit val jsonReads: Reads[ServicesOfAnotherTCSP] =
     (__ \ "servicesOfAnotherTCSP").read[Boolean] flatMap {
-      case true => (__ \ "mlrRefNumber").read[String] map ServicesOfAnotherTCSPYes.apply
+      case true => (__ \ "mlrRefNumber").readNullable[String] map ServicesOfAnotherTCSPYes.apply
       case false => Reads(__ => JsSuccess(ServicesOfAnotherTCSPNo))
     }
 
@@ -58,14 +58,14 @@ object ServicesOfAnotherTCSP {
   }
 
   def noneImpliesServicesOfAnotherTCSPNo(desView: models.des.SubscriptionView): Boolean = {
-    (tcspServicesOfferedIsDefined(desView) || tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView))
+    tcspServicesOfferedIsDefined(desView) || tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView)
   }
 
   implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
     desView.tcspAll match {
       case Some(tcsp) => tcsp.anotherTcspServiceProvider match {
         case true if mlrExists(tcsp.tcspMlrRef) =>
-          Some(ServicesOfAnotherTCSPYes(mlrNo(tcsp.tcspMlrRef)))
+          Some(ServicesOfAnotherTCSPYes(Some(mlrNo(tcsp.tcspMlrRef))))
         case _ => Some(ServicesOfAnotherTCSPNo)
       }
       case None if noneImpliesServicesOfAnotherTCSPNo(desView) =>

@@ -17,7 +17,7 @@
 package models.fe.tcsp
 
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
+import play.api.libs.json.{JsPath, JsSuccess, Json}
 import utils.AmlsBaseSpec
 
 class ServicesOfAnotherTCSPSpec extends PlaySpec with AmlsBaseSpec {
@@ -33,21 +33,21 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with AmlsBaseSpec {
 
       "successfully validate given an `Yes` value" in {
         Json.fromJson[ServicesOfAnotherTCSP](Json.obj("servicesOfAnotherTCSP" -> true, "mlrRefNumber" -> "12345678")) must
-          be(JsSuccess(ServicesOfAnotherTCSPYes("12345678"), JsPath \ "mlrRefNumber"))
+          be(JsSuccess(ServicesOfAnotherTCSPYes(Some("12345678")), JsPath \ "mlrRefNumber"))
       }
 
-      "fail to validate when given an empty `Yes` value" in {
+      "successfully validate when given an empty `Yes` value" in {
         val json = Json.obj("servicesOfAnotherTCSP" -> true)
 
         Json.fromJson[ServicesOfAnotherTCSP](json) must
-          be(JsError((JsPath \ "mlrRefNumber") -> JsonValidationError("error.path.missing")))
+          be(JsSuccess(ServicesOfAnotherTCSPYes(None)))
       }
 
       "write the correct value" in {
         Json.toJson(ServicesOfAnotherTCSPNo: ServicesOfAnotherTCSP) must
           be(Json.obj("servicesOfAnotherTCSP" -> false))
 
-        Json.toJson(ServicesOfAnotherTCSPYes("12345678"): ServicesOfAnotherTCSP) must
+        Json.toJson(ServicesOfAnotherTCSPYes(Some("12345678")): ServicesOfAnotherTCSP) must
           be(Json.obj(
             "servicesOfAnotherTCSP" -> true,
             "mlrRefNumber" -> "12345678"
