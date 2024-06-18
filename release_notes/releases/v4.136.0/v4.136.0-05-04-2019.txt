@@ -1,2 +1,0 @@
- + [AMLS-4123] - 'Model Changed for WhichCurrencies page split'
- + [AMLS-4756] - 'Rename About the Business to Business Details'

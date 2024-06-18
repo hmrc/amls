@@ -1,3 +1,0 @@
- + [AMLS-5657] - 'Fix change indicator comparison for business sectors only'
- + [AMLS-5697] - 'Bump to latest dependencies'
- + [AMLS-5736] - 'Fix the empty countries list in MSB section'

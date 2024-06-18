@@ -2,28 +2,31 @@
 amls
 =============
 
-Anti-money Laundering Supervision
-
-[![Build Status](https://travis-ci.org/hmrc/amls.svg?branch=master)](https://travis-ci.org/hmrc/amls) [ ![Download](https://api.bintray.com/packages/hmrc/releases/amls/images/download.svg) ](https://bintray.com/hmrc/releases/amls/_latestVersion)
+Anti-Money Laundering Supervision
 
 API
 ----
 
-| PATH | Supported Methods | Description |
-|------|-------------------|-------------|
-|```/subscription/:accountType/:ref/:safeId``` | POST | Submits an application for supervision |
-|```/subscription/:accountType/:ref/:amlsRegistrationNumber/update``` | POST | Submits an updated application for supervision |
-|```/subscription/:accountType/:ref/:amlsRegistrationNumber/variation``` | POST | Submits a variation to current supervision details |
-|```/subscription/:accountType/:ref/:amlsRegistrationNumber/renewal``` | POST | Submits an application to renew supervision |
-|```/subscription/:accountType/:ref/:amlsRegistrationNumber/status``` | GET | Gets the current status of supervision |
-|```/subscription/:accountType/:ref/:amlsRegistrationNumber``` | GET | Retrieves the currently held supervision details |
-|```/payment/:accountType/:ref/:amlsRegistrationNumber``` | GET | Retrieves information on the last fee response for this supervision |
-|```/payment/:accountType/:ref/:amlsRegistrationNumber``` | POST | Save a payment previously made through `pay-api` |
-|```/payment/:accountType/:ref/payref/:paymentReference``` | GET | Retrieve the latest payment made given the payment reference |
-|```/payment/:accountType/:ref/amlsref/:amlsRegistrationNumber``` | GET | Retrieve the latest payment made given the AMLS registration number |
-|```/payment/:accountType/:ref/refreshstatus``` | PUT | Refreshes the status of a payment, given an amls reference in the body |
-|```/payment/:accountType/:ref/:paymentReference/bacs``` | PUT | Updates the BACS status of a payment (see below) |
-|```/payment/:accountType/:ref/:paymentReference/bacs``` | POST | Creates a new BACS payment (see below) |
+| PATH                                                                            | Supported Methods | Description                                                             |
+|---------------------------------------------------------------------------------|-------------------|-------------------------------------------------------------------------|
+| ```/subscription/:accountType/:ref/:safeId```                                   | POST              | Submits an application for supervision                                  |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/update```            | POST              | Submits an updated application for supervision                          |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/variation```         | POST              | Submits a variation to current supervision details                      |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/renewal```           | POST              | Submits an application to renew supervision                             |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/renewalAmendment```  | POST              | Submits an amendment of a supervision renewal                           |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/withdrawal```        | POST              | Submits a withdrawal of a supervision                                   |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/deregistration```    | POST              | Submits a deregistration of a supervision                               |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber/status```            | GET               | Gets the current status of supervision                                  |
+| ```/subscription/:accountType/:ref/:amlsRegistrationNumber```                   | GET               | Retrieves the currently held supervision details                        |
+| ```/payment/:accountType/:ref/:amlsRegistrationNumber```                        | GET               | Retrieves information on the last fee response for this supervision     |
+| ```/payment/:accountType/:ref/:amlsRegistrationNumber/:safeId```                | POST              | Save a payment previously made through `pay-api`                        |
+| ```/payment/:accountType/:ref/payref/:paymentReference```                       | GET               | Retrieve the latest payment made given the payment reference            |
+| ```/payment/:accountType/:ref/amlsref/:amlsRegistrationNumber```                | GET               | Retrieve the latest payment made given the AMLS registration number     |
+| ```/payment/:accountType/:ref/refreshstatus```                                  | PUT               | Refreshes the status of a payment, given an amls reference in the body  |
+| ```/payment/:accountType/:ref/:paymentReference/bacs```                         | PUT               | Updates the BACS status of a payment (see below)                        |
+| ```/payment/:accountType/:ref/:paymentReference/bacs```                         | POST              | Creates a new BACS payment (see below)                                  |
+| ```/payment/:accountType/:ref/:paymentReference/bacs```                         | POST              | Creates a new BACS payment (see below)                                  |
+| ```/payment/:accountType/:ref/:paymentReference/bacs```                         | POST              | Creates a new BACS payment (see below)                                  |
 
 ## Retrieving a payment
 

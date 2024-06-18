@@ -1,3 +1,0 @@
- + [AMLS-5779] - 'Phase 3 Letting Agents DES Integration'
- + [AMLS-5848] - 'Remove Estate Agency Business Models and integrate using new Eab model'
- + [AMLS-5914] - | 'Bug fix: msb services being switched during conversion'
