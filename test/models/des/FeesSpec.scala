@@ -24,7 +24,6 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
 import java.time.temporal.ChronoUnit
 
-
 class FeesSpec extends PlaySpec with BeforeAndAfterAll {
 
   "FeeResponse" when {
@@ -34,13 +33,43 @@ class FeesSpec extends PlaySpec with BeforeAndAfterAll {
         val response = AmendVariationResponse(
           processingDate = "2016-09-17T09:30:47Z",
           etmpFormBundleNumber = "111111",
-          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(100), Some(100.0), Some(100.0)
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          Some(100),
+          Some(100.0),
+          Some(100.0)
         )
 
-        val fees = Fees.convertAmendmentVariation(response, "test")
+        val fees    = Fees.convertAmendmentVariation(response, "test")
         val newFees = fees.copy(createdAt = fees.createdAt.truncatedTo(ChronoUnit.SECONDS))
-        newFees must be(Fees(AmendOrVariationResponseType, "test", 0, None,
-          0, 0, None, None, Some(100.0), Some(100.0), LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)))
+        newFees must be(
+          Fees(
+            AmendOrVariationResponseType,
+            "test",
+            0,
+            None,
+            0,
+            0,
+            None,
+            None,
+            Some(100.0),
+            Some(100.0),
+            LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)
+          )
+        )
       }
     }
 
@@ -68,10 +97,23 @@ class FeesSpec extends PlaySpec with BeforeAndAfterAll {
         Some(100.0)
       )
 
-      val fees = Fees.convertAmendmentVariation(response, "test")
+      val fees    = Fees.convertAmendmentVariation(response, "test")
       val newFees = fees.copy(createdAt = fees.createdAt.truncatedTo(ChronoUnit.SECONDS))
-      newFees must be(Fees(AmendOrVariationResponseType, "test", 1301737.96, Some(231.42),
-        870458.0, 2172427.38, Some("string"), Some(3456.12), Some(100.0), Some(100.0), LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)))
+      newFees must be(
+        Fees(
+          AmendOrVariationResponseType,
+          "test",
+          1301737.96,
+          Some(231.42),
+          870458.0,
+          2172427.38,
+          Some("string"),
+          Some(3456.12),
+          Some(100.0),
+          Some(100.0),
+          LocalDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS)
+        )
+      )
 
     }
 

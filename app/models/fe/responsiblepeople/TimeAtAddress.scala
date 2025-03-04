@@ -39,16 +39,16 @@ object TimeAtAddress {
       case "02" => Reads(_ => JsSuccess(SixToElevenMonths))
       case "03" => Reads(_ => JsSuccess(OneToThreeYears))
       case "04" => Reads(_ => JsSuccess(ThreeYearsPlus))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "timeAtAddress", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[TimeAtAddress] = Writes[TimeAtAddress] {
-    case Empty => JsNull
-    case ZeroToFiveMonths => Json.obj("timeAtAddress" -> "01")
+    case Empty             => JsNull
+    case ZeroToFiveMonths  => Json.obj("timeAtAddress" -> "01")
     case SixToElevenMonths => Json.obj("timeAtAddress" -> "02")
-    case OneToThreeYears => Json.obj("timeAtAddress" -> "03")
-    case ThreeYearsPlus => Json.obj("timeAtAddress" -> "04")
+    case OneToThreeYears   => Json.obj("timeAtAddress" -> "03")
+    case ThreeYearsPlus    => Json.obj("timeAtAddress" -> "04")
   }
 }

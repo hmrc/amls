@@ -32,32 +32,36 @@ import utils._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
-                                                private[connectors] val auditConnector: AuditConnector,
-                                                private[connectors] val httpClient: HttpClient,
-                                                private[connectors] val metrics: Metrics)
-                                               (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
+class GovernmentGatewayAdminConnector @Inject() (
+  private[connectors] val applicationConfig: ApplicationConfig,
+  private[connectors] val auditConnector: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+)(implicit executionContext: ExecutionContext)
+    extends HttpResponseHelper
+    with Logging {
 
-  private[connectors] val serviceURL = applicationConfig.ggUrl
+  private[connectors] val serviceURL   = applicationConfig.ggUrl
   private[connectors] val audit: Audit = new Audit(AuditHelper.appName, auditConnector)
 
   lazy val postUrl = s"$serviceURL/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
-  def addKnownFacts(knownFacts: KnownFactsForService)(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  def addKnownFacts(
+    knownFacts: KnownFactsForService
+  )(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] =
     addKnownFactsFunction(knownFacts)
-  }
 
-  private def addKnownFactsFunction(knownFacts: KnownFactsForService)
-                                   (implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
+  private def addKnownFactsFunction(
+    knownFacts: KnownFactsForService
+  )(implicit headerCarrier: HeaderCarrier, writes: Writes[KnownFactsForService]): Future[HttpResponse] = {
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
-    val timer = metrics.timer(GGAdmin)
+    val timer  = metrics.timer(GGAdmin)
     logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
-    httpClient.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response body: ${response.body}")
-        response
+    httpClient.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response body: ${response.body}")
+      response
     } flatMap {
       case response @ status(OK) =>
         metrics.success(GGAdmin)
@@ -65,7 +69,7 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
-      case response @ status(s) =>
+      case response @ status(s)  =>
         metrics.failed(GGAdmin)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
@@ -74,7 +78,7 @@ class GovernmentGatewayAdminConnector @Inject()(private[connectors] val applicat
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(GGAdmin)
         logger.warn(s"$prefix - Failure: Exception", e)

@@ -17,29 +17,35 @@
 package models.des.businessActivities
 
 import models.des.businessactivities.{AuditableRecordsDetails, TransactionRecordingMethod}
-import models.fe.businessactivities.{DigitalSoftware, DigitalSpreadsheet, Paper, TransactionTypes, BusinessActivities => FEBusinessActivities}
+import models.fe.businessactivities.{BusinessActivities => FEBusinessActivities, DigitalSoftware, DigitalSpreadsheet, Paper, TransactionTypes}
 import org.scalatestplus.play.PlaySpec
 
 class AuditableRecordDetailsSpec extends PlaySpec {
   "TransactionRecord" must {
     "convertible to DES record" in {
-      val FETransactionRecord = Some(FEBusinessActivities(
-        transactionRecord = Some(true),
-        transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("Value"))))
-      ))
+      val FETransactionRecord = Some(
+        FEBusinessActivities(
+          transactionRecord = Some(true),
+          transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("Value"))))
+        )
+      )
 
-      val auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("Value"))))
+      val auditableRecordsDetails =
+        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("Value"))))
 
       AuditableRecordsDetails.convert(FETransactionRecord.get) must be(auditableRecordsDetails)
     }
 
     "convertible to DES record without all records" in {
-      val FETransactionRecord = Some(FEBusinessActivities(
-        transactionRecord = Some(true),
-        transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet)))
-      ))
+      val FETransactionRecord = Some(
+        FEBusinessActivities(
+          transactionRecord = Some(true),
+          transactionRecordTypes = Some(TransactionTypes(Set(Paper, DigitalSpreadsheet)))
+        )
+      )
 
-      val auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, false, None)))
+      val auditableRecordsDetails =
+        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, false, None)))
 
       AuditableRecordsDetails.convert(FETransactionRecord.get) must be(auditableRecordsDetails)
     }

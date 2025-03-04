@@ -28,7 +28,7 @@ class SubscriptionErrorResponseSpec extends PlaySpec with AmlsReferenceNumberGen
 
       Json.toJson(model) mustBe Json.obj(
         "amlsRegNumber" -> amlsRegistrationNumber,
-        "message" -> "This is the error message"
+        "message"       -> "This is the error message"
       )
     }
   }
@@ -37,10 +37,13 @@ class SubscriptionErrorResponseSpec extends PlaySpec with AmlsReferenceNumberGen
     "produce the correct model from the Json" in {
       val json = Json.obj(
         "amlsRegNumber" -> amlsRegistrationNumber,
-        "message" -> "This is another error message"
+        "message"       -> "This is another error message"
       )
 
-      json.as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, "This is another error message")
+      json.as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(
+        amlsRegistrationNumber,
+        "This is another error message"
+      )
     }
   }
 

@@ -25,35 +25,21 @@ import java.time.LocalDateTime
 
 trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
   val paymentRefGen = alphaNumOfLengthGen(refLength - 1) map { ref => s"X$ref" }
-  val paymentIdGen = alphaNumOfLengthGen(refLength)
+  val paymentIdGen  = alphaNumOfLengthGen(refLength)
 
-  def taxTypesGen = Gen.pick(1,
-    `self-assessment`,
-    `vat`,
-    `epaye`,
-    `p11d`,
-    `stamp-duty`,
-    `corporation-tax`,
-    `other`
-  )
+  def taxTypesGen = Gen.pick(1, `self-assessment`, `vat`, `epaye`, `p11d`, `stamp-duty`, `corporation-tax`, `other`)
 
   def now = LocalDateTime.now()
 
-  def paymentStatusGen = Gen.pick(1,
-    Created,
-    Successful,
-    Sent,
-    Failed,
-    Cancelled
-  )
+  def paymentStatusGen = Gen.pick(1, Created, Successful, Sent, Failed, Cancelled)
 
   val payApiPaymentGen: Gen[Payment] = for {
-    id <- hashGen
-    taxType <- taxTypesGen
-    ref <- Gen.some(paymentRefGen)
-    desc <- alphaNumOfLengthGen(refLength)
+    id            <- hashGen
+    taxType       <- taxTypesGen
+    ref           <- Gen.some(paymentRefGen)
+    desc          <- alphaNumOfLengthGen(refLength)
     amountInPence <- Gen.some(numGen)
-    url <- alphaNumOfLengthGen(refLength)
+    url           <- alphaNumOfLengthGen(refLength)
     paymentStatus <- paymentStatusGen
   } yield Payment(
     id,
@@ -65,12 +51,12 @@ trait PayApiGenerator extends BaseGenerator with AmlsReferenceNumberGenerator {
   )
 
   val payApiPaymentGenDesc: Gen[Payment] = for {
-    id <- hashGen
-    taxType <- taxTypesGen
-    ref <- Gen.some(paymentRefGen)
-    desc <- alphaNumOfLengthGen(refLength)
+    id            <- hashGen
+    taxType       <- taxTypesGen
+    ref           <- Gen.some(paymentRefGen)
+    desc          <- alphaNumOfLengthGen(refLength)
     amountInPence <- Gen.some(numGen)
-    url <- alphaNumOfLengthGen(refLength)
+    url           <- alphaNumOfLengthGen(refLength)
     paymentStatus <- paymentStatusGen
   } yield Payment(
     id,

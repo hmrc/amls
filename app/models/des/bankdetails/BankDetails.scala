@@ -27,13 +27,13 @@ object BankDetails {
   def emptyToOption(seq: Seq[BankAccount]): Option[Seq[BankAccount]] =
     seq match {
       case x if x.isEmpty => None
-      case x => Some(x)
+      case x              => Some(x)
     }
 
   implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): BankDetails = {
     val noOfMlrBankAccounts = bankdetails.length match {
       case x if x > 99 => "99"
-      case _ => bankdetails.length.toString
+      case _           => bankdetails.length.toString
     }
     BankDetails(noOfMlrBankAccounts, emptyToOption(bankdetails))
   }

@@ -37,33 +37,38 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
 
   val authAction: AuthAction = SuccessfulAuthAction
 
-  val Controller: SubscriptionViewController = new SubscriptionViewController(mock[ViewDESConnector], authAction, mockCC)
+  val Controller: SubscriptionViewController =
+    new SubscriptionViewController(mock[ViewDESConnector], authAction, mockCC)
 
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
       x.agentDetails match {
-        case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
-          startDate = y.agentPremises.startDate)))
-        case _ => None
+        case Some(data) =>
+          Some(
+            data.map(y =>
+              y.copy(agentPremises = y.agentPremises.copy(startDate = None), startDate = y.agentPremises.startDate)
+            )
+          )
+        case _          => None
       }
   }
 
   val subscriptionViewModelPhase2 = DesConstants.SubscriptionViewModelForRpPhase2.copy(
     businessActivities = DesConstants.testBusinessActivities.copy(
-      all = Some(DesConstants.testBusinessActivitiesAll.copy(
-        businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-      ))
+      all = Some(
+        DesConstants.testBusinessActivitiesAll.copy(
+          businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
+        )
+      )
     ),
     tradingPremises = DesConstants.testTradingPremisesAPI5.copy(
       agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))
     ),
-    msb = Some(DesConstants.testMsb.copy(
-      msbAllDetails = Some(MsbAllDetails(
-        Some("£50k-£100k"),
-        true,
-        Some(CountriesList(List("AD", "GB"))),
-        true)
-      )))
+    msb = Some(
+      DesConstants.testMsb.copy(
+        msbAllDetails = Some(MsbAllDetails(Some("£50k-£100k"), true, Some(CountriesList(List("AD", "GB"))), true))
+      )
+    )
   )
 
   val request = FakeRequest()
@@ -73,13 +78,12 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
 
     val amlsRegistrationNumber = "XAML00000567890"
 
-
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = Controller.view("test", "test", "test")(request)
+      val result  = Controller.view("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
-      status(result) must be(BAD_REQUEST)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(failure)
     }
 
@@ -91,7 +95,7 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
 
       val result = Controller.view("test", "test", amlsRegistrationNumber)(request)
 
-      status(result) must be(OK)
+      status(result)        must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionViewModel.convertedViewModelPhase2))
 
     }
@@ -135,4 +139,3 @@ class SubscriptionViewControllerSpec extends AmlsBaseSpec with IntegrationPatien
     DesConstants.extraFields
   )
 }
-

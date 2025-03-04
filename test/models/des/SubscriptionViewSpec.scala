@@ -41,26 +41,24 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
   "SubscriptionView" must {
     "deserialise the subscription json" when {
       "given valid json" in {
-        val json = Json.toJson(GetSuccessModel)
+        val json                  = Json.toJson(GetSuccessModel)
         val subscriptionViewModel = GetSuccessModel
 
         json.as[SubscriptionView] must be(subscriptionViewModel)
 
-        SubscriptionView.jsonReads.reads(
-          SubscriptionView.jsonWrites.writes(GetSuccessModel)) must
+        SubscriptionView.jsonReads.reads(SubscriptionView.jsonWrites.writes(GetSuccessModel)) must
           be(JsSuccess(GetSuccessModel))
 
         Json.toJson(GetSuccessModel) must be(json)
       }
 
       "given valid json with LA" in {
-        val json = Json.toJson(getSuccessModelLA)
+        val json                  = Json.toJson(getSuccessModelLA)
         val subscriptionViewModel = getSuccessModelLA
 
         json.as[SubscriptionView] must be(subscriptionViewModel)
 
-        SubscriptionView.jsonReads.reads(
-          SubscriptionView.jsonWrites.writes(getSuccessModelLA)) must
+        SubscriptionView.jsonReads.reads(SubscriptionView.jsonWrites.writes(getSuccessModelLA)) must
           be(JsSuccess(getSuccessModelLA))
 
         Json.toJson(getSuccessModelLA) must be(json)
@@ -71,8 +69,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
   "SubscriptionView" must {
     "deserialise real json" when {
       "given valid json" in {
-        val json = Json.parse(
-          """{
+        val json = Json.parse("""{
   "etmpFormBundleNumber": "082000001158",
   "businessDetails": {
     "typeOfLegalEntity": "Sole Proprietor"
@@ -495,8 +492,7 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
       }
 
       "given valid json with LA" in {
-        val jsonLA = Json.parse(
-          """{
+        val jsonLA = Json.parse("""{
   "etmpFormBundleNumber": "082000001158",
   "businessDetails": {
     "typeOfLegalEntity": "Sole Proprietor"
@@ -948,8 +944,8 @@ class SubscriptionViewSpec extends PlaySpec with AmlsBaseSpec {
     DesConstants.extraFields
   )
 
-  val getSuccessModelLA = GetSuccessModel.copy(lettingAgents = Some(
-    DesConstants.testLettingAgents),
+  val getSuccessModelLA = GetSuccessModel.copy(
+    lettingAgents = Some(DesConstants.testLettingAgents),
     businessActivities = DesConstants.testBusinessActivitiesLA
   )
 

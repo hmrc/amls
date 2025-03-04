@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  lazy val ssConn = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
+  lazy val ssConn            = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics)
   val authAction: AuthAction = SuccessfulAuthAction
 
   lazy val Controller: SubscriptionStatusController = new SubscriptionStatusController(ssConn, authAction, mockCC) {
@@ -47,17 +47,16 @@ class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNu
 
     "return a `BadRequest` response when the amls registration number is invalid" in {
 
-      val result = Controller.get("test", "test", "test")(request)
+      val result  = Controller.get("test", "test", "test")(request)
       val failure = Json.obj("errors" -> Seq("Invalid AMLS Registration Number"))
 
-      status(result) must be(BAD_REQUEST)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(failure)
     }
 
     "return a valid response when the amls registration number is valid" in {
 
-      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved",
-        None, None, None, None, false)
+      val response = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
 
       when {
         Controller.connector.status(ArgumentMatchers.eq(amlsRegistrationNumber))(any(), any(), any(), any())
@@ -65,7 +64,7 @@ class SubscriptionStatusControllerSpec extends AmlsBaseSpec with AmlsReferenceNu
 
       val result = Controller.get("test", "test", amlsRegistrationNumber)(request)
 
-      status(result) must be(OK)
+      status(result)        must be(OK)
       contentAsJson(result) must be(Json.toJson(response))
     }
 

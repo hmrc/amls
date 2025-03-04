@@ -16,7 +16,7 @@
 
 package models.fe.bankdetails
 
-import models.des.bankdetails.{IBANNumberView, AccountNumberView, ukAccountView, BankAccountView}
+import models.des.bankdetails.{AccountNumberView, BankAccountView, IBANNumberView, ukAccountView}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsPath, JsSuccess, Json}
 
@@ -26,9 +26,9 @@ class BankAccountSpec extends PlaySpec {
 
     "JSON Read is successful for UKAccount" in {
       val jsObject = Json.obj(
-        "isUK" -> true,
+        "isUK"          -> true,
         "accountNumber" -> "12345678",
-        "sortCode" -> "112233"
+        "sortCode"      -> "112233"
       )
 
       Account.jsonReads.reads(jsObject) must be(JsSuccess(UKAccount("12345678", "112233")))
@@ -39,9 +39,9 @@ class BankAccountSpec extends PlaySpec {
       val ukAccount = UKAccount("12345678", "112233")
 
       val jsObject = Json.obj(
-        "isUK" -> true,
+        "isUK"          -> true,
         "accountNumber" -> "12345678",
-        "sortCode" -> "112233"
+        "sortCode"      -> "112233"
       )
 
       Account.jsonWrites.writes(ukAccount) must be(jsObject)
@@ -50,9 +50,9 @@ class BankAccountSpec extends PlaySpec {
     "JSON Read is successful for Non UKAccount" in {
       val jsObject = Json.obj(
         "accountName" -> "test",
-        "isUK" -> false,
-        "IBANNumber" -> "IB12345678",
-        "isIBAN" -> true
+        "isUK"        -> false,
+        "IBANNumber"  -> "IB12345678",
+        "isIBAN"      -> true
       )
 
       Account.jsonReads.reads(jsObject) must be(JsSuccess(NonUKIBANNumber("IB12345678"), JsPath \ "IBANNumber"))
@@ -63,10 +63,9 @@ class BankAccountSpec extends PlaySpec {
       val nonUKAccountNumber = NonUKAccountNumber("12345678")
 
       val jsObject = Json.obj(
-        "isUK" -> false,
+        "isUK"               -> false,
         "nonUKAccountNumber" -> "12345678",
-        "isIBAN" -> false
-
+        "isIBAN"             -> false
       )
 
       Account.jsonWrites.writes(nonUKAccountNumber) must be(jsObject)

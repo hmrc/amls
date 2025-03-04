@@ -33,15 +33,17 @@ import scala.concurrent.Future
 
 class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
-  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+  implicit val defaultPatience: PatienceConfig =
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   trait Fixture {
-    val withdrawSubscriptionConnector = new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
-      override private[connectors] val token: String = "token"
-      override private[connectors] val env: String = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-    }
+    val withdrawSubscriptionConnector =
+      new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+        override private[connectors] val baseUrl: String = "baseUrl"
+        override private[connectors] val token: String   = "token"
+        override private[connectors] val env: String     = "ist0"
+        override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+      }
 
     val mockTimer = mock[Timer.Context]
 
@@ -50,11 +52,16 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
     } thenReturn mockTimer
 
     val amlsRegistrationNumber = "1121212UUUI"
-    val url = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"
+    val url                    = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"
   }
 
   val successModel = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
-  val testRequest = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", WithdrawalReason.Other, Some("Other Reason"))
+  val testRequest  = WithdrawSubscriptionRequest(
+    "AEF7234BGG12539GH143856HEA123412",
+    "2015-08-23",
+    WithdrawalReason.Other,
+    Some("Other Reason")
+  )
 
   "WithdrawSubscriptionConnector" must {
 
@@ -69,8 +76,11 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest)) {
@@ -86,27 +96,33 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
-          status must be(BAD_REQUEST)
+          status                     must be(BAD_REQUEST)
           body.getOrElse("").isEmpty must be(true)
       }
     }
 
     "return failed response on exception" in new Fixture {
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(INTERNAL_SERVER_ERROR)
-          body must be(Some("message"))
+          body   must be(Some("message"))
       }
     }
   }

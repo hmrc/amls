@@ -31,34 +31,45 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscribeDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                      private[connectors] val ac: AuditConnector,
-                                      private[connectors] val httpClient: HttpClient,
-                                      private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class SubscribeDESConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def subscribe(safeId: String, data: des.SubscriptionRequest)
-               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest],
-                wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper
-               ): Future[des.SubscriptionResponse] = {
+  def subscribe(safeId: String, data: des.SubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[des.SubscriptionRequest],
+    wr2: Writes[des.SubscriptionResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[des.SubscriptionResponse] =
     apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
-  }
 
-  private def subscribeFunction(safeId: String, data: des.SubscriptionRequest)
-                               (implicit ec: ExecutionContext, wr1: Writes[des.SubscriptionRequest], wr2: Writes[des.SubscriptionResponse], hc: HeaderCarrier
-                               ): Future[des.SubscriptionResponse] = {
-    val prefix = "[DESConnector][subscribe]"
+  private def subscribeFunction(safeId: String, data: des.SubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[des.SubscriptionRequest],
+    wr2: Writes[des.SubscriptionResponse],
+    hc: HeaderCarrier
+  ): Future[des.SubscriptionResponse] = {
+    val prefix     = "[DESConnector][subscribe]"
     val bodyParser = JsonParsed[des.SubscriptionResponse]
-    val timer = metrics.timer(API4)
+    val timer      = metrics.timer(API4)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$safeId"
 
-    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
-        response
+    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(
+      wr1,
+      implicitly[HttpReads[HttpResponse]],
+      hc,
+      ec
+    ) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response Body: ${response.body}")
+      response
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
@@ -67,7 +78,7 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         ac.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
         Future.successful(body)
-      case r @ status(s) =>
+      case r @ status(s)                                                             =>
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
@@ -79,7 +90,7 @@ class SubscribeDESConnector @Inject()(private[connectors] val appConfig: Applica
         logger.warn(s"$prefix - Failure: Exception", e)
         ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API4)
         logger.warn(s"$prefix - Failure: Exception", e)

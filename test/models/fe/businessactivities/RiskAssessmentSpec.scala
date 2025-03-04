@@ -29,9 +29,7 @@ class RiskAssessmentSpec extends PlaySpec {
     "JSON validation" must {
 
       "successfully validate given values" in {
-        val json = Json.obj(
-          "hasPolicy" -> true,
-          "riskassessments" -> Seq("01", "02"))
+        val json = Json.obj("hasPolicy" -> true, "riskassessments" -> Seq("01", "02"))
 
         Json.fromJson[RiskAssessmentPolicy](json) must
           be(JsSuccess(RiskAssessmentPolicyYes(formalRiskAssessments)))
@@ -45,13 +43,15 @@ class RiskAssessmentSpec extends PlaySpec {
       }
 
       "fail when on invalid data" in {
-        Json.fromJson[RiskAssessmentPolicy](Json.obj("hasPolicy" -> true, "riskassessments" -> Seq("01", "03"))) mustBe a[JsError]
+        Json.fromJson[RiskAssessmentPolicy](
+          Json.obj("hasPolicy" -> true, "riskassessments" -> Seq("01", "03"))
+        ) mustBe a[JsError]
       }
 
       "write valid data in using json write" in {
-        Json.toJson[RiskAssessmentPolicy](RiskAssessmentPolicyYes(Set(PaperBased, Digital))) must be(Json.obj("hasPolicy" -> true,
-          "riskassessments" -> Seq("01", "02")
-        ))
+        Json.toJson[RiskAssessmentPolicy](RiskAssessmentPolicyYes(Set(PaperBased, Digital))) must be(
+          Json.obj("hasPolicy" -> true, "riskassessments" -> Seq("01", "02"))
+        )
       }
 
       "write valid data in using json write with Option No" in {

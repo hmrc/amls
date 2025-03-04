@@ -22,24 +22,24 @@ import play.api.libs.json.{Reads, Writes}
 sealed trait CorrespondenceAddress
 
 case class UKCorrespondenceAddress(
-                                    yourName: String,
-                                    businessName: String,
-                                    addressLine1: String,
-                                    addressLine2: Option[String],
-                                    addressLine3: Option[String],
-                                    addressLine4: Option[String],
-                                    postCode: String
-                                  ) extends CorrespondenceAddress
+  yourName: String,
+  businessName: String,
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
+  addressLine4: Option[String],
+  postCode: String
+) extends CorrespondenceAddress
 
 case class NonUKCorrespondenceAddress(
-                                       yourName: String,
-                                       businessName: String,
-                                       addressLineNonUK1: String,
-                                       addressLineNonUK2: Option[String],
-                                       addressLineNonUK3: Option[String],
-                                       addressLineNonUK4: Option[String],
-                                       country: String
-                                     ) extends CorrespondenceAddress
+  yourName: String,
+  businessName: String,
+  addressLineNonUK1: String,
+  addressLineNonUK2: Option[String],
+  addressLineNonUK3: Option[String],
+  addressLineNonUK4: Option[String],
+  country: String
+) extends CorrespondenceAddress
 
 object CorrespondenceAddress {
 
@@ -54,16 +54,17 @@ object CorrespondenceAddress {
         (__ \ "correspondenceAddressLine2").readNullable[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
-        (__ \ "correspondencePostCode").read[String]) (UKCorrespondenceAddress.apply _) map identity[CorrespondenceAddress]
-      ) orElse (
+        (__ \ "correspondencePostCode")
+          .read[String])(UKCorrespondenceAddress.apply _) map identity[CorrespondenceAddress]
+    ) orElse (
       ((__ \ "yourName").read[String] and
         (__ \ "businessName").read[String] and
         (__ \ "correspondenceAddressLine1").read[String] and
         (__ \ "correspondenceAddressLine2").readNullable[String] and
         (__ \ "correspondenceAddressLine3").readNullable[String] and
         (__ \ "correspondenceAddressLine4").readNullable[String] and
-        (__ \ "correspondenceCountry").read[String]) (NonUKCorrespondenceAddress.apply _)
-      )
+        (__ \ "correspondenceCountry").read[String])(NonUKCorrespondenceAddress.apply _)
+    )
   }
 
   implicit val jsonWrites: Writes[CorrespondenceAddress] = {
@@ -71,7 +72,7 @@ object CorrespondenceAddress {
     import play.api.libs.json.Writes._
     import play.api.libs.json._
     Writes[CorrespondenceAddress] {
-      case a: UKCorrespondenceAddress =>
+      case a: UKCorrespondenceAddress    =>
         (
           (__ \ "yourName").write[String] and
             (__ \ "businessName").write[String] and
@@ -80,7 +81,7 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondencePostCode").write[String]
-          ) (unlift(UKCorrespondenceAddress.unapply)).writes(a)
+        )(unlift(UKCorrespondenceAddress.unapply)).writes(a)
       case a: NonUKCorrespondenceAddress =>
         (
           (__ \ "yourName").write[String] and
@@ -90,32 +91,40 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondenceCountry").write[String]
-          ) (unlift(NonUKCorrespondenceAddress.unapply)).writes(a)
+        )(unlift(NonUKCorrespondenceAddress.unapply)).writes(a)
     }
   }
 
-  implicit def conv(address: Option[AlternativeAddress]): Option[CorrespondenceAddress] = {
+  implicit def conv(address: Option[AlternativeAddress]): Option[CorrespondenceAddress] =
     address match {
-      case Some(data) => data.address.postcode match {
-        case None => Some(NonUKCorrespondenceAddress(data.name,
-          data.tradingName,
-          data.address.addressLine1,
-          data.address.addressLine2,
-          data.address.addressLine3,
-          data.address.addressLine4,
-          data.address.country
-        ))
-        case _ => Some(UKCorrespondenceAddress(data.name,
-          data.tradingName,
-          data.address.addressLine1,
-          data.address.addressLine2,
-          data.address.addressLine3,
-          data.address.addressLine4,
-          data.address.postcode.getOrElse("")
-        ))
-      }
-      case _ => None
+      case Some(data) =>
+        data.address.postcode match {
+          case None =>
+            Some(
+              NonUKCorrespondenceAddress(
+                data.name,
+                data.tradingName,
+                data.address.addressLine1,
+                data.address.addressLine2,
+                data.address.addressLine3,
+                data.address.addressLine4,
+                data.address.country
+              )
+            )
+          case _    =>
+            Some(
+              UKCorrespondenceAddress(
+                data.name,
+                data.tradingName,
+                data.address.addressLine1,
+                data.address.addressLine2,
+                data.address.addressLine3,
+                data.address.addressLine4,
+                data.address.postcode.getOrElse("")
+              )
+            )
+        }
+      case _          => None
     }
-  }
 
 }

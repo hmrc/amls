@@ -35,62 +35,70 @@ import utils.{ApiRetryHelper, SubscriptionRequestValidator}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubscriptionService @Inject()(private[services] val desConnector: SubscribeDESConnector,
-                                    private[services] val ggConnector: GovernmentGatewayAdminConnector,
-                                    private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
-                                    private[services] val auditConnector: AuditConnector,
-                                    private[services] val config: ApplicationConfig,
-                                    val subscriptionRequestValidator: SubscriptionRequestValidator,
-                                    val feeResponseRepository: FeesRepository) extends Logging {
+class SubscriptionService @Inject() (
+  private[services] val desConnector: SubscribeDESConnector,
+  private[services] val ggConnector: GovernmentGatewayAdminConnector,
+  private[services] val enrolmentStoreConnector: EnrolmentStoreConnector,
+  private[services] val auditConnector: AuditConnector,
+  private[services] val config: ApplicationConfig,
+  val subscriptionRequestValidator: SubscriptionRequestValidator,
+  val feeResponseRepository: FeesRepository
+) extends Logging {
 
   private val amlsRegistrationNumberRegex = "X[A-Z]ML00000[0-9]{6}$".r
 
-  private def duplicateSubscriptionErrorHandler(request: SubscriptionRequest): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
-    case ex @ HttpStatusException(BAD_REQUEST, _) => {
-      ex.jsonBody map {
-        case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
-          amlsRegistrationNumberRegex
-            .findFirstIn(body.reason)
-            .fold[Future[SubscriptionResponse]](failResponse(ex, body)) {
-              amlsRegNo => {
+  private def duplicateSubscriptionErrorHandler(
+    request: SubscriptionRequest
+  ): PartialFunction[Throwable, Future[SubscriptionResponse]] = {
+    case ex @ HttpStatusException(BAD_REQUEST, _) =>
+      {
+        ex.jsonBody map {
+          case body if body.reason.startsWith(Constants.duplicateSubscriptionErrorMessage) =>
+            amlsRegistrationNumberRegex
+              .findFirstIn(body.reason)
+              .fold[Future[SubscriptionResponse]](failResponse(ex, body)) { amlsRegNo =>
                 logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
                 failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
-            }
-        case body =>
-          failResponse(ex, body)
-      }
-    }.getOrElse(Future.failed(ex))
+          case body                                                                        =>
+            failResponse(ex, body)
+        }
+      }.getOrElse(Future.failed(ex))
 
     case e @ HttpStatusException(status, Some(body)) =>
       logger.warn(s" - Status: $status, Message: $body")
       Future.failed(e)
   }
 
-  def subscribe(safeId: String, request: SubscriptionRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext,
-                                                              apiRetryHelper: ApiRetryHelper): Future[SubscriptionResponse] = {
+  def subscribe(safeId: String, request: SubscriptionRequest)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[SubscriptionResponse] = {
 
-    val validationResult: Either[collection.Seq[JsObject], SubscriptionRequest] = subscriptionRequestValidator.validateRequest(request)
+    val validationResult: Either[collection.Seq[JsObject], SubscriptionRequest] =
+      subscriptionRequestValidator.validateRequest(request)
 
     validationResult match {
       case Left(errors) =>
         logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
         auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, errors))
-      case Right(_) =>
+      case Right(_)     =>
         logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
     }
 
     for {
-      response <- desConnector.subscribe(safeId, request)
-        .map(desResponse => SubscriptionResponse.convert(desResponse))
-        .recoverWith {
-          duplicateSubscriptionErrorHandler(request)
-        }
-      _ <- Fees.convertSubscription(response) match {
-        case Some(fees) => feeResponseRepository.insert(fees)
-        case _ => Future.successful(false)
-      }
-      _ <- addKnownFacts(safeId, request, response)
+      response <- desConnector
+                    .subscribe(safeId, request)
+                    .map(desResponse => SubscriptionResponse.convert(desResponse))
+                    .recoverWith {
+                      duplicateSubscriptionErrorHandler(request)
+                    }
+      _        <- Fees.convertSubscription(response) match {
+                    case Some(fees) => feeResponseRepository.insert(fees)
+                    case _          => Future.successful(false)
+                  }
+      _        <- addKnownFacts(safeId, request, response)
 
     } yield response
 
@@ -112,22 +120,26 @@ class SubscriptionService @Inject()(private[services] val desConnector: Subscrib
   private def failResponse(ex: Throwable, body: HttpExceptionBody) = {
     ex match {
       case e: HttpStatusException => logger.warn(s" - Status: ${e.status}, Message: $body")
-      case _ => logger.warn(s" - Exception thrown - Message: $body")
+      case _                      => logger.warn(s" - Exception thrown - Message: $body")
     }
 
     Future.failed(ex)
   }
 
-  private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)
-                           (implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def addKnownFacts(safeId: String, request: SubscriptionRequest, response: SubscriptionResponse)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ) =
     (if (config.enrolmentStoreToggle) {
-      enrolmentStoreConnector.addKnownFacts(AmlsEnrolmentKey(response.amlsRefNo), getKnownFacts(safeId, request, response))
-    } else {
-      ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
-    }) map (_ => response) recover {
-      case ex => logger.warn("[AddKnownFactsFailed]", ex)
-        response
+       enrolmentStoreConnector.addKnownFacts(
+         AmlsEnrolmentKey(response.amlsRefNo),
+         getKnownFacts(safeId, request, response)
+       )
+     } else {
+       ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
+     }) map (_ => response) recover { case ex =>
+      logger.warn("[AddKnownFactsFailed]", ex)
+      response
     }
-  }
 
 }

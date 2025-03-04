@@ -54,26 +54,32 @@ class BranchesOrAgentsSpec extends PlaySpec {
     "BranchesOrAgents form writes" when {
       "there is no list of countries" must {
         "set hasCountries to false" in {
-          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(Json.obj(
-            "hasCountries" -> false
-          ))
+          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(
+            Json.obj(
+              "hasCountries" -> false
+            )
+          )
         }
       }
 
       "the list of countries is empty" must {
         "set hasCountries to false" in {
-          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(Json.obj(
-            "hasCountries" -> false
-          ))
+          BranchesOrAgents.format.writes(BranchesOrAgents(false, None)) must be(
+            Json.obj(
+              "hasCountries" -> false
+            )
+          )
         }
       }
 
       "the list of countries has entries" must {
         "set hasCountries to true and populate the countries list" in {
-          BranchesOrAgents.format.writes(BranchesOrAgents(true, Some(Seq("TC1", "TC2")))) must be(Json.obj(
-            "hasCountries" -> true,
-            "countries" -> Seq("TC1", "TC2")
-          ))
+          BranchesOrAgents.format.writes(BranchesOrAgents(true, Some(Seq("TC1", "TC2")))) must be(
+            Json.obj(
+              "hasCountries" -> true,
+              "countries"    -> Seq("TC1", "TC2")
+            )
+          )
         }
       }
     }

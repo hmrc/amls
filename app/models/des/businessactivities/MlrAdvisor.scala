@@ -19,38 +19,39 @@ package models.des.businessactivities
 import models.fe.businessactivities.WhoIsYourAccountant
 import play.api.libs.json.{Json, OFormat}
 
-case class MlrAdvisorDetails(advisorNameAddress: Option[AdvisorNameAddress], agentDealsWithHmrc: Boolean, hmrcAgentRefNo: Option[String])
+case class MlrAdvisorDetails(
+  advisorNameAddress: Option[AdvisorNameAddress],
+  agentDealsWithHmrc: Boolean,
+  hmrcAgentRefNo: Option[String]
+)
 
 object MlrAdvisorDetails {
   implicit val format: OFormat[MlrAdvisorDetails] = Json.format[MlrAdvisorDetails]
 
-  implicit def convert(ba: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisorDetails] = {
+  implicit def convert(ba: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisorDetails] =
     ba.whoIsYourAccountant match {
       case None => None
-      case _ => Some(MlrAdvisorDetails(ba.whoIsYourAccountant, ba.taxMatters.fold(false)(x => x.manageYourTaxAffairs), None))
+      case _    =>
+        Some(MlrAdvisorDetails(ba.whoIsYourAccountant, ba.taxMatters.fold(false)(x => x.manageYourTaxAffairs), None))
     }
-  }
 
-  implicit def dealsWithTaxConvert(accountant: Option[WhoIsYourAccountant]): Option[AdvisorNameAddress] = {
+  implicit def dealsWithTaxConvert(accountant: Option[WhoIsYourAccountant]): Option[AdvisorNameAddress] =
     accountant match {
       case Some(data) => data
-      case None => None
+      case None       => None
     }
-  }
 }
 
-case class MlrAdvisor(doYouHaveMlrAdvisor: Boolean,
-                      mlrAdvisorDetails: Option[MlrAdvisorDetails] = None)
+case class MlrAdvisor(doYouHaveMlrAdvisor: Boolean, mlrAdvisorDetails: Option[MlrAdvisorDetails] = None)
 
 object MlrAdvisor {
   implicit val format: OFormat[MlrAdvisor] = Json.format[MlrAdvisor]
 
-  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisor] = {
+  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): Option[MlrAdvisor] =
     bact.accountantForAMLSRegulations match {
       case Some(x) => Some(MlrAdvisor(x.accountantForAMLSRegulations, bact))
       // have to keep sending for now as is required in API4 - a defect has been raised
-      case _ => Some(MlrAdvisor(doYouHaveMlrAdvisor = false))
+      case _       => Some(MlrAdvisor(doYouHaveMlrAdvisor = false))
 
     }
-  }
 }

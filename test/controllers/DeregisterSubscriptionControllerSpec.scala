@@ -45,15 +45,15 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
   }
 
   val accountType = "org"
-  val accountRef = "TestOrgRef"
+  val accountRef  = "TestOrgRef"
 
   val success = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
 
   private val inputRequest = Json.obj(
     "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-    "deregistrationDate" -> "2015-08-23",
-    "deregistrationReason" -> "Other, please specify",
-    "deregReasonOther" -> "Other Reason"
+    "deregistrationDate"       -> "2015-08-23",
+    "deregistrationReason"     -> "Other, please specify",
+    "deregReasonOther"         -> "Other Reason"
   )
 
   private val postRequest = FakeRequest("POST", "/")
@@ -72,24 +72,26 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
         mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any(), any())
       ) thenReturn Future.successful(success)
 
-      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest)
-      status(result) must be(OK)
+      private val result =
+        deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+      status(result)        must be(OK)
       contentAsJson(result) must be(Json.toJson(success))
     }
 
     "successfully return failed response on invalid request" in new Fixture {
       private val response = Json.obj(
         "errors" -> Seq(
-          Json.obj("path" -> "obj.acknowledgementReference",
-            "error" -> "error.path.missing"),
-          Json.obj("path" -> "obj.deregistrationReason",
-            "error" -> "error.path.missing"),
-          Json.obj("path" -> "obj.deregistrationDate",
-            "error" -> "error.path.missing")
-        ))
+          Json.obj("path" -> "obj.acknowledgementReference", "error" -> "error.path.missing"),
+          Json.obj("path" -> "obj.deregistrationReason", "error"     -> "error.path.missing"),
+          Json.obj("path" -> "obj.deregistrationDate", "error"       -> "error.path.missing")
+        )
+      )
 
-      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequestWithNoBody)
-      status(result) must be(BAD_REQUEST)
+      private val result =
+        deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(
+          postRequestWithNoBody
+        )
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
 
@@ -99,10 +101,13 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
         mockDeregConnector.deregistration(any(), any())(any(), any(), any(), any(), any())
       ) thenReturn Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("message")))
 
-      whenReady(deregisterSubscriptionController.deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest).failed) {
-        case HttpStatusException(status, body) =>
-          status must be(INTERNAL_SERVER_ERROR)
-          body must be(Some("message"))
+      whenReady(
+        deregisterSubscriptionController
+          .deregistration(accountType, accountRef, amlsRegistrationNumber)(postRequest)
+          .failed
+      ) { case HttpStatusException(status, body) =>
+        status must be(INTERNAL_SERVER_ERROR)
+        body   must be(Some("message"))
       }
 
     }
@@ -112,8 +117,9 @@ class DeregisterSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferen
         "errors" -> Seq("Invalid amlsRegistrationNumber")
       )
 
-      private val result = deregisterSubscriptionController.deregistration(accountType, accountRef, "fsdfsdf")(postRequest)
-      status(result) must be(BAD_REQUEST)
+      private val result =
+        deregisterSubscriptionController.deregistration(accountType, accountRef, "fsdfsdf")(postRequest)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
 

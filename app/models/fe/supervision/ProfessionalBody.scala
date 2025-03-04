@@ -25,30 +25,30 @@ case class ProfessionalBodyYes(value: String) extends ProfessionalBody
 
 case object ProfessionalBodyNo extends ProfessionalBody
 
-
 object ProfessionalBody {
 
   implicit val jsonReads: Reads[ProfessionalBody] =
     (__ \ "penalised").read[Boolean] flatMap {
-      case true => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply
+      case true  => (__ \ "professionalBody").read[String] map ProfessionalBodyYes.apply
       case false => Reads(_ => JsSuccess(ProfessionalBodyNo))
     }
 
   implicit val jsonWrites: Writes[ProfessionalBody] = Writes[ProfessionalBody] {
-    case ProfessionalBodyYes(value) => Json.obj(
-      "penalised" -> true,
-      "professionalBody" -> value
-    )
-    case ProfessionalBodyNo => Json.obj("penalised" -> false)
+    case ProfessionalBodyYes(value) =>
+      Json.obj(
+        "penalised"        -> true,
+        "professionalBody" -> value
+      )
+    case ProfessionalBodyNo         => Json.obj("penalised" -> false)
   }
 
-  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBody] = {
+  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBody] =
     supDtls match {
-      case Some(data) => data.prevWarnedWRegToAspActivities match {
-        case true => Some(ProfessionalBodyYes(data.detailsIfFinedWarned.getOrElse("")))
-        case false => Some(ProfessionalBodyNo)
-      }
-      case None => Some(ProfessionalBodyNo)
+      case Some(data) =>
+        data.prevWarnedWRegToAspActivities match {
+          case true  => Some(ProfessionalBodyYes(data.detailsIfFinedWarned.getOrElse("")))
+          case false => Some(ProfessionalBodyNo)
+        }
+      case None       => Some(ProfessionalBodyNo)
     }
-  }
 }

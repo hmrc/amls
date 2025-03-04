@@ -23,8 +23,9 @@ class RegisteringAgentPremisesSpec extends PlaySpec {
 
   "JSON" should {
     "Read and write successfully" in {
-      RegisteringAgentPremises.formats.reads(RegisteringAgentPremises.formats.writes(RegisteringAgentPremises(true))) must be(
-        JsSuccess(RegisteringAgentPremises(true)))
+      RegisteringAgentPremises.formats.reads(
+        RegisteringAgentPremises.formats.writes(RegisteringAgentPremises(true))
+      ) must be(JsSuccess(RegisteringAgentPremises(true)))
     }
   }
 }

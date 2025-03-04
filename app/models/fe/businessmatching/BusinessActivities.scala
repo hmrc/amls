@@ -39,7 +39,6 @@ case object TrustAndCompanyServices extends BusinessActivity
 
 case object TelephonePaymentService extends BusinessActivity
 
-
 object BusinessActivity {
 
   implicit val jsonActivityReads: Reads[BusinessActivity] = Reads {
@@ -51,18 +50,18 @@ object BusinessActivity {
     case JsString("05") => JsSuccess(MoneyServiceBusiness)
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
-    case _ => JsError((JsPath \ "businessActivities") -> JsonValidationError("error.invalid"))
+    case _              => JsError((JsPath \ "businessActivities") -> JsonValidationError("error.invalid"))
   }
 
   implicit val jsonActivityWrite: Writes[BusinessActivity] = Writes[BusinessActivity] {
-    case AccountancyServices => JsString("01")
-    case ArtMarketParticipant => JsString("08")
-    case BillPaymentServices => JsString("02")
+    case AccountancyServices        => JsString("01")
+    case ArtMarketParticipant       => JsString("08")
+    case BillPaymentServices        => JsString("02")
     case EstateAgentBusinessService => JsString("03")
-    case HighValueDealing => JsString("04")
-    case MoneyServiceBusiness => JsString("05")
-    case TrustAndCompanyServices => JsString("06")
-    case TelephonePaymentService => JsString("07")
+    case HighValueDealing           => JsString("04")
+    case MoneyServiceBusiness       => JsString("05")
+    case TrustAndCompanyServices    => JsString("06")
+    case TelephonePaymentService    => JsString("07")
   }
 }
 
@@ -70,27 +69,28 @@ object BusinessActivities {
 
   implicit val formats: OFormat[BusinessActivities] = Json.format[BusinessActivities]
 
-  def getActivity[A <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] = {
+  def getActivity[A <: BusinessActivity](activity: A, present: Boolean): Option[BusinessActivity] =
     if (present) {
       Some(activity)
     } else {
       None
     }
-  }
 
-  implicit def conv(activities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
+  implicit def conv(activities: Option[MlrActivitiesAppliedFor]): BusinessActivities =
     activities match {
-      case Some(mlrActivitiesAppliedFor) => BusinessActivities(Set(
-        getActivity(MoneyServiceBusiness, mlrActivitiesAppliedFor.msb),
-        getActivity(HighValueDealing, mlrActivitiesAppliedFor.hvd),
-        getActivity(AccountancyServices, mlrActivitiesAppliedFor.asp),
-        getActivity(TrustAndCompanyServices, mlrActivitiesAppliedFor.tcsp),
-        getActivity(EstateAgentBusinessService, mlrActivitiesAppliedFor.eab),
-        getActivity(BillPaymentServices, mlrActivitiesAppliedFor.bpsp),
-        getActivity(TelephonePaymentService, mlrActivitiesAppliedFor.tditpsp),
-        getActivity(ArtMarketParticipant, mlrActivitiesAppliedFor.amp))
-        .flatten)
-      case _ => BusinessActivities(Set.empty)
+      case Some(mlrActivitiesAppliedFor) =>
+        BusinessActivities(
+          Set(
+            getActivity(MoneyServiceBusiness, mlrActivitiesAppliedFor.msb),
+            getActivity(HighValueDealing, mlrActivitiesAppliedFor.hvd),
+            getActivity(AccountancyServices, mlrActivitiesAppliedFor.asp),
+            getActivity(TrustAndCompanyServices, mlrActivitiesAppliedFor.tcsp),
+            getActivity(EstateAgentBusinessService, mlrActivitiesAppliedFor.eab),
+            getActivity(BillPaymentServices, mlrActivitiesAppliedFor.bpsp),
+            getActivity(TelephonePaymentService, mlrActivitiesAppliedFor.tditpsp),
+            getActivity(ArtMarketParticipant, mlrActivitiesAppliedFor.amp)
+          ).flatten
+        )
+      case _                             => BusinessActivities(Set.empty)
     }
-  }
 }

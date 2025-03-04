@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
+import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover, OtherBusinessActivities}
 import models.fe.businessactivities.ExpectedAMLSTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -89,25 +89,46 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des to frontend model successfully when involved in other is false with other value" in {
-      val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£0-£15k")))))
+      val desModel = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£0-£15k"))))
+      )
       ExpectedAMLSTurnover.conv(desModel) must be(Some(First))
 
-      val desModel1 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£15k-50k")))))
+      val desModel1 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£15k-50k"))))
+      )
       ExpectedAMLSTurnover.conv(desModel1) must be(Some(Second))
 
-      val desModel2 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£50k-£100k")))))
+      val desModel2 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£50k-£100k"))))
+      )
       ExpectedAMLSTurnover.conv(desModel2) must be(Some(Third))
 
-      val desModel3 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£100k-£250k")))))
+      val desModel3 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£100k-£250k"))))
+      )
       ExpectedAMLSTurnover.conv(desModel3) must be(Some(Fourth))
 
-      val desModel4 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£250k-£1m")))))
+      val desModel4 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£250k-£1m"))))
+      )
       ExpectedAMLSTurnover.conv(desModel4) must be(Some(Fifth))
 
-      val desModel5 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£1m-10m")))))
+      val desModel5 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£1m-10m"))))
+      )
       ExpectedAMLSTurnover.conv(desModel5) must be(Some(Sixth))
 
-      val desModel7 = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£10m+")))))
+      val desModel7 = BusinessActivityDetails(
+        false,
+        Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("", "", "£10m+"))))
+      )
       ExpectedAMLSTurnover.conv(desModel7) must be(Some(Seventh))
     }
 

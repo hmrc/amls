@@ -26,18 +26,18 @@ case class Products(items: Set[ItemType])
 sealed trait ItemType {
   val value: String =
     this match {
-      case Alcohol => "01"
-      case Tobacco => "02"
-      case Antiques => "03"
-      case Cars => "04"
+      case Alcohol            => "01"
+      case Tobacco            => "02"
+      case Antiques           => "03"
+      case Cars               => "04"
       case OtherMotorVehicles => "05"
-      case Caravans => "06"
-      case Jewellery => "07"
-      case Gold => "08"
-      case ScrapMetals => "09"
-      case MobilePhones => "10"
-      case Clothing => "11"
-      case Other(_) => "12"
+      case Caravans           => "06"
+      case Jewellery          => "07"
+      case Gold               => "08"
+      case ScrapMetals        => "09"
+      case MobilePhones       => "10"
+      case Clothing           => "11"
+      case Other(_)           => "12"
     }
 }
 
@@ -69,7 +69,7 @@ object Products {
 
   def convOther(other: Boolean, specifyOther: String): Option[ItemType] =
     other match {
-      case true => Some(Other(specifyOther))
+      case true  => Some(Other(specifyOther))
       case false => None
     }
 
@@ -90,49 +90,52 @@ object Products {
         case "12" =>
           val test = (JsPath \ "otherDetails").read[String].map(Other.apply)
           test map identity[ItemType]
-        case _ =>
+        case _    =>
           Reads(_ => JsError((JsPath \ "products") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ItemType]]](
         Reads[Set[ItemType]](_ => JsSuccess(Set.empty))
-      ) {
-        (result, data) =>
-          data flatMap { m =>
-            result.map { n =>
-              n + m
-            }
+      ) { (result, data) =>
+        data flatMap { m =>
+          result.map { n =>
+            n + m
           }
+        }
       }
     } map Products.apply
 
-  implicit val jsonWrite: Writes[Products] = Writes[Products] {
-    case Products(transactions) =>
-      Json.obj(
-        "products" -> (transactions map {
-          _.value
-        }).toSeq
-      ) ++ transactions.foldLeft[JsObject](Json.obj()) {
-        case (m, Other(name)) =>
-          m ++ Json.obj("otherDetails" -> name)
-        case (m, _) =>
-          m
-      }
+  implicit val jsonWrite: Writes[Products] = Writes[Products] { case Products(transactions) =>
+    Json.obj(
+      "products" -> (transactions map {
+        _.value
+      }).toSeq
+    ) ++ transactions.foldLeft[JsObject](Json.obj()) {
+      case (m, Other(name)) =>
+        m ++ Json.obj("otherDetails" -> name)
+      case (m, _)           =>
+        m
+    }
   }
 
   implicit def conv(ba: BusinessActivities): Option[Products] = {
     val itemTypes: Option[Set[ItemType]] = ba.hvdGoodsSold match {
-      case Some(products) => Some(Set(CommonMethods.getSpecificType(products.alcohol, Alcohol),
-        CommonMethods.getSpecificType(products.tobacco, Tobacco),
-        CommonMethods.getSpecificType(products.antiques, Antiques),
-        CommonMethods.getSpecificType(products.caravans, Caravans),
-        CommonMethods.getSpecificType(products.cars, Cars),
-        CommonMethods.getSpecificType(products.clothing, Clothing),
-        CommonMethods.getSpecificType(products.gold, Gold),
-        CommonMethods.getSpecificType(products.jewellery, Jewellery),
-        CommonMethods.getSpecificType(products.mobilePhones, MobilePhones),
-        CommonMethods.getSpecificType(products.otherMotorVehicles, OtherMotorVehicles),
-        CommonMethods.getSpecificType(products.scrapMetals, ScrapMetals),
-        convOther(products.other, products.specifyOther.getOrElse(""))).flatten)
-      case None => None
+      case Some(products) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType(products.alcohol, Alcohol),
+            CommonMethods.getSpecificType(products.tobacco, Tobacco),
+            CommonMethods.getSpecificType(products.antiques, Antiques),
+            CommonMethods.getSpecificType(products.caravans, Caravans),
+            CommonMethods.getSpecificType(products.cars, Cars),
+            CommonMethods.getSpecificType(products.clothing, Clothing),
+            CommonMethods.getSpecificType(products.gold, Gold),
+            CommonMethods.getSpecificType(products.jewellery, Jewellery),
+            CommonMethods.getSpecificType(products.mobilePhones, MobilePhones),
+            CommonMethods.getSpecificType(products.otherMotorVehicles, OtherMotorVehicles),
+            CommonMethods.getSpecificType(products.scrapMetals, ScrapMetals),
+            convOther(products.other, products.specifyOther.getOrElse(""))
+          ).flatten
+        )
+      case None           => None
     }
 
     itemTypes.map(Products(_))

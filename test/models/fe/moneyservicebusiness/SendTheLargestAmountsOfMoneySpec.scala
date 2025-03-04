@@ -22,7 +22,6 @@ import play.api.libs.json.JsSuccess
 
 class SendTheLargestAmountsOfMoneySpec extends PlaySpec {
 
-
   "SendTheLargestAmountsOfMoney" must {
 
     "JSON validation" must {
@@ -35,33 +34,39 @@ class SendTheLargestAmountsOfMoneySpec extends PlaySpec {
     }
 
     "convert des to frontend model" in {
-      val msbMtDetails = Some(MsbMtDetails(
-        true,
-        Some("123456"),
-        IpspServicesDetails(
+      val msbMtDetails = Some(
+        MsbMtDetails(
           true,
-          Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1"), IpspDetails("IPSPName2", "IPSPMLRRegNo2")))
-        ),
-        true,
-        Some("11111111111"),
-        Some(CountriesList(List("GB", "AD"))),
-        Some(CountriesList(List("AD", "GB")))
-      ))
-      SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)))
+          Some("123456"),
+          IpspServicesDetails(
+            true,
+            Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1"), IpspDetails("IPSPName2", "IPSPMLRRegNo2")))
+          ),
+          true,
+          Some("11111111111"),
+          Some(CountriesList(List("GB", "AD"))),
+          Some(CountriesList(List("AD", "GB")))
+        )
+      )
+      SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(
+        Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None))
+      )
     }
 
     "convert des to frontend model when no countries listed" in {
-      val msbMtDetails = Some(MsbMtDetails(
-        true,
-        Some("123456"),
-        IpspServicesDetails(
+      val msbMtDetails = Some(
+        MsbMtDetails(
           true,
-          Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1"), IpspDetails("IPSPName2", "IPSPMLRRegNo2")))
-        ),
-        true,
-        Some("11111111111"),
-        None,
-        None)
+          Some("123456"),
+          IpspServicesDetails(
+            true,
+            Some(List(IpspDetails("IPSPName1", "IPSPMLRRegNo1"), IpspDetails("IPSPName2", "IPSPMLRRegNo2")))
+          ),
+          true,
+          Some("11111111111"),
+          None,
+          None
+        )
       )
       SendTheLargestAmountsOfMoney.convMsbMt(msbMtDetails) must be(None)
     }

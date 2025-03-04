@@ -25,10 +25,9 @@ object SendMoneyToOtherCountry {
 
   implicit val format: OFormat[SendMoneyToOtherCountry] = Json.format[SendMoneyToOtherCountry]
 
-  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[SendMoneyToOtherCountry] = {
+  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[SendMoneyToOtherCountry] =
     msbMt match {
       case Some(msbDtls) => Some(SendMoneyToOtherCountry(msbDtls.countriesLrgstMoneyAmtSentTo.isDefined))
-      case None => None
+      case None          => None
     }
-  }
 }

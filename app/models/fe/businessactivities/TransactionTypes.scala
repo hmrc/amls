@@ -22,7 +22,7 @@ import play.api.libs.json._
 sealed trait TransactionType {
   val value: String =
     this match {
-      case Paper => "01"
+      case Paper              => "01"
       case DigitalSpreadsheet => "02"
       case DigitalSoftware(_) => "03"
     }
@@ -42,51 +42,54 @@ object TransactionTypes {
 
   implicit val typesReader: Reads[Set[TransactionType]] = new Reads[Set[TransactionType]] {
     override def reads(json: JsValue): JsResult[Set[TransactionType]] = {
-      val t = (json \ "types").asOpt[Set[String]]
-      val n = (json \ "software").asOpt[String]
+      val t           = (json \ "types").asOpt[Set[String]]
+      val n           = (json \ "software").asOpt[String]
       val validValues = Set("01", "02", "03")
 
       (t, n) match {
-        case (None, _) => JsError(__ \ "types" -> JsonValidationError("error.missing"))
-        case (Some(types), None) if types.contains("03") => JsError(__ \ "software" -> JsonValidationError("error.missing"))
-        case (Some(types), _) if types.diff(validValues).nonEmpty => JsError(__ \ "types" -> JsonValidationError("error.invalid"))
-        case (Some(types), maybeName) => JsSuccess(types map {
-          case "01" => Paper
-          case "02" => DigitalSpreadsheet
-          case "03" => DigitalSoftware(maybeName.getOrElse(""))
-        })
+        case (None, _)                                            => JsError(__ \ "types" -> JsonValidationError("error.missing"))
+        case (Some(types), None) if types.contains("03")          =>
+          JsError(__ \ "software" -> JsonValidationError("error.missing"))
+        case (Some(types), _) if types.diff(validValues).nonEmpty =>
+          JsError(__ \ "types" -> JsonValidationError("error.invalid"))
+        case (Some(types), maybeName)                             =>
+          JsSuccess(types map {
+            case "01" => Paper
+            case "02" => DigitalSpreadsheet
+            case "03" => DigitalSoftware(maybeName.getOrElse(""))
+          })
       }
     }
   }
 
   implicit val jsonWrites: Writes[TransactionTypes] = Writes[TransactionTypes] { t =>
-    val softwareName = t.types.collectFirst {
-      case DigitalSoftware(name) => Json.obj("software" -> name)
-    }.getOrElse(Json.obj())
+    val softwareName = t.types
+      .collectFirst { case DigitalSoftware(name) =>
+        Json.obj("software" -> name)
+      }
+      .getOrElse(Json.obj())
 
     Json.obj("types" -> t.types.map(_.value)) ++ softwareName
   }
 
   implicit val jsonReads: Reads[TransactionTypes] = __.read[Set[TransactionType]] map TransactionTypes.apply
 
-  def convertRecordsKept(ba: BusinessActivitiesAll): Option[Boolean] = {
+  def convertRecordsKept(ba: BusinessActivitiesAll): Option[Boolean] =
     ba.auditableRecordsDetails.detailedRecordsKept match {
       case "Yes" => Some(true)
-      case "No" => Some(false)
+      case "No"  => Some(false)
     }
-  }
 
-  def convert(details: AuditableRecordsDetails): Option[TransactionTypes] = {
+  def convert(details: AuditableRecordsDetails): Option[TransactionTypes] =
     details.transactionRecordingMethod map { method =>
       val typeMap = Seq[(Boolean, TransactionType)](
-        method.manual -> Paper,
-        method.spreadsheet -> DigitalSpreadsheet,
+        method.manual            -> Paper,
+        method.spreadsheet       -> DigitalSpreadsheet,
         method.commercialPackage -> DigitalSoftware(method.commercialPackageName.getOrElse(""))
       )
 
-      TransactionTypes((typeMap collect {
-        case (true, t) => t
+      TransactionTypes((typeMap collect { case (true, t) =>
+        t
       }).toSet)
     }
-  }
 }

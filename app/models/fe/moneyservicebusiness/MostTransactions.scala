@@ -25,14 +25,13 @@ object MostTransactions {
 
   implicit val format: OFormat[MostTransactions] = Json.format[MostTransactions]
 
-  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[MostTransactions] = {
+  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[MostTransactions] =
     msbMt flatMap { m =>
       m.countriesLrgstTranscsSentTo.fold[Option[MostTransactions]] {
         None
       } {
-        case CountriesList(Nil) => None
+        case CountriesList(Nil)       => None
         case CountriesList(countries) => Some(MostTransactions(countries))
       }
     }
-  }
 }

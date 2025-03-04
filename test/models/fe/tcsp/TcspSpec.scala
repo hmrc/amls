@@ -26,43 +26,41 @@ trait TcspValues {
 
   object DefaultValues {
 
-    val DefaultProvidedServices = ProvidedServices(Set(PhonecallHandling, Other("other service")))
-    val DefaultCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
-      TrusteeProvider,
-      CompanyDirectorEtc,
-      CompanyFormationAgent))
+    val DefaultProvidedServices        = ProvidedServices(Set(PhonecallHandling, Other("other service")))
+    val DefaultCompanyServiceProviders = TcspTypes(
+      Set(NomineeShareholdersProvider, TrusteeProvider, CompanyDirectorEtc, CompanyFormationAgent)
+    )
     val DefaultDoServicesOfAnotherTCSP = true
-    val DefaultServicesOfAnotherTCSP = ServicesOfAnotherTCSPYes(Some("12345678"))
+    val DefaultServicesOfAnotherTCSP   = ServicesOfAnotherTCSPYes(Some("12345678"))
 
   }
 
   object NewValues {
 
-    val NewProvidedServices = ProvidedServices(Set(EmailHandling))
-    val NewCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
-      CompanyFormationAgent))
-    val NewServicesOfAnotherTCSP = ServicesOfAnotherTCSPNo
+    val NewProvidedServices        = ProvidedServices(Set(EmailHandling))
+    val NewCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider, CompanyFormationAgent))
+    val NewServicesOfAnotherTCSP   = ServicesOfAnotherTCSPNo
 
   }
 
   val completeJson = Json.obj(
-    "tcspTypes" -> Json.obj(
+    "tcspTypes"                    -> Json.obj(
       "serviceProviders" -> Seq("01", "02", "04", "05")
     ),
-    "onlyOffTheShelfCompsSold" -> Json.obj(
+    "onlyOffTheShelfCompsSold"     -> Json.obj(
       "onlyOffTheShelfCompsSold" -> true
     ),
     "complexCorpStructureCreation" -> Json.obj(
       "complexCorpStructureCreation" -> false
     ),
-    "providedServices" -> Json.obj(
+    "providedServices"             -> Json.obj(
       "services" -> Seq("01", "08"),
-      "details" -> "other service"
+      "details"  -> "other service"
     ),
-    "doesServicesOfAnotherTCSP" -> true,
-    "servicesOfAnotherTCSP" -> Json.obj(
+    "doesServicesOfAnotherTCSP"    -> true,
+    "servicesOfAnotherTCSP"        -> Json.obj(
       "servicesOfAnotherTCSP" -> true,
-      "mlrRefNumber" -> "12345678"
+      "mlrRefNumber"          -> "12345678"
     )
   )
 
@@ -116,7 +114,7 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
         }
       }
 
-      "Merged with Provided Services" must {
+      "Merged with Provided Services"        must {
         "return Tcsp with correct Provided Services" in {
           val result = initial.providedServices(NewValues.NewProvidedServices)
           result must be(Tcsp(providedServices = Some(NewValues.NewProvidedServices)))
@@ -129,7 +127,6 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
         }
       }
     }
-
 
     "Tcsp:merge with completeModel" when {
 
@@ -163,25 +160,75 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
   "converting the des subscription model must yield a frontend TCSP model" in {
     Tcsp.conv(DesConstants.SubscriptionViewModel) must
       be(
-        Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
-          Some(OnlyOffTheShelfCompsSoldYes),
-          Some(ComplexCorpStructureCreationYes),
-          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
-          Some(true),
-          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
+        Some(
+          Tcsp(
+            Some(
+              TcspTypes(
+                Set(
+                  CompanyDirectorEtc,
+                  NomineeShareholdersProvider,
+                  TrusteeProvider,
+                  RegisteredOfficeEtc,
+                  CompanyFormationAgent
+                )
+              )
+            ),
+            Some(OnlyOffTheShelfCompsSoldYes),
+            Some(ComplexCorpStructureCreationYes),
+            Some(
+              ProvidedServices(
+                Set(
+                  SelfCollectMailboxes,
+                  ConferenceRooms,
+                  PhonecallHandling,
+                  EmailHandling,
+                  Other("SpecifyOther"),
+                  EmailServer
+                )
+              )
+            ),
+            Some(true),
+            Some(ServicesOfAnotherTCSPYes(Some("111111111111111")))
+          )
+        )
+      )
   }
 
   "converting the des subscription model must yield a frontend TCSP model where empty mlr number" in {
     Tcsp.conv(DesConstants.SubscriptionViewModelNoTcspMLR) must
       be(
-        Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
-          Some(OnlyOffTheShelfCompsSoldYes),
-          Some(ComplexCorpStructureCreationYes),
-          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
-          Some(true),
-          Some(ServicesOfAnotherTCSPNo))))
+        Some(
+          Tcsp(
+            Some(
+              TcspTypes(
+                Set(
+                  CompanyDirectorEtc,
+                  NomineeShareholdersProvider,
+                  TrusteeProvider,
+                  RegisteredOfficeEtc,
+                  CompanyFormationAgent
+                )
+              )
+            ),
+            Some(OnlyOffTheShelfCompsSoldYes),
+            Some(ComplexCorpStructureCreationYes),
+            Some(
+              ProvidedServices(
+                Set(
+                  SelfCollectMailboxes,
+                  ConferenceRooms,
+                  PhonecallHandling,
+                  EmailHandling,
+                  Other("SpecifyOther"),
+                  EmailServer
+                )
+              )
+            ),
+            Some(true),
+            Some(ServicesOfAnotherTCSPNo)
+          )
+        )
+      )
   }
 
   "converting the des subscription where no tcsp must yield None" in {
@@ -191,7 +238,7 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
 
   "converting the des subscription model must yield a frontend TCSP model (CompanyFormationAgent variation 1)" in {
     val testTcspTrustCompFormationAgt = TcspTrustCompFormationAgt(true, false)
-    val SubscriptionViewModel = SubscriptionView(
+    val SubscriptionViewModel         = SubscriptionView(
       etmpFormBundleNumber = "111111",
       DesConstants.testBusinessDetails,
       DesConstants.testViewBusinessContactDetails,
@@ -216,18 +263,43 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
     )
     Tcsp.conv(SubscriptionViewModel) must
       be(
-        Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
-          Some(OnlyOffTheShelfCompsSoldYes),
-          Some(ComplexCorpStructureCreationNo),
-          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
-          Some(true),
-          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
+        Some(
+          Tcsp(
+            Some(
+              TcspTypes(
+                Set(
+                  CompanyDirectorEtc,
+                  NomineeShareholdersProvider,
+                  TrusteeProvider,
+                  RegisteredOfficeEtc,
+                  CompanyFormationAgent
+                )
+              )
+            ),
+            Some(OnlyOffTheShelfCompsSoldYes),
+            Some(ComplexCorpStructureCreationNo),
+            Some(
+              ProvidedServices(
+                Set(
+                  SelfCollectMailboxes,
+                  ConferenceRooms,
+                  PhonecallHandling,
+                  EmailHandling,
+                  Other("SpecifyOther"),
+                  EmailServer
+                )
+              )
+            ),
+            Some(true),
+            Some(ServicesOfAnotherTCSPYes(Some("111111111111111")))
+          )
+        )
+      )
   }
 
   "converting the des subscription model must yield a frontend TCSP model (CompanyFormationAgent variation 2)" in {
     val testTcspTrustCompFormationAgt = TcspTrustCompFormationAgt(false, true)
-    val SubscriptionViewModel = SubscriptionView(
+    val SubscriptionViewModel         = SubscriptionView(
       etmpFormBundleNumber = "111111",
       DesConstants.testBusinessDetails,
       DesConstants.testViewBusinessContactDetails,
@@ -252,14 +324,38 @@ class TcspSpec extends PlaySpec with AmlsBaseSpec with TcspValues {
     )
     Tcsp.conv(SubscriptionViewModel) must
       be(
-        Some(Tcsp(
-          Some(TcspTypes(Set(CompanyDirectorEtc, NomineeShareholdersProvider, TrusteeProvider, RegisteredOfficeEtc, CompanyFormationAgent))),
-          Some(OnlyOffTheShelfCompsSoldNo),
-          Some(ComplexCorpStructureCreationYes),
-          Some(ProvidedServices(Set(SelfCollectMailboxes, ConferenceRooms, PhonecallHandling, EmailHandling, Other("SpecifyOther"), EmailServer))),
-          Some(true),
-          Some(ServicesOfAnotherTCSPYes(Some("111111111111111"))))))
+        Some(
+          Tcsp(
+            Some(
+              TcspTypes(
+                Set(
+                  CompanyDirectorEtc,
+                  NomineeShareholdersProvider,
+                  TrusteeProvider,
+                  RegisteredOfficeEtc,
+                  CompanyFormationAgent
+                )
+              )
+            ),
+            Some(OnlyOffTheShelfCompsSoldNo),
+            Some(ComplexCorpStructureCreationYes),
+            Some(
+              ProvidedServices(
+                Set(
+                  SelfCollectMailboxes,
+                  ConferenceRooms,
+                  PhonecallHandling,
+                  EmailHandling,
+                  Other("SpecifyOther"),
+                  EmailServer
+                )
+              )
+            ),
+            Some(true),
+            Some(ServicesOfAnotherTCSPYes(Some("111111111111111")))
+          )
+        )
+      )
   }
-
 
 }

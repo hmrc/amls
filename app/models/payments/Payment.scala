@@ -25,17 +25,18 @@ import play.custom.JsPathSupport.{localDateTimeWrites, readLocalDateTime}
 
 import java.time.LocalDateTime
 
-case class Payment(_id: String,
-                   amlsRefNo: String,
-                   safeId: String,
-                   reference: String,
-                   description: Option[String],
-                   amountInPence: Int,
-                   status: PaymentStatus,
-                   createdAt: LocalDateTime,
-                   isBacs: Option[Boolean] = None,
-                   updatedAt: Option[LocalDateTime] = None
-                  )
+case class Payment(
+  _id: String,
+  amlsRefNo: String,
+  safeId: String,
+  reference: String,
+  description: Option[String],
+  amountInPence: Int,
+  status: PaymentStatus,
+  createdAt: LocalDateTime,
+  isBacs: Option[Boolean] = None,
+  updatedAt: Option[LocalDateTime] = None
+)
 
 object Payment {
 
@@ -52,7 +53,8 @@ object Payment {
     )
 
   def apply(bacsPaymentRequest: CreateBacsPaymentRequest): Payment =
-    Payment(new ObjectId().toString,
+    Payment(
+      new ObjectId().toString,
       bacsPaymentRequest.amlsReference,
       bacsPaymentRequest.safeId,
       bacsPaymentRequest.paymentReference,
@@ -75,7 +77,7 @@ object Payment {
         (__ \ "createdAt").read[LocalDateTime](readLocalDateTime) and
         (__ \ "isBacs").readNullable[Boolean] and
         (__ \ "updatedAt").readNullable[LocalDateTime]
-      ) (Payment(_, _, _, _, _, _, _, _, _, _))
+    )(Payment(_, _, _, _, _, _, _, _, _, _))
 
   implicit val writes: OWrites[Payment] =
     (
@@ -89,7 +91,7 @@ object Payment {
         (__ \ "createdAt").write[LocalDateTime](localDateTimeWrites) and
         (__ \ "isBacs").writeNullable[Boolean] and
         (__ \ "updatedAt").writeNullable[LocalDateTime]
-      ) (unlift(Payment.unapply))
+    )(unlift(Payment.unapply))
 
   implicit val format: OFormat[Payment] = OFormat(reads, writes)
 }

@@ -29,16 +29,18 @@ import utils.HttpResponseHelper
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PayAPIConnector @Inject()(private[connectors] val applicationConfig: ApplicationConfig,
-                                private[connectors] val httpClient: HttpClient,
-                                private[connectors] val metrics: Metrics)
-                               (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
+class PayAPIConnector @Inject() (
+  private[connectors] val applicationConfig: ApplicationConfig,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+)(implicit executionContext: ExecutionContext)
+    extends HttpResponseHelper
+    with Logging {
 
   private[connectors] val paymentUrl = applicationConfig.payAPIUrl
 
-  def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
+  def getPayment(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] =
     getPaymentFunction(paymentId)
-  }
 
   private def getPaymentFunction(paymentId: String)(implicit headerCarrier: HeaderCarrier): Future[Payment] = {
 
@@ -47,23 +49,22 @@ class PayAPIConnector @Inject()(private[connectors] val applicationConfig: Appli
     val bodyParser = JsonParsed[Payment]
 
     val prefix = "[PayAPIConnector][getPayment]"
-    val timer = metrics.timer(PayAPI)
+    val timer  = metrics.timer(PayAPI)
 
     logger.debug(s"$prefix - Request body: $paymentId")
 
-    httpClient.GET[HttpResponse](url) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response body: ${response.body}")
-        response
+    httpClient.GET[HttpResponse](url) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response body: ${response.body}")
+      response
     } flatMap {
       case response @ status(OK) & bodyParser(JsSuccess(body: Payment, _)) =>
         metrics.success(PayAPI)
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(body)
-      case response @ status(s) =>
+      case response @ status(s)                                            =>
         metrics.failed(PayAPI)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
@@ -72,7 +73,7 @@ class PayAPIConnector @Inject()(private[connectors] val applicationConfig: Appli
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(PayAPI)
         logger.warn(s"$prefix - Failure: Exception", e)

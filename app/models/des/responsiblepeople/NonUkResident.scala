@@ -19,40 +19,68 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople.{NonUKResidence, _}
 import play.api.libs.json.{Json, OFormat}
 
-case class NonUkResident(dateOfBirth: Option[String] = None, passportHeld: Boolean, passportDetails: Option[PassportDetail])
+case class NonUkResident(
+  dateOfBirth: Option[String] = None,
+  passportHeld: Boolean,
+  passportDetails: Option[PassportDetail]
+)
 
 object NonUkResident {
   implicit val format: OFormat[NonUkResident] = Json.format[NonUkResident]
 
-  implicit def convert(rp: ResponsiblePeople): Option[IdDetail] = {
+  implicit def convert(rp: ResponsiblePeople): Option[IdDetail] =
     rp.personResidenceType map { rt =>
       rp.ukPassport flatMap {
-        case UKPassportYes(num) => rt.isUKResidence match {
-          case NonUKResidence =>
-            Some(IdDetail(None, Some(NonUkResident(rp.dateOfBirth map {
-              _.dateOfBirth.toString
-            }, true,
-              Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))))
-            ))
-          case _ => throw new Exception("Cannot match on residence type.")
-        }
-        case _ => None
+        case UKPassportYes(num) =>
+          rt.isUKResidence match {
+            case NonUKResidence =>
+              Some(
+                IdDetail(
+                  None,
+                  Some(
+                    NonUkResident(
+                      rp.dateOfBirth map {
+                        _.dateOfBirth.toString
+                      },
+                      true,
+                      Some(PassportDetail(true, PassportNum(ukPassportNumber = Some(num))))
+                    )
+                  )
+                )
+              )
+            case _              => throw new Exception("Cannot match on residence type.")
+          }
+        case _                  => None
       } getOrElse {
         (rp.nonUKPassport, rt.isUKResidence) match {
-          case (Some(NonUKPassportYes(num)), NonUKResidence) => {
-            IdDetail(None, Some(NonUkResident(rp.dateOfBirth map {
-              _.dateOfBirth.toString
-            }, true,
-              Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num)))))))
-          }
-          case (Some(NoPassport) | None, NonUKResidence) => {
-            IdDetail(None, Some(NonUkResident(rp.dateOfBirth map {
-              _.dateOfBirth.toString
-            }, false, None)))
-          }
-          case _ => throw new Exception("Cannot match on passport and residence")
+          case (Some(NonUKPassportYes(num)), NonUKResidence) =>
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  rp.dateOfBirth map {
+                    _.dateOfBirth.toString
+                  },
+                  true,
+                  Some(PassportDetail(false, PassportNum(nonUkPassportNumber = Some(num))))
+                )
+              )
+            )
+          case (Some(NoPassport) | None, NonUKResidence)     =>
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  rp.dateOfBirth map {
+                    _.dateOfBirth.toString
+                  },
+                  false,
+                  None
+                )
+              )
+            )
+          case _                                             => throw new Exception("Cannot match on passport and residence")
         }
       }
     }
-  }
 }

@@ -18,31 +18,37 @@ package models.des.tradingpremises
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Address(addressLine1: String, addressLine2: Option[String], addressLine3: Option[String], addressLine4: Option[String], country: String,
-                   postcode: Option[String], addressChangeDate: Option[String] = None)
+case class Address(
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
+  addressLine4: Option[String],
+  country: String,
+  postcode: Option[String],
+  addressChangeDate: Option[String] = None
+)
 
 object Address {
   implicit val format: OFormat[Address] = Json.format[Address]
 
   private val postcodeRegex = "^[A-Za-z]{1,2}[0-9][0-9A-Za-z]?\\s?[0-9][A-Za-z]{2}$"
 
-  private def convertEmptyOrInvalidToNone(str: String) = {
+  private def convertEmptyOrInvalidToNone(str: String) =
     (str.nonEmpty, str.matches(postcodeRegex)) match {
       case (true, true) => Some(str)
-      case _ => None
+      case _            => None
     }
-  }
 
   private val maxAddressLineLength = 35
 
   private def removeAmpersands(address: Address): Address = {
-    def removeFromLine(addressLine: Option[String]) = {
-      addressLine map {
-        line => line.replaceAll("&", "and").take(maxAddressLineLength)
+    def removeFromLine(addressLine: Option[String]) =
+      addressLine map { line =>
+        line.replaceAll("&", "and").take(maxAddressLineLength)
       }
-    }
 
-    address.copy(addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
+    address.copy(
+      addressLine1 = removeFromLine(Some(address.addressLine1)).getOrElse(""),
       addressLine2 = removeFromLine(address.addressLine2),
       addressLine3 = removeFromLine(address.addressLine3),
       addressLine4 = removeFromLine(address.addressLine4)
@@ -50,8 +56,16 @@ object Address {
 
   }
 
-  implicit def convert(address: models.fe.tradingpremises.Address): Address = {
-    removeAmpersands(Address(address.addressLine1, address.addressLine2, address.addressLine3, address.addressLine4, "GB",
-      convertEmptyOrInvalidToNone(address.postcode), address.dateOfChange))
-  }
+  implicit def convert(address: models.fe.tradingpremises.Address): Address =
+    removeAmpersands(
+      Address(
+        address.addressLine1,
+        address.addressLine2,
+        address.addressLine3,
+        address.addressLine4,
+        "GB",
+        convertEmptyOrInvalidToNone(address.postcode),
+        address.dateOfChange
+      )
+    )
 }

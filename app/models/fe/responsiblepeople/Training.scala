@@ -31,22 +31,22 @@ object Training {
 
   implicit val jsonReads: Reads[Training] =
     (__ \ "training").read[Boolean] flatMap {
-      case true => (__ \ "information").read[String] map TrainingYes.apply
+      case true  => (__ \ "information").read[String] map TrainingYes.apply
       case false => Reads(_ => JsSuccess(TrainingNo))
     }
 
   implicit val jsonWrites: Writes[Training] = Writes[Training] {
-    case TrainingYes(information) => Json.obj(
-      "training" -> true,
-      "information" -> information
-    )
-    case TrainingNo => Json.obj("training" -> false)
+    case TrainingYes(information) =>
+      Json.obj(
+        "training"    -> true,
+        "information" -> information
+      )
+    case TrainingNo               => Json.obj("training" -> false)
   }
 
-  implicit def conv(rp: ResponsiblePersons): Option[Training] = {
+  implicit def conv(rp: ResponsiblePersons): Option[Training] =
     rp.amlAndCounterTerrFinTraining match {
-      case true => Some(TrainingYes(rp.trainingDetails.getOrElse("")))
+      case true  => Some(TrainingYes(rp.trainingDetails.getOrElse("")))
       case false => Some(TrainingNo)
     }
-  }
 }

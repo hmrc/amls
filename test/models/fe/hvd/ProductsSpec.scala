@@ -27,25 +27,21 @@ class ProductsSpec extends PlaySpec {
     "JSON validation" must {
 
       "successfully validate given values" in {
-        val json = Json.obj(
-          "products" -> Seq("06", "07", "08", "02", "01", "11"))
+        val json = Json.obj("products" -> Seq("06", "07", "08", "02", "01", "11"))
 
         Json.fromJson[Products](json) must
           be(JsSuccess(Products(Set(Clothing, Jewellery, Alcohol, Caravans, Gold, Tobacco))))
       }
 
       "successfully validate given values with option other details" in {
-        val json = Json.obj(
-          "products" -> Seq("09", "12"),
-          "otherDetails" -> "test")
+        val json = Json.obj("products" -> Seq("09", "12"), "otherDetails" -> "test")
 
         Json.fromJson[Products](json) must
           be(JsSuccess(Products(Set(Other("test"), ScrapMetals))))
       }
 
       "fail when on path is missing" in {
-        Json.fromJson[Products](Json.obj(
-          "product" -> Seq("01"))) must
+        Json.fromJson[Products](Json.obj("product" -> Seq("01"))) must
           be(JsError((JsPath \ "products") -> JsonValidationError("error.path.missing")))
       }
 
@@ -56,9 +52,8 @@ class ProductsSpec extends PlaySpec {
 
       "write valid data in using json write" in {
         Json.toJson[Products](Products(Set(Tobacco, Other("test657")))) must be(
-          Json.obj("products" -> Json.arr("02", "12"),
-            "otherDetails" -> "test657"
-          ))
+          Json.obj("products" -> Json.arr("02", "12"), "otherDetails" -> "test657")
+        )
       }
     }
     "convert to None given hvdGoodsSold = None" in {

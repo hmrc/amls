@@ -33,35 +33,46 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                                private[connectors] val ac: AuditConnector,
-                                                private[connectors] val httpClient: HttpClient,
-                                                private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class DeregisterSubscriptionConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
-                    (implicit ec: ExecutionContext, wr1: Writes[DeregisterSubscriptionRequest], wr2: Writes[DeregisterSubscriptionResponse],
-                     hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper): Future[DeregisterSubscriptionResponse] = {
+  def deregistration(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[DeregisterSubscriptionRequest],
+    wr2: Writes[DeregisterSubscriptionResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[DeregisterSubscriptionResponse] =
     apiRetryHelper.doWithBackoff(() => deregistrationFunction(amlsRegistrationNumber, data))
-  }
 
-  private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)
-                                    (implicit ec: ExecutionContext, wr1: Writes[DeregisterSubscriptionRequest],
-                                     wr2: Writes[DeregisterSubscriptionResponse], hc: HeaderCarrier
-                                    ): Future[DeregisterSubscriptionResponse] = {
-    val prefix = "[DESConnector][deregistration]"
+  private def deregistrationFunction(amlsRegistrationNumber: String, data: DeregisterSubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[DeregisterSubscriptionRequest],
+    wr2: Writes[DeregisterSubscriptionResponse],
+    hc: HeaderCarrier
+  ): Future[DeregisterSubscriptionResponse] = {
+    val prefix     = "[DESConnector][deregistration]"
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]
-    val timer = metrics.timer(API10)
+    val timer      = metrics.timer(API10)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val url = s"$fullUrl/$amlsRegistrationNumber/deregistration"
-    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
-        response
+    httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(
+      wr1,
+      implicitly[HttpReads[HttpResponse]],
+      hc,
+      ec
+    ) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response Body: ${response.body}")
+      response
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: DeregisterSubscriptionResponse, _)) =>
         metrics.success(API10)
@@ -70,7 +81,7 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r @ status(s)                                                                   =>
         metrics.failed(API10)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
@@ -79,7 +90,7 @@ class DeregisterSubscriptionConnector @Inject()(private[connectors] val appConfi
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API10)
         logger.warn(s"$prefix - Failure: Exception", e)

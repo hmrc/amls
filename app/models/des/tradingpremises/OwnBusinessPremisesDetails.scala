@@ -21,42 +21,42 @@ import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class OwnBusinessPremisesDetails(tradingName: Option[String],
-                                      businessAddress: Address,
-                                      residential:Boolean,
-                                      msb: Msb,
-                                      hvd:Hvd,
-                                      asp:Asp,
-                                      tcsp:Tcsp,
-                                      eab:Eab,
-                                      bpsp:Bpsp,
-                                      tditpsp:Tditpsp,
-                                      amp: Amp,
-                                      startDate : String,
-                                      endDate: Option[String] = None,
-                                      lineId: Option[StringOrInt] = None,
-                                      status: Option[String] = None,
-                                      sectorDateChange: Option[String] = None,
-                                      dateChangeFlag: Option[Boolean] = None,
-                                      tradingNameChangeDate: Option[String] = None
-                                     )
-
+case class OwnBusinessPremisesDetails(
+  tradingName: Option[String],
+  businessAddress: Address,
+  residential: Boolean,
+  msb: Msb,
+  hvd: Hvd,
+  asp: Asp,
+  tcsp: Tcsp,
+  eab: Eab,
+  bpsp: Bpsp,
+  tditpsp: Tditpsp,
+  amp: Amp,
+  startDate: String,
+  endDate: Option[String] = None,
+  lineId: Option[StringOrInt] = None,
+  status: Option[String] = None,
+  sectorDateChange: Option[String] = None,
+  dateChangeFlag: Option[Boolean] = None,
+  tradingNameChangeDate: Option[String] = None
+)
 
 object OwnBusinessPremisesDetails {
 
-  implicit val jsonReads: Reads[OwnBusinessPremisesDetails] = {
+  implicit val jsonReads: Reads[OwnBusinessPremisesDetails] =
     (
-        (__ \ "tradingName").readNullable[String] and
+      (__ \ "tradingName").readNullable[String] and
         (__ \ "businessAddress").read[Address] and
         (__ \ "residential").read[Boolean] and
-        (__ \ "msb").readNullable[Msb].map{_.getOrElse(Msb(false,false,false,false,false))} and
-        (__ \ "hvd").readNullable[Hvd].map{_.getOrElse(Hvd(false))} and
-        (__ \ "asp").readNullable[Asp].map{_.getOrElse(Asp(false))} and
-        (__ \ "tcsp").readNullable[Tcsp].map{_.getOrElse(Tcsp(false))} and
-        (__ \ "eab").readNullable[Eab].map{_.getOrElse(Eab(false))} and
-        (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
-        (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
-        (__ \ "amp").readNullable[Amp].map{_.getOrElse(Amp(false))} and
+        (__ \ "msb").readNullable[Msb].map(_.getOrElse(Msb(false, false, false, false, false))) and
+        (__ \ "hvd").readNullable[Hvd].map(_.getOrElse(Hvd(false))) and
+        (__ \ "asp").readNullable[Asp].map(_.getOrElse(Asp(false))) and
+        (__ \ "tcsp").readNullable[Tcsp].map(_.getOrElse(Tcsp(false))) and
+        (__ \ "eab").readNullable[Eab].map(_.getOrElse(Eab(false))) and
+        (__ \ "bpsp").readNullable[Bpsp].map(_.getOrElse(Bpsp(false))) and
+        (__ \ "tditpsp").readNullable[Tditpsp].map(_.getOrElse(Tditpsp(false))) and
+        (__ \ "amp").readNullable[Amp].map(_.getOrElse(Amp(false))) and
         (__ \ "startDate").read[String] and
         (__ \ "endDate").readNullable[String] and
         __.read(Reads.optionNoError[StringOrInt]) and
@@ -64,10 +64,9 @@ object OwnBusinessPremisesDetails {
         (__ \ "sectorDateChange").readNullable[String] and
         (__ \ "dateChangeFlag").readNullable[Boolean] and
         (__ \ "tradingNameChangeDate").readNullable[String]
-      ) (OwnBusinessPremisesDetails.apply _)
-  }
+    )(OwnBusinessPremisesDetails.apply _)
 
-  implicit val jsonWrites: Writes[OwnBusinessPremisesDetails] = {
+  implicit val jsonWrites: Writes[OwnBusinessPremisesDetails] =
     (
       (__ \ "tradingName").writeNullable[String] and
         (__ \ "businessAddress").write[Address] and
@@ -87,38 +86,37 @@ object OwnBusinessPremisesDetails {
         (__ \ "sectorDateChange").writeNullable[String] and
         (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "tradingNameChangeDate").writeNullable[String]
-      ) (unlift(OwnBusinessPremisesDetails.unapply))
-  }
+    )(unlift(OwnBusinessPremisesDetails.unapply))
 
-  implicit def convert(tradingPremises: Seq[models.fe.tradingpremises.TradingPremises]): Seq[OwnBusinessPremisesDetails] = {
-
-    tradingPremises map {
-      x => {
-        val y = x.yourTradingPremises
-        val z = x.whatDoesYourBusinessDoAtThisAddress.activities
-        OwnBusinessPremisesDetails(Some(y.tradingName), y.tradingPremisesAddress,
-          y.isResidential,
-          x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
-          z,
-          z,
-          z,
-          z,
-          z,
-          z,
-          z,
-          y.startDate.toString,
-          x.endDate.fold[Option[String]](None)(x=>Some(x.endDate.toString)),
-          x.lineId,
-          x.status,
-          x.whatDoesYourBusinessDoAtThisAddress.dateOfChange,
-          None,
-          x.yourTradingPremises.tradingNameChangeDate
-        )
-      }
+  implicit def convert(
+    tradingPremises: Seq[models.fe.tradingpremises.TradingPremises]
+  ): Seq[OwnBusinessPremisesDetails] =
+    tradingPremises map { x =>
+      val y = x.yourTradingPremises
+      val z = x.whatDoesYourBusinessDoAtThisAddress.activities
+      OwnBusinessPremisesDetails(
+        Some(y.tradingName),
+        y.tradingPremisesAddress,
+        y.isResidential,
+        x.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
+        z,
+        z,
+        z,
+        z,
+        z,
+        z,
+        z,
+        y.startDate.toString,
+        x.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)),
+        x.lineId,
+        x.status,
+        x.whatDoesYourBusinessDoAtThisAddress.dateOfChange,
+        None,
+        x.yourTradingPremises.tradingNameChangeDate
+      )
     }
-  }
 
-  implicit object OwnBusinessPremisesDetailsHasStatus extends StatusProvider[OwnBusinessPremisesDetails]{
-    override def getStatus(sp:OwnBusinessPremisesDetails): Option[String] = sp.status
+  implicit object OwnBusinessPremisesDetailsHasStatus extends StatusProvider[OwnBusinessPremisesDetails] {
+    override def getStatus(sp: OwnBusinessPremisesDetails): Option[String] = sp.status
   }
 }

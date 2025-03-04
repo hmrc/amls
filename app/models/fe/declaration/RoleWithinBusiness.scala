@@ -27,14 +27,14 @@ sealed trait RoleType {
   val value: String =
     this match {
       case BeneficialShareholder => "BeneficialShareholder"
-      case Director => "Director"
-      case Partner => "Partner"
-      case InternalAccountant => "InternalAccountant"
-      case ExternalAccountant => "ExternalAccountant"
-      case SoleProprietor => "SoleProprietor"
-      case NominatedOfficer => "NominatedOfficer"
-      case DesignatedMember => "DesignatedMember"
-      case Other(_) => "Other"
+      case Director              => "Director"
+      case Partner               => "Partner"
+      case InternalAccountant    => "InternalAccountant"
+      case ExternalAccountant    => "ExternalAccountant"
+      case SoleProprietor        => "SoleProprietor"
+      case NominatedOfficer      => "NominatedOfficer"
+      case DesignatedMember      => "DesignatedMember"
+      case Other(_)              => "Other"
     }
 }
 
@@ -62,79 +62,83 @@ object RoleWithinBusiness {
     (__ \ "roleWithinBusiness").read[Set[String]].flatMap { x: Set[String] =>
       x.map {
         case "BeneficialShareholder" => Reads(_ => JsSuccess(BeneficialShareholder)) map identity[RoleType]
-        case "Director" => Reads(_ => JsSuccess(Director)) map identity[RoleType]
-        case "Partner" => Reads(_ => JsSuccess(Partner)) map identity[RoleType]
-        case "InternalAccountant" => Reads(_ => JsSuccess(InternalAccountant)) map identity[RoleType]
-        case "ExternalAccountant" => Reads(_ => JsSuccess(ExternalAccountant)) map identity[RoleType]
-        case "SoleProprietor" => Reads(_ => JsSuccess(SoleProprietor)) map identity[RoleType]
-        case "NominatedOfficer" => Reads(_ => JsSuccess(NominatedOfficer)) map identity[RoleType]
-        case "DesignatedMember" => Reads(_ => JsSuccess(DesignatedMember)) map identity[RoleType]
-        case "Other" =>
+        case "Director"              => Reads(_ => JsSuccess(Director)) map identity[RoleType]
+        case "Partner"               => Reads(_ => JsSuccess(Partner)) map identity[RoleType]
+        case "InternalAccountant"    => Reads(_ => JsSuccess(InternalAccountant)) map identity[RoleType]
+        case "ExternalAccountant"    => Reads(_ => JsSuccess(ExternalAccountant)) map identity[RoleType]
+        case "SoleProprietor"        => Reads(_ => JsSuccess(SoleProprietor)) map identity[RoleType]
+        case "NominatedOfficer"      => Reads(_ => JsSuccess(NominatedOfficer)) map identity[RoleType]
+        case "DesignatedMember"      => Reads(_ => JsSuccess(DesignatedMember)) map identity[RoleType]
+        case "Other"                 =>
           val test = (JsPath \ "roleWithinBusinessOther").read[String].map(Other.apply _)
           test map identity[RoleType]
-        case _ =>
+        case _                       =>
           Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[RoleType]]](
         Reads[Set[RoleType]](_ => JsSuccess(Set.empty))
-      ) {
-        (result, data) =>
-          data flatMap { m =>
-            result.map { n =>
-              n + m
-            }
+      ) { (result, data) =>
+        data flatMap { m =>
+          result.map { n =>
+            n + m
           }
+        }
       }
     } map RoleWithinBusiness.apply
 
-  implicit val jsonWrite: Writes[RoleWithinBusiness] = Writes[RoleWithinBusiness] {
-    case RoleWithinBusiness(roles) =>
-      Json.obj(
-        "roleWithinBusiness" -> (roles map {
-          _.value
-        }).toSeq
-      ) ++ roles.foldLeft[JsObject](Json.obj()) {
-        case (m, Other(name)) =>
-          m ++ Json.obj("roleWithinBusinessOther" -> name)
-        case (m, _) =>
-          m
-      }
+  implicit val jsonWrite: Writes[RoleWithinBusiness] = Writes[RoleWithinBusiness] { case RoleWithinBusiness(roles) =>
+    Json.obj(
+      "roleWithinBusiness" -> (roles map {
+        _.value
+      }).toSeq
+    ) ++ roles.foldLeft[JsObject](Json.obj()) {
+      case (m, Other(name)) =>
+        m ++ Json.obj("roleWithinBusinessOther" -> name)
+      case (m, _)           =>
+        m
+    }
   }
 
   def convOther(other: Boolean, specifyOther: String): Option[RoleType] =
     other match {
-      case true => Some(Other(specifyOther))
+      case true  => Some(Other(specifyOther))
       case false => None
     }
 
   def convert(aboutYou: AboutYouRelease7): RoleWithinBusiness = {
 
     val withinTheBusinessO = aboutYou.roleWithinBusiness match {
-      case Some(roles) => Some(Set(
-        CommonMethods.getSpecificType(roles.beneficialShareholder, BeneficialShareholder),
-        CommonMethods.getSpecificType(roles.director, Director),
-        CommonMethods.getSpecificType(roles.partner, Partner),
-        CommonMethods.getSpecificType(roles.internalAccountant, InternalAccountant),
-        CommonMethods.getSpecificType(roles.soleProprietor, SoleProprietor),
-        CommonMethods.getSpecificType(roles.nominatedOfficer, NominatedOfficer),
-        CommonMethods.getSpecificType(roles.designatedMember, DesignatedMember),
-        convOther(roles.other, roles.specifyOtherRoleInBusiness.getOrElse(""))).flatten)
-      case None => None
+      case Some(roles) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType(roles.beneficialShareholder, BeneficialShareholder),
+            CommonMethods.getSpecificType(roles.director, Director),
+            CommonMethods.getSpecificType(roles.partner, Partner),
+            CommonMethods.getSpecificType(roles.internalAccountant, InternalAccountant),
+            CommonMethods.getSpecificType(roles.soleProprietor, SoleProprietor),
+            CommonMethods.getSpecificType(roles.nominatedOfficer, NominatedOfficer),
+            CommonMethods.getSpecificType(roles.designatedMember, DesignatedMember),
+            convOther(roles.other, roles.specifyOtherRoleInBusiness.getOrElse(""))
+          ).flatten
+        )
+      case None        => None
     }
 
     val forTheBusinessO = aboutYou.roleForTheBusiness match {
-      case Some(roles) => Some(Set(
-        CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
-        convOther(roles.other, roles.specifyOtherRoleForBusiness.getOrElse(""))).flatten)
-      case _ => None
+      case Some(roles) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType(roles.externalAccountant, ExternalAccountant),
+            convOther(roles.other, roles.specifyOtherRoleForBusiness.getOrElse(""))
+          ).flatten
+        )
+      case _           => None
     }
 
     val roleTypesWithinBusiness: Option[Set[RoleType]] =
       for {
         withinTheBusiness <- withinTheBusinessO
-        forTheBusiness <- forTheBusinessO
-      } yield {
-        withinTheBusiness ++ forTheBusiness
-      }
+        forTheBusiness    <- forTheBusinessO
+      } yield withinTheBusiness ++ forTheBusiness
 
     roleTypesWithinBusiness.map(RoleWithinBusiness(_)).getOrElse(RoleWithinBusiness(Set.empty))
   }

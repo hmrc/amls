@@ -30,24 +30,32 @@ class SubscriptionViewSpec extends PlaySpec with GuiceOneAppPerSuite {
   val agentDetails = DesConstants.testTradingPremisesAPI5.agentBusinessPremises.fold[Option[Seq[AgentDetails]]](None) {
     x =>
       x.agentDetails match {
-        case Some(data) => Some(data.map(y => y.copy(agentPremises = y.agentPremises.copy(startDate = None),
-          startDate = y.agentPremises.startDate)))
-        case _ => None
+        case Some(data) =>
+          Some(
+            data.map(y =>
+              y.copy(agentPremises = y.agentPremises.copy(startDate = None), startDate = y.agentPremises.startDate)
+            )
+          )
+        case _          => None
       }
   }
 
-  val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRpPhase2.copy(businessActivities = DesConstants.testBusinessActivities.copy(
-    all = Some(DesConstants.testBusinessActivitiesAll.copy(
-      businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
-    ))
-  ), tradingPremises = DesConstants.testTradingPremisesAPI5.copy(agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))),
-    msb = Some(DesConstants.testMsb.copy(
-      msbAllDetails = Some(MsbAllDetails(
-        Some("£50k-£100k"),
-        true,
-        Some(CountriesList(List("AD", "GB"))),
-        true)
-      ))))
+  val release7SubscriptionViewModel = DesConstants.SubscriptionViewModelForRpPhase2.copy(
+    businessActivities = DesConstants.testBusinessActivities.copy(
+      all = Some(
+        DesConstants.testBusinessActivitiesAll.copy(
+          businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£50k-£100k"))))
+        )
+      )
+    ),
+    tradingPremises = DesConstants.testTradingPremisesAPI5
+      .copy(agentBusinessPremises = Some(AgentBusinessPremises(true, agentDetails))),
+    msb = Some(
+      DesConstants.testMsb.copy(
+        msbAllDetails = Some(MsbAllDetails(Some("£50k-£100k"), true, Some(CountriesList(List("AD", "GB"))), true))
+      )
+    )
+  )
 
   "SubscriptionView" must {
     "deserialise the subscription json when phase 2 toggle is on" when {
@@ -83,4 +91,3 @@ class SubscriptionViewSpec extends PlaySpec with GuiceOneAppPerSuite {
     supervisionSection = SupervisionSection.completeModel
   )
 }
-

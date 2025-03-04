@@ -35,7 +35,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
   trait Fixture {
 
     val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl = s"url/pay-api/payment/summary/${testPayment.id}"
+    val paymentUrl  = s"url/pay-api/payment/summary/${testPayment.id}"
 
     val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
       override private[connectors] val paymentUrl = "url"
@@ -77,10 +77,9 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
         testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.getPayment(testPaymentId).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body.getOrElse("").isEmpty mustEqual true
+      whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body.getOrElse("").isEmpty mustEqual true
       }
     }
 
@@ -90,10 +89,9 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
         testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(testConnector.getPayment(testPaymentId).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
+      whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>
+        status mustEqual INTERNAL_SERVER_ERROR
+        body mustEqual Some("message")
       }
     }
   }

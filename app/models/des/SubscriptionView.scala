@@ -31,28 +31,29 @@ import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.TradingPremises
 import play.api.libs.json._
 
-case class SubscriptionView(etmpFormBundleNumber: String,
-                            businessDetails: BusinessDetails,
-                            businessContactDetails: BusinessContactDetails,
-                            businessReferencesAll: Option[PreviouslyRegisteredMLRView],
-                            businessReferencesAllButSp: Option[VATRegistration],
-                            businessReferencesCbUbLlp: Option[CorporationTaxRegisteredCbUbLlp],
-                            businessActivities: BusinessActivities,
-                            tradingPremises: TradingPremises,
-                            bankAccountDetails: Option[BankDetailsView],
-                            msb: Option[MoneyServiceBusiness],
-                            hvd: Option[Hvd],
-                            asp: Option[Asp],
-                            aspOrTcsp: Option[AspOrTcsp],
-                            tcspAll: Option[TcspAll],
-                            tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
-                            eabAll: Option[EabAll],
-                            eabResdEstAgncy: Option[EabResdEstAgncy],
-                            responsiblePersons: Option[Seq[ResponsiblePersons]],
-                            amp: Option[Amp],
-                            lettingAgents: Option[LettingAgents],
-                            extraFields: ExtraFields
-                           )
+case class SubscriptionView(
+  etmpFormBundleNumber: String,
+  businessDetails: BusinessDetails,
+  businessContactDetails: BusinessContactDetails,
+  businessReferencesAll: Option[PreviouslyRegisteredMLRView],
+  businessReferencesAllButSp: Option[VATRegistration],
+  businessReferencesCbUbLlp: Option[CorporationTaxRegisteredCbUbLlp],
+  businessActivities: BusinessActivities,
+  tradingPremises: TradingPremises,
+  bankAccountDetails: Option[BankDetailsView],
+  msb: Option[MoneyServiceBusiness],
+  hvd: Option[Hvd],
+  asp: Option[Asp],
+  aspOrTcsp: Option[AspOrTcsp],
+  tcspAll: Option[TcspAll],
+  tcspTrustCompFormationAgt: Option[TcspTrustCompFormationAgt],
+  eabAll: Option[EabAll],
+  eabResdEstAgncy: Option[EabResdEstAgncy],
+  responsiblePersons: Option[Seq[ResponsiblePersons]],
+  amp: Option[Amp],
+  lettingAgents: Option[LettingAgents],
+  extraFields: ExtraFields
+)
 
 object SubscriptionView {
 
@@ -82,7 +83,7 @@ object SubscriptionView {
         (__ \ "amp").readNullable[Amp] and
         (__ \ "lettingAgents").readNullable[LettingAgents] and
         __.read[ExtraFields]
-      ) (SubscriptionView.apply _)
+    )(SubscriptionView.apply _)
   }
 
   implicit val jsonWrites: Writes[SubscriptionView] = {
@@ -107,7 +108,6 @@ object SubscriptionView {
       (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
       (__ \ "amp").write[Option[Amp]] and
       (__ \ "lettingAgents").write[Option[LettingAgents]] and
-      __.write[ExtraFields]
-      ) (unlift(SubscriptionView.unapply _))
+      __.write[ExtraFields])(unlift(SubscriptionView.unapply _))
   }
 }

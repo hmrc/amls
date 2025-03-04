@@ -47,10 +47,12 @@ class ExperienceTrainingSpec extends PlaySpec {
     "write the correct value for Yes" in {
 
       Json.toJson(ExperienceTrainingYes("0123456789"): ExperienceTraining) must
-        be(Json.obj(
-          "experienceTraining" -> true,
-          "experienceInformation" -> "0123456789"
-        ))
+        be(
+          Json.obj(
+            "experienceTraining"    -> true,
+            "experienceInformation" -> "0123456789"
+          )
+        )
     }
 
     "write the correct value for No" in {

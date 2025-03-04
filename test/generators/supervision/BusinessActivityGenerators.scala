@@ -24,16 +24,16 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait BusinessActivityGenerators {
   val activityGen: Gen[MlrActivitiesAppliedFor] = for {
-    msb <- arbitrary[Boolean]
-    hvd <- arbitrary[Boolean]
-    asp <- arbitrary[Boolean]
-    tcsp <- arbitrary[Boolean]
-    eab <- arbitrary[Boolean]
-    bpsp <- arbitrary[Boolean]
+    msb     <- arbitrary[Boolean]
+    hvd     <- arbitrary[Boolean]
+    asp     <- arbitrary[Boolean]
+    tcsp    <- arbitrary[Boolean]
+    eab     <- arbitrary[Boolean]
+    bpsp    <- arbitrary[Boolean]
     tditpsp <- arbitrary[Boolean]
-    amp <- arbitrary[Boolean]
+    amp     <- arbitrary[Boolean]
   } yield MlrActivitiesAppliedFor(msb, hvd, asp, tcsp, eab, bpsp, tditpsp, amp)
 
   implicit val arbitraryMlrActivities: Arbitrary[MlrActivitiesAppliedFor] = Arbitrary(activityGen.sample.get)
-  implicit val arbitraryLocalDate: Arbitrary[LocalDate] = Arbitrary(LocalDate.now())
+  implicit val arbitraryLocalDate: Arbitrary[LocalDate]                   = Arbitrary(LocalDate.now())
 }

@@ -27,7 +27,7 @@ object AccountView {
     import play.api.libs.json._
 
     ((__ \ "ukAccount" \ "sortCode").read[String] and
-      (__ \ "ukAccount" \ "accountNumber").read[String]) (ukAccountView.apply _)
+      (__ \ "ukAccount" \ "accountNumber").read[String])(ukAccountView.apply _)
   }
 
   implicit val accountNumberReads: Reads[AccountNumberView] = {
@@ -60,26 +60,28 @@ object AccountView {
       __.read[nonUkAccountView].map(x => x: AccountView)
   }
 
-
   implicit val jsonWrites: Writes[AccountView] = Writes[AccountView] {
-    case m: ukAccountView =>
+    case m: ukAccountView       =>
       Json.obj(
         "ukAccount" -> Json.obj(
-          "sortCode" -> m.sortCode,
+          "sortCode"      -> m.sortCode,
           "accountNumber" -> m.accountNumber
-        ))
+        )
+      )
     case acc: AccountNumberView =>
       Json.obj(
         "nonUkAccount" -> Json.obj(
           "accountHasIban" -> false,
-          "accountNumber" -> Json.obj("bankAccountNumber" -> acc.accountNumber)
-        ))
-    case iban: IBANNumberView =>
+          "accountNumber"  -> Json.obj("bankAccountNumber" -> acc.accountNumber)
+        )
+      )
+    case iban: IBANNumberView   =>
       Json.obj(
         "nonUkAccount" -> Json.obj(
           "accountHasIban" -> true,
-          "accountNumber" -> Json.obj("iban" -> iban.iban)
-        ))
+          "accountNumber"  -> Json.obj("iban" -> iban.iban)
+        )
+      )
   }
 }
 

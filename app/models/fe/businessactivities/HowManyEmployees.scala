@@ -21,15 +21,14 @@ import play.api.libs.json.{Json, OFormat}
 
 case class HowManyEmployees(employeeCount: String, employeeCountAMLSSupervision: String)
 
-
 object HowManyEmployees {
 
   implicit val formats: OFormat[HowManyEmployees] = Json.format[HowManyEmployees]
 
-  def conv(activityDtls: BusinessActivitiesAll): Option[HowManyEmployees] = {
+  def conv(activityDtls: BusinessActivitiesAll): Option[HowManyEmployees] =
     (activityDtls.noOfEmployees, activityDtls.noOfEmployeesForMlr) match {
-      case (Some(noOfEmployees), Some(noOfEmployeesForMlr)) => Some(HowManyEmployees(noOfEmployees, noOfEmployeesForMlr))
-      case _ => None
+      case (Some(noOfEmployees), Some(noOfEmployeesForMlr)) =>
+        Some(HowManyEmployees(noOfEmployees, noOfEmployeesForMlr))
+      case _                                                => None
     }
-  }
 }

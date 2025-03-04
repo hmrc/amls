@@ -24,13 +24,14 @@ class HvdFromUnseenCustDetailsSpec extends PlaySpec {
   "HvdFromUnseenCustDetails" should {
     "successfully convert frontend model to des model" in {
       val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
-      val fe = models.fe.hvd.Hvd(
+      val fe             = models.fe.hvd.Hvd(
         receiveCashPayments = Some(true),
         cashPaymentMethods = Some(paymentMethods)
       )
 
       HvdFromUnseenCustDetails.conv(fe) must be(
-        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo"))))))
+        Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))
+      )
     }
 
     "successfully convert frontend model to des model when frontend model is none" in {
@@ -38,8 +39,7 @@ class HvdFromUnseenCustDetailsSpec extends PlaySpec {
         receiveCashPayments = Some(false)
       )
 
-      HvdFromUnseenCustDetails.conv(fe) must be(
-        Some(HvdFromUnseenCustDetails(false, None)))
+      HvdFromUnseenCustDetails.conv(fe) must be(Some(HvdFromUnseenCustDetails(false, None)))
     }
 
     "successfully convert frontend model to des model when frontend model is none1" in {

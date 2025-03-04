@@ -22,17 +22,29 @@ import play.api.libs.json.Json
 class AboutYouSpec extends PlaySpec {
   "AboutYouDetails" must {
     "be serialisable for roleWithinBusiness" in {
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Beneficial Shareholder"))
+      val aboutyouModel =
+        Aboutyou(Some(IndividualDetails("fName", None, "lName")), true, Some("Beneficial Shareholder"))
 
-      Aboutyou.format.writes(aboutyouModel) must be(Json.obj("individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
-        "employedWithinBusiness" -> true, "roleWithinBusiness" -> "Beneficial Shareholder"))
+      Aboutyou.format.writes(aboutyouModel) must be(
+        Json.obj(
+          "individualDetails"      -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
+          "employedWithinBusiness" -> true,
+          "roleWithinBusiness"     -> "Beneficial Shareholder"
+        )
+      )
     }
 
     "be serialisable for roleForTheBusiness" in {
-      val aboutyouModel = Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("External Accountant"))
+      val aboutyouModel =
+        Aboutyou(Some(IndividualDetails("fName", None, "lName")), false, None, None, Some("External Accountant"))
 
-      Aboutyou.format.writes(aboutyouModel) must be(Json.obj("individualDetails" -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
-        "employedWithinBusiness" -> false, "roleForTheBusiness" -> "External Accountant"))
+      Aboutyou.format.writes(aboutyouModel) must be(
+        Json.obj(
+          "individualDetails"      -> Json.obj("firstName" -> "fName", "lastName" -> "lName"),
+          "employedWithinBusiness" -> false,
+          "roleForTheBusiness"     -> "External Accountant"
+        )
+      )
     }
 
     "Convert from new release 7 model to old model" in {
@@ -40,9 +52,17 @@ class AboutYouSpec extends PlaySpec {
       val individualDetails = Some(IndividualDetails("fName", None, "lName"))
 
       val employedWithinBusiness = false
-      val oldModel = Aboutyou(individualDetails, employedWithinBusiness, Some("Beneficial Shareholder"), None, Some("External Accountant"), None)
+      val oldModel               = Aboutyou(
+        individualDetails,
+        employedWithinBusiness,
+        Some("Beneficial Shareholder"),
+        None,
+        Some("External Accountant"),
+        None
+      )
 
-      val release7Model = AboutYouRelease7(individualDetails,
+      val release7Model = AboutYouRelease7(
+        individualDetails,
         employedWithinBusiness,
         Some(RolesWithinBusiness(beneficialShareholder = true, false, false, false, false, false, false, false, None)),
         Some(RoleForTheBusiness(externalAccountant = true, false, None))
@@ -52,4 +72,3 @@ class AboutYouSpec extends PlaySpec {
     }
   }
 }
-

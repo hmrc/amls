@@ -31,14 +31,20 @@ class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         ukPassport = Some(UKPassportYes("AA111111A")),
         dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
-      NationalityDetails.convert(rp) must be(Some(NationalityDetails(true,
-        Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))),
-        rp.personResidenceType map {
-          _.countryOfBirth
-        },
-        rp.personResidenceType map {
-          _.nationality
-        })))
+      NationalityDetails.convert(rp) must be(
+        Some(
+          NationalityDetails(
+            true,
+            Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))),
+            rp.personResidenceType map {
+              _.countryOfBirth
+            },
+            rp.personResidenceType map {
+              _.nationality
+            }
+          )
+        )
+      )
     }
   }
 
@@ -49,14 +55,30 @@ class NationalityDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         ukPassport = Some(UKPassportYes("AA111111A")),
         dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
-      NationalityDetails.convert(rp) must be(Some(NationalityDetails(false,
-        Some(IdDetail(nonUkResident = Some(NonUkResident(Some("1990-02-24"), true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))),
-        rp.personResidenceType map {
-          _.countryOfBirth
-        },
-        rp.personResidenceType map {
-          _.nationality
-        })))
+      NationalityDetails.convert(rp) must be(
+        Some(
+          NationalityDetails(
+            false,
+            Some(
+              IdDetail(nonUkResident =
+                Some(
+                  NonUkResident(
+                    Some("1990-02-24"),
+                    true,
+                    Some(PassportDetail(true, PassportNum(Some("AA111111A"), None)))
+                  )
+                )
+              )
+            ),
+            rp.personResidenceType map {
+              _.countryOfBirth
+            },
+            rp.personResidenceType map {
+              _.nationality
+            }
+          )
+        )
+      )
     }
   }
 }

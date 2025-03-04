@@ -19,16 +19,18 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails._
 import play.api.libs.json.{Json, OFormat}
 
-case class BusinessContactDetails(businessAddress: Address,
-                                  altCorrespondenceAddress: Boolean,
-                                  alternativeAddress: Option[AlternativeAddress] = None,
-                                  businessTelNo: String,
-                                  businessEmail: String)
+case class BusinessContactDetails(
+  businessAddress: Address,
+  altCorrespondenceAddress: Boolean,
+  alternativeAddress: Option[AlternativeAddress] = None,
+  businessTelNo: String,
+  businessEmail: String
+)
 
 object BusinessContactDetails {
   implicit val format: OFormat[BusinessContactDetails] = Json.format[BusinessContactDetails]
 
-  implicit def convert(businessDetails: BusinessDetails): BusinessContactDetails = {
+  implicit def convert(businessDetails: BusinessDetails): BusinessContactDetails =
     BusinessContactDetails(
       businessAddress = businessDetails.registeredOffice,
       altCorrespondenceAddress = businessDetails.altCorrespondenceAddress,
@@ -36,5 +38,4 @@ object BusinessContactDetails {
       businessTelNo = businessDetails.contactingYou.phoneNumber,
       businessEmail = businessDetails.contactingYou.email
     )
-  }
 }

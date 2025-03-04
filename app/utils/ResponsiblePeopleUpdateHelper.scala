@@ -21,15 +21,20 @@ import models.des.responsiblepeople.{RPExtra, ResponsiblePersons}
 
 trait ResponsiblePeopleUpdateHelper {
 
-  def updateWithResponsiblePeople(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+  def updateWithResponsiblePeople(
+    desRequest: AmendVariationRequest,
+    viewResponse: SubscriptionView
+  ): AmendVariationRequest =
     desRequest.setResponsiblePersons(
       compareAndUpdateRps(viewResponse.responsiblePersons, desRequest.responsiblePersons)
     )
-  }
 
-  private def updateExistingRp(desRp: ResponsiblePersons, viewResponsiblePersons: Seq[ResponsiblePersons]): ResponsiblePersons = {
+  private def updateExistingRp(
+    desRp: ResponsiblePersons,
+    viewResponsiblePersons: Seq[ResponsiblePersons]
+  ): ResponsiblePersons = {
 
-    val rpOption = viewResponsiblePersons.find(x => x.extra.lineId.equals(desRp.extra.lineId))
+    val rpOption                   = viewResponsiblePersons.find(x => x.extra.lineId.equals(desRp.extra.lineId))
     val viewRp: ResponsiblePersons = rpOption.getOrElse(None)
 
     val desRPExtra = desRp.extra.copy(
@@ -37,58 +42,60 @@ trait ResponsiblePeopleUpdateHelper {
       testResultFitAndProper = viewRp.extra.testResultFitAndProper,
       testDateFitAndProper = viewRp.extra.testDateFitAndProper,
       testResultApprovalCheck = viewRp.extra.testResultApprovalCheck,
-      testDateApprovalCheck = viewRp.extra.testDateApprovalCheck)
+      testDateApprovalCheck = viewRp.extra.testDateApprovalCheck
+    )
 
     val desResponsiblePeople = desRp.copy(extra = desRPExtra)
 
-    val updatedStatus = desResponsiblePeople.extra.status.getOrElse(
-      if (desResponsiblePeople.equals(viewRp)) {
-        StatusConstants.Unchanged
-      } else {
-        StatusConstants.Updated
-      })
+    val updatedStatus = desResponsiblePeople.extra.status.getOrElse(if (desResponsiblePeople.equals(viewRp)) {
+      StatusConstants.Unchanged
+    } else {
+      StatusConstants.Updated
+    })
 
     val statusExtraField = desResponsiblePeople.extra.copy(status = Some(updatedStatus))
-    val updatedStatusRp = desResponsiblePeople.copy(extra = statusExtraField)
-    updatedStatusRp.copy(nameDetails = updatedStatusRp.nameDetails map {
-      nd =>
-        nd.copy(previousNameDetails = nd.previousNameDetails map {
-          pnd =>
-            pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
-              for {
-                nameDetails <- viewRp.nameDetails
-                previousNameDetails <- nameDetails.previousNameDetails
-                prevDateOfChange <- previousNameDetails.dateOfChange
-              } yield prevDateOfChange
-            }))
+    val updatedStatusRp  = desResponsiblePeople.copy(extra = statusExtraField)
+    updatedStatusRp.copy(
+      nameDetails = updatedStatusRp.nameDetails map { nd =>
+        nd.copy(previousNameDetails = nd.previousNameDetails map { pnd =>
+          pnd.copy(dateChangeFlag = Some(pnd.dateOfChange != {
+            for {
+              nameDetails         <- viewRp.nameDetails
+              previousNameDetails <- nameDetails.previousNameDetails
+              prevDateOfChange    <- previousNameDetails.dateOfChange
+            } yield prevDateOfChange
+          }))
         })
-    },
-      dateChangeFlag = Some(updatedStatusRp.startDate !=
-        viewRp.startDate
-      ))
+      },
+      dateChangeFlag = Some(
+        updatedStatusRp.startDate !=
+          viewRp.startDate
+      )
+    )
 
   }
 
-  private def compareAndUpdateRps(viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
-                                  desResponsiblePerson: Option[Seq[ResponsiblePersons]]
-                                 ): Seq[ResponsiblePersons] = {
-
+  private def compareAndUpdateRps(
+    viewResponsiblePerson: Option[Seq[ResponsiblePersons]],
+    desResponsiblePerson: Option[Seq[ResponsiblePersons]]
+  ): Seq[ResponsiblePersons] =
     (viewResponsiblePerson, desResponsiblePerson) match {
 
-      case (Some(rp), Some(desRp)) => {
-
+      case (Some(rp), Some(desRp)) =>
         val (withLineIds, withoutLineIds) = desRp.partition(_.extra.lineId.isDefined)
-        val rpWithLineIds = withLineIds.map(updateExistingRp(_, rp))
-        val rpWithAddedStatus = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
-        val rpWithDateChangeFlags = rpWithAddedStatus.map(rp => rp.copy(nameDetails = rp.nameDetails map {
-          nds =>
-            nds.copy(previousNameDetails = nds.previousNameDetails map {
-              pnd => pnd.copy(dateChangeFlag = Some(false))
-            })
-        }, dateChangeFlag = Some(false)))
+        val rpWithLineIds                 = withLineIds.map(updateExistingRp(_, rp))
+        val rpWithAddedStatus             = withoutLineIds.map(rp => rp.copy(extra = RPExtra(status = Some(StatusConstants.Added))))
+        val rpWithDateChangeFlags         = rpWithAddedStatus.map(rp =>
+          rp.copy(
+            nameDetails = rp.nameDetails map { nds =>
+              nds.copy(previousNameDetails = nds.previousNameDetails map { pnd =>
+                pnd.copy(dateChangeFlag = Some(false))
+              })
+            },
+            dateChangeFlag = Some(false)
+          )
+        )
         rpWithLineIds ++ rpWithDateChangeFlags
-      }
-      case _ => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
+      case _                       => desResponsiblePerson.fold[Seq[ResponsiblePersons]](Seq.empty)(x => x)
     }
-  }
 }

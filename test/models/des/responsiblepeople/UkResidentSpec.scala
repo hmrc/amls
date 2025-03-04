@@ -26,7 +26,8 @@ class UkResidentSpec extends PlaySpec {
   "UkResident" should {
     "convert frontend model to des model for UkResidence with DOB" in {
       UkResident.convert(UKResidence("nino"), Some(DateOfBirth(LocalDate.of(1990, 2, 24)))) must be(
-        Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24"))))
+        Some(IdDetail(Some(UkResident("nino")), dateOfBirth = Some("1990-02-24")))
+      )
     }
 
     "convert frontend model to des model for UkResidence without DOB" in {

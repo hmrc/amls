@@ -25,10 +25,9 @@ object CompanyRegistrationNumber {
 
   implicit val formats: OFormat[CompanyRegistrationNumber] = Json.format[CompanyRegistrationNumber]
 
-  implicit def conv(desBusinessDetails: BusinessDetails): Option[CompanyRegistrationNumber] = {
+  implicit def conv(desBusinessDetails: BusinessDetails): Option[CompanyRegistrationNumber] =
     desBusinessDetails.corpAndBodyLlps match {
       case Some(data) => Some(CompanyRegistrationNumber(data.companyRegNo))
-      case _ => None
+      case _          => None
     }
-  }
 }

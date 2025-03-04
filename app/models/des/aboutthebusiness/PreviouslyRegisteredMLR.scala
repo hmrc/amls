@@ -19,24 +19,25 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails.{BusinessDetails, PreviouslyRegisteredNo, PreviouslyRegisteredYes}
 import play.api.libs.json.{Json, OFormat}
 
-case class PreviouslyRegisteredMLR(amlsRegistered: Boolean,
-                                   mlrRegNumber8Long: Option[String],
-                                   prevRegForMlr: Boolean,
-                                   prevMlrRegNumber: Option[String]
-                                  )
+case class PreviouslyRegisteredMLR(
+  amlsRegistered: Boolean,
+  mlrRegNumber8Long: Option[String],
+  prevRegForMlr: Boolean,
+  prevMlrRegNumber: Option[String]
+)
 
 object PreviouslyRegisteredMLR {
   implicit val format: OFormat[PreviouslyRegisteredMLR] = Json.format[PreviouslyRegisteredMLR]
 
   implicit def convert(businessDetails: BusinessDetails): Option[PreviouslyRegisteredMLR] =
     businessDetails.previouslyRegistered match {
-      case x: PreviouslyRegisteredYes
-        if (x.value.getOrElse("").length == 15) => Some(PreviouslyRegisteredMLR(false, None, true, x.value))
-      case x: PreviouslyRegisteredYes
-        if (x.value.getOrElse("").length == 8) => Some(PreviouslyRegisteredMLR(true, x.value, false, None))
+      case x: PreviouslyRegisteredYes if x.value.getOrElse("").length == 15 =>
+        Some(PreviouslyRegisteredMLR(false, None, true, x.value))
+      case x: PreviouslyRegisteredYes if x.value.getOrElse("").length == 8  =>
+        Some(PreviouslyRegisteredMLR(true, x.value, false, None))
 
       case PreviouslyRegisteredYes(None) => Some(PreviouslyRegisteredMLR(true, None, false, None))
-      case PreviouslyRegisteredNo => Some(PreviouslyRegisteredMLR(false, None, false, None))
-      case _ => None
+      case PreviouslyRegisteredNo        => Some(PreviouslyRegisteredMLR(false, None, false, None))
+      case _                             => None
     }
 }

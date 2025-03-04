@@ -25,25 +25,25 @@ import utils.AmlsBaseSpec
 
 class WhoIsYourAccountantSpec extends PlaySpec with AmlsBaseSpec {
 
-  val DefaultName = "Default Name"
+  val DefaultName        = "Default Name"
   val DefaultTradingName = Some("Default Trading Name")
 
   val DefaultAddressLine1 = "Default Line 1"
   val DefaultAddressLine2 = Some("Default Line 2")
   val DefaultAddressLine3 = Some("Default Line 3")
   val DefaultAddressLine4 = Some("Default Line 4")
-  val DefaultPostcode = "BB1 1BB"
-  val DefaultCountry = "Default Country"
+  val DefaultPostcode     = "BB1 1BB"
+  val DefaultCountry      = "Default Country"
 
-  val DefaultUKAddress = UkAccountantsAddress(DefaultAddressLine1,
+  val DefaultUKAddress = UkAccountantsAddress(
+    DefaultAddressLine1,
     DefaultAddressLine2,
     DefaultAddressLine3,
     DefaultAddressLine4,
-    DefaultPostcode)
+    DefaultPostcode
+  )
 
-  val DefaultWhoIsYourAccountant = WhoIsYourAccountant(DefaultName,
-    DefaultTradingName,
-    DefaultUKAddress)
+  val DefaultWhoIsYourAccountant = WhoIsYourAccountant(DefaultName, DefaultTradingName, DefaultUKAddress)
 
   "WhoIsYourAccountant" must {
 
@@ -54,39 +54,74 @@ class WhoIsYourAccountantSpec extends PlaySpec with AmlsBaseSpec {
     }
 
     "convert des to frontend model successfully" in {
-      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
-        Some(AdvisorNameAddress("Name", Some("TradingName"), Address(
-          "AdvisorAddressLine1",
-          Some("AdvisorAddressLine2"),
-          Some("AdvisorAddressLine3"),
-          Some("AdvisorAddressLine4"),
-          "AD",
-          Some("AA1 1AA")))),
-        true,
-        Some("01234567890")
-      ))))
+      val mlrAdvisor = Some(
+        MlrAdvisor(
+          true,
+          Some(
+            MlrAdvisorDetails(
+              Some(
+                AdvisorNameAddress(
+                  "Name",
+                  Some("TradingName"),
+                  Address(
+                    "AdvisorAddressLine1",
+                    Some("AdvisorAddressLine2"),
+                    Some("AdvisorAddressLine3"),
+                    Some("AdvisorAddressLine4"),
+                    "AD",
+                    Some("AA1 1AA")
+                  )
+                )
+              ),
+              true,
+              Some("01234567890")
+            )
+          )
+        )
+      )
 
-      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(WhoIsYourAccountant(
-        "Name",
-        Some("TradingName"),
-        UkAccountantsAddress("AdvisorAddressLine1", Some("AdvisorAddressLine2"), Some("AdvisorAddressLine3"), Some("AdvisorAddressLine4"), "AA1 1AA")))
+      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(
+        WhoIsYourAccountant(
+          "Name",
+          Some("TradingName"),
+          UkAccountantsAddress(
+            "AdvisorAddressLine1",
+            Some("AdvisorAddressLine2"),
+            Some("AdvisorAddressLine3"),
+            Some("AdvisorAddressLine4"),
+            "AA1 1AA"
+          )
+        )
+      )
     }
 
     "convert des to frontend model successfully for nonuk address" in {
-      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
-        Some(AdvisorNameAddress("Name", Some("TradingName"), Address(
-          "line1",
-          Some("line2"),
-          Some("line3"),
-          Some("line4"),
-          "GB",
-          None))),
-        false,
-        None
-      ))))
+      val mlrAdvisor = Some(
+        MlrAdvisor(
+          true,
+          Some(
+            MlrAdvisorDetails(
+              Some(
+                AdvisorNameAddress(
+                  "Name",
+                  Some("TradingName"),
+                  Address("line1", Some("line2"), Some("line3"), Some("line4"), "GB", None)
+                )
+              ),
+              false,
+              None
+            )
+          )
+        )
+      )
 
-      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(WhoIsYourAccountant("Name", Some("TradingName"),
-        NonUkAccountantsAddress("line1", Some("line2"), Some("line3"), Some("line4"), "GB")))
+      WhoIsYourAccountant.conv(mlrAdvisor) mustBe Some(
+        WhoIsYourAccountant(
+          "Name",
+          Some("TradingName"),
+          NonUkAccountantsAddress("line1", Some("line2"), Some("line3"), Some("line4"), "GB")
+        )
+      )
     }
 
     "convert des to frontend model successfully when MlrAdvisor None" in {
@@ -102,11 +137,18 @@ class WhoIsYourAccountantSpec extends PlaySpec with AmlsBaseSpec {
     }
 
     "convert des to frontend model successfully when AdvisorNameAddress None" in {
-      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(
-        None,
-        false,
-        None
-      ))))
+      val mlrAdvisor = Some(
+        MlrAdvisor(
+          true,
+          Some(
+            MlrAdvisorDetails(
+              None,
+              false,
+              None
+            )
+          )
+        )
+      )
 
       WhoIsYourAccountant.conv(mlrAdvisor) shouldBe None
     }

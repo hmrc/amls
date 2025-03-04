@@ -33,37 +33,46 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                              private[connectors] val ac: AuditConnector,
-                                              private[connectors] val httpClient: HttpClient,
-                                              private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class WithdrawSubscriptionConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit ec: ExecutionContext,
-                                                                                    wr1: Writes[WithdrawSubscriptionRequest],
-                                                                                    wr2: Writes[WithdrawSubscriptionResponse],
-                                                                                    hc: HeaderCarrier,
-                                                                                    apiRetryHelper: ApiRetryHelper
-  ): Future[WithdrawSubscriptionResponse] = {
+  def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[WithdrawSubscriptionRequest],
+    wr2: Writes[WithdrawSubscriptionResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[WithdrawSubscriptionResponse] =
     apiRetryHelper.doWithBackoff(() => withdrawalFunction(amlsRegistrationNumber, data))
-  }
 
-  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)
-                                (implicit ec: ExecutionContext, wr1: Writes[WithdrawSubscriptionRequest], wr2: Writes[WithdrawSubscriptionResponse],
-                                 hc: HeaderCarrier): Future[WithdrawSubscriptionResponse] = {
-    val prefix = "[DESConnector][withdrawal]"
+  private def withdrawalFunction(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[WithdrawSubscriptionRequest],
+    wr2: Writes[WithdrawSubscriptionResponse],
+    hc: HeaderCarrier
+  ): Future[WithdrawSubscriptionResponse] = {
+    val prefix     = "[DESConnector][withdrawal]"
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]
-    val timer = metrics.timer(API8)
+    val timer      = metrics.timer(API8)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
-    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
-        response
+    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(
+      wr1,
+      implicitly[HttpReads[HttpResponse]],
+      hc,
+      ec
+    ) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response Body: ${response.body}")
+      response
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
         metrics.success(API8)
@@ -72,7 +81,7 @@ class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig:
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r @ status(s)                                                                 =>
         metrics.failed(API8)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
@@ -81,7 +90,7 @@ class WithdrawSubscriptionConnector @Inject()(private[connectors] val appConfig:
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API8)
         logger.warn(s"$prefix - Failure: Exception", e)

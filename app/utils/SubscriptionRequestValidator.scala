@@ -33,19 +33,19 @@ class SubscriptionRequestValidator {
   def validateRequest(request: SubscriptionRequest): Either[collection.Seq[JsObject], SubscriptionRequest] = {
 
     val stream: InputStream = getClass.getResourceAsStream("/resources/api4_schema_release_5.1.0.json")
-    val lines = scala.io.Source.fromInputStream(stream).getLines().mkString
+    val lines               = scala.io.Source.fromInputStream(stream).getLines().mkString
 
-    lazy val jsonMapper = new ObjectMapper().registerModule(PlayJsonModule)
-    lazy val jsonFactory = jsonMapper.getFactory
-    val schemaMapper = new ObjectMapper()
-    val factory = schemaMapper.getFactory
+    lazy val jsonMapper          = new ObjectMapper().registerModule(PlayJsonModule)
+    lazy val jsonFactory         = jsonMapper.getFactory
+    val schemaMapper             = new ObjectMapper()
+    val factory                  = schemaMapper.getFactory
     val schemaParser: JsonParser = factory.createParser(lines)
-    val schemaJson: JsonNode = schemaMapper.readTree(schemaParser)
-    val schema = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
-    val jsonParser = jsonFactory.createParser(Json.toJson(request).toString())
-    val jsonNode: JsonNode = jsonMapper.readTree(jsonParser)
-    val report = schema.validate(jsonNode)
-    val result = report.isSuccess
+    val schemaJson: JsonNode     = schemaMapper.readTree(schemaParser)
+    val schema                   = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
+    val jsonParser               = jsonFactory.createParser(Json.toJson(request).toString())
+    val jsonNode: JsonNode       = jsonMapper.readTree(jsonParser)
+    val report                   = schema.validate(jsonNode)
+    val result                   = report.isSuccess
 
     if (result) {
       Right(request)

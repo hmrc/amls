@@ -25,13 +25,17 @@ class ResponseTypeSpec extends PlaySpec {
   "A Response type" when {
     "Subscription response" must {
       "serialize/deserialize" in {
-        ResponseType.jsonReads.reads(ResponseType.jsonWrites.writes(SubscriptionResponseType)) must be(JsSuccess(SubscriptionResponseType))
+        ResponseType.jsonReads.reads(ResponseType.jsonWrites.writes(SubscriptionResponseType)) must be(
+          JsSuccess(SubscriptionResponseType)
+        )
       }
     }
 
     "Amend or Variation response" must {
       "serialize/deserialize" in {
-        ResponseType.jsonReads.reads(ResponseType.jsonWrites.writes(AmendOrVariationResponseType)) must be(JsSuccess(AmendOrVariationResponseType))
+        ResponseType.jsonReads.reads(ResponseType.jsonWrites.writes(AmendOrVariationResponseType)) must be(
+          JsSuccess(AmendOrVariationResponseType)
+        )
       }
     }
 

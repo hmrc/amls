@@ -30,20 +30,35 @@ class BusinessActivitiesSpec extends PlaySpec with AmlsBaseSpec {
       "successfully validate given an enum value" in {
         val json = Json.obj("businessActivities" -> Seq("05", "06", "07"))
 
-        Json.fromJson[BusinessActivities](json) must be(JsSuccess(BusinessActivities(
-          Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService),
-          None
-        ), JsPath))
+        Json.fromJson[BusinessActivities](json)                                                    must be(
+          JsSuccess(
+            BusinessActivities(
+              Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService),
+              None
+            ),
+            JsPath
+          )
+        )
 
-        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("01", "02", "03"))) must be(JsSuccess(BusinessActivities(
-          Set(AccountancyServices, BillPaymentServices, EstateAgentBusinessService),
-          None
-        ), JsPath))
+        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("01", "02", "03"))) must be(
+          JsSuccess(
+            BusinessActivities(
+              Set(AccountancyServices, BillPaymentServices, EstateAgentBusinessService),
+              None
+            ),
+            JsPath
+          )
+        )
 
-        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("04"))) must be(JsSuccess(BusinessActivities(
-          Set(HighValueDealing),
-          None
-        ), JsPath))
+        Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq("04")))             must be(
+          JsSuccess(
+            BusinessActivities(
+              Set(HighValueDealing),
+              None
+            ),
+            JsPath
+          )
+        )
 
       }
 
@@ -60,23 +75,31 @@ class BusinessActivitiesSpec extends PlaySpec with AmlsBaseSpec {
 
     "successfully validate json write" in {
       val json = Json.obj("businessActivities" -> Seq("02", "07", "01"))
-      Json.toJson(BusinessActivities(Set(BillPaymentServices, TelephonePaymentService, AccountancyServices))) must be(json)
+      Json.toJson(BusinessActivities(Set(BillPaymentServices, TelephonePaymentService, AccountancyServices))) must be(
+        json
+      )
 
     }
 
     "throw error for invalid data" in {
       Json.fromJson[BusinessActivities](Json.obj("businessActivities" -> Seq(JsString("20")))) must
-        be(JsError((JsPath \ "businessActivities") (0) \ "businessActivities", JsonValidationError("error.invalid")))
+        be(JsError((JsPath \ "businessActivities")(0) \ "businessActivities", JsonValidationError("error.invalid")))
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false, false))) must be(
-        BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, EstateAgentBusinessService, BillPaymentServices)))
+      BusinessActivities.conv(
+        Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, false, false))
+      ) must be(
+        BusinessActivities(
+          Set(MoneyServiceBusiness, TrustAndCompanyServices, EstateAgentBusinessService, BillPaymentServices)
+        )
+      )
     }
 
     "convert DesMlrActivitiesAppliedFor to frontend BusinessActivities when input is false" in {
-      BusinessActivities.conv(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))) must be(
-        BusinessActivities(Set.empty))
+      BusinessActivities.conv(
+        Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))
+      ) must be(BusinessActivities(Set.empty))
     }
   }
 }

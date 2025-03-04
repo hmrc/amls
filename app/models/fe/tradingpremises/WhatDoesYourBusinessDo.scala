@@ -49,43 +49,45 @@ object BusinessActivity {
     case JsString("06") => JsSuccess(TrustAndCompanyServices)
     case JsString("07") => JsSuccess(TelephonePaymentService)
     case JsString("08") => JsSuccess(ArtMarketParticipant)
-    case _ => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
+    case _              => JsError((JsPath \ "activities") -> JsonValidationError("error.invalid"))
   }
 
   implicit val jsonActivityWrite: Writes[BusinessActivity] = Writes[BusinessActivity] {
-    case AccountancyServices => JsString("01")
-    case BillPaymentServices => JsString("02")
+    case AccountancyServices        => JsString("01")
+    case BillPaymentServices        => JsString("02")
     case EstateAgentBusinessService => JsString("03")
-    case HighValueDealing => JsString("04")
-    case MoneyServiceBusiness => JsString("05")
-    case TrustAndCompanyServices => JsString("06")
-    case TelephonePaymentService => JsString("07")
-    case ArtMarketParticipant => JsString("08")
+    case HighValueDealing           => JsString("04")
+    case MoneyServiceBusiness       => JsString("05")
+    case TrustAndCompanyServices    => JsString("06")
+    case TelephonePaymentService    => JsString("07")
+    case ArtMarketParticipant       => JsString("08")
   }
 }
-
 
 case class WhatDoesYourBusinessDo(activities: Set[BusinessActivity], dateOfChange: Option[String] = None)
 
 object WhatDoesYourBusinessDo {
   implicit val format: OFormat[WhatDoesYourBusinessDo] = Json.format[WhatDoesYourBusinessDo]
 
-  def convMsb(msb: Msb): Option[BusinessActivity] = {
+  def convMsb(msb: Msb): Option[BusinessActivity] =
     msb match {
       case Msb(false, false, false, false, false) => None
-      case Msb(_, _, _, _, _) => Some(BusinessActivity.MoneyServiceBusiness)
+      case Msb(_, _, _, _, _)                     => Some(BusinessActivity.MoneyServiceBusiness)
     }
-  }
 
   implicit def conv(agentPremises: AgentPremises): WhatDoesYourBusinessDo = {
 
-    val businessActivities = Set(CommonMethods.getSpecificType[BusinessActivity](agentPremises.asp.asp, BusinessActivity.AccountancyServices),
+    val businessActivities = Set(
+      CommonMethods.getSpecificType[BusinessActivity](agentPremises.asp.asp, BusinessActivity.AccountancyServices),
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.bpsp.bpsp, BusinessActivity.BillPaymentServices),
-      CommonMethods.getSpecificType[BusinessActivity](agentPremises.eab.eab, BusinessActivity.EstateAgentBusinessService),
+      CommonMethods
+        .getSpecificType[BusinessActivity](agentPremises.eab.eab, BusinessActivity.EstateAgentBusinessService),
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.hvd.hvd, BusinessActivity.HighValueDealing),
       convMsb(agentPremises.msb),
-      CommonMethods.getSpecificType[BusinessActivity](agentPremises.tcsp.tcsp, BusinessActivity.TrustAndCompanyServices),
-      CommonMethods.getSpecificType[BusinessActivity](agentPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
+      CommonMethods
+        .getSpecificType[BusinessActivity](agentPremises.tcsp.tcsp, BusinessActivity.TrustAndCompanyServices),
+      CommonMethods
+        .getSpecificType[BusinessActivity](agentPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
       CommonMethods.getSpecificType[BusinessActivity](agentPremises.amp.amp, BusinessActivity.ArtMarketParticipant)
     ).flatten
 
@@ -94,13 +96,15 @@ object WhatDoesYourBusinessDo {
 
   implicit def conv(ownPremises: OwnBusinessPremisesDetails): WhatDoesYourBusinessDo = {
 
-    val businessActivities = Set(CommonMethods.getSpecificType[BusinessActivity](ownPremises.asp.asp, BusinessActivity.AccountancyServices),
+    val businessActivities = Set(
+      CommonMethods.getSpecificType[BusinessActivity](ownPremises.asp.asp, BusinessActivity.AccountancyServices),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.bpsp.bpsp, BusinessActivity.BillPaymentServices),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.eab.eab, BusinessActivity.EstateAgentBusinessService),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.hvd.hvd, BusinessActivity.HighValueDealing),
       convMsb(ownPremises.msb),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.tcsp.tcsp, BusinessActivity.TrustAndCompanyServices),
-      CommonMethods.getSpecificType[BusinessActivity](ownPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
+      CommonMethods
+        .getSpecificType[BusinessActivity](ownPremises.tditpsp.tditpsp, BusinessActivity.TelephonePaymentService),
       CommonMethods.getSpecificType[BusinessActivity](ownPremises.amp.amp, BusinessActivity.ArtMarketParticipant)
     ).flatten
 

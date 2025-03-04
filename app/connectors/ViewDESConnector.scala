@@ -32,21 +32,25 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                 private[connectors] val ac: AuditConnector,
-                                 private[connectors] val httpClient: HttpClient,
-                                 private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class ViewDESConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def view(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, hc: HeaderCarrier,
-                                           apiRetryHelper: ApiRetryHelper): Future[SubscriptionView] = {
+  def view(
+    amlsRegistrationNumber: String
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper): Future[SubscriptionView] =
     apiRetryHelper.doWithBackoff(() => viewFunction(amlsRegistrationNumber))
-  }
 
-  private def viewFunction(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
+  private def viewFunction(
+    amlsRegistrationNumber: String
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[SubscriptionView] = {
 
     val bodyParser = JsonParsed[SubscriptionView]
-    val timer = metrics.timer(API5)
-    val prefix = "[DESConnector][view]"
+    val timer      = metrics.timer(API5)
+    val prefix     = "[DESConnector][view]"
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
@@ -65,11 +69,13 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: $body")
         Future.successful(body)
-      case r @ status(OK) & bodyParser(JsError(errs)) =>
+      case r @ status(OK) & bodyParser(JsError(errs))                    =>
         metrics.failed(API5)
         logger.warn(s"$prefix - Deserialisation Errors: $errs")
-        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some("Failed to parse the json response from DES (API5)")))
-      case r @ status(s) =>
+        Future.failed(
+          HttpStatusException(INTERNAL_SERVER_ERROR, Some("Failed to parse the json response from DES (API5)"))
+        )
+      case r @ status(s)                                                 =>
         metrics.failed(API5)
         logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
@@ -77,7 +83,7 @@ class ViewDESConnector @Inject()(private[connectors] val appConfig: ApplicationC
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API5)
         logger.warn(s"$prefix - Failure: Exception", e)

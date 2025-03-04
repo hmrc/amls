@@ -33,42 +33,49 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                               private[connectors] val ac: AuditConnector,
-                                               private[connectors] val httpClient: HttpClient,
-                                               private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class SubscriptionStatusDESConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def status(amlsRegistrationNumber: String)(implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier,
-                                             apiRetryHelper: ApiRetryHelper): Future[ReadStatusResponse] = {
+  def status(amlsRegistrationNumber: String)(implicit
+    ec: ExecutionContext,
+    wr: Writes[ReadStatusResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[ReadStatusResponse] =
     apiRetryHelper.doWithBackoff(() => statusFunction(amlsRegistrationNumber))
-  }
 
-  private def statusFunction(amlsRegistrationNumber: String)
-                            (implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
+  private def statusFunction(
+    amlsRegistrationNumber: String
+  )(implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
 
-    val prefix = "[DESConnector][readstatus]"
+    val prefix     = "[DESConnector][readstatus]"
     val bodyParser = JsonParsed[ReadStatusResponse]
-    val timer = metrics.timer(API9)
+    val timer      = metrics.timer(API9)
     logger.debug(s"$prefix - reg no: $amlsRegistrationNumber")
 
     val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.GET[HttpResponse](s"$Url/status", headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
+    httpClient
+      .GET[HttpResponse](s"$Url/status", headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
     } flatMap {
-      case _ @ status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
+      case _ @status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
         metrics.success(API9)
         audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
         logger.debug(s"$prefix - Success response")
         logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
         Future.successful(body)
-      case r @ status(s) =>
+      case r @ status(s)                                                          =>
         metrics.failed(API9)
         logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
@@ -76,7 +83,7 @@ class SubscriptionStatusDESConnector @Inject()(private[connectors] val appConfig
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API9)
         logger.warn(s"$prefix - Failure: Exception", e)

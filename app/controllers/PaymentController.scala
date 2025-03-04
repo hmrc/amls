@@ -31,50 +31,51 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class PaymentController @Inject()(private[controllers] val paymentService: PaymentService,
-                                  authAction: AuthAction,
-                                  bodyParsers: PlayBodyParsers,
-                                  val cc: ControllerComponents)
-                                 (implicit executionContext: ExecutionContext) extends BackendController(cc) with ControllerHelper with Logging {
+class PaymentController @Inject() (
+  private[controllers] val paymentService: PaymentService,
+  authAction: AuthAction,
+  bodyParsers: PlayBodyParsers,
+  val cc: ControllerComponents
+)(implicit executionContext: ExecutionContext)
+    extends BackendController(cc)
+    with ControllerHelper
+    with Logging {
 
   def createBacsPayment(accountType: String, accountRef: String) = authAction.async(bodyParsers.json) {
     implicit request =>
       request.body.asOpt[CreateBacsPaymentRequest] match {
         case Some(r) => paymentService.createBacsPayment(r) map { p => Created(Json.toJson(p)) }
-        case _ => Future.successful(BadRequest)
+        case _       => Future.successful(BadRequest)
       }
   }
 
   def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) =
-    authAction.async(bodyParsers.text) {
-      implicit request: Request[String] => {
-        amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-          case Some(_) => {
-            logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-            paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
-              case Some(_) => Created
-              case _ => InternalServerError
-            }
+    authAction.async(bodyParsers.text) { implicit request: Request[String] =>
+      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
+        case Some(_) =>
+          logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
+          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
+            case Some(_) => Created
+            case _       => InternalServerError
           }
-          case None =>
-            Future.successful {
-              BadRequest(toError("Invalid amlsRegistrationNumber"))
-            }
-        }
+        case None    =>
+          Future.successful {
+            BadRequest(toError("Invalid amlsRegistrationNumber"))
+          }
       }
     }
 
   def getPaymentByRef(accountType: String, ref: String, paymentReference: String) = authAction.async {
     paymentService.getPaymentByPaymentReference(paymentReference) map {
       case Some(payment) => Ok(Json.toJson(payment))
-      case _ => NotFound
+      case _             => NotFound
     }
   }
 
   def getPaymentByAmlsRef(accountType: String, ref: String, amlsReference: String) = authAction.async {
     paymentService.getPaymentByAmlsReference(amlsReference) map {
       case Some(payment) => Ok(Json.toJson(payment))
-      case _ => NotFound
+      case _             => NotFound
     }
   }
 
@@ -82,20 +83,19 @@ class PaymentController @Inject()(private[controllers] val paymentService: Payme
     implicit request =>
       val processBody = for {
         bacsRequest <- OptionT.fromOption[Future](request.body.asOpt[SetBacsRequest])
-        payment <- OptionT(paymentService.getPaymentByPaymentReference(paymentReference))
-        _ <- OptionT.liftF(paymentService.updatePayment(payment.copy(isBacs = Some(bacsRequest.isBacs))))
+        payment     <- OptionT(paymentService.getPaymentByPaymentReference(paymentReference))
+        _           <- OptionT.liftF(paymentService.updatePayment(payment.copy(isBacs = Some(bacsRequest.isBacs))))
       } yield NoContent
 
       processBody getOrElse NotFound
   }
 
-  def refreshStatus(accountType: String, ref: String) = authAction.async(bodyParsers.json) {
-    implicit request =>
-      request.body.asOpt[RefreshPaymentStatusRequest] map { r =>
-        paymentService.refreshStatus(r.paymentReference).value map {
-          case Some(result) => Ok(Json.toJson(result))
-          case _ => NotFound
-        }
-      } getOrElse Future.successful(BadRequest)
+  def refreshStatus(accountType: String, ref: String) = authAction.async(bodyParsers.json) { implicit request =>
+    request.body.asOpt[RefreshPaymentStatusRequest] map { r =>
+      paymentService.refreshStatus(r.paymentReference).value map {
+        case Some(result) => Ok(Json.toJson(result))
+        case _            => NotFound
+      }
+    } getOrElse Future.successful(BadRequest)
   }
 }

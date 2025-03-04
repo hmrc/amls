@@ -25,15 +25,15 @@ object ExciseGoods {
 
   implicit val format: OFormat[ExciseGoods] = Json.format[ExciseGoods]
 
-  implicit def conv(ba: BusinessActivities): Option[ExciseGoods] = {
+  implicit def conv(ba: BusinessActivities): Option[ExciseGoods] =
     ba.hvdAlcoholTobacco match {
       case Some(goods) => Some(ExciseGoods(goods.dutySuspExAtGoods))
-      case None => ba.hvdGoodsSold match {
-        case Some(HvdGoodsSold(true, _, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
-        case Some(HvdGoodsSold(_, true, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
-        case _ => None
-      }
-      case _ => None
+      case None        =>
+        ba.hvdGoodsSold match {
+          case Some(HvdGoodsSold(true, _, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
+          case Some(HvdGoodsSold(_, true, _, _, _, _, _, _, _, _, _, _, _, _)) => Some(ExciseGoods(false))
+          case _                                                               => None
+        }
+      case _           => None
     }
-  }
 }

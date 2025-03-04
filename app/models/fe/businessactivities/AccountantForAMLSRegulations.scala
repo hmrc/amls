@@ -25,23 +25,28 @@ object AccountantForAMLSRegulations {
 
   implicit val formats: OFormat[AccountantForAMLSRegulations] = Json.format[AccountantForAMLSRegulations]
 
-  /**
-    * Converts an MLR Advisor instance into AccountantForAMLSRegulations.
-    * There is some logic here to ensure that the correct data is returned if no advisor data is supplied, which is a real scenario
-    * if the application says that the business does ASP, but the user has answered 'no' to the Business Activities question 'Does your business receive advice...?' on
-    * the frontend. In this case, ETMP will not return any data for this question. In that case, if the business is not an ASP and there is no data
-    * for that question, then it can be assumed that the user answered 'no'.
-    * If the business IS an ASP, then None should be returned for this question (in this scenario, the user is never asked to complete that question).
+  /** Converts an MLR Advisor instance into AccountantForAMLSRegulations. There is some logic here to ensure that the
+    * correct data is returned if no advisor data is supplied, which is a real scenario if the application says that the
+    * business does ASP, but the user has answered 'no' to the Business Activities question 'Does your business receive
+    * advice...?' on the frontend. In this case, ETMP will not return any data for this question. In that case, if the
+    * business is not an ASP and there is no data for that question, then it can be assumed that the user answered 'no'.
+    * If the business IS an ASP, then None should be returned for this question (in this scenario, the user is never
+    * asked to complete that question).
     *
-    * @param maybeAdvisor    The MLR Advisor object to convert
-    * @param maybeActivities The MLR activities supplied as part of the application
+    * @param maybeAdvisor
+    *   The MLR Advisor object to convert
+    * @param maybeActivities
+    *   The MLR activities supplied as part of the application
     * @return
     */
-  def convertAccountant(maybeAdvisor: Option[MlrAdvisor], maybeActivities: Option[MlrActivitiesAppliedFor]): Option[AccountantForAMLSRegulations] =
+  def convertAccountant(
+    maybeAdvisor: Option[MlrAdvisor],
+    maybeActivities: Option[MlrActivitiesAppliedFor]
+  ): Option[AccountantForAMLSRegulations] =
     (maybeAdvisor, maybeActivities) match {
       case (None, Some(activities)) if !activities.asp => Some(AccountantForAMLSRegulations(false))
-      case (None, Some(activities)) if activities.asp => None
-      case (Some(advisor), _) => Some(AccountantForAMLSRegulations(advisor.doYouHaveMlrAdvisor))
-      case _ => None
+      case (None, Some(activities)) if activities.asp  => None
+      case (Some(advisor), _)                          => Some(AccountantForAMLSRegulations(advisor.doYouHaveMlrAdvisor))
+      case _                                           => None
     }
 }

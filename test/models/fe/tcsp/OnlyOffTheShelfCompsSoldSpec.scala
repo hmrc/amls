@@ -27,15 +27,15 @@ class OnlyOffTheShelfCompsSoldSpec extends PlaySpec with AmlsBaseSpec {
       "return the form values" when {
         "for json" when {
           "onlyOffTheShelfCompsSold is 'yes'" in {
-            val model = OnlyOffTheShelfCompsSoldYes
-            val result = OnlyOffTheShelfCompsSold.jsonWrite.writes(model).toString()
+            val model    = OnlyOffTheShelfCompsSoldYes
+            val result   = OnlyOffTheShelfCompsSold.jsonWrite.writes(model).toString()
             val expected = "{\"onlyOffTheShelfCompsSold\":true}"
 
             result mustBe expected
           }
           "onlyOffTheShelfCompsSold is 'no'" in {
-            val model = OnlyOffTheShelfCompsSoldNo
-            val result = OnlyOffTheShelfCompsSold.jsonWrite.writes(model).toString()
+            val model    = OnlyOffTheShelfCompsSoldNo
+            val result   = OnlyOffTheShelfCompsSold.jsonWrite.writes(model).toString()
             val expected = "{\"onlyOffTheShelfCompsSold\":false}"
 
             result mustBe expected

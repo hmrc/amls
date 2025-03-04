@@ -19,26 +19,26 @@ package models.des.msb
 import play.api.libs.json.{Json, OFormat}
 
 case class CurrencySources(
-                            bankDetails: Option[MSBBankDetails] = None,
-                            currencyWholesalerDetails: Option[CurrencyWholesalerDetails] = None,
-                            reSellCurrTakenIn: Boolean,
-                            antNoOfTransNxt12Mnths: String,
-                            currSupplyToCust: Option[CurrSupplyToCust]
-                          )
+  bankDetails: Option[MSBBankDetails] = None,
+  currencyWholesalerDetails: Option[CurrencyWholesalerDetails] = None,
+  reSellCurrTakenIn: Boolean,
+  antNoOfTransNxt12Mnths: String,
+  currSupplyToCust: Option[CurrSupplyToCust]
+)
 
 object CurrencySources {
   implicit val format: OFormat[CurrencySources] = Json.format[CurrencySources]
 
-  implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): CurrencySources = {
+  implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): CurrencySources =
     msb.whichCurrencies match {
-      case Some(data) => CurrencySources(
-        data.bankMoneySource,
-        data.wholesalerMoneySource,
-        data.customerMoneySource,
-        msb.ceTransactionsInNext12Months.fold("")(x => x.ceTransaction),
-        data.currencies
-      )
-      case None => CurrencySources(None, None, false, "", None)
+      case Some(data) =>
+        CurrencySources(
+          data.bankMoneySource,
+          data.wholesalerMoneySource,
+          data.customerMoneySource,
+          msb.ceTransactionsInNext12Months.fold("")(x => x.ceTransaction),
+          data.currencies
+        )
+      case None       => CurrencySources(None, None, false, "", None)
     }
-  }
 }

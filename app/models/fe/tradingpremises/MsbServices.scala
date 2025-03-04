@@ -43,15 +43,15 @@ object MsbService {
       case JsString("03") => JsSuccess(ChequeCashingNotScrapMetal)
       case JsString("04") => JsSuccess(ChequeCashingScrapMetal)
       case JsString("05") => JsSuccess(ForeignExchange)
-      case _ => JsError(JsPath -> JsonValidationError("error.invalid"))
+      case _              => JsError(JsPath -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonW: Writes[MsbService] = Writes[MsbService] {
-    case TransmittingMoney => JsString("01")
-    case CurrencyExchange => JsString("02")
+    case TransmittingMoney          => JsString("01")
+    case CurrencyExchange           => JsString("02")
     case ChequeCashingNotScrapMetal => JsString("03")
-    case ChequeCashingScrapMetal => JsString("04")
-    case ForeignExchange => JsString("05")
+    case ChequeCashingScrapMetal    => JsString("04")
+    case ForeignExchange            => JsString("05")
   }
 }
 
@@ -60,15 +60,17 @@ object MsbServices {
   implicit val formats: OFormat[MsbServices] = Json.format[MsbServices]
 
   implicit def convMsb(msb: Msb): Option[MsbServices] = {
-    val `empty` = Set.empty[MsbService]
-    val services = Set(CommonMethods.getSpecificType[MsbService](msb.mt, TransmittingMoney),
+    val `empty`  = Set.empty[MsbService]
+    val services = Set(
+      CommonMethods.getSpecificType[MsbService](msb.mt, TransmittingMoney),
       CommonMethods.getSpecificType[MsbService](msb.ce, CurrencyExchange),
       CommonMethods.getSpecificType[MsbService](msb.nonSmdcc, ChequeCashingNotScrapMetal),
       CommonMethods.getSpecificType[MsbService](msb.smdcc, ChequeCashingScrapMetal),
-      CommonMethods.getSpecificType[MsbService](msb.fx, ForeignExchange)).flatten
+      CommonMethods.getSpecificType[MsbService](msb.fx, ForeignExchange)
+    ).flatten
     services match {
       case `empty` => None
-      case _ => Some(MsbServices(services))
+      case _       => Some(MsbServices(services))
     }
   }
 }

@@ -44,33 +44,29 @@ object ResidenceType {
         Json.obj(
           "nino" -> nino
         )
-      case NonUKResidence =>
+      case NonUKResidence    =>
         Json.obj(
           "isUKResidence" -> "false"
         )
     }
   }
 
-  implicit def conv(nationality: Option[NationalityDetails]): Option[ResidenceType] = {
+  implicit def conv(nationality: Option[NationalityDetails]): Option[ResidenceType] =
     nationality match {
       case Some(details) => details
-      case None => None
+      case None          => None
     }
-  }
 
-  implicit def conv(nationalityDetails: NationalityDetails): Option[ResidenceType] = {
+  implicit def conv(nationalityDetails: NationalityDetails): Option[ResidenceType] =
     nationalityDetails.idDetails match {
-      case Some(idDetail) => {
-
-        val ukResidence: Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
+      case Some(idDetail) =>
+        val ukResidence: Option[ResidenceType]    = idDetail.ukResident.map(x => UKResidence(x.nino))
         val nonUKResidence: Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
 
         nationalityDetails.areYouUkResident match {
-          case true => ukResidence
+          case true  => ukResidence
           case false => nonUKResidence
         }
-      }
-      case _ => None
+      case _              => None
     }
-  }
 }

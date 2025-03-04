@@ -26,12 +26,16 @@ class AgentCompanyDetailsSpec extends PlaySpec {
   "AgentCompanyName" must {
 
     "Success read and write json" in {
-      AgentCompanyDetails.formats.reads(AgentCompanyDetails.formats.writes(AgentCompanyDetails("somename", Some("12345678")))) must
+      AgentCompanyDetails.formats.reads(
+        AgentCompanyDetails.formats.writes(AgentCompanyDetails("somename", Some("12345678")))
+      ) must
         be(JsSuccess(AgentCompanyDetails("somename", Some("12345678"))))
     }
 
     "convert when agentLegalEntityName is empty" in {
-      AgentCompanyDetails.conv(AgentDetails("Sole Proprietor", None, None, None, DesConstants.AgentPremisesModel2)) must be(None)
+      AgentCompanyDetails.conv(
+        AgentDetails("Sole Proprietor", None, None, None, DesConstants.AgentPremisesModel2)
+      ) must be(None)
     }
   }
 }

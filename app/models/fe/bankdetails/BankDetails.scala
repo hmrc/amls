@@ -26,21 +26,17 @@ object BankDetails {
 
   implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 
-  def convBankAccount(bankDtls: BankAccountView): BankDetails = {
+  def convBankAccount(bankDtls: BankAccountView): BankDetails =
     BankDetails(bankDtls.accountType, bankDtls.accountName, bankDtls)
-  }
 
-  implicit def conv(desBanks: Option[BankDetailsView]): Seq[BankDetails] = {
-
+  implicit def conv(desBanks: Option[BankDetailsView]): Seq[BankDetails] =
     desBanks match {
-      case Some(db) => {
+      case Some(db) =>
         db.bankAccounts match {
           case Some(bankAcct) => bankAcct.map(x => convBankAccount(x))
-          case None => Seq.empty
+          case None           => Seq.empty
         }
-      }
-      case None => Seq.empty
+      case None     => Seq.empty
     }
 
-  }
 }

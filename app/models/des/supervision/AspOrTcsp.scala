@@ -19,24 +19,27 @@ package models.des.supervision
 import models.fe.supervision.Supervision
 import play.api.libs.json.{Json, OFormat}
 
-case class AspOrTcsp(supervisionDetails: Option[SupervisionDetails], professionalBodyDetails: Option[ProfessionalBodyDetails])
+case class AspOrTcsp(
+  supervisionDetails: Option[SupervisionDetails],
+  professionalBodyDetails: Option[ProfessionalBodyDetails]
+)
 
 object AspOrTcsp {
 
   implicit val format: OFormat[AspOrTcsp] = Json.format[AspOrTcsp]
 
-  def conv(supervision: Option[Supervision]): Option[AspOrTcsp] = {
+  def conv(supervision: Option[Supervision]): Option[AspOrTcsp] =
     supervision match {
-      case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv(x.anotherBody), ProfessionalBodyDetails.conv(x)))
-      case _ => None
+      case Some(x) if x != Supervision() =>
+        Some(AspOrTcsp(SupervisionDetails.conv(x.anotherBody), ProfessionalBodyDetails.conv(x)))
+      case _                             => None
     }
-  }
 
-  def conv1(supervision: Option[Supervision]): Option[AspOrTcsp] = {
+  def conv1(supervision: Option[Supervision]): Option[AspOrTcsp] =
     supervision match {
-      case Some(x) if x != Supervision() => Some(AspOrTcsp(SupervisionDetails.conv1(x.anotherBody), ProfessionalBodyDetails.conv(x)))
-      case _ => None
+      case Some(x) if x != Supervision() =>
+        Some(AspOrTcsp(SupervisionDetails.conv1(x.anotherBody), ProfessionalBodyDetails.conv(x)))
+      case _                             => None
     }
-  }
 
 }

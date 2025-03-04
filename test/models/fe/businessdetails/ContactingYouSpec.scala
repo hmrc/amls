@@ -24,11 +24,10 @@ class ContactingYouSpec extends PlaySpec {
 
     val completeJson = Json.obj(
       "phoneNumber" -> "1234567890",
-      "email" -> "test@test.com"
+      "email"       -> "test@test.com"
     )
 
     val completeModel = ContactingYou("1234567890", "test@test.com")
-
 
     "serialize as expected" in {
       Json.toJson(completeModel) must be(completeJson)

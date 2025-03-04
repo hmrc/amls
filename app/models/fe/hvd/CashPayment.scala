@@ -34,7 +34,7 @@ object CashPayment {
     import play.api.libs.json._
 
     (__ \ "acceptedAnyPayment").read[Boolean] flatMap {
-      case true => (__ \ "paymentDate").read[LocalDate] map CashPaymentYes.apply
+      case true  => (__ \ "paymentDate").read[LocalDate] map CashPaymentYes.apply
       case false => Reads(_ => JsSuccess(CashPaymentNo))
     }
   }
@@ -44,18 +44,18 @@ object CashPayment {
     import play.api.libs.json._
 
     Writes[CashPayment] {
-      case CashPaymentYes(b) => Json.obj(
-        "acceptedAnyPayment" -> true,
-        "paymentDate" -> b.toString
-      )
-      case CashPaymentNo => Json.obj("acceptedAnyPayment" -> false)
+      case CashPaymentYes(b) =>
+        Json.obj(
+          "acceptedAnyPayment" -> true,
+          "paymentDate"        -> b.toString
+        )
+      case CashPaymentNo     => Json.obj("acceptedAnyPayment" -> false)
     }
   }
 
-  implicit def conv(hvd: DesHvd): Option[CashPayment] = {
+  implicit def conv(hvd: DesHvd): Option[CashPayment] =
     hvd.cashPaymentsAccptOvrThrshld match {
-      case true => Some(CashPaymentYes(LocalDate.parse(hvd.dateOfTheFirst.getOrElse(""))))
+      case true  => Some(CashPaymentYes(LocalDate.parse(hvd.dateOfTheFirst.getOrElse(""))))
       case false => Some(CashPaymentNo)
     }
-  }
 }

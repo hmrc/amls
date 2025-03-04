@@ -36,12 +36,11 @@ trait AspValues {
     val NewServices = ServicesOfBusiness(Set(Accountancy, PayrollServices, FinancialOrTaxAdvice))
   }
 
-  val completeJson = Json.obj(
-    "services" -> Json.obj(
+  val completeJson  = Json.obj(
+    "services"                -> Json.obj(
       "services" -> Seq("01", "04", "05")
     ),
-    "otherBusinessTaxMatters" -> Json.obj(
-      "otherBusinessTaxMatters" -> true)
+    "otherBusinessTaxMatters" -> Json.obj("otherBusinessTaxMatters" -> true)
   )
   val completeModel = Asp(
     Some(DefaultValues.DefaultServices),
@@ -134,15 +133,22 @@ class AspSpec extends PlaySpec with AspValues {
           Asp(
             Some(ServicesOfBusiness(Set(Auditing, FinancialOrTaxAdvice, BookKeeping, PayrollServices, Accountancy))),
             Some(OtherBusinessTaxMattersYes)
-          )))
+          )
+        )
+      )
     }
 
     "convert to None given view.asp = None" in {
-      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None, businessActivities = models.des.businessactivities.BusinessActivities())) must be(None)
+      Asp.conv(
+        DesConstants.SubscriptionViewModel
+          .copy(asp = None, businessActivities = models.des.businessactivities.BusinessActivities())
+      ) must be(None)
     }
 
     "convert to Some given view.asp = None but asp activities supplied" in {
-      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None)) must be(Some(Asp(DesConstants.SubscriptionViewModel.businessActivities, Some(OtherBusinessTaxMattersNo))))
+      Asp.conv(DesConstants.SubscriptionViewModel.copy(asp = None)) must be(
+        Some(Asp(DesConstants.SubscriptionViewModel.businessActivities, Some(OtherBusinessTaxMattersNo)))
+      )
     }
 
   }

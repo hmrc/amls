@@ -25,11 +25,9 @@ object AgentName {
 
   implicit val formats: OFormat[AgentName] = Json.format[AgentName]
 
-  implicit def conv(agentDetails: AgentDetails): Option[AgentName] = {
-
-    agentDetails.agentLegalEntityName map {
-      x => AgentName(x, None, agentDetails.dateOfBirth)
+  implicit def conv(agentDetails: AgentDetails): Option[AgentName] =
+    agentDetails.agentLegalEntityName map { x =>
+      AgentName(x, None, agentDetails.dateOfBirth)
     }
 
-  }
 }

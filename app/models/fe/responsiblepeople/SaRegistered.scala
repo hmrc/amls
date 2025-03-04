@@ -29,24 +29,24 @@ object SaRegistered {
 
   implicit val jsonReads: Reads[SaRegistered] =
     (__ \ "saRegistered").read[Boolean] flatMap {
-      case true => (__ \ "utrNumber").read[String] map SaRegisteredYes.apply
+      case true  => (__ \ "utrNumber").read[String] map SaRegisteredYes.apply
       case false => Reads(_ => JsSuccess(SaRegisteredNo))
     }
 
   implicit val jsonWrites: Writes[SaRegistered] = Writes[SaRegistered] {
-    case SaRegisteredYes(value) => Json.obj(
-      "saRegistered" -> true,
-      "utrNumber" -> value
-    )
-    case SaRegisteredNo => Json.obj("saRegistered" -> false)
+    case SaRegisteredYes(value) =>
+      Json.obj(
+        "saRegistered" -> true,
+        "utrNumber"    -> value
+      )
+    case SaRegisteredNo         => Json.obj("saRegistered" -> false)
   }
 
-  implicit def conv(des: Option[RegDetails]): Option[SaRegistered] = {
+  implicit def conv(des: Option[RegDetails]): Option[SaRegistered] =
     Some(
       des match {
         case Some(RegDetails(_, _, true, Some(regNo))) => SaRegisteredYes(regNo)
-        case _ => SaRegisteredNo
+        case _                                         => SaRegisteredNo
       }
     )
-  }
 }

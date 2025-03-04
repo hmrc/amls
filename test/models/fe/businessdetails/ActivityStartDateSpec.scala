@@ -29,13 +29,16 @@ class ActivityStartDateSpec extends PlaySpec {
       // scalastyle:off
       "Read and write successfully" in {
 
-        ActivityStartDate.format.reads(ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24)))) must be(
-          JsSuccess(ActivityStartDate(LocalDate.of(1990, 2, 24))))
+        ActivityStartDate.format.reads(
+          ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24)))
+        ) must be(JsSuccess(ActivityStartDate(LocalDate.of(1990, 2, 24))))
 
       }
 
       "write successfully" in {
-        ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24))) must be(Json.obj("startDate" -> "1990-02-24"))
+        ActivityStartDate.format.writes(ActivityStartDate(LocalDate.of(1990, 2, 24))) must be(
+          Json.obj("startDate" -> "1990-02-24")
+        )
       }
     }
 
@@ -46,19 +49,26 @@ class ActivityStartDateSpec extends PlaySpec {
 
     "des to frontend conversion when activitiesCommenceDate is none" in {
 
-      val desModel = Some(BusinessActivitiesAll(
-        None, None, Some(false),
-        BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("11122233344")))),
-        Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
-        Some("12345678901"),
-        Some("11223344556"),
-        NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
-        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
-        true,
-        true,
-        Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        None
-      ))
+      val desModel = Some(
+        BusinessActivitiesAll(
+          None,
+          None,
+          Some(false),
+          BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("11122233344")))),
+          Some(FranchiseDetails(true, Some(Seq("FranchiserName1", "FranchiserName2")))),
+          Some("12345678901"),
+          Some("11223344556"),
+          NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
+          AuditableRecordsDetails(
+            "Yes",
+            Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))
+          ),
+          true,
+          true,
+          Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
+          None
+        )
+      )
       ActivityStartDate.conv(desModel) must be(None)
 
     }

@@ -25,35 +25,55 @@ class PreviouslyRegisteredSpec extends PlaySpec {
   "PreviouslyRegistered" must {
 
     val Contact = ContactingYou("123456789", "afa@test.com")
-    val Office = RegisteredOfficeUK("1", Some("2"), None, None, "NE3 0QQ")
+    val Office  = RegisteredOfficeUK("1", Some("2"), None, None, "NE3 0QQ")
 
     "serialise PreviouslyRegistered model with option yes" in {
       val mlr = PreviouslyRegisteredMLR(true, Some("12345678"), false, None)
-      PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered" -> true,
-        "mlrRegNumber8Long" -> "12345678", "prevRegForMlr" -> false))
+      PreviouslyRegisteredMLR.format.writes(mlr) must be(
+        Json.obj("amlsRegistered" -> true, "mlrRegNumber8Long" -> "12345678", "prevRegForMlr" -> false)
+      )
     }
 
     "serialise PreviouslyRegistered model with option no" in {
       val mlr = PreviouslyRegisteredMLR(false, None, true, Some("123456789123654"))
-      PreviouslyRegisteredMLR.format.writes(mlr) must be(Json.obj("amlsRegistered" -> false,
-        "prevRegForMlr" -> true,
-        "prevMlrRegNumber" -> "123456789123654"))
+      PreviouslyRegisteredMLR.format.writes(mlr) must be(
+        Json.obj("amlsRegistered" -> false, "prevRegForMlr" -> true, "prevMlrRegNumber" -> "123456789123654")
+      )
     }
 
     "convert front end model to PreviouslyRegisteredMLRYes8" in {
-      val from = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+      val from = BusinessDetails(
+        PreviouslyRegisteredYes(Some("12345678")),
+        None,
+        Some(VATRegisteredYes("12345678")),
+        None,
+        Contact,
+        Office,
+        false
+      )
 
       PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(true, Some("12345678"), false, None)))
     }
 
     "convert front end model to PreviouslyRegisteredMLR15" in {
-      val from = BusinessDetails(PreviouslyRegisteredYes(Some("123456789123456")), None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+      val from = BusinessDetails(
+        PreviouslyRegisteredYes(Some("123456789123456")),
+        None,
+        Some(VATRegisteredYes("12345678")),
+        None,
+        Contact,
+        Office,
+        false
+      )
 
-      PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456"))))
+      PreviouslyRegisteredMLR.convert(from) must be(
+        Some(PreviouslyRegisteredMLR(false, None, true, Some("123456789123456")))
+      )
     }
 
     "convert front end model to PreviouslyRegisteredNo" in {
-      val from = BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+      val from =
+        BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
       PreviouslyRegisteredMLR.convert(from) must be(Some(PreviouslyRegisteredMLR(false, None, false, None)))
     }

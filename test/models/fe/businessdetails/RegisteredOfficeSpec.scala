@@ -26,13 +26,14 @@ class RegisteredOfficeSpec extends PlaySpec {
 
     "json read the given UK address" in {
 
-      val data = RegisteredOfficeUK("38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
+      val data    = RegisteredOfficeUK("38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
       val jsonObj = Json.obj(
         "addressLine1" -> "38B",
         "addressLine2" -> "Longbenton",
         "addressLine3" -> "line 1",
         "addressLine4" -> JsNull,
-        "postCode" -> "NE7 7DX")
+        "postCode"     -> "NE7 7DX"
+      )
 
       Json.fromJson[RegisteredOffice](jsonObj) must be
       JsSuccess(data, JsPath \ "postCode")
@@ -40,13 +41,14 @@ class RegisteredOfficeSpec extends PlaySpec {
 
     "json read the given non UK address" in {
 
-      val data = RegisteredOfficeNonUK("38B", Some("some place"), Some("line 1"), None, "AR")
+      val data    = RegisteredOfficeNonUK("38B", Some("some place"), Some("line 1"), None, "AR")
       val jsonObj = Json.obj(
         "addressLineNonUK1" -> "38B",
         "addressLineNonUK2" -> "some place",
         "addressLineNonUK3" -> "line 1",
         "addressLineNonUK4" -> JsNull,
-        "country" -> "AR")
+        "country"           -> "AR"
+      )
 
       Json.fromJson[RegisteredOffice](jsonObj) must be
       JsSuccess(data, JsPath \ "country")
@@ -56,12 +58,14 @@ class RegisteredOfficeSpec extends PlaySpec {
       val data = RegisteredOfficeUK("38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
 
       Json.toJson(data: RegisteredOffice) must
-        be(Json.obj(
-          "addressLine1" -> "38B",
-          "addressLine2" -> "Longbenton",
-          "addressLine3" -> "line 1",
-          "addressLine4" -> JsNull,
-          "postCode" -> "NE7 7DX")
+        be(
+          Json.obj(
+            "addressLine1" -> "38B",
+            "addressLine2" -> "Longbenton",
+            "addressLine3" -> "line 1",
+            "addressLine4" -> JsNull,
+            "postCode"     -> "NE7 7DX"
+          )
         )
     }
 
@@ -69,12 +73,14 @@ class RegisteredOfficeSpec extends PlaySpec {
       val data = RegisteredOfficeNonUK("38B", Some("some place"), Some("line 1"), None, "AR")
 
       Json.toJson(data: RegisteredOffice) must
-        be(Json.obj(
-          "addressLineNonUK1" -> "38B",
-          "addressLineNonUK2" -> "some place",
-          "addressLineNonUK3" -> "line 1",
-          "addressLineNonUK4" -> JsNull,
-          "country" -> "AR")
+        be(
+          Json.obj(
+            "addressLineNonUK1" -> "38B",
+            "addressLineNonUK2" -> "some place",
+            "addressLineNonUK3" -> "line 1",
+            "addressLineNonUK4" -> JsNull,
+            "country"           -> "AR"
+          )
         )
     }
 

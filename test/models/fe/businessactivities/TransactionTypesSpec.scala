@@ -27,7 +27,7 @@ class TransactionTypesSpec extends PlaySpec {
       val model = TransactionTypes(Set(Paper, DigitalSpreadsheet, DigitalSoftware("Some software")))
 
       Json.toJson(model) mustBe Json.obj(
-        "types" -> Seq("01", "02", "03"),
+        "types"    -> Seq("01", "02", "03"),
         "software" -> "Some software"
       )
     }

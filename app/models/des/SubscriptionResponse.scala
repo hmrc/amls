@@ -19,22 +19,22 @@ package models.des
 import play.api.libs.json._
 
 case class SubscriptionResponse(
-                                 etmpFormBundleNumber: String,
-                                 amlsRefNo: String,
-                                 registrationFee: Option[BigDecimal],
-                                 fpFee: Option[BigDecimal],
-                                 premiseFee: BigDecimal,
-                                 totalFees: BigDecimal,
-                                 paymentReference: String,
-                                 fpNumbers: Option[Int] = None,
-                                 fpFeeRate: Option[BigDecimal] = None,
-                                 responsiblePersonNotCharged: Option[Int] = None,
-                                 premiseFYNumber: Option[Int] = None,
-                                 premiseFeeRate: Option[BigDecimal] = None,
-                                 approvalCheckNumbers: Option[Int] = None,
-                                 approvalCheckFeeRate: Option[BigDecimal] = None,
-                                 approvalCheckFee: Option[BigDecimal] = None
-                               )
+  etmpFormBundleNumber: String,
+  amlsRefNo: String,
+  registrationFee: Option[BigDecimal],
+  fpFee: Option[BigDecimal],
+  premiseFee: BigDecimal,
+  totalFees: BigDecimal,
+  paymentReference: String,
+  fpNumbers: Option[Int] = None,
+  fpFeeRate: Option[BigDecimal] = None,
+  responsiblePersonNotCharged: Option[Int] = None,
+  premiseFYNumber: Option[Int] = None,
+  premiseFeeRate: Option[BigDecimal] = None,
+  approvalCheckNumbers: Option[Int] = None,
+  approvalCheckFeeRate: Option[BigDecimal] = None,
+  approvalCheckFee: Option[BigDecimal] = None
+)
 
 object SubscriptionResponse {
   implicit val format: OFormat[SubscriptionResponse] = Json.format[SubscriptionResponse]

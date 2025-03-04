@@ -25,11 +25,9 @@ object CurrencyWholesalerDetails {
 
   implicit val format: OFormat[CurrencyWholesalerDetails] = Json.format[CurrencyWholesalerDetails]
 
-  implicit def conv(moneySource: Option[WholesalerMoneySource]): Option[CurrencyWholesalerDetails] = {
-
+  implicit def conv(moneySource: Option[WholesalerMoneySource]): Option[CurrencyWholesalerDetails] =
     moneySource match {
       case Some(data) => Some(CurrencyWholesalerDetails(true, Some(Seq(data.wholesalerNames))))
-      case _ => Some(CurrencyWholesalerDetails(false, None))
+      case _          => Some(CurrencyWholesalerDetails(false, None))
     }
-  }
 }

@@ -23,7 +23,6 @@ case class HttpStatusException(status: Int, body: Option[String]) extends HttpEx
 
   lazy val jsonBody: Option[HttpExceptionBody] = this.body flatMap { body => HttpExceptionBody.fromJson(body) }
 
-  override def getMessage: String = {
+  override def getMessage: String =
     s"[${AuditHelper.appName}][HttpStatusException][status] - API call failed with http response code: $status"
-  }
 }

@@ -19,16 +19,15 @@ package models.fe.moneyservicebusiness
 import models.des.msb.MsbMtDetails
 import play.api.libs.json.{Json, OFormat}
 
-case class TransactionsInNext12Months (txnAmount: String)
+case class TransactionsInNext12Months(txnAmount: String)
 
 object TransactionsInNext12Months {
 
   implicit val format: OFormat[TransactionsInNext12Months] = Json.format[TransactionsInNext12Months]
 
-  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[TransactionsInNext12Months] = {
+  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[TransactionsInNext12Months] =
     msbMt match {
       case Some(msbDtls) => Some(TransactionsInNext12Months(msbDtls.noOfMoneyTrnsfrTransNxt12Mnths.getOrElse("")))
-      case None => None
+      case None          => None
     }
-  }
 }

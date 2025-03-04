@@ -38,7 +38,9 @@ class BusinessFranchiseSpec extends PlaySpec {
     }
 
     "convert des to frontend model successfully for businessFranchiseYes" in {
-      BusinessFranchise.conv(Some(FranchiseDetails(true, Some(Seq("notes"))))) must be(Some(BusinessFranchiseYes("notes")))
+      BusinessFranchise.conv(Some(FranchiseDetails(true, Some(Seq("notes"))))) must be(
+        Some(BusinessFranchiseYes("notes"))
+      )
     }
 
     "convert des to frontend model successfully for businessFranchiseNo" in {

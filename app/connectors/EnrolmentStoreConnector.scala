@@ -32,24 +32,30 @@ import utils._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: HttpClient,
-                                        private[connectors] val metrics: Metrics,
-                                        private[connectors] val mac: AuditConnector,
-                                        private[connectors] val config: ApplicationConfig)
-                                       (implicit executionContext: ExecutionContext) extends HttpResponseHelper with Logging {
+class EnrolmentStoreConnector @Inject() (
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics,
+  private[connectors] val mac: AuditConnector,
+  private[connectors] val config: ApplicationConfig
+)(implicit executionContext: ExecutionContext)
+    extends HttpResponseHelper
+    with Logging {
 
-  def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit headerCarrier: HeaderCarrier,
-                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
+  def addKnownFacts(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
+    headerCarrier: HeaderCarrier,
+    writes: Writes[KnownFacts]
+  ): Future[HttpResponse] =
     addKnownFactsFunction(enrolmentKey, knownFacts)
-  }
 
-  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit headerCarrier: HeaderCarrier,
-                                                                                            writes: Writes[KnownFacts]): Future[HttpResponse] = {
+  private def addKnownFactsFunction(enrolmentKey: AmlsEnrolmentKey, knownFacts: KnownFacts)(implicit
+    headerCarrier: HeaderCarrier,
+    writes: Writes[KnownFacts]
+  ): Future[HttpResponse] = {
 
     val url = s"${config.enrolmentStoreUrl}/tax-enrolments/enrolments/${enrolmentKey.key}"
 
     val prefix = "[EnrolmentStore][Enrolments]"
-    val timer = metrics.timer(EnrolmentStoreKnownFacts)
+    val timer  = metrics.timer(EnrolmentStoreKnownFacts)
 
     val audit: Audit = new Audit(AuditHelper.appName, mac)
 
@@ -67,7 +73,7 @@ class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: Http
         logger.debug(s"$prefix - Success Response")
         logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
-      case response @ status(s) =>
+      case response @ status(s)          =>
         metrics.failed(EnrolmentStoreKnownFacts)
         logger.warn(s"$prefix - Failure Response: $s")
         logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
@@ -76,7 +82,7 @@ class EnrolmentStoreConnector @Inject()(private[connectors] val httpClient: Http
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(EnrolmentStoreKnownFacts)
         logger.warn(s"$prefix - Failure: Exception", e)

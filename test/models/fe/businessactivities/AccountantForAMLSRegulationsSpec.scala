@@ -24,7 +24,11 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsSuccess, Json}
 import utils.AmlsBaseSpec
 
-class AccountantForAMLSRegulationsSpec extends PlaySpec with AmlsBaseSpec with BusinessActivityGenerators with ScalaCheckPropertyChecks {
+class AccountantForAMLSRegulationsSpec
+    extends PlaySpec
+    with AmlsBaseSpec
+    with BusinessActivityGenerators
+    with ScalaCheckPropertyChecks {
 
   "JSON validation" must {
 
@@ -54,7 +58,10 @@ class AccountantForAMLSRegulationsSpec extends PlaySpec with AmlsBaseSpec with B
   "convertAccountant" must {
     "return the data if it is supplied" in {
       forAll(activityGen) { mlrActivities =>
-        val result = AccountantForAMLSRegulations.convertAccountant(Some(MlrAdvisor(doYouHaveMlrAdvisor = true, None)), Some(mlrActivities))
+        val result = AccountantForAMLSRegulations.convertAccountant(
+          Some(MlrAdvisor(doYouHaveMlrAdvisor = true, None)),
+          Some(mlrActivities)
+        )
 
         result must contain(AccountantForAMLSRegulations(true))
       }

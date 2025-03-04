@@ -19,13 +19,13 @@ package models.fe.tradingpremises
 import play.api.libs.json.{Reads, Writes}
 
 case class Address(
-                    addressLine1: String,
-                    addressLine2: Option[String],
-                    addressLine3: Option[String],
-                    addressLine4: Option[String],
-                    postcode: String,
-                    dateOfChange: Option[String] = None
-                  )
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
+  addressLine4: Option[String],
+  postcode: String,
+  dateOfChange: Option[String] = None
+)
 
 object Address {
 
@@ -39,7 +39,7 @@ object Address {
         (__ \ "addressLine4").readNullable[String] and
         (__ \ "postcode").read[String] and
         (__ \ "addressDateOfChange").readNullable[String]
-      ) (Address.apply _)
+    )(Address.apply _)
   }
 
   implicit val writes: Writes[Address] = {
@@ -52,14 +52,15 @@ object Address {
         (__ \ "addressLine4").writeNullable[String] and
         (__ \ "postcode").write[String] and
         (__ \ "addressDateOfChange").writeNullable[String]
-      ) (unlift(Address.unapply))
+    )(unlift(Address.unapply))
   }
 
-  implicit def convert(address: models.des.tradingpremises.Address): Address = {
-    Address(address.addressLine1,
+  implicit def convert(address: models.des.tradingpremises.Address): Address =
+    Address(
+      address.addressLine1,
       address.addressLine2,
       address.addressLine3,
       address.addressLine4,
-      address.postcode.getOrElse(""))
-  }
+      address.postcode.getOrElse("")
+    )
 }

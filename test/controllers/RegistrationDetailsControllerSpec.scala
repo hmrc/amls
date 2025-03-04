@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class RegistrationDetailsControllerSpec extends AmlsBaseSpec {
 
   val rddc: RegistrationDetailsDesConnector = mock[RegistrationDetailsDesConnector]
-  val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction                = SuccessfulAuthAction
 
   val controller = new RegistrationDetailsController(rddc, authAction, mockCC)
 
@@ -39,8 +39,11 @@ class RegistrationDetailsControllerSpec extends AmlsBaseSpec {
     "use the Des connector to retrieve registration details" in {
       val safeId = "SAFEID"
 
-      val desDetails = DesRegistrationDetails(isAnIndividual = false, Organisation("Test Company", isAGroup = Some(false), Some(Partnership)))
-      val feDetails = RegistrationDetails("Test Company", isIndividual = false)
+      val desDetails = DesRegistrationDetails(
+        isAnIndividual = false,
+        Organisation("Test Company", isAGroup = Some(false), Some(Partnership))
+      )
+      val feDetails  = RegistrationDetails("Test Company", isIndividual = false)
 
       when {
         controller.registrationDetailsConnector.getRegistrationDetails(ArgumentMatchers.eq(safeId))(any(), any(), any())
@@ -50,7 +53,8 @@ class RegistrationDetailsControllerSpec extends AmlsBaseSpec {
 
       status(response) mustBe OK
       contentAsJson(response) mustBe Json.toJson(feDetails)
-      verify(controller.registrationDetailsConnector).getRegistrationDetails(ArgumentMatchers.eq(safeId))(any(), any(), any())
+      verify(controller.registrationDetailsConnector)
+        .getRegistrationDetails(ArgumentMatchers.eq(safeId))(any(), any(), any())
     }
   }
 

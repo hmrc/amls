@@ -26,19 +26,18 @@ object TaxMatters {
   implicit val formats: OFormat[TaxMatters] = Json.format[TaxMatters]
 
   implicit val jsonReads: Reads[TaxMatters] =
-    (__ \ "manageYourTaxAffairs").read[Boolean] flatMap {
-      case bool => Reads(_ => JsSuccess(TaxMatters(bool)))
+    (__ \ "manageYourTaxAffairs").read[Boolean] flatMap { case bool =>
+      Reads(_ => JsSuccess(TaxMatters(bool)))
     }
 
-  implicit val jsonWrites: Writes[TaxMatters] = Writes[TaxMatters] {
-    case TaxMatters(bool) => Json.obj("manageYourTaxAffairs" -> bool)
+  implicit val jsonWrites: Writes[TaxMatters] = Writes[TaxMatters] { case TaxMatters(bool) =>
+    Json.obj("manageYourTaxAffairs" -> bool)
   }
 
-  def conv(advisor : Option[MlrAdvisorDetails]) : Option[TaxMatters] = {
+  def conv(advisor: Option[MlrAdvisorDetails]): Option[TaxMatters] =
     advisor match {
       case Some(data) => Some(TaxMatters(data.agentDealsWithHmrc))
-      case None => None
+      case None       => None
     }
 
-  }
 }

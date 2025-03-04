@@ -45,33 +45,26 @@ class PreviouslyRegisteredSpec extends PlaySpec with AmlsBaseSpec {
         be(Json.obj("previouslyRegistered" -> false))
 
       Json.toJson(PreviouslyRegisteredYes(Some("12345678")): PreviouslyRegistered) must
-        be(Json.obj(
-          "previouslyRegistered" -> true,
-          "prevMLRRegNo" -> "12345678"
-        ))
+        be(
+          Json.obj(
+            "previouslyRegistered" -> true,
+            "prevMLRRegNo"         -> "12345678"
+          )
+        )
     }
 
     "convert des to frontend model when mlrRegNumber is returned from des" in {
-      val desModel = Some(PreviouslyRegisteredMLRView(false,
-        None,
-        true,
-        Some("555553333322222")))
+      val desModel = Some(PreviouslyRegisteredMLRView(false, None, true, Some("555553333322222")))
       PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber is returned from des" in {
-      val desModel = Some(PreviouslyRegisteredMLRView(true,
-        Some("555553333322222"),
-        false,
-        None))
+      val desModel = Some(PreviouslyRegisteredMLRView(true, Some("555553333322222"), false, None))
       PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredYes(Some("555553333322222")))
     }
 
     "convert des to frontend model when prevmlrRegNumber and  mlrRegNumberis os none" in {
-      val desModel = Some(PreviouslyRegisteredMLRView(false,
-        None,
-        false,
-        None))
+      val desModel = Some(PreviouslyRegisteredMLRView(false, None, false, None))
       PreviouslyRegistered.convert(desModel) must be(PreviouslyRegisteredNo)
     }
   }

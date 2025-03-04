@@ -31,33 +31,45 @@ import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                           private[connectors] val ac: AuditConnector,
-                                           private[connectors] val httpClient: HttpClient,
-                                           private[connectors] val metrics: Metrics) extends DESConnector(appConfig) {
+class AmendVariationDESConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClient: HttpClient,
+  private[connectors] val metrics: Metrics
+) extends DESConnector(appConfig) {
 
-  def amend(amlsRegistrationNumber: String, data: des.AmendVariationRequest)
-           (implicit ec: ExecutionContext, wr1: Writes[des.AmendVariationRequest], wr2: Writes[des.AmendVariationResponse],
-            hc: HeaderCarrier, apiRetryHelper: ApiRetryHelper): Future[des.AmendVariationResponse] = {
+  def amend(amlsRegistrationNumber: String, data: des.AmendVariationRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[des.AmendVariationRequest],
+    wr2: Writes[des.AmendVariationResponse],
+    hc: HeaderCarrier,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[des.AmendVariationResponse] =
     apiRetryHelper.doWithBackoff(() => amendFunction(amlsRegistrationNumber, data))
-  }
 
-  private def amendFunction(amlsRegistrationNumber: String, data: des.AmendVariationRequest)
-                           (implicit ec: ExecutionContext, wr1: Writes[des.AmendVariationRequest],
-                            wr2: Writes[des.AmendVariationResponse], hc: HeaderCarrier): Future[des.AmendVariationResponse] = {
-    val prefix = "[DESConnector][amend]"
+  private def amendFunction(amlsRegistrationNumber: String, data: des.AmendVariationRequest)(implicit
+    ec: ExecutionContext,
+    wr1: Writes[des.AmendVariationRequest],
+    wr2: Writes[des.AmendVariationResponse],
+    hc: HeaderCarrier
+  ): Future[des.AmendVariationResponse] = {
+    val prefix     = "[DESConnector][amend]"
     val bodyParser = JsonParsed[des.AmendVariationResponse]
-    val timer = metrics.timer(API6)
+    val timer      = metrics.timer(API6)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(wr1, implicitly[HttpReads[HttpResponse]], hc, ec) map {
-      response =>
-        timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
-        response
+    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(
+      wr1,
+      implicitly[HttpReads[HttpResponse]],
+      hc,
+      ec
+    ) map { response =>
+      timer.stop()
+      logger.debug(s"$prefix - Base Response: ${response.status}")
+      logger.debug(s"$prefix - Response Body: ${response.body}")
+      response
     } flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
@@ -66,7 +78,7 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
         logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         ac.sendExtendedEvent(AmendmentEvent(amlsRegistrationNumber, data, body))
         Future.successful(body)
-      case r @ status(s) =>
+      case r @ status(s)                                                               =>
         metrics.failed(API6)
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
@@ -78,7 +90,7 @@ class AmendVariationDESConnector @Inject()(private[connectors] val appConfig: Ap
         logger.warn(s"$prefix - Failure: Exception", e)
         ac.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, e))
         Future.failed(e)
-      case e =>
+      case e                      =>
         timer.stop()
         metrics.failed(API6)
         logger.warn(s"$prefix - Failure: Exception", e)

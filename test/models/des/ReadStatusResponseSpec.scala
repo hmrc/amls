@@ -23,8 +23,7 @@ import java.time.{LocalDate, LocalDateTime}
 
 class ReadStatusResponseSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  val json = Json.parse(
-    """{
+  val json = Json.parse("""{
       |  "processingDate": "2017-07-18T09:49:18Z",
       |  "formBundleStatus": "Approved",
       |  "currentRegYearStartDate": "2017-06-01",

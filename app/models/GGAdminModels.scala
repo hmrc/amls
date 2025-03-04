@@ -24,7 +24,6 @@ object KnownFact {
   implicit val formats: OFormat[KnownFact] = Json.format[KnownFact]
 }
 
-
 case class KnownFactsForService(facts: Seq[KnownFact])
 
 object KnownFactsForService {

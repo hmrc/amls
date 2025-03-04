@@ -25,20 +25,25 @@ import utils.ApiRetryHelper
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RegistrationDetailsDesConnector @Inject()(private[connectors] val appConfig: ApplicationConfig,
-                                                private[connectors] val httpClient: HttpClient) extends DESConnector(appConfig) {
+class RegistrationDetailsDesConnector @Inject() (
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val httpClient: HttpClient
+) extends DESConnector(appConfig) {
 
-  def getRegistrationDetails(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext,
-                                             apiRetryHelper: ApiRetryHelper): Future[RegistrationDetails] = {
+  def getRegistrationDetails(
+    safeId: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext, apiRetryHelper: ApiRetryHelper): Future[RegistrationDetails] =
     apiRetryHelper.doWithBackoff(() => getRegistrationDetailsFunction(safeId))
-  }
 
-  private def getRegistrationDetailsFunction(safeId: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
+  private def getRegistrationDetailsFunction(
+    safeId: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
 
     httpClient.GET[HttpResponse](url, headers = desHeaders)(implicitly, hc, ec) map {
       case response if response.status == OK => response.json.as[RegistrationDetails]
-      case response => throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
+      case response                          =>
+        throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
     }
   }
 }

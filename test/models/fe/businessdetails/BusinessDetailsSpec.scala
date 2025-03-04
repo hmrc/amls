@@ -40,45 +40,42 @@ class BusinessDetailsSpec extends PlaySpec with AmlsBaseSpec {
 
   val regOfficeOrMainPlaceUK = RegisteredOfficeUK("38B", Some("Longbenton"), None, None, "AA1 1AA")
 
-  val uKCorrespondenceAddress = UKCorrespondenceAddress("Name",
+  val uKCorrespondenceAddress = UKCorrespondenceAddress(
+    "Name",
     "Business Name",
     "address 1",
     Some("address 2"),
     Some("address 3"),
     Some("address 4"),
-    "BB1 1BB")
+    "BB1 1BB"
+  )
 
   "BusinessDetails" must {
     val completeJson = Json.obj(
-      "previouslyRegistered" -> Json.obj("previouslyRegistered" -> true,
-        "prevMLRRegNo" -> "12345678"),
-      "activityStartDate" -> Json.obj(
-        "startDate" -> "1990-02-24"),
-      "vatRegistered" -> Json.obj("registeredForVAT" -> true,
-        "vrnNumber" -> "123456789"),
-      "corporationTaxRegistered" -> Json.obj("registeredForCorporationTax" -> true,
-        "corporationTaxReference" -> "1234567890"),
-      "contactingYou" -> Json.obj(
-        "phoneNumber" -> "07000111222",
-        "email" -> "test@test.com"),
-      "registeredOffice" -> Json.obj(
+      "previouslyRegistered"     -> Json.obj("previouslyRegistered" -> true, "prevMLRRegNo" -> "12345678"),
+      "activityStartDate"        -> Json.obj("startDate" -> "1990-02-24"),
+      "vatRegistered"            -> Json.obj("registeredForVAT" -> true, "vrnNumber" -> "123456789"),
+      "corporationTaxRegistered" -> Json
+        .obj("registeredForCorporationTax" -> true, "corporationTaxReference" -> "1234567890"),
+      "contactingYou"            -> Json.obj("phoneNumber" -> "07000111222", "email" -> "test@test.com"),
+      "registeredOffice"         -> Json.obj(
         "addressLine1" -> "38B",
         "addressLine2" -> "Longbenton",
         "addressLine3" -> JsNull,
         "addressLine4" -> JsNull,
-        "postCode" -> "AA1 1AA"),
+        "postCode"     -> "AA1 1AA"
+      ),
       "altCorrespondenceAddress" -> true,
-      "correspondenceAddress" -> Json.obj(
-        "yourName" -> "Name",
-        "businessName" -> "Business Name",
+      "correspondenceAddress"    -> Json.obj(
+        "yourName"                   -> "Name",
+        "businessName"               -> "Business Name",
         "correspondenceAddressLine1" -> "address 1",
         "correspondenceAddressLine2" -> "address 2",
         "correspondenceAddressLine3" -> "address 3",
         "correspondenceAddressLine4" -> "address 4",
-        "correspondencePostCode" -> "BB1 1BB"
+        "correspondencePostCode"     -> "BB1 1BB"
       )
     )
-
 
     val completeModel = BusinessDetails(
       previouslyRegistered = PreviouslyRegisteredYes(Some("12345678")),
@@ -109,12 +106,25 @@ class BusinessDetailsSpec extends PlaySpec with AmlsBaseSpec {
         vatRegistered = Some(VATRegisteredYes("123456789")),
         corporationTaxRegistered = Some(CorporationTaxRegisteredYes("1234567891")),
         contactingYou = ContactingYou("07000111222", "BusinessEmail"),
-        registeredOffice = RegisteredOfficeUK("BusinessAddressLine1", Some("BusinessAddressLine2"), Some("BusinessAddressLine3"),
-          Some("BusinessAddressLine4"), "AA1 1AA"),
+        registeredOffice = RegisteredOfficeUK(
+          "BusinessAddressLine1",
+          Some("BusinessAddressLine2"),
+          Some("BusinessAddressLine3"),
+          Some("BusinessAddressLine4"),
+          "AA1 1AA"
+        ),
         altCorrespondenceAddress = true,
-        correspondenceAddress = Some(UKCorrespondenceAddress("Name", "TradingName", "AlternativeAddressLine1", Some("AlternativeAddressLine2"),
-          Some("AlternativeAddressLine3"),
-          Some("AlternativeAddressLine4"), "AA1 1AA"))
+        correspondenceAddress = Some(
+          UKCorrespondenceAddress(
+            "Name",
+            "TradingName",
+            "AlternativeAddressLine1",
+            Some("AlternativeAddressLine2"),
+            Some("AlternativeAddressLine3"),
+            Some("AlternativeAddressLine4"),
+            "AA1 1AA"
+          )
+        )
       )
 
       BusinessDetails.conv(DesConstants.SubscriptionViewModel) must be(atb)

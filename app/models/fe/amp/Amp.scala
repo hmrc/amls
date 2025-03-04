@@ -27,41 +27,45 @@ object Amp {
 
   implicit val format: OFormat[Amp] = Json.format[Amp]
 
-  implicit def conv(view: SubscriptionView): Option[Amp] = {
+  implicit def conv(view: SubscriptionView): Option[Amp] =
     view match {
-      case SubscriptionView(_, _, _, _, _, _, ba, _, _, _, _, _, _, _, _, _, _, _, Some(amp), _, _) => Some(
-        Amp(AmpData(
-          view.businessActivities.ampServicesCarriedOut,
-          ba.ampServicesCarriedOut.flatMap(s => s.other.specifyOther),
-          amp.transactionsAccptOvrThrshld.transactionsAccptOvrThrshldAnswer,
-          amp.transactionsAccptOvrThrshld.dateOfTheFirst,
-          amp.sysAutoIdOfLinkedTransactions,
-          getPercentage(amp.ampPercentageTurnover)))
-      )
-      case _ => None
+      case SubscriptionView(_, _, _, _, _, _, ba, _, _, _, _, _, _, _, _, _, _, _, Some(amp), _, _) =>
+        Some(
+          Amp(
+            AmpData(
+              view.businessActivities.ampServicesCarriedOut,
+              ba.ampServicesCarriedOut.flatMap(s => s.other.specifyOther),
+              amp.transactionsAccptOvrThrshld.transactionsAccptOvrThrshldAnswer,
+              amp.transactionsAccptOvrThrshld.dateOfTheFirst,
+              amp.sysAutoIdOfLinkedTransactions,
+              getPercentage(amp.ampPercentageTurnover)
+            )
+          )
+        )
+      case _                                                                                        => None
     }
-  }
 
-  def getPercentage(percentage: Int): Option[String] = {
+  def getPercentage(percentage: Int): Option[String] =
     percentage match {
-      case 20 => Some("zeroToTwenty")
-      case 40 => Some("twentyOneToForty")
-      case 60 => Some("fortyOneToSixty")
-      case 80 => Some("sixtyOneToEighty")
+      case 20  => Some("zeroToTwenty")
+      case 40  => Some("twentyOneToForty")
+      case 60  => Some("fortyOneToSixty")
+      case 80  => Some("sixtyOneToEighty")
       case 100 => Some("eightyOneToOneHundred")
-      case _ => None
+      case _   => None
     }
-  }
 
   private implicit def conv(services: Option[AmpServices]): List[String] = {
     val optionList = services match {
-      case Some(amp) => List(
-        CommonMethods.getSpecificType(amp.artGallery, "artGalleryOwner"),
-        CommonMethods.getSpecificType(amp.privateDealer, "artDealer"),
-        CommonMethods.getSpecificType(amp.intermediary, "artAgent"),
-        CommonMethods.getSpecificType(amp.auctionHouse, "artAuctioneer"),
-        CommonMethods.getSpecificType(amp.other.otherAnswer, "somethingElse"))
-      case None => List()
+      case Some(amp) =>
+        List(
+          CommonMethods.getSpecificType(amp.artGallery, "artGalleryOwner"),
+          CommonMethods.getSpecificType(amp.privateDealer, "artDealer"),
+          CommonMethods.getSpecificType(amp.intermediary, "artAgent"),
+          CommonMethods.getSpecificType(amp.auctionHouse, "artAuctioneer"),
+          CommonMethods.getSpecificType(amp.other.otherAnswer, "somethingElse")
+        )
+      case None      => List()
     }
 
     optionList.flatten

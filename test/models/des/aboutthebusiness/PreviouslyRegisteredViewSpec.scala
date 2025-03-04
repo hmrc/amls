@@ -26,22 +26,16 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
     "deserialise PreviouslyRegistered model" when {
       "given option yes" in {
 
-        val json = Json.obj(
-          "amlsRegistered" -> true,
-          "mlrRegNumber" -> "12345678",
-          "prevRegForMlr" -> false)
-        val mlr = PreviouslyRegisteredMLRView(true, Some("12345678"), false, None)
+        val json = Json.obj("amlsRegistered" -> true, "mlrRegNumber" -> "12345678", "prevRegForMlr" -> false)
+        val mlr  = PreviouslyRegisteredMLRView(true, Some("12345678"), false, None)
 
         PreviouslyRegisteredMLRView.format.reads(json) must be(JsSuccess(mlr))
       }
 
       "given option no" in {
 
-        val json = Json.obj(
-          "amlsRegistered" -> false,
-          "prevMlrRegNumber" -> "123456789123654",
-          "prevRegForMlr" -> true)
-        val mlr = PreviouslyRegisteredMLRView(false, None, true, Some("123456789123654"))
+        val json = Json.obj("amlsRegistered" -> false, "prevMlrRegNumber" -> "123456789123654", "prevRegForMlr" -> true)
+        val mlr  = PreviouslyRegisteredMLRView(false, None, true, Some("123456789123654"))
 
         PreviouslyRegisteredMLRView.format.reads(json) must be(JsSuccess(mlr))
       }
@@ -50,22 +44,16 @@ class PreviouslyRegisteredViewSpec extends PlaySpec {
     "serialise PreviouslyRegistered model" when {
       "given option yes" in {
 
-        val json = Json.obj(
-          "amlsRegistered" -> true,
-          "mlrRegNumber" -> "12345678",
-          "prevRegForMlr" -> false)
-        val mlr = PreviouslyRegisteredMLRView(true, Some("12345678"), false, None)
+        val json = Json.obj("amlsRegistered" -> true, "mlrRegNumber" -> "12345678", "prevRegForMlr" -> false)
+        val mlr  = PreviouslyRegisteredMLRView(true, Some("12345678"), false, None)
 
         PreviouslyRegisteredMLRView.format.reads(json) must be(JsSuccess(mlr))
       }
 
       "given option no" in {
 
-        val mlr = PreviouslyRegisteredMLRView(false, None, true, Some("123456789123654"))
-        val json = Json.obj(
-          "amlsRegistered" -> false,
-          "prevMlrRegNumber" -> "123456789123654",
-          "prevRegForMlr" -> true)
+        val mlr  = PreviouslyRegisteredMLRView(false, None, true, Some("123456789123654"))
+        val json = Json.obj("amlsRegistered" -> false, "prevMlrRegNumber" -> "123456789123654", "prevRegForMlr" -> true)
 
         PreviouslyRegisteredMLRView.format.reads(json) must be(JsSuccess(mlr))
       }

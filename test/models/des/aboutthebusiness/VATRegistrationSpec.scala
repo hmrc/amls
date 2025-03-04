@@ -25,7 +25,7 @@ class VATRegistrationSpec extends PlaySpec {
   "VATRegistration" must {
 
     val Contact = ContactingYou("123456789", "afa@test.com")
-    val Office = RegisteredOfficeUK("1", Some("2"), None, None, "NE3 0QQ")
+    val Office  = RegisteredOfficeUK("1", Some("2"), None, None, "NE3 0QQ")
 
     "serialise VATRegistration model with option yes" in {
       val vat = VATRegistration(true, Some("12345678"))
@@ -38,7 +38,8 @@ class VATRegistrationSpec extends PlaySpec {
     }
 
     "convert front end Vat model to VATRegistrationYes" in {
-      val from = BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
+      val from =
+        BusinessDetails(PreviouslyRegisteredNo, None, Some(VATRegisteredYes("12345678")), None, Contact, Office, false)
 
       VATRegistration.convert(from) must be(Some(VATRegistration(true, Some("12345678"))))
     }

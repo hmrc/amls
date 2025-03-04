@@ -37,15 +37,15 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
 
   trait Fixture {
 
-    val testDESConnector = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
-      override private[connectors] val token: String = "token"
-      override private[connectors] val env: String = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-    }
+    val testDESConnector =
+      new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+        override private[connectors] val baseUrl: String = "baseUrl"
+        override private[connectors] val token: String   = "token"
+        override private[connectors] val env: String     = "ist0"
+        override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
+      }
 
-    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved",
-      None, None, None, None, false)
+    val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
 
     val mockTimer = mock[Timer.Context]
 
@@ -86,10 +86,9 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
         testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body.getOrElse("").isEmpty mustEqual true
+      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body.getOrElse("").isEmpty mustEqual true
       }
     }
 
@@ -105,10 +104,9 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
         testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual OK
-          body mustBe Some("\"message\"")
+      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
+        status mustEqual OK
+        body mustBe Some("\"message\"")
       }
     }
 
@@ -117,10 +115,9 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with BeforeAndAfte
         testDESConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustBe Some("message")
+      whenReady(testDESConnector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
+        status mustEqual INTERNAL_SERVER_ERROR
+        body mustBe Some("message")
       }
     }
   }

@@ -33,15 +33,9 @@ object DateOfBirth {
       id <- nd.idDetails
     } yield id
 
-    val nonUkDob = idDetail.flatMap(idDetail =>
-      idDetail.nonUkResident.flatMap(nonUkRes =>
-        nonUkRes.dateOfBirth
-      )
-    )
+    val nonUkDob = idDetail.flatMap(idDetail => idDetail.nonUkResident.flatMap(nonUkRes => nonUkRes.dateOfBirth))
 
-    val ukDob = idDetail.flatMap(idDetail =>
-      idDetail.dateOfBirth
-    )
+    val ukDob = idDetail.flatMap(idDetail => idDetail.dateOfBirth)
 
     if (!ukDob.isEmpty) {
       Some(DateOfBirth(LocalDate.parse(ukDob.getOrElse(""))))

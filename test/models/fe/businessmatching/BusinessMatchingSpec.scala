@@ -28,7 +28,7 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
   "BusinessMatchingSpec" must {
 
     import play.api.libs.json._
-    val msbServices = MsbServices(
+    val msbServices                      = MsbServices(
       Set(
         TransmittingMoney,
         CurrencyExchange,
@@ -36,31 +36,33 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
         ChequeCashingScrapMetal
       )
     )
-    val BusinessActivitiesModel = BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService))
-    val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
-    val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "AA0001234567890")
-    val TypeOfBusinessModel = TypeOfBusiness("test")
-    val CompanyRegistrationNumberModel = CompanyRegistrationNumber("12345678")
+    val BusinessActivitiesModel          =
+      BusinessActivities(Set(MoneyServiceBusiness, TrustAndCompanyServices, TelephonePaymentService))
+    val businessAddress                  = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+    val ReviewDetailsModel               =
+      ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "AA0001234567890")
+    val TypeOfBusinessModel              = TypeOfBusiness("test")
+    val CompanyRegistrationNumberModel   = CompanyRegistrationNumber("12345678")
     val BusinessAppliedForPSRNumberModel = BusinessAppliedForPSRNumberYes("123456")
 
     val jsonBusinessMatching = Json.obj(
-      "businessActivities" -> Seq("05", "06", "07"),
-      "msbServices" -> Seq("01", "02", "03", "04"),
-      "businessName" -> "BusinessName",
-      "businessType" -> "Unincorporated Body",
-      "businessAddress" -> Json.obj(
-        "line_1" -> "line1",
-        "line_2" -> "line2",
-        "line_3" -> "line3",
-        "line_4" -> "line4",
+      "businessActivities"        -> Seq("05", "06", "07"),
+      "msbServices"               -> Seq("01", "02", "03", "04"),
+      "businessName"              -> "BusinessName",
+      "businessType"              -> "Unincorporated Body",
+      "businessAddress"           -> Json.obj(
+        "line_1"   -> "line1",
+        "line_2"   -> "line2",
+        "line_3"   -> "line3",
+        "line_4"   -> "line4",
         "postcode" -> "AA1 1AA",
-        "country" -> "GB"
+        "country"  -> "GB"
       ),
-      "safeId" -> "AA0001234567890",
-      "typeOfBusiness" -> "test",
+      "safeId"                    -> "AA0001234567890",
+      "typeOfBusiness"            -> "test",
       "companyRegistrationNumber" -> "12345678",
-      "appliedFor" -> true,
-      "regNumber" -> "123456"
+      "appliedFor"                -> true,
+      "regNumber"                 -> "123456"
     )
 
     val businessMatching = BusinessMatching(
@@ -69,7 +71,8 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
       Some(msbServices),
       Some(TypeOfBusinessModel),
       Some(CompanyRegistrationNumberModel),
-      Some(BusinessAppliedForPSRNumberModel))
+      Some(BusinessAppliedForPSRNumberModel)
+    )
 
     "JSON validation" must {
       "READ the JSON successfully and return the domain Object" in {
@@ -84,22 +87,53 @@ class BusinessMatchingSpec extends PlaySpec with AmlsBaseSpec {
     "Convert des model to frontend Business matching" in {
 
       val bmModel = BusinessMatching(
-        ReviewDetails("CompanyName", SoleProprietor, Address("BusinessAddressLine1", Some("BusinessAddressLine2"), Some("BusinessAddressLine3"),
-          Some("BusinessAddressLine4"), Some("AA1 1AA"), "GB"), ""),
-        BusinessActivities(Set(HighValueDealing, AccountancyServices, EstateAgentBusinessService,
-          BillPaymentServices, TelephonePaymentService, MoneyServiceBusiness, ArtMarketParticipant, TrustAndCompanyServices)),
-        Some(MsbServices(Set(TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange))),
+        ReviewDetails(
+          "CompanyName",
+          SoleProprietor,
+          Address(
+            "BusinessAddressLine1",
+            Some("BusinessAddressLine2"),
+            Some("BusinessAddressLine3"),
+            Some("BusinessAddressLine4"),
+            Some("AA1 1AA"),
+            "GB"
+          ),
+          ""
+        ),
+        BusinessActivities(
+          Set(
+            HighValueDealing,
+            AccountancyServices,
+            EstateAgentBusinessService,
+            BillPaymentServices,
+            TelephonePaymentService,
+            MoneyServiceBusiness,
+            ArtMarketParticipant,
+            TrustAndCompanyServices
+          )
+        ),
+        Some(
+          MsbServices(
+            Set(
+              TransmittingMoney,
+              CurrencyExchange,
+              ChequeCashingNotScrapMetal,
+              ChequeCashingScrapMetal,
+              ForeignExchange
+            )
+          )
+        ),
         Some(TypeOfBusiness("TypeOfBusiness")),
         Some(CompanyRegistrationNumber("12345678")),
-        Some(BusinessAppliedForPSRNumberYes("123456")))
+        Some(BusinessAppliedForPSRNumberYes("123456"))
+      )
 
       BusinessMatching.conv(DesConstants.SubscriptionViewModel) must be(bmModel)
 
     }
     "Convert des model to frontend TypeOfBusiness" in {
-      val desBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
-        Some(CorpAndBodyLlps("CompanyName", "12345678")),
-        None)
+      val desBusinessDetails =
+        BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")), None)
 
       TypeOfBusiness.conv(desBusinessDetails) must be(None)
     }

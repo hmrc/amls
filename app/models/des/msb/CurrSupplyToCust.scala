@@ -24,7 +24,6 @@ object CurrSupplyToCust {
 
   implicit val format: OFormat[CurrSupplyToCust] = Json.format[CurrSupplyToCust]
 
-  implicit def conv(countryList: Seq[String]): Option[CurrSupplyToCust] = {
+  implicit def conv(countryList: Seq[String]): Option[CurrSupplyToCust] =
     Some(CurrSupplyToCust(countryList))
-  }
 }

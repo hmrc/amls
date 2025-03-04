@@ -36,20 +36,24 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPatience with PaymentGenerator with BeforeAndAfter {
+class PaymentServiceSpec
+    extends PlaySpec
+    with ScalaFutures
+    with IntegrationPatience
+    with PaymentGenerator
+    with BeforeAndAfter {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
   val testPayAPIConnector = mock(classOf[PayAPIConnector])
-  val testPaymentRepo = mock(classOf[PaymentRepository])
-  val testPayApiPayment = payApiPaymentGen.sample.get
-  val safeId = amlsRefNoGen.sample.get
-  val testPayment = Payment(amlsRefNoGen.sample.get, safeId, testPayApiPayment)
-  val testPaymentService = new PaymentService(testPayAPIConnector, testPaymentRepo)
+  val testPaymentRepo     = mock(classOf[PaymentRepository])
+  val testPayApiPayment   = payApiPaymentGen.sample.get
+  val safeId              = amlsRefNoGen.sample.get
+  val testPayment         = Payment(amlsRefNoGen.sample.get, safeId, testPayApiPayment)
+  val testPaymentService  = new PaymentService(testPayAPIConnector, testPaymentRepo)
 
   val updateResult = mock(classOf[UpdateResult])
   when(updateResult.wasAcknowledged()) thenReturn true
-
 
   def errorResult() = UpdateResult.unacknowledged()
 
@@ -128,7 +132,7 @@ class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPati
     "retrieving a payment" must {
       "support getting a payment by payment reference" in {
         val paymentRef = paymentRefGen.sample.get
-        val payment = testPayment.copy(reference = paymentRef)
+        val payment    = testPayment.copy(reference = paymentRef)
 
         when {
           testPaymentRepo.findLatestByPaymentReference(ArgumentMatchers.eq(paymentRef))
@@ -137,7 +141,7 @@ class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPati
         whenReady(testPaymentService.getPaymentByPaymentReference(paymentRef)) {
           case Some(result) =>
             result mustBe payment
-          case _ => fail("No payment was returned")
+          case _            => fail("No payment was returned")
         }
       }
 
@@ -152,7 +156,7 @@ class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPati
         whenReady(testPaymentService.getPaymentByAmlsReference(amlsRef)) {
           case Some(result) =>
             result mustBe payment
-          case _ => fail("No payment was returned")
+          case _            => fail("No payment was returned")
         }
       }
     }
@@ -196,10 +200,10 @@ class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPati
 
     "refreshStatus is called" must {
       "refresh the status" in {
-        val paymentRef = paymentRefGen.sample.get
-        val paymentId = paymentIdGen.sample.get
-        val amlsPayment = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatus.Created)
-        val payApiPayment = testPayApiPayment.copy(status = PaymentStatus.Successful)
+        val paymentRef     = paymentRefGen.sample.get
+        val paymentId      = paymentIdGen.sample.get
+        val amlsPayment    = testPayment.copy(reference = paymentRef, _id = paymentId, status = PaymentStatus.Created)
+        val payApiPayment  = testPayApiPayment.copy(status = PaymentStatus.Successful)
         val updatedPayment = amlsPayment.copy(status = payApiPayment.status)
 
         when {
@@ -253,7 +257,7 @@ class PaymentServiceSpec extends PlaySpec with ScalaFutures with IntegrationPati
 
     "return the existing payment when trying to create a duplicate payment" in {
       val bacsPaymentRequest = createBacsPaymentRequestGen.sample.get
-      val payment = paymentGen.sample.get.copy(reference = bacsPaymentRequest.paymentReference)
+      val payment            = paymentGen.sample.get.copy(reference = bacsPaymentRequest.paymentReference)
 
       when {
         testPaymentRepo.findLatestByPaymentReference(ArgumentMatchers.eq(bacsPaymentRequest.paymentReference))

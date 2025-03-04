@@ -60,26 +60,38 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
 
     "convert des msb to frontend msb model" in {
 
-      val convertedMsb = Some(MoneyServiceBusiness(
-        Some(Third), Some(BusinessUseAnIPSPYes("IPSPName1", "IPSPMLRRegNo1")),
-        Some(IdentifyLinkedTransactions(true)),
-        Some(SendMoneyToOtherCountry(true)), Some(FundsTransfer(true)),
-        Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
-        Some(TransactionsInNext12Months("11111111111")),
-        Some(CETransactionsInNext12Months("11234567890")),
-        Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)),
-        Some(MostTransactions(List("AD", "GB"))),
-        Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), Some(true), Some(BankMoneySource("BankNames1")), Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)),
-        Some(FXTransactionsInNext12Months("234234234"))
-      ))
+      val convertedMsb = Some(
+        MoneyServiceBusiness(
+          Some(Third),
+          Some(BusinessUseAnIPSPYes("IPSPName1", "IPSPMLRRegNo1")),
+          Some(IdentifyLinkedTransactions(true)),
+          Some(SendMoneyToOtherCountry(true)),
+          Some(FundsTransfer(true)),
+          Some(BranchesOrAgents(true, Some(List("AD", "GB")))),
+          Some(TransactionsInNext12Months("11111111111")),
+          Some(CETransactionsInNext12Months("11234567890")),
+          Some(SendTheLargestAmountsOfMoney("GB", Some("AD"), None)),
+          Some(MostTransactions(List("AD", "GB"))),
+          Some(
+            WhichCurrencies(
+              List("GBP", "XYZ", "ABC"),
+              Some(true),
+              Some(BankMoneySource("BankNames1")),
+              Some(WholesalerMoneySource("CurrencyWholesalerNames")),
+              true
+            )
+          ),
+          Some(FXTransactionsInNext12Months("234234234"))
+        )
+      )
 
-      val release7SubscriptionViewModel = DesConstants.SubscriptionViewModel.copy(msb = Some(DesConstants.testMsb.copy(
-        msbAllDetails = Some(MsbAllDetails(
-          Some("£50k-£100k"),
-          true,
-          Some(CountriesList(List("AD", "GB"))),
-          true)
-        ))))
+      val release7SubscriptionViewModel = DesConstants.SubscriptionViewModel.copy(msb =
+        Some(
+          DesConstants.testMsb.copy(
+            msbAllDetails = Some(MsbAllDetails(Some("£50k-£100k"), true, Some(CountriesList(List("AD", "GB"))), true))
+          )
+        )
+      )
 
       MoneyServiceBusiness.conv(release7SubscriptionViewModel) must be(convertedMsb)
 
@@ -111,7 +123,7 @@ class MoneyServiceBusinessSpec extends PlaySpec with MoneyServiceBusinessTestDat
 
 trait MoneyServiceBusinessTestData {
 
-  private val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
+  private val businessUseAnIPSP            = BusinessUseAnIPSPYes("name", "123456789123456")
   private val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
   val completeModel = MoneyServiceBusiness(
@@ -131,17 +143,15 @@ trait MoneyServiceBusinessTestData {
   val emptyModel = MoneyServiceBusiness(None)
 
   val completeJson = Json.obj(
-    "throughput" -> Json.obj("throughput" -> "02"),
-    "businessUseAnIPSP" -> Json.obj("useAnIPSP" -> true,
-      "name" -> "name",
-      "referenceNumber" -> "123456789123456"),
-    "identifyLinkedTransactions" -> Json.obj("linkedTxn" -> true),
-    "sendMoneyToOtherCountry" -> Json.obj("money" -> true),
-    "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
-    "branchesOrAgents" -> Json.obj("hasCountries" -> true, "countries" -> Json.arr("GB")),
-    "transactionsInNext12Months" -> Json.obj("txnAmount" -> "12345678963"),
-    "fundsTransfer" -> Json.obj("transferWithoutFormalSystems" -> true),
-    "mostTransactions" -> Json.obj("mostTransactionsCountries" -> Seq("GB")),
+    "throughput"                   -> Json.obj("throughput" -> "02"),
+    "businessUseAnIPSP"            -> Json.obj("useAnIPSP" -> true, "name" -> "name", "referenceNumber" -> "123456789123456"),
+    "identifyLinkedTransactions"   -> Json.obj("linkedTxn" -> true),
+    "sendMoneyToOtherCountry"      -> Json.obj("money" -> true),
+    "fundsTransfer"                -> Json.obj("transferWithoutFormalSystems" -> true),
+    "branchesOrAgents"             -> Json.obj("hasCountries" -> true, "countries" -> Json.arr("GB")),
+    "transactionsInNext12Months"   -> Json.obj("txnAmount" -> "12345678963"),
+    "fundsTransfer"                -> Json.obj("transferWithoutFormalSystems" -> true),
+    "mostTransactions"             -> Json.obj("mostTransactionsCountries" -> Seq("GB")),
     "sendTheLargestAmountsOfMoney" -> Json.obj("country_1" -> "GB"),
     "ceTransactionsInNext12Months" -> Json.obj("ceTransaction" -> "12345678963"),
     "fxTransactionsInNext12Months" -> Json.obj("fxTransaction" -> "987654321")

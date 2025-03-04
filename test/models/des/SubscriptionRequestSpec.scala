@@ -35,9 +35,10 @@ import utils.AckRefGenerator
 
 class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false, "metrics.enabled" -> false)).build()
-  }
+  override def fakeApplication(): Application =
+    GuiceApplicationBuilder()
+      .configure(Map("microservice.services.feature-toggle.phase3-release2-la" -> false, "metrics.enabled" -> false))
+      .build()
 
   implicit val ackref: AckRefGenerator = new AckRefGenerator {
     override def ackRef: String = "1234"
@@ -63,9 +64,18 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     "given release 7 structure of msbcedetails" must {
       "read Json correctly" in {
 
-        val release7MsbCeDetails = MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(false, Some(Seq("bank1", "bank2", "bank3")))),
-          Some(CurrencyWholesalerDetails(true, Some(Seq("name1", "name2", "name3"))
-          )), false)), "94955689863", Some(CurrSupplyToCust(Seq("GBP", "EUR", "USD"))))
+        val release7MsbCeDetails = MsbCeDetailsR7(
+          Some(true),
+          Some(
+            CurrencySourcesR7(
+              Some(MSBBankDetails(false, Some(Seq("bank1", "bank2", "bank3")))),
+              Some(CurrencyWholesalerDetails(true, Some(Seq("name1", "name2", "name3")))),
+              false
+            )
+          ),
+          "94955689863",
+          Some(CurrSupplyToCust(Seq("GBP", "EUR", "USD")))
+        )
 
         SubscriptionRequest.format.reads(release7Json).asOpt.get.msb.get.msbCeDetails.get must be(release7MsbCeDetails)
 
@@ -73,16 +83,47 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
       "write Json correctly" in {
         val json = SubscriptionRequest.format.writes(SubscriptionRequest.format.reads(release7Json).asOpt.get)
-        (json \\ "msbCeDetails").head must be(JsObject(Seq(
-          ("dealInPhysCurrencies", JsBoolean(true)),
-          ("currencySources", JsObject(Seq(
-            ("bankDetails", JsObject(Seq(
-              ("banks", JsBoolean(false)), ("bankNames", JsArray(Seq(JsString("bank1"), JsString("bank2"), JsString("bank3"))))
-            )))
-            , ("currencyWholesalerDetails", JsObject(Seq(
-              ("currencyWholesalers", JsBoolean(true)), ("currencyWholesalersNames", JsArray(Seq(JsString("name1"), JsString("name2"), JsString("name3"))))))),
-            ("reSellCurrTakenIn", JsBoolean(false))))),
-          ("antNoOfTransNxt12Mnths", JsString("94955689863")), ("currSupplyToCust", JsObject(Seq(("currency", JsArray(Seq(JsString("GBP"), JsString("EUR"), JsString("USD"))))))))))
+        (json \\ "msbCeDetails").head must be(
+          JsObject(
+            Seq(
+              ("dealInPhysCurrencies", JsBoolean(true)),
+              (
+                "currencySources",
+                JsObject(
+                  Seq(
+                    (
+                      "bankDetails",
+                      JsObject(
+                        Seq(
+                          ("banks", JsBoolean(false)),
+                          ("bankNames", JsArray(Seq(JsString("bank1"), JsString("bank2"), JsString("bank3"))))
+                        )
+                      )
+                    ),
+                    (
+                      "currencyWholesalerDetails",
+                      JsObject(
+                        Seq(
+                          ("currencyWholesalers", JsBoolean(true)),
+                          (
+                            "currencyWholesalersNames",
+                            JsArray(Seq(JsString("name1"), JsString("name2"), JsString("name3")))
+                          )
+                        )
+                      )
+                    ),
+                    ("reSellCurrTakenIn", JsBoolean(false))
+                  )
+                )
+              ),
+              ("antNoOfTransNxt12Mnths", JsString("94955689863")),
+              (
+                "currSupplyToCust",
+                JsObject(Seq(("currency", JsArray(Seq(JsString("GBP"), JsString("EUR"), JsString("USD"))))))
+              )
+            )
+          )
+        )
       }
     }
 
@@ -114,7 +155,6 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
             lettingAgents = None
           )
         ) \ "businessReferencesAllButSp") must be(a[JsUndefined])
-
 
       }
     }
@@ -151,34 +191,81 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     }
   }
 
-  val businessDetailsModel = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+  val businessDetailsModel = BusinessDetails(
+    PreviouslyRegisteredYes(Some("12345678")),
     Some(ActivityStartDate(LocalDate.of(2001, 1, 1))),
     Some(VATRegisteredYes("123456789")),
     Some(CorporationTaxRegisteredYes("1234567890")),
     ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
-    RegisteredOfficeUK("line1", Some("line2"),
-      Some("some street"), Some("some city"), "EE1 1EE"),
+    RegisteredOfficeUK("line1", Some("line2"), Some("some street"), Some("some city"), "EE1 1EE"),
     true,
-    Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"),
-      Some("Street"), Some("city"), "EE1 1EE"))
+    Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"), Some("Street"), Some("city"), "EE1 1EE"))
   )
 
   val msbSectionRelease7 = Some(
     MoneyServiceBusiness(
       Some(MsbAllDetails(Some("£15k-50k"), true, Some(CountriesList(List("GB"))), true)),
-      Some(MsbMtDetails(true, Some("123456"),
-        IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
-        true,
-        Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))))),
-      Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
-        Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
+      Some(
+        MsbMtDetails(
+          true,
+          Some("123456"),
+          IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+          true,
+          Some("12345678963"),
+          Some(CountriesList(List("GB"))),
+          Some(CountriesList(List("LA", "LV")))
+        )
+      ),
+      Some(
+        MsbCeDetailsR7(
+          Some(true),
+          Some(
+            CurrencySourcesR7(
+              Some(MSBBankDetails(true, Some(List("Bank names")))),
+              Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))),
+              true
+            )
+          ),
+          "12345678963",
+          Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))
+        )
+      ),
+      None
+    )
   )
 
-  val desallActivitiesModel = BusinessActivitiesAll(None, Some("2001-01-01"), None, BusinessActivityDetails(true,
-    Some(ExpectedAMLSTurnover(Some("£0-£15k")))), Some(FranchiseDetails(true, Some(Seq("Name")))), Some("10"), Some("5"),
-    NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))), AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
-    true, true, Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))), Some(MlrAdvisor(true,
-      Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
+  val desallActivitiesModel = BusinessActivitiesAll(
+    None,
+    Some("2001-01-01"),
+    None,
+    BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
+    Some(FranchiseDetails(true, Some(Seq("Name")))),
+    Some("10"),
+    Some("5"),
+    NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))),
+    AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
+    true,
+    true,
+    Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
+    Some(
+      MlrAdvisor(
+        true,
+        Some(
+          MlrAdvisorDetails(
+            Some(
+              AdvisorNameAddress(
+                "Name",
+                Some("TradingName"),
+                Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA"))
+              )
+            ),
+            true,
+            None
+          )
+        )
+      )
+    )
+  )
 
   val desSubscriptionReq =
     des.SubscriptionRequest(
@@ -226,9 +313,7 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
     )
   }
 
-  val release7Json = Json.parse(
-
-    """{
+  val release7Json = Json.parse("""{
   "acknowledgementReference": "$AckRef$",
   "businessDetails": {
     "typeOfLegalEntity": "Sole Proprietor"
@@ -656,7 +741,6 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
   }
 }""")
 
-
   "SubscriptionRequestSpec" must {
     val businessDetailsModel = BusinessDetails(
       PreviouslyRegisteredYes(Some("12345678")),
@@ -664,41 +748,77 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       Some(VATRegisteredYes("123456789")),
       Some(CorporationTaxRegisteredYes("1234567890")),
       ContactingYou("019212323222323222323222323222", "abc@hotmail.co.uk"),
-      RegisteredOfficeUK("line1", Some("line2"),
-        Some("some street"), Some("some city"), "EE1 1EE"),
+      RegisteredOfficeUK("line1", Some("line2"), Some("some street"), Some("some city"), "EE1 1EE"),
       true,
-      Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"),
-        Some("Street"), Some("city"), "EE1 1EE"))
+      Some(UKCorrespondenceAddress("kap", "Trading", "Park", Some("lane"), Some("Street"), Some("city"), "EE1 1EE"))
     )
 
-    val msbSectionRelease7 = Some(MoneyServiceBusiness(
-      Some(MsbAllDetails(Some("£15k-50k"), true, Some(CountriesList(List("GB"))), true)),
-      Some(MsbMtDetails(true, Some("123456"),
-        IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
-        true,
-        Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))), None)),
-      Some(MsbCeDetailsR7(
-        Some(true), Some(CurrencySourcesR7
-        (
-          Some(MSBBankDetails(true, Some(List("Bank names")))),
-          Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
+    val msbSectionRelease7 = Some(
+      MoneyServiceBusiness(
+        Some(MsbAllDetails(Some("£15k-50k"), true, Some(CountriesList(List("GB"))), true)),
+        Some(
+          MsbMtDetails(
+            true,
+            Some("123456"),
+            IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+            true,
+            Some("12345678963"),
+            Some(CountriesList(List("GB"))),
+            Some(CountriesList(List("LA", "LV"))),
+            None
+          )
+        ),
+        Some(
+          MsbCeDetailsR7(
+            Some(true),
+            Some(
+              CurrencySourcesR7(
+                Some(MSBBankDetails(true, Some(List("Bank names")))),
+                Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))),
+                true
+              )
+            ),
+            "12345678963",
+            Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))
+          )
+        ),
+        None
+      )
     )
 
-    val desallActivitiesModel = BusinessActivitiesAll(None,
+    val desallActivitiesModel = BusinessActivitiesAll(
+      None,
       activitiesCommenceDate = Some("2001-01-01"),
       dateChangeFlag = None,
-      businessActivityDetails = BusinessActivityDetails(true,
-        Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
+      businessActivityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("£0-£15k")))),
       franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name")))),
       noOfEmployees = Some("10"),
       noOfEmployeesForMlr = Some("5"),
       nonUkResidentCustDetails = NonUkResidentCustDetails(true, Some(Seq("GB", "AB"))),
-      auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
+      auditableRecordsDetails =
+        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("value")))),
       suspiciousActivityGuidance = true,
       nationalCrimeAgencyRegistered = true,
       formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
-      mlrAdvisor = Some(MlrAdvisor(true,
-        Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None)))))
+      mlrAdvisor = Some(
+        MlrAdvisor(
+          true,
+          Some(
+            MlrAdvisorDetails(
+              Some(
+                AdvisorNameAddress(
+                  "Name",
+                  Some("TradingName"),
+                  Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA"))
+                )
+              ),
+              true,
+              None
+            )
+          )
+        )
+      )
+    )
 
     val desSubscriptionReq =
       des.SubscriptionRequest(
@@ -746,16 +866,18 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
       )
     }
 
-    val feRelease7SubscriptionViewModel = feSubscriptionReq.copy(businessActivitiesSection = BusinessActivitiesSection.model.copy(
-      expectedBusinessTurnover = Some(ExpectedBusinessTurnover.First)
-    )
+    val feRelease7SubscriptionViewModel = feSubscriptionReq.copy(businessActivitiesSection =
+      BusinessActivitiesSection.model.copy(
+        expectedBusinessTurnover = Some(ExpectedBusinessTurnover.First)
+      )
     )
 
     val feSubscriptionViewModelLA = feSubscriptionReq.copy(eabSection = EabSection.modelLA)
 
-    val desRelease7SubscriptionViewModel = desSubscriptionReq.copy(businessActivities = DefaultDesValues.BusinessActivitiesSection.copy(
-      all = Some(desallActivitiesModel)
-    )
+    val desRelease7SubscriptionViewModel = desSubscriptionReq.copy(businessActivities =
+      DefaultDesValues.BusinessActivitiesSection.copy(
+        all = Some(desallActivitiesModel)
+      )
     )
 
     val desRelease7SubscriptionViewModel1 = desSubscriptionReq.copy(
@@ -781,7 +903,7 @@ class SubscriptionRequestSpec extends PlaySpec with GuiceOneAppPerTest {
 
     "convert correctly" in {
       implicit val requestType = RequestType.Subscription
-      val result: Outgoing = des.SubscriptionRequest.convert(feRelease7SubscriptionViewModel)
+      val result: Outgoing     = des.SubscriptionRequest.convert(feRelease7SubscriptionViewModel)
       result must be(desRelease7SubscriptionViewModel1)
 
     }

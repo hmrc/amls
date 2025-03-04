@@ -24,39 +24,43 @@ import play.api.libs.json.{JsResult, Json}
 
 class PaymentSpec extends PlaySpec with AmlsReferenceNumberGenerator {
 
-  val id = "biuh98huiu"
+  val id  = "biuh98huiu"
   val ref = Some("ref")
 
-  val amountInPence = Some(100)
+  val amountInPence     = Some(100)
   val commissionInPence = 20
-  val totalInPence = 120
-  val name = "providerName"
-  val providerRef = "providerRef"
+  val totalInPence      = 120
+  val name              = "providerName"
+  val providerRef       = "providerRef"
 
   val now = LocalDateTime.now()
 
   "Payment" when {
     "Successful status" must {
       "serialise to JSON with no description" in {
-        Json.toJson(Payment(id, other, ref, None, amountInPence, PaymentStatus.Successful)) must be(Json.obj(
-          "id" -> id,
-          "taxType" -> "other",
-          "reference" -> ref,
-          "amountInPence" -> amountInPence,
-          "status" -> "Successful"
-        ))
+        Json.toJson(Payment(id, other, ref, None, amountInPence, PaymentStatus.Successful)) must be(
+          Json.obj(
+            "id"            -> id,
+            "taxType"       -> "other",
+            "reference"     -> ref,
+            "amountInPence" -> amountInPence,
+            "status"        -> "Successful"
+          )
+        )
 
       }
 
       "serialise to JSON with a description" in {
-        Json.toJson(Payment(id, other, ref, Some("Desc"), amountInPence, PaymentStatus.Successful)) must be(Json.obj(
-          "id" -> id,
-          "taxType" -> "other",
-          "reference" -> ref,
-          "description" -> "Desc",
-          "amountInPence" -> amountInPence,
-          "status" -> "Successful"
-        ))
+        Json.toJson(Payment(id, other, ref, Some("Desc"), amountInPence, PaymentStatus.Successful)) must be(
+          Json.obj(
+            "id"            -> id,
+            "taxType"       -> "other",
+            "reference"     -> ref,
+            "description"   -> "Desc",
+            "amountInPence" -> amountInPence,
+            "status"        -> "Successful"
+          )
+        )
       }
     }
 

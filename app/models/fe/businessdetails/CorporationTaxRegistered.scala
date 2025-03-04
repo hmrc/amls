@@ -25,30 +25,30 @@ case class CorporationTaxRegisteredYes(corporationTaxReference: String) extends 
 
 case object CorporationTaxRegisteredNo extends CorporationTaxRegistered
 
-
 object CorporationTaxRegistered {
 
   implicit val jsonReads: Reads[CorporationTaxRegistered] =
     (__ \ "registeredForCorporationTax").read[Boolean] flatMap {
-      case true => (__ \ "corporationTaxReference").read[String] map CorporationTaxRegisteredYes.apply
+      case true  => (__ \ "corporationTaxReference").read[String] map CorporationTaxRegisteredYes.apply
       case false => Reads(_ => JsSuccess(CorporationTaxRegisteredNo))
     }
 
   implicit val jsonWrites: Writes[CorporationTaxRegistered] = Writes[CorporationTaxRegistered] {
-    case CorporationTaxRegisteredYes(value) => Json.obj(
-      "registeredForCorporationTax" -> true,
-      "corporationTaxReference" -> value
-    )
-    case CorporationTaxRegisteredNo => Json.obj("registeredForCorporationTax" -> false)
+    case CorporationTaxRegisteredYes(value) =>
+      Json.obj(
+        "registeredForCorporationTax" -> true,
+        "corporationTaxReference"     -> value
+      )
+    case CorporationTaxRegisteredNo         => Json.obj("registeredForCorporationTax" -> false)
   }
 
-  implicit def conv(corpTax: Option[CorporationTaxRegisteredCbUbLlp]): Option[CorporationTaxRegistered] = {
+  implicit def conv(corpTax: Option[CorporationTaxRegisteredCbUbLlp]): Option[CorporationTaxRegistered] =
     corpTax match {
-      case Some(data) => data.cotaxRegistered match {
-        case true => Some(CorporationTaxRegisteredYes(data.ctutr.getOrElse("")))
-        case false => Some(CorporationTaxRegisteredNo)
-      }
-      case None => None
+      case Some(data) =>
+        data.cotaxRegistered match {
+          case true  => Some(CorporationTaxRegisteredYes(data.ctutr.getOrElse("")))
+          case false => Some(CorporationTaxRegisteredNo)
+        }
+      case None       => None
     }
-  }
 }

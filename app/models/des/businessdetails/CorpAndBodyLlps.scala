@@ -26,9 +26,8 @@ object CorpAndBodyLlps {
   implicit val format: OFormat[CorpAndBodyLlps] = Json.format[CorpAndBodyLlps]
 
   implicit def convert(businessMatching: BusinessMatching): Option[CorpAndBodyLlps] =
-    businessMatching.companyRegistrationNumber.map {
-      regNo =>
-        val name = businessMatching.reviewDetails.businessName
-        CorpAndBodyLlps(name, regNo.companyRegistrationNumber)
+    businessMatching.companyRegistrationNumber.map { regNo =>
+      val name = businessMatching.reviewDetails.businessName
+      CorpAndBodyLlps(name, regNo.companyRegistrationNumber)
     }
 }

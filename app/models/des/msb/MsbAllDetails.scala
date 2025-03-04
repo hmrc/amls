@@ -20,10 +20,12 @@ import models.fe.moneyservicebusiness.ExpectedThroughput._
 import models.fe.moneyservicebusiness._
 import play.api.libs.json.{Json, OFormat}
 
-case class MsbAllDetails(anticipatedTotThrputNxt12Mths: Option[String],
-                         otherCntryBranchesOrAgents: Boolean,
-                         countriesList: Option[CountriesList],
-                         sysLinkedTransIdentification: Boolean)
+case class MsbAllDetails(
+  anticipatedTotThrputNxt12Mths: Option[String],
+  otherCntryBranchesOrAgents: Boolean,
+  countriesList: Option[CountriesList],
+  sysLinkedTransIdentification: Boolean
+)
 
 object MsbAllDetails {
 
@@ -33,37 +35,43 @@ object MsbAllDetails {
 
     val (otherCntryBranchesOrAgents, countryList) = convBranchesOrAgents(msb.branchesOrAgents)
 
-    Some(MsbAllDetails(msb.throughput, otherCntryBranchesOrAgents, countryList, msb.identifyLinkedTransactions.fold(false)(x => x.linkedTxn)))
+    Some(
+      MsbAllDetails(
+        msb.throughput,
+        otherCntryBranchesOrAgents,
+        countryList,
+        msb.identifyLinkedTransactions.fold(false)(x => x.linkedTxn)
+      )
+    )
   }
 
-  implicit def convThroughput(throughput: Option[ExpectedThroughput]): Option[String] = {
+  implicit def convThroughput(throughput: Option[ExpectedThroughput]): Option[String] =
     throughput match {
       case Some(data) => data
-      case None => None
+      case None       => None
     }
-  }
 
   implicit def convThroughputValues(throughput: ExpectedThroughput): Option[String] = {
     val value = throughput match {
-      case First => "£0-£15k"
-      case Second => "£15k-50k"
-      case Third => "£50k-£100k"
-      case Fourth => "£100k-£250k"
-      case Fifth => "£250k-£1m"
-      case Sixth => "£1m-10m"
+      case First   => "£0-£15k"
+      case Second  => "£15k-50k"
+      case Third   => "£50k-£100k"
+      case Fourth  => "£100k-£250k"
+      case Fifth   => "£250k-£1m"
+      case Sixth   => "£1m-10m"
       case Seventh => "£10m+"
     }
     Some(value)
   }
 
-  implicit def convBranchesOrAgents(agents: Option[BranchesOrAgents]): (Boolean, Option[CountriesList]) = {
+  implicit def convBranchesOrAgents(agents: Option[BranchesOrAgents]): (Boolean, Option[CountriesList]) =
     agents match {
-      case Some(data) => data.countries match {
-        case Some(countries) if countries.nonEmpty => (true, countries)
-        case None => (false, None)
-        case _ => (false, None)
-      }
-      case None => (false, None)
+      case Some(data) =>
+        data.countries match {
+          case Some(countries) if countries.nonEmpty => (true, countries)
+          case None                                  => (false, None)
+          case _                                     => (false, None)
+        }
+      case None       => (false, None)
     }
-  }
 }

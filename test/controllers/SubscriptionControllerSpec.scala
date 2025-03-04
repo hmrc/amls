@@ -22,7 +22,7 @@ import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessdetails._
-import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
+import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessMatching, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import models.fe.{SubscriptionErrorResponse, SubscriptionResponse}
 import models.{des, fe}
@@ -52,25 +52,34 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
 
     val safeId = "XA0001234567890"
     // scalastyle:off
-    val body = fe.SubscriptionRequest(
-      businessMatchingSection =
-        BusinessMatching(
-          activities = BMBusinessActivities(Set.empty),
-          reviewDetails = ReviewDetails(
-            "", BT.SoleProprietor, Address(
-              line_1 = "",
-              line_2 = None,
-              line_3 = None,
-              line_4 = None,
-              postcode = None,
-              country = ""
-            ), ""
-          )
-        ),
+    val body   = fe.SubscriptionRequest(
+      businessMatchingSection = BusinessMatching(
+        activities = BMBusinessActivities(Set.empty),
+        reviewDetails = ReviewDetails(
+          "",
+          BT.SoleProprietor,
+          Address(
+            line_1 = "",
+            line_2 = None,
+            line_3 = None,
+            line_4 = None,
+            postcode = None,
+            country = ""
+          ),
+          ""
+        )
+      ),
       eabSection = None,
       tradingPremisesSection = None,
-      businessDetailsSection = BusinessDetails(PreviouslyRegisteredNo, Some(ActivityStartDate(LocalDate.of(1990, 2, 24))), Some(VATRegisteredNo),
-        Some(CorporationTaxRegisteredYes("1234567890")), ContactingYou("123456789", "asas@gmail.com"), RegisteredOfficeUK("1", Some("2"), None, None, "AA1 1AA"), altCorrespondenceAddress = false),
+      businessDetailsSection = BusinessDetails(
+        PreviouslyRegisteredNo,
+        Some(ActivityStartDate(LocalDate.of(1990, 2, 24))),
+        Some(VATRegisteredNo),
+        Some(CorporationTaxRegisteredYes("1234567890")),
+        ContactingYou("123456789", "asas@gmail.com"),
+        RegisteredOfficeUK("1", Some("2"), None, None, "AA1 1AA"),
+        altCorrespondenceAddress = false
+      ),
       bankDetailsSection = Seq(BankDetails(PersonalAccount, "name", NonUKAccountNumber("1234567896"))),
       aboutYouSection = AddPerson("name", Some("name"), "name", RoleWithinBusiness(Set(Director))),
       businessActivitiesSection = BusinessActivities(None),
@@ -93,10 +102,10 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
 
     "return a `BadRequest` response when the safeId is invalid" in {
 
-      val result = controller.subscribe("test", "test", "test")(postRequest)
+      val result  = controller.subscribe("test", "test", "test")(postRequest)
       val failure = Json.obj("errors" -> Seq("Invalid SafeId"))
 
-      status(result) must be(BAD_REQUEST)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(failure)
     }
 
@@ -118,7 +127,7 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
 
-      status(result) must be(OK)
+      status(result)        must be(OK)
       contentAsJson(result) must be(Json.toJson(SubscriptionResponse.convert(response)))
     }
 
@@ -140,23 +149,23 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
       val response = Json.obj(
         "errors" -> Seq(
           Json.obj(
-            "path" -> "obj.businessActivitiesSection",
+            "path"  -> "obj.businessActivitiesSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.aboutYouSection",
+            "path"  -> "obj.aboutYouSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.bankDetailsSection",
+            "path"  -> "obj.bankDetailsSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.businessDetailsSection",
+            "path"  -> "obj.businessDetailsSection",
             "error" -> "error.path.missing"
           ),
           Json.obj(
-            "path" -> "obj.businessMatchingSection",
+            "path"  -> "obj.businessMatchingSection",
             "error" -> "error.path.missing"
           )
         )
@@ -173,12 +182,15 @@ class SubscriptionControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGe
 
       when {
         controller.subscriptionService.subscribe(ArgumentMatchers.eq(safeId), any())(any(), any(), any())
-      } thenReturn Future.failed(DuplicateSubscriptionException(HttpStatusException(BAD_REQUEST, Some(reason)), amlsRegistrationNumber, reason))
+      } thenReturn Future.failed(
+        DuplicateSubscriptionException(HttpStatusException(BAD_REQUEST, Some(reason)), amlsRegistrationNumber, reason)
+      )
 
       val result = controller.subscribe("test", "orgRef", safeId)(postRequest)
 
       status(result) mustBe UNPROCESSABLE_ENTITY
-      contentAsJson(result).as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, reason)
+      contentAsJson(result)
+        .as[SubscriptionErrorResponse] mustBe SubscriptionErrorResponse(amlsRegistrationNumber, reason)
     }
 
     "return a normal exception response if DES does not return a json body" in {

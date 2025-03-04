@@ -24,7 +24,7 @@ import models.fe.bankdetails._
 import models.fe.businessactivities.BusinessActivities
 import models.fe.businesscustomer.{Address, ReviewDetails}
 import models.fe.businessdetails._
-import models.fe.businessmatching.{BusinessMatching, BusinessActivities => BMBusinessActivities, BusinessType => BT}
+import models.fe.businessmatching.{BusinessActivities => BMBusinessActivities, BusinessMatching, BusinessType => BT}
 import models.fe.declaration.{AddPerson, Director, RoleWithinBusiness}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.{ArgumentCaptor, ArgumentMatchers}
@@ -41,25 +41,27 @@ import scala.concurrent.Future
 class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   val avs: AmendVariationService = mock[AmendVariationService]
-  val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction     = SuccessfulAuthAction
 
   val testController = new AmendVariationController(avs, authAction, mockBodyParsers, mockCC)
 
   val body = fe.SubscriptionRequest(
-    businessMatchingSection =
-      BusinessMatching(
-        activities = BMBusinessActivities(Set.empty),
-        reviewDetails = ReviewDetails(
-          "", BT.SoleProprietor, Address(
-            line_1 = "",
-            line_2 = None,
-            line_3 = None,
-            line_4 = None,
-            postcode = None,
-            country = ""
-          ), ""
-        )
-      ),
+    businessMatchingSection = BusinessMatching(
+      activities = BMBusinessActivities(Set.empty),
+      reviewDetails = ReviewDetails(
+        "",
+        BT.SoleProprietor,
+        Address(
+          line_1 = "",
+          line_2 = None,
+          line_3 = None,
+          line_4 = None,
+          postcode = None,
+          country = ""
+        ),
+        ""
+      )
+    ),
     eabSection = None,
     tradingPremisesSection = None,
     businessDetailsSection = BusinessDetails(
@@ -91,26 +93,27 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
     .withHeaders(CONTENT_TYPE -> "application/json")
     .withBody[JsValue](Json.parse("{}"))
 
-
   val feResponse = fe.AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
     etmpFormBundleNumber = "111111",
     1301737.96,
-    None, None,
+    None,
+    None,
     115.0,
     None,
     124.58,
-    None, None
+    None,
+    None
   )
 
   "AmendvariationController" when {
     "amend is called" must {
       "return a `BadRequest` response when the AmlsRegistrationNumber is invalid" in {
 
-        val result = testController.amend("test", "test", "test")(postRequest)
+        val result  = testController.amend("test", "test", "test")(postRequest)
         val failure = Json.obj("errors" -> Seq("Invalid AmlsRegistrationNumber"))
 
-        status(result) must be(BAD_REQUEST)
+        status(result)        must be(BAD_REQUEST)
         contentAsJson(result) must be(failure)
       }
 
@@ -125,7 +128,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val result = testController.amend("test", "orgRef", amlsRegistrationNumber)(postRequest)
 
-        status(result) must be(OK)
+        status(result)        must be(OK)
         contentAsJson(result) must be(Json.toJson(feResponse))
       }
 
@@ -150,28 +153,28 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.businessActivitiesSection",
+              "path"  -> "obj.businessActivitiesSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.aboutYouSection",
+              "path"  -> "obj.aboutYouSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.bankDetailsSection",
+              "path"  -> "obj.bankDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessDetailsSection",
+              "path"  -> "obj.businessDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessMatchingSection",
+              "path"  -> "obj.businessMatchingSection",
               "error" -> "error.path.missing"
             )
           )
         )
-        val result = testController.amend("test", "orgRef", amlsRegistrationNumber)(requestWithEmptyBody)
+        val result   = testController.amend("test", "orgRef", amlsRegistrationNumber)(requestWithEmptyBody)
 
         status(result) mustEqual BAD_REQUEST
         contentAsJson(result) mustEqual response
@@ -182,7 +185,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         when(testController.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
-        val mockRequest = mock[AmendVariationRequest]
+        val mockRequest     = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
         when(testController.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
@@ -190,7 +193,8 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
+          verify(testController.service)
+            .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Amendment")
         }
       }
@@ -199,11 +203,10 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
     "variation is called" must {
       "return a `BadRequest` response when the AmlsRegistrationNumber is invalid" in {
 
-        val result = testController.variation("test", "test", "test")(postRequest)
+        val result  = testController.variation("test", "test", "test")(postRequest)
         val failure = Json.obj("errors" -> Seq("Invalid AmlsRegistrationNumber"))
 
-
-        status(result) must be(BAD_REQUEST)
+        status(result)        must be(BAD_REQUEST)
         contentAsJson(result) must be(failure)
       }
 
@@ -218,7 +221,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val result = testController.variation("test", "orgRef", amlsRegistrationNumber)(postRequest)
 
-        status(result) must be(OK)
+        status(result)        must be(OK)
         contentAsJson(result) must be(Json.toJson(feResponse))
       }
 
@@ -243,23 +246,23 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val response = Json.obj(
           "errors" -> Seq(
             Json.obj(
-              "path" -> "obj.businessActivitiesSection",
+              "path"  -> "obj.businessActivitiesSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.aboutYouSection",
+              "path"  -> "obj.aboutYouSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.bankDetailsSection",
+              "path"  -> "obj.bankDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessDetailsSection",
+              "path"  -> "obj.businessDetailsSection",
               "error" -> "error.path.missing"
             ),
             Json.obj(
-              "path" -> "obj.businessMatchingSection",
+              "path"  -> "obj.businessMatchingSection",
               "error" -> "error.path.missing"
             )
           )
@@ -275,7 +278,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         when(testController.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
-        val mockRequest = mock[AmendVariationRequest]
+        val mockRequest     = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
         when(testController.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
@@ -283,7 +286,8 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
+          verify(testController.service)
+            .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Variation")
         }
       }
@@ -292,7 +296,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         when(testController.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
-        val mockRequest = mock[AmendVariationRequest]
+        val mockRequest     = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
         when(testController.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
@@ -300,7 +304,8 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
+          verify(testController.service)
+            .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal")
         }
       }
@@ -309,7 +314,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         when(testController.service.update(any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(feResponse))
 
-        val mockRequest = mock[AmendVariationRequest]
+        val mockRequest     = mock[AmendVariationRequest]
         val requestArgument = ArgumentCaptor.forClass(classOf[AmendVariationRequest])
         when(testController.service.compareAndUpdate(requestArgument.capture(), any())(any(), any()))
           .thenReturn(Future.successful(mockRequest))
@@ -317,7 +322,8 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
         val resultF = testController.renewalAmendment("AccountType", "Ref", "XTML00000565656")(postRequest)
 
         whenReady(resultF) { result: Result =>
-          verify(testController.service).update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
+          verify(testController.service)
+            .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal Amendment")
         }
       }

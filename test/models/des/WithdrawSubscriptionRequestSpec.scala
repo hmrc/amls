@@ -23,39 +23,44 @@ import WithdrawalReason._
 class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
   val withdrawalReasons: Map[String, WithdrawalReason] = Map(
-    "Out of scope" -> OutOfscope,
+    "Out of scope"             -> OutOfscope,
     "Not trading in own right" -> NotTradingInOwnRight,
     "Under another supervisor" -> UnderAnotherSupervisor,
-    "Joined AWRS Group" -> JoinedAWRSGroup
+    "Joined AWRS Group"        -> JoinedAWRSGroup
   )
 
   "WithdrawSubscriptionRequest" must {
 
     "successfully read json" when {
 
-      withdrawalReasons foreach {
-        case (str, md) => {
-          s"withdrawalReason is $str" in {
-            val inputRequest = Json.obj(
-              "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-              "withdrawalDate" -> "2015-08-23",
-              "withdrawalReason" -> str
-            )
+      withdrawalReasons foreach { case (str, md) =>
+        s"withdrawalReason is $str" in {
+          val inputRequest = Json.obj(
+            "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+            "withdrawalDate"           -> "2015-08-23",
+            "withdrawalReason"         -> str
+          )
 
-            val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+          val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
 
-            WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
-          }
+          WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
         }
       }
 
       "withdrawalReasonOthers has value" in {
-        val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "withdrawalDate" -> "2015-08-23",
-          "withdrawalReason" -> "Other, please specify",
-          "withdrawalReasonOthers" -> "Other Reason")
+        val inputRequest = Json.obj(
+          "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+          "withdrawalDate"           -> "2015-08-23",
+          "withdrawalReason"         -> "Other, please specify",
+          "withdrawalReasonOthers"   -> "Other Reason"
+        )
 
-        val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", WithdrawalReason.Other, Some("Other Reason"))
+        val model = WithdrawSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          WithdrawalReason.Other,
+          Some("Other Reason")
+        )
 
         WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
       }
@@ -64,11 +69,16 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
         val inputRequest = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "withdrawalDate" -> "2015-08-23",
-          "withdrawalReason" -> "Out of scope"
+          "withdrawalDate"           -> "2015-08-23",
+          "withdrawalReason"         -> "Out of scope"
         )
 
-        val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", WithdrawalReason.OutOfscope, None)
+        val model = WithdrawSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          WithdrawalReason.OutOfscope,
+          None
+        )
 
         WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
 
@@ -77,29 +87,34 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
     "successfully write json" when {
 
-      withdrawalReasons foreach {
-        case (str, md) => {
-          s"withdrawalReason is $str" in {
-            val json = Json.obj(
-              "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-              "withdrawalDate" -> "2015-08-23",
-              "withdrawalReason" -> str
-            )
+      withdrawalReasons foreach { case (str, md) =>
+        s"withdrawalReason is $str" in {
+          val json = Json.obj(
+            "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+            "withdrawalDate"           -> "2015-08-23",
+            "withdrawalReason"         -> str
+          )
 
-            val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+          val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
 
-            WithdrawSubscriptionRequest.format.writes(model) must be(json)
-          }
+          WithdrawSubscriptionRequest.format.writes(model) must be(json)
         }
       }
 
       "withdrawalReasonOthers has value" in {
-        val json = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "withdrawalDate" -> "2015-08-23",
-          "withdrawalReason" -> "Other, please specify",
-          "withdrawalReasonOthers" -> "Other Reason")
+        val json = Json.obj(
+          "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+          "withdrawalDate"           -> "2015-08-23",
+          "withdrawalReason"         -> "Other, please specify",
+          "withdrawalReasonOthers"   -> "Other Reason"
+        )
 
-        val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", WithdrawalReason.Other, Some("Other Reason"))
+        val model = WithdrawSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          WithdrawalReason.Other,
+          Some("Other Reason")
+        )
 
         WithdrawSubscriptionRequest.format.writes(model) must be(json)
       }
@@ -108,11 +123,16 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
 
         val json = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "withdrawalDate" -> "2015-08-23",
-          "withdrawalReason" -> "Out of scope"
+          "withdrawalDate"           -> "2015-08-23",
+          "withdrawalReason"         -> "Out of scope"
         )
 
-        val model = WithdrawSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", WithdrawalReason.OutOfscope, None)
+        val model = WithdrawSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          WithdrawalReason.OutOfscope,
+          None
+        )
 
         WithdrawSubscriptionRequest.format.writes(model) must be(json)
       }
@@ -122,12 +142,14 @@ class WithdrawSubscriptionRequestSpec extends PlaySpec {
       "withdrawalReason is invalid" in {
         val inputRequest = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "withdrawalDate" -> "2015-08-23",
-          "withdrawalReason" -> "invalid"
+          "withdrawalDate"           -> "2015-08-23",
+          "withdrawalReason"         -> "invalid"
         )
 
-        WithdrawSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \ "withdrawalReason" \ "withdrawalReason",
-          List(JsonValidationError(List("error.invalid"))))))
+        WithdrawSubscriptionRequest.format.reads(inputRequest) must be(
+          JsError(
+            List((JsPath \ "withdrawalReason" \ "withdrawalReason", List(JsonValidationError(List("error.invalid")))))
+          )
         )
       }
     }

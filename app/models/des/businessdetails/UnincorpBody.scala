@@ -21,15 +21,13 @@ import play.api.libs.json.{Json, OFormat}
 
 case class UnincorpBody(companyName: String, typeOfBusiness: String)
 
-
 object UnincorpBody {
 
   implicit val format: OFormat[UnincorpBody] = Json.format[UnincorpBody]
 
   implicit def convert(businessMatching: BusinessMatching): Option[UnincorpBody] =
-    businessMatching.typeOfBusiness.map {
-      businessType =>
-        val name = businessMatching.reviewDetails.businessName
-        UnincorpBody(name, businessType.typeOfBusiness)
+    businessMatching.typeOfBusiness.map { businessType =>
+      val name = businessMatching.reviewDetails.businessName
+      UnincorpBody(name, businessType.typeOfBusiness)
     }
 }

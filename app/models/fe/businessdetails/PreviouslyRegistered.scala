@@ -29,36 +29,34 @@ object PreviouslyRegistered {
 
   implicit val jsonReads: Reads[PreviouslyRegistered] =
     (__ \ "previouslyRegistered").read[Boolean] flatMap {
-      case true => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYes.apply
+      case true  => (__ \ "prevMLRRegNo").readNullable[String] map PreviouslyRegisteredYes.apply
       case false => Reads(_ => JsSuccess(PreviouslyRegisteredNo))
     }
 
   implicit val jsonWrites: Writes[PreviouslyRegistered] = Writes[PreviouslyRegistered] {
-    case PreviouslyRegisteredYes(value) => Json.obj(
-      "previouslyRegistered" -> true,
-      "prevMLRRegNo" -> value
-    )
-    case PreviouslyRegisteredNo => Json.obj("previouslyRegistered" -> false)
+    case PreviouslyRegisteredYes(value) =>
+      Json.obj(
+        "previouslyRegistered" -> true,
+        "prevMLRRegNo"         -> value
+      )
+    case PreviouslyRegisteredNo         => Json.obj("previouslyRegistered" -> false)
   }
 
-  implicit def convert(prevMLR: Option[PreviouslyRegisteredMLRView]): PreviouslyRegistered = {
+  implicit def convert(prevMLR: Option[PreviouslyRegisteredMLRView]): PreviouslyRegistered =
     prevMLR match {
-      case Some(prevReg) => {
+      case Some(prevReg) =>
         (prevReg.amlsRegistered, prevReg.prevRegForMlr) match {
           case (true, false) => PreviouslyRegisteredYes(getStringOption(prevReg.mlrRegNumber.getOrElse("")))
           case (false, true) => PreviouslyRegisteredYes(getStringOption(prevReg.prevMlrRegNumber.getOrElse("")))
-          case (_, _) => PreviouslyRegisteredNo
+          case (_, _)        => PreviouslyRegisteredNo
         }
-      }
-      case None => PreviouslyRegisteredNo
+      case None          => PreviouslyRegisteredNo
     }
-  }
 
-  def getStringOption(value: String): Option[String] = {
+  def getStringOption(value: String): Option[String] =
     if (value.isEmpty) {
       None
     } else {
       Some(value)
     }
-  }
 }

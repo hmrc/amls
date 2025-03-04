@@ -19,27 +19,27 @@ package models.des
 import play.api.libs.json.{Json, OFormat}
 
 case class AmendVariationResponse(
-                                   processingDate: String,
-                                   etmpFormBundleNumber: String,
-                                   registrationFee: Option[BigDecimal],
-                                   fpNumbers: Option[Int],
-                                   fpFeeRate: Option[BigDecimal],
-                                   fpFee: Option[BigDecimal],
-                                   responsiblePersonNotCharged: Option[Int],
-                                   premiseFYNumber: Option[Int],
-                                   premiseFYFeeRate: Option[BigDecimal],
-                                   premiseFYTotal: Option[BigDecimal],
-                                   premiseHYNumber: Option[Int],
-                                   premiseHYFeeRate: Option[BigDecimal],
-                                   premiseHYTotal: Option[BigDecimal],
-                                   premiseFee: Option[BigDecimal],
-                                   totalFees: Option[BigDecimal],
-                                   paymentReference: Option[String],
-                                   difference: Option[BigDecimal],
-                                   approvalCheckNumbers: Option[Int] = None,
-                                   approvalCheckFeeRate: Option[BigDecimal] = None,
-                                   approvalCheckFee: Option[BigDecimal] = None
-                                 )
+  processingDate: String,
+  etmpFormBundleNumber: String,
+  registrationFee: Option[BigDecimal],
+  fpNumbers: Option[Int],
+  fpFeeRate: Option[BigDecimal],
+  fpFee: Option[BigDecimal],
+  responsiblePersonNotCharged: Option[Int],
+  premiseFYNumber: Option[Int],
+  premiseFYFeeRate: Option[BigDecimal],
+  premiseFYTotal: Option[BigDecimal],
+  premiseHYNumber: Option[Int],
+  premiseHYFeeRate: Option[BigDecimal],
+  premiseHYTotal: Option[BigDecimal],
+  premiseFee: Option[BigDecimal],
+  totalFees: Option[BigDecimal],
+  paymentReference: Option[String],
+  difference: Option[BigDecimal],
+  approvalCheckNumbers: Option[Int] = None,
+  approvalCheckFeeRate: Option[BigDecimal] = None,
+  approvalCheckFee: Option[BigDecimal] = None
+)
 
 object AmendVariationResponse {
   implicit val format: OFormat[AmendVariationResponse] = Json.format[AmendVariationResponse]

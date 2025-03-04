@@ -24,7 +24,7 @@ class RegistrationDetailsSpec extends PlaySpec {
   "The RegistrationDetails model" must {
     "serialise to Json" when {
       "given an 'Individual' des model" in {
-        //noinspection ScalaStyle
+        // noinspection ScalaStyle
         val model = DesRegistrationDetails(true, Individual("Forename", None, "Surname"))
 
         RegistrationDetails.convert(model) mustBe RegistrationDetails(

@@ -29,13 +29,24 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert to frontend MSB model to correct Msb Des model when Bank details is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(Some(MSBBankDetails(false, None)),
-        Some(CurrencyWholesalerDetails(false, None)), true, "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))), Some(true)))
+      val msbCeDetails = Some(
+        MsbCeDetails(
+          CurrencySources(
+            Some(MSBBankDetails(false, None)),
+            Some(CurrencyWholesalerDetails(false, None)),
+            true,
+            "12345678963",
+            Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))
+          ),
+          Some(true)
+        )
+      )
 
-      val businessUseAnIPSP = BusinessUseAnIPSPNo
+      val businessUseAnIPSP            = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), None, None, true)
-      val mostTransactions = MostTransactions(Seq("LA", "LV"))
+      val whichCurrencies              =
+        WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), None, None, true)
+      val mostTransactions             = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
         Some(ExpectedThroughput.Second),
@@ -56,11 +67,16 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert to frontend MSB model to correct Msb Des model when whichCurrencies is none" in {
 
-      val msbCeDetails = Some(MsbCeDetails(CurrencySources(None, None, reSellCurrTakenIn = false, "", None), dealInPhysCurrencies = Some(false)))
+      val msbCeDetails = Some(
+        MsbCeDetails(
+          CurrencySources(None, None, reSellCurrTakenIn = false, "", None),
+          dealInPhysCurrencies = Some(false)
+        )
+      )
 
-      val businessUseAnIPSP = BusinessUseAnIPSPNo
+      val businessUseAnIPSP            = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
-      val mostTransactions = MostTransactions(Seq("LA", "LV"))
+      val mostTransactions             = MostTransactions(Seq("LA", "LV"))
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
         Some(ExpectedThroughput.Second),
@@ -83,21 +99,31 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "no value is supplied by the front end and at least one currency source is specified" in {
         val model = FeMoneyServiceBusiness(whichCurrencies =
-          Some(WhichCurrencies(Seq("GBP"), None, Some(BankMoneySource("Some bank name")), None, customerMoneySource = false)))
+          Some(
+            WhichCurrencies(
+              Seq("GBP"),
+              None,
+              Some(BankMoneySource("Some bank name")),
+              None,
+              customerMoneySource = false
+            )
+          )
+        )
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(true))
-          case _ => logger.info("No MsbCe Details")
+          case _       => logger.info("No MsbCe Details")
         }
       }
 
       "no value is supplied by the front end and no currency sources are specified" in {
         val model = FeMoneyServiceBusiness(whichCurrencies =
-          Some(WhichCurrencies(Seq("GBP"), None, None, None, customerMoneySource = false)))
+          Some(WhichCurrencies(Seq("GBP"), None, None, None, customerMoneySource = false))
+        )
 
         MsbCeDetails.conv(model) match {
           case Some(x) => x.dealInPhysCurrencies must be(Some(false))
-          case _ => logger.info("No MsbCe Details")
+          case _       => logger.info("No MsbCe Details")
         }
       }
 
@@ -105,12 +131,15 @@ class MsbCeDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "deserialise the DES response correctly" when {
 
-      val model = MsbCeDetails(CurrencySources(
-        Some(MSBBankDetails(banks = true, Some(Seq("BankNames1", "BankNames2")))),
-        reSellCurrTakenIn = true,
-        antNoOfTransNxt12Mnths = "11234567890",
-        currSupplyToCust = Some(CurrSupplyToCust(Seq("GBP", "USD", "INR")))
-      ), dealInPhysCurrencies = Some(true))
+      val model = MsbCeDetails(
+        CurrencySources(
+          Some(MSBBankDetails(banks = true, Some(Seq("BankNames1", "BankNames2")))),
+          reSellCurrTakenIn = true,
+          antNoOfTransNxt12Mnths = "11234567890",
+          currSupplyToCust = Some(CurrSupplyToCust(Seq("GBP", "USD", "INR")))
+        ),
+        dealInPhysCurrencies = Some(true)
+      )
 
       "given usesForeignCurrencies as a string" in {
 

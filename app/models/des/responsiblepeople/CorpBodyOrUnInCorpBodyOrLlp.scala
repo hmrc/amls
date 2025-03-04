@@ -18,12 +18,14 @@ package models.des.responsiblepeople
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CorpBodyOrUnInCorpBodyOrLlp (director: Boolean = false,
-                                        beneficialOwner: Boolean = false,
-                                        nominatedOfficer: Boolean = false,
-                                        designatedMember: Option[Boolean] = None,
-                                        other: Option[Boolean] = None,
-                                        otherDetails: Option[String] = None) extends OtherDetails
+case class CorpBodyOrUnInCorpBodyOrLlp(
+  director: Boolean = false,
+  beneficialOwner: Boolean = false,
+  nominatedOfficer: Boolean = false,
+  designatedMember: Option[Boolean] = None,
+  other: Option[Boolean] = None,
+  otherDetails: Option[String] = None
+) extends OtherDetails
 
 object CorpBodyOrUnInCorpBodyOrLlp {
 

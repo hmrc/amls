@@ -55,10 +55,12 @@ class NonUKPassportSpec extends PlaySpec {
         be(Json.obj("nonUKPassport" -> false))
 
       Json.toJson(NonUKPassportYes("0123456789"): NonUKPassport) must
-        be(Json.obj(
-          "nonUKPassport" -> true,
-          "nonUKPassportNumber" -> "0123456789"
-        ))
+        be(
+          Json.obj(
+            "nonUKPassport"       -> true,
+            "nonUKPassportNumber" -> "0123456789"
+          )
+        )
     }
 
     val basicDesModel = ResponsiblePersons(
@@ -88,18 +90,24 @@ class NonUKPassportSpec extends PlaySpec {
         nationalityDetails = Some(
           NationalityDetails(
             areYouUkResident = false,
-            Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = Some(""),
-                  passportHeld = true,
-                  passportDetails = Some(
-                    PassportDetail(ukPassport = false, PassportNum(
-                      nonUkPassportNumber = Some("87654321")
-                    ))
+            Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    dateOfBirth = Some(""),
+                    passportHeld = true,
+                    passportDetails = Some(
+                      PassportDetail(
+                        ukPassport = false,
+                        PassportNum(
+                          nonUkPassportNumber = Some("87654321")
+                        )
+                      )
+                    )
                   )
-                ))
-            )),
+                )
+              )
+            ),
             countryOfBirth = None,
             nationality = None
           )
@@ -115,18 +123,24 @@ class NonUKPassportSpec extends PlaySpec {
         nationalityDetails = Some(
           NationalityDetails(
             areYouUkResident = false,
-            Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = Some(""),
-                  passportHeld = true,
-                  passportDetails = Some(
-                    PassportDetail(false, PassportNum(
-                      nonUkPassportNumber = None
-                    ))
+            Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    dateOfBirth = Some(""),
+                    passportHeld = true,
+                    passportDetails = Some(
+                      PassportDetail(
+                        false,
+                        PassportNum(
+                          nonUkPassportNumber = None
+                        )
+                      )
+                    )
                   )
-                ))
-            )),
+                )
+              )
+            ),
             countryOfBirth = None,
             nationality = None
           )
@@ -142,14 +156,17 @@ class NonUKPassportSpec extends PlaySpec {
         nationalityDetails = Some(
           NationalityDetails(
             areYouUkResident = false,
-            idDetails = Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = Some(""),
-                  passportHeld = false,
-                  passportDetails = None
-                ))
-            )),
+            idDetails = Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    dateOfBirth = Some(""),
+                    passportHeld = false,
+                    passportDetails = None
+                  )
+                )
+              )
+            ),
             countryOfBirth = None,
             nationality = None
           )
@@ -165,14 +182,17 @@ class NonUKPassportSpec extends PlaySpec {
         nationalityDetails = Some(
           NationalityDetails(
             areYouUkResident = true,
-            idDetails = Some(IdDetail(
-              nonUkResident = Some(
-                NonUkResident(
-                  dateOfBirth = Some(""),
-                  passportHeld = false,
-                  passportDetails = None
-                ))
-            )),
+            idDetails = Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    dateOfBirth = Some(""),
+                    passportHeld = false,
+                    passportDetails = None
+                  )
+                )
+              )
+            ),
             countryOfBirth = None,
             nationality = None
           )

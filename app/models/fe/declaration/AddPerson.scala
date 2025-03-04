@@ -18,7 +18,12 @@ package models.fe.declaration
 
 import models.des.aboutyou.AboutYouRelease7
 
-case class AddPerson(firstName: String, middleName: Option[String], lastName: String, roleWithinBusiness: models.fe.declaration.RoleWithinBusiness)
+case class AddPerson(
+  firstName: String,
+  middleName: Option[String],
+  lastName: String,
+  roleWithinBusiness: models.fe.declaration.RoleWithinBusiness
+)
 
 object AddPerson {
 
@@ -33,10 +38,9 @@ object AddPerson {
         (__ \ "middleName").readNullable[String] and
         (__ \ "lastName").read[String] and
         __.read[models.fe.declaration.RoleWithinBusiness]
-      ) (AddPerson.apply _)
+    )(AddPerson.apply _)
 
   }
-
 
   implicit val jsonWrites: Writes[AddPerson] = {
     import play.api.libs.functional.syntax._
@@ -47,14 +51,18 @@ object AddPerson {
         (__ \ "middleName").writeNullable[String] and
         (__ \ "lastName").write[String] and
         __.write[models.fe.declaration.RoleWithinBusiness]
-      ) (unlift(AddPerson.unapply))
+    )(unlift(AddPerson.unapply))
   }
 
-  implicit def convert(aboutYou: AboutYouRelease7): AddPerson = {
-
+  implicit def convert(aboutYou: AboutYouRelease7): AddPerson =
     aboutYou.individualDetails match {
-      case Some(details) => AddPerson(details.firstName, details.middleName, details.lastName, models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
-      case None => AddPerson("", None, "", models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
+      case Some(details) =>
+        AddPerson(
+          details.firstName,
+          details.middleName,
+          details.lastName,
+          models.fe.declaration.RoleWithinBusiness.convert(aboutYou)
+        )
+      case None          => AddPerson("", None, "", models.fe.declaration.RoleWithinBusiness.convert(aboutYou))
     }
-  }
 }

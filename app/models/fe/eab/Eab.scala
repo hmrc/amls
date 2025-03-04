@@ -28,16 +28,18 @@ object Eab {
 
   implicit val format: OFormat[Eab] = Json.format[Eab]
 
-  implicit def conv(view: SubscriptionView): Option[Eab] = {
-
+  implicit def conv(view: SubscriptionView): Option[Eab] =
     hasEabSector(view) match {
       case true => eabSection(view.businessActivities, view.eabAll, view.eabResdEstAgncy, view.lettingAgents)
-      case _ => None
+      case _    => None
     }
 
-  }
-
-  private implicit def eabSection(ba: BusinessActivities, eabAll: Option[EabAll], eabResdEA: Option[EabResdEstAgncy], la: Option[LettingAgents]): Option[Eab] = {
+  private implicit def eabSection(
+    ba: BusinessActivities,
+    eabAll: Option[EabAll],
+    eabResdEA: Option[EabResdEstAgncy],
+    la: Option[LettingAgents]
+  ): Option[Eab] =
     Some(
       Eab(
         EabData(
@@ -45,86 +47,82 @@ object Eab {
           None,
           (eabResdEA, redressSchemeApplies(ba)) match {
             case (Some(redress), _) => getRedressScheme(redress)
-            case (None, true) => Some("notRegistered")
-            case _ => None
+            case (None, true)       => Some("notRegistered")
+            case _                  => None
           },
           (la, lettingAgentApplies(ba)) match {
             case (Some(lettings), _) => lettings.clientMoneyProtection
-            case (None, true) => Some(false)
-            case _ => None
+            case (None, true)        => Some(false)
+            case _                   => None
           },
           eabAll match {
             case Some(all) => all.estateAgencyActProhibition
-            case _ => false
+            case _         => false
           },
           eabAll match {
             case Some(all) => all.estAgncActProhibProvideDetails
-            case _ => None
+            case _         => None
           },
           eabAll match {
             case Some(all) => all.prevWarnedWRegToEstateAgencyActivities
-            case _ => false
+            case _         => false
           },
-          (eabAll) match {
+          eabAll match {
             case Some(all) => all.prevWarnWRegProvideDetails
-            case _ => None
+            case _         => None
           }
         )
       )
     )
-  }
 
-  private implicit def getRedressScheme(eab: EabResdEstAgncy): Option[String] = {
+  private implicit def getRedressScheme(eab: EabResdEstAgncy): Option[String] =
     eab.regWithRedressScheme match {
-      case true =>
+      case true  =>
         val redressOption = eab.whichRedressScheme.getOrElse("")
         redressOption match {
           case "The Property Ombudsman Limited" => Some("propertyOmbudsman")
-          case "Property Redress Scheme" => Some("propertyRedressScheme")
-          case "Ombudsman Services" => Some("ombudsmanServices")
-          case "Other" => Some("other")
-          case _ => None
+          case "Property Redress Scheme"        => Some("propertyRedressScheme")
+          case "Ombudsman Services"             => Some("ombudsmanServices")
+          case "Other"                          => Some("other")
+          case _                                => None
         }
       case false => Some("notRegistered")
     }
-  }
 
-  private implicit def hasEabSector(response: SubscriptionView): Boolean = {
+  private implicit def hasEabSector(response: SubscriptionView): Boolean =
     response.businessActivities.mlrActivitiesAppliedFor match {
       case Some(MlrActivitiesAppliedFor(_, _, _, _, true, _, _, _)) => true
-      case _ => false
+      case _                                                        => false
     }
-  }
 
-  private implicit def redressSchemeApplies(businessActivities: BusinessActivities): Boolean = {
+  private implicit def redressSchemeApplies(businessActivities: BusinessActivities): Boolean =
     businessActivities.eabServicesCarriedOut match {
-      case Some(EabServices(true, _, _, _, _, _, _, _, _, _)) => true
+      case Some(EabServices(true, _, _, _, _, _, _, _, _, _))       => true
       case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
-      case _ => false
+      case _                                                        => false
     }
-  }
 
-  private implicit def lettingAgentApplies(businessActivities: BusinessActivities): Boolean = {
+  private implicit def lettingAgentApplies(businessActivities: BusinessActivities): Boolean =
     businessActivities.eabServicesCarriedOut match {
       case Some(EabServices(_, _, _, _, _, _, _, _, _, Some(true))) => true
-      case _ => false
+      case _                                                        => false
     }
-  }
 
-  private implicit def conv(services: Option[EabServices]): List[String] = {
+  private implicit def conv(services: Option[EabServices]): List[String] =
     (services match {
-      case Some(eab) => List(
-        CommonMethods.getSpecificType(eab.assetManagementCompany, "assetManagement"),
-        CommonMethods.getSpecificType(eab.auctioneer, "auctioneering"),
-        CommonMethods.getSpecificType(eab.businessTransferAgent, "businessTransfer"),
-        CommonMethods.getSpecificType(eab.commercialEstateAgency, "commercial"),
-        CommonMethods.getSpecificType(eab.developmentCompany, "developmentCompany"),
-        CommonMethods.getSpecificType(eab.landManagementAgent, "landManagement"),
-        CommonMethods.getSpecificType(eab.relocationAgent, "relocation"),
-        CommonMethods.getSpecificType(eab.residentialEstateAgency, "residential"),
-        CommonMethods.getSpecificType(eab.socialHousingProvider, "socialHousingProvision"),
-        CommonMethods.getSpecificTypeWithOption(eab.lettingAgents, "lettings"))
-      case None => List() // Catch all - should never be no services in API5 where we have EAB section...
+      case Some(eab) =>
+        List(
+          CommonMethods.getSpecificType(eab.assetManagementCompany, "assetManagement"),
+          CommonMethods.getSpecificType(eab.auctioneer, "auctioneering"),
+          CommonMethods.getSpecificType(eab.businessTransferAgent, "businessTransfer"),
+          CommonMethods.getSpecificType(eab.commercialEstateAgency, "commercial"),
+          CommonMethods.getSpecificType(eab.developmentCompany, "developmentCompany"),
+          CommonMethods.getSpecificType(eab.landManagementAgent, "landManagement"),
+          CommonMethods.getSpecificType(eab.relocationAgent, "relocation"),
+          CommonMethods.getSpecificType(eab.residentialEstateAgency, "residential"),
+          CommonMethods.getSpecificType(eab.socialHousingProvider, "socialHousingProvision"),
+          CommonMethods.getSpecificTypeWithOption(eab.lettingAgents, "lettings")
+        )
+      case None      => List() // Catch all - should never be no services in API5 where we have EAB section...
     }).flatten
-  }
 }

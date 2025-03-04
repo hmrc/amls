@@ -25,28 +25,29 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 case class BusinessActivitiesAll(
-                                  busActivitiesChangeDate:Option[String],
-                                  activitiesCommenceDate: Option[String],
-                                  dateChangeFlag: Option[Boolean],
-                                  businessActivityDetails: BusinessActivityDetails,
-                                  franchiseDetails: Option[FranchiseDetails],
-                                  noOfEmployees: Option[String],
-                                  noOfEmployeesForMlr: Option[String],
-                                  nonUkResidentCustDetails: NonUkResidentCustDetails,
-                                  auditableRecordsDetails: AuditableRecordsDetails,
-                                  suspiciousActivityGuidance: Boolean,
-                                  nationalCrimeAgencyRegistered: Boolean,
-                                  formalRiskAssessmentDetails: Option[FormalRiskAssessmentDetails],
-                                  mlrAdvisor: Option[MlrAdvisor])
+  busActivitiesChangeDate: Option[String],
+  activitiesCommenceDate: Option[String],
+  dateChangeFlag: Option[Boolean],
+  businessActivityDetails: BusinessActivityDetails,
+  franchiseDetails: Option[FranchiseDetails],
+  noOfEmployees: Option[String],
+  noOfEmployeesForMlr: Option[String],
+  nonUkResidentCustDetails: NonUkResidentCustDetails,
+  auditableRecordsDetails: AuditableRecordsDetails,
+  suspiciousActivityGuidance: Boolean,
+  nationalCrimeAgencyRegistered: Boolean,
+  formalRiskAssessmentDetails: Option[FormalRiskAssessmentDetails],
+  mlrAdvisor: Option[MlrAdvisor]
+)
 
-object BusinessActivitiesAll{
+object BusinessActivitiesAll {
 
   implicit val format: OFormat[BusinessActivitiesAll] = Json.format[BusinessActivitiesAll]
-  val jsonRead: Reads[BusinessActivitiesAll] = {
+  val jsonRead: Reads[BusinessActivitiesAll]          =
     (
       (__ \ "busActivitiesChangeDate").readNullable[String] and
         (__ \ "activitiesCommenceDate").readNullable[String] and
-        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)).map(x=>Some(x)) and
+        ((__ \ "dateChangeFlag").read[Boolean] or Reads.pure(false)).map(x => Some(x)) and
         (__ \ "businessActivityDetails").read[BusinessActivityDetails] and
         (__ \ "franchiseDetails").readNullable[FranchiseDetails] and
         (__ \ "noOfEmployees").readNullable[String] and
@@ -57,26 +58,31 @@ object BusinessActivitiesAll{
         (__ \ "nationalCrimeAgencyRegistered").read[Boolean] and
         (__ \ "formalRiskAssessmentDetails").readNullable[FormalRiskAssessmentDetails] and
         (__ \ "mlrAdvisor").readNullable[MlrAdvisor]
-      ) (BusinessActivitiesAll.apply _)
-  }
+    )(BusinessActivitiesAll.apply _)
 
-  def getEarliestDate(aspSection: Option[models.fe.asp.Asp],
-                      eabSection: Option[models.fe.eab.Eab],
-                      hvdSection: Option[models.fe.hvd.Hvd],
-                      businessMatchingSection: models.fe.businessmatching.BusinessMatching):Option[String] = {
+  def getEarliestDate(
+    aspSection: Option[models.fe.asp.Asp],
+    eabSection: Option[models.fe.eab.Eab],
+    hvdSection: Option[models.fe.hvd.Hvd],
+    businessMatchingSection: models.fe.businessmatching.BusinessMatching
+  ): Option[String] = {
     implicit def ord: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
 
     val aspDate = aspSection.fold[Option[String]](None)(_.services.fold[Option[String]](None)(_.dateOfChange))
     val eabDate = eabSection.fold[Option[String]](None)(_.data.dateOfChange)
     val hvdDate = hvdSection.fold[Option[String]](None)(_.dateOfChange)
-    val baDate =  businessMatchingSection.activities.dateOfChange
+    val baDate  = businessMatchingSection.activities.dateOfChange
     val dateLst = Seq(aspDate, eabDate, hvdDate, baDate).flatten
 
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd['T'HH:mm:ss]")
-    dateLst.map(x => LocalDate.parse(x, formatter)).sorted(ord).headOption.map(_.format(DateTimeFormatter.ISO_LOCAL_DATE))
+    dateLst
+      .map(x => LocalDate.parse(x, formatter))
+      .sorted(ord)
+      .headOption
+      .map(_.format(DateTimeFormatter.ISO_LOCAL_DATE))
   }
 
-  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
+  implicit def convtoActivitiesALL(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] =
     convert(
       feModel.businessDetailsSection,
       feModel.businessActivitiesSection,
@@ -87,9 +93,8 @@ object BusinessActivitiesAll{
         feModel.businessMatchingSection
       )
     )
-  }
 
-  def convtoActivitiesALLWithFlag(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] = {
+  def convtoActivitiesALLWithFlag(feModel: fe.SubscriptionRequest): Option[BusinessActivitiesAll] =
     convertWithFlag(
       feModel.businessDetailsSection,
       feModel.businessActivitiesSection,
@@ -100,89 +105,91 @@ object BusinessActivitiesAll{
         feModel.businessMatchingSection
       )
     )
-  }
 
-  def convert(atb:models.fe.businessdetails.BusinessDetails,
-              activities: models.fe.businessactivities.BusinessActivities,
-              dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
+  def convert(
+    atb: models.fe.businessdetails.BusinessDetails,
+    activities: models.fe.businessactivities.BusinessActivities,
+    dateOfChange: Option[String]
+  ): Option[BusinessActivitiesAll] =
+    Some(
+      BusinessActivitiesAll(
+        dateOfChange,
+        atb.activityStartDate,
+        None,
+        BusinessActivityDetails.convert(activities),
+        activities.businessFranchise,
+        employeeCount(activities.howManyEmployees),
+        mlremployeeCount(activities.howManyEmployees),
+        activities.customersOutsideUK,
+        AuditableRecordsDetails.convert(activities),
+        activities.identifySuspiciousActivity,
+        activities.ncaRegistered,
+        activities.riskAssessmentPolicy,
+        activities
+      )
+    )
 
-    Some(BusinessActivitiesAll(
-      dateOfChange,
-      atb.activityStartDate,
-      None,
-      BusinessActivityDetails.convert(activities),
-      activities.businessFranchise,
-      employeeCount(activities.howManyEmployees),
-      mlremployeeCount(activities.howManyEmployees),
-      activities.customersOutsideUK,
-      AuditableRecordsDetails.convert(activities),
-      activities.identifySuspiciousActivity,
-      activities.ncaRegistered,
-      activities.riskAssessmentPolicy,
-      activities))
-  }
+  def convertWithFlag(
+    atb: models.fe.businessdetails.BusinessDetails,
+    activities: models.fe.businessactivities.BusinessActivities,
+    dateOfChange: Option[String]
+  ): Option[BusinessActivitiesAll] =
+    Some(
+      BusinessActivitiesAll(
+        dateOfChange,
+        atb.activityStartDate,
+        Some(false),
+        BusinessActivityDetails.convert(activities),
+        activities.businessFranchise,
+        employeeCount(activities.howManyEmployees),
+        mlremployeeCount(activities.howManyEmployees),
+        activities.customersOutsideUK,
+        AuditableRecordsDetails.convert(activities),
+        activities.identifySuspiciousActivity,
+        activities.ncaRegistered,
+        activities.riskAssessmentPolicy,
+        activities
+      )
+    )
 
-  def convertWithFlag(atb:models.fe.businessdetails.BusinessDetails,
-              activities: models.fe.businessactivities.BusinessActivities,
-              dateOfChange: Option[String]): Option[BusinessActivitiesAll] = {
-
-    Some(BusinessActivitiesAll(
-      dateOfChange,
-      atb.activityStartDate,
-      Some(false),
-      BusinessActivityDetails.convert(activities),
-      activities.businessFranchise,
-      employeeCount(activities.howManyEmployees),
-      mlremployeeCount(activities.howManyEmployees),
-      activities.customersOutsideUK,
-      AuditableRecordsDetails.convert(activities),
-      activities.identifySuspiciousActivity,
-      activities.ncaRegistered,
-      activities.riskAssessmentPolicy,
-      activities))
-  }
-
-  implicit def convStartDate(startDate: Option[ActivityStartDate]): Option[String] = {
+  implicit def convStartDate(startDate: Option[ActivityStartDate]): Option[String] =
     startDate match {
       case Some(data) => Some(data.startDate.toString)
-      case _ => None
+      case _          => None
     }
-  }
 
-  def employeeCount(empCount:Option[models.fe.businessactivities.HowManyEmployees]): Option[String] ={
+  def employeeCount(empCount: Option[models.fe.businessactivities.HowManyEmployees]): Option[String]    =
     empCount match {
-      case None => None
+      case None    => None
       case Some(x) => Some(x.employeeCount)
     }
-  }
-  def mlremployeeCount(empCount:Option[models.fe.businessactivities.HowManyEmployees]): Option[String] ={
+  def mlremployeeCount(empCount: Option[models.fe.businessactivities.HowManyEmployees]): Option[String] =
     empCount match {
-      case None => None
+      case None    => None
       case Some(x) => Some(x.employeeCountAMLSSupervision)
     }
-  }
 
-  implicit def suspicious(susAct:Option[models.fe.businessactivities.IdentifySuspiciousActivity]): Boolean ={
-    susAct match{
+  implicit def suspicious(susAct: Option[models.fe.businessactivities.IdentifySuspiciousActivity]): Boolean =
+    susAct match {
       case Some(x) => x.hasWrittenGuidance
-      case _ => false
+      case _       => false
 
     }
-  }
 
-  implicit def ncaRegistered(criminalReg:Option[models.fe.businessactivities.NCARegistered]): Boolean ={
-    criminalReg match{
+  implicit def ncaRegistered(criminalReg: Option[models.fe.businessactivities.NCARegistered]): Boolean =
+    criminalReg match {
       case Some(x) => x.ncaRegistered
-      case _ => false
+      case _       => false
     }
-  }
 
-  implicit def convtoActivitiesALLChangeFlags(businessDetailsSection: models.fe.businessdetails.BusinessDetails,
-                                              businessActivitiesSection: models.fe.businessactivities.BusinessActivities,
-                                              aspSection: Option[models.fe.asp.Asp],
-                                              eabSection: Option[models.fe.eab.Eab],
-                                              hvdSection: Option[models.fe.hvd.Hvd],
-                                              businessMatchingSection: models.fe.businessmatching.BusinessMatching): Option[BusinessActivitiesAll] = {
+  implicit def convtoActivitiesALLChangeFlags(
+    businessDetailsSection: models.fe.businessdetails.BusinessDetails,
+    businessActivitiesSection: models.fe.businessactivities.BusinessActivities,
+    aspSection: Option[models.fe.asp.Asp],
+    eabSection: Option[models.fe.eab.Eab],
+    hvdSection: Option[models.fe.hvd.Hvd],
+    businessMatchingSection: models.fe.businessmatching.BusinessMatching
+  ): Option[BusinessActivitiesAll] =
     convert(
       businessDetailsSection,
       businessActivitiesSection,
@@ -193,6 +200,5 @@ object BusinessActivitiesAll{
         businessMatchingSection
       )
     )
-  }
 
 }

@@ -25,31 +25,30 @@ case class VATRegisteredYes(value: String) extends VATRegistered
 
 case object VATRegisteredNo extends VATRegistered
 
-
 object VATRegistered {
 
   implicit val jsonReads: Reads[VATRegistered] =
     (__ \ "registeredForVAT").read[Boolean] flatMap {
-      case true => (__ \ "vrnNumber").read[String] map VATRegisteredYes.apply
+      case true  => (__ \ "vrnNumber").read[String] map VATRegisteredYes.apply
       case false => Reads(_ => JsSuccess(VATRegisteredNo))
     }
 
   implicit val jsonWrites: Writes[VATRegistered] = Writes[VATRegistered] {
-    case VATRegisteredYes(value) => Json.obj(
-      "registeredForVAT" -> true,
-      "vrnNumber" -> value
-    )
-    case VATRegisteredNo => Json.obj("registeredForVAT" -> false)
+    case VATRegisteredYes(value) =>
+      Json.obj(
+        "registeredForVAT" -> true,
+        "vrnNumber"        -> value
+      )
+    case VATRegisteredNo         => Json.obj("registeredForVAT" -> false)
   }
 
-  implicit def conv(vat: Option[VATRegistration]): Option[VATRegistered] = {
-
+  implicit def conv(vat: Option[VATRegistration]): Option[VATRegistered] =
     vat match {
-      case Some(data) => data.vatRegistered match {
-        case true => Some(VATRegisteredYes(data.vrnNumber.getOrElse("")))
-        case false => Some(VATRegisteredNo)
-      }
-      case _ => Some(VATRegisteredNo)
+      case Some(data) =>
+        data.vatRegistered match {
+          case true  => Some(VATRegisteredYes(data.vrnNumber.getOrElse("")))
+          case false => Some(VATRegisteredNo)
+        }
+      case _          => Some(VATRegisteredNo)
     }
-  }
 }

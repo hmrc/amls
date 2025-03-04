@@ -34,7 +34,7 @@ class BusinessTypesSpec extends PlaySpec with AmlsBaseSpec {
 
     "validate given values with option Digital software" in {
       val json = Json.obj(
-        "businessType" -> Seq("14", "12"),
+        "businessType"         -> Seq("14", "12"),
         "specifyOtherBusiness" -> "test"
       )
 
@@ -58,10 +58,12 @@ class BusinessTypesSpec extends PlaySpec with AmlsBaseSpec {
 
     "write valid data in using json write" in {
       Json.toJson[BusinessTypes](BusinessTypes(Set(AccountantsScotland, Other("test657")))) must
-        be(Json.obj(
-          "businessType" -> Seq("09", "14"),
-          "specifyOtherBusiness" -> "test657"
-        ))
+        be(
+          Json.obj(
+            "businessType"         -> Seq("09", "14"),
+            "specifyOtherBusiness" -> "test657"
+          )
+        )
     }
 
   }
@@ -69,45 +71,64 @@ class BusinessTypesSpec extends PlaySpec with AmlsBaseSpec {
   "DES to frontend conversion" must {
 
     "define BusinessTypes" in {
-      val desModel = Some(ProfessionalBodyDetails(
-        true,
-        Some("DetailsIfFinedWarned"),
-        Some(ProfessionalBodyDesMember(
+      val desModel = Some(
+        ProfessionalBodyDetails(
           true,
-          Some(MemberOfProfessionalBody(
-            true, true, true, true, true, true, true, true, true, true, true, true, true, false, None
-          ))
-        ))
-      ))
+          Some("DetailsIfFinedWarned"),
+          Some(
+            ProfessionalBodyDesMember(
+              true,
+              Some(
+                MemberOfProfessionalBody(
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  true,
+                  false,
+                  None
+                )
+              )
+            )
+          )
+        )
+      )
 
-      val convertedModel = Some(BusinessTypes(Set(
-        AccountantsIreland,
-        CharteredCertifiedAccountants,
-        AssociationOfBookkeepers,
-        AccountantsEnglandandWales,
-        Bookkeepers,
-        AccountingTechnicians,
-        TaxationTechnicians,
-        InternationalAccountants,
-        LawSociety,
-        InstituteOfTaxation,
-        AccountantsScotland,
-        FinancialAccountants,
-        ManagementAccountants
-      )))
+      val convertedModel = Some(
+        BusinessTypes(
+          Set(
+            AccountantsIreland,
+            CharteredCertifiedAccountants,
+            AssociationOfBookkeepers,
+            AccountantsEnglandandWales,
+            Bookkeepers,
+            AccountingTechnicians,
+            TaxationTechnicians,
+            InternationalAccountants,
+            LawSociety,
+            InstituteOfTaxation,
+            AccountantsScotland,
+            FinancialAccountants,
+            ManagementAccountants
+          )
+        )
+      )
 
       BusinessTypes.conv(desModel) must be(convertedModel)
     }
 
     "convert to none" when {
       "MemberOfProfessionalBody is none" in {
-        val desModel = Some(ProfessionalBodyDetails(
-          true,
-          Some("DetailsIfFinedWarned"),
-          Some(ProfessionalBodyDesMember(
-            false,
-            None)
-          ))
+        val desModel = Some(
+          ProfessionalBodyDetails(true, Some("DetailsIfFinedWarned"), Some(ProfessionalBodyDesMember(false, None)))
         )
         BusinessTypes.conv(desModel) must be(None)
       }
@@ -117,11 +138,13 @@ class BusinessTypesSpec extends PlaySpec with AmlsBaseSpec {
       }
 
       "ProfessionalBodyDesMember is none" in {
-        val desModel = Some(ProfessionalBodyDetails(
-          true,
-          Some("DetailsIfFinedWarned"),
-          None
-        ))
+        val desModel = Some(
+          ProfessionalBodyDetails(
+            true,
+            Some("DetailsIfFinedWarned"),
+            None
+          )
+        )
         BusinessTypes.conv(desModel) must be(None)
       }
 

@@ -25,11 +25,11 @@ object Account {
     import play.api.libs.functional.syntax._
     import play.api.libs.json._
     (__ \ "doYouHaveUkBankAccount").read[Boolean] flatMap {
-      case true => (
-        (__ \ "sortCode").read[String] and
-          (__ \ "accountNumber").read[String]
-
-        ) (ukAccount.apply _)
+      case true =>
+        (
+          (__ \ "sortCode").read[String] and
+            (__ \ "accountNumber").read[String]
+        )(ukAccount.apply _)
 
       case false =>
         (__ \ "iban").read[String] fmap IBANNumber.apply
@@ -38,24 +38,27 @@ object Account {
   }
 
   implicit val jsonWrites: Writes[Account] = Writes[Account] {
-    case m: ukAccount =>
+    case m: ukAccount       =>
       Json.obj(
         "ukAccount" -> Json.obj(
-          "sortCode" -> m.sortCode,
+          "sortCode"      -> m.sortCode,
           "accountNumber" -> m.accountNumber
-        ))
+        )
+      )
     case acc: AccountNumber =>
       Json.obj(
         "nonUkAccount" -> Json.obj(
           "accountHasIban" -> false,
-          "accountNumber" -> Json.obj("bankAccountNumber" -> acc.accountNumber)
-        ))
-    case iban: IBANNumber =>
+          "accountNumber"  -> Json.obj("bankAccountNumber" -> acc.accountNumber)
+        )
+      )
+    case iban: IBANNumber   =>
       Json.obj(
         "nonUkAccount" -> Json.obj(
           "accountHasIban" -> true,
-          "accountNumber" -> Json.obj("iban" -> iban.iban)
-        ))
+          "accountNumber"  -> Json.obj("iban" -> iban.iban)
+        )
+      )
   }
 }
 

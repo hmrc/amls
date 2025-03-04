@@ -52,34 +52,40 @@ class VATRegisteredSpec extends PlaySpec {
         be(Json.obj("registeredForVAT" -> false))
 
       Json.toJson(VATRegisteredYes("12345678"): VATRegistered) must
-        be(Json.obj(
-          "registeredForVAT" -> true,
-          "vrnNumber" -> "12345678"
-        ))
+        be(
+          Json.obj(
+            "registeredForVAT" -> true,
+            "vrnNumber"        -> "12345678"
+          )
+        )
     }
   }
 
   "Vatregistration conversion" when {
     "Vat registered is false" must {
       "convert model to frontend - VATRegisteredNo" in {
-        val desModel = Some(RegDetails(
-          false,
-          None,
-          false,
-          None
-        ))
+        val desModel = Some(
+          RegDetails(
+            false,
+            None,
+            false,
+            None
+          )
+        )
         VATRegistered.conv(desModel) must be(Some(VATRegisteredNo))
       }
     }
 
     "Vat registered is true" must {
       "convert model to frontend - VATRegisteredYes with Registration Number included" in {
-        val desModel = Some(RegDetails(
-          true,
-          Some("VATREGNO"),
-          false,
-          None
-        ))
+        val desModel = Some(
+          RegDetails(
+            true,
+            Some("VATREGNO"),
+            false,
+            None
+          )
+        )
         VATRegistered.conv(desModel) must be(Some(VATRegisteredYes("VATREGNO")))
       }
     }

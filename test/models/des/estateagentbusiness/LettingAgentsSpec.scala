@@ -23,8 +23,8 @@ import play.api.libs.json.Json
 class LettingAgentsSpec extends PlaySpec {
   "LettingAgents" must {
 
-    val services = List("residential", "commercial", "auctioneering")
-    val lettingAgentModel = LettingAgents(Some(true))
+    val services           = List("residential", "commercial", "auctioneering")
+    val lettingAgentModel  = LettingAgents(Some(true))
     val lettingAgentModel2 = LettingAgents(Some(false))
 
     val eab = Eab(

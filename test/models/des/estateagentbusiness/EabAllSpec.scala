@@ -25,13 +25,14 @@ class EabAllSpec extends PlaySpec {
     val eabAllModel = EabAll(false, None, false, None)
 
     "serialise eaball model " in {
-      EabAll.format.writes(eabAllModel) must be(Json.obj("estateAgencyActProhibition" -> false,
-        "prevWarnedWRegToEstateAgencyActivities" -> false))
+      EabAll.format.writes(eabAllModel) must be(
+        Json.obj("estateAgencyActProhibition" -> false, "prevWarnedWRegToEstateAgencyActivities" -> false)
+      )
 
     }
 
     "Be convertable from Front end estate agent business model" in {
-      val from = {
+      val from =
         Eab(
           EabData(
             List("businessTransfer", "developmentCompany", "commercial"),
@@ -44,7 +45,6 @@ class EabAllSpec extends PlaySpec {
             Some("ProfBodyDetails")
           )
         )
-      }
 
       val expected = EabAll(true, Some("PenaltyDetails"), true, Some("ProfBodyDetails"))
 

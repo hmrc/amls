@@ -18,15 +18,16 @@ package models.fe.eab
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class EabData(eabServicesProvided: List[String],
-                         dateOfChange: Option[String],
-                         redressScheme: Option[String],
-                         clientMoneyProtectionScheme: Option[Boolean],
-                         penalisedEstateAgentsAct: Boolean,
-                         penalisedEstateAgentsActDetail: Option[String],
-                         penalisedProfessionalBody: Boolean,
-                         penalisedProfessionalBodyDetail: Option[String]) {
-}
+final case class EabData(
+  eabServicesProvided: List[String],
+  dateOfChange: Option[String],
+  redressScheme: Option[String],
+  clientMoneyProtectionScheme: Option[Boolean],
+  penalisedEstateAgentsAct: Boolean,
+  penalisedEstateAgentsActDetail: Option[String],
+  penalisedProfessionalBody: Boolean,
+  penalisedProfessionalBodyDetail: Option[String]
+) {}
 
 object EabData {
   implicit val format: OFormat[EabData] = Json.format[EabData]

@@ -24,14 +24,14 @@ import utils.CommonMethods
 sealed trait TcspService {
 
   val value: String = this match {
-    case PhonecallHandling => "01"
-    case EmailHandling => "02"
-    case EmailServer => "03"
+    case PhonecallHandling    => "01"
+    case EmailHandling        => "02"
+    case EmailServer          => "03"
     case SelfCollectMailboxes => "04"
-    case MailForwarding => "05"
-    case Receptionist => "06"
-    case ConferenceRooms => "07"
-    case Other(_) => "08"
+    case MailForwarding       => "05"
+    case Receptionist         => "06"
+    case ConferenceRooms      => "07"
+    case Other(_)             => "08"
   }
 }
 
@@ -57,10 +57,9 @@ object ProvidedServices {
 
   def convOther(other: Boolean, details: Option[String]): Option[TcspService] =
     other match {
-      case true => Some(Other(details.getOrElse("")))
+      case true  => Some(Other(details.getOrElse("")))
       case false => None
     }
-
 
   implicit val jsonReads: Reads[ProvidedServices] =
     (__ \ "services").read[Set[String]].flatMap { x =>
@@ -74,17 +73,16 @@ object ProvidedServices {
         case "07" => Reads(_ => JsSuccess(ConferenceRooms)) map identity[TcspService]
         case "08" =>
           (JsPath \ "details").read[String].map(Other.apply _) map identity[TcspService]
-        case _ =>
+        case _    =>
           Reads(_ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[TcspService]]](
         Reads[Set[TcspService]](_ => JsSuccess(Set.empty))
-      ) {
-        (result, data) =>
-          data flatMap { m =>
-            result.map { n =>
-              n + m
-            }
+      ) { (result, data) =>
+        data flatMap { m =>
+          result.map { n =>
+            n + m
           }
+        }
       }
     } map ProvidedServices.apply
 
@@ -96,24 +94,27 @@ object ProvidedServices {
     ) ++ ps.services.foldLeft[JsObject](Json.obj()) {
       case (m, Other(details)) =>
         m ++ Json.obj("details" -> details)
-      case (m, _) =>
+      case (m, _)              =>
         m
     }
   }
 
   implicit def conv(ba: BusinessActivities): Option[ProvidedServices] = {
     val tcspService: Option[Set[TcspService]] = ba.tcspServicesforRegOffBusinessAddrVirtualOff match {
-      case Some(tcspService) => Some(Set(
-        CommonMethods.getSpecificType(tcspService.callHandling, PhonecallHandling),
-        CommonMethods.getSpecificType(tcspService.emailHandling, EmailHandling),
-        CommonMethods.getSpecificType(tcspService.emailServer, EmailServer),
-        CommonMethods.getSpecificType(tcspService.selfCollectMailboxes, SelfCollectMailboxes),
-        CommonMethods.getSpecificType(tcspService.mailForwarding, MailForwarding),
-        CommonMethods.getSpecificType(tcspService.receptionist, Receptionist),
-        CommonMethods.getSpecificType(tcspService.conferenceRooms, ConferenceRooms),
-        convOther(tcspService.other, tcspService.specifyOther)
-      ).flatten)
-      case None => None
+      case Some(tcspService) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType(tcspService.callHandling, PhonecallHandling),
+            CommonMethods.getSpecificType(tcspService.emailHandling, EmailHandling),
+            CommonMethods.getSpecificType(tcspService.emailServer, EmailServer),
+            CommonMethods.getSpecificType(tcspService.selfCollectMailboxes, SelfCollectMailboxes),
+            CommonMethods.getSpecificType(tcspService.mailForwarding, MailForwarding),
+            CommonMethods.getSpecificType(tcspService.receptionist, Receptionist),
+            CommonMethods.getSpecificType(tcspService.conferenceRooms, ConferenceRooms),
+            convOther(tcspService.other, tcspService.specifyOther)
+          ).flatten
+        )
+      case None              => None
     }
 
     Some(ProvidedServices(tcspService.getOrElse(Set())))

@@ -38,13 +38,13 @@ object RiskAssessmentType {
     Reads {
       case JsString("01") => JsSuccess(PaperBased)
       case JsString("02") => JsSuccess(Digital)
-      case _ => JsError((JsPath \ "riskassessments") -> JsonValidationError("error.invalid"))
+      case _              => JsError((JsPath \ "riskassessments") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonRiskAssessmentWrites: Writes[RiskAssessmentType] =
     Writes[RiskAssessmentType] {
       case PaperBased => JsString("01")
-      case Digital => JsString("02")
+      case Digital    => JsString("02")
     }
 }
 
@@ -54,30 +54,30 @@ object RiskAssessmentPolicy {
 
   implicit def jsonReads: Reads[RiskAssessmentPolicy] =
     (__ \ "hasPolicy").read[Boolean] flatMap {
-      case true =>
+      case true  =>
         (__ \ "riskassessments").read[Set[RiskAssessmentType]].flatMap(RiskAssessmentPolicyYes.apply)
       case false => Reads(_ => JsSuccess(RiskAssessmentPolicyNo))
     }
 
   implicit def jsonWrites: Writes[RiskAssessmentPolicy] = Writes[RiskAssessmentPolicy] {
     case RiskAssessmentPolicyYes(data) =>
-      Json.obj("hasPolicy" -> true,
-        "riskassessments" -> data)
-    case RiskAssessmentPolicyNo =>
+      Json.obj("hasPolicy" -> true, "riskassessments" -> data)
+    case RiskAssessmentPolicyNo        =>
       Json.obj("hasPolicy" -> false)
   }
 
-  def conv(riskAssessment: Option[FormalRiskAssessmentDetails]): Option[RiskAssessmentPolicy] = {
+  def conv(riskAssessment: Option[FormalRiskAssessmentDetails]): Option[RiskAssessmentPolicy] =
     riskAssessment match {
-      case Some(data) => data.riskAssessmentFormat match {
-        case Some(dtls) => {
-          val services = Set(CommonMethods.getSpecificType[RiskAssessmentType](dtls.electronicFormat, Digital),
-            CommonMethods.getSpecificType[RiskAssessmentType](dtls.manualFormat, PaperBased))
-          Some(RiskAssessmentPolicyYes(services.flatten))
+      case Some(data) =>
+        data.riskAssessmentFormat match {
+          case Some(dtls) =>
+            val services = Set(
+              CommonMethods.getSpecificType[RiskAssessmentType](dtls.electronicFormat, Digital),
+              CommonMethods.getSpecificType[RiskAssessmentType](dtls.manualFormat, PaperBased)
+            )
+            Some(RiskAssessmentPolicyYes(services.flatten))
+          case _          => Some(RiskAssessmentPolicyNo)
         }
-        case _ => Some(RiskAssessmentPolicyNo)
-      }
-      case None => Some(RiskAssessmentPolicyNo)
+      case None       => Some(RiskAssessmentPolicyNo)
     }
-  }
 }

@@ -37,15 +37,17 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
 
     val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
 
-    val baseUrl = "http://localhost:7775"
+    val baseUrl  = "http://localhost:7775"
     val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
-    val url = s"$baseUrl/tax-enrolments/enrolments/${enrolKey.key}"
+    val url      = s"$baseUrl/tax-enrolments/enrolments/${enrolKey.key}"
 
-    val knownFacts = KnownFacts(Set(
-      KnownFact("Postcode", postcodeGen.sample.get),
-      KnownFact("SafeId", "safeId"),
-      KnownFact("MLRRefNumber", amlsRegistrationNumber)
-    ))
+    val knownFacts = KnownFacts(
+      Set(
+        KnownFact("Postcode", postcodeGen.sample.get),
+        KnownFact("SafeId", "safeId"),
+        KnownFact("MLRRefNumber", amlsRegistrationNumber)
+      )
+    )
 
     when {
       connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
@@ -72,7 +74,11 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
+          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](
+            ArgumentMatchers.eq(url),
+            ArgumentMatchers.eq(knownFacts),
+            any()
+          )(any(), any(), any(), any())
         }
       }
 
@@ -80,10 +86,9 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
 
         mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "")))
 
-        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) {
-          case HttpStatusException(status, body) =>
-            status mustEqual BAD_REQUEST
-            body.getOrElse("").isEmpty mustEqual true
+        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) { case HttpStatusException(status, body) =>
+          status mustEqual BAD_REQUEST
+          body.getOrElse("").isEmpty mustEqual true
         }
       }
 
@@ -91,10 +96,9 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
 
         mockResponse(Future.failed(new Exception("message")))
 
-        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) {
-          case HttpStatusException(status, body) =>
-            status mustEqual INTERNAL_SERVER_ERROR
-            body mustBe Some("message")
+        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) { case HttpStatusException(status, body) =>
+          status mustEqual INTERNAL_SERVER_ERROR
+          body mustBe Some("message")
         }
       }
     }

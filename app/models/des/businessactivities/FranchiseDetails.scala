@@ -21,14 +21,13 @@ import models.fe.businessactivities._
 
 case class FranchiseDetails(isBusinessAFranchise: Boolean, franchiserName: Option[Seq[String]])
 
-object FranchiseDetails{
+object FranchiseDetails {
   implicit val format: OFormat[FranchiseDetails] = Json.format[FranchiseDetails]
 
-  implicit def convert(franchise:Option[BusinessFranchise]): Option[FranchiseDetails] = {
-    franchise match{
-      case Some(BusinessFranchiseNo) => Some(FranchiseDetails(false, None))
+  implicit def convert(franchise: Option[BusinessFranchise]): Option[FranchiseDetails] =
+    franchise match {
+      case Some(BusinessFranchiseNo)     => Some(FranchiseDetails(false, None))
       case Some(BusinessFranchiseYes(x)) => Some(FranchiseDetails(true, Some(Seq(x))))
-      case None => None
+      case None                          => None
     }
-  }
 }

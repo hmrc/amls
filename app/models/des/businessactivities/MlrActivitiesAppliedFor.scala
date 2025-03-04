@@ -19,7 +19,16 @@ package models.des.businessactivities
 import models.fe.businessmatching._
 import play.api.libs.json.{Json, OFormat}
 
-case class MlrActivitiesAppliedFor(msb: Boolean, hvd: Boolean, asp: Boolean, tcsp: Boolean, eab: Boolean, bpsp: Boolean, tditpsp: Boolean, amp: Boolean)
+case class MlrActivitiesAppliedFor(
+  msb: Boolean,
+  hvd: Boolean,
+  asp: Boolean,
+  tcsp: Boolean,
+  eab: Boolean,
+  bpsp: Boolean,
+  tditpsp: Boolean,
+  amp: Boolean
+)
 
 object MlrActivitiesAppliedFor {
 
@@ -29,19 +38,21 @@ object MlrActivitiesAppliedFor {
 
   implicit def conv(bm: BusinessMatching): Option[MlrActivitiesAppliedFor] = {
 
-    val activities = bm.activities.businessActivities
-     val mlrActivities = activities.foldLeft[MlrActivitiesAppliedFor](MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))((result, activity) =>
-       activity match {
-          case MoneyServiceBusiness => result.copy(msb = true)
-          case HighValueDealing => result.copy(hvd = true)
-          case AccountancyServices => result.copy(asp = true)
-          case TrustAndCompanyServices => result.copy(tcsp = true)
-          case EstateAgentBusinessService => result.copy(eab = true)
-          case BillPaymentServices => result.copy(bpsp = true)
-          case TelephonePaymentService => result.copy(tditpsp = true)
-          case ArtMarketParticipant => result.copy(amp = true)
-        }
-      )
+    val activities    = bm.activities.businessActivities
+    val mlrActivities = activities.foldLeft[MlrActivitiesAppliedFor](
+      MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false)
+    )((result, activity) =>
+      activity match {
+        case MoneyServiceBusiness       => result.copy(msb = true)
+        case HighValueDealing           => result.copy(hvd = true)
+        case AccountancyServices        => result.copy(asp = true)
+        case TrustAndCompanyServices    => result.copy(tcsp = true)
+        case EstateAgentBusinessService => result.copy(eab = true)
+        case BillPaymentServices        => result.copy(bpsp = true)
+        case TelephonePaymentService    => result.copy(tditpsp = true)
+        case ArtMarketParticipant       => result.copy(amp = true)
+      }
+    )
     Some(mlrActivities)
   }
   // scalastyle:on

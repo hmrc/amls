@@ -37,7 +37,9 @@ class HowWillYouSellGoodsSpec extends PlaySpec with AmlsBaseSpec {
       HowWillYouSellGoods.convHowWillYouSellGoods(testModel) must be(None)
     }
     "convert to None when howGoodsAreSold is None" in {
-      val testModel = DesConstants.testBusinessActivities.copy(hvdGoodsSold = Some(DesConstants.testHvdGoodsSold.copy(howGoodsAreSold = None)))
+      val testModel = DesConstants.testBusinessActivities.copy(hvdGoodsSold =
+        Some(DesConstants.testHvdGoodsSold.copy(howGoodsAreSold = None))
+      )
       HowWillYouSellGoods.convHowWillYouSellGoods(testModel) must be(None)
     }
     "convert auction to None if given false" in {

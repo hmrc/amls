@@ -25,12 +25,10 @@ object VATRegistration {
 
   implicit val format: OFormat[VATRegistration] = Json.format[VATRegistration]
 
-  implicit def convert(businessDetails: BusinessDetails): Option[VATRegistration] = {
-
+  implicit def convert(businessDetails: BusinessDetails): Option[VATRegistration] =
     businessDetails.vatRegistered match {
       case Some(VATRegisteredYes(value)) => Some(VATRegistration(true, Some(value)))
-      case Some(VATRegisteredNo) => Some(VATRegistration(false, None))
-      case _ => None
+      case Some(VATRegisteredNo)         => Some(VATRegistration(false, None))
+      case _                             => None
     }
-  }
 }

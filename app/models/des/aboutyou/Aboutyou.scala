@@ -18,40 +18,38 @@ package models.des.aboutyou
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Aboutyou(individualDetails: Option[IndividualDetails] = None,
-                    employedWithinBusiness: Boolean,
-                    roleWithinBusiness: Option[String] = None,
-                    specifyOtherRoleInBusiness: Option[String] = None,
-                    roleForTheBusiness: Option[String] = None,
-                    specifyOtherRoleForBusiness: Option[String] = None) {
-
-}
+case class Aboutyou(
+  individualDetails: Option[IndividualDetails] = None,
+  employedWithinBusiness: Boolean,
+  roleWithinBusiness: Option[String] = None,
+  specifyOtherRoleInBusiness: Option[String] = None,
+  roleForTheBusiness: Option[String] = None,
+  specifyOtherRoleForBusiness: Option[String] = None
+) {}
 
 object Aboutyou {
   implicit val format: OFormat[Aboutyou] = Json.format[Aboutyou]
 
   implicit def convertFromRelease7(aboutYouRelease7: AboutYouRelease7): Aboutyou = {
 
-    val roleWithin: Option[String] = {
+    val roleWithin: Option[String] =
       aboutYouRelease7.roleWithinBusiness match {
         case Some(x) if x.beneficialShareholder => Some("Beneficial Shareholder")
-        case Some(x) if x.director => Some("Director")
-        case Some(x) if x.partner => Some("Partner")
-        case Some(x) if x.internalAccountant => Some("Internal Accountant")
-        case Some(x) if x.soleProprietor => Some("Sole proprietor")
-        case Some(x) if x.nominatedOfficer => Some("Nominated officer")
-        case Some(x) if x.designatedMember => Some("Designated Member")
-        case Some(x) if x.other => Some("Other")
-        case _ => None
+        case Some(x) if x.director              => Some("Director")
+        case Some(x) if x.partner               => Some("Partner")
+        case Some(x) if x.internalAccountant    => Some("Internal Accountant")
+        case Some(x) if x.soleProprietor        => Some("Sole proprietor")
+        case Some(x) if x.nominatedOfficer      => Some("Nominated officer")
+        case Some(x) if x.designatedMember      => Some("Designated Member")
+        case Some(x) if x.other                 => Some("Other")
+        case _                                  => None
       }
-    }
 
-    val roleFor: Option[String] = {
+    val roleFor: Option[String] =
       aboutYouRelease7.roleForTheBusiness match {
         case Some(x) if x.externalAccountant => Some("External Accountant")
-        case _ => Some("Other")
+        case _                               => Some("Other")
       }
-    }
 
     Aboutyou(
       aboutYouRelease7.individualDetails,
@@ -64,5 +62,3 @@ object Aboutyou {
 
   }
 }
-
-

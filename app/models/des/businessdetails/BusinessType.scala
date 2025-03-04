@@ -32,28 +32,28 @@ object BusinessType {
 
   implicit def convert(model: BT): BusinessType =
     model match {
-      case BT.SoleProprietor => SoleProprietor
-      case BT.LimitedCompany => LimitedCompany
-      case BT.Partnership => Partnership
-      case BT.LPrLLP => LPrLLP
+      case BT.SoleProprietor     => SoleProprietor
+      case BT.LimitedCompany     => LimitedCompany
+      case BT.Partnership        => Partnership
+      case BT.LPrLLP             => LPrLLP
       case BT.UnincorporatedBody => UnincorporatedBody
     }
 
   implicit val reads: Reads[BusinessType] = Reads[BusinessType] {
-    case JsString("Sole Proprietor") => JsSuccess(SoleProprietor)
+    case JsString("Sole Proprietor")               => JsSuccess(SoleProprietor)
     case JsString("Limited Liability Partnership") => JsSuccess(LPrLLP)
-    case JsString("Partnership") => JsSuccess(Partnership)
-    case JsString("Corporate Body") => JsSuccess(LimitedCompany)
-    case JsString("Unincorporated Body") => JsSuccess(UnincorporatedBody)
-    case _ =>
+    case JsString("Partnership")                   => JsSuccess(Partnership)
+    case JsString("Corporate Body")                => JsSuccess(LimitedCompany)
+    case JsString("Unincorporated Body")           => JsSuccess(UnincorporatedBody)
+    case _                                         =>
       JsError(JsonValidationError("error.invalid"))
   }
 
   implicit val writes: Writes[BusinessType] = Writes[BusinessType] {
-    case SoleProprietor => JsString("Sole Proprietor")
-    case LPrLLP => JsString("Limited Liability Partnership")
-    case Partnership => JsString("Partnership")
-    case LimitedCompany => JsString("Corporate Body")
+    case SoleProprietor     => JsString("Sole Proprietor")
+    case LPrLLP             => JsString("Limited Liability Partnership")
+    case Partnership        => JsString("Partnership")
+    case LimitedCompany     => JsString("Corporate Body")
     case UnincorporatedBody => JsString("Unincorporated Body")
   }
 }

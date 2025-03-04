@@ -32,34 +32,31 @@ object BusinessStructure {
 
   case object UnincorporatedBody extends BusinessStructure
 
-
-  implicit val jsonReadsBusinessStructure: Reads[BusinessStructure] = {
+  implicit val jsonReadsBusinessStructure: Reads[BusinessStructure] =
     (__ \ "agentsBusinessStructure").read[String].flatMap[BusinessStructure] {
       case "01" => Reads(_ => JsSuccess(SoleProprietor))
       case "02" => Reads(_ => JsSuccess(LimitedLiabilityPartnership))
       case "03" => Reads(_ => JsSuccess(Partnership))
       case "04" => Reads(_ => JsSuccess(IncorporatedBody))
       case "05" => Reads(_ => JsSuccess(UnincorporatedBody))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "agentsBusinessStructure", JsonValidationError("error.invalid")))
     }
-  }
 
   implicit val jsonWritesBusinessStructure: Writes[BusinessStructure] = Writes[BusinessStructure] {
-    case SoleProprietor => Json.obj("agentsBusinessStructure" -> "01")
+    case SoleProprietor              => Json.obj("agentsBusinessStructure" -> "01")
     case LimitedLiabilityPartnership => Json.obj("agentsBusinessStructure" -> "02")
-    case Partnership => Json.obj("agentsBusinessStructure" -> "03")
-    case IncorporatedBody => Json.obj("agentsBusinessStructure" -> "04")
-    case UnincorporatedBody => Json.obj("agentsBusinessStructure" -> "05")
+    case Partnership                 => Json.obj("agentsBusinessStructure" -> "03")
+    case IncorporatedBody            => Json.obj("agentsBusinessStructure" -> "04")
+    case UnincorporatedBody          => Json.obj("agentsBusinessStructure" -> "05")
   }
 
-  implicit def conv(entity: String): Option[BusinessStructure] = {
+  implicit def conv(entity: String): Option[BusinessStructure] =
     entity match {
-      case "Sole Proprietor" => Some(SoleProprietor)
+      case "Sole Proprietor"               => Some(SoleProprietor)
       case "Limited Liability Partnership" => Some(LimitedLiabilityPartnership)
-      case "Partnership" => Some(Partnership)
-      case "Corporate Body" => Some(IncorporatedBody)
-      case "Unincorporated Body" => Some(UnincorporatedBody)
+      case "Partnership"                   => Some(Partnership)
+      case "Corporate Body"                => Some(IncorporatedBody)
+      case "Unincorporated Body"           => Some(UnincorporatedBody)
     }
-  }
 }

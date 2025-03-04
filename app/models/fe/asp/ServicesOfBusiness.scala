@@ -43,14 +43,14 @@ object Service {
       case JsString("03") => JsSuccess(BookKeeping)
       case JsString("04") => JsSuccess(Auditing)
       case JsString("05") => JsSuccess(FinancialOrTaxAdvice)
-      case _ => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
+      case _              => JsError((JsPath \ "services") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites: Writes[Service] = Writes[Service] {
-    case Accountancy => JsString("01")
-    case PayrollServices => JsString("02")
-    case BookKeeping => JsString("03")
-    case Auditing => JsString("04")
+    case Accountancy          => JsString("01")
+    case PayrollServices      => JsString("02")
+    case BookKeeping          => JsString("03")
+    case Auditing             => JsString("04")
     case FinancialOrTaxAdvice => JsString("05")
   }
 }
@@ -60,14 +60,17 @@ object ServicesOfBusiness {
 
   implicit def conv(ba: BusinessActivities): Option[ServicesOfBusiness] = {
     val services: Option[Set[Service]] = ba.aspServicesOffered match {
-      case Some(services) => Some(Set(
-        CommonMethods.getSpecificType[Service](services.accountant, Accountancy),
-        CommonMethods.getSpecificType[Service](services.payrollServiceProvider, PayrollServices),
-        CommonMethods.getSpecificType[Service](services.bookKeeper, BookKeeping),
-        CommonMethods.getSpecificType[Service](services.auditor, Auditing),
-        CommonMethods.getSpecificType[Service](services.financialOrTaxAdvisor, FinancialOrTaxAdvice)
-      ).flatten)
-      case None => None
+      case Some(services) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType[Service](services.accountant, Accountancy),
+            CommonMethods.getSpecificType[Service](services.payrollServiceProvider, PayrollServices),
+            CommonMethods.getSpecificType[Service](services.bookKeeper, BookKeeping),
+            CommonMethods.getSpecificType[Service](services.auditor, Auditing),
+            CommonMethods.getSpecificType[Service](services.financialOrTaxAdvisor, FinancialOrTaxAdvice)
+          ).flatten
+        )
+      case None           => None
     }
     services.map(ServicesOfBusiness(_))
   }

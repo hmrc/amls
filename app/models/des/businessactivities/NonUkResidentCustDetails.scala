@@ -24,10 +24,9 @@ case class NonUkResidentCustDetails(nonUkResidentCustomers: Boolean, whichCountr
 object NonUkResidentCustDetails {
   implicit val format: OFormat[NonUkResidentCustDetails] = Json.format[NonUkResidentCustDetails]
 
-  implicit def convert(nonUKCust: Option[models.fe.businessactivities.CustomersOutsideUK]): NonUkResidentCustDetails = {
+  implicit def convert(nonUKCust: Option[models.fe.businessactivities.CustomersOutsideUK]): NonUkResidentCustDetails =
     nonUKCust match {
-      case Some(x@CustomersOutsideUK(boolean, Some(countries))) => NonUkResidentCustDetails(boolean, Some(countries))
-      case _ => NonUkResidentCustDetails(false)
+      case Some(x @ CustomersOutsideUK(boolean, Some(countries))) => NonUkResidentCustDetails(boolean, Some(countries))
+      case _                                                      => NonUkResidentCustDetails(false)
     }
-  }
 }

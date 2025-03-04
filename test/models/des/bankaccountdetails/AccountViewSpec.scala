@@ -26,7 +26,7 @@ class AccountViewSpec extends PlaySpec {
     "deserialise the account json" when {
       "given uk account json" in {
 
-        val json = Json.parse(
+        val json               = Json.parse(
           """{
           "ukAccount": {
             "sortCode": "112233",
@@ -41,7 +41,7 @@ class AccountViewSpec extends PlaySpec {
 
       "given non-uk account json with account number" in {
 
-        val json = Json.parse(
+        val json                  = Json.parse(
           """{
           "nonUkAccount": {
             "accountHasIban": false,
@@ -58,7 +58,7 @@ class AccountViewSpec extends PlaySpec {
 
       "given non-uk account json with iban" in {
 
-        val json = Json.parse(
+        val json                     = Json.parse(
           """{
           "nonUkAccount": {
             "accountHasIban": true,
@@ -77,7 +77,7 @@ class AccountViewSpec extends PlaySpec {
     "serialise the account json" when {
       "given uk account json" in {
 
-        val json = Json.parse(
+        val json               = Json.parse(
           """{
           "ukAccount": {
             "sortCode": "112233",
@@ -92,7 +92,7 @@ class AccountViewSpec extends PlaySpec {
 
       "given non-uk account json with account number" in {
 
-        val json = Json.parse(
+        val json                  = Json.parse(
           """{
           "nonUkAccount": {
             "accountHasIban": false,
@@ -109,7 +109,7 @@ class AccountViewSpec extends PlaySpec {
 
       "given non-uk account json with iban" in {
 
-        val json = Json.parse(
+        val json                     = Json.parse(
           """{
           "nonUkAccount": {
             "accountHasIban": true,

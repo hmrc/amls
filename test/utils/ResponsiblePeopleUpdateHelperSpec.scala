@@ -30,22 +30,22 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
     "correctly register the responsible person as 'unchanged' if the data is the same" in {
 
       val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-          rps => Seq(rps.head)
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map { rps =>
+          Seq(rps.head)
         }
       )
 
       val request = DesConstants.updateAmendVariationRequestRP.copy(
-        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-          rps => Seq(rps.tail.head)
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map { rps =>
+          Seq(rps.tail.head)
         }
       )
 
       val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-          rps =>
-            Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
-        })
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map { rps =>
+          Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
+        }
+      )
 
       val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
@@ -55,23 +55,27 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
     "register the person as 'unchanged' if specified in RP Extra, even if the data is different" in {
 
       val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-          rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map { rps =>
+          Seq(rps.head.copy(startDate = Some("1970-01-01")))
         }
       )
 
       val request = DesConstants.updateAmendVariationRequestRP.copy(
-        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-          rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Unchanged))) }
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map { rps =>
+          Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Unchanged))) }
         }
       )
 
       val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-          rps =>
-            Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
-              extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))))
-        })
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map { rps =>
+          Seq(
+            rps.tail.head.copy(
+              dateChangeFlag = Some(true),
+              extra = rps.tail.head.extra.copy(status = Some(StatusConstants.Unchanged))
+            )
+          )
+        }
+      )
 
       val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
@@ -82,25 +86,24 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
     "assume that the responsible person has changed if specified in RPExtra" in {
 
       val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-          rps => Seq(rps.head)
+        responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map { rps =>
+          Seq(rps.head)
         }
       )
 
       val request = DesConstants.updateAmendVariationRequestRP.copy(
-        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-          rps =>
-            Seq(rps.tail.head) map {
-              p => p.copy(extra = p.extra.copy(status = Some(StatusConstants.Updated)))
-            }
+        responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map { rps =>
+          Seq(rps.tail.head) map { p =>
+            p.copy(extra = p.extra.copy(status = Some(StatusConstants.Updated)))
+          }
         }
       )
 
       val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-          rps =>
-            Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some("Updated"))))
-        })
+        responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map { rps =>
+          Seq(rps.tail.head.copy(extra = rps.tail.head.extra.copy(status = Some("Updated"))))
+        }
+      )
 
       val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
@@ -114,23 +117,25 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
         "responsible people start date changes" in {
 
           val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-              rps => Seq(rps.head.copy(startDate = Some("1970-01-01")))
+            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map { rps =>
+              Seq(rps.head.copy(startDate = Some("1970-01-01")))
             }
           )
 
           val request = DesConstants.updateAmendVariationRequestRP.copy(
-            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-              rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
+            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map { rps =>
+              Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
             }
           )
 
           val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-              rps =>
-                Seq(rps.tail.head.copy(dateChangeFlag = Some(true),
-                  extra = rps.tail.head.extra.copy(status = Some("Updated"))))
-            })
+            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map { rps =>
+              Seq(
+                rps.tail.head
+                  .copy(dateChangeFlag = Some(true), extra = rps.tail.head.extra.copy(status = Some("Updated")))
+              )
+            }
+          )
 
           val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(request, viewModel)
 
@@ -139,33 +144,33 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
         }
 
         "user has modified the previous name date of change of an RP" in {
-          val viewModel = DesConstants.SubscriptionViewStatusRP.copy(
-            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map {
-              rps =>
-                Seq(rps.head.copy(nameDetails = rps.head.nameDetails map {
-                  nd =>
-                    nd.copy(previousNameDetails = nd.previousNameDetails map {
-                      pnd => pnd.copy(dateOfChange = Some("1970-01-01"))
-                    })
-                }))
+          val viewModel        = DesConstants.SubscriptionViewStatusRP.copy(
+            responsiblePersons = DesConstants.SubscriptionViewStatusRP.responsiblePersons map { rps =>
+              Seq(rps.head.copy(nameDetails = rps.head.nameDetails map { nd =>
+                nd.copy(previousNameDetails = nd.previousNameDetails map { pnd =>
+                  pnd.copy(dateOfChange = Some("1970-01-01"))
+                })
+              }))
             }
           )
-          val request = DesConstants.updateAmendVariationRequestRP.copy(
-            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map {
-              rps => Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
+          val request          = DesConstants.updateAmendVariationRequestRP.copy(
+            responsiblePersons = DesConstants.updateAmendVariationRequestRP.responsiblePersons map { rps =>
+              Seq(rps.tail.head) map { p => p.copy(extra = p.extra.copy(status = None)) }
             }
           )
           val convertedRequest = DesConstants.amendStatusAmendVariationRP.copy(
-            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map {
-              rps =>
-                Seq(rps.tail.head.copy(
-                  nameDetails = rps.tail.head.nameDetails map {
-                    nd =>
-                      nd.copy(previousNameDetails = nd.previousNameDetails map {
-                        pnd => pnd.copy(dateChangeFlag = Some(true))
-                      })
-                  }
-                  , extra = rps.tail.head.extra.copy(status = Some("Updated")), dateChangeFlag = Some(false)))
+            responsiblePersons = DesConstants.amendStatusAmendVariationRP.responsiblePersons map { rps =>
+              Seq(
+                rps.tail.head.copy(
+                  nameDetails = rps.tail.head.nameDetails map { nd =>
+                    nd.copy(previousNameDetails = nd.previousNameDetails map { pnd =>
+                      pnd.copy(dateChangeFlag = Some(true))
+                    })
+                  },
+                  extra = rps.tail.head.extra.copy(status = Some("Updated")),
+                  dateChangeFlag = Some(false)
+                )
+              )
             }
           )
 
@@ -179,7 +184,10 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
 
           val testRequest = DesConstants.amendStatusAmendVariationRP
 
-          val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(DesConstants.updateAmendVariationRequestRP, viewModel)
+          val result = testResponsiblePeopleUpdateHelper.updateWithResponsiblePeople(
+            DesConstants.updateAmendVariationRequestRP,
+            viewModel
+          )
 
           result.responsiblePersons must be(testRequest.responsiblePersons)
         }
@@ -187,4 +195,3 @@ class ResponsiblePeopleUpdateHelperSpec extends PlaySpec with ScalaFutures with 
     }
   }
 }
-

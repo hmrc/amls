@@ -23,7 +23,6 @@ import utils.AmlsBaseSpec
 
 class VATRegisteredSpec extends PlaySpec with AmlsBaseSpec {
 
-
   "JSON validation" must {
 
     "successfully validate given an enum value" in {
@@ -54,10 +53,12 @@ class VATRegisteredSpec extends PlaySpec with AmlsBaseSpec {
         be(Json.obj("registeredForVAT" -> false))
 
       Json.toJson(VATRegisteredYes("12345678"): VATRegistered) must
-        be(Json.obj(
-          "registeredForVAT" -> true,
-          "vrnNumber" -> "12345678"
-        ))
+        be(
+          Json.obj(
+            "registeredForVAT" -> true,
+            "vrnNumber"        -> "12345678"
+          )
+        )
     }
 
     "convert model from des to frontend and return VATRegisteredNo" in {
@@ -69,6 +70,5 @@ class VATRegisteredSpec extends PlaySpec with AmlsBaseSpec {
       VATRegistered.conv(None) must be(Some(VATRegisteredNo))
     }
   }
-
 
 }

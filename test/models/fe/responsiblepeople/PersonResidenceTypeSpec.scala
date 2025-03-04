@@ -27,8 +27,7 @@ class PersonResidenceTypeSpec extends PlaySpec {
     "Json validation" must {
 
       "Successfully read uk residence type model" in {
-        val ukModel = PersonResidenceType(UKResidence("AA1111111"),
-          "GB", "GB")
+        val ukModel = PersonResidenceType(UKResidence("AA1111111"), "GB", "GB")
 
         PersonResidenceType.jsonRead.reads(PersonResidenceType.jsonWrite.writes(ukModel)) must
           be(JsSuccess(ukModel))
@@ -37,87 +36,109 @@ class PersonResidenceTypeSpec extends PlaySpec {
       "Successfully validate non uk residence type model" in {
         val nonUKModel = PersonResidenceType(NonUKResidence, "GB", "GB")
 
-        PersonResidenceType.jsonRead.reads(
-          PersonResidenceType.jsonWrite.writes(nonUKModel)) must
+        PersonResidenceType.jsonRead.reads(PersonResidenceType.jsonWrite.writes(nonUKModel)) must
           be(JsSuccess(nonUKModel))
       }
     }
 
     "nonUkResident:convert des model to frontend model successfully" in {
 
-      val desModel = Some(NationalityDetails(
-        false,
-        Some(IdDetail(
-          None,
-          Some(NonUkResident(
-            Some("2001-01-01"),
-            true,
-            Some(PassportDetail(
-              true,
-              PassportNum(Some("AA1111111"), None)
-            ))
-          ))
-        )),
-        Some("AD"),
-        Some("AD")
-      ))
-      val feModel = Some(PersonResidenceType(NonUKResidence, "AD", "AD"))
+      val desModel = Some(
+        NationalityDetails(
+          false,
+          Some(
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  Some("2001-01-01"),
+                  true,
+                  Some(
+                    PassportDetail(
+                      true,
+                      PassportNum(Some("AA1111111"), None)
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          Some("AD"),
+          Some("AD")
+        )
+      )
+      val feModel  = Some(PersonResidenceType(NonUKResidence, "AD", "AD"))
       PersonResidenceType.conv(desModel) must be(feModel)
     }
 
     "nonUkResident with nonuk pass port :convert des model to frontend model successfully" in {
 
-      val desModel = Some(NationalityDetails(
-        false,
-        Some(IdDetail(
-          None,
-          Some(NonUkResident(
-            Some("2001-01-01"),
-            true,
-            Some(PassportDetail(
-              false,
-              PassportNum(None, Some("AA1111111"))
-            ))
-          ))
-        )),
-        Some("AA"),
-        Some("BB")
-      ))
-      val feModel = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
+      val desModel = Some(
+        NationalityDetails(
+          false,
+          Some(
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  Some("2001-01-01"),
+                  true,
+                  Some(
+                    PassportDetail(
+                      false,
+                      PassportNum(None, Some("AA1111111"))
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          Some("AA"),
+          Some("BB")
+        )
+      )
+      val feModel  = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }
 
     "nonUkResident with no passport:convert des model to frontend model successfully" in {
 
-      val desModel = Some(NationalityDetails(
-        false,
-        Some(IdDetail(
-          None,
-          Some(NonUkResident(
-            Some("2001-01-01"),
-            true,
-            None
-          ))
-        )),
-        Some("AA"),
-        Some("BB")
-      ))
-      val feModel = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
+      val desModel = Some(
+        NationalityDetails(
+          false,
+          Some(
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  Some("2001-01-01"),
+                  true,
+                  None
+                )
+              )
+            )
+          ),
+          Some("AA"),
+          Some("BB")
+        )
+      )
+      val feModel  = Some(PersonResidenceType(NonUKResidence, "AA", "BB"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }
 
     "UkResident:convert des model to frontend model successfully" in {
 
-      val desModel = Some(NationalityDetails(
-        true,
-        Some(IdDetail(
-          Some(UkResident("AA1111111")))),
-        Some("JJ"),
-        Some("GG")
-      ))
-      val feModel = Some(PersonResidenceType(UKResidence("AA1111111"), "JJ", "GG"))
+      val desModel = Some(
+        NationalityDetails(
+          true,
+          Some(IdDetail(Some(UkResident("AA1111111")))),
+          Some("JJ"),
+          Some("GG")
+        )
+      )
+      val feModel  = Some(PersonResidenceType(UKResidence("AA1111111"), "JJ", "GG"))
       PersonResidenceType.conv(desModel) must be(feModel)
 
     }

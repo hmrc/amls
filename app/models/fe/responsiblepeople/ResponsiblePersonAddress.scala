@@ -24,13 +24,16 @@ object ResponsiblePersonAddress {
 
   implicit val format: OFormat[ResponsiblePersonAddress] = Json.format[ResponsiblePersonAddress]
 
-  implicit def convertToCurrent(address: ResponsiblePersonAddress): ResponsiblePersonCurrentAddress = {
+  implicit def convertToCurrent(address: ResponsiblePersonAddress): ResponsiblePersonCurrentAddress =
     ResponsiblePersonCurrentAddress(address.personAddress, address.timeAtAddress, dateOfChange = None)
-  }
 
 }
 
-case class ResponsiblePersonCurrentAddress(personAddress: PersonAddress, timeAtAddress: TimeAtAddress, dateOfChange: Option[String] = None)
+case class ResponsiblePersonCurrentAddress(
+  personAddress: PersonAddress,
+  timeAtAddress: TimeAtAddress,
+  dateOfChange: Option[String] = None
+)
 
 object ResponsiblePersonCurrentAddress {
 

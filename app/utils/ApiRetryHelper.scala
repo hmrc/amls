@@ -28,18 +28,18 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig) extends Logging {
+class ApiRetryHelper @Inject() (val as: ActorSystem, appConfig: ApplicationConfig) extends Logging {
 
-  lazy val maxAttempts: Int = appConfig.maxAttempts
+  lazy val maxAttempts: Int     = appConfig.maxAttempts
   lazy val initialWaitInMS: Int = appConfig.initialWaitMs
-  lazy val waitFactor: Float = appConfig.waitFactor
+  lazy val waitFactor: Float    = appConfig.waitFactor
 
-  def doWithBackoff[T](f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
+  def doWithBackoff[T](f: () => Future[T])(implicit ec: ExecutionContext): Future[T] =
     expBackOffHelper(1, initialWaitInMS, f)
-  }
 
-  private def expBackOffHelper[T](currentAttempt: Int, currentWait: Int, f: () => Future[T])(implicit ec: ExecutionContext): Future[T] = {
-
+  private def expBackOffHelper[T](currentAttempt: Int, currentWait: Int, f: () => Future[T])(implicit
+    ec: ExecutionContext
+  ): Future[T] =
     f.apply().recoverWith {
       case e: HttpStatusException =>
         if (e.status >= 500 && e.status < 600 && currentAttempt < maxAttempts) {
@@ -51,8 +51,7 @@ class ApiRetryHelper @Inject()(val as: ActorSystem, appConfig: ApplicationConfig
         } else {
           Future.failed(e)
         }
-      case e =>
+      case e                      =>
         Future.failed(e)
     }
-  }
 }

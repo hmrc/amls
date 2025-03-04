@@ -26,27 +26,27 @@ object RegDetails {
 
   implicit def conv(rp: ResponsiblePeople): Option[RegDetails] = {
     val (vat, vatNum) = convVat(rp.vatRegistered)
-    val (sa, saNum) = convSa(rp.saRegistered)
+    val (sa, saNum)   = convSa(rp.saRegistered)
     Some(RegDetails(vat, vatNum, sa, saNum))
   }
 
-  def convVat(vat: Option[VATRegistered]): (Boolean, Option[String]) = {
+  def convVat(vat: Option[VATRegistered]): (Boolean, Option[String]) =
     vat match {
-      case Some(data) => data match {
-        case VATRegisteredYes(num) => (true, Some(num))
-        case VATRegisteredNo => (false, None)
-      }
-      case _ => (false, None)
+      case Some(data) =>
+        data match {
+          case VATRegisteredYes(num) => (true, Some(num))
+          case VATRegisteredNo       => (false, None)
+        }
+      case _          => (false, None)
     }
-  }
 
-  def convSa(vat: Option[SaRegistered]): (Boolean, Option[String]) = {
+  def convSa(vat: Option[SaRegistered]): (Boolean, Option[String]) =
     vat match {
-      case Some(data) => data match {
-        case SaRegisteredYes(num) => (true, Some(num))
-        case SaRegisteredNo => (false, None)
-      }
-      case _ => (false, None)
+      case Some(data) =>
+        data match {
+          case SaRegisteredYes(num) => (true, Some(num))
+          case SaRegisteredNo       => (false, None)
+        }
+      case _          => (false, None)
     }
-  }
 }

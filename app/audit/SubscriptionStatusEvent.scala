@@ -31,7 +31,7 @@ object SubscriptionStatusEvent {
       tags = hc.toAuditTags("Subscription Status", "N/A"),
       detail = hc.toAuditDetails() ++ Map(
         "amlsRegNo" -> amlsRegistrationNumber,
-        "response" -> Json.toJson(response).toString
+        "response"  -> Json.toJson(response).toString
       )
     )
 }

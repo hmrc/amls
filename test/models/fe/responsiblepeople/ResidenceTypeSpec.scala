@@ -24,22 +24,30 @@ class ResidenceTypeSpec extends PlaySpec {
   "ResidenceType" must {
 
     "convert des.NationalityDetails to fe.ResidenceType" in {
-      val desModel = Some(NationalityDetails(
-        false,
-        Some(IdDetail(
-          None,
-          Some(NonUkResident(
-            Some("2001-01-01"),
-            true,
-            Some(PassportDetail(
-              true,
-              PassportNum(Some("AA1111111"), None)
-            ))
-          ))
-        )),
-        Some("AD"),
-        Some("AD")
-      ))
+      val desModel = Some(
+        NationalityDetails(
+          false,
+          Some(
+            IdDetail(
+              None,
+              Some(
+                NonUkResident(
+                  Some("2001-01-01"),
+                  true,
+                  Some(
+                    PassportDetail(
+                      true,
+                      PassportNum(Some("AA1111111"), None)
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          Some("AD"),
+          Some("AD")
+        )
+      )
 
       val feModel = Some(NonUKResidence)
 

@@ -32,33 +32,36 @@ object DeregistrationReason {
 
   implicit val jsonServiceReads: Reads[DeregistrationReason] =
     Reads {
-      case JsString("Ceased Trading") => JsSuccess(Ceasedtrading)
-      case JsString("HVD - policy of not accepting high value cash payments") => JsSuccess(HVDPolicyOfNotAcceptingHighValueCashPayments)
-      case JsString("Out of scope") => JsSuccess(OutOfScope)
-      case JsString("Not trading in own right") => JsSuccess(NotTradingInOwnRight)
-      case JsString("Under another supervisor") => JsSuccess(UnderAnotherSupervisor)
-      case JsString("Change of Legal Entity") => JsSuccess(ChangeOfLegalEntity)
-      case JsString("Other, please specify") => JsSuccess(Other)
-      case _ => JsError((JsPath \ "deregistrationReason") -> JsonValidationError("error.invalid"))
+      case JsString("Ceased Trading")                                         => JsSuccess(Ceasedtrading)
+      case JsString("HVD - policy of not accepting high value cash payments") =>
+        JsSuccess(HVDPolicyOfNotAcceptingHighValueCashPayments)
+      case JsString("Out of scope")                                           => JsSuccess(OutOfScope)
+      case JsString("Not trading in own right")                               => JsSuccess(NotTradingInOwnRight)
+      case JsString("Under another supervisor")                               => JsSuccess(UnderAnotherSupervisor)
+      case JsString("Change of Legal Entity")                                 => JsSuccess(ChangeOfLegalEntity)
+      case JsString("Other, please specify")                                  => JsSuccess(Other)
+      case _                                                                  => JsError((JsPath \ "deregistrationReason") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites: Writes[DeregistrationReason] =
     Writes[DeregistrationReason] {
-      case Ceasedtrading => JsString("Ceased Trading")
-      case HVDPolicyOfNotAcceptingHighValueCashPayments => JsString("HVD - policy of not accepting high value cash payments")
-      case OutOfScope => JsString("Out of scope")
-      case NotTradingInOwnRight => JsString("Not trading in own right")
-      case UnderAnotherSupervisor => JsString("Under another supervisor")
-      case ChangeOfLegalEntity => JsString("Change of Legal Entity")
-      case Other => JsString("Other, please specify")
+      case Ceasedtrading                                => JsString("Ceased Trading")
+      case HVDPolicyOfNotAcceptingHighValueCashPayments =>
+        JsString("HVD - policy of not accepting high value cash payments")
+      case OutOfScope                                   => JsString("Out of scope")
+      case NotTradingInOwnRight                         => JsString("Not trading in own right")
+      case UnderAnotherSupervisor                       => JsString("Under another supervisor")
+      case ChangeOfLegalEntity                          => JsString("Change of Legal Entity")
+      case Other                                        => JsString("Other, please specify")
     }
 }
 
-case class DeregisterSubscriptionRequest (acknowledgementReference: String,
-                                          deregistrationDate: String,
-                                          deregistrationReason: DeregistrationReason,
-                                          deregReasonOther: Option[String]
-                                       )
+case class DeregisterSubscriptionRequest(
+  acknowledgementReference: String,
+  deregistrationDate: String,
+  deregistrationReason: DeregistrationReason,
+  deregReasonOther: Option[String]
+)
 
 object DeregisterSubscriptionRequest {
 

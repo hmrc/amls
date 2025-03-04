@@ -26,48 +26,62 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
   "WhichCurrencies" must {
 
     "serialize WhichCurrencies as expected" in {
-      val input = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val input = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")),
-        true)
+        true
+      )
 
       val expectedJson = Json.obj(
-        "currencies" -> Seq("USD", "MNO", "PQR"),
+        "currencies"            -> Seq("USD", "MNO", "PQR"),
         "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
-        "moneySources" -> Json.obj(
-          "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
-          "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
-          "customerMoneySource" -> "Yes"))
+        "moneySources"          -> Json.obj(
+          "bankMoneySource"       -> "Yes",
+          "bankNames"             -> "Bank names",
+          "wholesalerMoneySource" -> "Yes",
+          "wholesalerNames"       -> "wholesaler names",
+          "customerMoneySource"   -> "Yes"
+        )
+      )
 
       Json.toJson(input) must be(expectedJson)
     }
 
     "deserialize WhichCurrencies as expected" in {
       val json = Json.obj(
-        "currencies" -> Seq("USD", "MNO", "PQR"),
+        "currencies"            -> Seq("USD", "MNO", "PQR"),
         "usesForeignCurrencies" -> Json.obj("foreignCurrencies" -> true),
-        "moneySources" -> Json.obj(
-          "bankMoneySource" -> "Yes", "bankNames" -> "Bank names",
-          "wholesalerMoneySource" -> "Yes", "wholesalerNames" -> "wholesaler names",
-          "customerMoneySource" -> "Yes"))
+        "moneySources"          -> Json.obj(
+          "bankMoneySource"       -> "Yes",
+          "bankNames"             -> "Bank names",
+          "wholesalerMoneySource" -> "Yes",
+          "wholesalerNames"       -> "wholesaler names",
+          "customerMoneySource"   -> "Yes"
+        )
+      )
 
-      val expected = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val expected = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")),
-        true)
+        true
+      )
 
       Json.fromJson[WhichCurrencies](json) must be(JsSuccess(expected))
     }
 
     "round trip through Json correctly" in {
 
-      val model = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val model = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
         Some(WholesalerMoneySource("wholesaler names")),
-        true)
+        true
+      )
 
       val json = Json.toJson(model)
 
@@ -77,7 +91,13 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
     "round trip through Json correctly" when {
       "customerMoneySource is false" in {
 
-        val model = WhichCurrencies(Seq("USD", "MNO", "PQR"), usesForeignCurrencies = Some(true), Some(BankMoneySource("Bank names")), Some(WholesalerMoneySource("wholesaler names")), false)
+        val model = WhichCurrencies(
+          Seq("USD", "MNO", "PQR"),
+          usesForeignCurrencies = Some(true),
+          Some(BankMoneySource("Bank names")),
+          Some(WholesalerMoneySource("wholesaler names")),
+          false
+        )
         Json.fromJson[WhichCurrencies](Json.toJson(model)) mustBe JsSuccess(model)
       }
 
@@ -93,20 +113,33 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des model to frontend model" in {
-      val msbCe = MsbCeDetailsR7(Some(true),
-        Some(CurrencySourcesR7(
-          None,
-          Some(CurrencyWholesalerDetails(
-            true,
-            Some(List("CurrencyWholesalerNames"))
-          )),
-          true
-        )),
+      val msbCe = MsbCeDetailsR7(
+        Some(true),
+        Some(
+          CurrencySourcesR7(
+            None,
+            Some(
+              CurrencyWholesalerDetails(
+                true,
+                Some(List("CurrencyWholesalerNames"))
+              )
+            ),
+            true
+          )
+        ),
         "11234567890",
         Some(CurrSupplyToCust(List("GBP", "XYZ", "ABC")))
       )
 
-      val convertedModel = Some(WhichCurrencies(List("GBP", "XYZ", "ABC"), usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+      val convertedModel = Some(
+        WhichCurrencies(
+          List("GBP", "XYZ", "ABC"),
+          usesForeignCurrencies = Some(true),
+          None,
+          Some(WholesalerMoneySource("CurrencyWholesalerNames")),
+          true
+        )
+      )
 
       WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
 
@@ -115,52 +148,75 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
     "convert des model to frontend model" when {
 
       "CurrSupplyToCust empty" in {
-        val msbCe = MsbCeDetailsR7(Some(true),
-          Some(CurrencySourcesR7(
-            None,
-            Some(CurrencyWholesalerDetails(
-              true,
-              Some(List("CurrencyWholesalerNames"))
-            )),
-            true
-          )),
+        val msbCe = MsbCeDetailsR7(
+          Some(true),
+          Some(
+            CurrencySourcesR7(
+              None,
+              Some(
+                CurrencyWholesalerDetails(
+                  true,
+                  Some(List("CurrencyWholesalerNames"))
+                )
+              ),
+              true
+            )
+          ),
           "11234567890",
           None
         )
 
-        val convertedModel = Some(WhichCurrencies(List.empty, usesForeignCurrencies = Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+        val convertedModel = Some(
+          WhichCurrencies(
+            List.empty,
+            usesForeignCurrencies = Some(true),
+            None,
+            Some(WholesalerMoneySource("CurrencyWholesalerNames")),
+            true
+          )
+        )
 
         WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
       }
 
       "dealInPhysCurrencies is missing, but contains data" in {
 
-        val msbCe = MsbCeDetailsR7(None,
-          Some(CurrencySourcesR7(
-            None,
-            Some(CurrencyWholesalerDetails(
-              true,
-              Some(List("CurrencyWholesalerNames"))
-            )),
-            true
-          )),
+        val msbCe = MsbCeDetailsR7(
+          None,
+          Some(
+            CurrencySourcesR7(
+              None,
+              Some(
+                CurrencyWholesalerDetails(
+                  true,
+                  Some(List("CurrencyWholesalerNames"))
+                )
+              ),
+              true
+            )
+          ),
           "11234567890",
           None
         )
 
-        val convertedModel = Some(WhichCurrencies(List.empty, Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true))
+        val convertedModel = Some(
+          WhichCurrencies(List.empty, Some(true), None, Some(WholesalerMoneySource("CurrencyWholesalerNames")), true)
+        )
 
         WhichCurrencies.convMsbCe(Some(msbCe)) must be(convertedModel)
       }
 
       "dealInPhysCurrencies is missing and contains no data" in {
 
-        val msbCe = MsbCeDetailsR7(None,
-          Some(CurrencySourcesR7(
-            None,
-            None,
-            false
-          )),
+        val msbCe = MsbCeDetailsR7(
+          None,
+          Some(
+            CurrencySourcesR7(
+              None,
+              None,
+              false
+            )
+          ),
           "11234567890",
           None
         )
@@ -177,43 +233,53 @@ class WhichCurrenciesSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des model to frontend model when bankNames empty" in {
-      val desModel = Some(MSBBankDetails(
-        false,
-        Some(List.empty)
-      ))
+      val desModel = Some(
+        MSBBankDetails(
+          false,
+          Some(List.empty)
+        )
+      )
       WhichCurrencies.convMSBBankDetails(desModel) must be(None)
     }
 
     "convert des model to frontend model when bankNames is none" in {
-      val desModel = Some(MSBBankDetails(
-        false,
-        None
-      ))
+      val desModel = Some(
+        MSBBankDetails(
+          false,
+          None
+        )
+      )
       WhichCurrencies.convMSBBankDetails(desModel) must be(None)
     }
 
     "convert des model to frontend model when valid input is supplied" in {
-      val desModel = Some(MSBBankDetails(
-        true,
-        Some(Seq("bank1", "bank2"))
-      ))
+      val desModel = Some(
+        MSBBankDetails(
+          true,
+          Some(Seq("bank1", "bank2"))
+        )
+      )
       WhichCurrencies.convMSBBankDetails(desModel) must be(Some(BankMoneySource("bank1")))
     }
 
     "convert des model to frontend model when currencyWholesalersNames is none" in {
-      val desModel = Some(CurrencyWholesalerDetails(
-        false,
-        None
-      ))
+      val desModel = Some(
+        CurrencyWholesalerDetails(
+          false,
+          None
+        )
+      )
       WhichCurrencies.convWholesalerDetails(desModel) must be(None)
-      WhichCurrencies.convWholesalerDetails(None) must be(None)
+      WhichCurrencies.convWholesalerDetails(None)     must be(None)
     }
 
     "convert des model to frontend model when currencyWholesalersNames list is empty" in {
-      val desModel = Some(CurrencyWholesalerDetails(
-        false,
-        Some(Seq.empty)
-      ))
+      val desModel = Some(
+        CurrencyWholesalerDetails(
+          false,
+          Some(Seq.empty)
+        )
+      )
       WhichCurrencies.convWholesalerDetails(desModel) must be(None)
     }
   }

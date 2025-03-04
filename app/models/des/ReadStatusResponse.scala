@@ -22,18 +22,18 @@ import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
 case class ReadStatusResponse(
-                               processingDate: LocalDateTime,
-                               formBundleStatus: String,
-                               statusReason: Option[String],
-                               deRegistrationDate: Option[LocalDate],
-                               currentRegYearStartDate: Option[LocalDate],
-                               currentRegYearEndDate: Option[LocalDate],
-                               renewalConFlag: Boolean,
-                               renewalSubmissionFlag: Option[Boolean] = None,
-                               currentAMLSOutstandingBalance: Option[String] = None,
-                               businessContactNumber: Option[String] = None,
-                               safeId: Option[String] = None
-                             ) {
+  processingDate: LocalDateTime,
+  formBundleStatus: String,
+  statusReason: Option[String],
+  deRegistrationDate: Option[LocalDate],
+  currentRegYearStartDate: Option[LocalDate],
+  currentRegYearEndDate: Option[LocalDate],
+  renewalConFlag: Boolean,
+  renewalSubmissionFlag: Option[Boolean] = None,
+  currentAMLSOutstandingBalance: Option[String] = None,
+  businessContactNumber: Option[String] = None,
+  safeId: Option[String] = None
+) {
 
   def isRenewalPeriod(dateTime: LocalDate = LocalDate.now()) = {
 
@@ -41,7 +41,7 @@ case class ReadStatusResponse(
 
     currentRegYearEndDate match {
       case Some(endDate) => !dateTime.atStartOfDay().isAfter(endDate.atStartOfDay().minusDays(renewalWindow))
-      case _ => false
+      case _             => false
     }
 
   }
@@ -53,9 +53,7 @@ object ReadStatusResponse {
   val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC)
 
   implicit val readsLocalDateTime: Reads[LocalDateTime] = Reads[LocalDateTime](js =>
-    js.validate[String].map[LocalDateTime](dtString =>
-      LocalDateTime.parse(dtString, dateTimeFormat)
-    )
+    js.validate[String].map[LocalDateTime](dtString => LocalDateTime.parse(dtString, dateTimeFormat))
   )
 
   implicit val localDateTimeWrite: Writes[LocalDateTime] = new Writes[LocalDateTime] {

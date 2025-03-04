@@ -16,14 +16,18 @@
 
 package models.fe.tradingpremises
 
-
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
 
 import java.time.LocalDate
 import play.api.libs.json.{Reads, Writes}
 
-case class YourTradingPremises(tradingName: String, tradingPremisesAddress: Address, startDate: LocalDate,
-                               isResidential: Boolean, tradingNameChangeDate: Option[String] = None)
+case class YourTradingPremises(
+  tradingName: String,
+  tradingPremisesAddress: Address,
+  startDate: LocalDate,
+  isResidential: Boolean,
+  tradingNameChangeDate: Option[String] = None
+)
 
 object YourTradingPremises {
 
@@ -36,7 +40,7 @@ object YourTradingPremises {
         (__ \ "startDate").read[LocalDate] and
         (__ \ "isResidential").read[Boolean] and
         (__ \ "tradingNameChangeDate").readNullable[String]
-      ) (YourTradingPremises.apply _)
+    )(YourTradingPremises.apply _)
   }
 
   implicit val writes: Writes[YourTradingPremises] = {
@@ -48,7 +52,7 @@ object YourTradingPremises {
         (__ \ "startDate").write[LocalDate] and
         (__ \ "isResidential").write[Boolean] and
         (__ \ "tradingNameChangeDate").writeNullable[String]
-      ) (unlift(YourTradingPremises.unapply))
+    )(unlift(YourTradingPremises.unapply))
   }
 
   implicit def conv(agentDetails: AgentDetails): YourTradingPremises = {
@@ -56,16 +60,19 @@ object YourTradingPremises {
 
     val startDate = agentDetails.startDate
 
-    YourTradingPremises(agentPremises.tradingName,
+    YourTradingPremises(
+      agentPremises.tradingName,
       agentPremises.businessAddress,
       LocalDate.parse(startDate.getOrElse("")),
-      agentPremises.residential)
+      agentPremises.residential
+    )
   }
 
-  implicit def conv(ownPremises: OwnBusinessPremisesDetails): YourTradingPremises = {
-    YourTradingPremises(ownPremises.tradingName.getOrElse(""),
+  implicit def conv(ownPremises: OwnBusinessPremisesDetails): YourTradingPremises =
+    YourTradingPremises(
+      ownPremises.tradingName.getOrElse(""),
       ownPremises.businessAddress,
       LocalDate.parse(ownPremises.startDate),
-      ownPremises.residential)
-  }
+      ownPremises.residential
+    )
 }

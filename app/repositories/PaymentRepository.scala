@@ -29,62 +29,60 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentRepository @Inject()(mongoC: MongoComponent)
-                                 (implicit executionContext: ExecutionContext)
-  extends PlayMongoRepository[Payment](
-    mongoComponent = mongoC,
-    collectionName = "payments",
-    domainFormat = Payment.format,
-    indexes = Seq(
-      IndexModel(
-        Indexes.ascending("createdAt"),
-        IndexOptions().name("paymentDetailsExpiry")
+class PaymentRepository @Inject() (mongoC: MongoComponent)(implicit executionContext: ExecutionContext)
+    extends PlayMongoRepository[Payment](
+      mongoComponent = mongoC,
+      collectionName = "payments",
+      domainFormat = Payment.format,
+      indexes = Seq(
+        IndexModel(
+          Indexes.ascending("createdAt"),
+          IndexOptions().name("paymentDetailsExpiry")
+        ),
+        IndexModel(
+          Indexes.ascending("amlsRefNo"),
+          IndexOptions().name("amlsRefNoIndex")
+        ),
+        IndexModel(
+          Indexes.compoundIndex(Indexes.ascending("reference"), Indexes.descending("createdAt")),
+          IndexOptions().name("reference lookup")
+        )
       ),
-      IndexModel(
-        Indexes.ascending("amlsRefNo"),
-        IndexOptions().name("amlsRefNoIndex")
-      ),
-      IndexModel(
-        Indexes.compoundIndex(Indexes.ascending("reference"), Indexes.descending("createdAt")),
-        IndexOptions().name("reference lookup")
-      )
-    ),
-    extraCodecs = Codecs.playFormatSumCodecs(PaymentStatus.formats)
-  ) with Logging {
+      extraCodecs = Codecs.playFormatSumCodecs(PaymentStatus.formats)
+    )
+    with Logging {
 
-  /**
-    * Records of successful/failed payments are not something that we want to lose. These payments are not audited
-    * by the application either so these are the only records that we have of them.
+  /** Records of successful/failed payments are not something that we want to lose. These payments are not audited by
+    * the application either so these are the only records that we have of them.
     */
   override lazy val requiresTtlIndex = false
 
-  def insert(newPayment: Payment): Future[Payment] = {
+  def insert(newPayment: Payment): Future[Payment] =
     collection
       .insertOne(newPayment)
       .toFuture()
       .flatMap {
         case res: InsertOneResult if !res.wasAcknowledged() => Future.failed(PaymentException(None, res.toString))
-        case _ => Future.successful(newPayment)
+        case _                                              => Future.successful(newPayment)
       }
-  }
 
   def update(payment: Payment): Future[UpdateResult] =
-    collection.replaceOne(
-      filter = Filters.eq("_id", payment._id),
-      replacement = payment
-    ).toFuture()
+    collection
+      .replaceOne(
+        filter = Filters.eq("_id", payment._id),
+        replacement = payment
+      )
+      .toFuture()
 
-  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] = {
+  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Payment]] =
     collection
       .find(Filters.eq("amlsRefNo", amlsReferenceNumber))
       .sort(Sorts.descending("createdAt"))
       .headOption()
-  }
 
-  def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] = {
+  def findLatestByPaymentReference(paymentReference: String): Future[Option[Payment]] =
     collection
       .find(Filters.eq("reference", paymentReference))
       .sort(Sorts.descending("createdAt"))
       .headOption()
-  }
 }

@@ -48,10 +48,12 @@ class TrainingSpec extends PlaySpec {
       Json.toJson(TrainingNo: Training) must be(Json.obj("training" -> false))
 
       Json.toJson(TrainingYes("0123456789"): Training) must
-        be(Json.obj(
-          "training" -> true,
-          "information" -> "0123456789"
-        ))
+        be(
+          Json.obj(
+            "training"    -> true,
+            "information" -> "0123456789"
+          )
+        )
     }
   }
 

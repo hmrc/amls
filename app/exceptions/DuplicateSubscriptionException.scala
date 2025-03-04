@@ -16,4 +16,5 @@
 
 package exceptions
 
-case class DuplicateSubscriptionException(cause: Throwable, amlsRegNumber: String, message: String) extends Throwable(message, cause)
+case class DuplicateSubscriptionException(cause: Throwable, amlsRegNumber: String, message: String)
+    extends Throwable(message, cause)

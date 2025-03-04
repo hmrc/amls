@@ -28,45 +28,66 @@ class BusinessDetailsSpec extends PlaySpec {
 
     "be convertible to BusinessDetails DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", FE.LPrLLP, Address("line_1", Some("line_2"), None, None, None, "UK"), "safeId")
+      val reviewDetails =
+        ReviewDetails("businessName", FE.LPrLLP, Address("line_1", Some("line_2"), None, None, None, "UK"), "safeId")
 
       val tp = TypeOfBusiness("LP")
 
       val companyRegistrationNumber = CompanyRegistrationNumber("123456789")
 
-      val businessMatching = BusinessMatching(reviewDetails, BusinessActivities(Set.empty), None, Some(tp), Some(companyRegistrationNumber), None)
+      val businessMatching = BusinessMatching(
+        reviewDetails,
+        BusinessActivities(Set.empty),
+        None,
+        Some(tp),
+        Some(companyRegistrationNumber),
+        None
+      )
 
       BusinessDetails.convert(businessMatching) must be(
-        BusinessDetails(DES.LPrLLP, Some(CorpAndBodyLlps("businessName", "123456789")), Some(UnincorpBody("businessName", "LP")))
+        BusinessDetails(
+          DES.LPrLLP,
+          Some(CorpAndBodyLlps("businessName", "123456789")),
+          Some(UnincorpBody("businessName", "LP"))
+        )
       )
     }
 
     "successfully evaluate equals" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
+      val testBusinessDetails = BusinessDetails(
+        BusinessType.SoleProprietor,
         Some(CorpAndBodyLlps("CompanyName", "12345678")),
-        Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
+        Some(UnincorpBody("CompanyName", "TypeOfBusiness"))
+      )
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor,
+      val testBusinessDetails1 = BusinessDetails(
+        BusinessType.SoleProprietor,
         Some(CorpAndBodyLlps("CompanyName", "12345678")),
-        Some(UnincorpBody("CompanyName1", "TypeOfBusiness")))
+        Some(UnincorpBody("CompanyName1", "TypeOfBusiness"))
+      )
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
     }
 
     "successfully evaluate equals1" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
+      val testBusinessDetails =
+        BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")),
-        Some(UnincorpBody("CompanyName1", "TypeOfBusiness")))
+      val testBusinessDetails1 = BusinessDetails(
+        BusinessType.SoleProprietor,
+        Some(CorpAndBodyLlps("CompanyName", "12345678")),
+        Some(UnincorpBody("CompanyName1", "TypeOfBusiness"))
+      )
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
     }
 
-
     "successfully evaluate equals2" in {
-      val testBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
+      val testBusinessDetails =
+        BusinessDetails(BusinessType.SoleProprietor, None, Some(UnincorpBody("CompanyName", "TypeOfBusiness")))
 
-      val testBusinessDetails1 = BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")), None)
+      val testBusinessDetails1 =
+        BusinessDetails(BusinessType.SoleProprietor, Some(CorpAndBodyLlps("CompanyName", "12345678")), None)
 
       testBusinessDetails.equals(testBusinessDetails1) must be(false)
     }

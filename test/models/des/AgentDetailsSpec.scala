@@ -16,7 +16,7 @@
 
 package models.des
 
-import models.des.tradingpremises.{AgentDetails, AgentPremises, Amp, Asp, Bpsp, Eab, Hvd, Msb, Tcsp, Tditpsp, Address => DesAddress}
+import models.des.tradingpremises.{Address => DesAddress, AgentDetails, AgentPremises, Amp, Asp, Bpsp, Eab, Hvd, Msb, Tcsp, Tditpsp}
 import models.fe.tradingpremises._
 
 import java.time.LocalDate
@@ -29,29 +29,93 @@ class AgentDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     "convert frontend Trading premises into backend model in Amendment flow" in {
       implicit val requestType = RequestType.Amendment
 
-      val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
-        Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
+      val feTradingPremises = TradingPremises(
+        Some(RegisteringAgentPremises(true)),
+        YourTradingPremises(
+          "string",
+          Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"),
+          LocalDate.of(2008, 1, 1),
+          true
+        ),
+        Some(BusinessStructure.SoleProprietor),
+        Some(AgentName("entity name", None, Some("1970-01-01"))),
+        None,
+        None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
-      AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor", None, Some("1970-01-01"), Some("entity name"),
-        AgentPremises("string", DesAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA"), None), true,
-          Msb(false, false, false, false, false), Hvd(false), Asp(false),
-          Tcsp(false), Eab(true), Bpsp(true), Tditpsp(false), Amp(false), None, None), Some("2008-01-01"), Some(false), None, None))
+      AgentDetails.convert(feTradingPremises) must be(
+        AgentDetails(
+          "Sole Proprietor",
+          None,
+          Some("1970-01-01"),
+          Some("entity name"),
+          AgentPremises(
+            "string",
+            DesAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA"), None),
+            true,
+            Msb(false, false, false, false, false),
+            Hvd(false),
+            Asp(false),
+            Tcsp(false),
+            Eab(true),
+            Bpsp(true),
+            Tditpsp(false),
+            Amp(false),
+            None,
+            None
+          ),
+          Some("2008-01-01"),
+          Some(false),
+          None,
+          None
+        )
+      )
     }
 
     "convert frontend Trading premises into backend model in Subscription flow" in {
       implicit val requestType = RequestType.Subscription
 
-      val feTradingPremises = TradingPremises(Some(RegisteringAgentPremises(true)), YourTradingPremises("string",
-        Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"), LocalDate.of(2008, 1, 1), true),
-        Some(BusinessStructure.SoleProprietor), Some(AgentName("entity name", None, Some("1970-01-01"))), None, None,
+      val feTradingPremises = TradingPremises(
+        Some(RegisteringAgentPremises(true)),
+        YourTradingPremises(
+          "string",
+          Address("string", Some("string"), Some("string"), Some("string"), "AA1 1AA"),
+          LocalDate.of(2008, 1, 1),
+          true
+        ),
+        Some(BusinessStructure.SoleProprietor),
+        Some(AgentName("entity name", None, Some("1970-01-01"))),
+        None,
+        None,
         WhatDoesYourBusinessDo(Set(BusinessActivity.EstateAgentBusinessService, BusinessActivity.BillPaymentServices))
       )
-      AgentDetails.convert(feTradingPremises) must be(AgentDetails("Sole Proprietor", None, Some("1970-01-01"), Some("entity name"),
-        AgentPremises("string", DesAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA"), None), true,
-          Msb(false, false, false, false, false), Hvd(false), Asp(false),
-          Tcsp(false), Eab(true), Bpsp(true), Tditpsp(false), Amp(false), Some("2008-01-01"), None), None, Some(false), None, None))
+      AgentDetails.convert(feTradingPremises) must be(
+        AgentDetails(
+          "Sole Proprietor",
+          None,
+          Some("1970-01-01"),
+          Some("entity name"),
+          AgentPremises(
+            "string",
+            DesAddress("string", Some("string"), Some("string"), Some("string"), "GB", Some("AA1 1AA"), None),
+            true,
+            Msb(false, false, false, false, false),
+            Hvd(false),
+            Asp(false),
+            Tcsp(false),
+            Eab(true),
+            Bpsp(true),
+            Tditpsp(false),
+            Amp(false),
+            Some("2008-01-01"),
+            None
+          ),
+          None,
+          Some(false),
+          None,
+          None
+        )
+      )
     }
   }
 

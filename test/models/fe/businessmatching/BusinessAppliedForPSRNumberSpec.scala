@@ -26,12 +26,16 @@ class BusinessAppliedForPSRNumberSpec extends PlaySpec {
     "Json Validation" must {
 
       "Successfully read and write data:option yes" in {
-        BusinessAppliedForPSRNumber.jsonReads.reads(BusinessAppliedForPSRNumber.jsonWrites.writes(BusinessAppliedForPSRNumberYes("123456"))) must
+        BusinessAppliedForPSRNumber.jsonReads.reads(
+          BusinessAppliedForPSRNumber.jsonWrites.writes(BusinessAppliedForPSRNumberYes("123456"))
+        ) must
           be(JsSuccess(BusinessAppliedForPSRNumberYes("123456"), JsPath \ "regNumber"))
       }
 
       "Successfully read and write data:option No" in {
-        BusinessAppliedForPSRNumber.jsonReads.reads(BusinessAppliedForPSRNumber.jsonWrites.writes(BusinessAppliedForPSRNumberNo)) must
+        BusinessAppliedForPSRNumber.jsonReads.reads(
+          BusinessAppliedForPSRNumber.jsonWrites.writes(BusinessAppliedForPSRNumberNo)
+        ) must
           be(JsSuccess(BusinessAppliedForPSRNumberNo))
       }
     }

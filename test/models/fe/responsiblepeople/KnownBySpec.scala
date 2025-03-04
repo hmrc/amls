@@ -46,14 +46,14 @@ class KnownBySpec extends PlaySpec {
 
       Json.toJson(model) mustBe Json.obj(
         "hasOtherNames" -> true,
-        "otherNames" -> "name"
+        "otherNames"    -> "name"
       )
     }
 
     "deserialise to the correct model" in {
       val json = Json.obj(
         "hasOtherNames" -> true,
-        "otherNames" -> "jimbob"
+        "otherNames"    -> "jimbob"
       )
 
       json.as[KnownBy] mustBe KnownBy(true, Some("jimbob"))

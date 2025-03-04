@@ -29,16 +29,16 @@ case object Auction extends SalesChannel
 object SalesChannel {
   implicit val jsonServiceReads: Reads[SalesChannel] =
     Reads {
-      case JsString("Retail") => JsSuccess(Retail)
+      case JsString("Retail")    => JsSuccess(Retail)
       case JsString("Wholesale") => JsSuccess(Wholesale)
-      case JsString("Auction") => JsSuccess(Auction)
-      case _ => JsError((JsPath \ "salesChannels") -> JsonValidationError("error.invalid"))
+      case JsString("Auction")   => JsSuccess(Auction)
+      case _                     => JsError((JsPath \ "salesChannels") -> JsonValidationError("error.invalid"))
     }
 
   implicit val jsonServiceWrites: Writes[SalesChannel] =
     Writes[SalesChannel] {
-      case Retail => JsString("Retail")
+      case Retail    => JsString("Retail")
       case Wholesale => JsString("Wholesale")
-      case Auction => JsString("Auction")
+      case Auction   => JsString("Auction")
     }
 }

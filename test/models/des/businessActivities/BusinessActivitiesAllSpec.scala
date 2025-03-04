@@ -31,19 +31,24 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
   "All Business Activities" should {
     "be serialisable from business activities" in {
 
-      val activityDetails = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("100"))))
-      val franchiseDetails = Some(FranchiseDetails(true, Some(Seq("Name1", "Name2"))))
-      val noOfEmployees = Some("10")
-      val noOfEmployeesForMlr = Some("5")
-      val nonUkResidentCustDetails = NonUkResidentCustDetails(false)
-      val auditableRecordsDetails = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true)))
-      val suspiciousActivityGuidance = true
+      val activityDetails               = BusinessActivityDetails(true, Some(ExpectedAMLSTurnover(Some("100"))))
+      val franchiseDetails              = Some(FranchiseDetails(true, Some(Seq("Name1", "Name2"))))
+      val noOfEmployees                 = Some("10")
+      val noOfEmployeesForMlr           = Some("5")
+      val nonUkResidentCustDetails      = NonUkResidentCustDetails(false)
+      val auditableRecordsDetails       = AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true)))
+      val suspiciousActivityGuidance    = true
       val nationalCrimeAgencyRegistered = true
-      val formalRiskAssessmentDetails = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
-      val advisorNameAddress = AdvisorNameAddress("Name", Some("TradingName"), Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", None))
-      val mlrAdvisor = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
+      val formalRiskAssessmentDetails   = Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true))))
+      val advisorNameAddress            = AdvisorNameAddress(
+        "Name",
+        Some("TradingName"),
+        Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", None)
+      )
+      val mlrAdvisor                    = Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(advisorNameAddress), true, None))))
 
-      val model = BusinessActivitiesAll(Some("2016-05-25"),
+      val model = BusinessActivitiesAll(
+        Some("2016-05-25"),
         None,
         Some(false),
         activityDetails,
@@ -55,34 +60,53 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
         suspiciousActivityGuidance,
         nationalCrimeAgencyRegistered,
         formalRiskAssessmentDetails,
-        mlrAdvisor)
+        mlrAdvisor
+      )
 
-      BusinessActivitiesAll.format.writes(model) must be(Json.obj(
-        "busActivitiesChangeDate" -> "2016-05-25",
-        "dateChangeFlag" -> false,
-        "businessActivityDetails" -> Json.obj("actvtsBusRegForOnlyActvtsCarOut" -> true,
-          "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")),
-        "franchiseDetails" ->
-          Json.obj("isBusinessAFranchise" -> true,
-            "franchiserName" -> Json.arr("Name1", "Name2")),
-        "noOfEmployees" -> "10",
-        "noOfEmployeesForMlr" -> "5",
-        "nonUkResidentCustDetails" -> Json.obj("nonUkResidentCustomers" -> false),
-        "auditableRecordsDetails" -> Json.obj("detailedRecordsKept" -> "Yes",
-          "transactionRecordingMethod" -> Json.obj("manual" -> true, "spreadsheet" -> false, "commercialPackage" -> false)),
-        "suspiciousActivityGuidance" -> true,
-        "nationalCrimeAgencyRegistered" -> true,
-        "formalRiskAssessmentDetails" -> Json.obj("formalRiskAssessment" -> true,
-          "riskAssessmentFormat" -> Json.obj("electronicFormat" -> true, "manualFormat" -> false)),
-        "mlrAdvisor" -> Json.obj("doYouHaveMlrAdvisor" -> true,
-          "mlrAdvisorDetails" -> Json.obj(
-            "advisorNameAddress" -> Json.obj("name" -> "Name",
-              "tradingName" -> "TradingName",
-              "address" -> Json.obj("addressLine1" -> "Line1", "addressLine2" -> "Line2",
-                "addressLine3" -> "Line3", "addressLine4" -> "Line4", "country" -> "GB")),
-            "agentDealsWithHmrc" -> true))))
+      BusinessActivitiesAll.format.writes(model) must be(
+        Json.obj(
+          "busActivitiesChangeDate"       -> "2016-05-25",
+          "dateChangeFlag"                -> false,
+          "businessActivityDetails"       -> Json.obj(
+            "actvtsBusRegForOnlyActvtsCarOut"     -> true,
+            "respActvtsBusRegForOnlyActvtsCarOut" -> Json.obj("mlrActivityTurnover" -> "100")
+          ),
+          "franchiseDetails"              ->
+            Json.obj("isBusinessAFranchise" -> true, "franchiserName" -> Json.arr("Name1", "Name2")),
+          "noOfEmployees"                 -> "10",
+          "noOfEmployeesForMlr"           -> "5",
+          "nonUkResidentCustDetails"      -> Json.obj("nonUkResidentCustomers" -> false),
+          "auditableRecordsDetails"       -> Json.obj(
+            "detailedRecordsKept"        -> "Yes",
+            "transactionRecordingMethod" -> Json
+              .obj("manual" -> true, "spreadsheet" -> false, "commercialPackage" -> false)
+          ),
+          "suspiciousActivityGuidance"    -> true,
+          "nationalCrimeAgencyRegistered" -> true,
+          "formalRiskAssessmentDetails"   -> Json.obj(
+            "formalRiskAssessment" -> true,
+            "riskAssessmentFormat" -> Json.obj("electronicFormat" -> true, "manualFormat" -> false)
+          ),
+          "mlrAdvisor"                    -> Json.obj(
+            "doYouHaveMlrAdvisor" -> true,
+            "mlrAdvisorDetails"   -> Json.obj(
+              "advisorNameAddress" -> Json.obj(
+                "name"        -> "Name",
+                "tradingName" -> "TradingName",
+                "address"     -> Json.obj(
+                  "addressLine1" -> "Line1",
+                  "addressLine2" -> "Line2",
+                  "addressLine3" -> "Line3",
+                  "addressLine4" -> "Line4",
+                  "country"      -> "GB"
+                )
+              ),
+              "agentDealsWithHmrc" -> true
+            )
+          )
+        )
+      )
     }
-
 
     "successfully return earliest date comparing with asp, eab and hvd dates" in {
 
@@ -105,8 +129,22 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, aspSection, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
+      val feModel = SubscriptionRequest(
+        BusinessMatchingSection.model,
+        eabModel,
+        None,
+        AboutTheBusinessSection.model,
+        Seq.empty,
+        AboutYouSection.model,
+        BusinessActivitiesSection.model,
+        None,
+        None,
+        aspSection,
+        None,
+        Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))),
+        None,
+        None
+      )
 
       BusinessActivitiesAll.getEarliestDate(
         feModel.aspSection,
@@ -134,8 +172,22 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, None, None, Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))), None, None)
+      val feModel = SubscriptionRequest(
+        BusinessMatchingSection.model,
+        eabModel,
+        None,
+        AboutTheBusinessSection.model,
+        Seq.empty,
+        AboutYouSection.model,
+        BusinessActivitiesSection.model,
+        None,
+        None,
+        None,
+        None,
+        Some(models.fe.hvd.Hvd(dateOfChange = Some("2001-01-01"))),
+        None,
+        None
+      )
 
       BusinessActivitiesAll.getEarliestDate(
         feModel.aspSection,
@@ -163,8 +215,22 @@ class BusinessActivitiesAllSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
       )
 
-      val feModel = SubscriptionRequest(BusinessMatchingSection.model, eabModel, None, AboutTheBusinessSection.model, Seq.empty, AboutYouSection.model,
-        BusinessActivitiesSection.model, None, None, None, None, None, None, None)
+      val feModel = SubscriptionRequest(
+        BusinessMatchingSection.model,
+        eabModel,
+        None,
+        AboutTheBusinessSection.model,
+        Seq.empty,
+        AboutYouSection.model,
+        BusinessActivitiesSection.model,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None
+      )
 
       BusinessActivitiesAll.getEarliestDate(
         feModel.aspSection,

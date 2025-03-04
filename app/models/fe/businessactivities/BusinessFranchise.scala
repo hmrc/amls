@@ -29,25 +29,26 @@ object BusinessFranchise {
 
   implicit val jsonReads: Reads[BusinessFranchise] =
     (__ \ "businessFranchise").read[Boolean] flatMap {
-      case true => (__ \ "franchiseName").read[String] map BusinessFranchiseYes.apply
+      case true  => (__ \ "franchiseName").read[String] map BusinessFranchiseYes.apply
       case false => Reads(_ => JsSuccess(BusinessFranchiseNo))
     }
 
   implicit val jsonWrites: Writes[BusinessFranchise] = Writes[BusinessFranchise] {
-    case BusinessFranchiseYes(value) => Json.obj(
-      "businessFranchise" -> true,
-      "franchiseName" -> value
-    )
-    case BusinessFranchiseNo => Json.obj("businessFranchise" -> false)
+    case BusinessFranchiseYes(value) =>
+      Json.obj(
+        "businessFranchise" -> true,
+        "franchiseName"     -> value
+      )
+    case BusinessFranchiseNo         => Json.obj("businessFranchise" -> false)
   }
 
-  def conv(des: Option[FranchiseDetails]): Option[BusinessFranchise] = {
+  def conv(des: Option[FranchiseDetails]): Option[BusinessFranchise] =
     des match {
-      case Some(data) => data.franchiserName.fold[Option[String]](None)(x => x.headOption) match {
-        case Some(yes) => Some(BusinessFranchiseYes(yes))
-        case None => Some(BusinessFranchiseNo)
-      }
-      case None => Some(BusinessFranchiseNo)
+      case Some(data) =>
+        data.franchiserName.fold[Option[String]](None)(x => x.headOption) match {
+          case Some(yes) => Some(BusinessFranchiseYes(yes))
+          case None      => Some(BusinessFranchiseNo)
+        }
+      case None       => Some(BusinessFranchiseNo)
     }
-  }
 }

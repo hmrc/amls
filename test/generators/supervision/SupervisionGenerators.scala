@@ -26,11 +26,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait SupervisionGenerators {
   val supervisorDetailsGen: Gen[SupervisorDetails] = for {
-    name <- arbitrary[String]
-    startDate <- Gen.const(LocalDate.now())
-    endDate <- Gen.const(LocalDate.now())
+    name       <- arbitrary[String]
+    startDate  <- Gen.const(LocalDate.now())
+    endDate    <- Gen.const(LocalDate.now())
     dateChange <- arbitrary[Option[Boolean]]
-    reason <- arbitrary[String]
+    reason     <- arbitrary[String]
   } yield SupervisorDetails(name, startDate.format(datePattern), endDate.format(datePattern), dateChange, reason)
 
   val supervisionDetailsGen: Gen[SupervisionDetails] = for {
@@ -39,18 +39,34 @@ trait SupervisionGenerators {
   } yield SupervisionDetails(supervised, if (supervised) Some(supervisor) else None)
 
   val memberOfProfessionalBodyGen: Gen[MemberOfProfessionalBody] = Gen.const(
-    MemberOfProfessionalBody(false, false, false, false, false, false, false, false, false, false, false, false, false, false, None)
+    MemberOfProfessionalBody(
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      None
+    )
   )
 
   val professionalBodyGen: Gen[ProfessionalBodyDetails] = for {
-    preWarned <- arbitrary[Boolean]
-    details <- arbitrary[String]
+    preWarned              <- arbitrary[Boolean]
+    details                <- arbitrary[String]
     professionalBodyMember <- arbitrary[Boolean]
-    member <- Gen.const(ProfessionalBodyDesMember(professionalBodyMember, memberOfProfessionalBodyGen.sample))
+    member                 <- Gen.const(ProfessionalBodyDesMember(professionalBodyMember, memberOfProfessionalBodyGen.sample))
   } yield ProfessionalBodyDetails(preWarned, if (preWarned) Some(details) else None, Some(member))
 
   val aspOrTcspGen: Gen[AspOrTcsp] = for {
-    details <- supervisionDetailsGen
+    details          <- supervisionDetailsGen
     professionalBody <- professionalBodyGen
   } yield AspOrTcsp(Some(details), Some(professionalBody))
 

@@ -25,22 +25,45 @@ object SupervisionDetails {
 
   implicit val format: OFormat[SupervisionDetails] = Json.format[SupervisionDetails]
 
-  implicit def conv(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
-
+  implicit def conv(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] =
     anotherBody match {
       case Some(AnotherBodyYes(supervisorName, startDate, endDate, endingReason)) =>
-        Some(SupervisionDetails(prevSupervisedByMlsRegs = true,supervisorDetails = Some(SupervisorDetails(nameOfLastSupervisor = supervisorName, supervisionStartDate = startDate.toString, supervisionEndDate = endDate.toString, dateChangeFlag = Some(false), supervisionEndingReason = endingReason))))
-      case Some(AnotherBodyNo) => Some(SupervisionDetails(false, None))
-      case _ => None
+        Some(
+          SupervisionDetails(
+            prevSupervisedByMlsRegs = true,
+            supervisorDetails = Some(
+              SupervisorDetails(
+                nameOfLastSupervisor = supervisorName,
+                supervisionStartDate = startDate.toString,
+                supervisionEndDate = endDate.toString,
+                dateChangeFlag = Some(false),
+                supervisionEndingReason = endingReason
+              )
+            )
+          )
+        )
+      case Some(AnotherBodyNo)                                                    => Some(SupervisionDetails(false, None))
+      case _                                                                      => None
     }
-  }
 
-  implicit def conv1(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] = {
+  implicit def conv1(anotherBody: Option[AnotherBody]): Option[SupervisionDetails] =
     anotherBody match {
       case Some(AnotherBodyYes(supervisorName, startDate, endDate, endingReason)) =>
-        Some(SupervisionDetails(prevSupervisedByMlsRegs = true, supervisorDetails = Some(SupervisorDetails(nameOfLastSupervisor = supervisorName, supervisionStartDate = startDate.toString, supervisionEndDate = endDate.toString, dateChangeFlag = None, supervisionEndingReason = endingReason))))
-      case Some(AnotherBodyNo) => Some(SupervisionDetails(false, None))
-      case _ => None
+        Some(
+          SupervisionDetails(
+            prevSupervisedByMlsRegs = true,
+            supervisorDetails = Some(
+              SupervisorDetails(
+                nameOfLastSupervisor = supervisorName,
+                supervisionStartDate = startDate.toString,
+                supervisionEndDate = endDate.toString,
+                dateChangeFlag = None,
+                supervisionEndingReason = endingReason
+              )
+            )
+          )
+        )
+      case Some(AnotherBodyNo)                                                    => Some(SupervisionDetails(false, None))
+      case _                                                                      => None
     }
-  }
 }
