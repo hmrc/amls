@@ -19,35 +19,70 @@ package models.des.bankaccountdetails
 import models.des.bankdetails.{AccountNumber, BankAccount, BankDetails, ukAccount}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
-import models.fe.bankdetails.{PersonalAccount, UKAccount, BankDetails => FEBankDetails}
+import models.fe.bankdetails.{BankDetails => FEBankDetails, PersonalAccount, UKAccount}
 import utils.AmlsBaseSpec
 
 class BankDetailsSpec extends PlaySpec with AmlsBaseSpec {
   "BankAccountDetails" must {
-    val bankDetailsModel = BankDetails("1",
-      Some(Seq(BankAccount("Personal", "Personal", true, ukAccount(sortCode = "112233", accountNumber = "12345678")))))
-
+    val bankDetailsModel = BankDetails(
+      "1",
+      Some(Seq(BankAccount("Personal", "Personal", true, ukAccount(sortCode = "112233", accountNumber = "12345678"))))
+    )
 
     "serialise BankDetails model " in {
-      BankDetails.format.writes(bankDetailsModel) must be(Json.obj("noOfMlrBankAccounts" -> "1",
-        "bankAccounts" -> Json.arr(Json.obj(
-          "accountName" -> "Personal", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> true,
-          "bankAccountDetails" -> Json.obj("ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233"))))))
+      BankDetails.format.writes(bankDetailsModel) must be(
+        Json.obj(
+          "noOfMlrBankAccounts" -> "1",
+          "bankAccounts"        -> Json.arr(
+            Json.obj(
+              "accountName"            -> "Personal",
+              "accountType"            -> "Personal",
+              "doYouHaveUkBankAccount" -> true,
+              "bankAccountDetails"     -> Json.obj(
+                "ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233")
+              )
+            )
+          )
+        )
+      )
 
     }
 
-    val multiAccountModel = BankDetails("2",
-      Some(Seq(BankAccount("Personal account", "Personal", true, ukAccount(sortCode = "112233", accountNumber = "12345678")),
-        BankAccount("Business account", "This business's", false, AccountNumber(accountNumber = "12345678")))))
+    val multiAccountModel = BankDetails(
+      "2",
+      Some(
+        Seq(
+          BankAccount("Personal account", "Personal", true, ukAccount(sortCode = "112233", accountNumber = "12345678")),
+          BankAccount("Business account", "This business's", false, AccountNumber(accountNumber = "12345678"))
+        )
+      )
+    )
 
     "serialise BankDetails model with multiple accounts " in {
-      BankDetails.format.writes(multiAccountModel) must be(Json.obj("noOfMlrBankAccounts" -> "2",
-        "bankAccounts" -> Json.arr(Json.obj(
-          "accountName" -> "Personal account", "accountType" -> "Personal", "doYouHaveUkBankAccount" -> true,
-          "bankAccountDetails" -> Json.obj("ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233"))),
-          Json.obj(
-            "accountName" -> "Business account", "accountType" -> "This business's", "doYouHaveUkBankAccount" -> false,
-            "bankAccountDetails" -> Json.obj("nonUkAccount" -> Json.obj("accountHasIban" -> false, "accountNumber" -> Json.obj("bankAccountNumber" -> "12345678")))))))
+      BankDetails.format.writes(multiAccountModel) must be(
+        Json.obj(
+          "noOfMlrBankAccounts" -> "2",
+          "bankAccounts"        -> Json.arr(
+            Json.obj(
+              "accountName"            -> "Personal account",
+              "accountType"            -> "Personal",
+              "doYouHaveUkBankAccount" -> true,
+              "bankAccountDetails"     -> Json.obj(
+                "ukAccount" -> Json.obj("accountNumber" -> "12345678", "sortCode" -> "112233")
+              )
+            ),
+            Json.obj(
+              "accountName"            -> "Business account",
+              "accountType"            -> "This business's",
+              "doYouHaveUkBankAccount" -> false,
+              "bankAccountDetails"     -> Json.obj(
+                "nonUkAccount" -> Json
+                  .obj("accountHasIban" -> false, "accountNumber" -> Json.obj("bankAccountNumber" -> "12345678"))
+              )
+            )
+          )
+        )
+      )
 
     }
 

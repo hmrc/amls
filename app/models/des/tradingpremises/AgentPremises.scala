@@ -21,29 +21,41 @@ import models.fe.tradingpremises.MsbService
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Writes, _}
 
-case class AgentPremises(tradingName:String, businessAddress: Address, residential:Boolean, msb: Msb, hvd: Hvd, asp: Asp, tcsp: Tcsp,
-                         eab: Eab, bpsp: Bpsp, tditpsp: Tditpsp, amp: Amp, startDate : Option[String], sectorChangeDate: Option[String] = None)
+case class AgentPremises(
+  tradingName: String,
+  businessAddress: Address,
+  residential: Boolean,
+  msb: Msb,
+  hvd: Hvd,
+  asp: Asp,
+  tcsp: Tcsp,
+  eab: Eab,
+  bpsp: Bpsp,
+  tditpsp: Tditpsp,
+  amp: Amp,
+  startDate: Option[String],
+  sectorChangeDate: Option[String] = None
+)
 
 object AgentPremises {
-  implicit val jsonReads: Reads[AgentPremises] = {
+  implicit val jsonReads: Reads[AgentPremises] =
     (
       (__ \ "tradingName").read[String] and
         (__ \ "businessAddress").read[Address] and
         (__ \ "residential").read[Boolean] and
-        (__ \ "msb").readNullable[Msb].map{_.getOrElse(Msb(false,false,false,false,false))} and
-        (__ \ "hvd").readNullable[Hvd].map{_.getOrElse(Hvd(false))} and
-        (__ \ "asp").readNullable[Asp].map{_.getOrElse(Asp(false))} and
-        (__ \ "tcsp").readNullable[Tcsp].map{_.getOrElse(Tcsp(false))} and
-        (__ \ "eab").readNullable[Eab].map{_.getOrElse(Eab(false))} and
-        (__ \ "bpsp").readNullable[Bpsp].map{_.getOrElse(Bpsp(false))} and
-        (__ \ "tditpsp").readNullable[Tditpsp].map{_.getOrElse(Tditpsp(false))} and
-        (__ \ "amp").readNullable[Amp].map{_.getOrElse(Amp(false))} and
+        (__ \ "msb").readNullable[Msb].map(_.getOrElse(Msb(false, false, false, false, false))) and
+        (__ \ "hvd").readNullable[Hvd].map(_.getOrElse(Hvd(false))) and
+        (__ \ "asp").readNullable[Asp].map(_.getOrElse(Asp(false))) and
+        (__ \ "tcsp").readNullable[Tcsp].map(_.getOrElse(Tcsp(false))) and
+        (__ \ "eab").readNullable[Eab].map(_.getOrElse(Eab(false))) and
+        (__ \ "bpsp").readNullable[Bpsp].map(_.getOrElse(Bpsp(false))) and
+        (__ \ "tditpsp").readNullable[Tditpsp].map(_.getOrElse(Tditpsp(false))) and
+        (__ \ "amp").readNullable[Amp].map(_.getOrElse(Amp(false))) and
         (__ \ "startDate").readNullable[String] and
         (__ \ "agentSectorChgDate").readNullable[String]
-      ) (AgentPremises.apply _)
-  }
+    )(AgentPremises.apply _)
 
-  implicit val jsonWrites: Writes[AgentPremises] = {
+  implicit val jsonWrites: Writes[AgentPremises] =
     (
       (__ \ "tradingName").write[String] and
         (__ \ "businessAddress").write[Address] and
@@ -58,20 +70,32 @@ object AgentPremises {
         (__ \ "amp").write[Amp] and
         (__ \ "startDate").writeNullable[String] and
         (__ \ "agentSectorChgDate").writeNullable[String]
-      ) (unlift(AgentPremises.unapply _))
-  }
+    )(unlift(AgentPremises.unapply _))
 
-  implicit def convert(tradingPremises: models.fe.tradingpremises.TradingPremises)(implicit requestType: RequestType): AgentPremises = {
+  implicit def convert(
+    tradingPremises: models.fe.tradingpremises.TradingPremises
+  )(implicit requestType: RequestType): AgentPremises = {
     val ytp = tradingPremises.yourTradingPremises
 
     val startDate = requestType match {
       case RequestType.Amendment => None
-      case _ => Some(ytp.startDate.toString)
+      case _                     => Some(ytp.startDate.toString)
     }
-    val z = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities
-    AgentPremises(ytp.tradingName, ytp.tradingPremisesAddress,
+    val z         = tradingPremises.whatDoesYourBusinessDoAtThisAddress.activities
+    AgentPremises(
+      ytp.tradingName,
+      ytp.tradingPremisesAddress,
       ytp.isResidential,
-      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices), z, z, z, z, z, z, z, startDate,
-      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange)
+      tradingPremises.msbServices.fold[Set[MsbService]](Set.empty)(x => x.msbServices),
+      z,
+      z,
+      z,
+      z,
+      z,
+      z,
+      z,
+      startDate,
+      tradingPremises.whatDoesYourBusinessDoAtThisAddress.dateOfChange
+    )
   }
 }

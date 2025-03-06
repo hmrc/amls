@@ -21,22 +21,20 @@ import org.scalacheck.Gen
 trait BaseGenerator {
   val refLength = 10
 
-  //noinspection ScalaStyle
+  // noinspection ScalaStyle
   def hashGen: Gen[String] = {
     val c = Gen.oneOf(Seq("a", "b", "c", "d", "e", "f"))
     val n = Gen.chooseNum(0, 9).map(_.toString)
     Gen.listOfN(32, Gen.oneOf(c, n)).map(l => l.mkString)
   }
 
-  def stringOfLengthGen(maxLength: Int) = {
+  def stringOfLengthGen(maxLength: Int) =
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
-  }
 
-  def alphaNumOfLengthGen(maxLength: Int) = {
+  def alphaNumOfLengthGen(maxLength: Int) =
     Gen.listOfN(maxLength, Gen.alphaNumChar).map(_.mkString)
-  }
 
-  //noinspection ScalaStyle
+  // noinspection ScalaStyle
   def numGen = Gen.chooseNum(0, 1000)
 
   def safeIdGen = alphaNumOfLengthGen(9) map { ref =>
@@ -44,10 +42,10 @@ trait BaseGenerator {
   }
 
   val postcodeGen: Gen[String] = for {
-    a <- stringOfLengthGen(2)
+    a    <- stringOfLengthGen(2)
     num1 <- Gen.chooseNum(1, 99)
     num2 <- Gen.chooseNum(1, 9)
-    b <- stringOfLengthGen(2)
+    b    <- stringOfLengthGen(2)
   } yield s"$a$num1 $num2$b"
 
 }

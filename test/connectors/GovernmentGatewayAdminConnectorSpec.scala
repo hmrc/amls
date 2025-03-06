@@ -33,14 +33,17 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new GovernmentGatewayAdminConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val serviceURL = "url"
-    }
+    val testConnector =
+      new GovernmentGatewayAdminConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+        override private[connectors] val serviceURL = "url"
+      }
 
-    val knownFacts = KnownFactsForService(Seq(
-      KnownFact("SafeId", "safeId"),
-      KnownFact("MLRRefNumber", amlsRegistrationNumber)
-    ))
+    val knownFacts = KnownFactsForService(
+      Seq(
+        KnownFact("SafeId", "safeId"),
+        KnownFact("MLRRefNumber", amlsRegistrationNumber)
+      )
+    )
 
     val url = "url/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
 
@@ -61,7 +64,11 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       val response = HttpResponse(status = OK, body = "message")
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
+          ArgumentMatchers.eq(url),
+          ArgumentMatchers.eq(knownFacts),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.addKnownFacts(knownFacts)) {
@@ -74,26 +81,32 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
+          ArgumentMatchers.eq(url),
+          ArgumentMatchers.eq(knownFacts),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
-      whenReady(testConnector.addKnownFacts(knownFacts).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body.getOrElse("").isEmpty mustEqual true
+      whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body.getOrElse("").isEmpty mustEqual true
       }
     }
 
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(knownFacts), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
+          ArgumentMatchers.eq(url),
+          ArgumentMatchers.eq(knownFacts),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
-      whenReady(testConnector.addKnownFacts(knownFacts).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
+      whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>
+        status mustEqual INTERNAL_SERVER_ERROR
+        body mustEqual Some("message")
       }
     }
   }

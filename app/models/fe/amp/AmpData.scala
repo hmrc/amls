@@ -18,12 +18,14 @@ package models.fe.amp
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class AmpData(typeOfParticipant: List[String],
-                         typeOfParticipantDetail: Option[String],
-                         soldOverThreshold: Boolean,
-                         dateTransactionOverThreshold: Option[String],
-                         identifyLinkedTransactions: Boolean,
-                         percentageExpectedTurnover: Option[String])
+final case class AmpData(
+  typeOfParticipant: List[String],
+  typeOfParticipantDetail: Option[String],
+  soldOverThreshold: Boolean,
+  dateTransactionOverThreshold: Option[String],
+  identifyLinkedTransactions: Boolean,
+  percentageExpectedTurnover: Option[String]
+)
 
 object AmpData {
   implicit val format: OFormat[AmpData] = Json.format[AmpData]

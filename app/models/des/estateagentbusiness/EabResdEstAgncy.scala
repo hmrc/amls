@@ -24,19 +24,17 @@ case class EabResdEstAgncy(regWithRedressScheme: Boolean, whichRedressScheme: Op
 object EabResdEstAgncy {
   implicit val format: OFormat[EabResdEstAgncy] = Json.format[EabResdEstAgncy]
 
-  implicit def conv(eabOpt: Option[Eab]): Option[EabResdEstAgncy] = {
+  implicit def conv(eabOpt: Option[Eab]): Option[EabResdEstAgncy] =
     eabOpt match {
       case Some(eab) => eab
-      case _ => None
+      case _         => None
     }
-  }
 
-  implicit def convert(eab: Eab): Option[EabResdEstAgncy] = {
+  implicit def convert(eab: Eab): Option[EabResdEstAgncy] =
     eab.data.redressScheme match {
-      case Some("propertyOmbudsman") => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited")))
+      case Some("propertyOmbudsman")     => Some(EabResdEstAgncy(true, Some("The Property Ombudsman Limited")))
       case Some("propertyRedressScheme") => Some(EabResdEstAgncy(true, Some("Property Redress Scheme")))
-      case Some("notRegistered") => Some(EabResdEstAgncy(false, None))
-      case _ => None
+      case Some("notRegistered")         => Some(EabResdEstAgncy(false, None))
+      case _                             => None
     }
-  }
 }

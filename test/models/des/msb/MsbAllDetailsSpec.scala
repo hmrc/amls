@@ -27,16 +27,14 @@ class MsbAllDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     "convert to  frontend MSB model to correct Msb Des model when ExpectedThroughput is None" in {
       val msbAllDetails = Some(MsbAllDetails(None, false, None, false))
 
-      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(None,
-        None)
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(None, None)
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
 
     "convert to  frontend MSB model to correct Msb Des model when ExpectedThroughput is First" in {
       val msbAllDetails = Some(MsbAllDetails(Some("£0-£15k"), false, None, false))
 
-      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
-        Some(ExpectedThroughput.First))
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(Some(ExpectedThroughput.First))
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
 
@@ -85,25 +83,21 @@ class MsbAllDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Fifth" in {
       val msbAllDetails = Some(MsbAllDetails(Some("£250k-£1m"), false, None, false))
 
-      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
-        Some(ExpectedThroughput.Fifth))
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(Some(ExpectedThroughput.Fifth))
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
 
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Sixth" in {
       val msbAllDetails = Some(MsbAllDetails(Some("£1m-10m"), false, None, false))
 
-      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
-        Some(ExpectedThroughput.Sixth))
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(Some(ExpectedThroughput.Sixth))
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
-
 
     "convert to  frontend MSB model to correct Msb Des model whenExpectedThroughput is Seventh" in {
       val msbAllDetails = Some(MsbAllDetails(Some("£10m+"), false, None, false))
 
-      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
-        Some(ExpectedThroughput.Seventh))
+      val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(Some(ExpectedThroughput.Seventh))
       MsbAllDetails.conv(msbModel) must be(msbAllDetails)
     }
   }

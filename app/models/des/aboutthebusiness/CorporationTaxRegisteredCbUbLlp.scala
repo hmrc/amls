@@ -25,19 +25,15 @@ object CorporationTaxRegisteredCbUbLlp {
 
   implicit val format: OFormat[CorporationTaxRegisteredCbUbLlp] = Json.format[CorporationTaxRegisteredCbUbLlp]
 
-  implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp] = {
-
+  implicit def conv(atb: models.fe.businessdetails.BusinessDetails): Option[CorporationTaxRegisteredCbUbLlp] =
     atb.corporationTaxRegistered match {
       case Some(data) => data
-      case _ => None
+      case _          => None
     }
-  }
 
-  implicit def conv1(corp: CorporationTaxRegistered): Option[CorporationTaxRegisteredCbUbLlp] = {
-
+  implicit def conv1(corp: CorporationTaxRegistered): Option[CorporationTaxRegisteredCbUbLlp] =
     corp match {
       case CorporationTaxRegisteredYes(num) => Some(CorporationTaxRegisteredCbUbLlp(true, Some(num)))
-      case CorporationTaxRegisteredNo => Some(CorporationTaxRegisteredCbUbLlp(false, None))
+      case CorporationTaxRegisteredNo       => Some(CorporationTaxRegisteredCbUbLlp(false, None))
     }
-  }
 }

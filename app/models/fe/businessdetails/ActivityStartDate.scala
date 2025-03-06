@@ -21,21 +21,19 @@ import models.des.businessactivities.BusinessActivitiesAll
 import java.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 
-
 case class ActivityStartDate(startDate: LocalDate)
 
 object ActivityStartDate {
 
   implicit val format: OFormat[ActivityStartDate] = Json.format[ActivityStartDate]
 
-  implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] = {
-
+  implicit def conv(activitiesAll: Option[BusinessActivitiesAll]): Option[ActivityStartDate] =
     activitiesAll match {
-      case Some(data) => data.activitiesCommenceDate match {
-        case Some(validDate) => Some(ActivityStartDate(LocalDate.parse(validDate)))
-        case _ => None
-      }
-      case _ => None
+      case Some(data) =>
+        data.activitiesCommenceDate match {
+          case Some(validDate) => Some(ActivityStartDate(LocalDate.parse(validDate)))
+          case _               => None
+        }
+      case _          => None
     }
-  }
 }

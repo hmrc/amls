@@ -26,21 +26,21 @@ class TcspAllSpec extends PlaySpec {
 
       val servicesOfAnother = ServicesOfAnotherTCSPYes(Some("12345678"))
 
-      val TcspSection = Some(Tcsp(None, None, None, None, Some(true), Some(servicesOfAnother)))
+      val TcspSection    = Some(Tcsp(None, None, None, None, Some(true), Some(servicesOfAnother)))
       val tcspAllSection = TcspAll(true, Some("12345678"))
       TcspAll.conv(TcspSection) must be(tcspAllSection)
     }
 
     "convert frontend model to Des with No" in {
 
-      val TcspSection = Some(Tcsp(None, None, None, None, Some(false), None))
+      val TcspSection    = Some(Tcsp(None, None, None, None, Some(false), None))
       val tcspAllSection = TcspAll(false, None)
       TcspAll.conv(TcspSection) must be(tcspAllSection)
     }
 
     "convert frontend model to Des when frontened model holds no data" in {
 
-      val TcspSection = Some(Tcsp(None, None, None, None, None))
+      val TcspSection    = Some(Tcsp(None, None, None, None, None))
       val tcspAllSection = TcspAll(false, None)
       TcspAll.conv(TcspSection) must be(tcspAllSection)
     }

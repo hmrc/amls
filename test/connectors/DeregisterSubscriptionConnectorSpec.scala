@@ -36,12 +36,13 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
   trait Fixture {
 
-    val testConnector = new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
-      override private[connectors] val token: String = "token"
-      override private[connectors] val env: String = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-    }
+    val testConnector =
+      new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+        override private[connectors] val baseUrl: String = "baseUrl"
+        override private[connectors] val token: String   = "token"
+        override private[connectors] val env: String     = "ist0"
+        override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+      }
 
     val mockTimer = mock[Timer.Context]
     when {
@@ -54,7 +55,12 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
   }
 
   val successModel = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
-  val testRequest = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", DeregistrationReason.Other, Some("Other Reason"))
+  val testRequest  = DeregisterSubscriptionRequest(
+    "AEF7234BGG12539GH143856HEA123412",
+    "2015-08-23",
+    DeregistrationReason.Other,
+    Some("Other Reason")
+  )
 
   "DeregisterSubscriptionConnector" must {
 
@@ -67,8 +73,11 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -84,13 +93,16 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
-          status must be(BAD_REQUEST)
+          status                     must be(BAD_REQUEST)
           body.getOrElse("").isEmpty must be(true)
       }
     }
@@ -98,19 +110,24 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return failed response on exception" in new Fixture {
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
+          ArgumentMatchers.eq(url),
+          any(),
+          any()
+        )(any(), any(), any(), any())
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(
-        testConnector.deregistration(
-          amlsRegistrationNumber,
-          testRequest
-        ).failed, timeout(Span(2, Seconds))
-      ) {
-        case HttpStatusException(status, body) =>
-          status must be(INTERNAL_SERVER_ERROR)
-          body must be(Some("message"))
+        testConnector
+          .deregistration(
+            amlsRegistrationNumber,
+            testRequest
+          )
+          .failed,
+        timeout(Span(2, Seconds))
+      ) { case HttpStatusException(status, body) =>
+        status must be(INTERNAL_SERVER_ERROR)
+        body   must be(Some("message"))
       }
     }
   }

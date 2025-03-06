@@ -31,39 +31,42 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class AmendVariationController @Inject()(avs: AmendVariationService, authAction: AuthAction, bodyParsers: PlayBodyParsers,
-                                         val cc: ControllerComponents)
-                                        (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
-                                        extends BackendController(cc) with Logging with ControllerHelper {
+class AmendVariationController @Inject() (
+  avs: AmendVariationService,
+  authAction: AuthAction,
+  bodyParsers: PlayBodyParsers,
+  val cc: ControllerComponents
+)(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+    extends BackendController(cc)
+    with Logging
+    with ControllerHelper {
 
   private[controllers] def service: AmendVariationService = avs
 
-  def update(amlsRegistrationNumber: String,
-             messageType: AmlsMessageType,
-             requestType: RequestType)(implicit request: Request[JsValue]): Future[Result] = {
+  def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, requestType: RequestType)(implicit
+    request: Request[JsValue]
+  ): Future[Result] = {
 
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>
         Json.fromJson[fe.SubscriptionRequest](request.body) match {
           case JsSuccess(body, _) =>
-            implicit val mt: AmlsMessageType = messageType
+            implicit val mt: AmlsMessageType      = messageType
             implicit val requestType: RequestType = RequestType.Amendment
             service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
               updatedAmendRequest =>
-                service.update(amlsRegistrationNumber, updatedAmendRequest) map {
-                  response =>
-                    Ok(Json.toJson(response))
-                } recoverWith {
-                  case e @ HttpStatusException(status, message) =>
-                    logger.warn(s"$prefix - Status: $status, Message: $message")
-                    Future.failed(e)
+                service.update(amlsRegistrationNumber, updatedAmendRequest) map { response =>
+                  Ok(Json.toJson(response))
+                } recoverWith { case e @ HttpStatusException(status, message) =>
+                  logger.warn(s"$prefix - Status: $status, Message: $message")
+                  Future.failed(e)
                 }
             }
-          case JsError(errors) =>
+          case JsError(errors)    =>
             Future.successful(BadRequest(toError(errors)))
         }
-      case _ =>
+      case _       =>
         Future.successful {
           BadRequest(toError("Invalid AmlsRegistrationNumber"))
         }
@@ -72,35 +75,30 @@ class AmendVariationController @Inject()(avs: AmendVariationService, authAction:
   }
 
   def amend(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
-    authAction.async(bodyParsers.json) {
-      implicit request =>
-        val prefix = "[AmendVariationController][amend]"
-        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
+    authAction.async(bodyParsers.json) { implicit request =>
+      val prefix = "[AmendVariationController][amend]"
+      logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+      update(amlsRegistrationNumber, Amendment, RequestType.Amendment)
     }
 
   def variation(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
-    authAction.async(bodyParsers.json) {
-      implicit request =>
-        val prefix = "[AmendVariationController][variation]"
-        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, Variation, RequestType.Variation)
+    authAction.async(bodyParsers.json) { implicit request =>
+      val prefix = "[AmendVariationController][variation]"
+      logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+      update(amlsRegistrationNumber, Variation, RequestType.Variation)
     }
 
   def renewal(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
-    authAction.async(bodyParsers.json) {
-      implicit request =>
-        val prefix = "[AmendVariationController][renewal]"
-        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
+    authAction.async(bodyParsers.json) { implicit request =>
+      val prefix = "[AmendVariationController][renewal]"
+      logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+      update(amlsRegistrationNumber, Renewal, RequestType.Renewal)
     }
 
   def renewalAmendment(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
-    authAction.async(bodyParsers.json) {
-      implicit request =>
-        val prefix = "[AmendVariationController][renewalAmendment]"
-        logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
-        update(amlsRegistrationNumber, RenewalAmendment, RequestType.RenewalAmendment)
+    authAction.async(bodyParsers.json) { implicit request =>
+      val prefix = "[AmendVariationController][renewalAmendment]"
+      logger.debug(s"$prefix - AmlsRegistrationNumber: $amlsRegistrationNumber")
+      update(amlsRegistrationNumber, RenewalAmendment, RequestType.RenewalAmendment)
     }
 }
-

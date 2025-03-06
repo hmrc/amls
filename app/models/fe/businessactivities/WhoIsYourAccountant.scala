@@ -19,35 +19,37 @@ package models.fe.businessactivities
 import models.des.businessactivities.MlrAdvisor
 import play.api.libs.functional.syntax._
 
-case class WhoIsYourAccountant(accountantsName: String, accountantsTradingName: Option[String], address: AccountantsAddress)
+case class WhoIsYourAccountant(
+  accountantsName: String,
+  accountantsTradingName: Option[String],
+  address: AccountantsAddress
+)
 
 object WhoIsYourAccountant {
 
   import play.api.libs.json._
 
   implicit val jsonWrites: Writes[WhoIsYourAccountant] = Writes[WhoIsYourAccountant] { data: WhoIsYourAccountant =>
-    Json.obj("accountantsName" -> data.accountantsName,
-      "accountantsTradingName" -> data.accountantsTradingName) ++
+    Json.obj("accountantsName" -> data.accountantsName, "accountantsTradingName" -> data.accountantsTradingName) ++
       Json.toJson(data.address).as[JsObject]
   }
 
   implicit val jsonReads: Reads[WhoIsYourAccountant] =
     ((__ \ "accountantsName").read[String] and
       (__ \ "accountantsTradingName").readNullable[String] and
-      __.read[AccountantsAddress]) (WhoIsYourAccountant.apply _)
+      __.read[AccountantsAddress])(WhoIsYourAccountant.apply _)
 
-  def conv(mlrAdvisorOpt: Option[MlrAdvisor]): Option[WhoIsYourAccountant] = {
-
-    mlrAdvisorOpt flatMap {
-      mlrAdvisor =>
-        mlrAdvisor.mlrAdvisorDetails match {
-          case Some(mlrDtls) => mlrDtls.advisorNameAddress match {
-            case Some(advisorDtls) => Some(WhoIsYourAccountant(advisorDtls.name, advisorDtls.tradingName, advisorDtls.address))
-            case None => None
+  def conv(mlrAdvisorOpt: Option[MlrAdvisor]): Option[WhoIsYourAccountant] =
+    mlrAdvisorOpt flatMap { mlrAdvisor =>
+      mlrAdvisor.mlrAdvisorDetails match {
+        case Some(mlrDtls) =>
+          mlrDtls.advisorNameAddress match {
+            case Some(advisorDtls) =>
+              Some(WhoIsYourAccountant(advisorDtls.name, advisorDtls.tradingName, advisorDtls.address))
+            case None              => None
           }
-          case None => None
-        }
+        case None          => None
+      }
     }
 
-  }
 }

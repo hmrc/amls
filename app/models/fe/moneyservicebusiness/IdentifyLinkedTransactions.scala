@@ -25,10 +25,9 @@ object IdentifyLinkedTransactions {
 
   implicit val format: OFormat[IdentifyLinkedTransactions] = Json.format[IdentifyLinkedTransactions]
 
-  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[IdentifyLinkedTransactions] = {
+  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[IdentifyLinkedTransactions] =
     msbAll match {
       case Some(msbDtls) => Some(IdentifyLinkedTransactions(msbDtls.sysLinkedTransIdentification))
-      case None => None
+      case None          => None
     }
-  }
 }

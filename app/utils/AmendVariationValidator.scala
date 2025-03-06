@@ -34,19 +34,19 @@ class AmendVariationValidator {
   def validateResult(request: AmendVariationRequest): Either[collection.Seq[JsObject], AmendVariationRequest] = {
     // $COVERAGE-OFF$
     val stream: InputStream = getClass.getResourceAsStream("/resources/api6_schema_release_5.1.0.json")
-    val lines = scala.io.Source.fromInputStream(stream).getLines().mkString
+    val lines               = scala.io.Source.fromInputStream(stream).getLines().mkString
 
-    lazy val jsonMapper = new ObjectMapper().registerModule(PlayJsonModule)
-    lazy val jsonFactory = jsonMapper.getFactory
-    val schemaMapper = new ObjectMapper()
-    val factory = schemaMapper.getFactory
+    lazy val jsonMapper          = new ObjectMapper().registerModule(PlayJsonModule)
+    lazy val jsonFactory         = jsonMapper.getFactory
+    val schemaMapper             = new ObjectMapper()
+    val factory                  = schemaMapper.getFactory
     val schemaParser: JsonParser = factory.createParser(lines)
-    val schemaJson: JsonNode = schemaMapper.readTree(schemaParser)
-    val schema = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
-    val jsonParser = jsonFactory.createParser(Json.toJson(request).toString())
-    val jsonNode: JsonNode = jsonMapper.readTree(jsonParser)
+    val schemaJson: JsonNode     = schemaMapper.readTree(schemaParser)
+    val schema                   = JsonSchemaFactory.byDefault().getJsonSchema(schemaJson)
+    val jsonParser               = jsonFactory.createParser(Json.toJson(request).toString())
+    val jsonNode: JsonNode       = jsonMapper.readTree(jsonParser)
     val report: ProcessingReport = schema.validate(jsonNode)
-    val result = report.isSuccess
+    val result                   = report.isSuccess
 
     if (result) {
       Right(request)

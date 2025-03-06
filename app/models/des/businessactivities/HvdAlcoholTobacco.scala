@@ -19,25 +19,22 @@ package models.des.businessactivities
 import models.fe.hvd.{Alcohol, ItemType, Tobacco}
 import play.api.libs.json.{Json, OFormat}
 
-case class HvdAlcoholTobacco (dutySuspExAtGoods: Boolean)
+case class HvdAlcoholTobacco(dutySuspExAtGoods: Boolean)
 
 object HvdAlcoholTobacco {
 
   implicit val format: OFormat[HvdAlcoholTobacco] = Json.format[HvdAlcoholTobacco]
 
-  implicit def covn(model: Option[models.fe.hvd.Hvd]): Option[HvdAlcoholTobacco] = {
-
+  implicit def covn(model: Option[models.fe.hvd.Hvd]): Option[HvdAlcoholTobacco] =
     model match {
       case Some(data) =>
         lazy val products = data.products.fold[Set[ItemType]](Set.empty)(x => x.items)
 
-        if(products.contains(Alcohol) || products.contains(Tobacco)) {
+        if (products.contains(Alcohol) || products.contains(Tobacco)) {
           Some(HvdAlcoholTobacco(data.exciseGoods.fold[Boolean](false)(x => x.exciseGoods)))
-        }
-        else {
+        } else {
           None
         }
-      case _ => None
+      case _          => None
     }
-  }
 }

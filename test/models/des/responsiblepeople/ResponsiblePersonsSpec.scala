@@ -97,7 +97,6 @@ class ResponsiblePersonsSpec extends PlaySpec with GuiceOneAppPerSuite {
       )
 
       val responsiblePersonPhase2 =
-
         ResponsiblePersons.convertResponsiblePeopleToResponsiblePerson(
           respPeoplePhase2,
           BusinessMatchingSection.emptyModel,
@@ -117,106 +116,116 @@ object RPValues {
     msbOrTcsp = None,
     passedFitAndProperTest = Some(false),
     passedApprovalCheck = Some(true),
-    nationalityDetails = Some(NationalityDetails(true, Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))), Some("GB"), Some("GB")))
+    nationalityDetails = Some(
+      NationalityDetails(
+        true,
+        Some(IdDetail(Some(UkResident("nino")), None, Some("1990-02-24"))),
+        Some("GB"),
+        Some("GB")
+      )
+    )
   )
 
   val modelPhase3 = modelPhase2.copy(dateChangeFlag = None, nameDetails = nameDtls1)
 
   val jsonExpectedFromWrite = Json.obj(
-    "nameDetails" -> Json.obj(
-      "personName" -> Json.obj(
-        "firstName" -> "name",
+    "nameDetails"                  -> Json.obj(
+      "personName"                -> Json.obj(
+        "firstName"  -> "name",
         "middleName" -> "some",
-        "lastName" -> "surname"
+        "lastName"   -> "surname"
       ),
       "othrNamesOrAliasesDetails" -> Json.obj(
         "otherNamesOrAliases" -> true,
-        "aliases" -> Json.arr(
+        "aliases"             -> Json.arr(
           "Doc"
         )
       ),
-      "previousNameDetails" -> Json.obj(
+      "previousNameDetails"       -> Json.obj(
         "nameEverChanged" -> true,
-        "previousName" -> Json.obj(
-          "firstName" -> "fname",
+        "previousName"    -> Json.obj(
+          "firstName"  -> "fname",
           "middleName" -> "mname",
-          "lastName" -> "lname"
+          "lastName"   -> "lname"
         ),
-        "dateOfChange" -> "1990-02-24",
-        "dateChangeFlag" -> false
+        "dateOfChange"    -> "1990-02-24",
+        "dateChangeFlag"  -> false
       )
     ),
-    "nationalityDetails" -> Json.obj(
+    "nationalityDetails"           -> Json.obj(
       "areYouUkResident" -> true,
-      "idDetails" -> Json.obj(
+      "idDetails"        -> Json.obj(
         "ukResident" -> Json.obj(
           "nino" -> "nino"
         )
       ),
-      "countryOfBirth" -> "GB",
-      "nationality" -> "GB"
+      "countryOfBirth"   -> "GB",
+      "nationality"      -> "GB"
     ),
-    "contactCommDetails" -> Json.obj(
+    "contactCommDetails"           -> Json.obj(
       "contactEmailAddress" -> "test@test.com",
-      "primaryTeleNo" -> "07000001122"
+      "primaryTeleNo"       -> "07000001122"
     ),
-    "currentAddressDetails" -> Json.obj(
+    "currentAddressDetails"        -> Json.obj(
       "address" -> Json.obj(
         "addressLine1" -> "ccLine 1",
         "addressLine2" -> "ccLine 2",
-        "country" -> "GB",
-        "postcode" -> "AA1 1AA"
+        "country"      -> "GB",
+        "postcode"     -> "AA1 1AA"
       )
     ),
-    "timeAtCurrentAddress" -> "0-6 months",
-    "addressUnderThreeYears" -> Json.obj(
+    "timeAtCurrentAddress"         -> "0-6 months",
+    "addressUnderThreeYears"       -> Json.obj(
       "address" -> Json.obj(
         "addressLine1" -> "Line 1",
         "addressLine2" -> "Line 2",
-        "country" -> "GB",
-        "postcode" -> "BB1 1BB"
+        "country"      -> "GB",
+        "postcode"     -> "BB1 1BB"
       )
     ),
     "timeAtAddressUnderThreeYears" -> "7-12 months",
-    "addressUnderOneYear" -> Json.obj(
+    "addressUnderOneYear"          -> Json.obj(
       "address" -> Json.obj(
         "addressLine1" -> "e Line 1",
         "addressLine2" -> "e Line 2",
         "addressLine3" -> "e Line 3",
         "addressLine4" -> "e Line 4",
-        "country" -> "GB",
-        "postcode" -> "CC1 1CC"
+        "country"      -> "GB",
+        "postcode"     -> "CC1 1CC"
       )
     ),
-    "timeAtAddressUnderOneYear" -> "1-3 years",
-    "positionInBusiness" -> Json.obj(
+    "timeAtAddressUnderOneYear"    -> "1-3 years",
+    "positionInBusiness"           -> Json.obj(
       "soleProprietor" -> Json.obj(
-        "soleProprietor" -> true,
+        "soleProprietor"   -> true,
         "nominatedOfficer" -> true,
-        "other" -> false
-      )),
-    "regDetails" -> Json.obj(
-      "vatRegistered" -> false,
-      "saRegistered" -> true,
-      "saUtr" -> "0123456789"
+        "other"            -> false
+      )
     ),
-    "previousExperience" -> true,
-    "descOfPrevExperience" -> "Some training",
+    "regDetails"                   -> Json.obj(
+      "vatRegistered" -> false,
+      "saRegistered"  -> true,
+      "saUtr"         -> "0123456789"
+    ),
+    "previousExperience"           -> true,
+    "descOfPrevExperience"         -> "Some training",
     "amlAndCounterTerrFinTraining" -> true,
-    "trainingDetails" -> "test",
-    "dateChangeFlag" -> false,
-    "msbOrTcsp" -> Json.obj(
+    "trainingDetails"              -> "test",
+    "dateChangeFlag"               -> false,
+    "msbOrTcsp"                    -> Json.obj(
       "passedFitAndProperTest" -> true
     )
   )
 
-  val ukResident = Json.obj(
+  val ukResident         = Json.obj(
     "nino" -> "nino"
   )
-  val idDetails = Json.obj()
+  val idDetails          = Json
+    .obj()
     .+(("ukResident", ukResident))
     .+(("dateOfBirth", JsString("1990-02-24")))
-  val nationalityDetails = Json.obj()
+  val nationalityDetails = Json
+    .obj()
     .+(("areYouUkResident", JsBoolean(true)))
     .+(("idDetails", idDetails))
     .+(("countryOfBirth", JsString("GB")))

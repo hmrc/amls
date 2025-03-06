@@ -26,38 +26,35 @@ import java.time.LocalDate
 
 class HvdSpec extends PlaySpec with TableDrivenPropertyChecks {
 
-  private val DefaultCashPayment = CashPaymentYes(LocalDate.of(1956, 2, 15))
-  private val DefaultProducts = Products(Set(Other("Details")))
-  private val DefaultExciseGoods = ExciseGoods(true)
-  private val DefaultLinkedCashPayment = LinkedCashPayments(true)
-  private val DefaultHowWillYouSellGoods = HowWillYouSellGoods(Seq(Retail, Wholesale, Auction))
+  private val DefaultCashPayment                      = CashPaymentYes(LocalDate.of(1956, 2, 15))
+  private val DefaultProducts                         = Products(Set(Other("Details")))
+  private val DefaultExciseGoods                      = ExciseGoods(true)
+  private val DefaultLinkedCashPayment                = LinkedCashPayments(true)
+  private val DefaultHowWillYouSellGoods              = HowWillYouSellGoods(Seq(Retail, Wholesale, Auction))
   private val DefaultPercentageOfCashPaymentOver15000 = First
-  private val paymentMethods = PaymentMethods(courier = true, direct = true, true, Some("foo"))
+  private val paymentMethods                          = PaymentMethods(courier = true, direct = true, true, Some("foo"))
 
-  val NewCashPayment = CashPaymentNo
-  val NewProducts = Products(Set(Other("Details")))
-  val NewExciseGoods = ExciseGoods(true)
+  val NewCashPayment       = CashPaymentNo
+  val NewProducts          = Products(Set(Other("Details")))
+  val NewExciseGoods       = ExciseGoods(true)
   val NewLinkedCashPayment = LinkedCashPayments(true)
 
   "hvd" must {
 
     val completeJson = Json.obj(
-      "cashPayment" -> Json.obj(
-        "acceptedAnyPayment" -> true,
-        "paymentDate" -> LocalDate.of(1956, 2, 15)),
-      "products" -> Json.obj(
-        "products" -> Json.arr("12"),
-        "otherDetails" -> "Details"),
-      "exciseGoods" -> Json.obj("exciseGoods" -> true),
-      "linkedCashPayment" -> Json.obj("linkedCashPayments" -> true),
-      "howWillYouSellGoods" -> Json.obj("salesChannels" -> Json.arr("Retail", "Wholesale", "Auction")),
-      "receiveCashPayments" -> true,
-      "cashPaymentMethods" -> Json.obj("courier" -> true, "direct" -> true, "other" -> true, "details" -> "foo"),
+      "cashPayment"                      -> Json.obj("acceptedAnyPayment" -> true, "paymentDate" -> LocalDate.of(1956, 2, 15)),
+      "products"                         -> Json.obj("products" -> Json.arr("12"), "otherDetails" -> "Details"),
+      "exciseGoods"                      -> Json.obj("exciseGoods" -> true),
+      "linkedCashPayment"                -> Json.obj("linkedCashPayments" -> true),
+      "howWillYouSellGoods"              -> Json.obj("salesChannels" -> Json.arr("Retail", "Wholesale", "Auction")),
+      "receiveCashPayments"              -> true,
+      "cashPaymentMethods"               -> Json.obj("courier" -> true, "direct" -> true, "other" -> true, "details" -> "foo"),
       "percentageOfCashPaymentOver15000" -> Json.obj("percentage" -> "01"),
-      "dateOfChange" -> "2016-02-24"
+      "dateOfChange"                     -> "2016-02-24"
     )
 
-    val completeModel = Hvd(cashPayment = Some(DefaultCashPayment),
+    val completeModel = Hvd(
+      cashPayment = Some(DefaultCashPayment),
       products = Some(DefaultProducts),
       exciseGoods = Some(DefaultExciseGoods),
       linkedCashPayment = Some(DefaultLinkedCashPayment),

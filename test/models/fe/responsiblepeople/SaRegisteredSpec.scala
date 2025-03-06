@@ -53,10 +53,12 @@ class SaRegisteredSpec extends PlaySpec {
           be(Json.obj("saRegistered" -> false))
 
         Json.toJson(SaRegisteredYes("0123456789"): SaRegistered) must
-          be(Json.obj(
-            "saRegistered" -> true,
-            "utrNumber" -> "0123456789"
-          ))
+          be(
+            Json.obj(
+              "saRegistered" -> true,
+              "utrNumber"    -> "0123456789"
+            )
+          )
       }
     }
   }
@@ -64,24 +66,28 @@ class SaRegisteredSpec extends PlaySpec {
   "SaRegisterd conversion" when {
     "Sa registered is false" must {
       "convert model to frontend - SARegisteredNo" in {
-        val desModel = Some(RegDetails(
-          false,
-          None,
-          false,
-          None
-        ))
+        val desModel = Some(
+          RegDetails(
+            false,
+            None,
+            false,
+            None
+          )
+        )
         SaRegistered.conv(desModel) must be(Some(SaRegisteredNo))
       }
     }
 
     "SA registered is true" must {
       "convert model to frontend - VATRegisteredYes with Registration Number included" in {
-        val desModel = Some(RegDetails(
-          false,
-          None,
-          true,
-          Some("SA REG NUMBER")
-        ))
+        val desModel = Some(
+          RegDetails(
+            false,
+            None,
+            true,
+            Some("SA REG NUMBER")
+          )
+        )
         SaRegistered.conv(desModel) must be(Some(SaRegisteredYes("SA REG NUMBER")))
       }
     }

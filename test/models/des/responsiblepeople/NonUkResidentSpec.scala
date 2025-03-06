@@ -31,8 +31,16 @@ class NonUkResidentSpec extends PlaySpec {
         ukPassport = Some(UKPassportYes("AA111111A")),
         dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
-      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
-        true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))))))
+      NonUkResident.convert(rp) must be(
+        Some(
+          IdDetail(
+            None,
+            Some(
+              NonUkResident(Some("1990-02-24"), true, Some(PassportDetail(true, PassportNum(Some("AA111111A"), None))))
+            )
+          )
+        )
+      )
     }
 
     "convert frontend model to des model for NonUKPassport" in {
@@ -41,8 +49,20 @@ class NonUkResidentSpec extends PlaySpec {
         nonUKPassport = Some(NonUKPassportYes("1234612124646")),
         dateOfBirth = Some(DateOfBirth(LocalDate.of(1990, 2, 24)))
       )
-      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(Some("1990-02-24"),
-        true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
+      NonUkResident.convert(rp) must be(
+        Some(
+          IdDetail(
+            None,
+            Some(
+              NonUkResident(
+                Some("1990-02-24"),
+                true,
+                Some(PassportDetail(false, PassportNum(None, Some("1234612124646"))))
+              )
+            )
+          )
+        )
+      )
     }
 
     "convert frontend model to des model for NonUKPassport with no DOB" in {
@@ -51,8 +71,14 @@ class NonUkResidentSpec extends PlaySpec {
         nonUKPassport = Some(NonUKPassportYes("1234612124646")),
         dateOfBirth = None
       )
-      NonUkResident.convert(rp) must be(Some(IdDetail(None, Some(NonUkResident(None,
-        true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646")))))))))
+      NonUkResident.convert(rp) must be(
+        Some(
+          IdDetail(
+            None,
+            Some(NonUkResident(None, true, Some(PassportDetail(false, PassportNum(None, Some("1234612124646"))))))
+          )
+        )
+      )
     }
 
     "convert frontend model to des model for NoPassport" when {
@@ -78,4 +104,3 @@ class NonUkResidentSpec extends PlaySpec {
     }
   }
 }
-

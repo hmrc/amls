@@ -33,8 +33,8 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
 
     val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient) {
       override private[connectors] val baseUrl = "baseUrl"
-      override private[connectors] val env = "ist0"
-      override private[connectors] val token = "token"
+      override private[connectors] val env     = "ist0"
+      override private[connectors] val token   = "token"
       override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
     }
   }
@@ -42,11 +42,16 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
   "The RegistrationDetailsDesConnector" must {
     "get the registration details" in new Fixture {
 
-      val safeId = "SAFEID"
-      val details = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
+      val safeId  = "SAFEID"
+      val details =
+        RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        connector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"), any(), any())(any(), any(), any())
+        connector.httpClient.GET[HttpResponse](
+          ArgumentMatchers.eq(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"),
+          any(),
+          any()
+        )(any(), any(), any())
       } thenReturn Future.successful(HttpResponse(status = OK, json = Json.toJson(details), headers = Map.empty))
 
       whenReady(connector.getRegistrationDetails(safeId)) {

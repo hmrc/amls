@@ -38,10 +38,10 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
   }
 
   "Subscription request validator" must {
-        "validate invalid request" in {
-          val jsResult = validator.validateRequest(givenInvalidSubscriptionRequest())
-          jsResult.isLeft mustBe true
-        }
+    "validate invalid request" in {
+      val jsResult = validator.validateRequest(givenInvalidSubscriptionRequest())
+      jsResult.isLeft mustBe true
+    }
 
     "validate valid request" in {
       val jsResult = validator.validateRequest(givenValidSubscriptionRequest())
@@ -49,10 +49,14 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
     }
   }
 
-  private def givenInvalidSubscriptionRequest(): SubscriptionRequest = {
+  private def givenInvalidSubscriptionRequest(): SubscriptionRequest =
     SubscriptionRequest(
       acknowledgementReference = ackref.ackRef,
-      businessDetails = BusinessDetails(BusinessType.LimitedCompany, Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")), None),
+      businessDetails = BusinessDetails(
+        BusinessType.LimitedCompany,
+        Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")),
+        None
+      ),
       businessActivities = DefaultDesValues.BusinessActivitiesSection,
       eabAll = DefaultDesValues.EabAllDetails,
       eabResdEstAgncy = DefaultDesValues.EabResd,
@@ -60,7 +64,10 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       businessReferencesAll = DefaultDesValues.PrevRegMLR,
       businessReferencesAllButSp = None,
       businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
-      tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(DesConstants.subscriptionRequestOwnBusinessPremisesDetails)))), None),
+      tradingPremises = TradingPremises(
+        Some(OwnBusinessPremises(true, Some(Seq(DesConstants.subscriptionRequestOwnBusinessPremisesDetails)))),
+        None
+      ),
       bankAccountDetails = DefaultDesValues.bankDetailsSection,
       msb = DefaultDesValues.msbSection,
       hvd = DefaultDesValues.hvdSection,
@@ -72,13 +79,17 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       amp = DefaultDesValues.AmpSection,
       aspOrTcsp = DefaultDesValues.AspOrTcspSection,
       declaration = Declaration(true),
-      lettingAgents = None)
-  }
+      lettingAgents = None
+    )
 
-  private def givenValidSubscriptionRequest(): SubscriptionRequest = {
+  private def givenValidSubscriptionRequest(): SubscriptionRequest =
     SubscriptionRequest(
       acknowledgementReference = "b998aae85b78423989ffb9161ee74a0d",
-      businessDetails = BusinessDetails(BusinessType.LimitedCompany, Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")), None),
+      businessDetails = BusinessDetails(
+        BusinessType.LimitedCompany,
+        Some(CorpAndBodyLlps("ABCDEFGHIJK ABCDE & LETTINGS LTD", "12345678")),
+        None
+      ),
       businessActivities = givenValidBusinessActivities,
       eabAll = DefaultDesValues.EabAllDetails,
       eabResdEstAgncy = DefaultDesValues.EabResd,
@@ -86,8 +97,10 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       businessReferencesAll = DefaultDesValues.PrevRegMLR,
       businessReferencesAllButSp = None,
       businessReferencesCbUbLlp = DefaultDesValues.CorpTaxRegime,
-      tradingPremises = TradingPremises(Some(OwnBusinessPremises(true, Some(Seq(validOwnBusinessPremisesDetails)))),
-        Some(AgentBusinessPremises(false, None))),
+      tradingPremises = TradingPremises(
+        Some(OwnBusinessPremises(true, Some(Seq(validOwnBusinessPremisesDetails)))),
+        Some(AgentBusinessPremises(false, None))
+      ),
       bankAccountDetails = DefaultDesValues.bankDetailsSection,
       msb = validMsbSection,
       hvd = validHvdSection,
@@ -99,15 +112,31 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
       amp = validAmpSection,
       aspOrTcsp = validAspOrTcspSection,
       declaration = Declaration(true),
-      lettingAgents = None)
-  }
+      lettingAgents = None
+    )
 
   private val givenValidBusinessActivities =
     BusinessActivities(
       Some(MlrActivitiesAppliedFor(true, true, true, false, false, false, false, false)),
       Some(MsbServicesCarriedOut(true, true, false, true, false)),
-      Some(HvdGoodsSold(true, true, true, true, true, false, false, false, false, false, false, true, Some("Details"),
-        Some(HowGoodsAreSold(true, false, true)))),
+      Some(
+        HvdGoodsSold(
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          Some("Details"),
+          Some(HowGoodsAreSold(true, false, true))
+        )
+      ),
       Some(HvdAlcoholTobacco(true)),
       Some(AspServicesOffered(true, false, false, true, true)),
       Some(TcspServicesOffered(true, true, true, true, true)),
@@ -128,8 +157,24 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
           true,
           true,
           Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true)))),
-          Some(MlrAdvisor(true, Some(MlrAdvisorDetails(Some(AdvisorNameAddress("Name", Some("TradingName"),
-            Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA")))), true, None))))
+          Some(
+            MlrAdvisor(
+              true,
+              Some(
+                MlrAdvisorDetails(
+                  Some(
+                    AdvisorNameAddress(
+                      "Name",
+                      Some("TradingName"),
+                      Address("Line1", Some("Line2"), Some("Line3"), Some("Line4"), "GB", Some("AA1 1AA"))
+                    )
+                  ),
+                  true,
+                  None
+                )
+              )
+            )
+          )
         )
       )
     )
@@ -138,7 +183,13 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
     BusinessContactDetails(
       Address("line1", Some("line2"), Some("some street"), Some("some city"), "GB", Some("EE1 1EE")),
       true,
-      Some(AlternativeAddress("kap", "Trading", Address("Park", Some("lane"), Some("Street"), Some("city"), "GB", Some("EE1 1EE")))),
+      Some(
+        AlternativeAddress(
+          "kap",
+          "Trading",
+          Address("Park", Some("lane"), Some("Street"), Some("city"), "GB", Some("EE1 1EE"))
+        )
+      ),
       "078 6353 4828",
       "abc@hotmail.co.uk"
     )
@@ -147,12 +198,33 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
     Some(
       MoneyServiceBusiness(
         Some(MsbAllDetails(Some("£1m-10m"), true, Some(CountriesList(List("GB"))), true)),
-        Some(MsbMtDetails(true, Some("123456"),
-          IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
-          true,
-          Some("12345678963"), Some(CountriesList(List("GB"))), Some(CountriesList(List("LA", "LV"))))),
-        Some(MsbCeDetailsR7(Some(true), Some(CurrencySourcesR7(Some(MSBBankDetails(true, Some(List("Bank names")))),
-          Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))), true)), "12345678963", Some(CurrSupplyToCust(List("USD", "MNO", "PQR"))))), None)
+        Some(
+          MsbMtDetails(
+            true,
+            Some("123456"),
+            IpspServicesDetails(true, Some(Seq(IpspDetails("name", "123456789123456")))),
+            true,
+            Some("12345678963"),
+            Some(CountriesList(List("GB"))),
+            Some(CountriesList(List("LA", "LV")))
+          )
+        ),
+        Some(
+          MsbCeDetailsR7(
+            Some(true),
+            Some(
+              CurrencySourcesR7(
+                Some(MSBBankDetails(true, Some(List("Bank names")))),
+                Some(CurrencyWholesalerDetails(true, Some(List("wholesaler names")))),
+                true
+              )
+            ),
+            "12345678963",
+            Some(CurrSupplyToCust(List("USD", "MNO", "PQR")))
+          )
+        ),
+        None
+      )
     )
 
   private val validAmpSection = Some(Amp(TransactionsAccptOvrThrshld(true, Some("2019-09-19")), true, 60))
@@ -160,25 +232,67 @@ class SubscriptionRequestValidatorSpec extends PlaySpec with EitherValues {
   val validAspOrTcspSection =
     Some(
       AspOrTcsp(
-        Some(SupervisionDetails(true, Some(SupervisorDetails("Company A", "1993-08-25", "1999-08-25", None, "Ending reason")))),
-        Some(ProfessionalBodyDetails(true, Some("details"),
-          Some(ProfessionalBodyDesMember(true,
-            Some(MemberOfProfessionalBody(true, true, false, false, false, false, false, false, false, false, false, false, false, true, Some("test"))))))
-        ))
+        Some(
+          SupervisionDetails(
+            true,
+            Some(SupervisorDetails("Company A", "1993-08-25", "1999-08-25", None, "Ending reason"))
+          )
+        ),
+        Some(
+          ProfessionalBodyDetails(
+            true,
+            Some("details"),
+            Some(
+              ProfessionalBodyDesMember(
+                true,
+                Some(
+                  MemberOfProfessionalBody(
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    Some("test")
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
     )
 
-  val validHvdSection = Some(Hvd(true, Some("1978-02-15"), None, true, Some(40),
-    Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))))
+  val validHvdSection = Some(
+    Hvd(
+      true,
+      Some("1978-02-15"),
+      None,
+      true,
+      Some(40),
+      Some(HvdFromUnseenCustDetails(true, Some(ReceiptMethods(true, true, true, Some("foo")))))
+    )
+  )
 
   val validOwnBusinessPremisesDetails =
     OwnBusinessPremisesDetails(
       tradingName = Some("ABCDEFGHIJK ABCDE & LETTINGS LTD"),
-      businessAddress = tradingpremises.Address("ABC 1234, ABCDEFGHIJ, CLYDE",
+      businessAddress = tradingpremises.Address(
+        "ABC 1234, ABCDEFGHIJ, CLYDE",
         Some("OwnBusinessAddressLine2"),
         Some("OwnBusinessAddressLine3"),
         Some("OwnBusinessAddressLine4"),
         "GB",
-        Some("YY1 1YY")),
+        Some("YY1 1YY")
+      ),
       residential = false,
       msb = models.des.tradingpremises.Msb(false, false, false, false, false),
       hvd = models.des.tradingpremises.Hvd(false),

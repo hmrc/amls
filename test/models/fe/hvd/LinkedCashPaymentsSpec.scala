@@ -17,7 +17,7 @@
 package models.fe.hvd
 
 import models.des.DesConstants
-import models.des.hvd.{HvdFromUnseenCustDetails, ReceiptMethods, Hvd => DesHvd}
+import models.des.hvd.{Hvd => DesHvd, HvdFromUnseenCustDetails, ReceiptMethods}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.JsSuccess
@@ -30,22 +30,27 @@ class LinkedCashPaymentsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "successfully read and write json data" in {
 
-        LinkedCashPayments.format.reads(LinkedCashPayments.format.writes(LinkedCashPayments(true))) must be(JsSuccess(LinkedCashPayments(true)))
+        LinkedCashPayments.format.reads(LinkedCashPayments.format.writes(LinkedCashPayments(true))) must be(
+          JsSuccess(LinkedCashPayments(true))
+        )
 
       }
     }
   }
 
   "converting the des model must yield a frontend model" in {
-    DesHvd(true,
+    DesHvd(
+      true,
       Some("2001-01-01"),
       Some(false),
       true,
       Some(0),
-      Some(HvdFromUnseenCustDetails(
-        true,
-        Some(ReceiptMethods(true, true, true, Some("aaaaaaaaaaaaa")))
-      ))
+      Some(
+        HvdFromUnseenCustDetails(
+          true,
+          Some(ReceiptMethods(true, true, true, Some("aaaaaaaaaaaaa")))
+        )
+      )
     )
     LinkedCashPayments.conv(DesConstants.testHvd) must be(Some(LinkedCashPayments(true)))
   }

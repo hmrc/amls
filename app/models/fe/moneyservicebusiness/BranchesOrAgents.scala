@@ -25,11 +25,11 @@ object BranchesOrAgents {
 
   implicit val format: OFormat[BranchesOrAgents] = Json.format[BranchesOrAgents]
 
-  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[BranchesOrAgents] = {
+  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[BranchesOrAgents] =
     msbAll map { allDtls =>
-      BranchesOrAgents(allDtls.countriesList.nonEmpty,
+      BranchesOrAgents(
+        allDtls.countriesList.nonEmpty,
         allDtls.countriesList map { countries => countries.listOfCountries }
       )
     }
-  }
 }

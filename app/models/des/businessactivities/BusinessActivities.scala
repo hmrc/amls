@@ -20,21 +20,22 @@ import models.fe
 import play.api.libs.json.{Json, OFormat}
 
 case class BusinessActivities(
-                               mlrActivitiesAppliedFor: Option[MlrActivitiesAppliedFor] = None,
-                               msbServicesCarriedOut: Option[MsbServicesCarriedOut] = None,
-                               hvdGoodsSold: Option[HvdGoodsSold] = None,
-                               hvdAlcoholTobacco: Option[HvdAlcoholTobacco] = None,
-                               aspServicesOffered: Option[AspServicesOffered] = None,
-                               tcspServicesOffered: Option[TcspServicesOffered] = None,
-                               tcspServicesforRegOffBusinessAddrVirtualOff: Option[ServicesforRegOff] = None,
-                               eabServicesCarriedOut: Option[EabServices] = None,
-                               ampServicesCarriedOut: Option[AmpServices] = None,
-                               all: Option[BusinessActivitiesAll] = None)
+  mlrActivitiesAppliedFor: Option[MlrActivitiesAppliedFor] = None,
+  msbServicesCarriedOut: Option[MsbServicesCarriedOut] = None,
+  hvdGoodsSold: Option[HvdGoodsSold] = None,
+  hvdAlcoholTobacco: Option[HvdAlcoholTobacco] = None,
+  aspServicesOffered: Option[AspServicesOffered] = None,
+  tcspServicesOffered: Option[TcspServicesOffered] = None,
+  tcspServicesforRegOffBusinessAddrVirtualOff: Option[ServicesforRegOff] = None,
+  eabServicesCarriedOut: Option[EabServices] = None,
+  ampServicesCarriedOut: Option[AmpServices] = None,
+  all: Option[BusinessActivitiesAll] = None
+)
 
 object BusinessActivities {
   implicit val format: OFormat[BusinessActivities] = Json.format[BusinessActivities]
 
-  implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities = {
+  implicit def conv(feModel: fe.SubscriptionRequest): BusinessActivities =
     BusinessActivities(
       feModel.businessMatchingSection,
       feModel.businessMatchingSection,
@@ -47,9 +48,8 @@ object BusinessActivities {
       feModel.ampSection,
       BusinessActivitiesAll.convtoActivitiesALL(feModel)
     )
-  }
 
-  def convWithFlag(feModel: fe.SubscriptionRequest): BusinessActivities = {
+  def convWithFlag(feModel: fe.SubscriptionRequest): BusinessActivities =
     BusinessActivities(
       feModel.businessMatchingSection,
       feModel.businessMatchingSection,
@@ -62,7 +62,5 @@ object BusinessActivities {
       feModel.ampSection,
       BusinessActivitiesAll.convtoActivitiesALLWithFlag(feModel)
     )
-  }
-
 
 }

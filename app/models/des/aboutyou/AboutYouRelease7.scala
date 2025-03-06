@@ -18,46 +18,49 @@ package models.des.aboutyou
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AboutYouRelease7(individualDetails: Option[IndividualDetails] = None,
-                            employedWithinBusiness: Boolean,
-                            roleWithinBusiness: Option[RolesWithinBusiness] = None,
-                            roleForTheBusiness: Option[RoleForTheBusiness] = None)
+case class AboutYouRelease7(
+  individualDetails: Option[IndividualDetails] = None,
+  employedWithinBusiness: Boolean,
+  roleWithinBusiness: Option[RolesWithinBusiness] = None,
+  roleForTheBusiness: Option[RoleForTheBusiness] = None
+)
 
 object AboutYouRelease7 {
   implicit val format: OFormat[AboutYouRelease7] = Json.format[AboutYouRelease7]
 
-
-  private def rolesWithinBusinessConvert(person: models.fe.declaration.AddPerson): models.des.aboutyou.RolesWithinBusiness = {
+  private def rolesWithinBusinessConvert(
+    person: models.fe.declaration.AddPerson
+  ): models.des.aboutyou.RolesWithinBusiness = {
     import models.fe.declaration._
 
     person.roleWithinBusiness.roles.foldLeft(
-      RolesWithinBusiness(false, false, false, false, false, false, false, false, None)) {
-      (result, roleType) =>
-        roleType match {
-          case BeneficialShareholder => result.copy(beneficialShareholder = true)
-          case Director => result.copy(director = true)
-          case Partner => result.copy(partner = true)
-          case InternalAccountant => result.copy(internalAccountant = true)
-          case SoleProprietor => result.copy(soleProprietor = true)
-          case NominatedOfficer => result.copy(nominatedOfficer = true)
-          case DesignatedMember => result.copy(designatedMember = true)
-          case Other(details) => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
-          case _ => result
-        }
+      RolesWithinBusiness(false, false, false, false, false, false, false, false, None)
+    ) { (result, roleType) =>
+      roleType match {
+        case BeneficialShareholder => result.copy(beneficialShareholder = true)
+        case Director              => result.copy(director = true)
+        case Partner               => result.copy(partner = true)
+        case InternalAccountant    => result.copy(internalAccountant = true)
+        case SoleProprietor        => result.copy(soleProprietor = true)
+        case NominatedOfficer      => result.copy(nominatedOfficer = true)
+        case DesignatedMember      => result.copy(designatedMember = true)
+        case Other(details)        => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
+        case _                     => result
+      }
     }
   }
 
-  private def roleForTheBusinessConvert(person: models.fe.declaration.AddPerson): models.des.aboutyou.RoleForTheBusiness = {
+  private def roleForTheBusinessConvert(
+    person: models.fe.declaration.AddPerson
+  ): models.des.aboutyou.RoleForTheBusiness = {
     import models.fe.declaration._
 
-    person.roleWithinBusiness.roles.foldLeft(
-      RoleForTheBusiness(false, false, None)) {
-      (result, roleType) =>
-        roleType match {
-          case ExternalAccountant => result.copy(externalAccountant = true)
-          case Other(details) => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
-          case _ => result
-        }
+    person.roleWithinBusiness.roles.foldLeft(RoleForTheBusiness(false, false, None)) { (result, roleType) =>
+      roleType match {
+        case ExternalAccountant => result.copy(externalAccountant = true)
+        case Other(details)     => result.copy(other = true, specifyOtherRoleForBusiness = Some(details))
+        case _                  => result
+      }
     }
   }
 
@@ -79,49 +82,47 @@ object AboutYouRelease7 {
     )
   }
 
-
   implicit def convertToRelease7(old: models.des.aboutyou.Aboutyou): AboutYouRelease7 = {
 
     val convertWithinFromOld: RolesWithinBusiness = {
       val roleWithin = old.roleWithinBusiness.foldLeft(
-        RolesWithinBusiness(false, false, false, false, false, false, false, false, None)) {
-        (result, roleString) =>
-          roleString match {
-            case "Beneficial Shareholder" => result.copy(beneficialShareholder = true)
-            case "Director" => result.copy(director = true)
-            case "Partner" => result.copy(partner = true)
-            case "Internal Accountant" => result.copy(internalAccountant = true)
-            case "Sole Proprietor" => result.copy(soleProprietor = true)
-            case "Nominated Officer" => result.copy(nominatedOfficer = true)
-            case "Designated Member" => result.copy(designatedMember = true)
-            case _ => result
-          }
+        RolesWithinBusiness(false, false, false, false, false, false, false, false, None)
+      ) { (result, roleString) =>
+        roleString match {
+          case "Beneficial Shareholder" => result.copy(beneficialShareholder = true)
+          case "Director"               => result.copy(director = true)
+          case "Partner"                => result.copy(partner = true)
+          case "Internal Accountant"    => result.copy(internalAccountant = true)
+          case "Sole Proprietor"        => result.copy(soleProprietor = true)
+          case "Nominated Officer"      => result.copy(nominatedOfficer = true)
+          case "Designated Member"      => result.copy(designatedMember = true)
+          case _                        => result
+        }
       }
 
       old.specifyOtherRoleInBusiness match {
         case Some(x) => roleWithin.copy(other = true, specifyOtherRoleInBusiness = Some(x))
-        case _ => roleWithin
+        case _       => roleWithin
       }
     }
 
     val convertForFromOld: RoleForTheBusiness = {
-      val roleFor = old.roleForTheBusiness.foldLeft(
-        RoleForTheBusiness(false, false, None)) {
-        (result, roleString) =>
-          roleString match {
-            case "External Accountant" => result.copy(externalAccountant = true)
-            case _ => result
-          }
+      val roleFor = old.roleForTheBusiness.foldLeft(RoleForTheBusiness(false, false, None)) { (result, roleString) =>
+        roleString match {
+          case "External Accountant" => result.copy(externalAccountant = true)
+          case _                     => result
+        }
       }
 
       old.specifyOtherRoleForBusiness match {
         case Some(x) => roleFor.copy(other = true, specifyOtherRoleForBusiness = Some(x))
-        case _ => roleFor
+        case _       => roleFor
       }
 
     }
 
-    AboutYouRelease7(old.individualDetails,
+    AboutYouRelease7(
+      old.individualDetails,
       old.employedWithinBusiness,
       Some(convertWithinFromOld),
       Some(convertForFromOld)

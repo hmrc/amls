@@ -57,7 +57,9 @@ class PositionWithinBusinessSpec extends PlaySpec {
     }
 
     "successfully validate given an Other value" in {
-      Json.fromJson[PositionWithinBusiness](Json.obj("other" -> "some other role")) mustBe JsSuccess(Other("some other role"))
+      Json.fromJson[PositionWithinBusiness](Json.obj("other" -> "some other role")) mustBe JsSuccess(
+        Other("some other role")
+      )
     }
 
     "fail to validate when given an empty value" in {
@@ -95,15 +97,44 @@ class PositionWithinBusinessSpec extends PlaySpec {
 
     "convert des model to frontend model successfully" in {
 
-      val position = Some(PositionInBusiness(
-        Some(DesSoleProprietor(true, true, Some(false), Some("texty text text"))),
-        Some(Partnership(true, true)),
-        Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true)))
-      ))
+      val position = Some(
+        PositionInBusiness(
+          Some(DesSoleProprietor(true, true, Some(false), Some("texty text text"))),
+          Some(Partnership(true, true)),
+          Some(CorpBodyOrUnInCorpBodyOrLlp(true, true, true, Some(true)))
+        )
+      )
 
-      val desModel = ResponsiblePersons(None, None, None, None, None, None, None, None, None, position, None, false, None, false, None, Some(today.toString()), Some(false), None, extra = RPExtra())
+      val desModel = ResponsiblePersons(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        position,
+        None,
+        false,
+        None,
+        false,
+        None,
+        Some(today.toString()),
+        Some(false),
+        None,
+        extra = RPExtra()
+      )
 
-      Positions.conv(desModel) must be(Some(Positions(Set(Partner, SoleProprietor, NominatedOfficer, Director, BeneficialOwner, DesignatedMember), Some(today))))
+      Positions.conv(desModel) must be(
+        Some(
+          Positions(
+            Set(Partner, SoleProprietor, NominatedOfficer, Director, BeneficialOwner, DesignatedMember),
+            Some(today)
+          )
+        )
+      )
     }
 
     "convert des model to frontend model successfully with other details" in {
@@ -111,7 +142,11 @@ class PositionWithinBusinessSpec extends PlaySpec {
       val positions = Seq(
         PositionInBusiness(Some(DesSoleProprietor(true, false, Some(true), Some("another sp role"))), None, None),
         PositionInBusiness(None, Some(Partnership(true, false, Some(true), Some("another partnership role"))), None),
-        PositionInBusiness(None, None, Some(CorpBodyOrUnInCorpBodyOrLlp(false, true, false, None, Some(true), Some("another corp role"))))
+        PositionInBusiness(
+          None,
+          None,
+          Some(CorpBodyOrUnInCorpBodyOrLlp(false, true, false, None, Some(true), Some("another corp role")))
+        )
       )
 
       val expectedResults = Seq(
@@ -120,22 +155,63 @@ class PositionWithinBusinessSpec extends PlaySpec {
         Positions(Set(BeneficialOwner, Other("another corp role")), Some(today))
       )
 
-      positions.zip(expectedResults) foreach {
-        case (pos, result) =>
-          //noinspection ScalaStyle
-          val desModel = ResponsiblePersons(None, None, None, None, None, None, None, None, None, Some(pos), None, false, None, false, None, Some(today.toString()), Some(false), None, extra = RPExtra())
-          Positions.conv(desModel) mustBe Some(result)
+      positions.zip(expectedResults) foreach { case (pos, result) =>
+        // noinspection ScalaStyle
+        val desModel = ResponsiblePersons(
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          Some(pos),
+          None,
+          false,
+          None,
+          false,
+          None,
+          Some(today.toString()),
+          Some(false),
+          None,
+          extra = RPExtra()
+        )
+        Positions.conv(desModel) mustBe Some(result)
       }
     }
 
     "convert des model to frontend model successfully when user has no data selected" in {
-      val position = Some(PositionInBusiness(
-        Some(DesSoleProprietor(false, false)),
-        Some(Partnership(false, false)),
-        Some(CorpBodyOrUnInCorpBodyOrLlp(false, false, false))
-      ))
+      val position = Some(
+        PositionInBusiness(
+          Some(DesSoleProprietor(false, false)),
+          Some(Partnership(false, false)),
+          Some(CorpBodyOrUnInCorpBodyOrLlp(false, false, false))
+        )
+      )
 
-      val desModel = ResponsiblePersons(None, None, None, None, None, None, None, None, None, position, None, false, None, false, None, None, Some(false), None, extra = RPExtra())
+      val desModel = ResponsiblePersons(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        position,
+        None,
+        false,
+        None,
+        false,
+        None,
+        None,
+        Some(false),
+        None,
+        extra = RPExtra()
+      )
 
       Positions.conv(desModel) must be(None)
     }

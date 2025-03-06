@@ -25,12 +25,13 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatestplus.play.PlaySpec
 import utils.AmlsBaseSpec
 
-class SupervisionSpec extends PlaySpec
-  with AmlsBaseSpec
-  with SupervisionValues
-  with ScalaCheckPropertyChecks
-  with SupervisionGenerators
-  with BusinessActivityGenerators {
+class SupervisionSpec
+    extends PlaySpec
+    with AmlsBaseSpec
+    with SupervisionValues
+    with ScalaCheckPropertyChecks
+    with SupervisionGenerators
+    with BusinessActivityGenerators {
 
   "Supervision" must {
     "convert supervision des to frontend successfully" when {
@@ -51,7 +52,9 @@ class SupervisionSpec extends PlaySpec
         "the des model is None and the application contains ASP or TCSP" in {
           forAll(activitiesWithSupervision) { activitySet =>
             val result = Supervision.convertFrom(None, Some(activitySet))
-            result mustBe Some(Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo)))
+            result mustBe Some(
+              Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
+            )
           }
         }
       }
@@ -77,9 +80,38 @@ class SupervisionSpec extends PlaySpec
 }
 
 trait SupervisionValues {
-  val activitiesWithAspTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = true, eab = false, bpsp = false, tditpsp = false, amp = false)
-  val activitiesWithAsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = true, tcsp = false, eab = false, bpsp = false, tditpsp = false, amp = false)
-  val activitiesWithTcsp = MlrActivitiesAppliedFor(msb = false, hvd = false, asp = false, tcsp = true, eab = false, bpsp = false, tditpsp = false, amp = false)
-  val activitiesWithSupervision: Gen[MlrActivitiesAppliedFor] = Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
-  val negativeSupervision = Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
+  val activitiesWithAspTcsp                                   = MlrActivitiesAppliedFor(
+    msb = false,
+    hvd = false,
+    asp = true,
+    tcsp = true,
+    eab = false,
+    bpsp = false,
+    tditpsp = false,
+    amp = false
+  )
+  val activitiesWithAsp                                       = MlrActivitiesAppliedFor(
+    msb = false,
+    hvd = false,
+    asp = true,
+    tcsp = false,
+    eab = false,
+    bpsp = false,
+    tditpsp = false,
+    amp = false
+  )
+  val activitiesWithTcsp                                      = MlrActivitiesAppliedFor(
+    msb = false,
+    hvd = false,
+    asp = false,
+    tcsp = true,
+    eab = false,
+    bpsp = false,
+    tditpsp = false,
+    amp = false
+  )
+  val activitiesWithSupervision: Gen[MlrActivitiesAppliedFor] =
+    Gen.oneOf(activitiesWithAspTcsp, activitiesWithAsp, activitiesWithTcsp)
+  val negativeSupervision                                     =
+    Supervision(Some(AnotherBodyNo), Some(ProfessionalBodyMemberNo), None, Some(ProfessionalBodyNo))
 }

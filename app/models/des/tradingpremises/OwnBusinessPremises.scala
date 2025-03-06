@@ -19,7 +19,10 @@ package models.des.tradingpremises
 import play.api.libs.json.{Json, OFormat}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
-case class OwnBusinessPremises(ownBusinessPremises: Boolean, ownBusinessPremisesDetails: Option[Seq[OwnBusinessPremisesDetails]])
+case class OwnBusinessPremises(
+  ownBusinessPremises: Boolean,
+  ownBusinessPremisesDetails: Option[Seq[OwnBusinessPremisesDetails]]
+)
 
 object OwnBusinessPremises {
 
@@ -30,7 +33,7 @@ object OwnBusinessPremises {
     tradingPremises match {
       case `empty` =>
         OwnBusinessPremises(false, None)
-      case _ =>
+      case _       =>
         OwnBusinessPremises(true, Some(tradingPremises))
     }
   }

@@ -19,30 +19,37 @@ package models.fe.responsiblepeople
 import models.des.responsiblepeople.PreviousNameDetails
 import play.api.libs.json.{Json, OFormat}
 
-case class PreviousName(hasPreviousName: Boolean, firstName: Option[String], middleName: Option[String], lastName: Option[String])
+case class PreviousName(
+  hasPreviousName: Boolean,
+  firstName: Option[String],
+  middleName: Option[String],
+  lastName: Option[String]
+)
 
 object PreviousName {
   implicit val format: OFormat[PreviousName] = Json.format[PreviousName]
 
   val noPreviousName = PreviousName(false, None, None, None)
 
-  implicit def conv(desPrevNames: Option[PreviousNameDetails]): Option[PreviousName] = {
+  implicit def conv(desPrevNames: Option[PreviousNameDetails]): Option[PreviousName] =
     desPrevNames match {
-      case Some(pName) => pName.nameEverChanged match {
-        case true => {
-          pName.previousName match {
-            case Some(name) => Some(PreviousName(
-              true,
-              name.firstName,
-              name.middleName,
-              name.lastName
-            ))
-            case None => Some(noPreviousName)
-          }
+      case Some(pName) =>
+        pName.nameEverChanged match {
+          case true  =>
+            pName.previousName match {
+              case Some(name) =>
+                Some(
+                  PreviousName(
+                    true,
+                    name.firstName,
+                    name.middleName,
+                    name.lastName
+                  )
+                )
+              case None       => Some(noPreviousName)
+            }
+          case false => Some(noPreviousName)
         }
-        case false => Some(noPreviousName)
-      }
-      case _ => Some(noPreviousName)
+      case _           => Some(noPreviousName)
     }
-  }
 }

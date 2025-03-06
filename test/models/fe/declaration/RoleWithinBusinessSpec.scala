@@ -41,7 +41,7 @@ class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneApp
       "given a set of all values" in {
 
         val json = Json.obj(
-          "roleWithinBusiness" -> Set(
+          "roleWithinBusiness"      -> Set(
             "BeneficialShareholder",
             "Director",
             "Partner",
@@ -55,17 +55,19 @@ class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneApp
           "roleWithinBusinessOther" -> "some other text"
         )
 
-        val model = RoleWithinBusiness(Set(
-          Partner,
-          SoleProprietor,
-          DesignatedMember,
-          NominatedOfficer,
-          Director,
-          BeneficialShareholder,
-          Other("some other text"),
-          ExternalAccountant,
-          InternalAccountant
-        ))
+        val model = RoleWithinBusiness(
+          Set(
+            Partner,
+            SoleProprietor,
+            DesignatedMember,
+            NominatedOfficer,
+            Director,
+            BeneficialShareholder,
+            Other("some other text"),
+            ExternalAccountant,
+            InternalAccountant
+          )
+        )
 
         RoleWithinBusiness.jsonReads.reads(json) must be(JsSuccess(model))
 
@@ -97,7 +99,7 @@ class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneApp
       "given a set of all values" in {
 
         val json = Json.obj(
-          "roleWithinBusiness" -> Seq(
+          "roleWithinBusiness"      -> Seq(
             "Other",
             "Partner",
             "SoleProprietor",
@@ -111,17 +113,19 @@ class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneApp
           "roleWithinBusinessOther" -> "Some other text"
         )
 
-        val model = RoleWithinBusiness(Set(
-          Partner,
-          SoleProprietor,
-          DesignatedMember,
-          NominatedOfficer,
-          Director,
-          BeneficialShareholder,
-          Other("Some other text"),
-          ExternalAccountant,
-          InternalAccountant
-        ))
+        val model = RoleWithinBusiness(
+          Set(
+            Partner,
+            SoleProprietor,
+            DesignatedMember,
+            NominatedOfficer,
+            Director,
+            BeneficialShareholder,
+            Other("Some other text"),
+            ExternalAccountant,
+            InternalAccountant
+          )
+        )
 
         RoleWithinBusiness.jsonWrite.writes(model) must equal(json)
       }
@@ -138,18 +142,19 @@ class RoleWithinBusinessSpec extends PlaySpec with AmlsBaseSpec with GuiceOneApp
         Some(RoleForTheBusiness(true, true, Some("Some other text")))
       )
 
-      val feModel = RoleWithinBusiness(Set(
-        Partner,
-        SoleProprietor,
-        DesignatedMember,
-        NominatedOfficer,
-        Director,
-        BeneficialShareholder,
-        Other("Some other text"),
-        ExternalAccountant,
-        InternalAccountant
-      ))
-
+      val feModel = RoleWithinBusiness(
+        Set(
+          Partner,
+          SoleProprietor,
+          DesignatedMember,
+          NominatedOfficer,
+          Director,
+          BeneficialShareholder,
+          Other("Some other text"),
+          ExternalAccountant,
+          InternalAccountant
+        )
+      )
 
       RoleWithinBusiness.convert(desModel) must be(feModel)
 

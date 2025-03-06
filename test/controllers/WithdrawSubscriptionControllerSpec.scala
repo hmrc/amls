@@ -34,7 +34,7 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
 
   trait Fixture {
     lazy val desConnector = mock[WithdrawSubscriptionConnector]
-    val controller = new WithdrawSubscriptionController(
+    val controller        = new WithdrawSubscriptionController(
       connector = desConnector,
       authAction = authAction,
       bodyParsers = mockBodyParsers,
@@ -44,10 +44,12 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
 
   val success = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
 
-  private val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-    "withdrawalDate" -> "2015-08-23",
-    "withdrawalReason" -> "Other, please specify",
-    "withdrawalReasonOthers" -> "Other Reason")
+  private val inputRequest = Json.obj(
+    "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+    "withdrawalDate"           -> "2015-08-23",
+    "withdrawalReason"         -> "Other, please specify",
+    "withdrawalReasonOthers"   -> "Other Reason"
+  )
 
   private val postRequest = FakeRequest("POST", "/")
     .withHeaders("CONTENT_TYPE" -> "application/json")
@@ -64,22 +66,21 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
         .thenReturn(Future.successful(success))
 
       private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest)
-      status(result) must be(OK)
+      status(result)        must be(OK)
       contentAsJson(result) must be(Json.toJson(success))
     }
 
     "successfully return failed response on invalid request" in new Fixture {
-      private val response = Json.obj("errors" -> Seq(
-          Json.obj("path" -> "obj.withdrawalReason",
-          "error" -> "error.path.missing"),
-          Json.obj("path" -> "obj.acknowledgementReference",
-          "error" -> "error.path.missing"),
-          Json.obj("path" -> "obj.withdrawalDate",
-          "error" -> "error.path.missing")
-      ))
+      private val response = Json.obj(
+        "errors" -> Seq(
+          Json.obj("path" -> "obj.withdrawalReason", "error"         -> "error.path.missing"),
+          Json.obj("path" -> "obj.acknowledgementReference", "error" -> "error.path.missing"),
+          Json.obj("path" -> "obj.withdrawalDate", "error"           -> "error.path.missing")
+        )
+      )
 
       private val result = controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequestWithNoBody)
-      status(result) must be(BAD_REQUEST)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
 
@@ -90,7 +91,7 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
       whenReady(controller.withdrawal("org", "TestOrgRef", amlsRegistrationNumber)(postRequest).failed) {
         case HttpStatusException(status, body) =>
           status must be(INTERNAL_SERVER_ERROR)
-          body must be(Some("message"))
+          body   must be(Some("message"))
       }
     }
 
@@ -100,7 +101,7 @@ class WithdrawSubscriptionControllerSpec extends AmlsBaseSpec with AmlsReference
       )
 
       private val result = controller.withdrawal("org", "TestOrgRef", "fsdfsdf")(postRequest)
-      status(result) must be(BAD_REQUEST)
+      status(result)        must be(BAD_REQUEST)
       contentAsJson(result) must be(response)
     }
   }

@@ -37,53 +37,59 @@ object ResponseType {
   import utils.MappingUtils.Implicits._
 
   implicit val jsonWrites: Writes[ResponseType] = Writes[ResponseType] {
-    case SubscriptionResponseType => JsString("SubscriptionReponse")
+    case SubscriptionResponseType     => JsString("SubscriptionReponse")
     case AmendOrVariationResponseType => JsString("AmendOrVariationResponse")
   }
 
   implicit val jsonReads: Reads[ResponseType] = {
     import play.api.libs.json.Reads.StringReads
-    (__).read[String] flatMap {
-      case "SubscriptionReponse" => SubscriptionResponseType
+    __.read[String] flatMap {
+      case "SubscriptionReponse"      => SubscriptionResponseType
       case "AmendOrVariationResponse" => AmendOrVariationResponseType
-      case _ =>
+      case _                          =>
         JsonValidationError("error.invalid")
     }
   }
 }
 
-case class Fees(responseType: ResponseType,
-                amlsReferenceNumber: String,
-                registrationFee: BigDecimal = 0,
-                fpFee: Option[BigDecimal],
-                premiseFee: BigDecimal = 0,
-                totalFees: BigDecimal = 0,
-                paymentReference: Option[String],
-                difference: Option[BigDecimal],
-                approvalCheckFeeRate: Option[BigDecimal] = None,
-                approvalCheckFee: Option[BigDecimal] = None,
-                createdAt: LocalDateTime)
+case class Fees(
+  responseType: ResponseType,
+  amlsReferenceNumber: String,
+  registrationFee: BigDecimal = 0,
+  fpFee: Option[BigDecimal],
+  premiseFee: BigDecimal = 0,
+  totalFees: BigDecimal = 0,
+  paymentReference: Option[String],
+  difference: Option[BigDecimal],
+  approvalCheckFeeRate: Option[BigDecimal] = None,
+  approvalCheckFee: Option[BigDecimal] = None,
+  createdAt: LocalDateTime
+)
 
 object Fees {
-  def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] = {
-    subscriptionResponse.subscriptionFees map {
-      feesResponse =>
-        Fees(SubscriptionResponseType,
-          subscriptionResponse.amlsRefNo,
-          feesResponse.registrationFee,
-          feesResponse.fpFee,
-          feesResponse.premiseFee,
-          feesResponse.totalFees,
-          Some(feesResponse.paymentReference),
-          None,
-          feesResponse.approvalCheckFeeRate,
-          feesResponse.approvalCheckFee,
-          LocalDateTime.now(UTC))
+  def convertSubscription(subscriptionResponse: SubscriptionResponse): Option[Fees] =
+    subscriptionResponse.subscriptionFees map { feesResponse =>
+      Fees(
+        SubscriptionResponseType,
+        subscriptionResponse.amlsRefNo,
+        feesResponse.registrationFee,
+        feesResponse.fpFee,
+        feesResponse.premiseFee,
+        feesResponse.totalFees,
+        Some(feesResponse.paymentReference),
+        None,
+        feesResponse.approvalCheckFeeRate,
+        feesResponse.approvalCheckFee,
+        LocalDateTime.now(UTC)
+      )
     }
-  }
 
-  implicit def convertAmendmentVariation(amendVariationResponse: AmendVariationResponse, amlsReferenceNumber: String): Fees = {
-    Fees(AmendOrVariationResponseType,
+  implicit def convertAmendmentVariation(
+    amendVariationResponse: AmendVariationResponse,
+    amlsReferenceNumber: String
+  ): Fees =
+    Fees(
+      AmendOrVariationResponseType,
       amlsReferenceNumber,
       amendVariationResponse.registrationFee.getOrElse(0),
       amendVariationResponse.fpFee,
@@ -93,8 +99,8 @@ object Fees {
       amendVariationResponse.difference,
       amendVariationResponse.approvalCheckFeeRate,
       amendVariationResponse.approvalCheckFee,
-      LocalDateTime.now(UTC))
-  }
+      LocalDateTime.now(UTC)
+    )
 
   implicit lazy val reads: Reads[Fees] =
     (
@@ -109,8 +115,7 @@ object Fees {
         (__ \ "approvalCheckFeeRate").readNullable[BigDecimal] and
         (__ \ "approvalCheckFee").readNullable[BigDecimal] and
         (__ \ "createdAt").read[LocalDateTime](readLocalDateTime)
-      ) (Fees.apply _)
-
+    )(Fees.apply _)
 
   implicit lazy val writes: OWrites[Fees] =
     (
@@ -125,7 +130,7 @@ object Fees {
         (__ \ "approvalCheckFeeRate").writeNullable[BigDecimal] and
         (__ \ "approvalCheckFee").writeNullable[BigDecimal] and
         (__ \ "createdAt").write[LocalDateTime](JsPathSupport.localDateTimeWrites)
-      ) (unlift(Fees.unapply))
+    )(unlift(Fees.unapply))
 
   implicit val format: OFormat[Fees] = OFormat(reads, writes)
 }

@@ -20,49 +20,50 @@ import models.fe.tcsp._
 import play.api.libs.json.{Json, OFormat}
 
 case class ServicesforRegOff(
-                              callHandling: Boolean = false,
-                              emailHandling: Boolean = false,
-                              emailServer: Boolean = false,
-                              selfCollectMailboxes: Boolean = false,
-                              mailForwarding: Boolean = false,
-                              receptionist: Boolean = false,
-                              conferenceRooms: Boolean = false,
-                              other: Boolean = false,
-                              specifyOther: Option[String] = None
-                            )
+  callHandling: Boolean = false,
+  emailHandling: Boolean = false,
+  emailServer: Boolean = false,
+  selfCollectMailboxes: Boolean = false,
+  mailForwarding: Boolean = false,
+  receptionist: Boolean = false,
+  conferenceRooms: Boolean = false,
+  other: Boolean = false,
+  specifyOther: Option[String] = None
+)
 
 object ServicesforRegOff {
 
   implicit val format: OFormat[ServicesforRegOff] = Json.format[ServicesforRegOff]
 
-  implicit def conv(tcsp: Option[Tcsp]): Option[ServicesforRegOff] = {
+  implicit def conv(tcsp: Option[Tcsp]): Option[ServicesforRegOff] =
     tcsp match {
       case Some(data) =>
         lazy val serviceProviders = tcsp.tcspTypes.fold[Set[ServiceProvider]](Set.empty)(x => x.serviceProviders)
 
         if (serviceProviders.contains(RegisteredOfficeEtc)) {
-          data.providedServices.fold[Set[TcspService]](Set.empty) { x => x.services }
+          data.providedServices.fold[Set[TcspService]](Set.empty)(x => x.services)
         } else {
           None
         }
-      case _ => None
+      case _          => None
     }
-  }
 
   implicit def conv1(svcs: Set[TcspService]): Option[ServicesforRegOff] = {
-    val servicesforRegOff = svcs.foldLeft[ServicesforRegOff](ServicesforRegOff(false, false, false, false, false, false, false, false, None))((x, y) =>
-      y match {
-        case PhonecallHandling => x.copy(callHandling = true)
-        case EmailHandling => x.copy(emailHandling = true)
-        case EmailServer => x.copy(emailServer = true)
-        case SelfCollectMailboxes => x.copy(selfCollectMailboxes = true)
-        case MailForwarding => x.copy(mailForwarding = true)
-        case Receptionist => x.copy(receptionist = true)
-        case ConferenceRooms => x.copy(conferenceRooms = true)
-        case Other(dtls) => x.copy(other = true, specifyOther = Some(dtls))
+    val servicesforRegOff =
+      svcs.foldLeft[ServicesforRegOff](ServicesforRegOff(false, false, false, false, false, false, false, false, None))(
+        (x, y) =>
+          y match {
+            case PhonecallHandling    => x.copy(callHandling = true)
+            case EmailHandling        => x.copy(emailHandling = true)
+            case EmailServer          => x.copy(emailServer = true)
+            case SelfCollectMailboxes => x.copy(selfCollectMailboxes = true)
+            case MailForwarding       => x.copy(mailForwarding = true)
+            case Receptionist         => x.copy(receptionist = true)
+            case ConferenceRooms      => x.copy(conferenceRooms = true)
+            case Other(dtls)          => x.copy(other = true, specifyOther = Some(dtls))
 
-      }
-    )
+          }
+      )
     Some(servicesforRegOff)
   }
 }

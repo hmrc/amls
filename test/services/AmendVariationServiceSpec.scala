@@ -40,11 +40,12 @@ import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendVariationServiceSpec extends PlaySpec
-  with GuiceOneAppPerSuite
-  with ScalaFutures
-  with IntegrationPatience
-  with AmlsReferenceNumberGenerator {
+class AmendVariationServiceSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with ScalaFutures
+    with IntegrationPatience
+    with AmlsReferenceNumberGenerator {
 
   val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
@@ -63,21 +64,23 @@ class AmendVariationServiceSpec extends PlaySpec
 
   val feeRepo: FeesRepository = mock(classOf[FeesRepository])
 
-  class TestAmendVariationService extends AmendVariationService(
-    mock(classOf[AmendVariationDESConnector]),
-    mock(classOf[SubscriptionStatusDESConnector]),
-    mock(classOf[ViewDESConnector]),
-    mock(classOf[AuditConnector]),
-    mock(classOf[AmendVariationValidator]),
-    feeRepo,
-    mock(classOf[ApplicationConfig])
-  ) {
+  class TestAmendVariationService
+      extends AmendVariationService(
+        mock(classOf[AmendVariationDESConnector]),
+        mock(classOf[SubscriptionStatusDESConnector]),
+        mock(classOf[ViewDESConnector]),
+        mock(classOf[AuditConnector]),
+        mock(classOf[AmendVariationValidator]),
+        feeRepo,
+        mock(classOf[ApplicationConfig])
+      ) {
     def validateResult: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
     override private[services] def amendVariationResponse(
-                                                           request: AmendVariationRequest,
-                                                           isRenewalWindow: Boolean,
-                                                           des: models.des.AmendVariationResponse) = feAmendVariationResponse
+      request: AmendVariationRequest,
+      isRenewalWindow: Boolean,
+      des: models.des.AmendVariationResponse
+    ) = feAmendVariationResponse
   }
 
   val avs = new TestAmendVariationService
@@ -105,10 +108,11 @@ class AmendVariationServiceSpec extends PlaySpec
     Some(100.0)
   )
 
-  val statusResponse = ReadStatusResponse(LocalDateTime.now, "Approved", None, None, None, Some(LocalDate.of(2017, 4, 30)), false)
+  val statusResponse =
+    ReadStatusResponse(LocalDateTime.now, "Approved", None, None, None, Some(LocalDate.of(2017, 4, 30)), false)
 
   val unchangedExtra: RPExtra = RPExtra(status = Some("Unchanged"))
-  val addedExtra: RPExtra = RPExtra(status = Some("Added"))
+  val addedExtra: RPExtra     = RPExtra(status = Some("Added"))
 
   val unchangedResponsiblePersons = ResponsiblePersons(
     None,
@@ -167,22 +171,38 @@ class AmendVariationServiceSpec extends PlaySpec
       } thenReturn tradingPremises
 
       when {
-        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
-        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(
+          any(),
+          any(),
+          any(),
+          any(),
+          any()
+        )
+        avs.amendVariationDesConnector.amend(ArgumentMatchers.eq(amlsRegistrationNumber), ArgumentMatchers.eq(request))(
+          any(),
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.successful(response)
 
       when {
         avs.feeResponseRepository.insert(any())
       } thenReturn Future.successful(true)
 
-      whenReady(avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))) {
-        result =>
-          result mustEqual feAmendVariationResponse
+      whenReady(
+        avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))
+      ) { result =>
+        result mustEqual feAmendVariationResponse
       }
     }
 
     "evaluate isBusinessReferenceChanged when api5 data is same as api6 " in {
-      avs.isBusinessReferenceChanged(DesConstants.AmendVariationRequestModel, DesConstants.SubscriptionViewModelForRp) must be(false)
+      avs.isBusinessReferenceChanged(
+        DesConstants.AmendVariationRequestModel,
+        DesConstants.SubscriptionViewModelForRp
+      ) must be(false)
     }
 
     "compare and update api6 request with api5 1" in {
@@ -199,11 +219,13 @@ class AmendVariationServiceSpec extends PlaySpec
         )
       )
 
-      whenReady(avs.compareAndUpdate(
-        DesConstants.amendVariationRequest1, amlsRegistrationNumber)(hc, apiRetryHelper = mock(classOf[ApiRetryHelper]))
-      ) {
-        updatedRequest =>
-          updatedRequest must be(testRequest)
+      whenReady(
+        avs.compareAndUpdate(DesConstants.amendVariationRequest1, amlsRegistrationNumber)(
+          hc,
+          apiRetryHelper = mock(classOf[ApiRetryHelper])
+        )
+      ) { updatedRequest =>
+        updatedRequest must be(testRequest)
       }
     }
   }

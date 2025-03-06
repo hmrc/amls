@@ -28,22 +28,33 @@ class MlrActivitiesAppliedForSpec extends PlaySpec {
 
     "convert partial front end Business Matching model to des MlrActivitiesAppliedFor" in {
 
-      val businessActivities = BusinessActivities(Set(MoneyServiceBusiness,
-        TrustAndCompanyServices, TelephonePaymentService, EstateAgentBusinessService, BillPaymentServices))
-      val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
-      val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
-      val model = BusinessMatching(reviewDetails, businessActivities, None, None)
+      val businessActivities = BusinessActivities(
+        Set(
+          MoneyServiceBusiness,
+          TrustAndCompanyServices,
+          TelephonePaymentService,
+          EstateAgentBusinessService,
+          BillPaymentServices
+        )
+      )
+      val businessAddress    = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+      val reviewDetails      = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
+      val model              = BusinessMatching(reviewDetails, businessActivities, None, None)
 
-      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, true, false)))
+      MlrActivitiesAppliedFor.conv(model) must be(
+        Some(MlrActivitiesAppliedFor(true, false, false, true, true, true, true, false))
+      )
     }
 
     "convert when no front model is empty" in {
       val businessActivities = BusinessActivities(Set.empty)
-      val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
-      val reviewDetails = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
-      val model = BusinessMatching(reviewDetails, businessActivities, None, None)
+      val businessAddress    = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+      val reviewDetails      = ReviewDetails("BusinessName", SoleProprietor, businessAddress, "11111111")
+      val model              = BusinessMatching(reviewDetails, businessActivities, None, None)
 
-      MlrActivitiesAppliedFor.conv(model) must be(Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false)))
+      MlrActivitiesAppliedFor.conv(model) must be(
+        Some(MlrActivitiesAppliedFor(false, false, false, false, false, false, false, false))
+      )
     }
   }
 

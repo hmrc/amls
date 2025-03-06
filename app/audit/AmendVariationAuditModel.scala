@@ -20,12 +20,14 @@ import models.des.{AmendVariationRequest, AmendVariationResponse, ChangeIndicato
 import models.des.businessdetails.BusinessType
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendVariationAuditModel(amlsRegistrationNumber: String,
-                                    response: AmendVariationResponse,
-                                    acknowledgementReference: String,
-                                    typeOfLegalEntity: BusinessType,
-                                    changeIndicators: ChangeIndicators,
-                                    request: AmendVariationRequest)
+case class AmendVariationAuditModel(
+  amlsRegistrationNumber: String,
+  response: AmendVariationResponse,
+  acknowledgementReference: String,
+  typeOfLegalEntity: BusinessType,
+  changeIndicators: ChangeIndicators,
+  request: AmendVariationRequest
+)
 
 object AmendVariationAuditModel {
 

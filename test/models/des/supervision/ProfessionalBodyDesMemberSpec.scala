@@ -21,24 +21,52 @@ import org.scalatestplus.play.PlaySpec
 
 class ProfessionalBodyDesMemberSpec extends PlaySpec {
 
-
   "ProfessionalBodyDesMember" must {
 
     "convert front end model to ProfessionalBodyDesMember true" in {
       val from = Supervision(
         professionalBodyMember = Some(ProfessionalBodyMemberYes),
-        professionalBodies = Some(BusinessTypes(Set(
-          AccountantsIreland,
-          CharteredCertifiedAccountants,
-          AssociationOfBookkeepers,
-          AccountantsScotland,
-          FinancialAccountants,
-          ManagementAccountants
-        )))
+        professionalBodies = Some(
+          BusinessTypes(
+            Set(
+              AccountantsIreland,
+              CharteredCertifiedAccountants,
+              AssociationOfBookkeepers,
+              AccountantsScotland,
+              FinancialAccountants,
+              ManagementAccountants
+            )
+          )
+        )
       )
 
       ProfessionalBodyDesMember.conv(from) must
-        be(Some(ProfessionalBodyDesMember(true, Some(MemberOfProfessionalBody(false, true, false, false, true, false, false, true, true, false, true, true, false, false, None)))))
+        be(
+          Some(
+            ProfessionalBodyDesMember(
+              true,
+              Some(
+                MemberOfProfessionalBody(
+                  false,
+                  true,
+                  false,
+                  false,
+                  true,
+                  false,
+                  false,
+                  true,
+                  true,
+                  false,
+                  true,
+                  true,
+                  false,
+                  false,
+                  None
+                )
+              )
+            )
+          )
+        )
     }
 
     "convert front end model to ProfessionalBodyDesMember false" in {

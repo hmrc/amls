@@ -46,15 +46,15 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
       )
 
       val json = Json.obj(
-        "_id" -> "123456789",
-        "amlsRefNo" -> "X12345678",
-        "safeId" -> "X73289473",
-        "reference" -> "X987654321",
+        "_id"           -> "123456789",
+        "amlsRefNo"     -> "X12345678",
+        "safeId"        -> "X73289473",
+        "reference"     -> "X987654321",
         "amountInPence" -> 10000,
-        "status" -> "Successful",
-        "isBacs" -> true,
-        "createdAt" -> Json.obj(s"$$date" -> Json.obj("$numberLong" -> date.toInstant(UTC).toEpochMilli.toString)),
-        "updatedAt" -> date.plusDays(1)
+        "status"        -> "Successful",
+        "isBacs"        -> true,
+        "createdAt"     -> Json.obj(s"$$date" -> Json.obj("$numberLong" -> date.toInstant(UTC).toEpochMilli.toString)),
+        "updatedAt"     -> date.plusDays(1)
       )
 
       "serialise to Json" in {
@@ -67,14 +67,14 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
 
       "deserialise from Json (old String date format)" in {
         val oldDateFormatJson = Json.obj(
-          "_id" -> "123456789",
-          "amlsRefNo" -> "X12345678",
-          "safeId" -> "X73289473",
-          "reference" -> "X987654321",
+          "_id"           -> "123456789",
+          "amlsRefNo"     -> "X12345678",
+          "safeId"        -> "X73289473",
+          "reference"     -> "X987654321",
           "amountInPence" -> 10000,
-          "status" -> "Successful",
-          "isBacs" -> true,
-          "createdAt" -> "2020-01-01T00:00:05.555"
+          "status"        -> "Successful",
+          "isBacs"        -> true,
+          "createdAt"     -> "2020-01-01T00:00:05.555"
         )
 
         Json.fromJson[Payment](oldDateFormatJson) mustBe JsSuccess(model.copy(updatedAt = None))
@@ -84,9 +84,9 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
     "converting" must {
       "convert from a Pay Api payment with no description" in {
         val payApiModel = payApiPaymentGen.sample.get
-        val refNumber = amlsRefNoGen.sample.get
-        val safeId = amlsRefNoGen.sample.get
-        val now = LocalDateTime.now
+        val refNumber   = amlsRefNoGen.sample.get
+        val safeId      = amlsRefNoGen.sample.get
+        val now         = LocalDateTime.now
 
         Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
           payApiModel.id,
@@ -104,9 +104,9 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
 
       "convert from a Pay Api payment with a description" in {
         val payApiModel = payApiPaymentGenDesc.sample.get
-        val refNumber = amlsRefNoGen.sample.get
-        val safeId = amlsRefNoGen.sample.get
-        val now = LocalDateTime.now
+        val refNumber   = amlsRefNoGen.sample.get
+        val safeId      = amlsRefNoGen.sample.get
+        val now         = LocalDateTime.now
 
         Payment(refNumber, safeId, payApiModel).copy(createdAt = now) mustBe Payment(
           payApiModel.id,
@@ -126,17 +126,18 @@ class PaymentSpec extends PlaySpec with PaymentGenerator {
         val paymentRequest = createBacsPaymentRequestGen.sample.get
 
         Payment(paymentRequest) match {
-          case Payment(_,
-          paymentRequest.amlsReference,
-          paymentRequest.safeId,
-          paymentRequest.paymentReference,
-          _,
-          paymentRequest.amountInPence,
-          Created,
-          _,
-          Some(true),
-          None
-          ) =>
+          case Payment(
+                _,
+                paymentRequest.amlsReference,
+                paymentRequest.safeId,
+                paymentRequest.paymentReference,
+                _,
+                paymentRequest.amountInPence,
+                Created,
+                _,
+                Some(true),
+                None
+              ) =>
           case _ => fail("The resulting payment object was not expected")
         }
       }

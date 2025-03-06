@@ -25,18 +25,18 @@ case class ReviewDetails(businessName: String, businessType: BusinessType, busin
 object ReviewDetails {
   implicit val format: OFormat[ReviewDetails] = Json.format[ReviewDetails]
 
-  implicit def conv1(desView: SubscriptionView): ReviewDetails = {
+  implicit def conv1(desView: SubscriptionView): ReviewDetails =
     ReviewDetails(
       desView.businessDetails.unincorpBody match {
         case Some(unincorpBody) => unincorpBody.companyName
-        case _ => desView.businessDetails.corpAndBodyLlps match {
-          case Some(corpAndBodyLlps) => corpAndBodyLlps.companyName
-          case _ => desView.businessContactDetails.businessAddress.addressLine1
-        }
+        case _                  =>
+          desView.businessDetails.corpAndBodyLlps match {
+            case Some(corpAndBodyLlps) => corpAndBodyLlps.companyName
+            case _                     => desView.businessContactDetails.businessAddress.addressLine1
+          }
       },
       desView.businessDetails.typeOfLegalEntity,
       desView.businessContactDetails.businessAddress,
       ""
     )
-  }
 }

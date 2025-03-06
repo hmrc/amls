@@ -44,15 +44,18 @@ class RolesWithinTheBusinessSpec extends PlaySpec {
 
     "convert from frontend model when everything is present" in {
 
-      val frontendModel = RoleWithinBusiness(Set(
-        BeneficialShareholder,
-        Director,
-        Partner,
-        InternalAccountant,
-        SoleProprietor,
-        NominatedOfficer,
-        DesignatedMember,
-        Other("Some other text")))
+      val frontendModel = RoleWithinBusiness(
+        Set(
+          BeneficialShareholder,
+          Director,
+          Partner,
+          InternalAccountant,
+          SoleProprietor,
+          NominatedOfficer,
+          DesignatedMember,
+          Other("Some other text")
+        )
+      )
 
       val desModel = RolesWithinBusiness(true, true, true, true, true, true, true, true, Some("Some other text"))
 

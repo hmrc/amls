@@ -29,32 +29,35 @@ object NonUKPassport {
 
   implicit val jsonReads: Reads[NonUKPassport] =
     (__ \ "nonUKPassport").read[Boolean] flatMap {
-      case true => (__ \ "nonUKPassportNumber").read[String] map NonUKPassportYes.apply
+      case true  => (__ \ "nonUKPassportNumber").read[String] map NonUKPassportYes.apply
       case false => Reads(_ => JsSuccess(NoPassport))
     }
 
   implicit val jsonWrites: Writes[NonUKPassport] = Writes[NonUKPassport] {
-    case NonUKPassportYes(value) => Json.obj(
-      "nonUKPassport" -> true,
-      "nonUKPassportNumber" -> value
-    )
-    case NoPassport => Json.obj("nonUKPassport" -> false)
+    case NonUKPassportYes(value) =>
+      Json.obj(
+        "nonUKPassport"       -> true,
+        "nonUKPassportNumber" -> value
+      )
+    case NoPassport              => Json.obj("nonUKPassport" -> false)
   }
 
   implicit def conv(responsiblePersons: ResponsiblePersons): Option[NonUKPassport] = {
     val passportDetail: Option[PassportDetail] = for {
-      nd <- responsiblePersons.nationalityDetails
-      id <- nd.idDetails
-      non <- id.nonUkResident
+      nd       <- responsiblePersons.nationalityDetails
+      id       <- nd.idDetails
+      non      <- id.nonUkResident
       passport <- non.passportDetails
     } yield passport
 
-    val nonUkPassport: NonUKPassport = passportDetail.map(passport => {
-      passport.passportNumber.nonUkPassportNumber match {
-        case Some(number) => NonUKPassportYes(number)
-        case _ => NoPassport
+    val nonUkPassport: NonUKPassport = passportDetail
+      .map { passport =>
+        passport.passportNumber.nonUkPassportNumber match {
+          case Some(number) => NonUKPassportYes(number)
+          case _            => NoPassport
+        }
       }
-    }).getOrElse(NoPassport)
+      .getOrElse(NoPassport)
 
     if (responsiblePersons.nationalityDetails.exists(a => a.areYouUkResident)) {
       None

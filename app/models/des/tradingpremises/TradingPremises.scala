@@ -20,7 +20,10 @@ import models.des.RequestType
 import play.api.libs.json.{Json, OFormat}
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises}
 
-case class TradingPremises(ownBusinessPremises: Option[OwnBusinessPremises], agentBusinessPremises: Option[AgentBusinessPremises])
+case class TradingPremises(
+  ownBusinessPremises: Option[OwnBusinessPremises],
+  agentBusinessPremises: Option[AgentBusinessPremises]
+)
 
 object TradingPremises {
 
@@ -32,8 +35,9 @@ object TradingPremises {
     TradingPremises(Some(own), Some(agent))
   }
 
-  implicit def convert(tradingPremises: Option[Seq[FETradingPremises]])(implicit requestType: RequestType): TradingPremises = {
+  implicit def convert(tradingPremises: Option[Seq[FETradingPremises]])(implicit
+    requestType: RequestType
+  ): TradingPremises =
     convert(tradingPremises.getOrElse(Seq.empty))
-  }
 
 }

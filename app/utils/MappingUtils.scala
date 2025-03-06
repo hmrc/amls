@@ -25,16 +25,16 @@ trait MappingUtils {
   object Implicits {
 
     /*
-   * Json reads implicits
-   */
+     * Json reads implicits
+     */
 
     import play.api.libs.json.{JsError, JsSuccess, Reads}
 
     implicit def toReadsSuccess[A, B <: A](b: B): Reads[A] =
-      Reads { _ => JsSuccess(b) }
+      Reads(_ => JsSuccess(b))
 
     implicit def toReadsFailure[A](f: JsonValidationError): Reads[A] =
-      Reads { _ => JsError(f) }
+      Reads(_ => JsError(f))
   }
 
   object JsConstraints {
@@ -51,18 +51,16 @@ trait MappingUtils {
 object MappingUtils extends MappingUtils
 
 object CommonMethods {
-  def getSpecificType[T](bSelected: Boolean, bType: T) = {
+  def getSpecificType[T](bSelected: Boolean, bType: T) =
     bSelected match {
-      case true => Some(bType)
+      case true  => Some(bType)
       case false => None
     }
-  }
 
-  def getSpecificTypeWithOption[T](bSelected: Option[Boolean], bType: T) = {
+  def getSpecificTypeWithOption[T](bSelected: Option[Boolean], bType: T) =
     bSelected match {
-      case Some(true) => Some(bType)
+      case Some(true)  => Some(bType)
       case Some(false) => None
-      case _ => None
+      case _           => None
     }
-  }
 }

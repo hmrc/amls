@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivityDetails, OtherBusinessActivities, ExpectedAMLSTurnover => DesExpectedAMLSTurnover}
+import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover, OtherBusinessActivities}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 import utils.AmlsBaseSpec
@@ -52,10 +52,12 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with AmlsBaseSpec {
         be(Json.obj("involvedInOther" -> false))
 
       Json.toJson(InvolvedInOtherYes("test"): InvolvedInOther) must
-        be(Json.obj(
-          "involvedInOther" -> true,
-          "details" -> "test"
-        ))
+        be(
+          Json.obj(
+            "involvedInOther" -> true,
+            "details"         -> "test"
+          )
+        )
     }
   }
 
@@ -65,7 +67,10 @@ class InvolvedInOtherActivitiesSpec extends PlaySpec with AmlsBaseSpec {
   }
 
   "convert des to frontend model successfully when involved in other is false with other value" in {
-    val desModel = BusinessActivityDetails(false, Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("involve in other text", "", "99999")))))
+    val desModel = BusinessActivityDetails(
+      false,
+      Some(DesExpectedAMLSTurnover(None, Some(OtherBusinessActivities("involve in other text", "", "99999"))))
+    )
     InvolvedInOther.conv(desModel) must be(Some(InvolvedInOtherYes("involve in other text")))
   }
 

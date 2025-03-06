@@ -19,20 +19,25 @@ package models.des.responsiblepeople
 import models.fe.responsiblepeople.ResponsiblePeople
 import play.api.libs.json.{Json, OFormat}
 
-case class PreviousNameDetails(nameEverChanged: Boolean, previousName: Option[PersonName], dateOfChange: Option[String], dateChangeFlag: Option[Boolean])
+case class PreviousNameDetails(
+  nameEverChanged: Boolean,
+  previousName: Option[PersonName],
+  dateOfChange: Option[String],
+  dateChangeFlag: Option[Boolean]
+)
 
 object PreviousNameDetails {
   implicit val format: OFormat[PreviousNameDetails] = Json.format[PreviousNameDetails]
 
-
   def from(person: ResponsiblePeople, amendVariation: Boolean): Option[PreviousNameDetails] = {
     val dateChangeFlag = amendVariation match {
-      case true => Some(false)
+      case true  => Some(false)
       case false => None
     }
     (person.legalName, person.legalNameChangeDate) match {
-      case (Some(name), date) if name.hasPreviousName => Some(PreviousNameDetails(true, name, date.map(_.toString), dateChangeFlag))
-      case _ => Some(PreviousNameDetails(false, None, None, dateChangeFlag))
+      case (Some(name), date) if name.hasPreviousName =>
+        Some(PreviousNameDetails(true, name, date.map(_.toString), dateChangeFlag))
+      case _                                          => Some(PreviousNameDetails(false, None, None, dateChangeFlag))
     }
   }
 }

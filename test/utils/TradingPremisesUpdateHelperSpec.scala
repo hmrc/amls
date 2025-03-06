@@ -22,7 +22,11 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 
-class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
+class TradingPremisesUpdateHelperSpec
+    extends PlaySpec
+    with ScalaFutures
+    with IntegrationPatience
+    with GuiceOneAppPerSuite {
 
   val testTradingPremisesUpdatedHelper = new TradingPremisesUpdateHelper {}
 
@@ -33,12 +37,14 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
 
       val data = OwnBusinessPremisesDetails(
         Some("OwnBusinessTradingName"),
-        Address("OwnBusinessAddressLine1",
+        Address(
+          "OwnBusinessAddressLine1",
           Some("OwnBusinessAddressLine2"),
           Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),
           "GB",
-          Some("YY1 1YY")),
+          Some("YY1 1YY")
+        ),
         false,
         Msb(false, false, false, false, false),
         Hvd(false),
@@ -61,10 +67,11 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
 
       val modelWithchangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
         tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))))
+          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))
+        )
+      )
 
       val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(modelWithchangedStartDate, viewModel)
-
 
       result.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
 
@@ -75,17 +82,25 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
 
       val testRequest = DesConstants.amendStatusAmendVariationTP.copy(
         businessActivities = DesConstants.testBusinessActivitiesWithDateChangeFlag.copy(
-          all = Some(DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
-            dateChangeFlag = Some(false)
-          ))
-        ),
-        aspOrTcsp = Some(DesConstants.testAspOrTcsp.copy(
-          supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-            supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
+          all = Some(
+            DesConstants.testBusinessActivitiesAllWithDateChangeFlag.copy(
               dateChangeFlag = Some(false)
-            ))
-          ))
-        )),
+            )
+          )
+        ),
+        aspOrTcsp = Some(
+          DesConstants.testAspOrTcsp.copy(
+            supervisionDetails = Some(
+              DesConstants.testSupervisionDetails.copy(
+                supervisorDetails = Some(
+                  DesConstants.testSupervisorDetails.copy(
+                    dateChangeFlag = Some(false)
+                  )
+                )
+              )
+            )
+          )
+        ),
         tradingPremises = DesConstants.amendStatusTradingPremisesAPI6.copy(
           DesConstants.amendStatusOwnBusinessPremisesR7
         )
@@ -105,12 +120,14 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
 
       val data = OwnBusinessPremisesDetails(
         Some("OwnBusinessTradingName"),
-        Address("OwnBusinessAddressLine1",
+        Address(
+          "OwnBusinessAddressLine1",
           Some("OwnBusinessAddressLine2"),
           Some("OwnBusinessAddressLine3"),
           Some("OwnBusinessAddressLine4"),
           "GB",
-          Some("YY1 1YY")),
+          Some("YY1 1YY")
+        ),
         false,
         Msb(false, false, false, false, false),
         Hvd(false),
@@ -133,10 +150,11 @@ class TradingPremisesUpdateHelperSpec extends PlaySpec with ScalaFutures with In
 
       val modelWithchangedStartDate = DesConstants.updateAmendVariationCompleteRequest1.copy(
         tradingPremises = DesConstants.testAmendTradingPremisesAPI6.copy(
-          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))))
+          ownBusinessPremises = Some(OwnBusinessPremises(true, Some(Seq(data))))
+        )
+      )
 
       val result = testTradingPremisesUpdatedHelper.updateWithTradingPremises(modelWithchangedStartDate, viewModel)
-
 
       result.tradingPremises.ownBusinessPremises must be(Some(OwnBusinessPremises(true, Some(Seq(expectedData)))))
 

@@ -25,14 +25,14 @@ object IpspServicesDetails {
 
   implicit val format: OFormat[IpspServicesDetails] = Json.format[IpspServicesDetails]
 
-  implicit def convIpsp(ipsp: Option[BusinessUseAnIPSP]): IpspServicesDetails = {
-
+  implicit def convIpsp(ipsp: Option[BusinessUseAnIPSP]): IpspServicesDetails =
     ipsp match {
-      case Some(data) => data match {
-        case BusinessUseAnIPSPYes(name, refNumber) => IpspServicesDetails(true, Some(Seq(IpspDetails(name, refNumber))))
-        case BusinessUseAnIPSPNo => IpspServicesDetails(false, None)
-      }
-      case None => IpspServicesDetails(false, None)
+      case Some(data) =>
+        data match {
+          case BusinessUseAnIPSPYes(name, refNumber) =>
+            IpspServicesDetails(true, Some(Seq(IpspDetails(name, refNumber))))
+          case BusinessUseAnIPSPNo                   => IpspServicesDetails(false, None)
+        }
+      case None       => IpspServicesDetails(false, None)
     }
-  }
 }

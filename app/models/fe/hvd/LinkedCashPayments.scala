@@ -25,7 +25,6 @@ object LinkedCashPayments {
 
   implicit val format: OFormat[LinkedCashPayments] = Json.format[LinkedCashPayments]
 
-  implicit def conv(hvd: DesHvd): Option[LinkedCashPayments] = {
+  implicit def conv(hvd: DesHvd): Option[LinkedCashPayments] =
     Some(LinkedCashPayments(hvd.sysAutoIdOfLinkedCashPymts))
-  }
 }

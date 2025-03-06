@@ -18,7 +18,4 @@ package models.fe.businessactivities
 
 import org.scalatestplus.play.PlaySpec
 
-class IdentifySuspiciousActivitySpec extends PlaySpec {
-
-
-}
+class IdentifySuspiciousActivitySpec extends PlaySpec {}

@@ -19,15 +19,15 @@ package models.fe.businessdetails
 import models.des.SubscriptionView
 
 case class BusinessDetails(
-                            previouslyRegistered: PreviouslyRegistered,
-                            activityStartDate: Option[ActivityStartDate] = None,
-                            vatRegistered: Option[VATRegistered] = None,
-                            corporationTaxRegistered: Option[CorporationTaxRegistered] = None,
-                            contactingYou: ContactingYou,
-                            registeredOffice: RegisteredOffice,
-                            altCorrespondenceAddress: Boolean,
-                            correspondenceAddress: Option[CorrespondenceAddress] = None
-                          )
+  previouslyRegistered: PreviouslyRegistered,
+  activityStartDate: Option[ActivityStartDate] = None,
+  vatRegistered: Option[VATRegistered] = None,
+  corporationTaxRegistered: Option[CorporationTaxRegistered] = None,
+  contactingYou: ContactingYou,
+  registeredOffice: RegisteredOffice,
+  altCorrespondenceAddress: Boolean,
+  correspondenceAddress: Option[CorrespondenceAddress] = None
+)
 
 object BusinessDetails {
 
@@ -36,16 +36,18 @@ object BusinessDetails {
   implicit val format: OFormat[BusinessDetails] = Json.format[BusinessDetails]
 
   implicit def conv(view: SubscriptionView): BusinessDetails = {
-    val bcDetails = view.businessContactDetails
+    val bcDetails            = view.businessContactDetails
     val previouslyRegistered = view.businessReferencesAll
-    BusinessDetails(previouslyRegistered,
+    BusinessDetails(
+      previouslyRegistered,
       view.businessActivities.all,
       view.businessReferencesAllButSp,
       view.businessReferencesCbUbLlp,
       ContactingYou(bcDetails.businessTelNo, bcDetails.businessEmail),
       bcDetails.businessAddress,
       bcDetails.altCorrespondenceAddress,
-      bcDetails.alternativeAddress)
+      bcDetails.alternativeAddress
+    )
   }
 
 }

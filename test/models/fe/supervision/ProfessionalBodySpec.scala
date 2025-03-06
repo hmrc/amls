@@ -52,10 +52,12 @@ class ProfessionalBodySpec extends PlaySpec {
         be(Json.obj("penalised" -> false))
 
       Json.toJson(ProfessionalBodyYes("details"): ProfessionalBody) must
-        be(Json.obj(
-          "penalised" -> true,
-          "professionalBody" -> "details"
-        ))
+        be(
+          Json.obj(
+            "penalised"        -> true,
+            "professionalBody" -> "details"
+          )
+        )
     }
 
     "convert when input is none" in {
@@ -63,11 +65,13 @@ class ProfessionalBodySpec extends PlaySpec {
     }
 
     "convert des to frontend and return ProfessionalBodyNo" in {
-      val desModel = Some(ProfessionalBodyDetails(
-        false,
-        None,
-        None
-      ))
+      val desModel = Some(
+        ProfessionalBodyDetails(
+          false,
+          None,
+          None
+        )
+      )
       ProfessionalBody.conv(desModel) must be(Some(ProfessionalBodyNo))
     }
   }

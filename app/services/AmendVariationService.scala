@@ -33,17 +33,24 @@ import utils._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendVariationService @Inject()(private[services] val amendVariationDesConnector: AmendVariationDESConnector,
-                                      private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
-                                      private[services] val viewDesConnector: ViewDESConnector,
-                                      private[services] val auditConnector: AuditConnector,
-                                      val amendVariationValidator: AmendVariationValidator,
-                                      val feeResponseRepository: FeesRepository,
-                                      private[services] val config: ApplicationConfig)(implicit val ec: ExecutionContext)
-  extends ResponsiblePeopleUpdateHelper with TradingPremisesUpdateHelper with DateOfChangeUpdateHelper with ChangeIndicatorHelper with Logging {
+class AmendVariationService @Inject() (
+  private[services] val amendVariationDesConnector: AmendVariationDESConnector,
+  private[services] val viewStatusDesConnector: SubscriptionStatusDESConnector,
+  private[services] val viewDesConnector: ViewDESConnector,
+  private[services] val auditConnector: AuditConnector,
+  val amendVariationValidator: AmendVariationValidator,
+  val feeResponseRepository: FeesRepository,
+  private[services] val config: ApplicationConfig
+)(implicit val ec: ExecutionContext)
+    extends ResponsiblePeopleUpdateHelper
+    with TradingPremisesUpdateHelper
+    with DateOfChangeUpdateHelper
+    with ChangeIndicatorHelper
+    with Logging {
 
-  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)
-       (implicit f: (DesAmendVariationResponse, String) => Fees) =
+  def t(amendVariationResponse: DesAmendVariationResponse, amlsReferenceNumber: String)(implicit
+    f: (DesAmendVariationResponse, String) => Fees
+  ) =
     f(amendVariationResponse, amlsReferenceNumber)
 
   private[services] lazy val updates: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = {
@@ -53,8 +60,7 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
       updateWithResponsiblePeople
     )
 
-    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) =>
-      AmendVariationRequest] = Set(
+    val release7Transforms: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest] = Set(
       updateWithHvdDateOfChangeFlag,
       updateWithSupervisorDateOfChangeFlag,
       updateWithBusinessActivitiesDateOfChangeFlag
@@ -62,14 +68,13 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
     transforms ++ release7Transforms
   }
 
-  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(
-    implicit hc: HeaderCarrier,
+  def compareAndUpdate(desRequest: AmendVariationRequest, amlsRegistrationNumber: String)(implicit
+    hc: HeaderCarrier,
     apiRetryHelper: ApiRetryHelper
-  ): Future[AmendVariationRequest] = {
+  ): Future[AmendVariationRequest] =
     viewDesConnector.view(amlsRegistrationNumber).map { viewResponse =>
-
       val updatedRequest = updateRequest(desRequest, viewResponse)
-      val desRPs = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
+      val desRPs         = updateWithResponsiblePeople(desRequest, viewResponse).responsiblePersons
 
       updatedRequest.setChangeIndicator(
         changeIndicators = ChangeIndicators(
@@ -93,32 +98,42 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
         )
       )
     }
-  }
 
-  def update(amlsRegistrationNumber: String, request: AmendVariationRequest)(implicit hc: HeaderCarrier,
-                                                                             ec: ExecutionContext,
-                                                                             apiRetryHelper: ApiRetryHelper): Future[AmendVariationResponse] = {
+  def update(amlsRegistrationNumber: String, request: AmendVariationRequest)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext,
+    apiRetryHelper: ApiRetryHelper
+  ): Future[AmendVariationResponse] = {
 
-    val validationResult: Either[collection.Seq[JsObject], AmendVariationRequest] = amendVariationValidator.validateResult(request)
+    val validationResult: Either[collection.Seq[JsObject], AmendVariationRequest] =
+      amendVariationValidator.validateResult(request)
 
     validationResult match {
       case Left(errors) =>
         logger.warn(s"[AmendVariationService][update] Schema Validation Failed : amlsReg: $amlsRegistrationNumber")
-        auditConnector.sendExtendedEvent(AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, errors.toIndexedSeq))
-      case Right(_) =>
+        auditConnector.sendExtendedEvent(
+          AmendVariationValidationFailedEvent(amlsRegistrationNumber, request, errors.toIndexedSeq)
+        )
+      case Right(_)     =>
         logger.debug(s"[AmendVariationService][update] Schema Validation Passed : amlsReg: $amlsRegistrationNumber")
     }
 
     for {
       response <- amendVariationDesConnector.amend(amlsRegistrationNumber, request)
-      status <- viewStatusDesConnector.status(amlsRegistrationNumber)
-      _ <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
+      status   <- viewStatusDesConnector.status(amlsRegistrationNumber)
+      _        <- feeResponseRepository.insert(t(response, amlsRegistrationNumber))
     } yield amendVariationResponse(request, status.isRenewalPeriod(), response)
   }
 
-  private[services] def updateRequest(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+  private[services] def updateRequest(
+    desRequest: AmendVariationRequest,
+    viewResponse: SubscriptionView
+  ): AmendVariationRequest = {
 
-    def update(request: AmendVariationRequest, updateF: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest]): AmendVariationRequest = {
+    def update(
+      request: AmendVariationRequest,
+      updateF: Set[(AmendVariationRequest, SubscriptionView) => AmendVariationRequest]
+    ): AmendVariationRequest =
       if (updateF.size < 1) {
         request
       } else {
@@ -129,22 +144,27 @@ class AmendVariationService @Inject()(private[services] val amendVariationDesCon
           update(updated, updateF.tail)
         }
       }
-    }
 
     update(desRequest, updates)
   }
 
-  private[services] def updateWithEtmpFields(desRequest: AmendVariationRequest, viewResponse: SubscriptionView): AmendVariationRequest = {
+  private[services] def updateWithEtmpFields(
+    desRequest: AmendVariationRequest,
+    viewResponse: SubscriptionView
+  ): AmendVariationRequest = {
     val etmpFields = desRequest.extraFields.setEtmpFields(viewResponse.extraFields.etmpFields)
     desRequest.setExtraFields(etmpFields)
   }
 
-  private[services] def isBusinessReferenceChanged(desRequest: AmendVariationRequest, response: SubscriptionView) = {
+  private[services] def isBusinessReferenceChanged(desRequest: AmendVariationRequest, response: SubscriptionView) =
     !(response.businessReferencesAll.equals(desRequest.businessReferencesAll) &&
       response.businessReferencesAllButSp.equals(desRequest.businessReferencesAllButSp) &&
       response.businessReferencesCbUbLlp.equals(desRequest.businessReferencesCbUbLlp))
-  }
 
-  private[services] def amendVariationResponse(request: AmendVariationRequest, isRenewalWindow: Boolean, des: DesAmendVariationResponse) =
+  private[services] def amendVariationResponse(
+    request: AmendVariationRequest,
+    isRenewalWindow: Boolean,
+    des: DesAmendVariationResponse
+  ) =
     AmendVariationResponse.convert(request, isRenewalWindow, des)
 }

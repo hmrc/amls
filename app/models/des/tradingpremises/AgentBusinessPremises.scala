@@ -26,11 +26,13 @@ object AgentBusinessPremises {
 
   implicit val format: OFormat[AgentBusinessPremises] = Json.format[AgentBusinessPremises]
 
-  implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): AgentBusinessPremises = {
+  implicit def convert(
+    tradingPremises: Seq[FETradingPremises]
+  )(implicit requestType: RequestType): AgentBusinessPremises = {
     val `empty` = Seq.empty[FETradingPremises]
     tradingPremises match {
       case `empty` => AgentBusinessPremises(false, None)
-      case _ => AgentBusinessPremises(true, Some(tradingPremises))
+      case _       => AgentBusinessPremises(true, Some(tradingPremises))
     }
   }
 }

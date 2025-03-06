@@ -24,21 +24,19 @@ case class HowGoodsAreSold(retail: Boolean, wholesale: Boolean, auction: Boolean
 object HowGoodsAreSold {
   implicit val format: OFormat[HowGoodsAreSold] = Json.format[HowGoodsAreSold]
 
-  implicit def conv(model: Option[HowWillYouSellGoods]): Option[HowGoodsAreSold] = {
+  implicit def conv(model: Option[HowWillYouSellGoods]): Option[HowGoodsAreSold] =
     model match {
       case Some(data) => data
-      case None => None
+      case None       => None
     }
-  }
 
   implicit def conv1(model: HowWillYouSellGoods): Option[HowGoodsAreSold] = {
-    val howWillYouSellGoods = model.salesChannels.foldLeft(HowGoodsAreSold(false, false, false)) {
-      (result, channel) =>
-        channel match {
-          case Retail => result.copy(retail = true)
-          case Wholesale => result.copy(wholesale = true)
-          case Auction => result.copy(auction = true)
-        }
+    val howWillYouSellGoods = model.salesChannels.foldLeft(HowGoodsAreSold(false, false, false)) { (result, channel) =>
+      channel match {
+        case Retail    => result.copy(retail = true)
+        case Wholesale => result.copy(wholesale = true)
+        case Auction   => result.copy(auction = true)
+      }
     }
     Some(howWillYouSellGoods)
   }

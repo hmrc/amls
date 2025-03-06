@@ -30,34 +30,34 @@ object BusinessUseAnIPSP {
   implicit val jsonReads: Reads[BusinessUseAnIPSP] = {
     import play.api.libs.functional.syntax._
     (__ \ "useAnIPSP").read[Boolean] flatMap {
-      case true => ((__ \ "name").read[String] and
-        (__ \ "referenceNumber").read[String]) (BusinessUseAnIPSPYes.apply _)
+      case true  =>
+        ((__ \ "name").read[String] and
+          (__ \ "referenceNumber").read[String])(BusinessUseAnIPSPYes.apply _)
       case false => Reads(_ => JsSuccess(BusinessUseAnIPSPNo))
     }
   }
 
   implicit val jsonWrites: Writes[BusinessUseAnIPSP] = Writes[BusinessUseAnIPSP] {
-    case BusinessUseAnIPSPYes(name, referenceNumber) => Json.obj(
-      "useAnIPSP" -> true,
-      "name" -> name,
-      "referenceNumber" -> referenceNumber
-
-    )
-    case BusinessUseAnIPSPNo => Json.obj("useAnIPSP" -> false)
+    case BusinessUseAnIPSPYes(name, referenceNumber) =>
+      Json.obj(
+        "useAnIPSP"       -> true,
+        "name"            -> name,
+        "referenceNumber" -> referenceNumber
+      )
+    case BusinessUseAnIPSPNo                         => Json.obj("useAnIPSP" -> false)
   }
 
-  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[BusinessUseAnIPSP] = {
+  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[BusinessUseAnIPSP] =
     msbMt match {
-      case Some(msbDtls) => convIdDetails(msbDtls.ipspServicesDetails.ipspDetails.fold[Option[IpspDetails]](None)(x => x.headOption))
-      case None => None
+      case Some(msbDtls) =>
+        convIdDetails(msbDtls.ipspServicesDetails.ipspDetails.fold[Option[IpspDetails]](None)(x => x.headOption))
+      case None          => None
     }
-  }
 
-  def convIdDetails(ipspDtls: Option[IpspDetails]): Option[BusinessUseAnIPSP] = {
+  def convIdDetails(ipspDtls: Option[IpspDetails]): Option[BusinessUseAnIPSP] =
     ipspDtls match {
       case Some(ipsp) => Some(BusinessUseAnIPSPYes(ipsp.ipspName, ipsp.ipspMlrRegNo))
-      case None => Some(BusinessUseAnIPSPNo)
+      case None       => Some(BusinessUseAnIPSPNo)
     }
-  }
 
 }

@@ -83,12 +83,7 @@ class ExpectedThroughputSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert des to frontend model" in {
-      val msbAll = Some(MsbAllDetails(
-        None,
-        true,
-        Some(CountriesList(List("AD", "GB"))),
-        true)
-      )
+      val msbAll = Some(MsbAllDetails(None, true, Some(CountriesList(List("AD", "GB"))), true))
       ExpectedThroughput.convMsbAll(msbAll) must be(None)
 
     }
@@ -101,13 +96,13 @@ class ExpectedThroughputSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "return correct throughput when supplied with string" in {
 
-      ExpectedThroughput.convThroughput("£0-£15k") must be(First)
-      ExpectedThroughput.convThroughput("£15k-50k") must be(Second)
-      ExpectedThroughput.convThroughput("£50k-£100k") must be(Third)
+      ExpectedThroughput.convThroughput("£0-£15k")     must be(First)
+      ExpectedThroughput.convThroughput("£15k-50k")    must be(Second)
+      ExpectedThroughput.convThroughput("£50k-£100k")  must be(Third)
       ExpectedThroughput.convThroughput("£100k-£250k") must be(Fourth)
-      ExpectedThroughput.convThroughput("£250k-£1m") must be(Fifth)
-      ExpectedThroughput.convThroughput("£1m-10m") must be(Sixth)
-      ExpectedThroughput.convThroughput("£10m+") must be(Seventh)
+      ExpectedThroughput.convThroughput("£250k-£1m")   must be(Fifth)
+      ExpectedThroughput.convThroughput("£1m-10m")     must be(Sixth)
+      ExpectedThroughput.convThroughput("£10m+")       must be(Seventh)
 
     }
 

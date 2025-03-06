@@ -69,11 +69,21 @@ class PercentageOfCashPaymentOver15000Spec extends PlaySpec {
       }
     }
     "convert to the correct model given a percentageTurnover int" in {
-      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(20))) must be(Some(PercentageOfCashPaymentOver15000.First))
-      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(40))) must be(Some(PercentageOfCashPaymentOver15000.Second))
-      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(60))) must be(Some(PercentageOfCashPaymentOver15000.Third))
-      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(80))) must be(Some(PercentageOfCashPaymentOver15000.Fourth))
-      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(100))) must be(Some(PercentageOfCashPaymentOver15000.Fifth))
+      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(20)))  must be(
+        Some(PercentageOfCashPaymentOver15000.First)
+      )
+      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(40)))  must be(
+        Some(PercentageOfCashPaymentOver15000.Second)
+      )
+      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(60)))  must be(
+        Some(PercentageOfCashPaymentOver15000.Third)
+      )
+      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(80)))  must be(
+        Some(PercentageOfCashPaymentOver15000.Fourth)
+      )
+      PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = Some(100))) must be(
+        Some(PercentageOfCashPaymentOver15000.Fifth)
+      )
     }
     "convert to None given hvPercentageTurnover = None" in {
       PercentageOfCashPaymentOver15000.conv(DesConstants.testHvd.copy(hvPercentageTurnover = None)) must be(None)

@@ -19,7 +19,6 @@ package models.fe.moneyservicebusiness
 import play.api.libs.json.{Json, Reads, Writes}
 import play.api.libs.json._
 
-
 case class BankMoneySource(bankNames: String)
 
 case object BankMoneySource {
@@ -28,17 +27,18 @@ case object BankMoneySource {
     import play.api.libs.functional.syntax._
 
     ((__ \ "moneySources" \ "bankMoneySource").readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ "bankNames").readNullable[String].orElse(Reads.pure(None))) ((bankMoney: Option[String], names: Option[String]) => {
-      (bankMoney, names) match {
-        case (Some(_), Some(n)) => Some(BankMoneySource(n))
-        case _ => None
-      }
-    })
+      (__ \ "moneySources" \ "bankNames").readNullable[String].orElse(Reads.pure(None))) {
+      (bankMoney: Option[String], names: Option[String]) =>
+        (bankMoney, names) match {
+          case (Some(_), Some(n)) => Some(BankMoneySource(n))
+          case _                  => None
+        }
+    }
   }
 
   implicit val jsonWrites: Writes[Option[BankMoneySource]] = Writes[Option[BankMoneySource]] {
     case Some(bankNames) => Json.obj("bankMoneySource" -> "Yes", "bankNames" -> bankNames.bankNames)
-    case _ => Json.obj()
+    case _               => Json.obj()
   }
 
 }
@@ -49,19 +49,19 @@ object WholesalerMoneySource {
 
   import play.api.libs.functional.syntax._
 
-  implicit val jsonReads: Reads[Option[WholesalerMoneySource]] = {
+  implicit val jsonReads: Reads[Option[WholesalerMoneySource]] =
     ((__ \ "moneySources" \ "wholesalerMoneySource").readNullable[String].orElse(Reads.pure(None)) and
-      (__ \ "moneySources" \ "wholesalerNames").readNullable[String].orElse(Reads.pure(None))) ((wholesalerMoney: Option[String], names: Option[String]) => {
-      (wholesalerMoney, names) match {
-        case (Some(_), Some(n)) => Some(WholesalerMoneySource(n))
-        case _ => None
-      }
-    })
-  }
+      (__ \ "moneySources" \ "wholesalerNames").readNullable[String].orElse(Reads.pure(None))) {
+      (wholesalerMoney: Option[String], names: Option[String]) =>
+        (wholesalerMoney, names) match {
+          case (Some(_), Some(n)) => Some(WholesalerMoneySource(n))
+          case _                  => None
+        }
+    }
 
   implicit val jsonWrites: Writes[Option[WholesalerMoneySource]] = Writes[Option[WholesalerMoneySource]] {
     case Some(source) => Json.obj("wholesalerMoneySource" -> "Yes", "wholesalerNames" -> source.wholesalerNames)
-    case _ => Json.obj()
+    case _            => Json.obj()
   }
 }
 

@@ -52,10 +52,12 @@ class CorporationTaxRegisteredSpec extends PlaySpec with AmlsBaseSpec {
         be(Json.obj("registeredForCorporationTax" -> false))
 
       Json.toJson(CorporationTaxRegisteredYes("1234567890"): CorporationTaxRegistered) must
-        be(Json.obj(
-          "registeredForCorporationTax" -> true,
-          "corporationTaxReference" -> "1234567890"
-        ))
+        be(
+          Json.obj(
+            "registeredForCorporationTax" -> true,
+            "corporationTaxReference"     -> "1234567890"
+          )
+        )
     }
 
     "convert model from des to frontend and return CorporationTaxRegisteredNo" in {
@@ -67,6 +69,5 @@ class CorporationTaxRegisteredSpec extends PlaySpec with AmlsBaseSpec {
       CorporationTaxRegistered.conv(None) must be(None)
     }
   }
-
 
 }

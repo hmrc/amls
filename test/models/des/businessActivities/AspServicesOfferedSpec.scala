@@ -32,7 +32,8 @@ class AspServicesOfferedSpec extends PlaySpec {
     "convert complete front end Asp model to des AspServicesOffered " in {
       val model = Asp(
         Some(ServicesOfBusiness(Set(Accountancy, PayrollServices, BookKeeping, Auditing, FinancialOrTaxAdvice))),
-        Some(OtherBusinessTaxMattersYes))
+        Some(OtherBusinessTaxMattersYes)
+      )
 
       AspServicesOffered.conv(Some(model)) must be(Some(AspServicesOffered(true, true, true, true, true)))
     }

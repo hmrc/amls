@@ -28,17 +28,18 @@ import utils.{ApiRetryHelper, AuthAction}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RegistrationDetailsController @Inject()(connector: RegistrationDetailsDesConnector,
-                                              authAction: AuthAction,
-                                              val cc: ControllerComponents)
-                                             (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext) extends BackendController(cc) {
+class RegistrationDetailsController @Inject() (
+  connector: RegistrationDetailsDesConnector,
+  authAction: AuthAction,
+  val cc: ControllerComponents
+)(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+    extends BackendController(cc) {
 
   private[controllers] val registrationDetailsConnector: RegistrationDetailsDesConnector = connector
 
-  def get(accountType: String, ref: String, safeId: String) = authAction.async {
-    implicit request =>
-      registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
-        Ok(Json.toJson(RegistrationDetails.convert(details)))
-      }
+  def get(accountType: String, ref: String, safeId: String) = authAction.async { implicit request =>
+    registrationDetailsConnector.getRegistrationDetails(safeId) map { details =>
+      Ok(Json.toJson(RegistrationDetails.convert(details)))
+    }
   }
 }

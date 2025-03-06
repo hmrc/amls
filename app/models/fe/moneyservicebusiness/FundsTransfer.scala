@@ -25,10 +25,9 @@ object FundsTransfer {
 
   implicit val formats: OFormat[FundsTransfer] = Json.format[FundsTransfer]
 
-  implicit def convMsbAll(msbAll: Option[MsbMtDetails]): Option[FundsTransfer] = {
+  implicit def convMsbAll(msbAll: Option[MsbMtDetails]): Option[FundsTransfer] =
     msbAll match {
       case Some(msbDtls) => Some(FundsTransfer(msbDtls.informalFundsTransferSystem))
-      case None => None
+      case None          => None
     }
-  }
 }

@@ -23,15 +23,17 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import utils.StatusConstants
 
-case class RPExtra(lineId: Option[StringOrInt] = None,
-                    endDate: Option[String] = None,
-                    status: Option[String] = None,
-                    retestFlag: Option[Boolean] = None,
-                    retest: Option[String] = None,
-                    testResultFitAndProper: Option[String] = None,
-                    testDateFitAndProper: Option[String] = None,
-                    testResultApprovalCheck: Option[String] = None,
-                    testDateApprovalCheck: Option[String] = None)
+case class RPExtra(
+  lineId: Option[StringOrInt] = None,
+  endDate: Option[String] = None,
+  status: Option[String] = None,
+  retestFlag: Option[Boolean] = None,
+  retest: Option[String] = None,
+  testResultFitAndProper: Option[String] = None,
+  testDateFitAndProper: Option[String] = None,
+  testResultApprovalCheck: Option[String] = None,
+  testDateApprovalCheck: Option[String] = None
+)
 
 object RPExtra {
 
@@ -42,12 +44,12 @@ object RPExtra {
       (__ \ "retestFlag").readNullable[Boolean] and
       (__ \ "retest").readNullable[String] and
       (__ \ "testResultFitAndProper").readNullable[String] and
-      (__ \ "testDateFitAndProper").readNullable[String]and
+      (__ \ "testDateFitAndProper").readNullable[String] and
       (__ \ "testResultApprovalCheck").readNullable[String] and
       (__ \ "testDateApprovalCheck").readNullable[String]
-    ) (RPExtra.apply _)
+  )(RPExtra.apply _)
 
-  implicit val jsonWrites: Writes[RPExtra] = {
+  implicit val jsonWrites: Writes[RPExtra] =
     (
       __.writeNullable[StringOrInt] and
         (__ \ "endDate").writeNullable[String] and
@@ -58,14 +60,18 @@ object RPExtra {
         (__ \ "testDateFitAndProper").writeNullable[String] and
         (__ \ "testResultApprovalCheck").writeNullable[String] and
         (__ \ "testDateApprovalCheck").writeNullable[String]
-      ) (unlift(RPExtra.unapply))
-  }
+    )(unlift(RPExtra.unapply))
 
-  implicit def conv(rp: ResponsiblePeople): RPExtra = {
+  implicit def conv(rp: ResponsiblePeople): RPExtra =
     RPExtra(
       rp.lineId.fold[Option[StringOrInt]](None)(x => Some(StringOrInt(x.toString))),
       None,
-      rp.lineId.fold[Option[String]](None)(_ => if(rp.hasChanged) rp.status else Some(StatusConstants.Unchanged)),
-      None, None, None, None, None, None)
-  }
+      rp.lineId.fold[Option[String]](None)(_ => if (rp.hasChanged) rp.status else Some(StatusConstants.Unchanged)),
+      None,
+      None,
+      None,
+      None,
+      None,
+      None
+    )
 }

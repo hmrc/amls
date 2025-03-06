@@ -22,22 +22,22 @@ import play.api.libs.json.{Json, Reads, Writes}
 sealed trait RegisteredOffice
 
 case class RegisteredOfficeUK(
-                               addressLine1: String,
-                               addressLine2: Option[String] = None,
-                               addressLine3: Option[String] = None,
-                               addressLine4: Option[String] = None,
-                               postCode: String,
-                               dateOfChange: Option[String] = None
-                             ) extends RegisteredOffice
+  addressLine1: String,
+  addressLine2: Option[String] = None,
+  addressLine3: Option[String] = None,
+  addressLine4: Option[String] = None,
+  postCode: String,
+  dateOfChange: Option[String] = None
+) extends RegisteredOffice
 
 case class RegisteredOfficeNonUK(
-                                  addressLine1: String,
-                                  addressLine2: Option[String] = None,
-                                  addressLine3: Option[String] = None,
-                                  addressLine4: Option[String] = None,
-                                  country: String,
-                                  dateOfChange: Option[String] = None
-                                ) extends RegisteredOffice
+  addressLine1: String,
+  addressLine2: Option[String] = None,
+  addressLine3: Option[String] = None,
+  addressLine4: Option[String] = None,
+  country: String,
+  dateOfChange: Option[String] = None
+) extends RegisteredOffice
 
 object RegisteredOffice {
 
@@ -54,8 +54,8 @@ object RegisteredOffice {
             (__ \ "addressLine4").readNullable[String] and
             (__ \ "postCode").read[String] and
             (__ \ "dateOfChange").readNullable[String]
-          ) (RegisteredOfficeUK.apply _) map identity[RegisteredOffice]
-      ) orElse
+        )(RegisteredOfficeUK.apply _) map identity[RegisteredOffice]
+    ) orElse
       (
         (__ \ "addressLineNonUK1").read[String] and
           (__ \ "addressLineNonUK2").readNullable[String] and
@@ -63,41 +63,45 @@ object RegisteredOffice {
           (__ \ "addressLineNonUK4").readNullable[String] and
           (__ \ "country").read[String] and
           (__ \ "dateOfChange").readNullable[String]
-        ) (RegisteredOfficeNonUK.apply _)
+      )(RegisteredOfficeNonUK.apply _)
   }
 
   implicit val jsonWrites: Writes[RegisteredOffice] = Writes[RegisteredOffice] {
-    case m: RegisteredOfficeUK =>
+    case m: RegisteredOfficeUK    =>
       Json.obj(
         "addressLine1" -> m.addressLine1,
         "addressLine2" -> m.addressLine2,
         "addressLine3" -> m.addressLine3,
         "addressLine4" -> m.addressLine4,
-        "postCode" -> m.postCode)
+        "postCode"     -> m.postCode
+      )
     case m: RegisteredOfficeNonUK =>
       Json.obj(
         "addressLineNonUK1" -> m.addressLine1,
         "addressLineNonUK2" -> m.addressLine2,
         "addressLineNonUK3" -> m.addressLine3,
         "addressLineNonUK4" -> m.addressLine4,
-        "country" -> m.country)
+        "country"           -> m.country
+      )
   }
 
-
-  implicit def conv(address: DesAddress): RegisteredOffice = {
+  implicit def conv(address: DesAddress): RegisteredOffice =
     address.postcode match {
-      case None => RegisteredOfficeNonUK(address.addressLine1,
-        address.addressLine2,
-        address.addressLine3,
-        address.addressLine4,
-        address.country
-      )
-      case _ => RegisteredOfficeUK(address.addressLine1,
-        address.addressLine2,
-        address.addressLine3,
-        address.addressLine4,
-        address.postcode.getOrElse("")
-      )
+      case None =>
+        RegisteredOfficeNonUK(
+          address.addressLine1,
+          address.addressLine2,
+          address.addressLine3,
+          address.addressLine4,
+          address.country
+        )
+      case _    =>
+        RegisteredOfficeUK(
+          address.addressLine1,
+          address.addressLine2,
+          address.addressLine3,
+          address.addressLine4,
+          address.postcode.getOrElse("")
+        )
     }
-  }
 }

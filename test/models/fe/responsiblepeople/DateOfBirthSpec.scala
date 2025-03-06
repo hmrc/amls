@@ -41,22 +41,52 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "write the correct value to JSON" in {
       Json.toJson(DateOfBirth(date)) must
-        be(Json.obj(
-          "dateOfBirth" -> "1990-02-24"
-        ))
+        be(
+          Json.obj(
+            "dateOfBirth" -> "1990-02-24"
+          )
+        )
     }
 
     "convert from des ResponsiblePerson to fe DateOfBirth - NonUkResident" in {
 
       val desModel = ResponsiblePersons(
-        None, Some(NationalityDetails(
-          false,
-          Some(IdDetail(
-            nonUkResident = Some(NonUkResident(
-              Some("1990-03-23"), false, None
-            ))
-          )), None, None
-        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, Some(false), None, extra = RPExtra()
+        None,
+        Some(
+          NationalityDetails(
+            false,
+            Some(
+              IdDetail(
+                nonUkResident = Some(
+                  NonUkResident(
+                    Some("1990-03-23"),
+                    false,
+                    None
+                  )
+                )
+              )
+            ),
+            None,
+            None
+          )
+        ),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        false,
+        None,
+        false,
+        None,
+        None,
+        Some(false),
+        None,
+        extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(LocalDate.of(1990, 3, 23))))
@@ -64,11 +94,32 @@ class DateOfBirthSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert from des ResponsiblePerson to fe DateOfBirth - UkResident" in {
       val desModel = ResponsiblePersons(
-        None, Some(NationalityDetails(
-          false,
-          Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24")))
-          , None, None
-        )), None, None, None, None, None, None, None, None, None, false, None, false, None, None, Some(false), None, extra = RPExtra()
+        None,
+        Some(
+          NationalityDetails(
+            false,
+            Some(IdDetail(Some(UkResident("nino")), None, dateOfBirth = Some("1990-02-24"))),
+            None,
+            None
+          )
+        ),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        false,
+        None,
+        false,
+        None,
+        None,
+        Some(false),
+        None,
+        extra = RPExtra()
       )
 
       DateOfBirth.conv(desModel) must be(Some(DateOfBirth(LocalDate.of(1990, 2, 24))))

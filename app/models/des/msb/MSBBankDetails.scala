@@ -24,10 +24,9 @@ case class MSBBankDetails(banks: Boolean, bankNames: Option[Seq[String]])
 object MSBBankDetails {
   implicit val format: OFormat[MSBBankDetails] = Json.format[MSBBankDetails]
 
-  implicit def conv(bankDtls: Option[BankMoneySource]): Option[MSBBankDetails] = {
+  implicit def conv(bankDtls: Option[BankMoneySource]): Option[MSBBankDetails] =
     bankDtls match {
       case Some(data) => Some(MSBBankDetails(true, Some(Seq(data.bankNames))))
-      case _ => Some(MSBBankDetails(false, None))
+      case _          => Some(MSBBankDetails(false, None))
     }
-  }
 }

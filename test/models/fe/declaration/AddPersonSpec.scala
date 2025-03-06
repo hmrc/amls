@@ -29,9 +29,9 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
       "given no Other and no ExternalAccountant role" in {
 
         val json = Json.obj(
-          "firstName" -> "name",
-          "middleName" -> "some",
-          "lastName" -> "surname",
+          "firstName"          -> "name",
+          "middleName"         -> "some",
+          "lastName"           -> "surname",
           "roleWithinBusiness" -> Seq(
             "Partner",
             "SoleProprietor",
@@ -44,29 +44,33 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
         )
 
         val model = AddPerson(
-          "name", Some("some"), "surname",
-          models.fe.declaration.RoleWithinBusiness(Set(
-            models.fe.declaration.BeneficialShareholder,
-            models.fe.declaration.Director,
-            models.fe.declaration.Partner,
-            models.fe.declaration.InternalAccountant,
-            models.fe.declaration.SoleProprietor,
-            models.fe.declaration.NominatedOfficer,
-            models.fe.declaration.DesignatedMember
-          ))
+          "name",
+          Some("some"),
+          "surname",
+          models.fe.declaration.RoleWithinBusiness(
+            Set(
+              models.fe.declaration.BeneficialShareholder,
+              models.fe.declaration.Director,
+              models.fe.declaration.Partner,
+              models.fe.declaration.InternalAccountant,
+              models.fe.declaration.SoleProprietor,
+              models.fe.declaration.NominatedOfficer,
+              models.fe.declaration.DesignatedMember
+            )
+          )
         )
 
-        AddPerson.jsonReads.reads(json) must be(JsSuccess(model))
+        AddPerson.jsonReads.reads(json)    must be(JsSuccess(model))
         AddPerson.jsonWrites.writes(model) must be(json)
       }
 
       "given Other and ExternalAccountant role for the reads" in {
 
         val json = Json.obj(
-          "firstName" -> "name",
-          "middleName" -> "some",
-          "lastName" -> "surname",
-          "roleWithinBusiness" -> Json.arr(
+          "firstName"               -> "name",
+          "middleName"              -> "some",
+          "lastName"                -> "surname",
+          "roleWithinBusiness"      -> Json.arr(
             "Partner",
             "Other",
             "SoleProprietor",
@@ -80,20 +84,23 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
           "roleWithinBusinessOther" -> "Other details here"
         )
 
-
         val model = AddPerson(
-          "name", Some("some"), "surname",
-          models.fe.declaration.RoleWithinBusiness(Set(
-            models.fe.declaration.BeneficialShareholder,
-            models.fe.declaration.Director,
-            models.fe.declaration.Partner,
-            models.fe.declaration.InternalAccountant,
-            models.fe.declaration.ExternalAccountant,
-            models.fe.declaration.SoleProprietor,
-            models.fe.declaration.NominatedOfficer,
-            models.fe.declaration.DesignatedMember,
-            models.fe.declaration.Other("Other details here")
-          ))
+          "name",
+          Some("some"),
+          "surname",
+          models.fe.declaration.RoleWithinBusiness(
+            Set(
+              models.fe.declaration.BeneficialShareholder,
+              models.fe.declaration.Director,
+              models.fe.declaration.Partner,
+              models.fe.declaration.InternalAccountant,
+              models.fe.declaration.ExternalAccountant,
+              models.fe.declaration.SoleProprietor,
+              models.fe.declaration.NominatedOfficer,
+              models.fe.declaration.DesignatedMember,
+              models.fe.declaration.Other("Other details here")
+            )
+          )
         )
 
         AddPerson.jsonReads.reads(json) must be(JsSuccess(model))
@@ -103,10 +110,10 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
       "given Other and ExternalAccountant role for the writes" in {
 
         val json = Json.obj(
-          "firstName" -> "name",
-          "middleName" -> "some",
-          "lastName" -> "surname",
-          "roleWithinBusiness" -> Json.arr(
+          "firstName"               -> "name",
+          "middleName"              -> "some",
+          "lastName"                -> "surname",
+          "roleWithinBusiness"      -> Json.arr(
             "Other",
             "Partner",
             "SoleProprietor",
@@ -120,20 +127,23 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
           "roleWithinBusinessOther" -> "Other details here"
         )
 
-
         val model = AddPerson(
-          "name", Some("some"), "surname",
-          models.fe.declaration.RoleWithinBusiness(Set(
-            models.fe.declaration.BeneficialShareholder,
-            models.fe.declaration.Director,
-            models.fe.declaration.Partner,
-            models.fe.declaration.InternalAccountant,
-            models.fe.declaration.ExternalAccountant,
-            models.fe.declaration.SoleProprietor,
-            models.fe.declaration.NominatedOfficer,
-            models.fe.declaration.DesignatedMember,
-            models.fe.declaration.Other("Other details here")
-          ))
+          "name",
+          Some("some"),
+          "surname",
+          models.fe.declaration.RoleWithinBusiness(
+            Set(
+              models.fe.declaration.BeneficialShareholder,
+              models.fe.declaration.Director,
+              models.fe.declaration.Partner,
+              models.fe.declaration.InternalAccountant,
+              models.fe.declaration.ExternalAccountant,
+              models.fe.declaration.SoleProprietor,
+              models.fe.declaration.NominatedOfficer,
+              models.fe.declaration.DesignatedMember,
+              models.fe.declaration.Other("Other details here")
+            )
+          )
         )
 
         AddPerson.jsonWrites.writes(model) must be(json)
@@ -150,16 +160,21 @@ class AddPersonSpec extends PlaySpec with GuiceOneAppPerSuite {
           Some(RoleForTheBusiness(false, false, None))
         )
 
-        val frontendModel = AddPerson("fName", None, "lName",
-          models.fe.declaration.RoleWithinBusiness(Set(
-            models.fe.declaration.BeneficialShareholder,
-            models.fe.declaration.Director,
-            models.fe.declaration.Partner,
-            models.fe.declaration.InternalAccountant,
-            models.fe.declaration.SoleProprietor,
-            models.fe.declaration.NominatedOfficer,
-            models.fe.declaration.DesignatedMember
-          ))
+        val frontendModel = AddPerson(
+          "fName",
+          None,
+          "lName",
+          models.fe.declaration.RoleWithinBusiness(
+            Set(
+              models.fe.declaration.BeneficialShareholder,
+              models.fe.declaration.Director,
+              models.fe.declaration.Partner,
+              models.fe.declaration.InternalAccountant,
+              models.fe.declaration.SoleProprietor,
+              models.fe.declaration.NominatedOfficer,
+              models.fe.declaration.DesignatedMember
+            )
+          )
         )
 
         AddPerson.convert(desModel) must be(frontendModel)

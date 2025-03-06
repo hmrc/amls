@@ -26,26 +26,44 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "MsbMtDetails" should {
 
-    val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-    val businessAddress = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
-    val BusinessActivitiesModel = BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
-    val ReviewDetailsModel = ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
+    val msbService              = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+    val businessAddress         = Address("line1", Some("line2"), Some("line3"), Some("line4"), Some("AA1 1AA"), "GB")
+    val BusinessActivitiesModel =
+      BusinessActivities(Set(BMMoneyServiceBusiness_, TrustAndCompanyServices, TelephonePaymentService))
+    val ReviewDetailsModel      =
+      ReviewDetails("BusinessName", BusinessType.UnincorporatedBody, businessAddress, "XE0001234567890")
 
     "convert to frontend MSB model to correct Msb Des model when Send money to other country is false" in {
-      val msbMtDetails = MsbMtDetails(true, Some("123456"),
+      val msbMtDetails = MsbMtDetails(
+        true,
+        Some("123456"),
         IpspServicesDetails(false, None),
         true,
-        Some("12345678963"), None, None, Some(false))
-      val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
+        Some("12345678963"),
+        None,
+        None,
+        Some(false)
+      )
+      val psrNumber    = Some(BusinessAppliedForPSRNumberYes("123456"))
+      val bm           = BusinessMatching(
+        ReviewDetailsModel,
+        BusinessActivitiesModel,
+        msbServices = Some(msbService),
+        None,
+        None,
+        psrNumber
+      )
 
-      val businessUseAnIPSP = BusinessUseAnIPSPNo
+      val businessUseAnIPSP            = BusinessUseAnIPSPNo
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "EUR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "EUR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        customerMoneySource = true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
@@ -66,23 +84,36 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert to frontend MSB model to correct Msb Des model when Send money to other country is true" in {
-      val msbMtDetails = MsbMtDetails(true,
+      val msbMtDetails = MsbMtDetails(
+        true,
         Some("123456"),
         None,
         false,
-        None, Some(CountriesList(List("GB"))),
+        None,
+        Some(CountriesList(List("GB"))),
         Some(CountriesList(List("LA", "LV"))),
-        psrRefChangeFlag = Some(false))
+        psrRefChangeFlag = Some(false)
+      )
 
-      val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-      val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
+      val msbService                   = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+      val psrNumber                    = Some(BusinessAppliedForPSRNumberYes("123456"))
+      val bm                           = BusinessMatching(
+        ReviewDetailsModel,
+        BusinessActivitiesModel,
+        msbServices = Some(msbService),
+        None,
+        None,
+        psrNumber
+      )
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        customerMoneySource = true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
@@ -103,23 +134,36 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert to frontend MSB model to correct Msb Des model when submission is not an amendment or variation" in {
-      val msbMtDetails = MsbMtDetails(true,
+      val msbMtDetails = MsbMtDetails(
+        true,
         Some("123456"),
         None,
         false,
-        None, Some(CountriesList(List("GB"))),
+        None,
+        Some(CountriesList(List("GB"))),
         Some(CountriesList(List("LA", "LV"))),
-        psrRefChangeFlag = None)
+        psrRefChangeFlag = None
+      )
 
-      val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-      val psrNumber = Some(BusinessAppliedForPSRNumberYes("123456"))
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, psrNumber)
+      val msbService                   = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+      val psrNumber                    = Some(BusinessAppliedForPSRNumberYes("123456"))
+      val bm                           = BusinessMatching(
+        ReviewDetailsModel,
+        BusinessActivitiesModel,
+        msbServices = Some(msbService),
+        None,
+        None,
+        psrNumber
+      )
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        customerMoneySource = true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
@@ -139,9 +183,9 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       MsbMtDetails.conv((msbModel, bm, false)) must be(Some(msbMtDetails))
     }
 
-
     "convert to frontend MSB model to correct Msb Des model when fundTransfer is false" in {
-      val msbMtDetails = MsbMtDetails(true,
+      val msbMtDetails = MsbMtDetails(
+        true,
         Some("123456"),
         IpspServicesDetails(true, Some(List(IpspDetails("name", "123456789123456")))),
         false,
@@ -153,15 +197,24 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
 
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None,
-        Some(BusinessAppliedForPSRNumberYes("123456")))
-      val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
+      val bm                           = BusinessMatching(
+        ReviewDetailsModel,
+        BusinessActivitiesModel,
+        msbServices = Some(msbService),
+        None,
+        None,
+        Some(BusinessAppliedForPSRNumberYes("123456"))
+      )
+      val businessUseAnIPSP            = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        customerMoneySource = true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
@@ -181,9 +234,9 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
       MsbMtDetails.conv((msbModel, bm, true)) must be(Some(msbMtDetails))
     }
 
-
     "convert to frontend MSB model to correct Msb Des model when psrNumber option is false" in {
-      val msbMtDetails = MsbMtDetails(false,
+      val msbMtDetails = MsbMtDetails(
+        false,
         None,
         IpspServicesDetails(true, Some(List(IpspDetails("name", "123456789123456")))),
         false,
@@ -195,15 +248,24 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
 
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None,
-        None, Some(BusinessAppliedForPSRNumberNo))
-      val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
+      val bm                           = BusinessMatching(
+        ReviewDetailsModel,
+        BusinessActivitiesModel,
+        msbServices = Some(msbService),
+        None,
+        None,
+        Some(BusinessAppliedForPSRNumberNo)
+      )
+      val businessUseAnIPSP            = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
@@ -224,7 +286,8 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "convert to frontend MSB model to correct Msb Des model when psrNumberModel is None" in {
-      val msbMtDetails = MsbMtDetails(false,
+      val msbMtDetails = MsbMtDetails(
+        false,
         None,
         IpspServicesDetails(true, Some(List(IpspDetails("name", "123456789123456")))),
         false,
@@ -234,19 +297,22 @@ class MsbMtDetailsSpec extends PlaySpec with GuiceOneAppPerSuite {
         psrRefChangeFlag = Some(false)
       )
 
-      val msbService = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
-      val businessUseAnIPSP = BusinessUseAnIPSPYes("name", "123456789123456")
+      val msbService                   = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal))
+      val businessUseAnIPSP            = BusinessUseAnIPSPYes("name", "123456789123456")
       val sendTheLargestAmountsOfMoney = SendTheLargestAmountsOfMoney("GB")
 
-      val whichCurrencies = WhichCurrencies(Seq("USD", "MNO", "PQR"),
+      val whichCurrencies = WhichCurrencies(
+        Seq("USD", "MNO", "PQR"),
         usesForeignCurrencies = Some(true),
         Some(BankMoneySource("Bank names")),
-        Some(WholesalerMoneySource("wholesaler names")), customerMoneySource = true)
+        Some(WholesalerMoneySource("wholesaler names")),
+        customerMoneySource = true
+      )
 
       val mostTransactions = MostTransactions(Seq("LA", "LV"))
 
-      val bm = BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None,
-        None, None)
+      val bm =
+        BusinessMatching(ReviewDetailsModel, BusinessActivitiesModel, msbServices = Some(msbService), None, None, None)
 
       val msbModel = models.fe.moneyservicebusiness.MoneyServiceBusiness(
         Some(ExpectedThroughput.Second),

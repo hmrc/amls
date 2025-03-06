@@ -25,10 +25,9 @@ object CustomersOutsideUK {
 
   implicit val format: OFormat[CustomersOutsideUK] = Json.format[CustomersOutsideUK]
 
-  def conv(des: BusinessActivitiesAll): Option[CustomersOutsideUK] = {
+  def conv(des: BusinessActivitiesAll): Option[CustomersOutsideUK] =
     des.nonUkResidentCustDetails.whichCountries match {
       case Some(countries) => Some(CustomersOutsideUK(true, Some(countries)))
-      case _ => Some(CustomersOutsideUK(false, None))
+      case _               => Some(CustomersOutsideUK(false, None))
     }
-  }
 }

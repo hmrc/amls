@@ -33,23 +33,22 @@ import models.fe.tradingpremises.TradingPremises
 import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionView(
-                             etmpFormBundleNumber: String,
-                             businessMatchingSection: BusinessMatching,
-                             eabSection: Option[Eab],
-                             tradingPremisesSection: Option[Seq[TradingPremises]],
-                             businessDetailsSection: BusinessDetails,
-                             bankDetailsSection: Seq[BankDetails],
-                             aboutYouSection: AddPerson,
-                             businessActivitiesSection: BusinessActivities,
-                             responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
-                             tcspSection: Option[Tcsp],
-                             aspSection: Option[Asp],
-                             msbSection: Option[MoneyServiceBusiness],
-                             hvdSection: Option[Hvd],
-                             ampSection: Option[Amp],
-                             supervisionSection: Option[Supervision]
-                           )
-
+  etmpFormBundleNumber: String,
+  businessMatchingSection: BusinessMatching,
+  eabSection: Option[Eab],
+  tradingPremisesSection: Option[Seq[TradingPremises]],
+  businessDetailsSection: BusinessDetails,
+  bankDetailsSection: Seq[BankDetails],
+  aboutYouSection: AddPerson,
+  businessActivitiesSection: BusinessActivities,
+  responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
+  tcspSection: Option[Tcsp],
+  aspSection: Option[Asp],
+  msbSection: Option[MoneyServiceBusiness],
+  hvdSection: Option[Hvd],
+  ampSection: Option[Amp],
+  supervisionSection: Option[Supervision]
+)
 
 object SubscriptionView {
 
@@ -58,7 +57,7 @@ object SubscriptionView {
   final type Outgoing = SubscriptionView
   final type Incoming = models.des.SubscriptionView
 
-  implicit def convert(desView: Incoming): SubscriptionView = {
+  implicit def convert(desView: Incoming): SubscriptionView =
     SubscriptionView(
       etmpFormBundleNumber = desView.etmpFormBundleNumber,
       businessMatchingSection = desView,
@@ -77,8 +76,7 @@ object SubscriptionView {
       msbSection = desView,
       hvdSection = desView,
       ampSection = desView,
-      supervisionSection = Supervision.convertFrom(desView.aspOrTcsp,
-        desView.businessActivities.mlrActivitiesAppliedFor)
+      supervisionSection =
+        Supervision.convertFrom(desView.aspOrTcsp, desView.businessActivities.mlrActivitiesAppliedFor)
     )
-  }
 }

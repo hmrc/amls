@@ -32,28 +32,31 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
-class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymentsRepository: PaymentRepository)(implicit ec:ExecutionContext) extends Logging {
+class PaymentService @Inject() (val paymentConnector: PayAPIConnector, val paymentsRepository: PaymentRepository)(
+  implicit ec: ExecutionContext
+) extends Logging {
 
-  def createPayment(paymentId: String, amlsRegistrationNumber: String, safeId: String)
-                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Payment]] = {
+  def createPayment(paymentId: String, amlsRegistrationNumber: String, safeId: String)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Option[Payment]] =
     (for {
-      pm <- paymentConnector.getPayment(paymentId)
+      pm         <- paymentConnector.getPayment(paymentId)
       newPayment <- paymentsRepository.insert(Payment(amlsRegistrationNumber, safeId, pm))
     } yield newPayment.some) recoverWith {
       case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
-      case e: HttpStatusException => Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
-      case e: PaymentException => Future.failed(e)
+      case e: HttpStatusException                               =>
+        Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
+      case e: PaymentException                                  => Future.failed(e)
     }
-  }
 
-  def createBacsPayment(request: CreateBacsPaymentRequest)(implicit ec: ExecutionContext): Future[Payment] = {
+  def createBacsPayment(request: CreateBacsPaymentRequest)(implicit ec: ExecutionContext): Future[Payment] =
     paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
       case Some(p) =>
         val copied = p.copy(isBacs = Some(true))
         paymentsRepository.update(copied) map { _ => copied }
-      case _ => paymentsRepository.insert(Payment(request))
+      case _       => paymentsRepository.insert(Payment(request))
     }
-  }
 
   def getPaymentByAmlsReference(amlsRefNo: String): Future[Option[Payment]] = {
     logger.debug(s"Searching for payment by amls reference $amlsRefNo ...")
@@ -61,7 +64,7 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymen
 
     futureOptPayment.foreach {
       case Some(payment) => Some(payment)
-      case None => logger.error(s"unable to find payment in database for amls ref number $amlsRefNo");None
+      case None          => logger.error(s"unable to find payment in database for amls ref number $amlsRefNo"); None
     }
 
     futureOptPayment
@@ -73,7 +76,7 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymen
 
     futureOptPayment.foreach {
       case Some(payment) => Some(payment)
-      case None => logger.error(s"unable to find payment in database for payment reference $paymentReference");None
+      case None          => logger.error(s"unable to find payment in database for payment reference $paymentReference"); None
     }
 
     futureOptPayment
@@ -82,17 +85,17 @@ class PaymentService @Inject()(val paymentConnector: PayAPIConnector, val paymen
   def updatePayment(payment: Payment)(implicit ec: ExecutionContext): Future[Boolean] =
     paymentsRepository.update(payment) map {
       case r if r.wasAcknowledged() => true
-      case _: UpdateResult => throw new Exception(s"Unknown error when trying to update payment ref ${payment.reference}")
+      case _: UpdateResult          =>
+        throw new Exception(s"Unknown error when trying to update payment ref ${payment.reference}")
     }
 
-  def refreshStatus(paymentReference: String)(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] = {
+  def refreshStatus(
+    paymentReference: String
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): OptionT[Future, PaymentStatusResult] =
     for {
-      payment: Payment <- OptionT(getPaymentByPaymentReference(paymentReference))
+      payment: Payment                 <- OptionT(getPaymentByPaymentReference(paymentReference))
       refreshedPayment: payapi.Payment <- OptionT.liftF(paymentConnector.getPayment(payment._id))
-      _ <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
-    } yield {
-      PaymentStatusResult(paymentReference, refreshedPayment.id, refreshedPayment.status)
-    }
-  }
+      _                                <- OptionT.liftF(paymentsRepository.update(payment.copy(status = refreshedPayment.status)))
+    } yield PaymentStatusResult(paymentReference, refreshedPayment.id, refreshedPayment.status)
 
 }

@@ -26,19 +26,22 @@ class MsbServicesSpec extends PlaySpec {
 
     "round trip through Json correctly" in {
 
-      val data = MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange, ForeignExchange))
-      val js = Json.toJson(data)
+      val data = MsbServices(
+        Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, CurrencyExchange, ForeignExchange)
+      )
+      val js   = Json.toJson(data)
 
       js.as[MsbServices] mustEqual data
     }
 
     "fail when on invalid data" in {
       Json.fromJson[MsbServices](Json.obj("msbServices" -> Seq("40"))) must
-        be(JsError((JsPath \ "msbServices") (0) -> JsonValidationError("error.invalid")))
+        be(JsError((JsPath \ "msbServices")(0) -> JsonValidationError("error.invalid")))
     }
 
     "convert msb des model to frontend model" in {
-      val feModel = Some(MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange)))
+      val feModel =
+        Some(MsbServices(Set(TransmittingMoney, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange)))
 
       MsbServices.convMsb(Msb(true, false, true, true, true)) must be(feModel)
     }

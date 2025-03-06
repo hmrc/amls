@@ -36,7 +36,6 @@ class OtherBusinessTaxMattersSpec extends PlaySpec {
         be(JsSuccess(OtherBusinessTaxMattersYes))
     }
 
-
     "write the correct value" in {
       Json.toJson(OtherBusinessTaxMattersNo: OtherBusinessTaxMatters) must
         be(Json.obj("otherBusinessTaxMatters" -> false))

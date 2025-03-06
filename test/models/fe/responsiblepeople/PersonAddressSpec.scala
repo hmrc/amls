@@ -25,62 +25,58 @@ class PersonAddressSpec extends PlaySpec {
   val DefaultAddressLine2 = Some("Default Line 2")
   val DefaultAddressLine3 = Some("Default Line 3")
   val DefaultAddressLine4 = Some("Default Line 4")
-  val DefaultPostcode = "AA1 1AA"
-  val DefaultCountry = "GB"
+  val DefaultPostcode     = "AA1 1AA"
+  val DefaultCountry      = "GB"
 
   val NewAddressLine1 = "New Line 1"
   val NewAddressLine2 = "New Line 2"
   val NewAddressLine3 = Some("New Line 3")
   val NewAddressLine4 = Some("New Line 4")
-  val NewPostcode = "BB1 1BB"
-  val NewCountry = "AB"
+  val NewPostcode     = "BB1 1BB"
+  val NewCountry      = "AB"
 
-  val DefaultUKAddress = PersonAddressUK(
-    DefaultAddressLine1,
-    DefaultAddressLine2,
-    DefaultAddressLine3,
-    DefaultAddressLine4,
-    DefaultPostcode)
+  val DefaultUKAddress =
+    PersonAddressUK(DefaultAddressLine1, DefaultAddressLine2, DefaultAddressLine3, DefaultAddressLine4, DefaultPostcode)
 
   val DefaultNonUKAddress = PersonAddressNonUK(
     DefaultAddressLine1,
     DefaultAddressLine2,
     DefaultAddressLine3,
     DefaultAddressLine4,
-    DefaultCountry)
+    DefaultCountry
+  )
 
   val DefaultUKModel = Map(
-    "isUK" -> Seq("true"),
+    "isUK"         -> Seq("true"),
     "addressLine1" -> Seq(DefaultAddressLine1),
     "addressLine2" -> Seq(DefaultAddressLine2),
     "addressLine3" -> Seq("Default Line 3"),
     "addressLine4" -> Seq("Default Line 4"),
-    "postCode" -> Seq(DefaultPostcode)
+    "postCode"     -> Seq(DefaultPostcode)
   )
 
   val DefaultNonUKModel = Map(
-    "isUK" -> Seq("false"),
+    "isUK"              -> Seq("false"),
     "addressLineNonUK1" -> Seq(DefaultAddressLine1),
     "addressLineNonUK2" -> Seq(DefaultAddressLine2),
     "addressLineNonUK3" -> Seq("Default Line 3"),
     "addressLineNonUK4" -> Seq("Default Line 4"),
-    "country" -> Seq(DefaultCountry)
+    "country"           -> Seq(DefaultCountry)
   )
 
-
   val DefaultUKJson = Json.obj(
-    "personAddressLine1" -> DefaultAddressLine1,
-    "personAddressLine2" -> DefaultAddressLine2,
-    "personAddressLine3" -> DefaultAddressLine3,
-    "personAddressLine4" -> DefaultAddressLine4,
+    "personAddressLine1"    -> DefaultAddressLine1,
+    "personAddressLine2"    -> DefaultAddressLine2,
+    "personAddressLine3"    -> DefaultAddressLine3,
+    "personAddressLine4"    -> DefaultAddressLine4,
     "personAddressPostCode" -> DefaultPostcode
   )
 
   val DefaultNonUKJson = Json.obj(
-    "personAddressLine1" -> DefaultAddressLine1,
-    "personAddressLine2" -> DefaultAddressLine2,
-    "personAddressLine3" -> DefaultAddressLine3,
-    "personAddressLine4" -> DefaultAddressLine4,
+    "personAddressLine1"   -> DefaultAddressLine1,
+    "personAddressLine2"   -> DefaultAddressLine2,
+    "personAddressLine3"   -> DefaultAddressLine3,
+    "personAddressLine4"   -> DefaultAddressLine4,
     "personAddressCountry" -> DefaultCountry
   )
 

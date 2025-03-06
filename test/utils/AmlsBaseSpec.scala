@@ -30,25 +30,29 @@ import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.ExecutionContext
 
-trait AmlsBaseSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite with MockitoSugar {
+trait AmlsBaseSpec
+    extends PlaySpec
+    with ScalaFutures
+    with IntegrationPatience
+    with GuiceOneAppPerSuite
+    with MockitoSugar {
 
-  val mockRunModeConf: Configuration = mock[Configuration]
-  val mockEnvironment: Environment = mock[Environment]
-  val mockAppConfig: ApplicationConfig = mock[ApplicationConfig]
+  val mockRunModeConf: Configuration     = mock[Configuration]
+  val mockEnvironment: Environment       = mock[Environment]
+  val mockAppConfig: ApplicationConfig   = mock[ApplicationConfig]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
-  val mockHttpClient: HttpClient = mock[HttpClient]
-  val mockCC: ControllerComponents = mock[ControllerComponents]
-  val mockBodyParsers: PlayBodyParsers = mock[PlayBodyParsers]
-  val mockMetrics: Metrics = mock[Metrics]
+  val mockHttpClient: HttpClient         = mock[HttpClient]
+  val mockCC: ControllerComponents       = mock[ControllerComponents]
+  val mockBodyParsers: PlayBodyParsers   = mock[PlayBodyParsers]
+  val mockMetrics: Metrics               = mock[Metrics]
 
-  val maxRetries = 10
-  val initialWaitMs = 10
+  val maxRetries        = 10
+  val initialWaitMs     = 10
   val waitFactor: Float = 1.5f
 
   implicit val apiRetryHelper: ApiRetryHelper = new ApiRetryHelper(as = app.actorSystem, mockAppConfig)
-  implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-
+  implicit val hc: HeaderCarrier              = HeaderCarrier()
+  implicit val ec: ExecutionContext           = app.injector.instanceOf[ExecutionContext]
 
   when {
     mockAppConfig.maxAttempts

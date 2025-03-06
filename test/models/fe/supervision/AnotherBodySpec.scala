@@ -34,23 +34,23 @@ class AnotherBodySpec extends PlaySpec {
 
       "Serialise AnotherBodyYes service as expected" in {
 
-        val start = LocalDate.of(1990, 2, 24) //scalastyle:off magic.number
-        val end = LocalDate.of(1998, 2, 24) //scalastyle:off magic.number
+        val start = LocalDate.of(1990, 2, 24) // scalastyle:off magic.number
+        val end   = LocalDate.of(1998, 2, 24) // scalastyle:off magic.number
         val input = AnotherBodyYes("Name", start, end, "Reason")
 
         val expectedJson = Json.obj(
-          "anotherBody" -> true,
+          "anotherBody"    -> true,
           "supervisorName" -> "Name",
-          "startDate" -> Json.obj("supervisionStartDate" -> "1990-02-24"),
-          "endDate" -> Json.obj("supervisionEndDate" -> "1998-02-24"),
-          "endingReason" -> Json.obj("supervisionEndingReason" -> "Reason")
+          "startDate"      -> Json.obj("supervisionStartDate" -> "1990-02-24"),
+          "endDate"        -> Json.obj("supervisionEndDate" -> "1998-02-24"),
+          "endingReason"   -> Json.obj("supervisionEndingReason" -> "Reason")
         )
 
         Json.toJson(input: AnotherBody) must be(expectedJson)
       }
 
       "Deserialise AnotherBodyNo as expected" in {
-        val json = Json.obj("anotherBody" -> false)
+        val json     = Json.obj("anotherBody" -> false)
         val expected = JsSuccess(AnotherBodyNo)
         Json.fromJson[AnotherBody](json) must be(expected)
       }
@@ -58,15 +58,15 @@ class AnotherBodySpec extends PlaySpec {
       "Deserialise AnotherBodyYes as expected" in {
 
         val input = Json.obj(
-          "anotherBody" -> true,
+          "anotherBody"    -> true,
           "supervisorName" -> "Name",
-          "startDate" -> Json.obj("supervisionStartDate" -> "1990-02-24"),
-          "endDate" -> Json.obj("supervisionEndDate" -> "1998-02-24"),
-          "endingReason" -> Json.obj("supervisionEndingReason" -> "Reason")
+          "startDate"      -> Json.obj("supervisionStartDate" -> "1990-02-24"),
+          "endDate"        -> Json.obj("supervisionEndDate" -> "1998-02-24"),
+          "endingReason"   -> Json.obj("supervisionEndingReason" -> "Reason")
         )
 
-        val start = LocalDate.of(1990, 2, 24) //scalastyle:off magic.number
-        val end = LocalDate.of(1998, 2, 24) //scalastyle:off magic.number
+        val start    = LocalDate.of(1990, 2, 24) // scalastyle:off magic.number
+        val end      = LocalDate.of(1998, 2, 24) // scalastyle:off magic.number
         val expected = AnotherBodyYes("Name", start, end, "Reason")
 
         Json.fromJson[AnotherBody](input) must be(JsSuccess(expected))
@@ -80,18 +80,29 @@ class AnotherBodySpec extends PlaySpec {
 
     "convert des SupervisionDetails to frontend AnotherBody" in {
 
-      val desModel = Some(SupervisionDetails(
-        true,
-        Some(SupervisorDetails(
-          "NameOfLastSupervisor",
-          "2001-01-01",
-          "2001-01-01",
-          Some(false),
-          "SupervisionEndingReason")
+      val desModel = Some(
+        SupervisionDetails(
+          true,
+          Some(
+            SupervisorDetails(
+              "NameOfLastSupervisor",
+              "2001-01-01",
+              "2001-01-01",
+              Some(false),
+              "SupervisionEndingReason"
+            )
+          )
         )
-      ))
+      )
 
-      val convertedModel = Some(AnotherBodyYes("NameOfLastSupervisor", LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 1), "SupervisionEndingReason"))
+      val convertedModel = Some(
+        AnotherBodyYes(
+          "NameOfLastSupervisor",
+          LocalDate.of(2001, 1, 1),
+          LocalDate.of(2001, 1, 1),
+          "SupervisionEndingReason"
+        )
+      )
       AnotherBody.conv(desModel) must be(convertedModel)
     }
 

@@ -23,38 +23,40 @@ import DeregistrationReason._
 class DeregisterSubscriptionRequestSpec extends PlaySpec {
 
   val deregReasons: Map[String, DeregistrationReason] = Map(
-    "Ceased Trading" -> Ceasedtrading,
+    "Ceased Trading"                                         -> Ceasedtrading,
     "HVD - policy of not accepting high value cash payments" -> HVDPolicyOfNotAcceptingHighValueCashPayments,
-    "Out of scope" -> OutOfScope,
-    "Not trading in own right" -> NotTradingInOwnRight,
-    "Under another supervisor" -> UnderAnotherSupervisor,
-    "Change of Legal Entity" -> ChangeOfLegalEntity
+    "Out of scope"                                           -> OutOfScope,
+    "Not trading in own right"                               -> NotTradingInOwnRight,
+    "Under another supervisor"                               -> UnderAnotherSupervisor,
+    "Change of Legal Entity"                                 -> ChangeOfLegalEntity
   )
 
   "DeregisterSubscriptionRequest" must {
 
     "successfully read json" when {
 
-      deregReasons foreach {
-        case (str, md) => {
-          s"deregistrationReason is $str" in {
-            val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-              "deregistrationDate" -> "2015-08-23",
-              "deregistrationReason" -> str
-            )
-            val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
-            DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
-          }
+      deregReasons foreach { case (str, md) =>
+        s"deregistrationReason is $str" in {
+          val inputRequest = Json.obj(
+            "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+            "deregistrationDate"       -> "2015-08-23",
+            "deregistrationReason"     -> str
+          )
+          val model        = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+          DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
         }
       }
 
       "deregReasonOther has value" in {
-        val inputRequest = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "deregistrationDate" -> "2015-08-23",
-          "deregistrationReason" -> "Other, please specify",
-          "deregReasonOther" -> "Other Reason")
+        val inputRequest = Json.obj(
+          "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+          "deregistrationDate"       -> "2015-08-23",
+          "deregistrationReason"     -> "Other, please specify",
+          "deregReasonOther"         -> "Other Reason"
+        )
 
-        val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", Other, Some("Other Reason"))
+        val model =
+          DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", Other, Some("Other Reason"))
 
         DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
       }
@@ -63,11 +65,16 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
 
         val inputRequest = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "deregistrationDate" -> "2015-08-23",
-          "deregistrationReason" -> "Out of scope"
+          "deregistrationDate"       -> "2015-08-23",
+          "deregistrationReason"     -> "Out of scope"
         )
 
-        val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", DeregistrationReason.OutOfScope, None)
+        val model = DeregisterSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          DeregistrationReason.OutOfScope,
+          None
+        )
 
         DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsSuccess(model))
 
@@ -76,28 +83,34 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
 
     "successfully write json" when {
 
-      deregReasons foreach {
-        case (str, md) => {
-          s"deregistrationReason is $str" in {
-            val json = Json.obj(
-              "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-              "deregistrationDate" -> "2015-08-23",
-              "deregistrationReason" -> str)
+      deregReasons foreach { case (str, md) =>
+        s"deregistrationReason is $str" in {
+          val json = Json.obj(
+            "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+            "deregistrationDate"       -> "2015-08-23",
+            "deregistrationReason"     -> str
+          )
 
-            val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
+          val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", md, None)
 
-            DeregisterSubscriptionRequest.format.writes(model) must be(json)
-          }
+          DeregisterSubscriptionRequest.format.writes(model) must be(json)
         }
       }
 
       "deregReasonOther has value" in {
-        val json = Json.obj("acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "deregistrationDate" -> "2015-08-23",
-          "deregistrationReason" -> "Other, please specify",
-          "deregReasonOther" -> "Other Reason")
+        val json = Json.obj(
+          "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
+          "deregistrationDate"       -> "2015-08-23",
+          "deregistrationReason"     -> "Other, please specify",
+          "deregReasonOther"         -> "Other Reason"
+        )
 
-        val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", DeregistrationReason.Other, Some("Other Reason"))
+        val model = DeregisterSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          DeregistrationReason.Other,
+          Some("Other Reason")
+        )
 
         DeregisterSubscriptionRequest.format.writes(model) must be(json)
       }
@@ -106,11 +119,16 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
 
         val json = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "deregistrationDate" -> "2015-08-23",
-          "deregistrationReason" -> "Out of scope"
+          "deregistrationDate"       -> "2015-08-23",
+          "deregistrationReason"     -> "Out of scope"
         )
 
-        val model = DeregisterSubscriptionRequest("AEF7234BGG12539GH143856HEA123412", "2015-08-23", DeregistrationReason.OutOfScope, None)
+        val model = DeregisterSubscriptionRequest(
+          "AEF7234BGG12539GH143856HEA123412",
+          "2015-08-23",
+          DeregistrationReason.OutOfScope,
+          None
+        )
 
         DeregisterSubscriptionRequest.format.writes(model) must be(json)
       }
@@ -120,12 +138,19 @@ class DeregisterSubscriptionRequestSpec extends PlaySpec {
       "deregistrationReason is invalid" in {
         val inputRequest = Json.obj(
           "acknowledgementReference" -> "AEF7234BGG12539GH143856HEA123412",
-          "deregistrationDate" -> "2015-08-23",
-          "deregistrationReason" -> "invalid"
+          "deregistrationDate"       -> "2015-08-23",
+          "deregistrationReason"     -> "invalid"
         )
 
-        DeregisterSubscriptionRequest.format.reads(inputRequest) must be(JsError(List((JsPath \ "deregistrationReason" \ "deregistrationReason",
-          List(JsonValidationError(List("error.invalid"))))))
+        DeregisterSubscriptionRequest.format.reads(inputRequest) must be(
+          JsError(
+            List(
+              (
+                JsPath \ "deregistrationReason" \ "deregistrationReason",
+                List(JsonValidationError(List("error.invalid")))
+              )
+            )
+          )
         )
       }
     }

@@ -31,7 +31,8 @@ class BankDetailsSpec extends PlaySpec {
       val convertedModel = List(
         BankDetails(BelongsToBusiness, "AccountName", UKAccount("12345678", "123456")),
         BankDetails(PersonalAccount, "AccountName1", NonUKIBANNumber("87654321")),
-        BankDetails(BelongsToOtherBusiness, "AccountName2", NonUKAccountNumber("87654321")))
+        BankDetails(BelongsToOtherBusiness, "AccountName2", NonUKAccountNumber("87654321"))
+      )
 
       BankDetails.conv(DesConstants.testBankDetails) must be(convertedModel)
     }

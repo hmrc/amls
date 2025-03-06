@@ -49,18 +49,18 @@ object ExpectedAMLSTurnover {
       case "05" => Reads(_ => JsSuccess(Fifth))
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "expectedAMLSTurnover", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[ExpectedAMLSTurnover] = Writes[ExpectedAMLSTurnover] {
-    case First => Json.obj("expectedAMLSTurnover" -> "01")
-    case Second => Json.obj("expectedAMLSTurnover" -> "02")
-    case Third => Json.obj("expectedAMLSTurnover" -> "03")
-    case Fourth => Json.obj("expectedAMLSTurnover" -> "04")
-    case Fifth => Json.obj("expectedAMLSTurnover" -> "05")
-    case Sixth => Json.obj("expectedAMLSTurnover" -> "06")
+    case First   => Json.obj("expectedAMLSTurnover" -> "01")
+    case Second  => Json.obj("expectedAMLSTurnover" -> "02")
+    case Third   => Json.obj("expectedAMLSTurnover" -> "03")
+    case Fourth  => Json.obj("expectedAMLSTurnover" -> "04")
+    case Fifth   => Json.obj("expectedAMLSTurnover" -> "05")
+    case Sixth   => Json.obj("expectedAMLSTurnover" -> "06")
     case Seventh => Json.obj("expectedAMLSTurnover" -> "07")
   }
 
@@ -69,27 +69,28 @@ object ExpectedAMLSTurnover {
   def conv(activityDtls: BusinessActivityDetails): Option[ExpectedAMLSTurnover] = {
     logger.debug(s"[ExpectedAMLSTurnover][conv] desValue = $activityDtls")
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
-      case Some(data) => activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
-        case true => convertAMLSTurnover(data.mlrActivityTurnover)
-        case false => data.otherBusActivitiesCarriedOut match {
-          case Some(other) => convertAMLSTurnover(Some(other.mlrActivityTurnover))
-          case None => None
+      case Some(data) =>
+        activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
+          case true  => convertAMLSTurnover(data.mlrActivityTurnover)
+          case false =>
+            data.otherBusActivitiesCarriedOut match {
+              case Some(other) => convertAMLSTurnover(Some(other.mlrActivityTurnover))
+              case None        => None
+            }
         }
-      }
-      case None => None
+      case None       => None
     }
   }
 
-  def convertAMLSTurnover(to: Option[String]): Option[ExpectedAMLSTurnover] = {
+  def convertAMLSTurnover(to: Option[String]): Option[ExpectedAMLSTurnover] =
     to match {
-      case Some("£0-£15k") => Some(First)
-      case Some("£15k-50k") => Some(Second)
-      case Some("£50k-£100k") => Some(Third)
+      case Some("£0-£15k")     => Some(First)
+      case Some("£15k-50k")    => Some(Second)
+      case Some("£50k-£100k")  => Some(Third)
       case Some("£100k-£250k") => Some(Fourth)
-      case Some("£250k-£1m") => Some(Fifth)
-      case Some("£1m-10m") => Some(Sixth)
-      case Some("£10m+") => Some(Seventh)
-      case _ => None
+      case Some("£250k-£1m")   => Some(Fifth)
+      case Some("£1m-10m")     => Some(Sixth)
+      case Some("£10m+")       => Some(Seventh)
+      case _                   => None
     }
-  }
 }

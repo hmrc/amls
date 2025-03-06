@@ -19,16 +19,17 @@ package models.des.aboutyou
 import models.fe.declaration._
 import play.api.libs.json.{Json, OFormat}
 
-case class RolesWithinBusiness(beneficialShareholder: Boolean,
-                               director: Boolean,
-                               partner: Boolean,
-                               internalAccountant: Boolean,
-                               soleProprietor: Boolean,
-                               nominatedOfficer: Boolean,
-                               designatedMember: Boolean,
-                               other: Boolean,
-                               specifyOtherRoleInBusiness: Option[String]
-                              )
+case class RolesWithinBusiness(
+  beneficialShareholder: Boolean,
+  director: Boolean,
+  partner: Boolean,
+  internalAccountant: Boolean,
+  soleProprietor: Boolean,
+  nominatedOfficer: Boolean,
+  designatedMember: Boolean,
+  other: Boolean,
+  specifyOtherRoleInBusiness: Option[String]
+)
 
 object RolesWithinBusiness {
   implicit val format: OFormat[RolesWithinBusiness] = Json.format[RolesWithinBusiness]
@@ -37,22 +38,19 @@ object RolesWithinBusiness {
 
     val things = Some(frontendModel).fold[Set[RoleType]](Set.empty)(x => x.roles)
 
-    things.foldLeft(
-      RolesWithinBusiness(false,false,false,false,false,false,false,false,None)){
+    things.foldLeft(RolesWithinBusiness(false, false, false, false, false, false, false, false, None)) {
       (result, roleType) =>
         roleType match {
           case BeneficialShareholder => result.copy(beneficialShareholder = true)
-          case Director => result.copy(director = true)
-          case Partner => result.copy(partner = true)
-          case InternalAccountant => result.copy(internalAccountant = true)
-          case SoleProprietor => result.copy(soleProprietor = true)
-          case NominatedOfficer => result.copy(nominatedOfficer = true)
-          case DesignatedMember => result.copy(designatedMember = true)
-          case Other(details) => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
-          case _ => throw new MatchError(this)
+          case Director              => result.copy(director = true)
+          case Partner               => result.copy(partner = true)
+          case InternalAccountant    => result.copy(internalAccountant = true)
+          case SoleProprietor        => result.copy(soleProprietor = true)
+          case NominatedOfficer      => result.copy(nominatedOfficer = true)
+          case DesignatedMember      => result.copy(designatedMember = true)
+          case Other(details)        => result.copy(other = true, specifyOtherRoleInBusiness = Some(details))
+          case _                     => throw new MatchError(this)
         }
     }
   }
 }
-
-

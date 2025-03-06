@@ -34,11 +34,11 @@ object PaymentStatus {
 
   implicit val formats: Format[PaymentStatus] = new Format[PaymentStatus] {
     override def reads(json: JsValue): JsResult[PaymentStatus] = json match {
-      case JsString("Created") => JsSuccess(Created)
+      case JsString("Created")    => JsSuccess(Created)
       case JsString("Successful") => JsSuccess(Successful)
-      case JsString("Sent") => JsSuccess(Sent)
-      case JsString("Failed") => JsSuccess(Failed)
-      case JsString("Cancelled") => JsSuccess(Cancelled)
+      case JsString("Sent")       => JsSuccess(Sent)
+      case JsString("Failed")     => JsSuccess(Failed)
+      case JsString("Cancelled")  => JsSuccess(Cancelled)
     }
 
     override def writes(status: PaymentStatus): JsValue = JsString(status.toString)

@@ -23,7 +23,7 @@ class EabServicesSpec extends PlaySpec {
 
   "EabServices " should {
     "Be convertable from front end Estate agent business services" in {
-      val from = {
+      val from =
         Eab(
           EabData(
             List("businessTransfer", "developmentCompany", "commercial"),
@@ -36,17 +36,17 @@ class EabServicesSpec extends PlaySpec {
             Some("Details")
           )
         )
-      }
 
-      val expected = Some(models.des.businessactivities.EabServices(
-        false, true, false, false, true, false, false, true, false, Some(false))
+      val expected = Some(
+        models.des.businessactivities
+          .EabServices(false, true, false, false, true, false, false, true, false, Some(false))
       )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be(expected)
     }
 
     "Be convertable from front end Estate agent business services when none" in {
-      val from = {
+      val from =
         Eab(
           EabData(
             List(),
@@ -59,10 +59,10 @@ class EabServicesSpec extends PlaySpec {
             Some("Details")
           )
         )
-      }
 
-      val expected = Some(models.des.businessactivities.EabServices(
-        false, false, false, false, false, false, false, false, false, Some(false))
+      val expected = Some(
+        models.des.businessactivities
+          .EabServices(false, false, false, false, false, false, false, false, false, Some(false))
       )
 
       models.des.businessactivities.EabServices.convert(Some(from)) must be(expected)

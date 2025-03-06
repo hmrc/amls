@@ -34,22 +34,21 @@ object BankAccountType {
       case "01" => Reads(_ => JsSuccess(PersonalAccount))
       case "02" => Reads(_ => JsSuccess(BelongsToBusiness))
       case "03" => Reads(_ => JsSuccess(BelongsToOtherBusiness))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "bankAccountType", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[BankAccountType] = Writes[BankAccountType] {
-    case PersonalAccount => Json.obj("bankAccountType" -> "01")
-    case BelongsToBusiness => Json.obj("bankAccountType" -> "02")
+    case PersonalAccount        => Json.obj("bankAccountType" -> "01")
+    case BelongsToBusiness      => Json.obj("bankAccountType" -> "02")
     case BelongsToOtherBusiness => Json.obj("bankAccountType" -> "03")
   }
 
-  implicit def conv(accountType: String): BankAccountType = {
+  implicit def conv(accountType: String): BankAccountType =
     accountType match {
-      case "Personal" => PersonalAccount
-      case "This business's" => BelongsToBusiness
+      case "Personal"           => PersonalAccount
+      case "This business's"    => BelongsToBusiness
       case "Another business's" => BelongsToOtherBusiness
     }
-  }
 }

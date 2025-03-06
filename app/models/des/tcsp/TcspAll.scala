@@ -25,19 +25,16 @@ object TcspAll {
 
   implicit val format: OFormat[TcspAll] = Json.format[TcspAll]
 
-  implicit def conv(tcsp: Tcsp): TcspAll = {
-
+  implicit def conv(tcsp: Tcsp): TcspAll =
     (tcsp.doesServicesOfAnotherTCSP, tcsp.servicesOfAnotherTCSP) match {
       case (Some(x), Some(data)) => (x, data)
-      case _ => TcspAll(false, None)
+      case _                     => TcspAll(false, None)
     }
-  }
 
-  implicit def conv1(x: (Boolean, ServicesOfAnotherTCSP)): TcspAll = {
+  implicit def conv1(x: (Boolean, ServicesOfAnotherTCSP)): TcspAll =
     (x._1, x._2) match {
       case (true, ServicesOfAnotherTCSPYes(dtls)) => TcspAll(true, dtls)
-      case (true, ServicesOfAnotherTCSPNo) => TcspAll(true, None)
-      case (false, _) => TcspAll(false, None)
+      case (true, ServicesOfAnotherTCSPNo)        => TcspAll(true, None)
+      case (false, _)                             => TcspAll(false, None)
     }
-  }
 }

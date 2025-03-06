@@ -30,7 +30,7 @@ object PersonResidenceType {
       __.read[ResidenceType] and
         (__ \ "countryOfBirth").read[String] and
         (__ \ "nationality").read[String]
-      ) (PersonResidenceType.apply _)
+    )(PersonResidenceType.apply _)
   }
 
   implicit val jsonWrite: Writes[PersonResidenceType] = {
@@ -40,33 +40,30 @@ object PersonResidenceType {
       __.write[ResidenceType] and
         (__ \ "countryOfBirth").write[String] and
         (__ \ "nationality").write[String]
-      ) (unlift(PersonResidenceType.unapply))
+    )(unlift(PersonResidenceType.unapply))
   }
 
-  implicit def conv(nationality: Option[NationalityDetails]): Option[PersonResidenceType] = {
+  implicit def conv(nationality: Option[NationalityDetails]): Option[PersonResidenceType] =
     nationality match {
       case Some(details) => details
-      case None => None
+      case None          => None
     }
-  }
 
-  implicit def convNationality(details: NationalityDetails): Option[PersonResidenceType] = {
+  implicit def convNationality(details: NationalityDetails): Option[PersonResidenceType] =
     details.idDetails match {
-      case Some(idDetail) => {
-
-        val ukResidence: Option[ResidenceType] = idDetail.ukResident.map(x => UKResidence(x.nino))
+      case Some(idDetail) =>
+        val ukResidence: Option[ResidenceType]    = idDetail.ukResident.map(x => UKResidence(x.nino))
         val nonUKResidence: Option[ResidenceType] = idDetail.nonUkResident.map(x => NonUKResidence)
 
         val residenceType = details.areYouUkResident match {
-          case true => ukResidence
+          case true  => ukResidence
           case false => nonUKResidence
         }
         residenceType match {
-          case Some(resType) => Some(PersonResidenceType(resType, details.countryOfBirth.getOrElse(""), details.nationality.getOrElse("")))
-          case _ => None
+          case Some(resType) =>
+            Some(PersonResidenceType(resType, details.countryOfBirth.getOrElse(""), details.nationality.getOrElse("")))
+          case _             => None
         }
-      }
-      case _ => None
+      case _              => None
     }
-  }
 }

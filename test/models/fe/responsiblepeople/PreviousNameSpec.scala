@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{PreviousNameDetails, PersonName => DesPersonName}
+import models.des.responsiblepeople.{PersonName => DesPersonName, PreviousNameDetails}
 import org.scalatestplus.play.PlaySpec
 
 class PreviousNameSpec extends PlaySpec {
@@ -30,8 +30,14 @@ class PreviousNameSpec extends PlaySpec {
 
     "convert des name details to frontend" in {
 
-      val previousNameDetails = Some(PreviousNameDetails(true, Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
-        Some("2001-01-01"), None))
+      val previousNameDetails = Some(
+        PreviousNameDetails(
+          true,
+          Some(DesPersonName(Some("first name"), Some("middle name"), Some("last name"))),
+          Some("2001-01-01"),
+          None
+        )
+      )
 
       val previousName = PreviousName(true, Some("first name"), Some("middle name"), Some("last name"))
       PreviousName.conv(previousNameDetails) must be(Some(previousName))

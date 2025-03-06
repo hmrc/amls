@@ -27,32 +27,32 @@ case object ProfessionalBodyMemberNo extends ProfessionalBodyMember
 
 object ProfessionalBodyMember {
 
-  implicit val jsonReads: Reads[ProfessionalBodyMember] = {
+  implicit val jsonReads: Reads[ProfessionalBodyMember] =
     (__ \ "isAMember").read[Boolean] flatMap {
-      case true => Reads(_ => JsSuccess(ProfessionalBodyMemberYes))
+      case true  => Reads(_ => JsSuccess(ProfessionalBodyMemberYes))
       case false => Reads(_ => JsSuccess(ProfessionalBodyMemberNo))
     }
-  }
 
   implicit val jsonWrites: Writes[ProfessionalBodyMember] = Writes[ProfessionalBodyMember] {
     case ProfessionalBodyMemberYes => Json.obj("isAMember" -> true)
-    case ProfessionalBodyMemberNo => Json.obj("isAMember" -> false)
+    case ProfessionalBodyMemberNo  => Json.obj("isAMember" -> false)
   }
 
-  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBodyMember] = {
+  implicit def conv(supDtls: Option[ProfessionalBodyDetails]): Option[ProfessionalBodyMember] =
     supDtls match {
-      case Some(pBodyDtls) => pBodyDtls.professionalBody match {
-        case Some(member) => member.professionalBodyDetails
-        case None => None
-      }
-      case None => Some(ProfessionalBodyMemberNo)
+      case Some(pBodyDtls) =>
+        pBodyDtls.professionalBody match {
+          case Some(member) => member.professionalBodyDetails
+          case None         => None
+        }
+      case None            => Some(ProfessionalBodyMemberNo)
     }
-  }
 
-  implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[ProfessionalBodyMember] = {
+  implicit def convProfessionalBodyMember(
+    pBodyMember: Option[MemberOfProfessionalBody]
+  ): Option[ProfessionalBodyMember] =
     pBodyMember match {
       case Some(_) => Some(ProfessionalBodyMemberYes)
-      case None => Some(ProfessionalBodyMemberNo)
+      case None    => Some(ProfessionalBodyMemberNo)
     }
-  }
 }

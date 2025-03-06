@@ -27,12 +27,11 @@ case object Renewal extends AmlsMessageType
 case object RenewalAmendment extends AmlsMessageType
 
 object AmlsMessageType {
-  implicit def convToString(mt: AmlsMessageType): String = {
+  implicit def convToString(mt: AmlsMessageType): String =
     mt match {
-      case Amendment => "Amendment"
-      case Variation => "Variation"
-      case Renewal => "Renewal"
+      case Amendment        => "Amendment"
+      case Variation        => "Variation"
+      case Renewal          => "Renewal"
       case RenewalAmendment => "Renewal Amendment"
     }
-  }
 }

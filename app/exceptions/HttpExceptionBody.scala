@@ -25,5 +25,7 @@ case class HttpExceptionBody(reason: String)
 object HttpExceptionBody {
   implicit val format: OFormat[HttpExceptionBody] = Json.format[HttpExceptionBody]
 
-  def fromJson(json: String): Option[HttpExceptionBody] = Try { Json.parse(json).asOpt[HttpExceptionBody] } getOrElse None
+  def fromJson(json: String): Option[HttpExceptionBody] = Try {
+    Json.parse(json).asOpt[HttpExceptionBody]
+  } getOrElse None
 }

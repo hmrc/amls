@@ -33,21 +33,21 @@ import models.fe.eab.Eab
 import play.api.libs.json.{Json, OFormat}
 
 case class SubscriptionRequest(
-                                businessMatchingSection: BusinessMatching,
-                                eabSection: Option[Eab],
-                                tradingPremisesSection: Option[Seq[TradingPremises]],
-                                businessDetailsSection: BusinessDetails,
-                                bankDetailsSection: Seq[BankDetails],
-                                aboutYouSection: AddPerson,
-                                businessActivitiesSection: BusinessActivities,
-                                responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
-                                tcspSection: Option[Tcsp],
-                                aspSection: Option[Asp],
-                                msbSection: Option[MoneyServiceBusiness],
-                                hvdSection: Option[Hvd],
-                                ampSection: Option[Amp],
-                                supervisionSection: Option[Supervision]
-                              )
+  businessMatchingSection: BusinessMatching,
+  eabSection: Option[Eab],
+  tradingPremisesSection: Option[Seq[TradingPremises]],
+  businessDetailsSection: BusinessDetails,
+  bankDetailsSection: Seq[BankDetails],
+  aboutYouSection: AddPerson,
+  businessActivitiesSection: BusinessActivities,
+  responsiblePeopleSection: Option[Seq[ResponsiblePeople]],
+  tcspSection: Option[Tcsp],
+  aspSection: Option[Asp],
+  msbSection: Option[MoneyServiceBusiness],
+  hvdSection: Option[Hvd],
+  ampSection: Option[Amp],
+  supervisionSection: Option[Supervision]
+)
 
 object SubscriptionRequest {
 

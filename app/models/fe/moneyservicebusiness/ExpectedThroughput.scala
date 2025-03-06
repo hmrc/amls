@@ -47,37 +47,35 @@ object ExpectedThroughput {
       case "05" => Reads(_ => JsSuccess(Fifth))
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "throughput", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[ExpectedThroughput] = Writes[ExpectedThroughput] {
-    case First => Json.obj("throughput" -> "01")
-    case Second => Json.obj("throughput" -> "02")
-    case Third => Json.obj("throughput" -> "03")
-    case Fourth => Json.obj("throughput" -> "04")
-    case Fifth => Json.obj("throughput" -> "05")
-    case Sixth => Json.obj("throughput" -> "06")
+    case First   => Json.obj("throughput" -> "01")
+    case Second  => Json.obj("throughput" -> "02")
+    case Third   => Json.obj("throughput" -> "03")
+    case Fourth  => Json.obj("throughput" -> "04")
+    case Fifth   => Json.obj("throughput" -> "05")
+    case Sixth   => Json.obj("throughput" -> "06")
     case Seventh => Json.obj("throughput" -> "07")
   }
 
-  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[ExpectedThroughput] = {
+  implicit def convMsbAll(msbAll: Option[MsbAllDetails]): Option[ExpectedThroughput] =
     msbAll match {
       case Some(msbDtls) => msbDtls.anticipatedTotThrputNxt12Mths.map(x => convThroughput(x))
-      case None => None
+      case None          => None
     }
-  }
 
-  def convThroughput(msbAll: String): ExpectedThroughput = {
+  def convThroughput(msbAll: String): ExpectedThroughput =
     msbAll match {
-      case "£0-£15k" => First
-      case "£15k-50k" => Second
-      case "£50k-£100k" => Third
+      case "£0-£15k"     => First
+      case "£15k-50k"    => Second
+      case "£50k-£100k"  => Third
       case "£100k-£250k" => Fourth
-      case "£250k-£1m" => Fifth
-      case "£1m-10m" => Sixth
-      case "£10m+" => Seventh
+      case "£250k-£1m"   => Fifth
+      case "£1m-10m"     => Sixth
+      case "£10m+"       => Seventh
     }
-  }
 }

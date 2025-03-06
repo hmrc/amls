@@ -43,9 +43,11 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
         )
 
         val expectedRequest = request.copy(
-          hvd = Some(changeToHvd.copy(
-            dateChangeFlag = Some(true)
-          ))
+          hvd = Some(
+            changeToHvd.copy(
+              dateChangeFlag = Some(true)
+            )
+          )
         )
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithHvdDateOfChangeFlag(
@@ -64,21 +66,31 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
           supervisionStartDate = LocalDate.of(1900, 1, 1).format(datePattern)
         )
 
-        val request = DesConstants.AmendVariationRequestModel.copy(
-          aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
-            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-              supervisorDetails = Some(changeToSupervisor)
-            ))
-          ))
+        val request         = DesConstants.AmendVariationRequestModel.copy(
+          aspOrTcsp = Some(
+            DesConstants.testAmendAspOrTcsp.copy(
+              supervisionDetails = Some(
+                DesConstants.testSupervisionDetails.copy(
+                  supervisorDetails = Some(changeToSupervisor)
+                )
+              )
+            )
+          )
         )
         val expectedRequest = request.copy(
-          aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
-            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-              supervisorDetails = Some(changeToSupervisor.copy(
-                dateChangeFlag = Some(true)
-              ))
-            ))
-          ))
+          aspOrTcsp = Some(
+            DesConstants.testAmendAspOrTcsp.copy(
+              supervisionDetails = Some(
+                DesConstants.testSupervisionDetails.copy(
+                  supervisorDetails = Some(
+                    changeToSupervisor.copy(
+                      dateChangeFlag = Some(true)
+                    )
+                  )
+                )
+              )
+            )
+          )
         )
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithSupervisorDateOfChangeFlag(
@@ -97,16 +109,18 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
           activitiesCommenceDate = Some(LocalDate.of(1900, 1, 1).format(datePattern))
         )
 
-        val request = DesConstants.AmendVariationRequestModel.copy(
+        val request         = DesConstants.AmendVariationRequestModel.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
             all = Some(changeToBusinessActivitiesAll)
           )
         )
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(changeToBusinessActivitiesAll.copy(
-              dateChangeFlag = Some(true)
-            ))
+            all = Some(
+              changeToBusinessActivitiesAll.copy(
+                dateChangeFlag = Some(true)
+              )
+            )
           )
         )
 
@@ -128,9 +142,11 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
         val request = DesConstants.AmendVariationRequestModel
 
         val expectedRequest = request.copy(
-          hvd = Some(DesConstants.testHvd.copy(
-            dateChangeFlag = Some(false)
-          ))
+          hvd = Some(
+            DesConstants.testHvd.copy(
+              dateChangeFlag = Some(false)
+            )
+          )
         )
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithHvdDateOfChangeFlag(
@@ -148,13 +164,19 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
         val request = DesConstants.AmendVariationRequestModel
 
         val expectedRequest = request.copy(
-          aspOrTcsp = Some(DesConstants.testAmendAspOrTcsp.copy(
-            supervisionDetails = Some(DesConstants.testSupervisionDetails.copy(
-              supervisorDetails = Some(DesConstants.testSupervisorDetails.copy(
-                dateChangeFlag = Some(false)
-              ))
-            ))
-          ))
+          aspOrTcsp = Some(
+            DesConstants.testAmendAspOrTcsp.copy(
+              supervisionDetails = Some(
+                DesConstants.testSupervisionDetails.copy(
+                  supervisorDetails = Some(
+                    DesConstants.testSupervisorDetails.copy(
+                      dateChangeFlag = Some(false)
+                    )
+                  )
+                )
+              )
+            )
+          )
         )
 
         val result = testDateOfChangeFlagUpdatedHelper.updateWithSupervisorDateOfChangeFlag(
@@ -173,9 +195,11 @@ class DateOfChangeUpdateHelperSpec extends PlaySpec with ScalaFutures with Integ
 
         val expectedRequest = request.copy(
           businessActivities = DesConstants.testBusinessActivities.copy(
-            all = Some(DesConstants.testBusinessActivitiesAll.copy(
-              dateChangeFlag = Some(false)
-            ))
+            all = Some(
+              DesConstants.testBusinessActivitiesAll.copy(
+                dateChangeFlag = Some(false)
+              )
+            )
           )
         )
 

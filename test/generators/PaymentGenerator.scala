@@ -22,16 +22,16 @@ import org.scalacheck.Gen
 trait PaymentGenerator extends BaseGenerator with PayApiGenerator {
 
   val paymentGen: Gen[Payment] = for {
-    refNo <- amlsRefNoGen
-    safeId <- amlsRefNoGen
+    refNo         <- amlsRefNoGen
+    safeId        <- amlsRefNoGen
     payApiPayment <- payApiPaymentGen
   } yield Payment(refNo, safeId, payApiPayment)
 
   val createBacsPaymentRequestGen: Gen[CreateBacsPaymentRequest] = for {
     amlsRef <- amlsRefNoGen
-    safeId <- amlsRefNoGen
-    payRef <- paymentRefGen
-    amount <- numGen
+    safeId  <- amlsRefNoGen
+    payRef  <- paymentRefGen
+    amount  <- numGen
   } yield CreateBacsPaymentRequest(amlsRef, payRef, safeId, amount)
 
 }

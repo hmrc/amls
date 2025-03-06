@@ -28,49 +28,45 @@ object ServicesOfAnotherTCSP {
 
   implicit val jsonReads: Reads[ServicesOfAnotherTCSP] =
     (__ \ "servicesOfAnotherTCSP").read[Boolean] flatMap {
-      case true => (__ \ "mlrRefNumber").readNullable[String] map ServicesOfAnotherTCSPYes.apply
+      case true  => (__ \ "mlrRefNumber").readNullable[String] map ServicesOfAnotherTCSPYes.apply
       case false => Reads(__ => JsSuccess(ServicesOfAnotherTCSPNo))
     }
 
   implicit val jsonWrites: Writes[ServicesOfAnotherTCSP] = Writes[ServicesOfAnotherTCSP] {
-    case ServicesOfAnotherTCSPYes(value) => Json.obj(
-      "servicesOfAnotherTCSP" -> true,
-      "mlrRefNumber" -> value
-    )
-    case ServicesOfAnotherTCSPNo => Json.obj("servicesOfAnotherTCSP" -> false)
+    case ServicesOfAnotherTCSPYes(value) =>
+      Json.obj(
+        "servicesOfAnotherTCSP" -> true,
+        "mlrRefNumber"          -> value
+      )
+    case ServicesOfAnotherTCSPNo         => Json.obj("servicesOfAnotherTCSP" -> false)
 
   }
 
-  def mlrExists(mlrRefNo: Option[String]): Boolean = {
+  def mlrExists(mlrRefNo: Option[String]): Boolean =
     mlrRefNo.getOrElse("").nonEmpty
-  }
 
-  def mlrNo(mlrRefNo: Option[String]): String = {
+  def mlrNo(mlrRefNo: Option[String]): String =
     mlrRefNo.getOrElse("")
-  }
 
-  def tcspServicesOfferedIsDefined(desView: models.des.SubscriptionView): Boolean = {
+  def tcspServicesOfferedIsDefined(desView: models.des.SubscriptionView): Boolean =
     desView.businessActivities.tcspServicesOffered.isDefined
-  }
 
-  def tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView: models.des.SubscriptionView): Boolean = {
+  def tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView: models.des.SubscriptionView): Boolean =
     desView.businessActivities.tcspServicesforRegOffBusinessAddrVirtualOff.isDefined
-  }
 
-  def noneImpliesServicesOfAnotherTCSPNo(desView: models.des.SubscriptionView): Boolean = {
+  def noneImpliesServicesOfAnotherTCSPNo(desView: models.des.SubscriptionView): Boolean =
     tcspServicesOfferedIsDefined(desView) || tcspServicesforRegOffBusinessAddrVirtualOffIsDefined(desView)
-  }
 
-  implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] = {
+  implicit def conv(desView: models.des.SubscriptionView): Option[ServicesOfAnotherTCSP] =
     desView.tcspAll match {
-      case Some(tcsp) => tcsp.anotherTcspServiceProvider match {
-        case true if mlrExists(tcsp.tcspMlrRef) =>
-          Some(ServicesOfAnotherTCSPYes(Some(mlrNo(tcsp.tcspMlrRef))))
-        case _ => Some(ServicesOfAnotherTCSPNo)
-      }
+      case Some(tcsp)                                          =>
+        tcsp.anotherTcspServiceProvider match {
+          case true if mlrExists(tcsp.tcspMlrRef) =>
+            Some(ServicesOfAnotherTCSPYes(Some(mlrNo(tcsp.tcspMlrRef))))
+          case _                                  => Some(ServicesOfAnotherTCSPNo)
+        }
       case None if noneImpliesServicesOfAnotherTCSPNo(desView) =>
         Some(ServicesOfAnotherTCSPNo)
-      case _ => None
+      case _                                                   => None
     }
-  }
 }

@@ -19,26 +19,32 @@ package models.des.bankdetails
 import models.fe.bankdetails.{BankAccountType, BelongsToBusiness, BelongsToOtherBusiness, NonUKAccountNumber, NonUKIBANNumber, PersonalAccount, UKAccount}
 import play.api.libs.json.{Json, OFormat}
 
-case class BankAccount(accountName: String, accountType: String, doYouHaveUkBankAccount: Boolean, bankAccountDetails: Account)
+case class BankAccount(
+  accountName: String,
+  accountType: String,
+  doYouHaveUkBankAccount: Boolean,
+  bankAccountDetails: Account
+)
 
 object BankAccount {
   implicit val format: OFormat[BankAccount] = Json.format[BankAccount]
 
-  implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccount] = {
+  implicit def convert(bankdetails: Seq[models.fe.bankdetails.BankDetails]): Seq[BankAccount] =
     bankdetails map { x =>
       x.bankAccount match {
-        case uk: UKAccount => BankAccount(x.accountName, convertType(x.bankAccountType), true, ukAccount(uk.sortCode, uk.accountNumber))
-        case nonukacc: NonUKAccountNumber => BankAccount(x.accountName, convertType(x.bankAccountType), false, AccountNumber(nonukacc.accountNumber))
-        case nonukiban: NonUKIBANNumber => BankAccount(x.accountName, convertType(x.bankAccountType), false, IBANNumber(nonukiban.IBANNumber))
+        case uk: UKAccount                =>
+          BankAccount(x.accountName, convertType(x.bankAccountType), true, ukAccount(uk.sortCode, uk.accountNumber))
+        case nonukacc: NonUKAccountNumber =>
+          BankAccount(x.accountName, convertType(x.bankAccountType), false, AccountNumber(nonukacc.accountNumber))
+        case nonukiban: NonUKIBANNumber   =>
+          BankAccount(x.accountName, convertType(x.bankAccountType), false, IBANNumber(nonukiban.IBANNumber))
       }
     }
-  }
 
-  def convertType(accountType: BankAccountType): String = {
+  def convertType(accountType: BankAccountType): String =
     accountType match {
-      case PersonalAccount => "Personal"
-      case BelongsToBusiness => "This business's"
+      case PersonalAccount        => "Personal"
+      case BelongsToBusiness      => "This business's"
       case BelongsToOtherBusiness => "Another business's"
     }
-  }
 }

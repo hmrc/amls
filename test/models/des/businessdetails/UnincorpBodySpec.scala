@@ -27,11 +27,17 @@ class UnincorpBodySpec extends PlaySpec {
 
     "be convertible to UnincorpBody DES record" in {
 
-      val reviewDetails = ReviewDetails("businessName", LimitedCompany, Address("line_1", Some("line_2"), None, None, None, "UK"), "safeId")
+      val reviewDetails = ReviewDetails(
+        "businessName",
+        LimitedCompany,
+        Address("line_1", Some("line_2"), None, None, None, "UK"),
+        "safeId"
+      )
 
       val typeOfBusiness = TypeOfBusiness("LTD")
 
-      val businessMatching = BusinessMatching(reviewDetails, BusinessActivities(Set.empty), None, Some(typeOfBusiness), None)
+      val businessMatching =
+        BusinessMatching(reviewDetails, BusinessActivities(Set.empty), None, Some(typeOfBusiness), None)
 
       UnincorpBody.convert(businessMatching) must be(Some(UnincorpBody("businessName", "LTD")))
     }

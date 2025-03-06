@@ -24,10 +24,9 @@ case class OthrNamesOrAliasesDetails(otherNamesOrAliases: Boolean, aliases: Opti
 object OthrNamesOrAliasesDetails {
   implicit val format: OFormat[OthrNamesOrAliasesDetails] = Json.format[OthrNamesOrAliasesDetails]
 
-  def from(person: ResponsiblePeople): Option[OthrNamesOrAliasesDetails] = {
+  def from(person: ResponsiblePeople): Option[OthrNamesOrAliasesDetails] =
     person.knownBy match {
       case Some(name) if name.hasOtherNames => Some(OthrNamesOrAliasesDetails(true, Some(Seq(name.otherNames.get))))
-      case _ => Some(OthrNamesOrAliasesDetails(false, None))
+      case _                                => Some(OthrNamesOrAliasesDetails(false, None))
     }
-  }
 }

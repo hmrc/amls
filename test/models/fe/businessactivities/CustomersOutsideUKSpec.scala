@@ -32,7 +32,8 @@ class CustomersOutsideUKSpec extends PlaySpec {
     }
 
     "convert des model to frontend model successfully" in {
-      val businessActivitiesAll = BusinessActivitiesAll(None,
+      val businessActivitiesAll = BusinessActivitiesAll(
+        None,
         Some("2001-01-01"),
         Some(false),
         BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("11122233344")))),
@@ -40,17 +41,22 @@ class CustomersOutsideUKSpec extends PlaySpec {
         Some("12345678901"),
         Some("11223344556"),
         NonUkResidentCustDetails(true, Some(Seq("AD", "GB"))),
-        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+        AuditableRecordsDetails(
+          "Yes",
+          Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))
+        ),
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        None)
+        None
+      )
 
       CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(true, Some(List("AD", "GB")))))
     }
 
     "convert des model to frontend model successfully when countries option is none" in {
-      val businessActivitiesAll = BusinessActivitiesAll(None,
+      val businessActivitiesAll = BusinessActivitiesAll(
+        None,
         Some("2001-01-01"),
         Some(false),
         BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("11122233344")))),
@@ -58,11 +64,15 @@ class CustomersOutsideUKSpec extends PlaySpec {
         Some("12345678901"),
         Some("11223344556"),
         NonUkResidentCustDetails(false, None),
-        AuditableRecordsDetails("Yes", Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))),
+        AuditableRecordsDetails(
+          "Yes",
+          Some(TransactionRecordingMethod(true, true, true, Some("CommercialPackageName")))
+        ),
         true,
         true,
         Some(FormalRiskAssessmentDetails(true, Some(RiskAssessmentFormat(true, true)))),
-        None)
+        None
+      )
 
       CustomersOutsideUK.conv(businessActivitiesAll) must be(Some(CustomersOutsideUK(false, None)))
     }

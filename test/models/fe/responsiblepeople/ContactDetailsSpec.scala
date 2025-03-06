@@ -29,7 +29,7 @@ class ContactDetailsSpec extends PlaySpec {
       "Read the json and return the InKnownByOtherNamesYes domain object successfully" in {
 
         val json = Json.obj(
-          "phoneNumber" -> "07000111222",
+          "phoneNumber"  -> "07000111222",
           "emailAddress" -> "myname@example.com"
         )
 
@@ -42,7 +42,7 @@ class ContactDetailsSpec extends PlaySpec {
         val contactDetails = ContactDetails("07000111222", "myname@example.com")
 
         val json = Json.obj(
-          "phoneNumber" -> "07000111222",
+          "phoneNumber"  -> "07000111222",
           "emailAddress" -> "myname@example.com"
         )
 
@@ -55,7 +55,6 @@ class ContactDetailsSpec extends PlaySpec {
       val desModel = ContactCommDetails("adg@gmail.com", "123456789", Some("1234567788"))
       ContactDetails.conv(Some(desModel)) must be(Some(ContactDetails("123456789", "adg@gmail.com")))
     }
-
 
     "convert des model to frontend model successfully when input is none" in {
 

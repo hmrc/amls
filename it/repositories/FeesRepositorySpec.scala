@@ -10,10 +10,14 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext
 
-class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Fees] with IntegrationPatience {
+class FeesRepositorySpec
+    extends AnyFreeSpec
+    with Matchers
+    with DefaultPlayMongoRepositorySupport[Fees]
+    with IntegrationPatience {
 
   implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  override lazy val repository = new FeesRepository(mongoComponent)
+  override lazy val repository                    = new FeesRepository(mongoComponent)
 
   "Fees Repository" - {
 
@@ -25,7 +29,8 @@ class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongo
         paymentReference = Some("XA1000000000208"),
         difference = Some(BigDecimal(100)),
         createdAt = LocalDateTime.parse("2022-10-17T10:08:28.462"),
-        fpFee = None)
+        fpFee = None
+      )
 
       // When
       val inserted = repository.insert(fee).futureValue
@@ -42,7 +47,8 @@ class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongo
         paymentReference = Some("XA1000000000208"),
         difference = Some(BigDecimal(100)),
         createdAt = LocalDateTime.parse("2022-10-17T10:08:28.462"),
-        fpFee = None)
+        fpFee = None
+      )
 
       val feeTwo = Fees(
         responseType = AmendOrVariationResponseType,
@@ -50,7 +56,8 @@ class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongo
         paymentReference = Some("XA1000000000208"),
         difference = Some(BigDecimal(100)),
         createdAt = LocalDateTime.parse("2022-10-17T10:08:28.462"),
-        fpFee = None)
+        fpFee = None
+      )
 
       val feeThree = Fees(
         responseType = AmendOrVariationResponseType,
@@ -58,7 +65,8 @@ class FeesRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongo
         paymentReference = Some("XA1000000000208"),
         difference = Some(BigDecimal(100)),
         createdAt = LocalDateTime.parse("2022-10-22T10:08:28.462"),
-        fpFee = None)
+        fpFee = None
+      )
 
       repository.insert(feeOne).futureValue
       repository.insert(feeTwo).futureValue

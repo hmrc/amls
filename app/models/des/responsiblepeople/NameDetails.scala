@@ -19,20 +19,25 @@ package models.des.responsiblepeople
 import play.api.libs.json.{Json, OFormat}
 import models.fe.responsiblepeople.ResponsiblePeople
 
-case class NameDetails(personName: PersonName,
-                       othrNamesOrAliasesDetails: Option[OthrNamesOrAliasesDetails], //it is not optional
-                       previousNameDetails: Option[PreviousNameDetails]) //it is not optional
+case class NameDetails(
+  personName: PersonName,
+  othrNamesOrAliasesDetails: Option[OthrNamesOrAliasesDetails], // it is not optional
+  previousNameDetails: Option[PreviousNameDetails]
+) //it is not optional
 
 object NameDetails {
   implicit val format: OFormat[NameDetails] = Json.format[NameDetails]
 
-  def from(maybePerson: Option[ResponsiblePeople], amendVariation: Boolean): Option[NameDetails] = {
+  def from(maybePerson: Option[ResponsiblePeople], amendVariation: Boolean): Option[NameDetails] =
     maybePerson match {
-      case Some(person) => Some(NameDetails(
-        person.personName,
-        OthrNamesOrAliasesDetails.from(person),
-        PreviousNameDetails.from(person, amendVariation)))
-      case _ => None
+      case Some(person) =>
+        Some(
+          NameDetails(
+            person.personName,
+            OthrNamesOrAliasesDetails.from(person),
+            PreviousNameDetails.from(person, amendVariation)
+          )
+        )
+      case _            => None
     }
-  }
 }

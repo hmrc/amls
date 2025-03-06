@@ -24,13 +24,12 @@ case class AlternativeAddress(name: String, tradingName: String, address: Addres
 object AlternativeAddress {
   implicit val format: OFormat[AlternativeAddress] = Json.format[AlternativeAddress]
 
-  implicit def convert(alternativeAddress: Option[CorrespondenceAddress]): Option[AlternativeAddress] = {
+  implicit def convert(alternativeAddress: Option[CorrespondenceAddress]): Option[AlternativeAddress] =
     alternativeAddress match {
-      case Some(UKCorrespondenceAddress(yourName, businessName, _, _, _, _, _)) =>
+      case Some(UKCorrespondenceAddress(yourName, businessName, _, _, _, _, _))    =>
         Some(AlternativeAddress(yourName, businessName, alternativeAddress))
       case Some(NonUKCorrespondenceAddress(yourName, businessName, _, _, _, _, _)) =>
         Some(AlternativeAddress(yourName, businessName, alternativeAddress))
-      case _ => None
+      case _                                                                       => None
     }
-  }
 }

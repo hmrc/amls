@@ -24,7 +24,13 @@ class PremisesDetailsSpec extends AmlsBaseSpec {
   "PremisesDetails" must {
     "have convert method which" when {
       "called with set of all FE Msb services will return DES Msb" in {
-        val feMsbServices = Set[MsbService](TransmittingMoney, CurrencyExchange, ChequeCashingNotScrapMetal, ChequeCashingScrapMetal, ForeignExchange)
+        val feMsbServices = Set[MsbService](
+          TransmittingMoney,
+          CurrencyExchange,
+          ChequeCashingNotScrapMetal,
+          ChequeCashingScrapMetal,
+          ForeignExchange
+        )
 
         val expectedMsb = Msb(mt = true, ce = true, smdcc = true, nonSmdcc = true, fx = true)
 

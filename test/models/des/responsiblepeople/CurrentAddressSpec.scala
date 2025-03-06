@@ -34,9 +34,12 @@ class CurrentAddressSpec extends PlaySpec {
         val testResponsiblePersonCurrentAddress = ResponsiblePersonCurrentAddress(
           PersonAddressUK("line1", Some("line2"), None, None, "AB1 2CD"),
           OneToThreeYears,
-          Some("2017-1-1"))
+          Some("2017-1-1")
+        )
 
-        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", Some("line2"), None, None, "GB", Some("AB1 2CD"), Some("2017-1-1")))
+        val testCurrentAddress = CurrentAddress(
+          AddressWithChangeDate("line1", Some("line2"), None, None, "GB", Some("AB1 2CD"), Some("2017-1-1"))
+        )
 
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
@@ -47,9 +50,11 @@ class CurrentAddressSpec extends PlaySpec {
         val testResponsiblePersonCurrentAddress = ResponsiblePersonCurrentAddress(
           PersonAddressUK("line1", Some("line2"), None, None, "AB 2CD"),
           OneToThreeYears,
-          Some("2017-1-1"))
+          Some("2017-1-1")
+        )
 
-        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", Some("line2"), None, None, "GB", None, Some("2017-1-1")))
+        val testCurrentAddress =
+          CurrentAddress(AddressWithChangeDate("line1", Some("line2"), None, None, "GB", None, Some("2017-1-1")))
 
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
@@ -57,22 +62,27 @@ class CurrentAddressSpec extends PlaySpec {
 
       "convert from uk registered address replacing ampersands" in {
 
-        val address = CurrentAddress(AddressWithChangeDate(
-          "Hodaway, Hodaway, Hodaway and Hodaw",
-          Some("addressLine2"),
-          Some("addressLine3"),
-          Some("Tyne and Wear"),
-          "GB",
-          Some("AB1 2CD"),
-          Some("2016-1-1")
-        ))
+        val address = CurrentAddress(
+          AddressWithChangeDate(
+            "Hodaway, Hodaway, Hodaway and Hodaw",
+            Some("addressLine2"),
+            Some("addressLine3"),
+            Some("Tyne and Wear"),
+            "GB",
+            Some("AB1 2CD"),
+            Some("2016-1-1")
+          )
+        )
 
-        val rpCurrentAddress = ResponsiblePersonCurrentAddress(PersonAddressUK(
-          "Hodaway, Hodaway, Hodaway & Hodaway",
-          Some("addressLine2"),
-          Some("addressLine3"),
-          Some("Tyne & Wear"),
-          "AB1 2CD"), OneToThreeYears,
+        val rpCurrentAddress = ResponsiblePersonCurrentAddress(
+          PersonAddressUK(
+            "Hodaway, Hodaway, Hodaway & Hodaway",
+            Some("addressLine2"),
+            Some("addressLine3"),
+            Some("Tyne & Wear"),
+            "AB1 2CD"
+          ),
+          OneToThreeYears,
           Some("2016-1-1")
         )
 
@@ -87,15 +97,16 @@ class CurrentAddressSpec extends PlaySpec {
         val testResponsiblePersonCurrentAddress = ResponsiblePersonCurrentAddress(
           PersonAddressNonUK("line1", Some("line2"), None, None, "Country"),
           OneToThreeYears,
-          Some("2017-1-1"))
+          Some("2017-1-1")
+        )
 
-        val testCurrentAddress = CurrentAddress(AddressWithChangeDate("line1", Some("line2"), None, None, "Country", None, Some("2017-1-1")))
+        val testCurrentAddress =
+          CurrentAddress(AddressWithChangeDate("line1", Some("line2"), None, None, "Country", None, Some("2017-1-1")))
 
         CurrentAddress.convPersonAddress(testResponsiblePersonCurrentAddress) must be(Some(testCurrentAddress))
 
       }
     }
   }
-
 
 }

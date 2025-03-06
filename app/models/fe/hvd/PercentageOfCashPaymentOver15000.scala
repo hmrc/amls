@@ -22,10 +22,10 @@ import models.des.hvd.{Hvd => DesHvd}
 sealed trait PercentageOfCashPaymentOver15000
 
 object PercentageOfCashPaymentOver15000 {
-  val `twenty` = 20
-  val `forty` = 40
-  val `sixty` = 60
-  val `eighty` = 80
+  val `twenty`  = 20
+  val `forty`   = 40
+  val `sixty`   = 60
+  val `eighty`  = 80
   val `hundred` = 100
 
   case object First extends PercentageOfCashPaymentOver15000
@@ -46,31 +46,30 @@ object PercentageOfCashPaymentOver15000 {
       case "03" => Reads(_ => JsSuccess(Third))
       case "04" => Reads(_ => JsSuccess(Fourth))
       case "05" => Reads(_ => JsSuccess(Fifth))
-      case _ =>
+      case _    =>
         Reads(_ => JsError((JsPath \ "percentage") -> JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[PercentageOfCashPaymentOver15000] = Writes[PercentageOfCashPaymentOver15000] {
-    case First => Json.obj("percentage" -> "01")
+    case First  => Json.obj("percentage" -> "01")
     case Second => Json.obj("percentage" -> "02")
-    case Third => Json.obj("percentage" -> "03")
+    case Third  => Json.obj("percentage" -> "03")
     case Fourth => Json.obj("percentage" -> "04")
-    case Fifth => Json.obj("percentage" -> "05")
+    case Fifth  => Json.obj("percentage" -> "05")
   }
 
-  implicit def conv(hvd: DesHvd): Option[PercentageOfCashPaymentOver15000] = {
-
+  implicit def conv(hvd: DesHvd): Option[PercentageOfCashPaymentOver15000] =
     hvd.hvPercentageTurnover match {
-      case Some(data) => data match {
-        case `twenty` => Some(First)
-        case `forty` => Some(Second)
-        case `sixty` => Some(Third)
-        case `eighty` => Some(Fourth)
-        case `hundred` => Some(Fifth)
-        case _ => None
-      }
-      case None => None
+      case Some(data) =>
+        data match {
+          case `twenty`  => Some(First)
+          case `forty`   => Some(Second)
+          case `sixty`   => Some(Third)
+          case `eighty`  => Some(Fourth)
+          case `hundred` => Some(Fifth)
+          case _         => None
+        }
+      case None       => None
     }
-  }
 }

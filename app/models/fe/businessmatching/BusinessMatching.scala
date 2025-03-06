@@ -20,13 +20,13 @@ import models.des.msb.MsbMtDetails
 import models.fe.businesscustomer.ReviewDetails
 
 case class BusinessMatching(
-                             reviewDetails: ReviewDetails,
-                             activities: BusinessActivities,
-                             msbServices: Option[MsbServices] = None,
-                             typeOfBusiness: Option[TypeOfBusiness] = None,
-                             companyRegistrationNumber: Option[CompanyRegistrationNumber] = None,
-                             businessAppliedForPSRNumber: Option[BusinessAppliedForPSRNumber] = None
-                           )
+  reviewDetails: ReviewDetails,
+  activities: BusinessActivities,
+  msbServices: Option[MsbServices] = None,
+  typeOfBusiness: Option[TypeOfBusiness] = None,
+  companyRegistrationNumber: Option[CompanyRegistrationNumber] = None,
+  businessAppliedForPSRNumber: Option[BusinessAppliedForPSRNumber] = None
+)
 
 object BusinessMatching {
 
@@ -40,27 +40,30 @@ object BusinessMatching {
       __.read(Reads.optionNoError[TypeOfBusiness]) and
       __.read(Reads.optionNoError[CompanyRegistrationNumber]) and
       __.read(Reads.optionNoError[BusinessAppliedForPSRNumber])
-    ) (BusinessMatching.apply _)
+  )(BusinessMatching.apply _)
 
   implicit val writes: Writes[BusinessMatching] =
-    Writes[BusinessMatching] {
-      model =>
-        Seq(
-          Json.toJson(model.reviewDetails).asOpt[JsObject],
-          Json.toJson(model.activities).asOpt[JsObject],
-          Json.toJson(model.msbServices).asOpt[JsObject],
-          Json.toJson(model.typeOfBusiness).asOpt[JsObject],
-          Json.toJson(model.companyRegistrationNumber).asOpt[JsObject],
-          Json.toJson(model.businessAppliedForPSRNumber).asOpt[JsObject]
-        ).flatten.fold(Json.obj()) {
-          _ ++ _
-        }
+    Writes[BusinessMatching] { model =>
+      Seq(
+        Json.toJson(model.reviewDetails).asOpt[JsObject],
+        Json.toJson(model.activities).asOpt[JsObject],
+        Json.toJson(model.msbServices).asOpt[JsObject],
+        Json.toJson(model.typeOfBusiness).asOpt[JsObject],
+        Json.toJson(model.companyRegistrationNumber).asOpt[JsObject],
+        Json.toJson(model.businessAppliedForPSRNumber).asOpt[JsObject]
+      ).flatten.fold(Json.obj()) {
+        _ ++ _
+      }
     }
 
-
-  implicit def conv(desView: models.des.SubscriptionView): BusinessMatching = {
-    BusinessMatching(desView, desView.businessActivities.mlrActivitiesAppliedFor, desView.businessActivities.msbServicesCarriedOut,
-      desView.businessDetails, desView.businessDetails, desView.msb.fold[Option[MsbMtDetails]](None)(x => x.msbMtDetails))
-  }
+  implicit def conv(desView: models.des.SubscriptionView): BusinessMatching =
+    BusinessMatching(
+      desView,
+      desView.businessActivities.mlrActivitiesAppliedFor,
+      desView.businessActivities.msbServicesCarriedOut,
+      desView.businessDetails,
+      desView.businessDetails,
+      desView.msb.fold[Option[MsbMtDetails]](None)(x => x.msbMtDetails)
+    )
 
 }

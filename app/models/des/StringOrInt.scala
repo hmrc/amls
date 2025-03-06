@@ -23,19 +23,17 @@ case class StringOrInt(data: Either[Int, String]) {
 
   override def canEqual(a: Any) = a.isInstanceOf[StringOrInt]
 
-  override def equals(that: Any): Boolean = {
+  override def equals(that: Any): Boolean =
     that match {
       case that: StringOrInt => that.canEqual(this) && that.hashCode == this.hashCode
-      case _ => false
+      case _                 => false
     }
-  }
 
-  override def hashCode: Int = {
+  override def hashCode: Int =
     41 + (41 + (data match {
-      case Left(x) => x
+      case Left(x)  => x
       case Right(x) => x
     }).toString.hashCode)
-  }
 
 }
 
@@ -58,25 +56,22 @@ object StringOrInt {
     )
   }
 
-  implicit def convToStringOrInt(feLineId: Option[Int]): Option[StringOrInt] = {
+  implicit def convToStringOrInt(feLineId: Option[Int]): Option[StringOrInt] =
     feLineId match {
       case Some(lineId) => Some(StringOrInt(Right(lineId.toString)))
-      case _ => None
+      case _            => None
     }
-  }
 
-  implicit def convToInt(desLineId: Option[StringOrInt]): Option[Int] = {
+  implicit def convToInt(desLineId: Option[StringOrInt]): Option[Int] =
     desLineId match {
       case Some(lineId) => lineId
-      case _ => None
+      case _            => None
     }
-  }
 
-  implicit def convToLineId(desLineId: StringOrInt): Option[Int] = {
+  implicit def convToLineId(desLineId: StringOrInt): Option[Int] =
     desLineId.data match {
-      case Left(intData) => Some(intData)
+      case Left(intData)  => Some(intData)
       case Right(strData) => Some(Integer.parseInt(strData))
     }
-  }
 
 }

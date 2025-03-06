@@ -31,9 +31,9 @@ case object UnincorporatedBody extends OrganisationType
 object OrganisationType {
 
   val orgTypeToString: Map[OrganisationType, String] = Map[OrganisationType, String](
-    Partnership -> "Partnership",
-    LLP -> "LLP",
-    CorporateBody -> "Corporate body",
+    Partnership        -> "Partnership",
+    LLP                -> "LLP",
+    CorporateBody      -> "Corporate body",
     UnincorporatedBody -> "Unincorporated body"
   )
 
@@ -42,22 +42,25 @@ object OrganisationType {
   implicit val reads: Reads[OrganisationType] = new Reads[OrganisationType] {
     override def reads(json: JsValue): JsResult[OrganisationType] with Serializable = json match {
       case JsString(x) if stringToOrgType.isDefinedAt(x) => JsSuccess(stringToOrgType(x))
-      case x => JsError(s"Unable to parse the organisation type value: $x")
+      case x                                             => JsError(s"Unable to parse the organisation type value: $x")
     }
   }
 
   implicit val writes: Writes[OrganisationType] = new Writes[OrganisationType] {
     override def writes(o: OrganisationType): JsString = o match {
       case org if orgTypeToString.isDefinedAt(org) => JsString(orgTypeToString(org))
-      case _ => throw new Exception("Unable to convert org type to string")
+      case _                                       => throw new Exception("Unable to convert org type to string")
     }
   }
 }
 
 sealed trait OrganisationBodyDetails
 
-case class Organisation(organisationName: String, isAGroup: Option[Boolean] = None, organisationType: Option[OrganisationType] = None)
-  extends OrganisationBodyDetails
+case class Organisation(
+  organisationName: String,
+  isAGroup: Option[Boolean] = None,
+  organisationType: Option[OrganisationType] = None
+) extends OrganisationBodyDetails
 
 object Organisation {
   implicit val format: OFormat[Organisation] = Json.format[Organisation]
@@ -73,17 +76,16 @@ object OrganisationBodyDetails {
 
   import play.api.libs.json._
 
-  implicit val reads: Reads[OrganisationBodyDetails] = {
+  implicit val reads: Reads[OrganisationBodyDetails] =
     (__ \ "isAnIndividual").read[Boolean] flatMap {
       case true => (__ \ "individual").read[Individual].map(identity[OrganisationBodyDetails])
-      case _ => (__ \ "organisation").read[Organisation].map(identity[OrganisationBodyDetails])
+      case _    => (__ \ "organisation").read[Organisation].map(identity[OrganisationBodyDetails])
     }
-  }
 
   implicit val writes: Writes[OrganisationBodyDetails] = new Writes[OrganisationBodyDetails] {
     override def writes(o: OrganisationBodyDetails): JsObject = o match {
       case x: Organisation => Json.obj("organisation" -> Organisation.format.writes(x))
-      case x: Individual => Json.obj("individual" -> Individual.format.writes(x))
+      case x: Individual   => Json.obj("individual" -> Individual.format.writes(x))
     }
   }
 }
@@ -95,17 +97,15 @@ object RegistrationDetails {
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
 
-  implicit val reads: Reads[RegistrationDetails] = {
+  implicit val reads: Reads[RegistrationDetails] =
     (
       (__ \ "isAnIndividual").read[Boolean] and
         __.read[OrganisationBodyDetails]
-      ) (RegistrationDetails.apply _)
-  }
+    )(RegistrationDetails.apply _)
 
-  implicit val writes: Writes[RegistrationDetails] = {
+  implicit val writes: Writes[RegistrationDetails] =
     (
       (__ \ "isAnIndividual").write[Boolean] and
         __.write[OrganisationBodyDetails]
-      ) (unlift(RegistrationDetails.unapply))
-  }
+    )(unlift(RegistrationDetails.unapply))
 }

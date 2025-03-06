@@ -33,33 +33,31 @@ object BusinessType {
   case object UnincorporatedBody extends BusinessType
 
   implicit val writes: Writes[BusinessType] = Writes[BusinessType] {
-    case LimitedCompany => JsString("Corporate Body")
-    case SoleProprietor => JsString("Sole Trader")
-    case Partnership => JsString("Partnership")
-    case LPrLLP => JsString("LLP")
+    case LimitedCompany     => JsString("Corporate Body")
+    case SoleProprietor     => JsString("Sole Trader")
+    case Partnership        => JsString("Partnership")
+    case LPrLLP             => JsString("LLP")
     case UnincorporatedBody => JsString("Unincorporated Body")
   }
 
   implicit val reads: Reads[BusinessType] = Reads[BusinessType] {
-    case JsString("Corporate Body") => JsSuccess(LimitedCompany)
-    case JsString("Sole Trader") => JsSuccess(SoleProprietor)
-    case JsString("Partnership") => JsSuccess(Partnership)
-    case JsString("LLP") => JsSuccess(LPrLLP)
+    case JsString("Corporate Body")      => JsSuccess(LimitedCompany)
+    case JsString("Sole Trader")         => JsSuccess(SoleProprietor)
+    case JsString("Partnership")         => JsSuccess(Partnership)
+    case JsString("LLP")                 => JsSuccess(LPrLLP)
     case JsString("Unincorporated Body") => JsSuccess(UnincorporatedBody)
-    case _ =>
+    case _                               =>
       JsError(JsPath -> JsonValidationError("error.invalid"))
   }
 
   import models.des.businessdetails.{BusinessType => DesBT}
 
-  implicit def conv(businessType: DesBT): BusinessType = {
-
+  implicit def conv(businessType: DesBT): BusinessType =
     businessType match {
-      case DesBT.SoleProprietor => SoleProprietor
-      case DesBT.LimitedCompany => LimitedCompany
-      case DesBT.Partnership => Partnership
-      case DesBT.LPrLLP => LPrLLP
+      case DesBT.SoleProprietor     => SoleProprietor
+      case DesBT.LimitedCompany     => LimitedCompany
+      case DesBT.Partnership        => Partnership
+      case DesBT.LPrLLP             => LPrLLP
       case DesBT.UnincorporatedBody => UnincorporatedBody
     }
-  }
 }

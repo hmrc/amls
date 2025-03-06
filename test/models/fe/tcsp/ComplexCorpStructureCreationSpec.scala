@@ -27,15 +27,15 @@ class ComplexCorpStructureCreationSpec extends PlaySpec with AmlsBaseSpec {
       "return the form values" when {
         "for json" when {
           "complexCorpStructureCreation is 'yes'" in {
-            val model = ComplexCorpStructureCreationYes
-            val result = ComplexCorpStructureCreation.jsonWrite.writes(model).toString()
+            val model    = ComplexCorpStructureCreationYes
+            val result   = ComplexCorpStructureCreation.jsonWrite.writes(model).toString()
             val expected = "{\"complexCorpStructureCreation\":true}"
 
             result mustBe expected
           }
           "complexCorpStructureCreation is 'no'" in {
-            val model = ComplexCorpStructureCreationNo
-            val result = ComplexCorpStructureCreation.jsonWrite.writes(model).toString()
+            val model    = ComplexCorpStructureCreationNo
+            val result   = ComplexCorpStructureCreation.jsonWrite.writes(model).toString()
             val expected = "{\"complexCorpStructureCreation\":false}"
 
             result mustBe expected

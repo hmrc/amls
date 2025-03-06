@@ -24,13 +24,14 @@ case class UkResident(nino: String)
 object UkResident {
   implicit val format: OFormat[UkResident] = Json.format[UkResident]
 
-  implicit def convert(dtls: UKResidence, dob: Option[DateOfBirth] = None): Option[IdDetail] = {
-    Some(IdDetail(
-      Some(UkResident(dtls.nino)),
-      None,
-      dateOfBirth = dob map {
-        _.dateOfBirth.toString
-      }
-    ))
-  }
+  implicit def convert(dtls: UKResidence, dob: Option[DateOfBirth] = None): Option[IdDetail] =
+    Some(
+      IdDetail(
+        Some(UkResident(dtls.nino)),
+        None,
+        dateOfBirth = dob map {
+          _.dateOfBirth.toString
+        }
+      )
+    )
 }

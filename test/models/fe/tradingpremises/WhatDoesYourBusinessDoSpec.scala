@@ -31,10 +31,12 @@ class WhatDoesYourBusinessDoSpec extends PlaySpec with AmlsBaseSpec {
   )
 
   "WhatDoesYourBusinessDo" when {
-    val businessServices: Set[BusinessActivity] = Set(BusinessActivity.AccountancyServices,
+    val businessServices: Set[BusinessActivity] = Set(
+      BusinessActivity.AccountancyServices,
       BusinessActivity.HighValueDealing,
       BusinessActivity.TrustAndCompanyServices,
-      BusinessActivity.TelephonePaymentService)
+      BusinessActivity.TelephonePaymentService
+    )
     "JSON validation" must {
 
       "successfully validate given values" in {
@@ -46,7 +48,7 @@ class WhatDoesYourBusinessDoSpec extends PlaySpec with AmlsBaseSpec {
 
       "fail when on invalid data" in {
         Json.fromJson[WhatDoesYourBusinessDo](Json.obj("activities" -> Seq("40"))) must
-          be(JsError(((JsPath \ "activities") (0) \ "activities") -> JsonValidationError("error.invalid")))
+          be(JsError(((JsPath \ "activities")(0) \ "activities") -> JsonValidationError("error.invalid")))
       }
 
       "successfully validate json write" in {
@@ -57,17 +59,28 @@ class WhatDoesYourBusinessDoSpec extends PlaySpec with AmlsBaseSpec {
     }
 
     "convert des model to frontend model" in {
-      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing,
-        BusinessActivity.BillPaymentServices,
-        BusinessActivity.MoneyServiceBusiness,
-        BusinessActivity.TrustAndCompanyServices,
-        BusinessActivity.ArtMarketParticipant))
+      val model = WhatDoesYourBusinessDo(
+        Set(
+          BusinessActivity.HighValueDealing,
+          BusinessActivity.BillPaymentServices,
+          BusinessActivity.MoneyServiceBusiness,
+          BusinessActivity.TrustAndCompanyServices,
+          BusinessActivity.ArtMarketParticipant
+        )
+      )
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel1) must be(model)
     }
 
     "convert des model to frontend model when msb is not selected" in {
-      val model = WhatDoesYourBusinessDo(Set(BusinessActivity.HighValueDealing, BusinessActivity.BillPaymentServices, BusinessActivity.TrustAndCompanyServices, BusinessActivity.ArtMarketParticipant))
+      val model = WhatDoesYourBusinessDo(
+        Set(
+          BusinessActivity.HighValueDealing,
+          BusinessActivity.BillPaymentServices,
+          BusinessActivity.TrustAndCompanyServices,
+          BusinessActivity.ArtMarketParticipant
+        )
+      )
 
       WhatDoesYourBusinessDo.conv(DesConstants.AgentPremisesModel2) must be(model)
     }

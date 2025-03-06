@@ -25,8 +25,9 @@ object RegistrationDetails {
   implicit val writes: OWrites[RegistrationDetails] = Json.writes[RegistrationDetails]
 
   implicit def convert(details: DesRegistrationDetails): RegistrationDetails = details match {
-    case DesRegistrationDetails(x@true, details: Individual) => RegistrationDetails(s"${details.firstName} ${details.lastName}", x)
-    case DesRegistrationDetails(x@false, details: Organisation) => RegistrationDetails(details.organisationName, x)
-    case _ => throw new RuntimeException(s"Invalid Organisation Body Details.")
+    case DesRegistrationDetails(x @ true, details: Individual)    =>
+      RegistrationDetails(s"${details.firstName} ${details.lastName}", x)
+    case DesRegistrationDetails(x @ false, details: Organisation) => RegistrationDetails(details.organisationName, x)
+    case _                                                        => throw new RuntimeException(s"Invalid Organisation Body Details.")
   }
 }

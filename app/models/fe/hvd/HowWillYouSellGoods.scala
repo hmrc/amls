@@ -27,36 +27,37 @@ object HowWillYouSellGoods {
 
   def convRetail(retail: Boolean): Option[SalesChannel] =
     retail match {
-      case true => Some(Retail)
+      case true  => Some(Retail)
       case false => None
     }
 
   def convWholesale(wholesale: Boolean): Option[SalesChannel] =
     wholesale match {
-      case true => Some(Wholesale)
+      case true  => Some(Wholesale)
       case false => None
     }
 
   def convAuction(auction: Boolean): Option[SalesChannel] =
     auction match {
-      case true => Some(Auction)
+      case true  => Some(Auction)
       case false => None
     }
 
-  implicit def convHowWillYouSellGoods(ba: BusinessActivities): Option[HowWillYouSellGoods] = {
-
+  implicit def convHowWillYouSellGoods(ba: BusinessActivities): Option[HowWillYouSellGoods] =
     ba.hvdGoodsSold match {
-      case Some(hvdGoodsSold) => hvdGoodsSold.howGoodsAreSold match {
+      case Some(hvdGoodsSold) =>
+        hvdGoodsSold.howGoodsAreSold match {
 
-        case Some(goods) => Some(HowWillYouSellGoods(Seq(
-          convRetail(goods.retail),
-          convWholesale(goods.wholesale),
-          convAuction(goods.auction)).flatten))
+          case Some(goods) =>
+            Some(
+              HowWillYouSellGoods(
+                Seq(convRetail(goods.retail), convWholesale(goods.wholesale), convAuction(goods.auction)).flatten
+              )
+            )
 
-        case None => None
-      }
-      case None => None
+          case None => None
+        }
+      case None               => None
     }
-  }
 
 }

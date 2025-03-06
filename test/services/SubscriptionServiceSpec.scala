@@ -45,17 +45,18 @@ import scala.concurrent.Future
 trait TestFixture extends AmlsReferenceNumberGenerator {
 
   val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
-  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
+  val duplicateSubscriptionMessage       = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
-  class MockSubscriptionService extends SubscriptionService(
-    mock(classOf[SubscribeDESConnector]),
-    mock(classOf[GovernmentGatewayAdminConnector]),
-    mock(classOf[EnrolmentStoreConnector]),
-    mock(classOf[AuditConnector]),
-    mock(classOf[ApplicationConfig]),
-    mock(classOf[SubscriptionRequestValidator]),
-    mock(classOf[FeesRepository])
-  )
+  class MockSubscriptionService
+      extends SubscriptionService(
+        mock(classOf[SubscribeDESConnector]),
+        mock(classOf[GovernmentGatewayAdminConnector]),
+        mock(classOf[EnrolmentStoreConnector]),
+        mock(classOf[AuditConnector]),
+        mock(classOf[ApplicationConfig]),
+        mock(classOf[SubscriptionRequestValidator]),
+        mock(classOf[FeesRepository])
+      )
 
   val connector = new MockSubscriptionService
 
@@ -73,15 +74,14 @@ trait TestFixture extends AmlsReferenceNumberGenerator {
   )
 
   val businessAddressPostcode = "TEST POSTCODE"
-  val contactDetails = mock(classOf[BusinessContactDetails])
-  val address = mock(classOf[Address])
+  val contactDetails          = mock(classOf[BusinessContactDetails])
+  val address                 = mock(classOf[Address])
 
   when(contactDetails.businessAddress) thenReturn address
   when(address.postcode) thenReturn Some(businessAddressPostcode)
 
   val request = mock(classOf[des.SubscriptionRequest])
   when(request.businessContactDetails) thenReturn contactDetails
-
 
   val safeId = "safeId"
 
@@ -96,11 +96,13 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
 
         "returns full response" in new TestFixture {
 
-          val knownFacts = KnownFactsForService(Seq(
-            KnownFact("MLRRefNumber", response.amlsRefNo),
-            KnownFact("SafeId", safeId),
-            KnownFact("POSTCODE", businessAddressPostcode)
-          ))
+          val knownFacts = KnownFactsForService(
+            Seq(
+              KnownFact("MLRRefNumber", response.amlsRefNo),
+              KnownFact("SafeId", safeId),
+              KnownFact("POSTCODE", businessAddressPostcode)
+            )
+          )
 
           reset(connector.ggConnector)
 
@@ -109,7 +111,8 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.successful(response)
 
           when {
@@ -127,7 +130,8 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))) {
             result =>
               result mustEqual SubscriptionResponse.convert(response)
-              verify(connector.enrolmentStoreConnector, times(1)).addKnownFacts(any(), ArgumentMatchers.eq(knownFacts))(any(), any())
+              verify(connector.enrolmentStoreConnector, times(1))
+                .addKnownFacts(any(), ArgumentMatchers.eq(knownFacts))(any(), any())
           }
         }
 
@@ -135,7 +139,7 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
 
           reset(connector.ggConnector)
 
-          val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
+          val errorMessage          = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
 
           when {
@@ -143,7 +147,8 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(exceptionBody)))
 
           when(connector.feeResponseRepository.findLatestByAmlsReference(any())).thenReturn(Future.successful(None))
@@ -152,9 +157,33 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
             connector.config.enrolmentStoreToggle
           } thenReturn true
 
-          when(request.responsiblePersons).thenReturn(Some(Seq(ResponsiblePersons(
-            None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, Some(false), None, extra = RPExtra(None, None, None, None, None, None, None))
-          )))
+          when(request.responsiblePersons).thenReturn(
+            Some(
+              Seq(
+                ResponsiblePersons(
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  false,
+                  None,
+                  false,
+                  None,
+                  None,
+                  Some(false),
+                  None,
+                  extra = RPExtra(None, None, None, None, None, None, None)
+                )
+              )
+            )
+          )
 
           when(request.tradingPremises).thenReturn(mock(classOf[TradingPremises]))
           when(request.tradingPremises.ownBusinessPremises).thenReturn(None)
@@ -173,7 +202,7 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
 
         "returns duplicate response with amlsregno and there are stored fees" in new TestFixture {
 
-          val errorMessage = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
+          val errorMessage          = s"$duplicateSubscriptionMessage $amlsRegistrationNumber"
           val exceptionBody: String = Json.obj("reason" -> errorMessage).toString
 
           reset(connector.ggConnector)
@@ -185,14 +214,17 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
-          val knownFacts = KnownFactsForService(Seq(
-            KnownFact("MLRRefNumber", amlsRegistrationNumber),
-            KnownFact("SafeId", safeId),
-            KnownFact("POSTCODE", businessAddressPostcode)
-          ))
+          val knownFacts = KnownFactsForService(
+            Seq(
+              KnownFact("MLRRefNumber", amlsRegistrationNumber),
+              KnownFact("SafeId", safeId),
+              KnownFact("POSTCODE", businessAddressPostcode)
+            )
+          )
 
           when {
             connector.enrolmentStoreConnector.addKnownFacts(any(), ArgumentMatchers.eq(knownFacts))(any(), any())
@@ -206,8 +238,23 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
 
           when {
             connector.feeResponseRepository.findLatestByAmlsReference(any())
-          } thenReturn Future.successful(Some(Fees(SubscriptionResponseType, amlsRegistrationNumber, 500, Some(50), 115, 1000,
-            Some("PaymentRef"), None, Some(BigDecimal(20)), Some(BigDecimal(30)), LocalDateTime.now())))
+          } thenReturn Future.successful(
+            Some(
+              Fees(
+                SubscriptionResponseType,
+                amlsRegistrationNumber,
+                500,
+                Some(50),
+                115,
+                1000,
+                Some("PaymentRef"),
+                None,
+                Some(BigDecimal(20)),
+                Some(BigDecimal(30)),
+                LocalDateTime.now()
+              )
+            )
+          )
 
           when(request.responsiblePersons).thenReturn(None)
           when(request.tradingPremises).thenReturn(mock(classOf[TradingPremises]))
@@ -239,14 +286,15 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some(jsonBody)))
 
-
-          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed) {
-            case ex@HttpStatusException(status, _) =>
-              status mustEqual BAD_REQUEST
-              ex.jsonBody.get.reason must equal(duplicateSubscriptionMessage)
+          whenReady(
+            connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed
+          ) { case ex @ HttpStatusException(status, _) =>
+            status mustEqual BAD_REQUEST
+            ex.jsonBody.get.reason must equal(duplicateSubscriptionMessage)
 
           }
         }
@@ -260,13 +308,15 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, None))
 
-          whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed) {
-            case ex@HttpStatusException(status, _) =>
-              status mustEqual BAD_REQUEST
-              ex.jsonBody must equal(None)
+          whenReady(
+            connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed
+          ) { case ex @ HttpStatusException(status, _) =>
+            status mustEqual BAD_REQUEST
+            ex.jsonBody must equal(None)
 
           }
         }
@@ -281,13 +331,15 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
         } thenReturn Right(request)
 
         when {
-          connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+          connector.desConnector
+            .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
         } thenReturn Future.failed(HttpStatusException(BAD_GATEWAY, None))
 
-        whenReady(connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed) {
-          case ex@HttpStatusException(status, body) =>
-            status mustEqual BAD_GATEWAY
-            ex.jsonBody must equal(None)
+        whenReady(
+          connector.subscribe(safeId, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper])).failed
+        ) { case ex @ HttpStatusException(status, body) =>
+          status mustEqual BAD_GATEWAY
+          ex.jsonBody must equal(None)
 
         }
       }
@@ -300,11 +352,13 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
       "connects to GGAdminConnector" when {
         "enrolment-store-toggle is switched to false" in new TestFixture {
 
-          val knownFacts = KnownFactsForService(Seq(
-            KnownFact("MLRRefNumber", response.amlsRefNo),
-            KnownFact("SafeId", safeId),
-            KnownFact("POSTCODE", businessAddressPostcode)
-          ))
+          val knownFacts = KnownFactsForService(
+            Seq(
+              KnownFact("MLRRefNumber", response.amlsRefNo),
+              KnownFact("SafeId", safeId),
+              KnownFact("POSTCODE", businessAddressPostcode)
+            )
+          )
 
           reset(connector.ggConnector)
 
@@ -313,7 +367,8 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
           } thenReturn Right(request)
 
           when {
-            connector.desConnector.subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+            connector.desConnector
+              .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
           } thenReturn Future.successful(response)
 
           when {

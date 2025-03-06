@@ -18,37 +18,37 @@ package models.des.amp
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Amp(transactionsAccptOvrThrshld: TransactionsAccptOvrThrshld,
-               sysAutoIdOfLinkedTransactions: Boolean,
-               ampPercentageTurnover: Int)
+case class Amp(
+  transactionsAccptOvrThrshld: TransactionsAccptOvrThrshld,
+  sysAutoIdOfLinkedTransactions: Boolean,
+  ampPercentageTurnover: Int
+)
 
-case class TransactionsAccptOvrThrshld(transactionsAccptOvrThrshldAnswer: Boolean,
-                                       dateOfTheFirst: Option[String])
+case class TransactionsAccptOvrThrshld(transactionsAccptOvrThrshldAnswer: Boolean, dateOfTheFirst: Option[String])
 
 object Amp {
 
   implicit val format: OFormat[Amp] = Json.format[Amp]
 
-  def getPercentage(percentage: Option[String]): Int = {
+  def getPercentage(percentage: Option[String]): Int =
     percentage match {
-      case Some("zeroToTwenty") => 20
-      case Some("twentyOneToForty") => 40
-      case Some("fortyOneToSixty") => 60
-      case Some("sixtyOneToEighty") => 80
+      case Some("zeroToTwenty")          => 20
+      case Some("twentyOneToForty")      => 40
+      case Some("fortyOneToSixty")       => 60
+      case Some("sixtyOneToEighty")      => 80
       case Some("eightyOneToOneHundred") => 100
-      case _ => 0
+      case _                             => 0
     }
-  }
 
-  implicit def conv(ampOpt: Option[models.fe.amp.Amp]): Option[Amp] = {
-    ampOpt.map(amp => amp.data).map(amp => {
-      Amp(transactionsAccptOvrThrshld = TransactionsAccptOvrThrshld(amp.soldOverThreshold,
-        amp.dateTransactionOverThreshold),
+  implicit def conv(ampOpt: Option[models.fe.amp.Amp]): Option[Amp] =
+    ampOpt.map(amp => amp.data).map { amp =>
+      Amp(
+        transactionsAccptOvrThrshld =
+          TransactionsAccptOvrThrshld(amp.soldOverThreshold, amp.dateTransactionOverThreshold),
         sysAutoIdOfLinkedTransactions = amp.identifyLinkedTransactions,
         ampPercentageTurnover = getPercentage(amp.percentageExpectedTurnover)
       )
-    })
-  }
+    }
 }
 
 object TransactionsAccptOvrThrshld {

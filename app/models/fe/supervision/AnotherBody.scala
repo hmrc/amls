@@ -23,7 +23,8 @@ import play.api.libs.json.{Json, Reads, Writes}
 
 sealed trait AnotherBody
 
-case class AnotherBodyYes(supervisorName: String, startDate: LocalDate, endDate: LocalDate, endingReason: String) extends AnotherBody
+case class AnotherBodyYes(supervisorName: String, startDate: LocalDate, endDate: LocalDate, endingReason: String)
+    extends AnotherBody
 
 case object AnotherBodyNo extends AnotherBody
 
@@ -39,35 +40,42 @@ object AnotherBody {
 
     (__ \ "anotherBody").read[Boolean] flatMap {
       case true =>
-        (
-          (__ \ "supervisorName").read[String] ~
-            (__ \ "startDate" \ "supervisionStartDate").read[LocalDate] ~
-            (__ \ "endDate" \ "supervisionEndDate").read[LocalDate] ~
-            (__ \ "endingReason" \ "supervisionEndingReason").read[String]) (AnotherBodyYes.apply _) map identity[AnotherBody]
+        ((__ \ "supervisorName").read[String] ~
+          (__ \ "startDate" \ "supervisionStartDate").read[LocalDate] ~
+          (__ \ "endDate" \ "supervisionEndDate").read[LocalDate] ~
+          (__ \ "endingReason" \ "supervisionEndingReason")
+            .read[String])(AnotherBodyYes.apply _) map identity[AnotherBody]
 
       case false => AnotherBodyNo
     }
   }
 
   implicit val jsonWrites: Writes[AnotherBody] = Writes[AnotherBody] {
-    case a: AnotherBodyYes => Json.obj(
-      "anotherBody" -> true,
-      "supervisorName" -> a.supervisorName,
-      "startDate" -> Json.obj("supervisionStartDate" -> a.startDate),
-      "endDate" -> Json.obj("supervisionEndDate" -> a.endDate),
-      "endingReason" -> Json.obj("supervisionEndingReason" -> a.endingReason)
-    )
-    case AnotherBodyNo => Json.obj("anotherBody" -> false)
+    case a: AnotherBodyYes =>
+      Json.obj(
+        "anotherBody"    -> true,
+        "supervisorName" -> a.supervisorName,
+        "startDate"      -> Json.obj("supervisionStartDate" -> a.startDate),
+        "endDate"        -> Json.obj("supervisionEndDate" -> a.endDate),
+        "endingReason"   -> Json.obj("supervisionEndingReason" -> a.endingReason)
+      )
+    case AnotherBodyNo     => Json.obj("anotherBody" -> false)
   }
 
-  implicit def conv(supDtls: Option[SupervisionDetails]): Option[AnotherBody] = {
+  implicit def conv(supDtls: Option[SupervisionDetails]): Option[AnotherBody] =
     supDtls match {
-      case Some(sup) => sup.supervisorDetails.fold[Option[AnotherBody]](Some(AnotherBodyNo))(x => Some(AnotherBodyYes(x.nameOfLastSupervisor,
-        LocalDate.parse(x.supervisionStartDate),
-        LocalDate.parse(x.supervisionEndDate),
-        x.supervisionEndingReason)))
-      case None => None
+      case Some(sup) =>
+        sup.supervisorDetails.fold[Option[AnotherBody]](Some(AnotherBodyNo))(x =>
+          Some(
+            AnotherBodyYes(
+              x.nameOfLastSupervisor,
+              LocalDate.parse(x.supervisionStartDate),
+              LocalDate.parse(x.supervisionEndDate),
+              x.supervisionEndingReason
+            )
+          )
+        )
+      case None      => None
     }
-  }
 
 }

@@ -17,7 +17,7 @@
 package models.enrolment
 
 import generators.AmlsReferenceNumberGenerator
-import models.{KnownFactsForService, KnownFact => GGKNownFact}
+import models.{KnownFact => GGKNownFact, KnownFactsForService}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 
@@ -25,15 +25,17 @@ class KnownFactsSpec extends PlaySpec with AmlsReferenceNumberGenerator {
 
   "The model" must {
     "serialize to the correct Json" in {
-      val model = KnownFacts(Set(
-        KnownFact("Postcode", "TF2 6NU"),
-        KnownFact("NINO", "AB123456X")
-      ))
+      val model = KnownFacts(
+        Set(
+          KnownFact("Postcode", "TF2 6NU"),
+          KnownFact("NINO", "AB123456X")
+        )
+      )
 
       val expectedJson = Json.obj(
         "verifiers" -> Json.arr(
           Json.obj("key" -> "Postcode", "value" -> "TF2 6NU"),
-          Json.obj("key" -> "NINO", "value" -> "AB123456X")
+          Json.obj("key" -> "NINO", "value"     -> "AB123456X")
         )
       )
 
@@ -43,22 +45,25 @@ class KnownFactsSpec extends PlaySpec with AmlsReferenceNumberGenerator {
     "convert from legacy KnownFacts model" which {
       "filters identifier MLRRefNumber" in {
 
-        val legacyModel = KnownFactsForService(Seq(
-          GGKNownFact("MLRRefNumber", amlsRegistrationNumber),
-          GGKNownFact("Postcode", "TF2 6NU"),
-          GGKNownFact("NINO", "AB123456X")
-        ))
+        val legacyModel = KnownFactsForService(
+          Seq(
+            GGKNownFact("MLRRefNumber", amlsRegistrationNumber),
+            GGKNownFact("Postcode", "TF2 6NU"),
+            GGKNownFact("NINO", "AB123456X")
+          )
+        )
 
-        val currentModel = KnownFacts(Set(
-          KnownFact("Postcode", "TF2 6NU"),
-          KnownFact("NINO", "AB123456X")
-        ))
+        val currentModel = KnownFacts(
+          Set(
+            KnownFact("Postcode", "TF2 6NU"),
+            KnownFact("NINO", "AB123456X")
+          )
+        )
 
         KnownFacts.conv(legacyModel) must be(currentModel)
 
       }
     }
   }
-
 
 }

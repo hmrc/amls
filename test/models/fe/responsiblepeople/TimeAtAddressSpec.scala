@@ -25,24 +25,24 @@ class TimeAtAddressSpec extends PlaySpec {
 
   "JSON validation" must {
 
-    val ZeroToFiveJson = Json.obj(FieldName -> "01")
-    val SixToElevenJson = Json.obj(FieldName -> "02")
-    val OneToThreeJson = Json.obj(FieldName -> "03")
+    val ZeroToFiveJson    = Json.obj(FieldName -> "01")
+    val SixToElevenJson   = Json.obj(FieldName -> "02")
+    val OneToThreeJson    = Json.obj(FieldName -> "03")
     val MoreThanThreeJson = Json.obj(FieldName -> "04")
 
     "successfully validate given an enum value" in {
 
-      Json.fromJson[TimeAtAddress](ZeroToFiveJson) must be(JsSuccess(TimeAtAddress.ZeroToFiveMonths))
-      Json.fromJson[TimeAtAddress](SixToElevenJson) must be(JsSuccess(TimeAtAddress.SixToElevenMonths))
-      Json.fromJson[TimeAtAddress](OneToThreeJson) must be(JsSuccess(TimeAtAddress.OneToThreeYears))
+      Json.fromJson[TimeAtAddress](ZeroToFiveJson)    must be(JsSuccess(TimeAtAddress.ZeroToFiveMonths))
+      Json.fromJson[TimeAtAddress](SixToElevenJson)   must be(JsSuccess(TimeAtAddress.SixToElevenMonths))
+      Json.fromJson[TimeAtAddress](OneToThreeJson)    must be(JsSuccess(TimeAtAddress.OneToThreeYears))
       Json.fromJson[TimeAtAddress](MoreThanThreeJson) must be(JsSuccess(TimeAtAddress.ThreeYearsPlus))
     }
 
     "write the correct value" in {
-      Json.toJson(TimeAtAddress.ZeroToFiveMonths: TimeAtAddress) must be(ZeroToFiveJson)
+      Json.toJson(TimeAtAddress.ZeroToFiveMonths: TimeAtAddress)  must be(ZeroToFiveJson)
       Json.toJson(TimeAtAddress.SixToElevenMonths: TimeAtAddress) must be(SixToElevenJson)
-      Json.toJson(TimeAtAddress.OneToThreeYears: TimeAtAddress) must be(OneToThreeJson)
-      Json.toJson(TimeAtAddress.ThreeYearsPlus: TimeAtAddress) must be(MoreThanThreeJson)
+      Json.toJson(TimeAtAddress.OneToThreeYears: TimeAtAddress)   must be(OneToThreeJson)
+      Json.toJson(TimeAtAddress.ThreeYearsPlus: TimeAtAddress)    must be(MoreThanThreeJson)
     }
 
     "throw error for invalid data" in {

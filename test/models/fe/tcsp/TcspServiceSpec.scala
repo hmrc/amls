@@ -24,14 +24,14 @@ class TcspServiceSpec extends PlaySpec with AmlsBaseSpec {
   "TcspService" should {
 
     "Provide the correct value" in {
-      PhonecallHandling.value must be("01")
-      EmailHandling.value must be("02")
-      EmailServer.value must be("03")
+      PhonecallHandling.value    must be("01")
+      EmailHandling.value        must be("02")
+      EmailServer.value          must be("03")
       SelfCollectMailboxes.value must be("04")
-      MailForwarding.value must be("05")
-      Receptionist.value must be("06")
-      ConferenceRooms.value must be("07")
-      Other("").value must be("08")
+      MailForwarding.value       must be("05")
+      Receptionist.value         must be("06")
+      ConferenceRooms.value      must be("07")
+      Other("").value            must be("08")
     }
   }
 }

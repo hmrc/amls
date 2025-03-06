@@ -24,12 +24,17 @@ case class PaymentMethods(courier: Boolean, direct: Boolean, other: Boolean, det
 object PaymentMethods {
   implicit val format: OFormat[PaymentMethods] = Json.format[PaymentMethods]
 
-  implicit def conv(method: Option[ReceiptMethods]): Option[PaymentMethods] = {
-
+  implicit def conv(method: Option[ReceiptMethods]): Option[PaymentMethods] =
     method match {
-      case Some(payment) => Some(PaymentMethods(payment.receiptMethodViaCourier, payment.receiptMethodDirectBankAct,
-        payment.specifyOther.nonEmpty, payment.specifyOther))
-      case None => None
+      case Some(payment) =>
+        Some(
+          PaymentMethods(
+            payment.receiptMethodViaCourier,
+            payment.receiptMethodDirectBankAct,
+            payment.specifyOther.nonEmpty,
+            payment.specifyOther
+          )
+        )
+      case None          => None
     }
-  }
 }

@@ -28,9 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FeeResponseController @Inject()(authAction: AuthAction,
-                                      val cc: ControllerComponents)
-                                     (implicit val repository: FeesRepository, executionContext: ExecutionContext) extends BackendController(cc) with Logging {
+class FeeResponseController @Inject() (authAction: AuthAction, val cc: ControllerComponents)(implicit
+  val repository: FeesRepository,
+  executionContext: ExecutionContext
+) extends BackendController(cc)
+    with Logging {
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async {
@@ -39,12 +41,11 @@ class FeeResponseController @Inject()(authAction: AuthAction,
           case Some(feeResponse) =>
             logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
             Ok(Json.toJson[Fees](feeResponse))
-          case None => NotFound
+          case None              => NotFound
         }
-      }.recoverWith {
-        case e: Throwable =>
-          logger.error(s"[FeeResponseController - get] ", e)
-          Future.successful(InternalServerError)
+      }.recoverWith { case e: Throwable =>
+        logger.error(s"[FeeResponseController - get] ", e)
+        Future.successful(InternalServerError)
       }
     }
 }

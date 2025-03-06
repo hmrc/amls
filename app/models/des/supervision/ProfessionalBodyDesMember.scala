@@ -19,17 +19,20 @@ package models.des.supervision
 import models.fe.supervision.{ProfessionalBodyMemberNo, ProfessionalBodyMemberYes, Supervision}
 import play.api.libs.json.{Json, OFormat}
 
-case class ProfessionalBodyDesMember(professionalBodyMember: Boolean, professionalBodyDetails: Option[MemberOfProfessionalBody])
+case class ProfessionalBodyDesMember(
+  professionalBodyMember: Boolean,
+  professionalBodyDetails: Option[MemberOfProfessionalBody]
+)
 
 object ProfessionalBodyDesMember {
 
   implicit val format: OFormat[ProfessionalBodyDesMember] = Json.format[ProfessionalBodyDesMember]
 
-  implicit def conv(supervision: Supervision): Option[ProfessionalBodyDesMember] = {
+  implicit def conv(supervision: Supervision): Option[ProfessionalBodyDesMember] =
     (supervision.professionalBodyMember, supervision.professionalBodies) match {
-      case (Some(ProfessionalBodyMemberYes), Some(businessTypes)) => Some(ProfessionalBodyDesMember(true, businessTypes))
-      case (Some(ProfessionalBodyMemberNo), _) => Some(ProfessionalBodyDesMember(false, None))
-      case _ => None
+      case (Some(ProfessionalBodyMemberYes), Some(businessTypes)) =>
+        Some(ProfessionalBodyDesMember(true, businessTypes))
+      case (Some(ProfessionalBodyMemberNo), _)                    => Some(ProfessionalBodyDesMember(false, None))
+      case _                                                      => None
     }
-  }
 }

@@ -25,15 +25,12 @@ case class AdvisorNameAddress(name: String, tradingName: Option[String], address
 object AdvisorNameAddress {
   implicit val format: OFormat[AdvisorNameAddress] = Json.format[AdvisorNameAddress]
 
-  implicit def convert(accountant: models.fe.businessactivities.WhoIsYourAccountant): Option[AdvisorNameAddress] = {
-
+  implicit def convert(accountant: models.fe.businessactivities.WhoIsYourAccountant): Option[AdvisorNameAddress] =
     Some(AdvisorNameAddress(accountant.accountantsName, accountant.accountantsTradingName, accountant.address))
-  }
 
-  implicit def convert(address: models.fe.businessactivities.AccountantsAddress): Address = {
+  implicit def convert(address: models.fe.businessactivities.AccountantsAddress): Address =
     address match {
-      case UkAccountantsAddress(lin1, lin2, lin3, lin4, code) => Address(lin1, lin2, lin3, lin4, "GB", Some(code))
+      case UkAccountantsAddress(lin1, lin2, lin3, lin4, code)       => Address(lin1, lin2, lin3, lin4, "GB", Some(code))
       case NonUkAccountantsAddress(lin1, lin2, lin3, lin4, country) => Address(lin1, lin2, lin3, lin4, country, None)
     }
-  }
 }

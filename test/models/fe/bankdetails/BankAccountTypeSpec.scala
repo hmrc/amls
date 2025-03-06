@@ -39,8 +39,8 @@ class BankAccountTypeSpec extends PlaySpec {
     }
 
     "write correct Json value" in {
-      Json.toJson(PersonalAccount: BankAccountType) must be(Json.obj("bankAccountType" -> "01"))
-      Json.toJson(BelongsToBusiness: BankAccountType) must be(Json.obj("bankAccountType" -> "02"))
+      Json.toJson(PersonalAccount: BankAccountType)        must be(Json.obj("bankAccountType" -> "01"))
+      Json.toJson(BelongsToBusiness: BankAccountType)      must be(Json.obj("bankAccountType" -> "02"))
       Json.toJson(BelongsToOtherBusiness: BankAccountType) must be(Json.obj("bankAccountType" -> "03"))
     }
   }

@@ -33,8 +33,8 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
     "return a successful Future" in {
       val successfulFunction = () => Future.successful("A successful future")
 
-      whenReady(apiRetryHelper.doWithBackoff(successfulFunction)) {
-        result => result mustEqual "A successful future"
+      whenReady(apiRetryHelper.doWithBackoff(successfulFunction)) { result =>
+        result mustEqual "A successful future"
       }
     }
 
@@ -46,23 +46,22 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
     }
 
     "back off exponentially" in {
-      def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long = {
+      def getMinimumExpectedDuration(iteration: Int, expectedTime: Long, currentWait: Int): Long =
         if (iteration >= maxRetries) {
           expectedTime + currentWait
         } else {
           val nextWait: Int = Math.ceil(currentWait * waitFactor).toInt
           getMinimumExpectedDuration(iteration + 1, expectedTime + currentWait, nextWait)
         }
-      }
 
       val failedFunction = () => Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
-      val startTime = LocalDateTime.now
+      val startTime      = LocalDateTime.now
 
       whenReady(apiRetryHelper.doWithBackoff(failedFunction).failed, timeout(Span(TIMEOUT, Seconds))) {
         case e: HttpStatusException => e.status mustEqual SERVICE_UNAVAILABLE
       }
 
-      val endTime = LocalDateTime.now
+      val endTime      = LocalDateTime.now
       val expectedTime = getMinimumExpectedDuration(1, initialWaitMs, initialWaitMs)
       ChronoUnit.MILLIS.between(startTime, endTime) must be >= expectedTime
     }
@@ -70,23 +69,19 @@ class ApiRetryHelperSpec extends AmlsBaseSpec {
     "show that it pass after it fails" in {
 
       val numberOfRetries = 5
-      var counter = 0
+      var counter         = 0
 
-      val failThenSuccessFunc = () => {
+      val failThenSuccessFunc = () =>
         if (counter < numberOfRetries) {
           counter = counter + 1
           Future.failed(HttpStatusException(SERVICE_UNAVAILABLE, Some("Bad Request")))
-        }
-        else {
+        } else {
           Future.successful("A successful future")
         }
-      }
 
-      whenReady(apiRetryHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) {
-        result => {
-          result mustEqual "A successful future"
-          counter must be >= numberOfRetries
-        }
+      whenReady(apiRetryHelper.doWithBackoff(failThenSuccessFunc), timeout(Span(TIMEOUT, Seconds))) { result =>
+        result mustEqual "A successful future"
+        counter must be >= numberOfRetries
       }
     }
   }

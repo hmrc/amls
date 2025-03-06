@@ -19,20 +19,21 @@ package models.fe.businessactivities
 import models.des.businessactivities.{BusinessActivitiesAll, MlrActivitiesAppliedFor, MlrAdvisor}
 
 case class BusinessActivities(
-                               involvedInOther: Option[InvolvedInOther] = None,
-                               expectedBusinessTurnover: Option[ExpectedBusinessTurnover] = None,
-                               expectedAMLSTurnover: Option[ExpectedAMLSTurnover] = None,
-                               businessFranchise: Option[BusinessFranchise] = None,
-                               transactionRecord: Option[Boolean] = None,
-                               customersOutsideUK: Option[CustomersOutsideUK] = None,
-                               ncaRegistered: Option[NCARegistered] = None,
-                               accountantForAMLSRegulations: Option[AccountantForAMLSRegulations] = None,
-                               identifySuspiciousActivity: Option[IdentifySuspiciousActivity] = None,
-                               riskAssessmentPolicy: Option[RiskAssessmentPolicy] = None,
-                               howManyEmployees: Option[HowManyEmployees] = None,
-                               whoIsYourAccountant: Option[WhoIsYourAccountant] = None,
-                               taxMatters: Option[TaxMatters] = None,
-                               transactionRecordTypes: Option[TransactionTypes] = None)
+  involvedInOther: Option[InvolvedInOther] = None,
+  expectedBusinessTurnover: Option[ExpectedBusinessTurnover] = None,
+  expectedAMLSTurnover: Option[ExpectedAMLSTurnover] = None,
+  businessFranchise: Option[BusinessFranchise] = None,
+  transactionRecord: Option[Boolean] = None,
+  customersOutsideUK: Option[CustomersOutsideUK] = None,
+  ncaRegistered: Option[NCARegistered] = None,
+  accountantForAMLSRegulations: Option[AccountantForAMLSRegulations] = None,
+  identifySuspiciousActivity: Option[IdentifySuspiciousActivity] = None,
+  riskAssessmentPolicy: Option[RiskAssessmentPolicy] = None,
+  howManyEmployees: Option[HowManyEmployees] = None,
+  whoIsYourAccountant: Option[WhoIsYourAccountant] = None,
+  taxMatters: Option[TaxMatters] = None,
+  transactionRecordTypes: Option[TransactionTypes] = None
+)
 
 object BusinessActivities {
 
@@ -54,32 +55,33 @@ object BusinessActivities {
       __.read(Reads.optionNoError[WhoIsYourAccountant]) and
       __.read(Reads.optionNoError[TaxMatters]) and
       (__ \ "transactionTypes").readNullable[TransactionTypes]
-    ) (BusinessActivities.apply _)
+  )(BusinessActivities.apply _)
 
-  implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] {
-    model =>
-      Seq(
-        Json.toJson(model.involvedInOther).asOpt[JsObject],
-        Json.toJson(model.expectedBusinessTurnover).asOpt[JsObject],
-        Json.toJson(model.expectedAMLSTurnover).asOpt[JsObject],
-        Json.toJson(model.businessFranchise).asOpt[JsObject],
-        model.transactionRecord map { t => Json.obj("isRecorded" -> t) },
-        Json.toJson(model.customersOutsideUK).asOpt[JsObject],
-        Json.toJson(model.ncaRegistered).asOpt[JsObject],
-        Json.toJson(model.accountantForAMLSRegulations).asOpt[JsObject],
-        Json.toJson(model.identifySuspiciousActivity).asOpt[JsObject],
-        Json.toJson(model.riskAssessmentPolicy).asOpt[JsObject],
-        Json.toJson(model.howManyEmployees).asOpt[JsObject],
-        Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
-        Json.toJson(model.taxMatters).asOpt[JsObject],
-        model.transactionRecordTypes.map(t => Json.obj("transactionTypes" -> Json.toJson(t)))
-      ).flatten.fold(Json.obj()) {
-        _ ++ _
-      }
+  implicit val writes: Writes[BusinessActivities] = Writes[BusinessActivities] { model =>
+    Seq(
+      Json.toJson(model.involvedInOther).asOpt[JsObject],
+      Json.toJson(model.expectedBusinessTurnover).asOpt[JsObject],
+      Json.toJson(model.expectedAMLSTurnover).asOpt[JsObject],
+      Json.toJson(model.businessFranchise).asOpt[JsObject],
+      model.transactionRecord map { t => Json.obj("isRecorded" -> t) },
+      Json.toJson(model.customersOutsideUK).asOpt[JsObject],
+      Json.toJson(model.ncaRegistered).asOpt[JsObject],
+      Json.toJson(model.accountantForAMLSRegulations).asOpt[JsObject],
+      Json.toJson(model.identifySuspiciousActivity).asOpt[JsObject],
+      Json.toJson(model.riskAssessmentPolicy).asOpt[JsObject],
+      Json.toJson(model.howManyEmployees).asOpt[JsObject],
+      Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
+      Json.toJson(model.taxMatters).asOpt[JsObject],
+      model.transactionRecordTypes.map(t => Json.obj("transactionTypes" -> Json.toJson(t)))
+    ).flatten.fold(Json.obj()) {
+      _ ++ _
+    }
   }
 
-  def convertBusinessActivities(desBA: Option[BusinessActivitiesAll], mlrActivities: Option[MlrActivitiesAppliedFor]): BusinessActivities = {
-
+  def convertBusinessActivities(
+    desBA: Option[BusinessActivitiesAll],
+    mlrActivities: Option[MlrActivitiesAppliedFor]
+  ): BusinessActivities =
     desBA.map { dba =>
       BusinessActivities(
         involvedInOther = InvolvedInOther.conv(dba.businessActivityDetails),
@@ -89,7 +91,8 @@ object BusinessActivities {
         transactionRecord = TransactionTypes.convertRecordsKept(dba),
         customersOutsideUK = CustomersOutsideUK.conv(dba),
         ncaRegistered = Some(NCARegistered(dba.nationalCrimeAgencyRegistered)),
-        accountantForAMLSRegulations = AccountantForAMLSRegulations.convertAccountant(desBA.fold[Option[MlrAdvisor]](None)(_.mlrAdvisor), mlrActivities),
+        accountantForAMLSRegulations = AccountantForAMLSRegulations
+          .convertAccountant(desBA.fold[Option[MlrAdvisor]](None)(_.mlrAdvisor), mlrActivities),
         identifySuspiciousActivity = Some(IdentifySuspiciousActivity(dba.suspiciousActivityGuidance)),
         riskAssessmentPolicy = RiskAssessmentPolicy.conv(dba.formalRiskAssessmentDetails),
         howManyEmployees = HowManyEmployees.conv(dba),
@@ -99,5 +102,4 @@ object BusinessActivities {
       )
     } getOrElse BusinessActivities()
 
-  }
 }

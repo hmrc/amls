@@ -25,8 +25,7 @@ class ChangeIndicatorsSpec extends PlaySpec with GuiceOneAppPerSuite {
   "ChangeIndicators" must {
     "serialize correctly" in {
 
-      val json = Json.parse(
-        """{
+      val json = Json.parse("""{
     "businessDetails": false,
     "businessAddress": false,
     "businessReferences": true,
@@ -58,7 +57,8 @@ class ChangeIndicatorsSpec extends PlaySpec with GuiceOneAppPerSuite {
     "filingIndividual": true
   }""")
 
-      val changeIndicators = ChangeIndicators(false, false, true, true, true, true, true, false, true, false, true, true, true, false, true)
+      val changeIndicators =
+        ChangeIndicators(false, false, true, true, true, true, true, false, true, false, true, true, true, false, true)
 
       ChangeIndicators.format.writes(changeIndicators) must be(json)
 

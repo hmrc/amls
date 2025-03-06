@@ -24,24 +24,42 @@ class BusinessStructureSpec extends PlaySpec {
   "BusinessStructure" should {
 
     "Read JSON data successfully" in {
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "01")) must be(JsSuccess(BusinessStructure.SoleProprietor))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "01")) must be(
+        JsSuccess(BusinessStructure.SoleProprietor)
+      )
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "02")) must be(JsSuccess(BusinessStructure.LimitedLiabilityPartnership))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "02")) must be(
+        JsSuccess(BusinessStructure.LimitedLiabilityPartnership)
+      )
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "03")) must be(JsSuccess(BusinessStructure.Partnership))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "03")) must be(
+        JsSuccess(BusinessStructure.Partnership)
+      )
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "04")) must be(JsSuccess(BusinessStructure.IncorporatedBody))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "04")) must be(
+        JsSuccess(BusinessStructure.IncorporatedBody)
+      )
 
-      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "05")) must be(JsSuccess(BusinessStructure.UnincorporatedBody))
+      Json.fromJson[BusinessStructure](Json.obj("agentsBusinessStructure" -> "05")) must be(
+        JsSuccess(BusinessStructure.UnincorporatedBody)
+      )
     }
 
     "Write JSON data successfully" in {
 
-      Json.toJson(BusinessStructure.SoleProprietor: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "01"))
-      Json.toJson(BusinessStructure.LimitedLiabilityPartnership: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "02"))
-      Json.toJson(BusinessStructure.Partnership: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "03"))
-      Json.toJson(BusinessStructure.IncorporatedBody: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "04"))
-      Json.toJson(BusinessStructure.UnincorporatedBody: BusinessStructure) must be(Json.obj("agentsBusinessStructure" -> "05"))
+      Json.toJson(BusinessStructure.SoleProprietor: BusinessStructure)              must be(
+        Json.obj("agentsBusinessStructure" -> "01")
+      )
+      Json.toJson(BusinessStructure.LimitedLiabilityPartnership: BusinessStructure) must be(
+        Json.obj("agentsBusinessStructure" -> "02")
+      )
+      Json.toJson(BusinessStructure.Partnership: BusinessStructure)                 must be(Json.obj("agentsBusinessStructure" -> "03"))
+      Json.toJson(BusinessStructure.IncorporatedBody: BusinessStructure)            must be(
+        Json.obj("agentsBusinessStructure" -> "04")
+      )
+      Json.toJson(BusinessStructure.UnincorporatedBody: BusinessStructure)          must be(
+        Json.obj("agentsBusinessStructure" -> "05")
+      )
     }
 
     "throw error for invalid data" in {
@@ -50,10 +68,12 @@ class BusinessStructureSpec extends PlaySpec {
     }
 
     "convert input string successfully" in {
-      BusinessStructure.conv("Limited Liability Partnership") must be(Some(BusinessStructure.LimitedLiabilityPartnership))
-      BusinessStructure.conv("Partnership") must be(Some(BusinessStructure.Partnership))
-      BusinessStructure.conv("Corporate Body") must be(Some(BusinessStructure.IncorporatedBody))
-      BusinessStructure.conv("Unincorporated Body") must be(Some(BusinessStructure.UnincorporatedBody))
+      BusinessStructure.conv("Limited Liability Partnership") must be(
+        Some(BusinessStructure.LimitedLiabilityPartnership)
+      )
+      BusinessStructure.conv("Partnership")                   must be(Some(BusinessStructure.Partnership))
+      BusinessStructure.conv("Corporate Body")                must be(Some(BusinessStructure.IncorporatedBody))
+      BusinessStructure.conv("Unincorporated Body")           must be(Some(BusinessStructure.UnincorporatedBody))
     }
   }
 

@@ -20,12 +20,17 @@ import models.des.msb.{CurrencyWholesalerDetails, MSBBankDetails, MsbCeDetailsR7
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class WhichCurrencies(currencies: Seq[String], usesForeignCurrencies: Option[Boolean], bankMoneySource: Option[BankMoneySource],
-                           wholesalerMoneySource: Option[WholesalerMoneySource], customerMoneySource: Boolean)
+case class WhichCurrencies(
+  currencies: Seq[String],
+  usesForeignCurrencies: Option[Boolean],
+  bankMoneySource: Option[BankMoneySource],
+  wholesalerMoneySource: Option[WholesalerMoneySource],
+  customerMoneySource: Boolean
+)
 
 object WhichCurrencies {
 
-  implicit val jsonReads: Reads[WhichCurrencies] = {
+  implicit val jsonReads: Reads[WhichCurrencies] =
     (
       (__ \ "currencies").read[Seq[String]] and
         (__ \ "usesForeignCurrencies" \ "foreignCurrencies").readNullable[Boolean] and
@@ -33,15 +38,13 @@ object WhichCurrencies {
         __.read(WholesalerMoneySource.jsonReads) and
         (__ \ "moneySources" \ "customerMoneySource").readNullable[String].orElse(Reads.pure(None)).flatMap {
           case Some("Yes") => Reads(_ => JsSuccess(true))
-          case _ => Reads(_ => JsSuccess(false))
+          case _           => Reads(_ => JsSuccess(false))
         }
-      ) (WhichCurrencies.apply _)
-  }
+    )(WhichCurrencies.apply _)
 
   implicit val jsonWrites1: Writes[WhichCurrencies] = Writes[WhichCurrencies] { w =>
-
     val customerMoneySource = w.customerMoneySource match {
-      case true => Json.obj("customerMoneySource" -> "Yes")
+      case true  => Json.obj("customerMoneySource" -> "Yes")
       case false => Json.obj()
     }
 
@@ -54,56 +57,66 @@ object WhichCurrencies {
       Json.obj("moneySources" -> moneySources)
   }
 
-  implicit def convMsbCe(msbCe: Option[MsbCeDetailsR7]): Option[WhichCurrencies] = {
+  implicit def convMsbCe(msbCe: Option[MsbCeDetailsR7]): Option[WhichCurrencies] =
     msbCe match {
       case Some(msbDtls) =>
-
         val foreignCurrencyDefault: Option[Boolean] =
           msbDtls.currencySources match {
-            case Some(cs) => {
+            case Some(cs) =>
               cs.bankDetails.isDefined ||
                 cs.currencyWholesalerDetails.isDefined ||
                 cs.reSellCurrTakenIn match {
                 case true => Some(true)
-                case _ => Some(false)
+                case _    => Some(false)
               }
-            }
-            case None => None
+            case None     => None
           }
 
         msbDtls.currencySources match {
-          case Some(cs) => Some(WhichCurrencies(
-            msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-            msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
-            cs.bankDetails,
-            cs.currencyWholesalerDetails,
-            cs.reSellCurrTakenIn))
-          case None => Some(WhichCurrencies(msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
-            msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
-            None, None, false))
+          case Some(cs) =>
+            Some(
+              WhichCurrencies(
+                msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
+                msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
+                cs.bankDetails,
+                cs.currencyWholesalerDetails,
+                cs.reSellCurrTakenIn
+              )
+            )
+          case None     =>
+            Some(
+              WhichCurrencies(
+                msbDtls.currSupplyToCust.fold[Seq[String]](Seq.empty)(x => x.currency),
+                msbDtls.dealInPhysCurrencies.fold(foreignCurrencyDefault)(Some(_)),
+                None,
+                None,
+                false
+              )
+            )
         }
 
       case None => None
     }
-  }
 
-  implicit def convMSBBankDetails(bankDtls: Option[MSBBankDetails]): Option[BankMoneySource] = {
+  implicit def convMSBBankDetails(bankDtls: Option[MSBBankDetails]): Option[BankMoneySource] =
     bankDtls match {
-      case Some(dtls) => dtls.bankNames match {
-        case Some(sourceSeq) => sourceSeq.headOption.fold[Option[BankMoneySource]](None)(x => Some(BankMoneySource(x)))
-        case _ => None
-      }
-      case None => None
+      case Some(dtls) =>
+        dtls.bankNames match {
+          case Some(sourceSeq) =>
+            sourceSeq.headOption.fold[Option[BankMoneySource]](None)(x => Some(BankMoneySource(x)))
+          case _               => None
+        }
+      case None       => None
     }
-  }
 
-  implicit def convWholesalerDetails(details: Option[CurrencyWholesalerDetails]): Option[WholesalerMoneySource] = {
+  implicit def convWholesalerDetails(details: Option[CurrencyWholesalerDetails]): Option[WholesalerMoneySource] =
     details match {
-      case Some(dtls) => dtls.currencyWholesalersNames match {
-        case Some(currencySeq) => currencySeq.headOption.fold[Option[WholesalerMoneySource]](None)(x => Some(WholesalerMoneySource(x)))
-        case _ => None
-      }
-      case None => None
+      case Some(dtls) =>
+        dtls.currencyWholesalersNames match {
+          case Some(currencySeq) =>
+            currencySeq.headOption.fold[Option[WholesalerMoneySource]](None)(x => Some(WholesalerMoneySource(x)))
+          case _                 => None
+        }
+      case None       => None
     }
-  }
 }

@@ -16,7 +16,7 @@
 
 package models.fe.businessmatching
 
-import models.des.msb.{MsbMtDetails}
+import models.des.msb.MsbMtDetails
 import play.api.libs.json._
 
 sealed trait BusinessAppliedForPSRNumber
@@ -29,25 +29,26 @@ object BusinessAppliedForPSRNumber {
 
   implicit val jsonReads: Reads[BusinessAppliedForPSRNumber] =
     (__ \ "appliedFor").read[Boolean] flatMap {
-      case true => (__ \ "regNumber").read[String] map BusinessAppliedForPSRNumberYes.apply
+      case true  => (__ \ "regNumber").read[String] map BusinessAppliedForPSRNumberYes.apply
       case false => Reads(_ => JsSuccess(BusinessAppliedForPSRNumberNo))
     }
 
   implicit val jsonWrites: Writes[BusinessAppliedForPSRNumber] = Writes[BusinessAppliedForPSRNumber] {
-    case BusinessAppliedForPSRNumberYes(value) => Json.obj(
-      "appliedFor" -> true,
-      "regNumber" -> value
-    )
-    case BusinessAppliedForPSRNumberNo => Json.obj("appliedFor" -> false)
+    case BusinessAppliedForPSRNumberYes(value) =>
+      Json.obj(
+        "appliedFor" -> true,
+        "regNumber"  -> value
+      )
+    case BusinessAppliedForPSRNumberNo         => Json.obj("appliedFor" -> false)
   }
 
-  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[BusinessAppliedForPSRNumber] = {
+  implicit def convMsbMt(msbMt: Option[MsbMtDetails]): Option[BusinessAppliedForPSRNumber] =
     msbMt match {
-      case Some(msbDtls) => msbDtls.applyForFcapsrRegNo match {
-        case true => Some(BusinessAppliedForPSRNumberYes(msbDtls.fcapsrRefNo.getOrElse("")))
-        case false => Some(BusinessAppliedForPSRNumberNo)
-      }
-      case None => None
+      case Some(msbDtls) =>
+        msbDtls.applyForFcapsrRegNo match {
+          case true  => Some(BusinessAppliedForPSRNumberYes(msbDtls.fcapsrRefNo.getOrElse("")))
+          case false => Some(BusinessAppliedForPSRNumberNo)
+        }
+      case None          => None
     }
-  }
 }

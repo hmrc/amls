@@ -28,17 +28,15 @@ class CompanyRegistrationNumberSpec extends PlaySpec with AmlsBaseSpec {
     "Json validation" must {
 
       "READ the JSON successfully and return the domain Object" in {
-        val companyRegistrationNumber = CompanyRegistrationNumber("12345678")
+        val companyRegistrationNumber     = CompanyRegistrationNumber("12345678")
         val jsonCompanyRegistrationNumber = Json.obj("companyRegistrationNumber" -> "12345678")
-        val fromJson = Json.fromJson[CompanyRegistrationNumber](jsonCompanyRegistrationNumber)
+        val fromJson                      = Json.fromJson[CompanyRegistrationNumber](jsonCompanyRegistrationNumber)
         fromJson must be(JsSuccess(companyRegistrationNumber))
       }
     }
 
     "Convert des model to frontend CompanyRegistrationNumber" in {
-      val desBusinessDetails = BusinessDetails(BusinessType.SoleProprietor,
-        None,
-        None)
+      val desBusinessDetails = BusinessDetails(BusinessType.SoleProprietor, None, None)
 
       CompanyRegistrationNumber.conv(desBusinessDetails) must be(None)
     }

@@ -30,41 +30,41 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FeesRepository @Inject()(mongoC: MongoComponent)
-                              (implicit executionContext: ExecutionContext)
-                              extends PlayMongoRepository[Fees](
-    mongoComponent = mongoC,
-    collectionName = "fees",
-    domainFormat = Fees.format,
-    indexes = Seq(
-      IndexModel(
-        Indexes.ascending("createdAt"),
-        IndexOptions().name("feeResponseExpiry").expireAfter(feesResponseExpiryTimeSeconds, SECONDS)
-      ),
-      IndexModel(
-        Indexes.descending("amlsReferenceNumber"),
-        IndexOptions().name("amlsRefNumber")
+class FeesRepository @Inject() (mongoC: MongoComponent)(implicit executionContext: ExecutionContext)
+    extends PlayMongoRepository[Fees](
+      mongoComponent = mongoC,
+      collectionName = "fees",
+      domainFormat = Fees.format,
+      indexes = Seq(
+        IndexModel(
+          Indexes.ascending("createdAt"),
+          IndexOptions().name("feeResponseExpiry").expireAfter(feesResponseExpiryTimeSeconds, SECONDS)
+        ),
+        IndexModel(
+          Indexes.descending("amlsReferenceNumber"),
+          IndexOptions().name("amlsRefNumber")
+        )
       )
     )
-  ) with Logging {
+    with Logging {
 
-  def insert(feeResponse: Fees): Future[Boolean] = {
+  def insert(feeResponse: Fees): Future[Boolean] =
     collection
       .insertOne(feeResponse)
       .toFuture()
       .map { writeRes: InsertOneResult =>
-        logger.debug(s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result id: ${writeRes.getInsertedId}," +
-          s"acknowledged: ${writeRes.getInsertedId}")
+        logger.debug(
+          s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result id: ${writeRes.getInsertedId}," +
+            s"acknowledged: ${writeRes.getInsertedId}"
+        )
         writeRes.wasAcknowledged()
       }
-  }
 
-  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] = {
+  def findLatestByAmlsReference(amlsReferenceNumber: String): Future[Option[Fees]] =
     collection
       .find(Filters.eq("amlsReferenceNumber", amlsReferenceNumber))
       .sort(Sorts.descending("createdAt"))
       .headOption()
-  }
 }
 
 object FeesRepository {

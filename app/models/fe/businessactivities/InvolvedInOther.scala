@@ -29,25 +29,28 @@ object InvolvedInOther {
 
   implicit val jsonReads: Reads[InvolvedInOther] =
     (__ \ "involvedInOther").read[Boolean] flatMap {
-      case true => (__ \ "details").read[String] map InvolvedInOtherYes.apply
+      case true  => (__ \ "details").read[String] map InvolvedInOtherYes.apply
       case false => Reads(_ => JsSuccess(InvolvedInOtherNo))
     }
 
   implicit val jsonWrites: Writes[InvolvedInOther] = Writes[InvolvedInOther] {
-    case InvolvedInOtherYes(details) => Json.obj(
-      "involvedInOther" -> true,
-      "details" -> details
-    )
-    case _ => Json.obj("involvedInOther" -> false)
+    case InvolvedInOtherYes(details) =>
+      Json.obj(
+        "involvedInOther" -> true,
+        "details"         -> details
+      )
+    case _                           => Json.obj("involvedInOther" -> false)
   }
 
-  def conv(activityDtls: BusinessActivityDetails): Option[InvolvedInOther] = {
+  def conv(activityDtls: BusinessActivityDetails): Option[InvolvedInOther] =
     activityDtls.actvtsBusRegForOnlyActvtsCarOut match {
-      case true => Some(InvolvedInOtherNo)
-      case false => activityDtls.respActvtsBusRegForOnlyActvtsCarOut.fold[Option[InvolvedInOther]](None)(x => x.otherBusActivitiesCarriedOut match {
-        case Some(other) => Some(InvolvedInOtherYes(other.otherBusinessActivities))
-        case None => None
-      })
+      case true  => Some(InvolvedInOtherNo)
+      case false =>
+        activityDtls.respActvtsBusRegForOnlyActvtsCarOut.fold[Option[InvolvedInOther]](None)(x =>
+          x.otherBusActivitiesCarriedOut match {
+            case Some(other) => Some(InvolvedInOtherYes(other.otherBusinessActivities))
+            case None        => None
+          }
+        )
     }
-  }
 }

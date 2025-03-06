@@ -20,9 +20,11 @@ import models.des.responsiblepeople._
 import models.fe.responsiblepeople.TimeAtAddress._
 import play.api.libs.json.{Json, OFormat}
 
-case class ResponsiblePersonAddressHistory(currentAddress: Option[ResponsiblePersonCurrentAddress] = None,
-                                           additionalAddress: Option[ResponsiblePersonAddress] = None,
-                                           additionalExtraAddress: Option[ResponsiblePersonAddress] = None) {
+case class ResponsiblePersonAddressHistory(
+  currentAddress: Option[ResponsiblePersonCurrentAddress] = None,
+  additionalAddress: Option[ResponsiblePersonAddress] = None,
+  additionalExtraAddress: Option[ResponsiblePersonAddress] = None
+) {
 
   def currentAddress(add: ResponsiblePersonCurrentAddress): ResponsiblePersonAddressHistory =
     this.copy(currentAddress = Some(add))
@@ -38,57 +40,65 @@ object ResponsiblePersonAddressHistory {
 
   implicit val format: OFormat[ResponsiblePersonAddressHistory] = Json.format[ResponsiblePersonAddressHistory]
 
-  def convTimeAtAddress(timeAt: String): TimeAtAddress = {
+  def convTimeAtAddress(timeAt: String): TimeAtAddress =
     timeAt match {
-      case "0-6 months" => ZeroToFiveMonths
+      case "0-6 months"  => ZeroToFiveMonths
       case "7-12 months" => SixToElevenMonths
-      case "1-3 years" => OneToThreeYears
-      case "3+ years" => ThreeYearsPlus
-      case "" => Empty
+      case "1-3 years"   => OneToThreeYears
+      case "3+ years"    => ThreeYearsPlus
+      case ""            => Empty
     }
-  }
 
-  def convAddress(addr: Address): PersonAddress = {
+  def convAddress(addr: Address): PersonAddress =
     addr.postcode match {
-      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
-      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
+      case Some(postcode) =>
+        PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
+      case None           =>
+        PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
     }
-  }
 
-  def convAddress(addr: AddressWithChangeDate): PersonAddress = {
+  def convAddress(addr: AddressWithChangeDate): PersonAddress =
     addr.postcode match {
-      case Some(postcode) => PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
-      case None => PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
+      case Some(postcode) =>
+        PersonAddressUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, postcode)
+      case None           =>
+        PersonAddressNonUK(addr.addressLine1, addr.addressLine2, addr.addressLine3, addr.addressLine4, addr.country)
     }
-  }
 
-  def getAddressAndTime(addressDetails: Option[AddressUnderThreeYears], timeAtAddress: Option[String]): Option[ResponsiblePersonAddress] = {
+  def getAddressAndTime(
+    addressDetails: Option[AddressUnderThreeYears],
+    timeAtAddress: Option[String]
+  ): Option[ResponsiblePersonAddress] = {
     val address = addressDetails.map(x => convAddress(x.address))
-    val timeAt = timeAtAddress.map(x => convTimeAtAddress(x))
+    val timeAt  = timeAtAddress.map(x => convTimeAtAddress(x))
     (address, timeAt) match {
       case (Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
-      case _ => None
+      case _                        => None
     }
   }
 
-  def getAddressAndTimeForCurrentAddress(addressDetails: Option[CurrentAddress], timeAtAddress: Option[String]): Option[ResponsiblePersonCurrentAddress] = {
+  def getAddressAndTimeForCurrentAddress(
+    addressDetails: Option[CurrentAddress],
+    timeAtAddress: Option[String]
+  ): Option[ResponsiblePersonCurrentAddress] = {
     val address = addressDetails.map(x => convAddress(x.address))
-    val timeAt = timeAtAddress.map(x => convTimeAtAddress(x))
+    val timeAt  = timeAtAddress.map(x => convTimeAtAddress(x))
     (address, timeAt) match {
       case (Some(addr), Some(time)) => Some(ResponsiblePersonAddress(addr, time))
-      case _ => None
+      case _                        => None
     }
   }
-
 
   implicit def conv(rp: ResponsiblePersons): Option[ResponsiblePersonAddressHistory] = {
-    val addressHistory = ResponsiblePersonAddressHistory(getAddressAndTimeForCurrentAddress(rp.currentAddressDetails, rp.timeAtCurrentAddress),
+    val addressHistory = ResponsiblePersonAddressHistory(
+      getAddressAndTimeForCurrentAddress(rp.currentAddressDetails, rp.timeAtCurrentAddress),
       getAddressAndTime(rp.addressUnderThreeYears, rp.timeAtAddressUnderThreeYears),
-      getAddressAndTime(rp.addressUnderOneYear, rp.timeAtAddressUnderOneYear))
+      getAddressAndTime(rp.addressUnderOneYear, rp.timeAtAddressUnderOneYear)
+    )
 
     addressHistory match {
       case ResponsiblePersonAddressHistory(None, None, None) => None
-      case _ => Some(addressHistory)
+      case _                                                 => Some(addressHistory)
     }
   }
 }

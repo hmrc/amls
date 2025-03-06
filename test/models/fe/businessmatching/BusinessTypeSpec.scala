@@ -26,19 +26,21 @@ class BusinessTypeSpec extends PlaySpec {
   "BusinessType" should {
 
     "Read JSON data successfully" in {
-      BusinessType.reads.reads(BusinessType.writes.writes(SoleProprietor)) must be(JsSuccess(SoleProprietor, JsPath))
-      BusinessType.reads.reads(BusinessType.writes.writes(LPrLLP)) must be(JsSuccess(LPrLLP, JsPath))
-      BusinessType.reads.reads(BusinessType.writes.writes(Partnership)) must be(JsSuccess(Partnership, JsPath))
-      BusinessType.reads.reads(BusinessType.writes.writes(LimitedCompany)) must be(JsSuccess(LimitedCompany, JsPath))
-      BusinessType.reads.reads(BusinessType.writes.writes(UnincorporatedBody)) must be(JsSuccess(UnincorporatedBody, JsPath))
+      BusinessType.reads.reads(BusinessType.writes.writes(SoleProprietor))     must be(JsSuccess(SoleProprietor, JsPath))
+      BusinessType.reads.reads(BusinessType.writes.writes(LPrLLP))             must be(JsSuccess(LPrLLP, JsPath))
+      BusinessType.reads.reads(BusinessType.writes.writes(Partnership))        must be(JsSuccess(Partnership, JsPath))
+      BusinessType.reads.reads(BusinessType.writes.writes(LimitedCompany))     must be(JsSuccess(LimitedCompany, JsPath))
+      BusinessType.reads.reads(BusinessType.writes.writes(UnincorporatedBody)) must be(
+        JsSuccess(UnincorporatedBody, JsPath)
+      )
     }
 
     "convert input string successfully" in {
-      BusinessType.conv(DesBusinessType.LPrLLP) must be(LPrLLP)
-      BusinessType.conv(DesBusinessType.Partnership) must be(Partnership)
-      BusinessType.conv(DesBusinessType.LimitedCompany) must be(LimitedCompany)
+      BusinessType.conv(DesBusinessType.LPrLLP)             must be(LPrLLP)
+      BusinessType.conv(DesBusinessType.Partnership)        must be(Partnership)
+      BusinessType.conv(DesBusinessType.LimitedCompany)     must be(LimitedCompany)
       BusinessType.conv(DesBusinessType.UnincorporatedBody) must be(UnincorporatedBody)
-      BusinessType.conv(DesBusinessType.SoleProprietor) must be(SoleProprietor)
+      BusinessType.conv(DesBusinessType.SoleProprietor)     must be(SoleProprietor)
     }
   }
 

@@ -16,7 +16,7 @@
 
 package models.fe.businessdetails
 
-import models.des.aboutthebusiness.{AlternativeAddress, Address => DesAddress}
+import models.des.aboutthebusiness.{Address => DesAddress, AlternativeAddress}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
@@ -26,14 +26,15 @@ class CorrespondenceAddressSpec extends PlaySpec {
 
     "json read the given UKCorrespondenceAddress address" in {
 
-      val data = UKCorrespondenceAddress("Name", "Business", "38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
+      val data    = UKCorrespondenceAddress("Name", "Business", "38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
       val jsonObj = Json.obj(
-        "yourName" -> "Name",
-        "businessName" -> "Business",
+        "yourName"                   -> "Name",
+        "businessName"               -> "Business",
         "correspondenceAddressLine1" -> "38B",
         "correspondenceAddressLine2" -> "Longbenton",
         "correspondenceAddressLine3" -> "line 1",
-        "correspondencePostCode" -> "NE7 7DX")
+        "correspondencePostCode"     -> "NE7 7DX"
+      )
 
       Json.fromJson[CorrespondenceAddress](jsonObj) must be
       JsSuccess(data)
@@ -41,14 +42,15 @@ class CorrespondenceAddressSpec extends PlaySpec {
 
     "json read the given NonUKCorrespondenceAddress address" in {
 
-      val data = NonUKCorrespondenceAddress("Name", "Business", "38B", Some("some place"), Some("line 1"), None, "AR")
+      val data    = NonUKCorrespondenceAddress("Name", "Business", "38B", Some("some place"), Some("line 1"), None, "AR")
       val jsonObj = Json.obj(
-        "yourName" -> "Name",
-        "businessName" -> "Business",
+        "yourName"                   -> "Name",
+        "businessName"               -> "Business",
         "correspondenceAddressLine1" -> "38B",
         "correspondenceAddressLine2" -> "some place",
         "correspondenceAddressLine3" -> "line 1",
-        "correspondenceCountry" -> "AR")
+        "correspondenceCountry"      -> "AR"
+      )
 
       Json.fromJson[CorrespondenceAddress](jsonObj) must be
       JsSuccess(data)
@@ -58,13 +60,15 @@ class CorrespondenceAddressSpec extends PlaySpec {
       val data = UKCorrespondenceAddress("Name", "Business", "38B", Some("Longbenton"), Some("line 1"), None, "NE7 7DX")
 
       Json.toJson(data: CorrespondenceAddress) must
-        be(Json.obj(
-          "yourName" -> "Name",
-          "businessName" -> "Business",
-          "correspondenceAddressLine1" -> "38B",
-          "correspondenceAddressLine2" -> "Longbenton",
-          "correspondenceAddressLine3" -> "line 1",
-          "correspondencePostCode" -> "NE7 7DX")
+        be(
+          Json.obj(
+            "yourName"                   -> "Name",
+            "businessName"               -> "Business",
+            "correspondenceAddressLine1" -> "38B",
+            "correspondenceAddressLine2" -> "Longbenton",
+            "correspondenceAddressLine3" -> "line 1",
+            "correspondencePostCode"     -> "NE7 7DX"
+          )
         )
     }
 
@@ -72,23 +76,26 @@ class CorrespondenceAddressSpec extends PlaySpec {
       val data = NonUKCorrespondenceAddress("Name", "Business", "38B", Some("some place"), Some("line 1"), None, "AR")
 
       Json.toJson(data: CorrespondenceAddress) must
-        be(Json.obj(
-          "yourName" -> "Name",
-          "businessName" -> "Business",
-          "correspondenceAddressLine1" -> "38B",
-          "correspondenceAddressLine2" -> "some place",
-          "correspondenceAddressLine3" -> "line 1",
-          "correspondenceCountry" -> "AR")
+        be(
+          Json.obj(
+            "yourName"                   -> "Name",
+            "businessName"               -> "Business",
+            "correspondenceAddressLine1" -> "38B",
+            "correspondenceAddressLine2" -> "some place",
+            "correspondenceAddressLine3" -> "line 1",
+            "correspondenceCountry"      -> "AR"
+          )
         )
     }
 
     "convert des model to frontend ATB model" in {
 
       val desAddress = DesAddress("addr1", Some("addr2"), None, None, "UK", None)
-      val desModel = Some(AlternativeAddress("name", "trade name", desAddress))
+      val desModel   = Some(AlternativeAddress("name", "trade name", desAddress))
 
-      CorrespondenceAddress.conv(desModel) must be(Some(NonUKCorrespondenceAddress("name", "trade name",
-        "addr1", Some("addr2"), None, None, "UK")))
+      CorrespondenceAddress.conv(desModel) must be(
+        Some(NonUKCorrespondenceAddress("name", "trade name", "addr1", Some("addr2"), None, None, "UK"))
+      )
     }
 
     "convert des model to frontend ATB model when input is none" in {

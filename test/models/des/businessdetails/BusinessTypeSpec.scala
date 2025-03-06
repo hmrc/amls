@@ -25,19 +25,19 @@ class BusinessTypeSpec extends PlaySpec {
 
       "successfully validate given an enum value" in {
 
-        Json.fromJson[BusinessType](JsString("Sole Proprietor")) must
+        Json.fromJson[BusinessType](JsString("Sole Proprietor"))               must
           be(JsSuccess(BusinessType.SoleProprietor))
 
-        Json.fromJson[BusinessType](JsString("Corporate Body")) must
+        Json.fromJson[BusinessType](JsString("Corporate Body"))                must
           be(JsSuccess(BusinessType.LimitedCompany))
 
         Json.fromJson[BusinessType](JsString("Limited Liability Partnership")) must
           be(JsSuccess(BusinessType.LPrLLP))
 
-        Json.fromJson[BusinessType](JsString("Partnership")) must
+        Json.fromJson[BusinessType](JsString("Partnership"))                   must
           be(JsSuccess(BusinessType.Partnership))
 
-        Json.fromJson[BusinessType](JsString("Unincorporated Body")) must
+        Json.fromJson[BusinessType](JsString("Unincorporated Body"))           must
           be(JsSuccess(BusinessType.UnincorporatedBody))
       }
 
@@ -62,7 +62,6 @@ class BusinessTypeSpec extends PlaySpec {
 
         Json.toJson(BusinessType.UnincorporatedBody: BusinessType) must
           be(JsString("Unincorporated Body"))
-
 
       }
     }

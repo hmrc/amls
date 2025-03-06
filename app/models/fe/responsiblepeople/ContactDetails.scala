@@ -25,10 +25,9 @@ object ContactDetails {
 
   implicit val formats: OFormat[ContactDetails] = Json.format[ContactDetails]
 
-  implicit def conv(contactDetails: Option[ContactCommDetails]): Option[ContactDetails] = {
+  implicit def conv(contactDetails: Option[ContactCommDetails]): Option[ContactDetails] =
     contactDetails match {
       case Some(dtls) => Some(ContactDetails(dtls.primaryTeleNo, dtls.contactEmailAddress))
-      case _ => None
+      case _          => None
     }
-  }
 }

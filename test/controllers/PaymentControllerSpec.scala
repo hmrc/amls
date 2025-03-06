@@ -49,11 +49,12 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
       paymentService = testPaymentService,
       authAction = authAction,
       bodyParsers = mockBodyParsers,
-      cc = mockCC)
+      cc = mockCC
+    )
 
     val accountType = "org"
-    val accountRef = "TestOrgRef"
-    val request = FakeRequest("GET", "/")
+    val accountRef  = "TestOrgRef"
+    val request     = FakeRequest("GET", "/")
   }
 
   trait CreateRequestFixture extends Fixture {
@@ -113,7 +114,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
     "retrieving a payment by payment reference" must {
       "return the payment" in new Fixture {
         val paymentRef = paymentRefGen.sample.get
-        val payment = paymentGen.sample.get
+        val payment    = paymentGen.sample.get
 
         when {
           testPaymentService.getPaymentByPaymentReference(ArgumentMatchers.eq(paymentRef))
@@ -165,9 +166,9 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
     "refreshing the payment status" must {
       "refresh the status using the payments service" in new Fixture {
-        val paymentRef = paymentRefGen.sample.get
+        val paymentRef     = paymentRefGen.sample.get
         val refreshRequest = RefreshPaymentStatusRequest(paymentRef)
-        val statusResult = PaymentStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatus.Successful)
+        val statusResult   = PaymentStatusResult(paymentRef, paymentIdGen.sample.get, PaymentStatus.Successful)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(refreshRequest))
 
@@ -181,7 +182,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
       }
 
       "return a 404 when there is no RefreshStatusResult" in new Fixture {
-        val paymentRef = paymentRefGen.sample.get
+        val paymentRef     = paymentRefGen.sample.get
         val refreshRequest = RefreshPaymentStatusRequest(paymentRef)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(refreshRequest))
@@ -197,7 +198,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
       "return Bad Request when the input json cannot be parsed" in new Fixture {
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.obj("random_property" -> "some value"))
-        val result = testController.refreshStatus(accountType, accountRef)(putRequest)
+        val result     = testController.refreshStatus(accountType, accountRef)(putRequest)
 
         status(result) mustBe BAD_REQUEST
       }
@@ -205,7 +206,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
 
     "updating payment BACS flag" must {
       "set the BACS flag according to input data" in new Fixture {
-        val payment = paymentGen.sample.get.copy(isBacs = None)
+        val payment     = paymentGen.sample.get.copy(isBacs = None)
         val bacsRequest = SetBacsRequest(isBacs = true)
 
         when {
@@ -221,7 +222,8 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         val result = testController.updateBacsFlag(accountType, accountRef, payment.reference)(putRequest)
 
         status(result) mustBe NO_CONTENT
-        verify(testController.paymentService).updatePayment(ArgumentMatchers.eq(payment.copy(isBacs = Some(true))))(any())
+        verify(testController.paymentService)
+          .updatePayment(ArgumentMatchers.eq(payment.copy(isBacs = Some(true))))(any())
       }
 
       "return 404 Not Found if the payment was not found" in new Fixture {
@@ -232,7 +234,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
         } thenReturn Future.successful(None)
 
         val putRequest = FakeRequest("PUT", "/").withBody[JsValue](Json.toJson(bacsRequest))
-        val result = testController.updateBacsFlag(accountType, accountRef, paymentRefGen.sample.get)(putRequest)
+        val result     = testController.updateBacsFlag(accountType, accountRef, paymentRefGen.sample.get)(putRequest)
 
         status(result) mustBe NOT_FOUND
       }
@@ -242,14 +244,14 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
   "PaymentController" must {
     "use the payments service to create a new bacs payment" in new Fixture {
       val createBacsRequest = createBacsPaymentRequestGen.sample.get
-      val payment = Payment(createBacsRequest)
+      val payment           = Payment(createBacsRequest)
 
       when {
         testController.paymentService.createBacsPayment(ArgumentMatchers.eq(createBacsRequest))(any())
       } thenReturn Future.successful(payment)
 
       val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.toJson(createBacsRequest))
-      val result = testController.createBacsPayment(accountType, accountRef)(postRequest)
+      val result      = testController.createBacsPayment(accountType, accountRef)(postRequest)
 
       status(result) mustBe CREATED
       contentAsJson(result) mustBe Json.toJson(payment)
@@ -258,7 +260,7 @@ class PaymentControllerSpec extends AmlsBaseSpec with PaymentGenerator {
     "return 400 if the input json can't be parsed" in new Fixture {
 
       val postRequest = FakeRequest("POST", "/").withBody[JsValue](Json.obj("nonsense" -> "value"))
-      val result = testController.createBacsPayment(accountType, accountRef)(postRequest)
+      val result      = testController.createBacsPayment(accountType, accountRef)(postRequest)
 
       status(result) mustBe BAD_REQUEST
     }

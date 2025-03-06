@@ -26,20 +26,18 @@ object KnownBy {
 
   val noOtherNames = KnownBy(hasOtherNames = false)
 
-  implicit def conv(desOtherNames: Option[OthrNamesOrAliasesDetails]): Option[KnownBy] = {
+  implicit def conv(desOtherNames: Option[OthrNamesOrAliasesDetails]): Option[KnownBy] =
     desOtherNames match {
-      case Some(pName) => pName.otherNamesOrAliases match {
-        case true => {
-          pName.aliases match {
-            case Some(name) => Some(KnownBy(hasOtherNames = true, Some(name.mkString(" "))))
-            case None => Some(noOtherNames)
-          }
+      case Some(pName) =>
+        pName.otherNamesOrAliases match {
+          case true  =>
+            pName.aliases match {
+              case Some(name) => Some(KnownBy(hasOtherNames = true, Some(name.mkString(" "))))
+              case None       => Some(noOtherNames)
+            }
+          case false => Some(noOtherNames)
         }
-        case false => Some(noOtherNames)
-      }
-      case None => Some(noOtherNames)
+      case None        => Some(noOtherNames)
     }
-  }
-
 
 }

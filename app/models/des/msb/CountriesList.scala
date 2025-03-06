@@ -24,7 +24,6 @@ object CountriesList {
 
   implicit val format: OFormat[CountriesList] = Json.format[CountriesList]
 
-  implicit def conv(countryList: Seq[String]): Option[CountriesList] = {
+  implicit def conv(countryList: Seq[String]): Option[CountriesList] =
     Some(CountriesList(countryList))
-  }
 }

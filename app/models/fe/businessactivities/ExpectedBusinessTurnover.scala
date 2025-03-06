@@ -47,42 +47,40 @@ object ExpectedBusinessTurnover {
       case "05" => Reads(_ => JsSuccess(Fifth))
       case "06" => Reads(_ => JsSuccess(Sixth))
       case "07" => Reads(_ => JsSuccess(Seventh))
-      case _ =>
+      case _    =>
         Reads(_ => JsError(JsPath \ "expectedBusinessTurnover", JsonValidationError("error.invalid")))
     }
   }
 
   implicit val jsonWrites: Writes[ExpectedBusinessTurnover] = Writes[ExpectedBusinessTurnover] {
-    case First => Json.obj("expectedBusinessTurnover" -> "01")
-    case Second => Json.obj("expectedBusinessTurnover" -> "02")
-    case Third => Json.obj("expectedBusinessTurnover" -> "03")
-    case Fourth => Json.obj("expectedBusinessTurnover" -> "04")
-    case Fifth => Json.obj("expectedBusinessTurnover" -> "05")
-    case Sixth => Json.obj("expectedBusinessTurnover" -> "06")
+    case First   => Json.obj("expectedBusinessTurnover" -> "01")
+    case Second  => Json.obj("expectedBusinessTurnover" -> "02")
+    case Third   => Json.obj("expectedBusinessTurnover" -> "03")
+    case Fourth  => Json.obj("expectedBusinessTurnover" -> "04")
+    case Fifth   => Json.obj("expectedBusinessTurnover" -> "05")
+    case Sixth   => Json.obj("expectedBusinessTurnover" -> "06")
     case Seventh => Json.obj("expectedBusinessTurnover" -> "07")
   }
 
-  def conv(activityDtls: BusinessActivityDetails): Option[ExpectedBusinessTurnover] = {
+  def conv(activityDtls: BusinessActivityDetails): Option[ExpectedBusinessTurnover] =
     activityDtls.respActvtsBusRegForOnlyActvtsCarOut match {
-      case Some(data) => data.otherBusActivitiesCarriedOut match {
-        case Some(other) => other.anticipatedTotBusinessTurnover
-        case None => None
-      }
-      case None => None
+      case Some(data) =>
+        data.otherBusActivitiesCarriedOut match {
+          case Some(other) => other.anticipatedTotBusinessTurnover
+          case None        => None
+        }
+      case None       => None
     }
-  }
 
-  implicit def convertTurnover(to: String): Option[ExpectedBusinessTurnover] = {
-
+  implicit def convertTurnover(to: String): Option[ExpectedBusinessTurnover] =
     to match {
-      case "£0-£15k" => Some(First)
-      case "£15k-50k" => Some(Second)
-      case "£50k-£100k" => Some(Third)
+      case "£0-£15k"     => Some(First)
+      case "£15k-50k"    => Some(Second)
+      case "£50k-£100k"  => Some(Third)
       case "£100k-£250k" => Some(Fourth)
-      case "£250k-£1m" => Some(Fifth)
-      case "£1m-10m" => Some(Sixth)
-      case "£10m+" => Some(Seventh)
-      case _ => None
+      case "£250k-£1m"   => Some(Fifth)
+      case "£1m-10m"     => Some(Sixth)
+      case "£10m+"       => Some(Seventh)
+      case _             => None
     }
-  }
 }

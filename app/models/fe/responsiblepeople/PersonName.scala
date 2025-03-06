@@ -27,13 +27,16 @@ object PersonName {
 
   implicit val format: OFormat[PersonName] = Json.format[PersonName]
 
-  implicit def conv(desNameDtls: Option[NameDetails]): Option[PersonName] = {
+  implicit def conv(desNameDtls: Option[NameDetails]): Option[PersonName] =
     desNameDtls match {
-      case Some(data) => Some(PersonName(data.personName.firstName.getOrElse(""),
-        data.personName.middleName,
-        data.personName.lastName.getOrElse("")
-      ))
-      case None => None
+      case Some(data) =>
+        Some(
+          PersonName(
+            data.personName.firstName.getOrElse(""),
+            data.personName.middleName,
+            data.personName.lastName.getOrElse("")
+          )
+        )
+      case None       => None
     }
-  }
 }

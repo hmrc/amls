@@ -24,19 +24,32 @@ case class AddressUnderThreeYears(address: Address)
 object AddressUnderThreeYears {
   implicit val format: OFormat[AddressUnderThreeYears] = Json.format[AddressUnderThreeYears]
 
-  implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonAddress]): Option[AddressUnderThreeYears] = {
+  implicit def convPersonAddressOption(addrHistory: Option[ResponsiblePersonAddress]): Option[AddressUnderThreeYears] =
     addrHistory match {
       case Some(data) => data
-      case _ => None
+      case _          => None
     }
-  }
 
-  implicit def convPersonAddress(addrHistory: ResponsiblePersonAddress): Option[AddressUnderThreeYears] = {
+  implicit def convPersonAddress(addrHistory: ResponsiblePersonAddress): Option[AddressUnderThreeYears] =
     addrHistory.personAddress match {
-      case uk: PersonAddressUK => Some(AddressUnderThreeYears(Address(uk.addressLine1, uk.addressLine2, uk.addressLine3,
-        uk.addressLine4, "GB", Some(uk.postCode))))
-      case nonUk: PersonAddressNonUK => Some(AddressUnderThreeYears(Address(nonUk.addressLineNonUK1, nonUk.addressLineNonUK2, nonUk.addressLineNonUK3,
-        nonUk.addressLineNonUK4, nonUk.country, None)))
+      case uk: PersonAddressUK       =>
+        Some(
+          AddressUnderThreeYears(
+            Address(uk.addressLine1, uk.addressLine2, uk.addressLine3, uk.addressLine4, "GB", Some(uk.postCode))
+          )
+        )
+      case nonUk: PersonAddressNonUK =>
+        Some(
+          AddressUnderThreeYears(
+            Address(
+              nonUk.addressLineNonUK1,
+              nonUk.addressLineNonUK2,
+              nonUk.addressLineNonUK3,
+              nonUk.addressLineNonUK4,
+              nonUk.country,
+              None
+            )
+          )
+        )
     }
-  }
 }

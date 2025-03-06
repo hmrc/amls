@@ -26,31 +26,32 @@ import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeregisterSubscriptionController @Inject()(deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
-                                                 implicit val apiRetryHelper: ApiRetryHelper,
-                                                 authAction: AuthAction,
-                                                 bodyParsers: PlayBodyParsers,
-                                                 val cc: ControllerComponents)
-                                                (implicit executionContext: ExecutionContext) extends BackendController(cc) with ControllerHelper {
+class DeregisterSubscriptionController @Inject() (
+  deregisterSubscriptionConnector: DeregisterSubscriptionConnector,
+  implicit val apiRetryHelper: ApiRetryHelper,
+  authAction: AuthAction,
+  bodyParsers: PlayBodyParsers,
+  val cc: ControllerComponents
+)(implicit executionContext: ExecutionContext)
+    extends BackendController(cc)
+    with ControllerHelper {
 
-  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) = authAction.async(bodyParsers.json) {
-    implicit request =>
+  def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) =
+    authAction.async(bodyParsers.json) { implicit request =>
       amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-        case Some(_) => {
+        case Some(_) =>
           Json.fromJson[DeregisterSubscriptionRequest](request.body) match {
             case JsSuccess(body, _) =>
-              deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, body) map {
-                response =>
-                  Ok(Json.toJson(response))
+              deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber, body) map { response =>
+                Ok(Json.toJson(response))
               }
-            case JsError(errors) =>
+            case JsError(errors)    =>
               Future.successful(BadRequest(toError(errors)))
           }
-        }
-        case None =>
+        case None    =>
           Future.successful {
             BadRequest(toError("Invalid amlsRegistrationNumber"))
           }
       }
-  }
+    }
 }

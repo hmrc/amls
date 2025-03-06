@@ -27,8 +27,10 @@ class YourTradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "convert des model to frontend model" in {
 
-      val agentPremises = AgentPremises("TradingName",
-        TradingPremisesAddress("AddressLine1",
+      val agentPremises = AgentPremises(
+        "TradingName",
+        TradingPremisesAddress(
+          "AddressLine1",
           Some("AddressLine2"),
           Some("AddressLine3"),
           Some("AddressLine4"),
@@ -46,11 +48,14 @@ class YourTradingPremisesSpec extends PlaySpec with GuiceOneAppPerSuite {
         Amp(false),
         None
       )
-      val agentDetail = AgentDetails("", None, None, None, agentPremises, Some("2001-01-01"))
+      val agentDetail   = AgentDetails("", None, None, None, agentPremises, Some("2001-01-01"))
 
-      val feModel = YourTradingPremises("TradingName",
+      val feModel = YourTradingPremises(
+        "TradingName",
         Address("AddressLine1", Some("AddressLine2"), Some("AddressLine3"), Some("AddressLine4"), "AA1 1AA", None),
-        LocalDate.of(2001, 1, 1), true)
+        LocalDate.of(2001, 1, 1),
+        true
+      )
 
       YourTradingPremises.conv(agentDetail) mustBe feModel
 

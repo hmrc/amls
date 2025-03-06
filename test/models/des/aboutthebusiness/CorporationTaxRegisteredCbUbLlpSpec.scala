@@ -24,29 +24,31 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
   "CorporationTaxRegisteredCbUbLlp" should {
 
     "convert correctly for corporate tax Yes" in {
-      val regForCorpTax = CorporationTaxRegisteredYes("1234567890")
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val regForCorpTax   = CorporationTaxRegisteredYes("1234567890")
+      val businessDetails = BusinessDetails(
+        PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         Some(regForCorpTax),
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", Some("line2"),
-          Some("some street"), Some("some city"), "EE1 1EE"),
+        RegisteredOfficeUK("line1", Some("line2"), Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None
       )
-      CorporationTaxRegisteredCbUbLlp.conv(businessDetails) must be(Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890"))))
+      CorporationTaxRegisteredCbUbLlp.conv(businessDetails) must be(
+        Some(CorporationTaxRegisteredCbUbLlp(true, Some("1234567890")))
+      )
     }
 
     "convert correctly for corporate tax No" in {
-      val regForCorpTax = CorporationTaxRegisteredNo
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val regForCorpTax   = CorporationTaxRegisteredNo
+      val businessDetails = BusinessDetails(
+        PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         Some(regForCorpTax),
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", Some("line2"),
-          Some("some street"), Some("some city"), "EE1 1EE"),
+        RegisteredOfficeUK("line1", Some("line2"), Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None
       )
@@ -54,13 +56,13 @@ class CorporationTaxRegisteredCbUbLlpSpec extends PlaySpec {
     }
 
     "convert correctly for corporate tax model is none" in {
-      val businessDetails = BusinessDetails(PreviouslyRegisteredYes(Some("12345678")),
+      val businessDetails = BusinessDetails(
+        PreviouslyRegisteredYes(Some("12345678")),
         None,
         None,
         None,
         ContactingYou("019212323222323222323222323222", "abc@test.co.uk"),
-        RegisteredOfficeUK("line1", Some("line2"),
-          Some("some street"), Some("some city"), "EE1 1EE"),
+        RegisteredOfficeUK("line1", Some("line2"), Some("some street"), Some("some city"), "EE1 1EE"),
         false,
         None
       )

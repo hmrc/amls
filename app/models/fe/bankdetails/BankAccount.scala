@@ -16,7 +16,7 @@
 
 package models.fe.bankdetails
 
-import models.des.bankdetails.{IBANNumberView, AccountNumberView, ukAccountView, BankAccountView}
+import models.des.bankdetails.{AccountNumberView, BankAccountView, IBANNumberView, ukAccountView}
 import play.api.libs.json._
 
 sealed trait Account
@@ -27,48 +27,47 @@ object Account {
     import play.api.libs.functional.syntax._
     import play.api.libs.json._
     (__ \ "isUK").read[Boolean] flatMap {
-      case true => (
-        (__ \ "accountNumber").read[String] and
-          (__ \ "sortCode").read[String]
-        ) (UKAccount.apply _)
+      case true =>
+        (
+          (__ \ "accountNumber").read[String] and
+            (__ \ "sortCode").read[String]
+        )(UKAccount.apply _)
 
       case false =>
         (__ \ "isIBAN").read[Boolean] flatMap {
-          case true => (__ \ "IBANNumber").read[String] fmap NonUKIBANNumber.apply
+          case true  => (__ \ "IBANNumber").read[String] fmap NonUKIBANNumber.apply
           case false => (__ \ "nonUKAccountNumber").read[String] fmap NonUKAccountNumber.apply
         }
     }
   }
 
   implicit val jsonWrites: Writes[Account] = Writes[Account] {
-    case m: UKAccount =>
+    case m: UKAccount            =>
       Json.obj(
-        "isUK" -> true,
+        "isUK"          -> true,
         "accountNumber" -> m.accountNumber,
-        "sortCode" -> m.sortCode
+        "sortCode"      -> m.sortCode
       )
     case acc: NonUKAccountNumber =>
       Json.obj(
-        "isUK" -> false,
+        "isUK"               -> false,
         "nonUKAccountNumber" -> acc.accountNumber,
-        "isIBAN" -> false
+        "isIBAN"             -> false
       )
-    case iban: NonUKIBANNumber =>
+    case iban: NonUKIBANNumber   =>
       Json.obj(
-        "isUK" -> false,
+        "isUK"       -> false,
         "IBANNumber" -> iban.IBANNumber,
-        "isIBAN" -> true
+        "isIBAN"     -> true
       )
   }
 
-  implicit def convBankAccount(bankDtls: BankAccountView): Account = {
-
+  implicit def convBankAccount(bankDtls: BankAccountView): Account =
     bankDtls.bankAccountDetails match {
       case ukAccountView(sortCode, accountNumber) => UKAccount(accountNumber, sortCode)
-      case AccountNumberView(acctNumber) => NonUKAccountNumber(acctNumber)
-      case IBANNumberView(iban) => NonUKIBANNumber(iban)
+      case AccountNumberView(acctNumber)          => NonUKAccountNumber(acctNumber)
+      case IBANNumberView(iban)                   => NonUKIBANNumber(iban)
     }
-  }
 }
 
 case class UKAccount(accountNumber: String, sortCode: String) extends Account

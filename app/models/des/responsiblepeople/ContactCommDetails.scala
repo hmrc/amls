@@ -24,10 +24,9 @@ case class ContactCommDetails(contactEmailAddress: String, primaryTeleNo: String
 object ContactCommDetails {
   implicit val format: OFormat[ContactCommDetails] = Json.format[ContactCommDetails]
 
-  implicit def conv(dtls: Option[ContactDetails]): Option[ContactCommDetails] = {
+  implicit def conv(dtls: Option[ContactDetails]): Option[ContactCommDetails] =
     dtls match {
       case Some(data) => Some(ContactCommDetails(data.emailAddress, data.phoneNumber, None))
-      case _ => None
+      case _          => None
     }
-  }
 }

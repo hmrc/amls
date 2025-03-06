@@ -23,20 +23,20 @@ import play.api.libs.json._
 import models.fe.tradingpremises.{TradingPremises => FETradingPremises, _}
 
 case class AgentDetails(
-                         agentLegalEntity: String,
-                         companyRegNo: Option[String] = None,
-                         dateOfBirth: Option[String],
-                         agentLegalEntityName: Option[String],
-                         agentPremises: AgentPremises,
-                         startDate: Option[String] = None,
-                         dateChangeFlag: Option[Boolean] = None,
-                         endDate: Option[String] = None,
-                         status: Option[String] = None,
-                         lineId: Option[StringOrInt] = None,
-                         agentDetailsChangeDate: Option[String] = None,
-                         removalReason: Option[String] = None,
-                         removalReasonOther: Option[String] = None
-                       ) {
+  agentLegalEntity: String,
+  companyRegNo: Option[String] = None,
+  dateOfBirth: Option[String],
+  agentLegalEntityName: Option[String],
+  agentPremises: AgentPremises,
+  startDate: Option[String] = None,
+  dateChangeFlag: Option[Boolean] = None,
+  endDate: Option[String] = None,
+  status: Option[String] = None,
+  lineId: Option[StringOrInt] = None,
+  agentDetailsChangeDate: Option[String] = None,
+  removalReason: Option[String] = None,
+  removalReasonOther: Option[String] = None
+) {
 
   override def hashCode = 41 + (41 + agentLegalEntity.hashCode + agentLegalEntityName.hashCode +
     agentPremises.hashCode + status.hashCode)
@@ -44,16 +44,16 @@ case class AgentDetails(
   override def equals(other: Any): Boolean = other match {
     case (that: AgentDetails) =>
       this.agentLegalEntity.equals(that.agentLegalEntity) &&
-        this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
-        this.agentPremises.equals(that.agentPremises) &&
-        this.status.equals(this.status)
-    case _ => false
+      this.agentLegalEntityName.equals(that.agentLegalEntityName) &&
+      this.agentPremises.equals(that.agentPremises) &&
+      this.status.equals(this.status)
+    case _                    => false
   }
 }
 
 object AgentDetails {
 
-  implicit val jsonReads: Reads[AgentDetails] = {
+  implicit val jsonReads: Reads[AgentDetails] =
     (
       (__ \ "agentLegalEntity").read[String] and
         (__ \ "companyRegNo").readNullable[String] and
@@ -68,10 +68,9 @@ object AgentDetails {
         (__ \ "agentDetailsChgDate").readNullable[String] and
         (__ \ "removalReason").readNullable[String] and
         (__ \ "removalReasonOther").readNullable[String]
-      ) (AgentDetails.apply _)
-  }
+    )(AgentDetails.apply _)
 
-  implicit val jsonWrites: Writes[AgentDetails] = {
+  implicit val jsonWrites: Writes[AgentDetails] =
     (
       (__ \ "agentLegalEntity").write[String] and
         (__ \ "companyRegNo").writeNullable[String] and
@@ -86,39 +85,41 @@ object AgentDetails {
         (__ \ "agentDetailsChgDate").writeNullable[String] and
         (__ \ "removalReason").writeNullable[String] and
         (__ \ "removalReasonOther").writeNullable[String]
-      ) (unlift(AgentDetails.unapply))
-  }
+    )(unlift(AgentDetails.unapply))
 
   implicit def convert(tradingPremises: FETradingPremises)(implicit requestType: RequestType): AgentDetails = {
 
     def assignCompanyRegNo =
       tradingPremises.agentCompanyDetails.fold[Option[String]](None)(x => x.companyRegistrationNumber)
 
-
     val (startDate, endDate) = requestType match {
-      case RequestType.Amendment => (Some(tradingPremises.yourTradingPremises.startDate.toString),
-        tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString)))
-      case _ => (None, None)
+      case RequestType.Amendment =>
+        (
+          Some(tradingPremises.yourTradingPremises.startDate.toString),
+          tradingPremises.endDate.fold[Option[String]](None)(x => Some(x.endDate.toString))
+        )
+      case _                     => (None, None)
     }
 
     val dateChangeFlag = requestType match {
       case RequestType.Amendment => Some(false)
-      case _ => None
+      case _                     => None
     }
 
     AgentDetails(
       agentLegalEntity = tradingPremises.businessStructure.fold("")(x => x),
       companyRegNo = assignCompanyRegNo,
       dateOfBirth = for {
-        bs <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
+        bs        <- tradingPremises.businessStructure if bs == BusinessStructure.SoleProprietor
         agentName <- tradingPremises.agentName
-        dob <- agentName.agentDateOfBirth
+        dob       <- agentName.agentDateOfBirth
       } yield dob,
       agentLegalEntityName = tradingPremises.businessStructure flatMap {
-        case BusinessStructure.UnincorporatedBody => None
-        case BusinessStructure.SoleProprietor => tradingPremises.agentName map (_.agentName)
-        case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody => tradingPremises.agentCompanyDetails map (_.agentCompanyName)
-        case BusinessStructure.Partnership => tradingPremises.agentPartnership map (_.agentPartnership)
+        case BusinessStructure.UnincorporatedBody                                               => None
+        case BusinessStructure.SoleProprietor                                                   => tradingPremises.agentName map (_.agentName)
+        case BusinessStructure.LimitedLiabilityPartnership | BusinessStructure.IncorporatedBody =>
+          tradingPremises.agentCompanyDetails map (_.agentCompanyName)
+        case BusinessStructure.Partnership                                                      => tradingPremises.agentPartnership map (_.agentPartnership)
       },
       agentPremises = tradingPremises,
       startDate,
@@ -135,15 +136,14 @@ object AgentDetails {
   implicit def convert(tradingPremises: Seq[FETradingPremises])(implicit requestType: RequestType): Seq[AgentDetails] =
     tradingPremises.map(convert)
 
-  implicit def convertBusinessStructure(businessStructure: BusinessStructure): String = {
+  implicit def convertBusinessStructure(businessStructure: BusinessStructure): String =
     businessStructure match {
-      case BusinessStructure.SoleProprietor => "Sole Proprietor"
+      case BusinessStructure.SoleProprietor              => "Sole Proprietor"
       case BusinessStructure.LimitedLiabilityPartnership => "Limited Liability Partnership"
-      case BusinessStructure.Partnership => "Partnership"
-      case BusinessStructure.IncorporatedBody => "Corporate Body"
-      case BusinessStructure.UnincorporatedBody => "Unincorporated Body"
+      case BusinessStructure.Partnership                 => "Partnership"
+      case BusinessStructure.IncorporatedBody            => "Corporate Body"
+      case BusinessStructure.UnincorporatedBody          => "Unincorporated Body"
     }
-  }
 
   implicit object AgentDetailsHasStatus extends StatusProvider[AgentDetails] {
     override def getStatus(ad: AgentDetails): Option[String] = ad.status

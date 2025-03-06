@@ -37,54 +37,59 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some("Failed"),
         Some("2001-3-3"),
         Some("Passed"),
-        Some("2002-6-6"))
+        Some("2002-6-6")
+      )
 
-      val json = Json.obj("lineId" -> 112233,
-        "endDate" -> "1990-2-2",
-        "status" -> "Deleted",
-        "retest" -> "10",
-        "testResultFitAndProper" -> "Failed",
-        "testDateFitAndProper" -> "2001-3-3",
+      val json = Json.obj(
+        "lineId"                  -> 112233,
+        "endDate"                 -> "1990-2-2",
+        "status"                  -> "Deleted",
+        "retest"                  -> "10",
+        "testResultFitAndProper"  -> "Failed",
+        "testDateFitAndProper"    -> "2001-3-3",
         "testResultApprovalCheck" -> "Passed",
-        "testDateApprovalCheck" -> "2002-6-6")
+        "testDateApprovalCheck"   -> "2002-6-6"
+      )
 
       RPExtra.reads.reads(json) must be(JsSuccess(extra))
     }
 
     "serialise Json successfully1" in {
       val json = Json.obj(
-        "endDate" -> "1990-2-2",
-        "status" -> "Deleted",
-        "retest" -> "10",
-        "testResultFitAndProper" -> "Failed",
-        "testDateFitAndProper" -> "2001-3-3",
+        "endDate"                 -> "1990-2-2",
+        "status"                  -> "Deleted",
+        "retest"                  -> "10",
+        "testResultFitAndProper"  -> "Failed",
+        "testDateFitAndProper"    -> "2001-3-3",
         "testResultApprovalCheck" -> "Passed",
-        "testDateApprovalCheck" -> "2002-6-6")
+        "testDateApprovalCheck"   -> "2002-6-6"
+      )
 
-      RPExtra.reads.reads(json) must be(JsSuccess(
-        RPExtra(
-          None,
-          Some("1990-2-2"),
-          Some("Deleted"),
-          None,
-          Some("10"),
-          Some("Failed"),
-          Some("2001-3-3"),
-          Some("Passed"),
-          Some("2002-6-6")))
+      RPExtra.reads.reads(json) must be(
+        JsSuccess(
+          RPExtra(
+            None,
+            Some("1990-2-2"),
+            Some("Deleted"),
+            None,
+            Some("10"),
+            Some("Failed"),
+            Some("2001-3-3"),
+            Some("Passed"),
+            Some("2002-6-6")
+          )
+        )
       )
     }
 
     "serialise Json successfully2" in {
-      val json = Json.obj(
-        "status" -> "Deleted")
+      val json = Json.obj("status" -> "Deleted")
 
       RPExtra.reads.reads(json) must be(JsSuccess(RPExtra(None, None, Some("Deleted"), None, None, None, None, None)))
     }
 
     "Deserialise Json successfully1" in {
-      val json = Json.obj(
-        "status" -> "Deleted")
+      val json = Json.obj("status" -> "Deleted")
 
       RPExtra.jsonWrites.writes(RPExtra(None, None, Some("Deleted"), None, None, None, None, None)) must be(json)
     }
@@ -106,7 +111,8 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite {
         Some("Failed"),
         Some("2001-3-3"),
         Some("Passed"),
-        Some("2002-6-6"))
+        Some("2002-6-6")
+      )
 
       RPExtra.reads.reads(RPExtra.jsonWrites.writes(extra)) must be(JsSuccess(extra))
     }
@@ -118,27 +124,27 @@ class RPExtraSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
     "Should create an correct RPExtra object for deleted Responsible People" in {
-      val rp = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Deleted), hasChanged = true)
+      val rp  = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Deleted), hasChanged = true)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
       rpe.status must be(Some(StatusConstants.Deleted))
     }
 
     "Should create an correct RPExtra object for added Responsible People" in {
-      val rp = ResponsiblePeople(lineId = None, status = None, hasChanged = true)
+      val rp  = ResponsiblePeople(lineId = None, status = None, hasChanged = true)
       val rpe = RPExtra.conv(rp)
       rpe.status must be(None)
     }
 
     "Should create an correct RPExtra object for updated Responsible People" in {
-      val rp = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Updated), hasChanged = true)
+      val rp  = ResponsiblePeople(lineId = Some(1), status = Some(StatusConstants.Updated), hasChanged = true)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
       rpe.status must be(Some(StatusConstants.Updated))
     }
 
     "Should create an correct RPExtra object for unchanged Responsible People" in {
-      val rp = ResponsiblePeople(lineId = Some(1), status = None, hasChanged = false)
+      val rp  = ResponsiblePeople(lineId = Some(1), status = None, hasChanged = false)
       val rpe = RPExtra.conv(rp)
       rpe.lineId must be(Some(StringOrInt("1")))
       rpe.status must be(Some(StatusConstants.Unchanged))

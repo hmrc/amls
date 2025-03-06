@@ -24,10 +24,9 @@ object IndividualDetails {
 
   implicit val formats: OFormat[IndividualDetails] = Json.format[IndividualDetails]
 
-  implicit def convert(person: models.fe.declaration.AddPerson): Option[IndividualDetails] = {
+  implicit def convert(person: models.fe.declaration.AddPerson): Option[IndividualDetails] =
     person.firstName match {
       case "" => None
-      case _ => Some(IndividualDetails(person.firstName, person.middleName, person.lastName))
+      case _  => Some(IndividualDetails(person.firstName, person.middleName, person.lastName))
     }
-  }
 }

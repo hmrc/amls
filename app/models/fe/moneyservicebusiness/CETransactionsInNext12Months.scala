@@ -25,10 +25,9 @@ object CETransactionsInNext12Months {
 
   implicit val format: OFormat[CETransactionsInNext12Months] = Json.format[CETransactionsInNext12Months]
 
-  implicit def convMsbCe(msbMt: Option[MsbCeDetailsR7]): Option[CETransactionsInNext12Months] = {
+  implicit def convMsbCe(msbMt: Option[MsbCeDetailsR7]): Option[CETransactionsInNext12Months] =
     msbMt match {
       case Some(msbDtls) => Some(CETransactionsInNext12Months(msbDtls.antNoOfTransNxt12Mnths))
-      case None => None
+      case None          => None
     }
-  }
 }

@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class FeeResponseControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
   implicit val repository: FeesRepository = mock[FeesRepository]
-  val authAction: AuthAction = SuccessfulAuthAction
+  val authAction: AuthAction              = SuccessfulAuthAction
 
   val testFeeResponseController = new FeeResponseController(authAction, mockCC)
 
@@ -40,15 +40,27 @@ class FeeResponseControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     val request = FakeRequest()
       .withHeaders(CONTENT_TYPE -> "application/json")
 
-    val validFeeResponse = Fees(SubscriptionResponseType, amlsRegistrationNumber, 150.00, Some(100.0), 300.0, 550.0, Some("XA353523452345"), None, Some(100), Some(100.0),
-      LocalDateTime.of(2017, 12, 1, 1, 3))
+    val validFeeResponse = Fees(
+      SubscriptionResponseType,
+      amlsRegistrationNumber,
+      150.00,
+      Some(100.0),
+      300.0,
+      550.0,
+      Some("XA353523452345"),
+      None,
+      Some(100),
+      Some(100.0),
+      LocalDateTime.of(2017, 12, 1, 1, 3)
+    )
 
     "GET" must {
       "return valid fee response" in {
-        when(testFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.successful(Some(validFeeResponse)))
+        when(testFeeResponseController.repository.findLatestByAmlsReference(any()))
+          .thenReturn(Future.successful(Some(validFeeResponse)))
         val response = testFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
 
-        status(response) must be(OK)
+        status(response)        must be(OK)
         contentAsJson(response) must be(Json.toJson(validFeeResponse))
 
       }
@@ -64,7 +76,8 @@ class FeeResponseControllerSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
 
       "return a 500 error when mongo returns exception" in {
 
-        when(testFeeResponseController.repository.findLatestByAmlsReference(any())).thenReturn(Future.failed(new RuntimeException))
+        when(testFeeResponseController.repository.findLatestByAmlsReference(any()))
+          .thenReturn(Future.failed(new RuntimeException))
         val response = testFeeResponseController.get("accountType", "id", amlsRegistrationNumber)(request)
 
         status(response) must be(INTERNAL_SERVER_ERROR)

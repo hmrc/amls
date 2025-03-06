@@ -19,16 +19,19 @@ package models.des.businessactivities
 import models.fe.businessactivities.{InvolvedInOtherNo, InvolvedInOtherYes}
 import play.api.libs.json.{Json, OFormat}
 
-case class BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut: Boolean, respActvtsBusRegForOnlyActvtsCarOut: Option[ExpectedAMLSTurnover])
+case class BusinessActivityDetails(
+  actvtsBusRegForOnlyActvtsCarOut: Boolean,
+  respActvtsBusRegForOnlyActvtsCarOut: Option[ExpectedAMLSTurnover]
+)
 
 object BusinessActivityDetails {
   implicit val format: OFormat[BusinessActivityDetails] = Json.format[BusinessActivityDetails]
 
-  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): BusinessActivityDetails = {
+  implicit def convert(bact: models.fe.businessactivities.BusinessActivities): BusinessActivityDetails =
     bact.involvedInOther match {
-      case Some(InvolvedInOtherNo) => BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut = true, ExpectedAMLSTurnover.convert(bact))
+      case Some(InvolvedInOtherNo)     =>
+        BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut = true, ExpectedAMLSTurnover.convert(bact))
       case Some(InvolvedInOtherYes(x)) => BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut = false, bact)
-      case _ => BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut = false, None)
+      case _                           => BusinessActivityDetails(actvtsBusRegForOnlyActvtsCarOut = false, None)
     }
-  }
 }

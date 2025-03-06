@@ -18,12 +18,14 @@ package models.fe.tcsp
 
 import models.des.SubscriptionView
 
-case class Tcsp(tcspTypes: Option[TcspTypes] = None,
-                onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
-                complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
-                providedServices: Option[ProvidedServices] = None,
-                doesServicesOfAnotherTCSP: Option[Boolean] = None,
-                servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None) {
+case class Tcsp(
+  tcspTypes: Option[TcspTypes] = None,
+  onlyOffTheShelfCompsSold: Option[OnlyOffTheShelfCompsSold] = None,
+  complexCorpStructureCreation: Option[ComplexCorpStructureCreation] = None,
+  providedServices: Option[ProvidedServices] = None,
+  doesServicesOfAnotherTCSP: Option[Boolean] = None,
+  servicesOfAnotherTCSP: Option[ServicesOfAnotherTCSP] = None
+) {
 
   def tcspTypes(trust: TcspTypes): Tcsp =
     this.copy(tcspTypes = Some(trust))
@@ -46,9 +48,8 @@ case class Tcsp(tcspTypes: Option[TcspTypes] = None,
 
 object Tcsp {
 
-  def convBool(tcsp: models.des.tcsp.TcspAll): Option[Boolean] = {
+  def convBool(tcsp: models.des.tcsp.TcspAll): Option[Boolean] =
     Some(tcsp.anotherTcspServiceProvider)
-  }
 
   import play.api.libs.json._
 
@@ -59,12 +60,11 @@ object Tcsp {
   implicit def default(tcsp: Option[Tcsp]): Tcsp =
     tcsp.getOrElse(Tcsp())
 
-  implicit def conv(view: SubscriptionView): Option[Tcsp] = {
+  implicit def conv(view: SubscriptionView): Option[Tcsp] =
     (view.tcspAll, view.businessActivities.tcspServicesOffered) match {
       case (Some(tcspAll), _) => Some(Tcsp(view, view, view, view.businessActivities, convBool(tcspAll), view))
-      case (None, Some(_)) => Some(Tcsp(view, view, view, view.businessActivities, None, view))
-      case (None, None) => None
-      case _ => None
+      case (None, Some(_))    => Some(Tcsp(view, view, view, view.businessActivities, None, view))
+      case (None, None)       => None
+      case _                  => None
     }
-  }
 }

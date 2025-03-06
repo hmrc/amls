@@ -29,35 +29,35 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubscriptionStatusController @Inject()(ssConn: SubscriptionStatusDESConnector,
-                                             authAction: AuthAction,
-                                             val cc: ControllerComponents)
-                                            (implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
-                                            extends BackendController(cc) with Logging with ControllerHelper {
+class SubscriptionStatusController @Inject() (
+  ssConn: SubscriptionStatusDESConnector,
+  authAction: AuthAction,
+  val cc: ControllerComponents
+)(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+    extends BackendController(cc)
+    with Logging
+    with ControllerHelper {
 
   private[controllers] def connector: SubscriptionStatusDESConnector = ssConn
 
   val prefix = "[SubscriptionStatusController][get]"
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
-    authAction.async {
-      implicit request =>
-        logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
-        amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-          case Some(_) =>
-            connector.status(amlsRegistrationNumber) map {
-              response =>
-                Ok(Json.toJson(response))
-            } recoverWith {
-              case e @ HttpStatusException(status, Some(body)) =>
-                logger.warn(s"$prefix - Status: ${status}, Message: $body")
-                Future.failed(e)
-            }
+    authAction.async { implicit request =>
+      logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
+      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
+        case Some(_) =>
+          connector.status(amlsRegistrationNumber) map { response =>
+            Ok(Json.toJson(response))
+          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+            logger.warn(s"$prefix - Status: $status, Message: $body")
+            Future.failed(e)
+          }
 
-          case _ =>
-            Future.successful {
-              BadRequest(toError("Invalid AMLS Registration Number"))
-            }
-        }
+        case _ =>
+          Future.successful {
+            BadRequest(toError("Invalid AMLS Registration Number"))
+          }
+      }
     }
 }

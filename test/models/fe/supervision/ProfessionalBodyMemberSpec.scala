@@ -59,11 +59,13 @@ class ProfessionalBodyMemberSpec extends PlaySpec {
   }
 
   "convert des to frontend model successfully when ProfessionalBodyDesMember is none" in {
-    val desModel = Some(ProfessionalBodyDetails(
-      true,
-      Some("DetailsIfFinedWarned"),
-      None
-    ))
+    val desModel = Some(
+      ProfessionalBodyDetails(
+        true,
+        Some("DetailsIfFinedWarned"),
+        None
+      )
+    )
     ProfessionalBodyMember.conv(desModel) must be(None)
   }
 

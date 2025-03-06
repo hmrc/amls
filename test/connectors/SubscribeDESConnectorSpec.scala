@@ -45,8 +45,8 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   trait Fixture {
     val testConnector = new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "baseUrl"
-      override private[connectors] val token: String = "token"
-      override private[connectors] val env: String = "ist0"
+      override private[connectors] val token: String   = "token"
+      override private[connectors] val env: String     = "ist0"
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
 
@@ -82,8 +82,12 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       )
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.subscribe(safeId, testRequest)) {
@@ -104,24 +108,27 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.successful(response)
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body.getOrElse("").isEmpty mustEqual true
-          val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent: ExtendedDataEvent = captor.getValue
-          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-          capturedEvent.auditType mustEqual subscriptionEvent.auditType
-          capturedEvent.detail mustEqual subscriptionEvent.detail
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body.getOrElse("").isEmpty mustEqual true
+        val subscriptionEvent                = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
+        verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
+        val capturedEvent: ExtendedDataEvent = captor.getValue
+        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+        capturedEvent.auditType mustEqual subscriptionEvent.auditType
+        capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
 
@@ -138,24 +145,27 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.successful(response)
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual OK
-          body mustEqual Some("\"message\"")
-          val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent: ExtendedDataEvent = captor.getValue
-          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-          capturedEvent.auditType mustEqual subscriptionEvent.auditType
-          capturedEvent.detail mustEqual subscriptionEvent.detail
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
+        status mustEqual OK
+        body mustEqual Some("\"message\"")
+        val subscriptionEvent                = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
+        verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
+        val capturedEvent: ExtendedDataEvent = captor.getValue
+        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+        capturedEvent.auditType mustEqual subscriptionEvent.auditType
+        capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
 
@@ -166,24 +176,27 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.failed(new Exception("message"))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustEqual Some("message")
-          val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testConnector.ac, times(maxRetries)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent: ExtendedDataEvent = captor.getValue
-          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-          capturedEvent.auditType mustEqual subscriptionEvent.auditType
-          capturedEvent.detail mustEqual subscriptionEvent.detail
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
+        status mustEqual INTERNAL_SERVER_ERROR
+        body mustEqual Some("message")
+        val subscriptionEvent                = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
+        verify(testConnector.ac, times(maxRetries)).sendExtendedEvent(any())(any(), any())
+        val capturedEvent: ExtendedDataEvent = captor.getValue
+        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+        capturedEvent.auditType mustEqual subscriptionEvent.auditType
+        capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
 
@@ -194,30 +207,33 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest,
-          HttpResponse](ArgumentMatchers.eq(url), any(), any())(any(), any(), any(), any())
+        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
+          any(),
+          any(),
+          any(),
+          any()
+        )
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
       } thenReturn Future.successful(auditResult)
 
-      whenReady(testConnector.subscribe(safeId, testRequest).failed) {
-        case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body mustBe Some("error message")
-          val subscriptionEvent = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-          verify(testConnector.ac, times(1)).sendExtendedEvent(any())(any(), any())
-          val capturedEvent: ExtendedDataEvent = captor.getValue
-          capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-          capturedEvent.auditType mustEqual subscriptionEvent.auditType
-          capturedEvent.detail mustEqual subscriptionEvent.detail
+      whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body mustBe Some("error message")
+        val subscriptionEvent                = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
+        verify(testConnector.ac, times(1)).sendExtendedEvent(any())(any(), any())
+        val capturedEvent: ExtendedDataEvent = captor.getValue
+        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
+        capturedEvent.auditType mustEqual subscriptionEvent.auditType
+        capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
   }
 
-  def testRequest = Json.parse(
-    """{
+  def testRequest = Json
+    .parse("""{
   "acknowledgementReference": "$AckRef$",
   "businessDetails": {
     "typeOfLegalEntity": "Sole Proprietor"
@@ -575,6 +591,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
   "declaration": {
     "declarationFlag": true
   }
-}""").as[SubscriptionRequest]
+}""")
+    .as[SubscriptionRequest]
 
 }

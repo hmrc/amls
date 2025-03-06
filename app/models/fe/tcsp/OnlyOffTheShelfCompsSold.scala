@@ -29,26 +29,24 @@ object OnlyOffTheShelfCompsSold {
   import play.api.libs.json._
   import play.api.libs.json.Reads._
 
-  implicit val jsonReads: Reads[OnlyOffTheShelfCompsSold] = {
+  implicit val jsonReads: Reads[OnlyOffTheShelfCompsSold] =
     (__ \ "onlyOffTheShelfCompsSold").read[Boolean] map {
-      case true => OnlyOffTheShelfCompsSoldYes
+      case true  => OnlyOffTheShelfCompsSoldYes
       case false => OnlyOffTheShelfCompsSoldNo
     }
-  }
 
   implicit val jsonWrite: Writes[OnlyOffTheShelfCompsSold] = Writes[OnlyOffTheShelfCompsSold] {
     case OnlyOffTheShelfCompsSoldYes => Json.obj("onlyOffTheShelfCompsSold" -> true)
-    case OnlyOffTheShelfCompsSoldNo => Json.obj("onlyOffTheShelfCompsSold" -> false)
+    case OnlyOffTheShelfCompsSoldNo  => Json.obj("onlyOffTheShelfCompsSold" -> false)
   }
 
-  implicit def conv(view: SubscriptionView): Option[OnlyOffTheShelfCompsSold] = {
+  implicit def conv(view: SubscriptionView): Option[OnlyOffTheShelfCompsSold] =
     view.businessActivities.tcspServicesOffered.map(b => b.trustOrCompFormAgent) match {
       case Some(true) =>
-        (view.tcspTrustCompFormationAgt.map(b => b.onlyOffTheShelfCompsSold)) match {
+        view.tcspTrustCompFormationAgt.map(b => b.onlyOffTheShelfCompsSold) match {
           case Some(true) => Some(OnlyOffTheShelfCompsSoldYes)
-          case _ => Some(OnlyOffTheShelfCompsSoldNo)
+          case _          => Some(OnlyOffTheShelfCompsSoldNo)
         }
-      case _ => None
+      case _          => None
     }
-  }
 }

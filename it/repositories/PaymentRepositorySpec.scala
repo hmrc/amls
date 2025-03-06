@@ -11,16 +11,27 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext
 
-class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMongoRepositorySupport[Payment]
-  with IntegrationPatience {
+class PaymentRepositorySpec
+    extends AnyFreeSpec
+    with Matchers
+    with DefaultPlayMongoRepositorySupport[Payment]
+    with IntegrationPatience {
 
   implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  override lazy val repository = new PaymentRepository(mongoComponent)
+  override lazy val repository                    = new PaymentRepository(mongoComponent)
 
   val exampleDate: LocalDateTime = LocalDateTime.parse("2023-02-21T10:08:12")
-  val payment: Payment = Payment(
-    "006d7f4db2700ab06ad90e1dfacfdae8", "XZML00000219894", "XCML00000571981", "Xbowpvotcr",
-    Some("description"), 10000, Sent, exampleDate, Some(false), Some(exampleDate)
+  val payment: Payment           = Payment(
+    "006d7f4db2700ab06ad90e1dfacfdae8",
+    "XZML00000219894",
+    "XCML00000571981",
+    "Xbowpvotcr",
+    Some("description"),
+    10000,
+    Sent,
+    exampleDate,
+    Some(false),
+    Some(exampleDate)
   )
 
   "Payment Repository" - {
@@ -185,17 +196,57 @@ class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMo
 
     "must find latest payment by AMLS reference" in {
       // Given
-      val paymentOne = Payment("9f8bbb4adbfaca8991005f9a1a291bef", "XQML00000315655", "XJML00000265458", "XtnaqFrm5x", None,
-        1000, Cancelled, LocalDateTime.parse("2023-02-18T10:04:54"), None, None)
+      val paymentOne = Payment(
+        "9f8bbb4adbfaca8991005f9a1a291bef",
+        "XQML00000315655",
+        "XJML00000265458",
+        "XtnaqFrm5x",
+        None,
+        1000,
+        Cancelled,
+        LocalDateTime.parse("2023-02-18T10:04:54"),
+        None,
+        None
+      )
 
-      val paymentTwo = Payment("006d7f4db2700ab06ad90e1dfacfdae8", "XQML00000315655", "XCML00000571981", "Xbowpvotcr", None,
-        10000, Sent, LocalDateTime.parse("2023-02-19T10:08:12"), None, None)
+      val paymentTwo = Payment(
+        "006d7f4db2700ab06ad90e1dfacfdae8",
+        "XQML00000315655",
+        "XCML00000571981",
+        "Xbowpvotcr",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-19T10:08:12"),
+        None,
+        None
+      )
 
-      val paymentThree = Payment("1b2cb690adb104c750b8deca92c0a2a0", "XQML00000315655", "XCML00000571981", "Xbowpvotcr", None,
-        10000, Sent, LocalDateTime.parse("2023-02-20T12:06:22"), None, None)
+      val paymentThree = Payment(
+        "1b2cb690adb104c750b8deca92c0a2a0",
+        "XQML00000315655",
+        "XCML00000571981",
+        "Xbowpvotcr",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-20T12:06:22"),
+        None,
+        None
+      )
 
-      val paymentFour = Payment("0bda961ef49d11e70491dbabbf30fc01", "XQML00000315655", "XCML00000571981", "Xbowpvotcr", None,
-        10000, Sent, LocalDateTime.parse("2023-02-21T12:06:22"), None, None)
+      val paymentFour = Payment(
+        "0bda961ef49d11e70491dbabbf30fc01",
+        "XQML00000315655",
+        "XCML00000571981",
+        "Xbowpvotcr",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-21T12:06:22"),
+        None,
+        None
+      )
 
       repository.insert(paymentOne).futureValue
       repository.insert(paymentTwo).futureValue
@@ -211,17 +262,57 @@ class PaymentRepositorySpec extends AnyFreeSpec with Matchers with DefaultPlayMo
 
     "must find latest payment by payment reference" in {
       // Given
-      val paymentOne = Payment("9f8bbb4adbfaca8991005f9a1a291bef", "XQML00000315655", "XJML00000265458", "XtnaqFrm5x", None,
-        1000, Cancelled, LocalDateTime.parse("2023-02-18T10:04:54"), None, None)
+      val paymentOne = Payment(
+        "9f8bbb4adbfaca8991005f9a1a291bef",
+        "XQML00000315655",
+        "XJML00000265458",
+        "XtnaqFrm5x",
+        None,
+        1000,
+        Cancelled,
+        LocalDateTime.parse("2023-02-18T10:04:54"),
+        None,
+        None
+      )
 
-      val paymentTwo = Payment("006d7f4db2700ab06ad90e1dfacfdae8", "XQML00000315655", "XCML00000571981", "XyjbptHlai", None,
-        10000, Sent, LocalDateTime.parse("2023-02-19T10:08:12"), None, None)
+      val paymentTwo = Payment(
+        "006d7f4db2700ab06ad90e1dfacfdae8",
+        "XQML00000315655",
+        "XCML00000571981",
+        "XyjbptHlai",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-19T10:08:12"),
+        None,
+        None
+      )
 
-      val paymentThree = Payment("1b2cb690adb104c750b8deca92c0a2a0", "XQML00000315655", "XCML00000571981", "XyjbptHlai", None,
-        10000, Sent, LocalDateTime.parse("2023-02-20T12:06:22"), None, None)
+      val paymentThree = Payment(
+        "1b2cb690adb104c750b8deca92c0a2a0",
+        "XQML00000315655",
+        "XCML00000571981",
+        "XyjbptHlai",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-20T12:06:22"),
+        None,
+        None
+      )
 
-      val paymentFour = Payment("0bda961ef49d11e70491dbabbf30fc01", "XQML00000315655", "XCML00000571981", "XcjlbephaB", None,
-        10000, Sent, LocalDateTime.parse("2023-02-21T12:06:22"), None, None)
+      val paymentFour = Payment(
+        "0bda961ef49d11e70491dbabbf30fc01",
+        "XQML00000315655",
+        "XCML00000571981",
+        "XcjlbephaB",
+        None,
+        10000,
+        Sent,
+        LocalDateTime.parse("2023-02-21T12:06:22"),
+        None,
+        None
+      )
 
       repository.insert(paymentOne).futureValue
       repository.insert(paymentTwo).futureValue

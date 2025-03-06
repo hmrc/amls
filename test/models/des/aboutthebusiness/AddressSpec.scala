@@ -19,17 +19,30 @@ package models.des.aboutthebusiness
 import models.fe.businessdetails.{RegisteredOfficeNonUK, RegisteredOfficeUK, UKCorrespondenceAddress}
 import org.scalatestplus.play.PlaySpec
 
-
 class AddressSpec extends PlaySpec {
 
   "address" must {
 
-
     "convert to uk registered address" in {
 
-      val address = Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "GB", Some("AA1 1AA"), Some("2016-1-1"))
+      val address = Address(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        Some("AA1 1AA"),
+        Some("2016-1-1")
+      )
 
-      val registeredOfficeUk = RegisteredOfficeUK("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "AA1 1AA", Some("2016-1-1"))
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "AA1 1AA",
+        Some("2016-1-1")
+      )
 
       Address.convert(registeredOfficeUk) must be(address)
 
@@ -37,9 +50,24 @@ class AddressSpec extends PlaySpec {
 
     "convert to uk registered address when post code is empty" in {
 
-      val address = Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "GB", None, Some("2016-1-1"))
+      val address = Address(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
 
-      val registeredOfficeUk = RegisteredOfficeUK("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "", Some("2016-1-1"))
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "",
+        Some("2016-1-1")
+      )
 
       Address.convert(registeredOfficeUk) must be(address)
 
@@ -47,22 +75,45 @@ class AddressSpec extends PlaySpec {
 
     "convert from uk registered office when postcode is invalid format" in {
 
-      val address = Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "GB", None, Some("2016-1-1"))
+      val address = Address(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
 
-      val registeredOfficeUk = RegisteredOfficeUK("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"),
-        "NOT A POSTCODE", Some("2016-1-1"))
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "NOT A POSTCODE",
+        Some("2016-1-1")
+      )
 
       Address.convert(registeredOfficeUk) must be(address)
-
 
     }
 
     "convert to uk alternate address when post code is empty" in {
 
-      val address = Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "GB", None)
+      val address =
+        Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "GB", None)
 
-      val alternateAddress = Some(UKCorrespondenceAddress("Name", "Business Name", "addressLine1", Some("addressLine2"), Some("addressLine3"),
-        Some("addressLine4"), ""))
+      val alternateAddress = Some(
+        UKCorrespondenceAddress(
+          "Name",
+          "Business Name",
+          "addressLine1",
+          Some("addressLine2"),
+          Some("addressLine3"),
+          Some("addressLine4"),
+          ""
+        )
+      )
 
       Address.convertAlternateAddress(alternateAddress) must be(address)
 
@@ -70,10 +121,24 @@ class AddressSpec extends PlaySpec {
 
     "convert from uk registered address replacing ampersands" in {
 
-      val address = Address("Hodaway, Hodaway, Hodaway and Hodaw", Some("addressLine2"), Some("addressLine3"), Some("Tyne and Wear"), "GB", None, Some("2016-1-1"))
+      val address = Address(
+        "Hodaway, Hodaway, Hodaway and Hodaw",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("Tyne and Wear"),
+        "GB",
+        None,
+        Some("2016-1-1")
+      )
 
-      val registeredOfficeUk = RegisteredOfficeUK("Hodaway, Hodaway, Hodaway & Hodaway", Some("addressLine2"), Some("addressLine3"), Some("Tyne & Wear"), "",
-        Some("2016-1-1"))
+      val registeredOfficeUk = RegisteredOfficeUK(
+        "Hodaway, Hodaway, Hodaway & Hodaway",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("Tyne & Wear"),
+        "",
+        Some("2016-1-1")
+      )
 
       Address.convert(registeredOfficeUk) must be(address)
 
@@ -81,9 +146,24 @@ class AddressSpec extends PlaySpec {
 
     "convert to non uk registered address" in {
 
-      val address = Address("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "france", None, Some("2016-1-1"))
+      val address = Address(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "france",
+        None,
+        Some("2016-1-1")
+      )
 
-      val registeredOfficeNonUk = RegisteredOfficeNonUK("addressLine1", Some("addressLine2"), Some("addressLine3"), Some("addressLine4"), "france", Some("2016-1-1"))
+      val registeredOfficeNonUk = RegisteredOfficeNonUK(
+        "addressLine1",
+        Some("addressLine2"),
+        Some("addressLine3"),
+        Some("addressLine4"),
+        "france",
+        Some("2016-1-1")
+      )
 
       Address.convert(registeredOfficeNonUk) must be(address)
 

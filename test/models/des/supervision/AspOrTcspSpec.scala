@@ -27,16 +27,20 @@ class AspOrTcspSpec extends PlaySpec {
       "given a complete frontend Supervision model" in {
 
         val frontendModel = Some(
-          Supervision(Some(AnotherBodyNo),
+          Supervision(
+            Some(AnotherBodyNo),
             Some(ProfessionalBodyMemberNo),
             Some(BusinessTypes(Set(AccountingTechnicians))),
-            Some(ProfessionalBodyNo))
+            Some(ProfessionalBodyNo)
+          )
         )
 
-        val desModel = Some(AspOrTcsp(
-          Some(SupervisionDetails(false, None)),
-          Some(ProfessionalBodyDetails(false, None, Some(ProfessionalBodyDesMember(false, None))))
-        ))
+        val desModel = Some(
+          AspOrTcsp(
+            Some(SupervisionDetails(false, None)),
+            Some(ProfessionalBodyDetails(false, None, Some(ProfessionalBodyDesMember(false, None))))
+          )
+        )
 
         AspOrTcsp.conv(frontendModel) mustBe desModel
 

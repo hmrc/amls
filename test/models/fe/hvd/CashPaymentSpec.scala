@@ -55,7 +55,8 @@ class CashPaymentSpec extends PlaySpec {
       "Successfully read and write Json data" in {
 
         CashPayment.jsonReads.reads(CashPayment.jsonWrites.writes(DefaultCashPaymentYes)) must be(
-          JsSuccess(CashPaymentYes(LocalDate.of(1990, 2, 24)), JsPath \ "paymentDate"))
+          JsSuccess(CashPaymentYes(LocalDate.of(1990, 2, 24)), JsPath \ "paymentDate")
+        )
       }
 
       "write the correct value" in {
@@ -64,10 +65,12 @@ class CashPaymentSpec extends PlaySpec {
           be(Json.obj("acceptedAnyPayment" -> false))
 
         Json.toJson(DefaultCashPaymentYes: CashPayment) must
-          be(Json.obj(
-            "acceptedAnyPayment" -> true,
-            "paymentDate" -> LocalDate.of(1990, 2, 24)
-          ))
+          be(
+            Json.obj(
+              "acceptedAnyPayment" -> true,
+              "paymentDate"        -> LocalDate.of(1990, 2, 24)
+            )
+          )
       }
 
       "convert to CashPaymentNo if is false" in {

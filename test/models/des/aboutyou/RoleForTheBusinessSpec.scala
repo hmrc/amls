@@ -19,8 +19,7 @@ package models.des.aboutyou
 import models.fe.declaration.{ExternalAccountant, Other, RoleWithinBusiness}
 import org.scalatestplus.play.PlaySpec
 
-/**
-  * Created by NicoleAvison on 03/02/2017.
+/** Created by NicoleAvison on 03/02/2017.
   */
 class RoleForTheBusinessSpec extends PlaySpec {
 
@@ -56,6 +55,3 @@ class RoleForTheBusinessSpec extends PlaySpec {
     }
   }
 }
-
-
-

@@ -32,7 +32,9 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with AmlsBaseSpec {
       }
 
       "successfully validate given an `Yes` value" in {
-        Json.fromJson[ServicesOfAnotherTCSP](Json.obj("servicesOfAnotherTCSP" -> true, "mlrRefNumber" -> "12345678")) must
+        Json.fromJson[ServicesOfAnotherTCSP](
+          Json.obj("servicesOfAnotherTCSP" -> true, "mlrRefNumber" -> "12345678")
+        ) must
           be(JsSuccess(ServicesOfAnotherTCSPYes(Some("12345678")), JsPath \ "mlrRefNumber"))
       }
 
@@ -48,10 +50,12 @@ class ServicesOfAnotherTCSPSpec extends PlaySpec with AmlsBaseSpec {
           be(Json.obj("servicesOfAnotherTCSP" -> false))
 
         Json.toJson(ServicesOfAnotherTCSPYes(Some("12345678")): ServicesOfAnotherTCSP) must
-          be(Json.obj(
-            "servicesOfAnotherTCSP" -> true,
-            "mlrRefNumber" -> "12345678"
-          ))
+          be(
+            Json.obj(
+              "servicesOfAnotherTCSP" -> true,
+              "mlrRefNumber"          -> "12345678"
+            )
+          )
       }
     }
   }

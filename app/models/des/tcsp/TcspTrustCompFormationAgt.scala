@@ -19,7 +19,10 @@ package models.des.tcsp
 import models.fe.tcsp._
 import play.api.libs.json.{Json, OFormat}
 
-case class TcspTrustCompFormationAgt(onlyOffTheShelfCompsSold: Boolean = false, complexCorpStructureCreation: Boolean = false)
+case class TcspTrustCompFormationAgt(
+  onlyOffTheShelfCompsSold: Boolean = false,
+  complexCorpStructureCreation: Boolean = false
+)
 
 object TcspTrustCompFormationAgt {
 
@@ -29,12 +32,12 @@ object TcspTrustCompFormationAgt {
 
     val offTheShelf = tcsp.onlyOffTheShelfCompsSold match {
       case Some(OnlyOffTheShelfCompsSoldYes) => true
-      case _ => false
+      case _                                 => false
     }
 
     val corpStructure = tcsp.complexCorpStructureCreation match {
       case Some(ComplexCorpStructureCreationYes) => true
-      case _ => false
+      case _                                     => false
     }
 
     TcspTrustCompFormationAgt(offTheShelf, corpStructure)

@@ -25,25 +25,28 @@ class RegistrationDetailsSpec extends PlaySpec {
 
     val organisationJson = Json.obj(
       "isAnIndividual" -> false,
-      "organisation" -> Json.obj(
+      "organisation"   -> Json.obj(
         "organisationName" -> "Test Organisation",
-        "isAGroup" -> true,
+        "isAGroup"         -> true,
         "organisationType" -> "LLP"
       )
     )
 
-    val organisationModel = RegistrationDetails(isAnIndividual = false, Organisation("Test Organisation", isAGroup = Some(true), Some(LLP)))
+    val organisationModel =
+      RegistrationDetails(isAnIndividual = false, Organisation("Test Organisation", isAGroup = Some(true), Some(LLP)))
 
     val individualJson = Json.obj(
       "isAnIndividual" -> true,
-      "individual" -> Json.obj(
-        "firstName" -> "Firstname",
+      "individual"     -> Json.obj(
+        "firstName"  -> "Firstname",
         "middleName" -> "Middlename",
-        "lastName" -> "Lastname"
-      ))
+        "lastName"   -> "Lastname"
+      )
+    )
 
-    //noinspection ScalaStyle
-    val individualModel = RegistrationDetails(isAnIndividual = true, Individual("Firstname", Some("Middlename"), "Lastname"))
+    // noinspection ScalaStyle
+    val individualModel =
+      RegistrationDetails(isAnIndividual = true, Individual("Firstname", Some("Middlename"), "Lastname"))
 
     "deserialised" must {
       "produce the correct json" when {
@@ -76,7 +79,7 @@ class RegistrationDetailsSpec extends PlaySpec {
 
     val json = Json.obj(
       "organisationName" -> "Test Organisation",
-      "isAGroup" -> true,
+      "isAGroup"         -> true,
       "organisationType" -> "Partnership"
     )
 
@@ -102,13 +105,13 @@ class RegistrationDetailsSpec extends PlaySpec {
   }
 
   "The Individual model" when {
-    //noinspection ScalaStyle
+    // noinspection ScalaStyle
     val model = Individual("Firstname", Some("Middlename"), "Lastname")
 
     val json = Json.obj(
-      "firstName" -> "Firstname",
+      "firstName"  -> "Firstname",
       "middleName" -> "Middlename",
-      "lastName" -> "Lastname"
+      "lastName"   -> "Lastname"
     )
 
     "deserialised" must {
@@ -135,16 +138,16 @@ class RegistrationDetailsSpec extends PlaySpec {
 
     "deserialised" must {
       "produce the correct values" in {
-        types foreach {
-          case (t, str) => Json.fromJson[OrganisationType](JsString(str)) mustBe JsSuccess(t)
+        types foreach { case (t, str) =>
+          Json.fromJson[OrganisationType](JsString(str)) mustBe JsSuccess(t)
         }
       }
     }
 
     "serialised" must {
       "write the correct values" in {
-        types foreach {
-          case (t, str) => Json.toJson(t: OrganisationType) mustBe JsString(str)
+        types foreach { case (t, str) =>
+          Json.toJson(t: OrganisationType) mustBe JsString(str)
         }
       }
     }

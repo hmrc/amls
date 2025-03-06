@@ -24,14 +24,25 @@ class TcspTrustCompFormationAgtSpec extends PlaySpec {
   "TcspTrustCompFormationAgt" should {
 
     "convert frontend model to Des" in {
-      val DefaultCompanyServiceProviders = TcspTypes(Set(NomineeShareholdersProvider,
-        TrusteeProvider,
-        CompanyDirectorEtc,
-        RegisteredOfficeEtc,
-        CompanyFormationAgent))
+      val DefaultCompanyServiceProviders = TcspTypes(
+        Set(
+          NomineeShareholdersProvider,
+          TrusteeProvider,
+          CompanyDirectorEtc,
+          RegisteredOfficeEtc,
+          CompanyFormationAgent
+        )
+      )
 
-      val TcspSection = Some(Tcsp(Some(DefaultCompanyServiceProviders), Some(OnlyOffTheShelfCompsSoldYes),
-        Some(ComplexCorpStructureCreationYes), None, None))
+      val TcspSection = Some(
+        Tcsp(
+          Some(DefaultCompanyServiceProviders),
+          Some(OnlyOffTheShelfCompsSoldYes),
+          Some(ComplexCorpStructureCreationYes),
+          None,
+          None
+        )
+      )
 
       TcspTrustCompFormationAgt.conv(TcspSection) must be(TcspTrustCompFormationAgt(true, true))
     }

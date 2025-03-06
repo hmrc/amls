@@ -18,8 +18,12 @@ package models.des.responsiblepeople
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Partnership(partner: Boolean = false, nominatedOfficer: Boolean = false, other: Option[Boolean] = None, otherDetails: Option[String] = None)
-  extends OtherDetails
+case class Partnership(
+  partner: Boolean = false,
+  nominatedOfficer: Boolean = false,
+  other: Option[Boolean] = None,
+  otherDetails: Option[String] = None
+) extends OtherDetails
 
 object Partnership {
   implicit val format: OFormat[Partnership] = Json.format[Partnership]

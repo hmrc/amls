@@ -29,32 +29,48 @@ class ProvidedServicesSpec extends PlaySpec with AmlsBaseSpec {
     }
 
     "Serialise multiple services as expected" in {
-      val allServices = Set[TcspService](PhonecallHandling, EmailHandling, EmailServer,
-        SelfCollectMailboxes, MailForwarding, Receptionist, ConferenceRooms)
-      val result = Json.toJson(ProvidedServices(allServices)).\("services").as[Seq[String]]
-      result must contain allOf("01", "02", "03", "04", "05", "06", "07")
+      val allServices = Set[TcspService](
+        PhonecallHandling,
+        EmailHandling,
+        EmailServer,
+        SelfCollectMailboxes,
+        MailForwarding,
+        Receptionist,
+        ConferenceRooms
+      )
+      val result      = Json.toJson(ProvidedServices(allServices)).\("services").as[Seq[String]]
+      result must contain allOf ("01", "02", "03", "04", "05", "06", "07")
     }
 
     "Serialise 'other' service as expected" in {
-      Json.toJson(ProvidedServices(Set(Other("other service")))) must be(Json.obj("services" -> Seq("08"), "details" -> "other service"))
+      Json.toJson(ProvidedServices(Set(Other("other service")))) must be(
+        Json.obj("services" -> Seq("08"), "details" -> "other service")
+      )
     }
 
     "Deserialise single service as expected" in {
-      val json = Json.obj("services" -> Set("01"))
+      val json     = Json.obj("services" -> Set("01"))
       val expected = JsSuccess(ProvidedServices(Set(PhonecallHandling)))
       Json.fromJson[ProvidedServices](json) must be(expected)
     }
 
     "Deserialise multiple service as expected" in {
-      val json = Json.obj("services" -> Seq("01", "02", "03", "04", "05", "06", "07"))
-      val allServices = Set[TcspService](PhonecallHandling, EmailHandling, EmailServer,
-        SelfCollectMailboxes, MailForwarding, Receptionist, ConferenceRooms)
-      val expected = JsSuccess(ProvidedServices(allServices))
+      val json        = Json.obj("services" -> Seq("01", "02", "03", "04", "05", "06", "07"))
+      val allServices = Set[TcspService](
+        PhonecallHandling,
+        EmailHandling,
+        EmailServer,
+        SelfCollectMailboxes,
+        MailForwarding,
+        Receptionist,
+        ConferenceRooms
+      )
+      val expected    = JsSuccess(ProvidedServices(allServices))
       Json.fromJson[ProvidedServices](json) must be(expected)
     }
 
     "Deserialise 'other' service as expected" in {
-      val json = Json.obj("services" -> Set("08"), "details" -> "other service")
+      val json     = Json.obj("services" -> Set("08"), "details" -> "other service")
       val expected = JsSuccess(ProvidedServices(Set(Other("other service"))))
       Json.fromJson[ProvidedServices](json) must be(expected)
     }

@@ -24,28 +24,29 @@ import play.api.libs.json.{Reads, Writes}
 
 import java.time.format.DateTimeFormatter
 
-case class ResponsiblePersons(nameDetails: Option[NameDetails],
-                              nationalityDetails: Option[NationalityDetails],
-                              contactCommDetails: Option[ContactCommDetails],
-                              currentAddressDetails: Option[CurrentAddress],
-                              timeAtCurrentAddress: Option[String],
-                              addressUnderThreeYears: Option[AddressUnderThreeYears],
-                              timeAtAddressUnderThreeYears: Option[String],
-                              addressUnderOneYear: Option[AddressUnderThreeYears],
-                              timeAtAddressUnderOneYear: Option[String],
-                              positionInBusiness: Option[PositionInBusiness],
-                              regDetails: Option[RegDetails],
-                              previousExperience: Boolean,
-                              descOfPrevExperience: Option[String],
-                              amlAndCounterTerrFinTraining: Boolean,
-                              trainingDetails: Option[String],
-                              startDate: Option[String],
-                              dateChangeFlag: Option[Boolean] = Some(false),
-                              msbOrTcsp: Option[MsbOrTcsp] = None,
-                              passedFitAndProperTest: Option[Boolean] = None,
-                              passedApprovalCheck: Option[Boolean] = None,
-                              extra: RPExtra
-                             )
+case class ResponsiblePersons(
+  nameDetails: Option[NameDetails],
+  nationalityDetails: Option[NationalityDetails],
+  contactCommDetails: Option[ContactCommDetails],
+  currentAddressDetails: Option[CurrentAddress],
+  timeAtCurrentAddress: Option[String],
+  addressUnderThreeYears: Option[AddressUnderThreeYears],
+  timeAtAddressUnderThreeYears: Option[String],
+  addressUnderOneYear: Option[AddressUnderThreeYears],
+  timeAtAddressUnderOneYear: Option[String],
+  positionInBusiness: Option[PositionInBusiness],
+  regDetails: Option[RegDetails],
+  previousExperience: Boolean,
+  descOfPrevExperience: Option[String],
+  amlAndCounterTerrFinTraining: Boolean,
+  trainingDetails: Option[String],
+  startDate: Option[String],
+  dateChangeFlag: Option[Boolean] = Some(false),
+  msbOrTcsp: Option[MsbOrTcsp] = None,
+  passedFitAndProperTest: Option[Boolean] = None,
+  passedApprovalCheck: Option[Boolean] = None,
+  extra: RPExtra
+)
 
 object ResponsiblePersons {
 
@@ -75,7 +76,7 @@ object ResponsiblePersons {
         (__ \ "passedFitAndProperTest").readNullable[Boolean] and
         (__ \ "passedApprovalCheck").readNullable[Boolean] and
         __.read[RPExtra]
-      ) (ResponsiblePersons.apply _)
+    )(ResponsiblePersons.apply _)
   }
 
   implicit val jsonWrites: Writes[ResponsiblePersons] = {
@@ -104,34 +105,59 @@ object ResponsiblePersons {
         (__ \ "passedFitAndProperTest").writeNullable[Boolean] and
         (__ \ "passedApprovalCheck").writeNullable[Boolean] and
         __.write[RPExtra]
-      ) (unlift(ResponsiblePersons.unapply))
+    )(unlift(ResponsiblePersons.unapply))
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =
-    responsiblePeople.getOrElse(ResponsiblePersons(None, None, None, None, None, None, None, None, None, None, None, false, None, false, None, None, None,
-      extra = RPExtra(None)))
+    responsiblePeople.getOrElse(
+      ResponsiblePersons(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        false,
+        None,
+        false,
+        None,
+        None,
+        None,
+        extra = RPExtra(None)
+      )
+    )
 
-  implicit def convert(responsiblePeople: Option[Seq[ResponsiblePeople]], bm: fe.businessmatching.BusinessMatching, amendVariation: Boolean):
-  Option[Seq[ResponsiblePersons]] = {
+  implicit def convert(
+    responsiblePeople: Option[Seq[ResponsiblePeople]],
+    bm: fe.businessmatching.BusinessMatching,
+    amendVariation: Boolean
+  ): Option[Seq[ResponsiblePersons]] =
     responsiblePeople match {
       case Some(data) =>
         Some(data.map(x => convertResponsiblePeopleToResponsiblePerson(x, bm, amendVariation)))
-      case _ => None
+      case _          => None
     }
-  }
 
-  implicit def convStartDate(startDate: Option[Positions]): Option[String] = {
+  implicit def convStartDate(startDate: Option[Positions]): Option[String] =
     startDate match {
-      case Some(data) => data.startDate map {
-        date => date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-      }
-      case _ => None
+      case Some(data) =>
+        data.startDate map { date =>
+          date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        }
+      case _          => None
     }
-  }
 
-  implicit def convertResponsiblePeopleToResponsiblePerson(rp: ResponsiblePeople, bm: fe.businessmatching.BusinessMatching,
-                                                           amendVariation: Boolean): ResponsiblePersons = {
-    val (training, trainingDesc) = convTraining(rp.training)
+  implicit def convertResponsiblePeopleToResponsiblePerson(
+    rp: ResponsiblePeople,
+    bm: fe.businessmatching.BusinessMatching,
+    amendVariation: Boolean
+  ): ResponsiblePersons = {
+    val (training, trainingDesc)       = convTraining(rp.training)
     val (expTraining, expTrainingDesc) = convExpTraining(rp.experienceTraining)
 
     val msbOrTcsp: Option[MsbOrTcsp] = None
@@ -146,12 +172,24 @@ object ResponsiblePersons {
       nameDetails = NameDetails.from(Some(rp), amendVariation),
       nationalityDetails = rp,
       contactCommDetails = rp.contactDetails,
-      currentAddressDetails = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      timeAtCurrentAddress = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x => x.currentAddress },
-      addressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      timeAtAddressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalAddress },
-      addressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
-      timeAtAddressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x => x.additionalExtraAddress },
+      currentAddressDetails = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x =>
+        x.currentAddress
+      },
+      timeAtCurrentAddress = rp.addressHistory.fold[Option[ResponsiblePersonCurrentAddress]](None) { x =>
+        x.currentAddress
+      },
+      addressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x =>
+        x.additionalAddress
+      },
+      timeAtAddressUnderThreeYears = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x =>
+        x.additionalAddress
+      },
+      addressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x =>
+        x.additionalExtraAddress
+      },
+      timeAtAddressUnderOneYear = rp.addressHistory.fold[Option[ResponsiblePersonAddress]](None) { x =>
+        x.additionalExtraAddress
+      },
       positionInBusiness = PositionInBusiness.conv(rp.positions, bm),
       regDetails = rp,
       previousExperience = expTraining,
@@ -167,57 +205,52 @@ object ResponsiblePersons {
     )
   }
 
-  def convTraining(training: Option[Training]): (Boolean, Option[String]) = {
+  def convTraining(training: Option[Training]): (Boolean, Option[String]) =
     training match {
-      case Some(data) => data match {
-        case TrainingYes(desc) => (true, Some(desc))
-        case TrainingNo => (false, None)
-      }
-      case _ => (false, None)
+      case Some(data) =>
+        data match {
+          case TrainingYes(desc) => (true, Some(desc))
+          case TrainingNo        => (false, None)
+        }
+      case _          => (false, None)
     }
-  }
 
-  def convExpTraining(vat: Option[ExperienceTraining]): (Boolean, Option[String]) = {
+  def convExpTraining(vat: Option[ExperienceTraining]): (Boolean, Option[String]) =
     vat match {
-      case Some(data) => data match {
-        case ExperienceTrainingYes(desc) => (true, Some(desc))
-        case ExperienceTrainingNo => (false, None)
-      }
-      case _ => (false, None)
+      case Some(data) =>
+        data match {
+          case ExperienceTrainingYes(desc) => (true, Some(desc))
+          case ExperienceTrainingNo        => (false, None)
+        }
+      case _          => (false, None)
     }
-  }
 
-  implicit def convDurationOption(addrHistory: Option[ResponsiblePersonAddress]): Option[String] = {
+  implicit def convDurationOption(addrHistory: Option[ResponsiblePersonAddress]): Option[String] =
     addrHistory match {
       case Some(data) => data
-      case _ => None
+      case _          => None
     }
-  }
 
-  implicit def convDurationOptionCurrent(addrHistory: Option[ResponsiblePersonCurrentAddress]): Option[String] = {
+  implicit def convDurationOptionCurrent(addrHistory: Option[ResponsiblePersonCurrentAddress]): Option[String] =
     addrHistory match {
       case Some(data) => data
-      case _ => None
+      case _          => None
     }
-  }
 
-  implicit def convDuration(addrHistory: ResponsiblePersonAddress): Option[String] = {
+  implicit def convDuration(addrHistory: ResponsiblePersonAddress): Option[String] =
     Some(addrHistory.timeAtAddress)
-  }
 
-  implicit def convDuration(addrHistory: ResponsiblePersonCurrentAddress): Option[String] = {
+  implicit def convDuration(addrHistory: ResponsiblePersonCurrentAddress): Option[String] =
     Some(addrHistory.timeAtAddress)
-  }
 
-  implicit def covnTimeAtAddrToString(time: TimeAtAddress): String = {
+  implicit def covnTimeAtAddrToString(time: TimeAtAddress): String =
     time match {
-      case ZeroToFiveMonths => "0-6 months"
+      case ZeroToFiveMonths  => "0-6 months"
       case SixToElevenMonths => "7-12 months"
-      case OneToThreeYears => "1-3 years"
-      case ThreeYearsPlus => "3+ years"
-      case Empty => ""
+      case OneToThreeYears   => "1-3 years"
+      case ThreeYearsPlus    => "3+ years"
+      case Empty             => ""
     }
-  }
 
   implicit object RpExtraHasStatus extends StatusProvider[ResponsiblePersons] {
     override def getStatus(rp: ResponsiblePersons): Option[String] = rp.extra.status

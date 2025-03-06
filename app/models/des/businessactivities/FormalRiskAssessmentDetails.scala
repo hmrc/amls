@@ -19,27 +19,27 @@ package models.des.businessactivities
 import models.fe.businessactivities._
 import play.api.libs.json.{Json, OFormat}
 
-case class RiskAssessmentFormat(electronicFormat: Boolean = false,
-                                manualFormat: Boolean = false)
+case class RiskAssessmentFormat(electronicFormat: Boolean = false, manualFormat: Boolean = false)
 
-object RiskAssessmentFormat{
+object RiskAssessmentFormat {
   implicit val format: OFormat[RiskAssessmentFormat] = Json.format[RiskAssessmentFormat]
 
-  implicit def convert(riskType: Set[RiskAssessmentType]): Option[RiskAssessmentFormat] = {
+  implicit def convert(riskType: Set[RiskAssessmentType]): Option[RiskAssessmentFormat] =
     Some(RiskAssessmentFormat(riskType.contains(Digital), riskType.contains(PaperBased)))
-  }
 }
 
-case class FormalRiskAssessmentDetails(formalRiskAssessment: Boolean, riskAssessmentFormat: Option[RiskAssessmentFormat] = None)
+case class FormalRiskAssessmentDetails(
+  formalRiskAssessment: Boolean,
+  riskAssessmentFormat: Option[RiskAssessmentFormat] = None
+)
 
-object FormalRiskAssessmentDetails{
+object FormalRiskAssessmentDetails {
   implicit val format: OFormat[FormalRiskAssessmentDetails] = Json.format[FormalRiskAssessmentDetails]
 
-  implicit def convert(riskAss:Option[RiskAssessmentPolicy]): Option[FormalRiskAssessmentDetails] ={
-    riskAss match{
+  implicit def convert(riskAss: Option[RiskAssessmentPolicy]): Option[FormalRiskAssessmentDetails] =
+    riskAss match {
       case Some(RiskAssessmentPolicyYes(x)) => Some(FormalRiskAssessmentDetails(true, x))
-      case Some(RiskAssessmentPolicyNo) => Some(FormalRiskAssessmentDetails(false))
-      case _ => None
+      case Some(RiskAssessmentPolicyNo)     => Some(FormalRiskAssessmentDetails(false))
+      case _                                => None
     }
-  }
 }

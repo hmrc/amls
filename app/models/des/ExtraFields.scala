@@ -21,9 +21,8 @@ import play.api.libs.json._
 
 case class ExtraFields(declaration: Declaration, filingIndividual: AboutYouRelease7, etmpFields: Option[EtmpFields]) {
 
-  def setEtmpFields(viewEtmpFields: Option[EtmpFields]): ExtraFields = {
+  def setEtmpFields(viewEtmpFields: Option[EtmpFields]): ExtraFields =
     this.copy(etmpFields = viewEtmpFields)
-  }
 }
 
 object ExtraFields {
@@ -31,7 +30,6 @@ object ExtraFields {
   implicit def format: OFormat[ExtraFields] =
     Json.format[ExtraFields]
 
-  implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields = {
+  implicit def convert(person: models.fe.declaration.AddPerson): ExtraFields =
     ExtraFields(Declaration(true), AboutYouRelease7.convert(person), None)
-  }
 }

@@ -24,10 +24,9 @@ case class TypeOfBusiness(typeOfBusiness: String)
 object TypeOfBusiness {
   implicit val format: OFormat[TypeOfBusiness] = Json.format[TypeOfBusiness]
 
-  implicit def conv(desBusinessDetails: BusinessDetails): Option[TypeOfBusiness] = {
+  implicit def conv(desBusinessDetails: BusinessDetails): Option[TypeOfBusiness] =
     desBusinessDetails.unincorpBody match {
       case Some(data) => Some(TypeOfBusiness(data.typeOfBusiness))
-      case _ => None
+      case _          => None
     }
-  }
 }

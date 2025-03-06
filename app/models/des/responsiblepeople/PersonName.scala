@@ -17,7 +17,7 @@
 package models.des.responsiblepeople
 
 import play.api.libs.json.{Json, OFormat}
-import models.fe.responsiblepeople.{PreviousName, PersonName => FEPersonName}
+import models.fe.responsiblepeople.{PersonName => FEPersonName, PreviousName}
 
 case class PersonName(firstName: Option[String], middleName: Option[String], lastName: Option[String])
 
@@ -26,10 +26,9 @@ case object PersonName {
 
   implicit def convert(maybePerson: Option[FEPersonName]): PersonName = maybePerson match {
     case Some(person) => PersonName(Some(person.firstName), person.middleName, Some(person.lastName))
-    case _ => PersonName(None, None, None)
+    case _            => PersonName(None, None, None)
   }
 
-  implicit def convertPreviousName(person: PreviousName): Option[PersonName] = {
+  implicit def convertPreviousName(person: PreviousName): Option[PersonName] =
     Some(PersonName(person.firstName, person.middleName, person.lastName))
-  }
 }

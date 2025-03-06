@@ -29,27 +29,24 @@ object ComplexCorpStructureCreation {
   import play.api.libs.json._
   import play.api.libs.json.Reads._
 
-  implicit val jsonReads: Reads[ComplexCorpStructureCreation] = {
+  implicit val jsonReads: Reads[ComplexCorpStructureCreation] =
     (__ \ "complexCorpStructureCreation").read[Boolean] map {
-      case true => ComplexCorpStructureCreationYes
+      case true  => ComplexCorpStructureCreationYes
       case false => ComplexCorpStructureCreationNo
     }
-  }
 
   implicit val jsonWrite: Writes[ComplexCorpStructureCreation] = Writes[ComplexCorpStructureCreation] {
     case ComplexCorpStructureCreationYes => Json.obj("complexCorpStructureCreation" -> true)
-    case ComplexCorpStructureCreationNo => Json.obj("complexCorpStructureCreation" -> false)
+    case ComplexCorpStructureCreationNo  => Json.obj("complexCorpStructureCreation" -> false)
   }
 
-  implicit def conv(view: SubscriptionView): Option[ComplexCorpStructureCreation] = {
+  implicit def conv(view: SubscriptionView): Option[ComplexCorpStructureCreation] =
     view.businessActivities.tcspServicesOffered.map(b => b.trustOrCompFormAgent) match {
       case Some(true) =>
-        (view.tcspTrustCompFormationAgt.map(b => b.complexCorpStructureCreation)) match {
+        view.tcspTrustCompFormationAgt.map(b => b.complexCorpStructureCreation) match {
           case Some(true) => Some(ComplexCorpStructureCreationYes)
-          case _ => Some(ComplexCorpStructureCreationNo)
+          case _          => Some(ComplexCorpStructureCreationNo)
         }
-      case _ => None
+      case _          => None
     }
-  }
 }
-

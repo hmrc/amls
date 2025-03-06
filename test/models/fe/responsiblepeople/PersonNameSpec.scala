@@ -16,7 +16,7 @@
 
 package models.fe.responsiblepeople
 
-import models.des.responsiblepeople.{PreviousNameDetails, OthrNamesOrAliasesDetails, PersonName => DesPersonName, NameDetails}
+import models.des.responsiblepeople.{NameDetails, OthrNamesOrAliasesDetails, PersonName => DesPersonName, PreviousNameDetails}
 import org.scalatestplus.play.PlaySpec
 
 class PersonNameSpec extends PlaySpec {
@@ -42,22 +42,27 @@ class PersonNameSpec extends PlaySpec {
       PersonName.format.reads(PersonName.format.writes(personName))
     }
 
-
     "convert des model to frontend personName model" in {
 
-      val desModel = Some(NameDetails(
-        DesPersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
-        Some(OthrNamesOrAliasesDetails(
-          true,
-          Some(List("Aliases1", "Aliases2", "Aliases3", "Aliases4"))
-        )),
-        Some(PreviousNameDetails(
-          true,
-          Some(DesPersonName(Some("FirstName1"), Some("MiddleName1"), Some("LastName1"))),
-          Some("2001-01-01"),
-          None
-        ))
-      ))
+      val desModel = Some(
+        NameDetails(
+          DesPersonName(Some("FirstName"), Some("MiddleName"), Some("LastName")),
+          Some(
+            OthrNamesOrAliasesDetails(
+              true,
+              Some(List("Aliases1", "Aliases2", "Aliases3", "Aliases4"))
+            )
+          ),
+          Some(
+            PreviousNameDetails(
+              true,
+              Some(DesPersonName(Some("FirstName1"), Some("MiddleName1"), Some("LastName1"))),
+              Some("2001-01-01"),
+              None
+            )
+          )
+        )
+      )
 
       val fePersonName = PersonName(
         firstName = "FirstName",

@@ -26,10 +26,10 @@ sealed trait ServiceProvider {
   val value: String =
     this match {
       case NomineeShareholdersProvider => "01"
-      case TrusteeProvider => "02"
-      case RegisteredOfficeEtc => "03"
-      case CompanyDirectorEtc => "04"
-      case CompanyFormationAgent => "05"
+      case TrusteeProvider             => "02"
+      case RegisteredOfficeEtc         => "03"
+      case CompanyDirectorEtc          => "04"
+      case CompanyFormationAgent       => "05"
     }
 }
 
@@ -55,43 +55,43 @@ object TcspTypes {
         case "03" => Reads(_ => JsSuccess(RegisteredOfficeEtc)) map identity[ServiceProvider]
         case "04" => Reads(_ => JsSuccess(CompanyDirectorEtc)) map identity[ServiceProvider]
         case "05" => Reads(_ => JsSuccess(CompanyFormationAgent)) map identity[ServiceProvider]
-        case _ =>
+        case _    =>
           Reads(_ => JsError((JsPath \ "serviceProviders") -> JsonValidationError("error.invalid")))
       }.foldLeft[Reads[Set[ServiceProvider]]](
         Reads[Set[ServiceProvider]](_ => JsSuccess(Set.empty))
-      ) {
-        (result, data) =>
-          data flatMap { m =>
-            result.map { n =>
-              n + m
-            }
+      ) { (result, data) =>
+        data flatMap { m =>
+          result.map { n =>
+            n + m
           }
+        }
       } map TcspTypes.apply
     }
   }
 
-  implicit val jsonWrite: Writes[TcspTypes] = Writes[TcspTypes] {
-    case TcspTypes(services) =>
-      Json.obj(
-        "serviceProviders" -> (services map {
-          _.value
-        }).toSeq
-      ) ++ services.foldLeft[JsObject](Json.obj()) {
-        case (m, _) =>
-          m
-      }
+  implicit val jsonWrite: Writes[TcspTypes] = Writes[TcspTypes] { case TcspTypes(services) =>
+    Json.obj(
+      "serviceProviders" -> (services map {
+        _.value
+      }).toSeq
+    ) ++ services.foldLeft[JsObject](Json.obj()) { case (m, _) =>
+      m
+    }
   }
 
   implicit def conv(view: SubscriptionView): Option[TcspTypes] = {
     val serviceProviders: Option[Set[ServiceProvider]] = view.businessActivities.tcspServicesOffered match {
-      case Some(svcsProviders) => Some(Set(
-        CommonMethods.getSpecificType(svcsProviders.nomineeShareholders, NomineeShareholdersProvider),
-        CommonMethods.getSpecificType(svcsProviders.trusteeProvider, TrusteeProvider),
-        CommonMethods.getSpecificType(svcsProviders.regOffBusinessAddrVirtualOff, RegisteredOfficeEtc),
-        CommonMethods.getSpecificType(svcsProviders.compDirSecPartnerProvider, CompanyDirectorEtc),
-        CommonMethods.getSpecificType(svcsProviders.trustOrCompFormAgent, CompanyFormationAgent)
-      ).flatten)
-      case None => None
+      case Some(svcsProviders) =>
+        Some(
+          Set(
+            CommonMethods.getSpecificType(svcsProviders.nomineeShareholders, NomineeShareholdersProvider),
+            CommonMethods.getSpecificType(svcsProviders.trusteeProvider, TrusteeProvider),
+            CommonMethods.getSpecificType(svcsProviders.regOffBusinessAddrVirtualOff, RegisteredOfficeEtc),
+            CommonMethods.getSpecificType(svcsProviders.compDirSecPartnerProvider, CompanyDirectorEtc),
+            CommonMethods.getSpecificType(svcsProviders.trustOrCompFormAgent, CompanyFormationAgent)
+          ).flatten
+        )
+      case None                => None
     }
 
     Some(TcspTypes(serviceProviders.getOrElse(Set())))
