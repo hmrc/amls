@@ -2,7 +2,47 @@
 amls
 =============
 
-Anti-Money Laundering Supervision
+This is the repository for the Anti-Money Laundering Supervision frontend.
+
+## Running the service
+
+### Using service manager
+
+Using [sm2](https://github.com/hmrc/sm2)
+with the service manager profile `AMLS_ALL` will start
+all the Anti Money Laundering Service microservices as well as the services
+that they depend on.
+
+```
+sm2 --start AMLS_ALL
+```
+
+To stop the frontend microservice from running on service manager (e.g. to run your own version locally), you can run:
+
+```
+sm2 -stop AMLS
+```
+
+### Using localhost
+
+To run this frontend microservice locally on the configured port **'8940'**, you can run:
+
+```
+sbt run 
+```
+
+**NOTE:** Ensure that you are not running the microservice via service manager before starting
+your service locally (vice versa) or the service will fail to start
+
+
+## Running tests via terminal
+
+To run tests in Intellij, you should increase the heapstack by running:
+
+```
+sbt test -mem 2048
+```
+
 
 API
 ----
@@ -75,3 +115,10 @@ This endpoints creates a new payment in the database which is already configured
     "amountInPence": 10000
 }
 ```
+
+
+## Other helpful documentation
+
+* [Service Runbook](https://confluence.tools.tax.service.gov.uk/display/ELSY/Anti+Money+Laundering+Supervision+%28AMLS%29+Runbook)
+
+* [Architecture Links](https://confluence.tools.tax.service.gov.uk/display/ELSY/AMLS+Architecture)
