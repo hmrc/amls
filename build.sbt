@@ -59,7 +59,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(majorVersion := 4)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(scalaVersion := "2.13.12")
+  .settings(scalaVersion := "2.13.16")
   .settings(defaultSettings(): _*)
   .settings(
     libraryDependencies ++= appDependencies,
@@ -73,12 +73,6 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / Keys.fork := false,
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest /testGrouping := oneForkedJvmPerTest((IntegrationTest / definedTests).value),
     IntegrationTest / parallelExecution := false
    )
 
-def oneForkedJvmPerTest(tests: Seq[TestDefinition]) = {
-  tests.map { test =>
-    new Group(test.name, Seq(test), SubProcess(ForkOptions().withRunJVMOptions(Vector(s"-Dtest.name=${test.name}"))))
-  }
-}
