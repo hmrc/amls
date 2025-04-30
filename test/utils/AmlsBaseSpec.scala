@@ -26,7 +26,7 @@ import play.api.mvc.{ControllerComponents, PlayBodyParsers}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.ExecutionContext
 
@@ -41,7 +41,7 @@ trait AmlsBaseSpec
   val mockEnvironment: Environment       = mock[Environment]
   val mockAppConfig: ApplicationConfig   = mock[ApplicationConfig]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
-  val mockHttpClient: HttpClient         = mock[HttpClient]
+  val mockHttpClient: HttpClientV2         = mock[HttpClientV2]
   val mockCC: ControllerComponents       = mock[ControllerComponents]
   val mockBodyParsers: PlayBodyParsers   = mock[PlayBodyParsers]
   val mockMetrics: Metrics               = mock[Metrics]

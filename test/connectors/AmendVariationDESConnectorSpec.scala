@@ -90,12 +90,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       )
 
       when {
-        testConnector.httpClient.PUT[des.AmendVariationRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.put(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.amend(amlsRegistrationNumber, testRequest)) {
@@ -116,12 +111,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.PUT[des.AmendVariationRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.put(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       when {
@@ -155,12 +145,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.PUT[des.AmendVariationRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.put(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       when {
@@ -190,12 +175,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.PUT[des.AmendVariationRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.put(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       when {
@@ -223,12 +203,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.PUT[des.AmendVariationRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.put(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       when {

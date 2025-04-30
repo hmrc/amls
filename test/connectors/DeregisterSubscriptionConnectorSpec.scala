@@ -27,7 +27,7 @@ import org.mockito.ArgumentMatchers.any
 import org.scalatest.time.{Seconds, Span}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -73,11 +73,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -93,11 +89,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       )
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.deregistration(amlsRegistrationNumber, testRequest).failed) {
@@ -110,11 +102,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return failed response on exception" in new Fixture {
 
       when {
-        testConnector.httpClient.POST[des.DeregisterSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(

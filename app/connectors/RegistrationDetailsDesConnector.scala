@@ -19,7 +19,8 @@ package connectors
 import config.ApplicationConfig
 import models.des.registrationdetails.RegistrationDetails
 import play.api.http.Status.OK
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.ApiRetryHelper
 
 import javax.inject.Inject
@@ -27,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RegistrationDetailsDesConnector @Inject() (
   private[connectors] val appConfig: ApplicationConfig,
-  private[connectors] val httpClient: HttpClient
+  private[connectors] val httpClientV2: HttpClientV2
 ) extends DESConnector(appConfig) {
 
   def getRegistrationDetails(
@@ -39,8 +40,7 @@ class RegistrationDetailsDesConnector @Inject() (
     safeId: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
     val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
-
-    httpClient.GET[HttpResponse](url, headers = desHeaders)(implicitly, hc, ec) map {
+    httpClientV2.get(url"$url").setHeader(desHeaders: _*).execute[HttpResponse].map {
       case response if response.status == OK => response.json.as[RegistrationDetails]
       case response                          =>
         throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")

@@ -22,7 +22,7 @@ import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfter
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -47,11 +47,7 @@ class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAft
         RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
 
       when {
-        connector.httpClient.GET[HttpResponse](
-          ArgumentMatchers.eq(s"${mockAppConfig.desUrl}/registration/details?safeid=$safeId"),
-          any(),
-          any()
-        )(any(), any(), any())
+        connector.httpClientV2.get(url"${mockAppConfig.desUrl}/registration/details?safeid=$safeId").setHeader(any()).execute[HttpResponse]
       } thenReturn Future.successful(HttpResponse(status = OK, json = Json.toJson(details), headers = Map.empty))
 
       whenReady(connector.getRegistrationDetails(safeId)) {

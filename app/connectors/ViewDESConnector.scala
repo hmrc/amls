@@ -23,7 +23,8 @@ import metrics.{API5, Metrics}
 import models.des.SubscriptionView
 import play.api.http.Status._
 import play.api.libs.json.{JsError, JsSuccess}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils.{ApiRetryHelper, AuditHelper}
@@ -33,10 +34,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ViewDESConnector @Inject() (
-  private[connectors] val appConfig: ApplicationConfig,
-  private[connectors] val ac: AuditConnector,
-  private[connectors] val httpClient: HttpClient,
-  private[connectors] val metrics: Metrics
+                                   private[connectors] val appConfig: ApplicationConfig,
+                                   private[connectors] val ac: AuditConnector,
+                                   private[connectors] val httpClientV2: HttpClientV2,
+                                   private[connectors] val metrics: Metrics
 ) extends DESConnector(appConfig) {
 
   def view(
@@ -56,13 +57,13 @@ class ViewDESConnector @Inject() (
 
     val audit: Audit = new Audit(AuditHelper.appName, ac)
 
-    httpClient.GET[HttpResponse](Url, headers = desHeaders)(implicitly[HttpReads[HttpResponse]], hc, ec) map {
+    httpClientV2.get(url"$Url").setHeader(desHeaders: _*).execute[HttpResponse].map {
       response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
-    } flatMap {
+    }.flatMap {
       case status(OK) & bodyParser(JsSuccess(body: SubscriptionView, _)) =>
         metrics.success(API5)
         audit.sendDataEvent(SubscriptionViewEvent(amlsRegistrationNumber, body))
@@ -79,7 +80,7 @@ class ViewDESConnector @Inject() (
         metrics.failed(API5)
         logger.warn(s"$prefix - Failure response: $s")
         Future.failed(HttpStatusException(s, Option(r.body)))
-    } recoverWith {
+    }.recoverWith {
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)

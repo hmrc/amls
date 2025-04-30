@@ -19,14 +19,13 @@ package connectors
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
 import metrics.API8
-import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse, WithdrawalReason}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.time.{Millis, Seconds, Span}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -76,11 +75,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest)) {
@@ -96,11 +91,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
       )
 
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
@@ -112,11 +103,7 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
 
     "return failed response on exception" in new Fixture {
       when {
-        withdrawSubscriptionConnector.httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](
-          ArgumentMatchers.eq(url),
-          any(),
-          any()
-        )(any(), any(), any(), any())
+        withdrawSubscriptionConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {

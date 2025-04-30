@@ -26,6 +26,7 @@ import org.mockito.ArgumentMatchers.any
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import utils.AmlsBaseSpec
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
 
@@ -64,11 +65,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
 
       val response = HttpResponse(status = OK, body = "message")
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").withBody(Json.toJson(knownFacts)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.addKnownFacts(knownFacts)) {
@@ -81,11 +78,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").withBody(Json.toJson(knownFacts)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>
@@ -97,11 +90,7 @@ class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenc
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
+        testConnector.httpClientV2.post(url"$url").withBody(Json.toJson(knownFacts)).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>

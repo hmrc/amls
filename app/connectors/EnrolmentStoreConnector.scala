@@ -24,7 +24,8 @@ import models.enrolment.{AmlsEnrolmentKey, KnownFacts}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT}
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
@@ -33,10 +34,10 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject() (
-  private[connectors] val httpClient: HttpClient,
-  private[connectors] val metrics: Metrics,
-  private[connectors] val mac: AuditConnector,
-  private[connectors] val config: ApplicationConfig
+                                          private[connectors] val httpClientV2: HttpClientV2,
+                                          private[connectors] val metrics: Metrics,
+                                          private[connectors] val mac: AuditConnector,
+                                          private[connectors] val config: ApplicationConfig
 )(implicit executionContext: ExecutionContext)
     extends HttpResponseHelper
     with Logging {
@@ -60,8 +61,7 @@ class EnrolmentStoreConnector @Inject() (
     val audit: Audit = new Audit(AuditHelper.appName, mac)
 
     logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
-
-    httpClient.PUT(url, knownFacts) map { response =>
+    httpClientV2.put(url"$url").withBody(Json.toJson(knownFacts)).execute[HttpResponse] map { response =>
       timer.stop()
       logger.debug(s"$prefix - Base Response: ${response.status}")
       logger.debug(s"$prefix - Response body: ${response.body}")

@@ -25,7 +25,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -59,7 +59,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         headers = Map.empty
       )
 
-      when(testDESConnector.httpClient.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+      when(testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse])
         .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
@@ -75,7 +75,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         headers = Map.empty
       )
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
@@ -93,7 +93,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       )
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, _) =>
@@ -104,7 +104,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
     "return a failed future (exception)" in new Fixture {
 
       when {
-        testDESConnector.httpClient.GET[HttpResponse](eqTo(url), any(), any())(any(), any(), any())
+        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>

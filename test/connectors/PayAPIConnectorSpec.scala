@@ -25,7 +25,7 @@ import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -61,7 +61,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       )
 
       when {
-        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.getPayment(testPaymentId)) {
@@ -74,7 +74,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>
@@ -86,7 +86,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     "return an unsuccessful response when an exception is thrown" in new Fixture {
 
       when {
-        testConnector.httpClient.GET[HttpResponse](ArgumentMatchers.eq(paymentUrl), any(), any())(any(), any(), any())
+        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>

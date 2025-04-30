@@ -24,7 +24,8 @@ import models.des
 import models.des.{WithdrawSubscriptionRequest, WithdrawSubscriptionResponse}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils.{ApiRetryHelper, AuditHelper}
@@ -34,10 +35,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class WithdrawSubscriptionConnector @Inject() (
-  private[connectors] val appConfig: ApplicationConfig,
-  private[connectors] val ac: AuditConnector,
-  private[connectors] val httpClient: HttpClient,
-  private[connectors] val metrics: Metrics
+                                                private[connectors] val appConfig: ApplicationConfig,
+                                                private[connectors] val ac: AuditConnector,
+                                                private[connectors] val httpClientV2: HttpClientV2,
+                                                private[connectors] val metrics: Metrics
 ) extends DESConnector(appConfig) {
 
   def withdrawal(amlsRegistrationNumber: String, data: WithdrawSubscriptionRequest)(implicit
@@ -63,17 +64,12 @@ class WithdrawSubscriptionConnector @Inject() (
     val audit: Audit = new Audit(AuditHelper.appName, ac)
 
     val url = s"$fullUrl/$amlsRegistrationNumber/withdrawal"
-    httpClient.POST[des.WithdrawSubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(
-      wr1,
-      implicitly[HttpReads[HttpResponse]],
-      hc,
-      ec
-    ) map { response =>
+    httpClientV2.post(url"$url").setHeader(desHeaders: _*).withBody(Json.toJson(data)).execute[HttpResponse].map { response =>
       timer.stop()
       logger.debug(s"$prefix - Base Response: ${response.status}")
       logger.debug(s"$prefix - Response Body: ${response.body}")
       response
-    } flatMap {
+    }.flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: WithdrawSubscriptionResponse, _)) =>
         metrics.success(API8)
         audit.sendDataEvent(WithdrawSubscriptionEvent(amlsRegistrationNumber, data, body))
@@ -86,7 +82,7 @@ class WithdrawSubscriptionConnector @Inject() (
         logger.warn(s"$prefix - Failure response: $s")
         logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
         Future.failed(HttpStatusException(s, Option(r.body)))
-    } recoverWith {
+    }.recoverWith {
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         Future.failed(e)

@@ -29,7 +29,7 @@ import org.scalatest.BeforeAndAfter
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.audit.HandlerResult
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.AmlsBaseSpec
@@ -82,12 +82,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       )
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       whenReady(testConnector.subscribe(safeId, testRequest)) {
@@ -108,12 +103,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       when {
@@ -145,12 +135,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.successful(response)
 
       when {
@@ -176,12 +161,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.failed(new Exception("message"))
 
       when {
@@ -207,12 +187,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
-        )
+        testConnector.httpClientV2.post(url"$url").setHeader(any()).withBody(Json.toJson(testRequest)).execute[HttpResponse]
       } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
 
       when {

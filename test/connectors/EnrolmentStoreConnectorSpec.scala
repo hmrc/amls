@@ -24,7 +24,8 @@ import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
+import play.api.libs.json.Json
 import utils.AmlsBaseSpec
 
 import scala.concurrent.Future
@@ -59,7 +60,9 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
 
     def mockResponse(response: Future[HttpResponse]) =
       when {
-        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
+        connector.httpClientV2.put(ArgumentMatchers.any())
+          .withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))
+          .execute[HttpResponse]
       } thenReturn response
 
   }
@@ -69,16 +72,13 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberG
       "call the ES6 enrolment store endpoint for known facts" in new Fixture {
 
         val response = HttpResponse(status = NO_CONTENT, body = "message")
-
         mockResponse(Future.successful(response))
 
         whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
           result mustEqual response
-          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](
-            ArgumentMatchers.eq(url),
-            ArgumentMatchers.eq(knownFacts),
-            any()
-          )(any(), any(), any(), any())
+          verify(connector.httpClientV2).put(ArgumentMatchers.eq(url"$url"))
+            .withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))
+            .execute[HttpResponse]
         }
       }
 

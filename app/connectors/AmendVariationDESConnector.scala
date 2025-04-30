@@ -23,7 +23,8 @@ import metrics.{API6, Metrics}
 import models.des
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
@@ -32,10 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendVariationDESConnector @Inject() (
-  private[connectors] val appConfig: ApplicationConfig,
-  private[connectors] val ac: AuditConnector,
-  private[connectors] val httpClient: HttpClient,
-  private[connectors] val metrics: Metrics
+                                             private[connectors] val appConfig: ApplicationConfig,
+                                             private[connectors] val ac: AuditConnector,
+                                             private[connectors] val httpClientV2: HttpClientV2,
+                                             private[connectors] val metrics: Metrics
 ) extends DESConnector(appConfig) {
 
   def amend(amlsRegistrationNumber: String, data: des.AmendVariationRequest)(implicit
@@ -59,18 +60,12 @@ class AmendVariationDESConnector @Inject() (
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$amlsRegistrationNumber"
-
-    httpClient.PUT[des.AmendVariationRequest, HttpResponse](url, data, headers = desHeaders)(
-      wr1,
-      implicitly[HttpReads[HttpResponse]],
-      hc,
-      ec
-    ) map { response =>
+    httpClientV2.put(url"$url").setHeader(desHeaders: _*).withBody(Json.toJson(data)).execute[HttpResponse].map { response =>
       timer.stop()
       logger.debug(s"$prefix - Base Response: ${response.status}")
       logger.debug(s"$prefix - Response Body: ${response.body}")
       response
-    } flatMap {
+    }.flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.AmendVariationResponse, _)) =>
         metrics.success(API6)
         logger.debug(s"$prefix - Success response")
@@ -85,7 +80,7 @@ class AmendVariationDESConnector @Inject() (
         val httpEx = HttpStatusException(s, Option(r.body))
         ac.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
         Future.failed(httpEx)
-    } recoverWith {
+    }.recoverWith {
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         ac.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, e))

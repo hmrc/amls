@@ -23,7 +23,8 @@ import metrics.{API4, Metrics}
 import models.des
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.ApiRetryHelper
 
@@ -32,10 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubscribeDESConnector @Inject() (
-  private[connectors] val appConfig: ApplicationConfig,
-  private[connectors] val ac: AuditConnector,
-  private[connectors] val httpClient: HttpClient,
-  private[connectors] val metrics: Metrics
+                                        private[connectors] val appConfig: ApplicationConfig,
+                                        private[connectors] val ac: AuditConnector,
+                                        private[connectors] val httpClientV2: HttpClientV2,
+                                        private[connectors] val metrics: Metrics
 ) extends DESConnector(appConfig) {
 
   def subscribe(safeId: String, data: des.SubscriptionRequest)(implicit
@@ -59,18 +60,13 @@ class SubscribeDESConnector @Inject() (
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
     val url = s"$fullUrl/$safeId"
-
-    httpClient.POST[des.SubscriptionRequest, HttpResponse](url, data, headers = desHeaders)(
-      wr1,
-      implicitly[HttpReads[HttpResponse]],
-      hc,
-      ec
-    ) map { response =>
+    httpClientV2.post(url"$url").setHeader(desHeaders: _*).withBody(Json.toJson(data)).execute[HttpResponse]
+    .map { response =>
       timer.stop()
       logger.debug(s"$prefix - Base Response: ${response.status}")
       logger.debug(s"$prefix - Response Body: ${response.body}")
       response
-    } flatMap {
+    }.flatMap {
       case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
         metrics.success(API4)
         logger.debug(s"$prefix - Success response")
@@ -85,7 +81,7 @@ class SubscribeDESConnector @Inject() (
         val httpEx = HttpStatusException(s, Option(r.body))
         ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
         Future.failed(httpEx)
-    } recoverWith {
+    }.recoverWith {
       case e: HttpStatusException =>
         logger.warn(s"$prefix - Failure: Exception", e)
         ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
