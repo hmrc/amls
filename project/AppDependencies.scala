@@ -28,6 +28,7 @@ private object AppDependencies {
         "org.scalatestplus"       %% "scalacheck-1-17"           % "3.2.17.0"               % scope,
         "uk.gov.hmrc"             %% s"bootstrap-test-$playV"    % bootstrapVersion         % scope,
         "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playV"   % "2.6.0"                  % scope,
+        "org.scalamock" %% "scalamock" % "5.2.0" % scope
       )
     }.test
   }
