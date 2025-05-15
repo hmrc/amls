@@ -51,7 +51,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
 
   val url = new URL(s"${connector.fullUrl}/${amlsRegistrationNumber}/status")
   when(connector.metrics.timer(ArgumentMatchers.eq(API9))).thenReturn(mockTimer)
-   println(s"Response : ${successModel}")
+  println(s"Response : ${successModel}")
   println(s"URL : ${url}")
   println(s"1 line")
   "DESConnector" must {
@@ -62,11 +62,18 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
         headers = Map.empty
       )
 
-      when(mockHttpClient.get(ArgumentMatchers.eq(url))(any()))
-        .thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader(any()))
-        .thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse])
+      when {
+        connector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(response))
 
       whenReady(connector.status(amlsRegistrationNumber)) { result =>
@@ -75,15 +82,25 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
     }
 
     "return a failed future" in {
-
       val response = HttpResponse(
         status = BAD_REQUEST,
         body = "",
         headers = Map.empty
       )
+
       when {
-        connector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        connector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(response))
 
       whenReady(connector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
         status mustEqual BAD_REQUEST
@@ -92,7 +109,6 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
     }
 
     "return a failed future (json validation)" in  {
-
       val response = HttpResponse(
         status = OK,
         json = Json.toJson("message"),
@@ -100,8 +116,18 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
       )
 
       when {
-        connector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        connector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(response))
 
       whenReady(connector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
         status mustEqual OK
@@ -111,8 +137,18 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
 
     "return a failed future (exception)" in  {
       when {
-        connector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.failed(new Exception("message"))
+        connector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.failed(new Exception("message")))
 
       whenReady(connector.status(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
         status mustEqual INTERNAL_SERVER_ERROR
