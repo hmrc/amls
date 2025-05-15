@@ -34,10 +34,10 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentStoreConnector @Inject() (
-                                          private[connectors] val httpClientV2: HttpClientV2,
-                                          private[connectors] val metrics: Metrics,
-                                          private[connectors] val mac: AuditConnector,
-                                          private[connectors] val config: ApplicationConfig
+  private[connectors] val httpClientV2: HttpClientV2,
+  private[connectors] val metrics: Metrics,
+  private[connectors] val mac: AuditConnector,
+  private[connectors] val config: ApplicationConfig
 )(implicit executionContext: ExecutionContext)
     extends HttpResponseHelper
     with Logging {

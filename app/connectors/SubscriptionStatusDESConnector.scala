@@ -35,10 +35,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubscriptionStatusDESConnector @Inject() (
-                                                 private[connectors] val appConfig: ApplicationConfig,
-                                                 private[connectors] val ac: AuditConnector,
-                                                 private[connectors] val httpClientV2: HttpClientV2,
-                                                 private[connectors] val metrics: Metrics
+  private[connectors] val appConfig: ApplicationConfig,
+  private[connectors] val ac: AuditConnector,
+  private[connectors] val httpClientV2: HttpClientV2,
+  private[connectors] val metrics: Metrics
 ) extends DESConnector(appConfig) {
 
   def status(amlsRegistrationNumber: String)(implicit
@@ -62,32 +62,37 @@ class SubscriptionStatusDESConnector @Inject() (
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
-    httpClientV2.get(url"$Url/status").setHeader(desHeaders: _*).execute[HttpResponse].map {
-      response =>
+    httpClientV2
+      .get(url"$Url/status")
+      .setHeader(desHeaders: _*)
+      .execute[HttpResponse]
+      .map { response =>
         timer.stop()
         logger.debug(s"$prefix - Base Response: ${response.status}")
         logger.debug(s"$prefix - Response Body: ${response.body}")
         response
-    }.flatMap {
-      case _ @status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
-        metrics.success(API9)
-        audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
-        logger.debug(s"$prefix - Success response")
-        logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
-        Future.successful(body)
-      case r @ status(s)                                                          =>
-        metrics.failed(API9)
-        logger.warn(s"$prefix - Failure response: $s")
-        Future.failed(HttpStatusException(s, Option(r.body)))
-    }.recoverWith {
-      case e: HttpStatusException =>
-        logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(e)
-      case e                      =>
-        timer.stop()
-        metrics.failed(API9)
-        logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
-    }
+      }
+      .flatMap {
+        case _ @status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
+          metrics.success(API9)
+          audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
+          logger.debug(s"$prefix - Success response")
+          logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
+          Future.successful(body)
+        case r @ status(s)                                                          =>
+          metrics.failed(API9)
+          logger.warn(s"$prefix - Failure response: $s")
+          Future.failed(HttpStatusException(s, Option(r.body)))
+      }
+      .recoverWith {
+        case e: HttpStatusException =>
+          logger.warn(s"$prefix - Failure: Exception", e)
+          Future.failed(e)
+        case e                      =>
+          timer.stop()
+          metrics.failed(API9)
+          logger.warn(s"$prefix - Failure: Exception", e)
+          Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
+      }
   }
 }

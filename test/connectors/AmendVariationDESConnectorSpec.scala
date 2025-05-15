@@ -44,7 +44,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
 
   trait Fixture {
     val testConnector = new AmendVariationDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
+      override private[connectors] val baseUrl: String = "http://localhost:1234"
       override private[connectors] val token: String   = "token"
       override private[connectors] val env: String     = "ist0"
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
@@ -70,7 +70,7 @@ class AmendVariationDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumb
       Some(3456.12)
     )
 
-    val url = s"${testConnector.fullUrl}/$amlsRegistrationNumber"
+    val url = s"${testConnector.fullUrl}$amlsRegistrationNumber"
 
     val mockTimer = mock[Timer.Context]
 
