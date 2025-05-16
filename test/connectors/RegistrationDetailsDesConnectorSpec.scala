@@ -15,45 +15,47 @@
  */
 
 package connectors
-
 import models.des.registrationdetails.{Organisation, Partnership, RegistrationDetails}
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfter
+import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
-import utils.AmlsBaseSpec
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.Future
 
 class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
 
-  trait Fixture {
-
-    val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient) {
-      override private[connectors] val baseUrl = "baseUrl"
-      override private[connectors] val env     = "ist0"
-      override private[connectors] val token   = "token"
-      override private[connectors] val fullUrl = s"$baseUrl/$requestUrl"
-    }
+  val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient) {
+    override private[connectors] val baseUrl: String = "http://localhost:1234"
+    override private[connectors] val env: String = "ist0"
+    override private[connectors] val token: String = "token"
+    override private[connectors] val fullUrl: String = s"$baseUrl/anti-money-laundering/subscription"
   }
+  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val mockRequestBuilder = mock[RequestBuilder]
+  val safeId = "SAFEID"
+  val url = s"${connector.fullUrl}/registration/details?safeid=$safeId"
+  val registrationDetails = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
+  "RegistrationDetailsDesConnector" must {
 
-  "The RegistrationDetailsDesConnector" must {
-    "get the registration details" in new Fixture {
-
-      val safeId  = "SAFEID"
-      val details =
-        RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
-
-      when {
-        connector.httpClientV2.get(url"${mockAppConfig.desUrl}/registration/details?safeid=$safeId").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.successful(HttpResponse(status = OK, json = Json.toJson(details), headers = Map.empty))
-
-      whenReady(connector.getRegistrationDetails(safeId)) {
-        _ mustBe details
+    "return registration details successfully" in {
+      println(s"$url")
+      val response = HttpResponse(OK, json = Json.toJson(registrationDetails), headers = Map.empty)
+      when(connector.httpClientV2.get(url"$url")).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
+      whenReady(connector.getRegistrationDetails(safeId)) {result =>
+        result mustBe registrationDetails
       }
-
     }
+
   }
 }

@@ -25,6 +25,7 @@ import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.AmlsBaseSpec
 
@@ -32,14 +33,15 @@ import scala.concurrent.Future
 
 class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
 
-  trait Fixture {
+
 
     val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl  = s"url/pay-api/payment/summary/${testPayment.id}"
+    val paymentUrl  = s"http://localhost:1234/pay-api/payment/summary/${testPayment.id}"
 
     val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
-      override private[connectors] val paymentUrl = "url"
+      override private[connectors] val paymentUrl = "http://localhost:1234"
     }
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
     val testPaymentId = testPayment.id
 
@@ -48,11 +50,11 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
     when {
       testConnector.metrics.timer(ArgumentMatchers.eq(PayAPI))
     } thenReturn mockTimer
-  }
+
 
   "PayAPIConnector" must {
 
-    "return a successful response" in new Fixture {
+    "return a successful response" in  {
 
       val response = HttpResponse(
         status = OK,
@@ -61,21 +63,23 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       )
 
       when {
-        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        testConnector.httpClientV2.get(url"$paymentUrl")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.getPayment(testPaymentId)) {
         _ mustEqual testPayment
       }
     }
 
-    "return an unsuccessful response when a non-200 response is returned" in new Fixture {
+    "return an unsuccessful response when a non-200 response is returned" in {
 
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        testConnector.httpClientV2.get(url"$paymentUrl")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>
         status mustEqual BAD_REQUEST
@@ -83,11 +87,12 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       }
     }
 
-    "return an unsuccessful response when an exception is thrown" in new Fixture {
+    "return an unsuccessful response when an exception is thrown" in  {
 
       when {
-        testConnector.httpClientV2.get(url"$paymentUrl").execute[HttpResponse]
-      } thenReturn Future.failed(new Exception("message"))
+        testConnector.httpClientV2.get(url"$paymentUrl")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       whenReady(testConnector.getPayment(testPaymentId).failed) { case HttpStatusException(status, body) =>
         status mustEqual INTERNAL_SERVER_ERROR

@@ -34,7 +34,6 @@ import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import utils.{AmlsBaseSpec, ApiRetryHelper}
 
-import java.net.URL
 import scala.concurrent.Future
 
 class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
@@ -49,11 +48,8 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
   val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
   val mockTimer = mock[Timer.Context]
 
-  val url = new URL(s"${connector.fullUrl}/${amlsRegistrationNumber}/status")
+  val url = s"${connector.fullUrl}/${amlsRegistrationNumber}/status"
   when(connector.metrics.timer(ArgumentMatchers.eq(API9))).thenReturn(mockTimer)
-  println(s"Response : ${successModel}")
-  println(s"URL : ${url}")
-  println(s"1 line")
   "DESConnector" must {
     "return a successful future" in {
       val response = HttpResponse(

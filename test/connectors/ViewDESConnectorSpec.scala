@@ -25,49 +25,59 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import play.api.http.Status._
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
-import utils.AmlsBaseSpec
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.Future
 
 class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  trait Fixture {
+
     val testDESConnector = new ViewDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
+      override private[connectors] val baseUrl: String = "http://localhost:1234"
       override private[connectors] val token: String   = "token"
       override private[connectors] val env: String     = "ist0"
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
     }
+  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
     val mockTimer = mock[Timer.Context]
-
     val url = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber"
 
     when {
       testDESConnector.metrics.timer(eqTo(API5))
     } thenReturn mockTimer
-  }
+
 
   "DESConnector" must {
 
-    "return a successful future" in new Fixture {
+    "return a successful future" in  {
 
       val response = HttpResponse(
         status = OK,
         json = Json.toJson(ViewSuccessModel),
         headers = Map.empty
       )
+      when {
+        testDESConnector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
-      when(testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse])
-        .thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
         _ mustEqual ViewSuccessModel
       }
     }
 
-    "return a failed future" in new Fixture {
+    "return a failed future" in  {
 
       val response = HttpResponse(
         status = BAD_REQUEST,
@@ -75,8 +85,15 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
         headers = Map.empty
       )
       when {
-        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        testDESConnector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
         status mustEqual BAD_REQUEST
@@ -84,7 +101,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       }
     }
 
-    "return a failed future (json validation)" in new Fixture {
+    "return a failed future (json validation)" in  {
 
       val response = HttpResponse(
         status = OK,
@@ -93,19 +110,32 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       )
 
       when {
-        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.successful(response)
+        testDESConnector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, _) =>
         status mustEqual INTERNAL_SERVER_ERROR
       }
     }
 
-    "return a failed future (exception)" in new Fixture {
-
+    "return a failed future (exception)" in  {
       when {
-        testDESConnector.httpClientV2.get(url"$url").setHeader(any()).execute[HttpResponse]
-      } thenReturn Future.failed(new Exception("message"))
+        testDESConnector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.setHeader(
+        ("Authorization", "token"),
+        ("Environment", "ist0"),
+        ("Accept", "application/json"),
+        ("Content-Type", "application/json;charset=utf-8")
+      )).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
         status mustEqual INTERNAL_SERVER_ERROR
