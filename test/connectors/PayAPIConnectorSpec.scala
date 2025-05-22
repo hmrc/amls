@@ -33,28 +33,25 @@ import scala.concurrent.Future
 
 class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
 
+  val testPayment = payApiPaymentGen.sample.get
+  val paymentUrl  = s"http://localhost:1234/pay-api/payment/summary/${testPayment.id}"
 
-
-    val testPayment = payApiPaymentGen.sample.get
-    val paymentUrl  = s"http://localhost:1234/pay-api/payment/summary/${testPayment.id}"
-
-    val testConnector = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
-      override private[connectors] val paymentUrl = "http://localhost:1234"
-    }
+  val testConnector                      = new PayAPIConnector(mockAppConfig, mockHttpClient, mockMetrics) {
+    override private[connectors] val paymentUrl = "http://localhost:1234"
+  }
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
-    val testPaymentId = testPayment.id
+  val testPaymentId = testPayment.id
 
-    val mockTimer = mock[Timer.Context]
+  val mockTimer = mock[Timer.Context]
 
-    when {
-      testConnector.metrics.timer(ArgumentMatchers.eq(PayAPI))
-    } thenReturn mockTimer
-
+  when {
+    testConnector.metrics.timer(ArgumentMatchers.eq(PayAPI))
+  } thenReturn mockTimer
 
   "PayAPIConnector" must {
 
-    "return a successful response" in  {
+    "return a successful response" in {
 
       val response = HttpResponse(
         status = OK,
@@ -87,7 +84,7 @@ class PayAPIConnectorSpec extends AmlsBaseSpec with PayApiGenerator {
       }
     }
 
-    "return an unsuccessful response when an exception is thrown" in  {
+    "return an unsuccessful response when an exception is thrown" in {
 
       when {
         testConnector.httpClientV2.get(url"$paymentUrl")

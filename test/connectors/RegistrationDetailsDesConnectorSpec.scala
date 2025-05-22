@@ -27,33 +27,41 @@ import utils.{AmlsBaseSpec, ApiRetryHelper}
 import scala.concurrent.Future
 
 class RegistrationDetailsDesConnectorSpec extends AmlsBaseSpec with BeforeAndAfter {
+  when(mockAppConfig.desUrl).thenReturn("http://localhost:1234")
+  when(mockAppConfig.desToken).thenReturn("token")
+  when(mockAppConfig.desEnv).thenReturn("ist0")
 
-  val connector = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient) {
-    override private[connectors] val baseUrl: String = "http://localhost:1234"
-    override private[connectors] val env: String = "ist0"
-    override private[connectors] val token: String = "token"
-    override private[connectors] val fullUrl: String = s"$baseUrl/anti-money-laundering/subscription"
-  }
-  val mockApiRetryHelper = mock[ApiRetryHelper]
-  val mockRequestBuilder = mock[RequestBuilder]
-  val safeId = "SAFEID"
-  val url = s"${connector.fullUrl}/registration/details?safeid=$safeId"
-  val registrationDetails = RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
+  val connector           = new RegistrationDetailsDesConnector(mockAppConfig, mockHttpClient)
+  val mockApiRetryHelper  = mock[ApiRetryHelper]
+  val mockRequestBuilder  = mock[RequestBuilder]
+  val safeId              = "SAFEID"
+  val url                 = s"http://localhost:1234/registration/details?safeid=$safeId"
+  val registrationDetails =
+    RegistrationDetails(isAnIndividual = false, Organisation("Test organisation", Some(false), Some(Partnership)))
+
   "RegistrationDetailsDesConnector" must {
 
     "return registration details successfully" in {
-      println(s"$url")
       val response = HttpResponse(OK, json = Json.toJson(registrationDetails), headers = Map.empty)
-      when(connector.httpClientV2.get(url"$url")).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
-      whenReady(connector.getRegistrationDetails(safeId)) {result =>
-        result mustBe registrationDetails
+
+      when {
+        connector.httpClientV2.get(url"$url")
+      } thenReturn mockRequestBuilder
+
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "Bearer token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(response))
+
+      whenReady(connector.getRegistrationDetails(safeId)) { result =>
+        result mustEqual registrationDetails
       }
     }
 

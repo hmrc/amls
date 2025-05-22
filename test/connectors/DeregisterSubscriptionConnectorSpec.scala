@@ -35,26 +35,24 @@ import scala.concurrent.Future
 
 class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-
-  val connector =
-      new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-        override private[connectors] val baseUrl: String = "http://localhost:1234"
-        override private[connectors] val token: String   = "token"
-        override private[connectors] val env: String     = "ist0"
-        override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
-      }
-  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val connector                          =
+    new DeregisterSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+      override private[connectors] val baseUrl: String = "http://localhost:1234"
+      override private[connectors] val token: String   = "token"
+      override private[connectors] val env: String     = "ist0"
+      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
+    }
+  val mockApiRetryHelper                 = mock[ApiRetryHelper]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
-  val successModel = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
-  val mockTimer = mock[Timer.Context]
+  val successModel                       = DeregisterSubscriptionResponse("2016-09-17T09:30:47Z")
+  val mockTimer                          = mock[Timer.Context]
   when {
-      connector.metrics.timer(ArgumentMatchers.eq(API10))
-    } thenReturn mockTimer
-
+    connector.metrics.timer(ArgumentMatchers.eq(API10))
+  } thenReturn mockTimer
 
   val url = s"${connector.fullUrl}/$amlsRegistrationNumber/deregistration"
 
-  val testRequest  = DeregisterSubscriptionRequest(
+  val testRequest = DeregisterSubscriptionRequest(
     "AEF7234BGG12539GH143856HEA123412",
     "2015-08-23",
     DeregistrationReason.Other,
@@ -73,13 +71,16 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       when {
         connector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(connector.deregistration(amlsRegistrationNumber, testRequest)) {
@@ -87,7 +88,7 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       }
     }
 
-    "return failed response on invalid request" in  {
+    "return failed response on invalid request" in {
       val response = HttpResponse(
         status = BAD_REQUEST,
         body = "",
@@ -97,13 +98,16 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       when {
         connector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
       whenReady(connector.deregistration(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
@@ -112,17 +116,20 @@ class DeregisterSubscriptionConnectorSpec extends AmlsBaseSpec with AmlsReferenc
       }
     }
 
-    "return failed response on exception" in  {
+    "return failed response on exception" in {
       when {
         connector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       whenReady(

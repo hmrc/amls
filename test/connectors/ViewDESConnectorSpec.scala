@@ -33,27 +33,25 @@ import scala.concurrent.Future
 
 class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-
-    val testDESConnector = new ViewDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "http://localhost:1234"
-      override private[connectors] val token: String   = "token"
-      override private[connectors] val env: String     = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-    }
-  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val testDESConnector                   = new ViewDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+    override private[connectors] val baseUrl: String = "http://localhost:1234"
+    override private[connectors] val token: String   = "token"
+    override private[connectors] val env: String     = "ist0"
+    override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
+  }
+  val mockApiRetryHelper                 = mock[ApiRetryHelper]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
-    val mockTimer = mock[Timer.Context]
-    val url = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber"
+  val mockTimer = mock[Timer.Context]
+  val url       = s"${testDESConnector.fullUrl}/$amlsRegistrationNumber"
 
-    when {
-      testDESConnector.metrics.timer(eqTo(API5))
-    } thenReturn mockTimer
-
+  when {
+    testDESConnector.metrics.timer(eqTo(API5))
+  } thenReturn mockTimer
 
   "DESConnector" must {
 
-    "return a successful future" in  {
+    "return a successful future" in {
 
       val response = HttpResponse(
         status = OK,
@@ -63,21 +61,22 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       when {
         testDESConnector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
-
 
       whenReady(testDESConnector.view(amlsRegistrationNumber)) {
         _ mustEqual ViewSuccessModel
       }
     }
 
-    "return a failed future" in  {
+    "return a failed future" in {
 
       val response = HttpResponse(
         status = BAD_REQUEST,
@@ -87,12 +86,14 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       when {
         testDESConnector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>
@@ -101,7 +102,7 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       }
     }
 
-    "return a failed future (json validation)" in  {
+    "return a failed future (json validation)" in {
 
       val response = HttpResponse(
         status = OK,
@@ -112,12 +113,14 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       when {
         testDESConnector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, _) =>
@@ -125,16 +128,18 @@ class ViewDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerato
       }
     }
 
-    "return a failed future (exception)" in  {
+    "return a failed future (exception)" in {
       when {
         testDESConnector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       whenReady(testDESConnector.view(amlsRegistrationNumber).failed) { case HttpStatusException(status, body) =>

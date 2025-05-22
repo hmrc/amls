@@ -43,37 +43,36 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     reset(mockAuditConnector)
   }
 
-  val testConnector = new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "http://localhost:1234"
-      override private[connectors] val token: String   = "token"
-      override private[connectors] val env: String     = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
+  val testConnector                      = new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+    override private[connectors] val baseUrl: String = "http://localhost:1234"
+    override private[connectors] val token: String   = "token"
+    override private[connectors] val env: String     = "ist0"
+    override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
   }
-  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val mockApiRetryHelper                 = mock[ApiRetryHelper]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
-  val safeId = "safeId"
+  val safeId                             = "safeId"
 
   val successModel = des.SubscriptionResponse(
-      etmpFormBundleNumber = "111111",
-      amlsRefNo = amlsRegistrationNumber,
-      Some(1301737.96),
-      Some(231.42),
-      870458,
-      2172427.38,
-      "string"
-    )
+    etmpFormBundleNumber = "111111",
+    amlsRefNo = amlsRegistrationNumber,
+    Some(1301737.96),
+    Some(231.42),
+    870458,
+    2172427.38,
+    "string"
+  )
 
   val url = s"${testConnector.fullUrl}/$safeId"
 
   val mockTimer = mock[Timer.Context]
   when {
-      testConnector.metrics.timer(ArgumentMatchers.eq(API4))
+    testConnector.metrics.timer(ArgumentMatchers.eq(API4))
   } thenReturn mockTimer
-
 
   "DESConnector" must {
 
-    "return a succesful future" in  {
+    "return a succesful future" in {
 
       val response = HttpResponse(
         status = OK,
@@ -83,13 +82,16 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       when {
         testConnector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.subscribe(safeId, testRequest)) {
@@ -97,7 +99,7 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       }
     }
 
-    "return a failed future" in  {
+    "return a failed future" in {
 
       val response = HttpResponse(
         status = BAD_REQUEST,
@@ -108,13 +110,16 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       when {
         testConnector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
@@ -138,13 +143,16 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       when {
         testConnector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       when {
@@ -172,13 +180,16 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       when {
         testConnector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       when {
@@ -206,14 +217,18 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       when {
         testConnector.httpClientV2.post(url"$url")
       } thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(HttpStatusException(BAD_REQUEST, Some("error message"))))
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.failed(HttpStatusException(BAD_REQUEST, Some("error message"))))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())

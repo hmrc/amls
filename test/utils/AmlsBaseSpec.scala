@@ -41,7 +41,7 @@ trait AmlsBaseSpec
   val mockEnvironment: Environment       = mock[Environment]
   val mockAppConfig: ApplicationConfig   = mock[ApplicationConfig]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
-  val mockHttpClient: HttpClientV2         = mock[HttpClientV2]
+  val mockHttpClient: HttpClientV2       = mock[HttpClientV2]
   val mockCC: ControllerComponents       = mock[ControllerComponents]
   val mockBodyParsers: PlayBodyParsers   = mock[PlayBodyParsers]
   val mockMetrics: Metrics               = mock[Metrics]

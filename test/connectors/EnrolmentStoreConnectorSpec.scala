@@ -35,43 +35,47 @@ import java.net.URL
 class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with BaseGenerator with AmlsReferenceNumberGenerator {
 
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
-  val mockTimer = mock[Timer.Context]
-  val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
-  val enrolmentKey = AmlsEnrolmentKey(amlsRegistrationNumber)
-  val knownFacts = KnownFacts(
+  val mockTimer                          = mock[Timer.Context]
+  val connector                          = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
+  val enrolmentKey                       = AmlsEnrolmentKey(amlsRegistrationNumber)
+  val knownFacts                         = KnownFacts(
     Set(
       KnownFact("Postcode", postcodeGen.sample.get),
       KnownFact("SafeId", "safeId"),
       KnownFact("MLRRefNumber", amlsRegistrationNumber)
     )
   )
-  val url = new URL(s"http://localhost:1234/tax-enrolments/enrolments/${enrolmentKey.key}")
+  val url                                = new URL(s"http://localhost:1234/tax-enrolments/enrolments/${enrolmentKey.key}")
 
   "addKnownFacts" must {
     "return successful response when DES returns 204" in {
       when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
       when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
       when {
         connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
-      } thenReturn (mockTimer)
+      } thenReturn mockTimer
       val response = HttpResponse(status = NO_CONTENT, body = "message")
       when {
         connector.addKnownFacts(enrolmentKey, knownFacts)
       } thenReturn (Future.successful(response))
-      whenReady(connector.addKnownFacts(enrolmentKey, knownFacts)) { result => result mustEqual response }
+      whenReady(connector.addKnownFacts(enrolmentKey, knownFacts))(result => result mustEqual response)
       response.status shouldBe NO_CONTENT
     }
 
     "return an unsuccessful response when a non-200 response is returned" in {
       when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
       when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(HttpResponse(BAD_REQUEST, "")))
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(HttpResponse(BAD_REQUEST, "")))
       when {
         connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
-      } thenReturn (mockTimer)
+      } thenReturn mockTimer
       val response = HttpResponse(status = BAD_REQUEST, body = "")
       when {
         connector.addKnownFacts(enrolmentKey, knownFacts)
@@ -86,11 +90,12 @@ class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with BaseGenerator with A
     "return an unsuccessful response when an exception is thrown" in {
       when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
       when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any())).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn((Future.failed(new Exception("message"))))
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
       when {
         connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
-      } thenReturn (mockTimer)
+      } thenReturn mockTimer
       when {
         connector.addKnownFacts(enrolmentKey, knownFacts)
       } thenReturn (Future.failed(new Exception("message")))

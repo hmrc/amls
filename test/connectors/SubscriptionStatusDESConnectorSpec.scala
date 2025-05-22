@@ -37,18 +37,18 @@ import utils.{AmlsBaseSpec, ApiRetryHelper}
 import scala.concurrent.Future
 
 class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
-  val connector = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics){
+  val connector                          = new SubscriptionStatusDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
     override private[connectors] val baseUrl: String = "http://localhost:1234"
     override private[connectors] val token: String   = "token"
     override private[connectors] val env: String     = "ist0"
     override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
   }
-  val mockApiRetryHelper = mock[ApiRetryHelper]
+  val mockApiRetryHelper                 = mock[ApiRetryHelper]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
-  val successModel = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
-  val mockTimer = mock[Timer.Context]
+  val successModel                       = des.ReadStatusResponse(LocalDateTime.now(), "Approved", None, None, None, None, false)
+  val mockTimer                          = mock[Timer.Context]
 
-  val url = s"${connector.fullUrl}/${amlsRegistrationNumber}/status"
+  val url = s"${connector.fullUrl}/$amlsRegistrationNumber/status"
   when(connector.metrics.timer(ArgumentMatchers.eq(API9))).thenReturn(mockTimer)
   "DESConnector" must {
     "return a successful future" in {
@@ -62,12 +62,14 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
         connector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
 
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
 
       when(mockRequestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(response))
@@ -88,12 +90,14 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
         connector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
 
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
 
       when(mockRequestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(response))
@@ -104,7 +108,7 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
       }
     }
 
-    "return a failed future (json validation)" in  {
+    "return a failed future (json validation)" in {
       val response = HttpResponse(
         status = OK,
         json = Json.toJson("message"),
@@ -115,12 +119,14 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
         connector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
 
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
 
       when(mockRequestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.successful(response))
@@ -131,17 +137,19 @@ class SubscriptionStatusDESConnectorSpec extends AmlsBaseSpec with AmlsReference
       }
     }
 
-    "return a failed future (exception)" in  {
+    "return a failed future (exception)" in {
       when {
         connector.httpClientV2.get(url"$url")
       } thenReturn mockRequestBuilder
 
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
 
       when(mockRequestBuilder.execute[HttpResponse](any(), any()))
         .thenReturn(Future.failed(new Exception("message")))

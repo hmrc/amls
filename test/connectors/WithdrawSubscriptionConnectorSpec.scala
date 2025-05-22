@@ -36,22 +36,22 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
   implicit val defaultPatience: PatienceConfig =
     PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  val withdrawSubscriptionConnector =
+  val withdrawSubscriptionConnector      =
     new WithdrawSubscriptionConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
       override private[connectors] val baseUrl: String = "http://localhost:1234"
       override private[connectors] val token: String   = "token"
       override private[connectors] val env: String     = "ist0"
       override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl"
     }
-  val amlsRegistrationNumber = "1121212UUUI"
-  val mockTimer = mock[Timer.Context]
+  val amlsRegistrationNumber             = "1121212UUUI"
+  val mockTimer                          = mock[Timer.Context]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
   when {
     withdrawSubscriptionConnector.metrics.timer(ArgumentMatchers.eq(API8))
   } thenReturn mockTimer
-  val url                    = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"
-  val successModel = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
-  val testRequest  = WithdrawSubscriptionRequest(
+  val url                                = s"${withdrawSubscriptionConnector.fullUrl}/$amlsRegistrationNumber/withdrawal"
+  val successModel                       = WithdrawSubscriptionResponse("2016-09-17T09:30:47Z")
+  val testRequest                        = WithdrawSubscriptionRequest(
     "AEF7234BGG12539GH143856HEA123412",
     "2015-08-23",
     WithdrawalReason.Other,
@@ -69,36 +69,42 @@ class WithdrawSubscriptionConnectorSpec extends AmlsBaseSpec {
           "CorrelationId" -> Seq("my-correlation-id")
         )
       )
-      when {withdrawSubscriptionConnector.httpClientV2.post(url"$url")} thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(withdrawSubscriptionConnector.httpClientV2.post(url"$url")) thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
-      whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber,testRequest)){
-        result => result mustEqual successModel
+      whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest)) { result =>
+        result mustEqual successModel
       }
 
     }
 
-    "return failed response on invalid request" in  {
+    "return failed response on invalid request" in {
       val response = HttpResponse(
         status = BAD_REQUEST,
         body = "",
         headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
-      when {withdrawSubscriptionConnector.httpClientV2.post(url"$url")} thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(withdrawSubscriptionConnector.httpClientV2.post(url"$url")) thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
@@ -107,16 +113,19 @@ when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(
       }
     }
 
-    "return failed response on exception" in  {
+    "return failed response on exception" in {
 
-      when {withdrawSubscriptionConnector.httpClientV2.post(url"$url")} thenReturn mockRequestBuilder
-      when(mockRequestBuilder.setHeader(
-        ("Authorization", "token"),
-        ("Environment", "ist0"),
-        ("Accept", "application/json"),
-        ("Content-Type", "application/json;charset=utf-8")
-      )).thenReturn(mockRequestBuilder)
-      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any())).thenReturn(mockRequestBuilder)
+      when(withdrawSubscriptionConnector.httpClientV2.post(url"$url")) thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
+        )
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
       when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
       whenReady(withdrawSubscriptionConnector.withdrawal(amlsRegistrationNumber, testRequest).failed) {
         case HttpStatusException(status, body) =>
