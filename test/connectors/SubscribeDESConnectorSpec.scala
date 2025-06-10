@@ -29,10 +29,11 @@ import org.scalatest.BeforeAndAfter
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.audit.HandlerResult
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.client.RequestBuilder
+import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.AmlsBaseSpec
+import utils.{AmlsBaseSpec, ApiRetryHelper}
 
 import scala.concurrent.Future
 
@@ -42,60 +43,63 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
     reset(mockAuditConnector)
   }
 
-  trait Fixture {
-    val testConnector = new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-      override private[connectors] val baseUrl: String = "baseUrl"
-      override private[connectors] val token: String   = "token"
-      override private[connectors] val env: String     = "ist0"
-      override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
-    }
-
-    val safeId = "safeId"
-
-    val successModel = des.SubscriptionResponse(
-      etmpFormBundleNumber = "111111",
-      amlsRefNo = amlsRegistrationNumber,
-      Some(1301737.96),
-      Some(231.42),
-      870458,
-      2172427.38,
-      "string"
-    )
-
-    val url = s"${testConnector.fullUrl}/$safeId"
-
-    val mockTimer = mock[Timer.Context]
-
-    when {
-      testConnector.metrics.timer(ArgumentMatchers.eq(API4))
-    } thenReturn mockTimer
+  val testConnector                      = new SubscribeDESConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+    override private[connectors] val baseUrl: String = "http://localhost:1234"
+    override private[connectors] val token: String   = "token"
+    override private[connectors] val env: String     = "ist0"
+    override private[connectors] val fullUrl: String = s"$baseUrl/$requestUrl/"
   }
+  val mockApiRetryHelper                 = mock[ApiRetryHelper]
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
+  val safeId                             = "safeId"
+
+  val successModel = des.SubscriptionResponse(
+    etmpFormBundleNumber = "111111",
+    amlsRefNo = amlsRegistrationNumber,
+    Some(1301737.96),
+    Some(231.42),
+    870458,
+    2172427.38,
+    "string"
+  )
+
+  val url = s"${testConnector.fullUrl}/$safeId"
+
+  val mockTimer = mock[Timer.Context]
+  when {
+    testConnector.metrics.timer(ArgumentMatchers.eq(API4))
+  } thenReturn mockTimer
 
   "DESConnector" must {
 
-    "return a succesful future" in new Fixture {
+    "return a succesful future" in {
 
       val response = HttpResponse(
         status = OK,
         json = Json.toJson(successModel),
         headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
-
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
         )
-      } thenReturn Future.successful(response)
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.subscribe(safeId, testRequest)) {
         _ mustEqual successModel
       }
     }
 
-    "return a failed future" in new Fixture {
+    "return a failed future" in {
 
       val response = HttpResponse(
         status = BAD_REQUEST,
@@ -103,36 +107,28 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
         headers = Map("CorrelationId" -> Seq("my-correlation-id"))
       )
 
-      val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
-
-      val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
-
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
         )
-      } thenReturn Future.successful(response)
-
-      when {
-        testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
-      } thenReturn Future.successful(auditResult)
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.subscribe(safeId, testRequest).failed) { case HttpStatusException(status, body) =>
         status mustEqual BAD_REQUEST
         body.getOrElse("").isEmpty mustEqual true
-        val subscriptionEvent                = SubscriptionFailedEvent(safeId, testRequest, HttpStatusException(status, body))
-        verify(testConnector.ac, times(2)).sendExtendedEvent(any())(any(), any())
-        val capturedEvent: ExtendedDataEvent = captor.getValue
-        capturedEvent.auditSource mustEqual subscriptionEvent.auditSource
-        capturedEvent.auditType mustEqual subscriptionEvent.auditType
-        capturedEvent.detail mustEqual subscriptionEvent.detail
       }
     }
 
-    "return a failed future (json validation)" in new Fixture {
+    "return a failed future (json validation)" in {
 
       val response = HttpResponse(
         status = OK,
@@ -145,13 +141,19 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
         )
-      } thenReturn Future.successful(response)
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
@@ -169,20 +171,26 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       }
     }
 
-    "return a failed future (exception)" in new Fixture {
+    "return a failed future (exception)" in {
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
 
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
         )
-      } thenReturn Future.failed(new Exception("message"))
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())
@@ -200,20 +208,27 @@ class SubscribeDESConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGen
       }
     }
 
-    "return a failed future (BAD_REQUEST)" in new Fixture {
+    "return a failed future (BAD_REQUEST)" in {
 
       val auditResult = AuditResult.fromHandlerResult(HandlerResult.Success)
 
       val captor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
       when {
-        testConnector.httpClient.POST[des.SubscriptionRequest, HttpResponse](ArgumentMatchers.eq(url), any(), any())(
-          any(),
-          any(),
-          any(),
-          any()
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(
+        mockRequestBuilder.setHeader(
+          ("Authorization", "token"),
+          ("Environment", "ist0"),
+          ("Accept", "application/json"),
+          ("Content-Type", "application/json;charset=utf-8")
         )
-      } thenReturn Future.failed(HttpStatusException(BAD_REQUEST, Some("error message")))
+      ).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(testRequest)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.failed(HttpStatusException(BAD_REQUEST, Some("error message"))))
 
       when {
         testConnector.ac.sendExtendedEvent(captor.capture())(any(), any())

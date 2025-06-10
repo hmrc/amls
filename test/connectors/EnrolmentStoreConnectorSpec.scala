@@ -16,92 +16,93 @@
 
 package connectors
 
+import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
+import org.mockito.ArgumentMatchers.any
 import com.codahale.metrics.Timer
 import exceptions.HttpStatusException
-import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
-import metrics.EnrolmentStoreKnownFacts
-import models.enrolment.{AmlsEnrolmentKey, KnownFact, KnownFacts}
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import play.api.test.Helpers._
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.RequestBuilder
 import uk.gov.hmrc.http.HttpResponse
+import metrics.EnrolmentStoreKnownFacts
+import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
+import org.mockito.ArgumentMatchers
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NO_CONTENT}
 import utils.AmlsBaseSpec
-
 import scala.concurrent.Future
+import java.net.URL
 
-class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator with BaseGenerator {
+class EnrolmentStoreConnectorSpec extends AmlsBaseSpec with BaseGenerator with AmlsReferenceNumberGenerator {
 
-  trait Fixture {
-
-    val mockTimer = mock[Timer.Context]
-
-    val connector = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
-
-    val baseUrl  = "http://localhost:7775"
-    val enrolKey = AmlsEnrolmentKey(amlsRegistrationNumber)
-    val url      = s"$baseUrl/tax-enrolments/enrolments/${enrolKey.key}"
-
-    val knownFacts = KnownFacts(
-      Set(
-        KnownFact("Postcode", postcodeGen.sample.get),
-        KnownFact("SafeId", "safeId"),
-        KnownFact("MLRRefNumber", amlsRegistrationNumber)
-      )
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
+  val mockTimer                          = mock[Timer.Context]
+  val connector                          = new EnrolmentStoreConnector(mockHttpClient, mockMetrics, mockAuditConnector, mockAppConfig)
+  val enrolmentKey                       = AmlsEnrolmentKey(amlsRegistrationNumber)
+  val knownFacts                         = KnownFacts(
+    Set(
+      KnownFact("Postcode", postcodeGen.sample.get),
+      KnownFact("SafeId", "safeId"),
+      KnownFact("MLRRefNumber", amlsRegistrationNumber)
     )
+  )
+  val url                                = new URL(s"http://localhost:1234/tax-enrolments/enrolments/${enrolmentKey.key}")
 
-    when {
-      connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
-    } thenReturn mockTimer
-
-    when {
-      connector.config.enrolmentStoreUrl
-    } thenReturn baseUrl
-
-    def mockResponse(response: Future[HttpResponse]) =
+  "addKnownFacts" must {
+    "return successful response when DES returns 204" in {
+      when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
+      when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
       when {
-        connector.httpClient.PUT[KnownFacts, HttpResponse](any(), any(), any())(any(), any(), any(), any())
-      } thenReturn response
+        connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
+      } thenReturn mockTimer
+      val response = HttpResponse(status = NO_CONTENT, body = "message")
+      when {
+        connector.addKnownFacts(enrolmentKey, knownFacts)
+      } thenReturn (Future.successful(response))
+      whenReady(connector.addKnownFacts(enrolmentKey, knownFacts))(result => result mustEqual response)
+      response.status shouldBe NO_CONTENT
+    }
 
-  }
-
-  "enrol" when {
-    "called" must {
-      "call the ES6 enrolment store endpoint for known facts" in new Fixture {
-
-        val response = HttpResponse(status = NO_CONTENT, body = "message")
-
-        mockResponse(Future.successful(response))
-
-        whenReady(connector.addKnownFacts(enrolKey, knownFacts)) { result =>
-          result mustEqual response
-          verify(connector.httpClient).PUT[KnownFacts, HttpResponse](
-            ArgumentMatchers.eq(url),
-            ArgumentMatchers.eq(knownFacts),
-            any()
-          )(any(), any(), any(), any())
-        }
+    "return an unsuccessful response when a non-200 response is returned" in {
+      when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
+      when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any()))
+        .thenReturn(Future.successful(HttpResponse(BAD_REQUEST, "")))
+      when {
+        connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
+      } thenReturn mockTimer
+      val response = HttpResponse(status = BAD_REQUEST, body = "")
+      when {
+        connector.addKnownFacts(enrolmentKey, knownFacts)
+      } thenReturn (Future.successful(response))
+      whenReady(connector.addKnownFacts(enrolmentKey, knownFacts).failed) { case HttpStatusException(status, body) =>
+        status mustEqual BAD_REQUEST
+        body.getOrElse("").isEmpty mustEqual true
       }
+      response.status shouldBe BAD_REQUEST
+    }
 
-      "return an unsuccessful response when a non-200 response is returned" in new Fixture {
-
-        mockResponse(Future.successful(HttpResponse(status = BAD_REQUEST, body = "")))
-
-        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) { case HttpStatusException(status, body) =>
-          status mustEqual BAD_REQUEST
-          body.getOrElse("").isEmpty mustEqual true
-        }
-      }
-
-      "return an unsuccessful response when an exception is thrown" in new Fixture {
-
-        mockResponse(Future.failed(new Exception("message")))
-
-        whenReady(connector.addKnownFacts(enrolKey, knownFacts).failed) { case HttpStatusException(status, body) =>
-          status mustEqual INTERNAL_SERVER_ERROR
-          body mustBe Some("message")
-        }
+    "return an unsuccessful response when an exception is thrown" in {
+      when(mockAppConfig.enrolmentStoreUrl).thenReturn("http://localhost:1234")
+      when(mockHttpClient.put(ArgumentMatchers.eq(url))(any())).thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
+      when {
+        connector.metrics.timer(ArgumentMatchers.eq(EnrolmentStoreKnownFacts))
+      } thenReturn mockTimer
+      when {
+        connector.addKnownFacts(enrolmentKey, knownFacts)
+      } thenReturn (Future.failed(new Exception("message")))
+      whenReady(connector.addKnownFacts(enrolmentKey, knownFacts).failed) { case HttpStatusException(status, body) =>
+        status mustEqual INTERNAL_SERVER_ERROR
+        body mustBe Some("message")
       }
     }
   }
-
 }

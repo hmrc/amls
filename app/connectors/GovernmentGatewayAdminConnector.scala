@@ -25,6 +25,7 @@ import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils._
@@ -35,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class GovernmentGatewayAdminConnector @Inject() (
   private[connectors] val applicationConfig: ApplicationConfig,
   private[connectors] val auditConnector: AuditConnector,
-  private[connectors] val httpClient: HttpClient,
+  private[connectors] val httpClientV2: HttpClientV2,
   private[connectors] val metrics: Metrics
 )(implicit executionContext: ExecutionContext)
     extends HttpResponseHelper
@@ -57,32 +58,38 @@ class GovernmentGatewayAdminConnector @Inject() (
     val prefix = "[GovernmentGatewayAdminConnector][addKnownFacts]"
     val timer  = metrics.timer(GGAdmin)
     logger.debug(s"$prefix - Request body: ${Json.toJson(knownFacts)}")
-    httpClient.POST[KnownFactsForService, HttpResponse](postUrl, knownFacts) map { response =>
-      timer.stop()
-      logger.debug(s"$prefix - Base Response: ${response.status}")
-      logger.debug(s"$prefix - Response body: ${response.body}")
-      response
-    } flatMap {
-      case response @ status(OK) =>
-        metrics.success(GGAdmin)
-        audit.sendDataEvent(KnownFactsEvent(knownFacts))
-        logger.debug(s"$prefix - Success Response")
-        logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
-        Future.successful(response)
-      case response @ status(s)  =>
-        metrics.failed(GGAdmin)
-        logger.warn(s"$prefix - Failure Response: $s")
-        logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
-        Future.failed(HttpStatusException(s, Option(response.body)))
-    } recoverWith {
-      case e: HttpStatusException =>
-        logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(e)
-      case e                      =>
+    httpClientV2
+      .post(url"$postUrl")
+      .withBody(Json.toJson(knownFacts))
+      .execute[HttpResponse]
+      .map { response =>
         timer.stop()
-        metrics.failed(GGAdmin)
-        logger.warn(s"$prefix - Failure: Exception", e)
-        Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
-    }
+        logger.debug(s"$prefix - Base Response: ${response.status}")
+        logger.debug(s"$prefix - Response body: ${response.body}")
+        response
+      }
+      .flatMap {
+        case response @ status(OK) =>
+          metrics.success(GGAdmin)
+          audit.sendDataEvent(KnownFactsEvent(knownFacts))
+          logger.debug(s"$prefix - Success Response")
+          logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+          Future.successful(response)
+        case response @ status(s)  =>
+          metrics.failed(GGAdmin)
+          logger.warn(s"$prefix - Failure Response: $s")
+          logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+          Future.failed(HttpStatusException(s, Option(response.body)))
+      }
+      .recoverWith {
+        case e: HttpStatusException =>
+          logger.warn(s"$prefix - Failure: Exception", e)
+          Future.failed(e)
+        case e                      =>
+          timer.stop()
+          metrics.failed(GGAdmin)
+          logger.warn(s"$prefix - Failure: Exception", e)
+          Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
+      }
   }
 }

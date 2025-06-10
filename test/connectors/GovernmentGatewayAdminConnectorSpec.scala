@@ -26,83 +26,78 @@ import org.mockito.ArgumentMatchers.any
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import utils.AmlsBaseSpec
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.RequestBuilder
 
 import scala.concurrent.Future
 
 class GovernmentGatewayAdminConnectorSpec extends AmlsBaseSpec with AmlsReferenceNumberGenerator {
 
-  trait Fixture {
+  val testConnector =
+    new GovernmentGatewayAdminConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
+      override private[connectors] val serviceURL = "http://localhost:1234"
+    }
 
-    val testConnector =
-      new GovernmentGatewayAdminConnector(mockAppConfig, mockAuditConnector, mockHttpClient, mockMetrics) {
-        override private[connectors] val serviceURL = "url"
-      }
-
-    val knownFacts = KnownFactsForService(
-      Seq(
-        KnownFact("SafeId", "safeId"),
-        KnownFact("MLRRefNumber", amlsRegistrationNumber)
-      )
+  val knownFacts = KnownFactsForService(
+    Seq(
+      KnownFact("SafeId", "safeId"),
+      KnownFact("MLRRefNumber", amlsRegistrationNumber)
     )
+  )
 
-    val url = "url/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
+  val url                                = "http://localhost:1234/government-gateway-admin/service/HMRC-MLR-ORG/known-facts"
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
+  val mockTimer                          = mock[Timer.Context]
 
-    val mockTimer = mock[Timer.Context]
-
-    when {
-      testConnector.metrics.timer(ArgumentMatchers.eq(GGAdmin))
-    } thenReturn mockTimer
-  }
+  when {
+    testConnector.metrics.timer(ArgumentMatchers.eq(GGAdmin))
+  } thenReturn mockTimer
 
   "GovernmentGatewayAdminConnector" must {
 
-    "have correct serviceUrl" in new Fixture {
+    "have correct serviceUrl" in {
       testConnector.postUrl mustEqual url
     }
 
-    "return a successful response" in new Fixture {
+    "return a successful response" in {
 
       val response = HttpResponse(status = OK, body = "message")
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
-      } thenReturn Future.successful(response)
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
 
       whenReady(testConnector.addKnownFacts(knownFacts)) {
         _ mustEqual response
       }
     }
 
-    "return an unsuccessful response when a non-200 response is returned" in new Fixture {
+    "return an unsuccessful response when a non-200 response is returned" in {
 
       val response = HttpResponse(status = BAD_REQUEST, body = "")
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
-      } thenReturn Future.successful(response)
-
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.successful(response))
       whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>
         status mustEqual BAD_REQUEST
         body.getOrElse("").isEmpty mustEqual true
       }
     }
 
-    "return an unsuccessful response when an exception is thrown" in new Fixture {
+    "return an unsuccessful response when an exception is thrown" in {
 
       when {
-        testConnector.httpClient.POST[KnownFactsForService, HttpResponse](
-          ArgumentMatchers.eq(url),
-          ArgumentMatchers.eq(knownFacts),
-          any()
-        )(any(), any(), any(), any())
-      } thenReturn Future.failed(new Exception("message"))
+        testConnector.httpClientV2.post(url"$url")
+      } thenReturn mockRequestBuilder
+      when(mockRequestBuilder.withBody(ArgumentMatchers.eq(Json.toJson(knownFacts)))(any(), any(), any()))
+        .thenReturn(mockRequestBuilder)
+      when(mockRequestBuilder.execute[HttpResponse](any(), any())).thenReturn(Future.failed(new Exception("message")))
 
       whenReady(testConnector.addKnownFacts(knownFacts).failed) { case HttpStatusException(status, body) =>
         status mustEqual INTERNAL_SERVER_ERROR
