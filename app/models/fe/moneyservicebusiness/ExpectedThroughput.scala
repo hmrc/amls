@@ -70,12 +70,21 @@ object ExpectedThroughput {
 
   def convThroughput(msbAll: String): ExpectedThroughput =
     msbAll match {
-      case "£0-£15k"     => First
-      case "£15k-50k"    => Second
-      case "£50k-£100k"  => Third
-      case "£100k-£250k" => Fourth
-      case "£250k-£1m"   => Fifth
-      case "£1m-10m"     => Sixth
-      case "£10m+"       => Seventh
+      case "£0-£15k"          => First
+      case "£15k-50k"         => Second
+      case "£50k-£100k"       => Third
+      case "£100k-£250k"      => Fourth
+      case "£250k-£1m"        => Fifth
+      case "£1m-10m"          => Sixth
+      case "£10m+"            => Seventh
+
+      case "£0-£100k"         => First
+      case "£100k-£500k"      => Second
+      case "£500k-£1m"        => Third
+      case "£1m-£20m"         => Fourth
+      case "£20m-£100m"       => Fifth
+      case "£100m-£1b"        => Sixth
+      case "£1b+"             => Seventh
+      case "£0-£15k"          => First
     }
 }
