@@ -3,7 +3,7 @@ import sbt._
 private object AppDependencies {
   import play.sbt.PlayImport._
 
-  val bootstrapVersion = "9.13.0"
+  val bootstrapVersion = "9.18.0"
 
   private val playV = "play-30"
 
