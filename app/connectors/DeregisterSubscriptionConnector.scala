@@ -20,12 +20,11 @@ import audit.DeregisterSubscriptionEvent
 import config.ApplicationConfig
 import exceptions.HttpStatusException
 import metrics.{API10, Metrics}
-import models.des
 import models.des.{DeregisterSubscriptionRequest, DeregisterSubscriptionResponse}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.{JsSuccess, Json, Writes}
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.Audit
 import utils.{ApiRetryHelper, AuditHelper}
