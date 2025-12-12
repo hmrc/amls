@@ -3,13 +3,13 @@ import sbt._
 private object AppDependencies {
   import play.sbt.PlayImport._
 
-  val bootstrapVersion = "9.18.0"
+  val bootstrapVersion = "9.19.0"
 
   private val playV = "play-30"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc.mongo"    %% s"hmrc-mongo-$playV"         % "2.6.0",
+    "uk.gov.hmrc.mongo"    %% s"hmrc-mongo-$playV"         % "2.11.0",
     "org.typelevel"        %% "cats-core"                  % "2.10.0",
     "com.github.fge"       %  "json-schema-validator"      % "2.2.14",
     "com.beachape"         %% "enumeratum"                 % "1.7.3",
