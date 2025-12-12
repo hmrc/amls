@@ -7,9 +7,11 @@ private object AppDependencies {
 
   private val playV = "play-30"
 
+  val hmrcMongoVersion = "2.11.0"
+
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc.mongo"    %% s"hmrc-mongo-$playV"         % "2.11.0",
+    "uk.gov.hmrc.mongo"    %% s"hmrc-mongo-$playV"         % hmrcMongoVersion,
     "org.typelevel"        %% "cats-core"                  % "2.10.0",
     "com.github.fge"       %  "json-schema-validator"      % "2.2.14",
     "com.beachape"         %% "enumeratum"                 % "1.7.3",
@@ -27,7 +29,7 @@ private object AppDependencies {
         "org.mockito"             %% "mockito-scala"             % "1.17.30"                % scope,
         "org.scalatestplus"       %% "scalacheck-1-17"           % "3.2.17.0"               % scope,
         "uk.gov.hmrc"             %% s"bootstrap-test-$playV"    % bootstrapVersion         % scope,
-        "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playV"   % "2.6.0"                  % scope,
+        "uk.gov.hmrc.mongo"       %% s"hmrc-mongo-test-$playV"   % hmrcMongoVersion                  % scope,
         "org.scalamock" %% "scalamock" % "5.2.0" % scope
       )
     }.test
