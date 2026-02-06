@@ -17,6 +17,7 @@
 package services
 
 import cats.implicits._
+import com.google.inject.Inject
 import com.mongodb.client.result.UpdateResult
 import connectors.PayAPIConnector
 import exceptions.{HttpStatusException, PaymentException}
@@ -33,10 +34,9 @@ import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class PaymentServiceSpec
+class PaymentServiceSpec @Inject() (implicit val ec: ExecutionContext)
     extends PlaySpec
     with ScalaFutures
     with IntegrationPatience
