@@ -16,6 +16,7 @@
 
 package services
 
+import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.{AmendVariationDESConnector, SubscriptionStatusDESConnector, ViewDESConnector}
 import generators.AmlsReferenceNumberGenerator
@@ -37,10 +38,9 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{AmendVariationValidator, ApiRetryHelper}
 
 import java.time.{LocalDate, LocalDateTime}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class AmendVariationServiceSpec
+class AmendVariationServiceSpec @Inject() (implicit val ec: ExecutionContext)
     extends PlaySpec
     with GuiceOneAppPerSuite
     with ScalaFutures
@@ -192,7 +192,7 @@ class AmendVariationServiceSpec
       } thenReturn Future.successful(true)
 
       whenReady(
-        avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))
+        avs.update(amlsRegistrationNumber, request)(hc, ec, apiRetryHelper = mock(classOf[ApiRetryHelper]))
       ) { result =>
         result mustEqual feAmendVariationResponse
       }
