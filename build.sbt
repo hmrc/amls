@@ -63,6 +63,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     libraryDependencies ++= appDependencies,
+    excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),
     retrieveManaged := true,
     PlayKeys.playDefaultPort := 8940
   )
