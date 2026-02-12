@@ -16,7 +16,8 @@ private object AppDependencies {
     "org.typelevel"        %% "cats-core"                  % "2.10.0",
     "com.github.fge"       %  "json-schema-validator"      % "2.2.14" exclude("org.mozilla", "rhino"),
     "org.mozilla"          %  "rhino"                      % "1.8.1",
-    "ch.qos.logback"       % "logback-core"                % "1.5.21",
+    "ch.qos.logback"       % "logback-core"                % "1.5.27",
+    "ch.qos.logback"       % "logback-classic"             % "1.5.27",
     "com.beachape"         %% "enumeratum"                 % "1.7.3",
     "uk.gov.hmrc"          %% s"bootstrap-backend-$playV"  % bootstrapVersion exclude("org.apache.commons", "commons-lang3"),
     "org.apache.commons" % "commons-lang3" % "3.18.0"
