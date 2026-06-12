@@ -18,6 +18,7 @@ package controllers
 
 import cats.data.OptionT
 import cats.implicits._
+import domain.AmlsRegistrationNumber
 import models.payments.{CreateBacsPaymentRequest, RefreshPaymentStatusRequest, SetBacsRequest}
 import play.api.Logging
 import play.api.libs.json.Json
@@ -51,17 +52,28 @@ class PaymentController @Inject() (
 
   def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) =
     authAction.async(bodyParsers.text) { implicit request: Request[String] =>
-      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-        case Some(_) =>
+//      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
+//        case Some(_) =>
+//          logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
+//          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
+//            case Some(_) => Created
+//            case _       => InternalServerError
+//          }
+//        case None    =>
+//          Future.successful {
+//            BadRequest(toError("Invalid amlsRegistrationNumber"))
+//          }
+//      }
+      AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+        case Right(amlsRegistrationNumber) =>
           logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
+          paymentService.createPayment(request.body, amlsRegistrationNumber.regNum, safeId) map {
             case Some(_) => Created
-            case _       => InternalServerError
+            case _ => InternalServerError
           }
-        case None    =>
-          Future.successful {
-            BadRequest(toError("Invalid amlsRegistrationNumber"))
-          }
+        case Left(_) => Future.successful {
+          BadRequest(toError("Invalid amlsRegistrationNumber"))
+        }
       }
     }
 

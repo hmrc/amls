@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.SubscriptionStatusDESConnector
+import domain.AmlsRegistrationNumber
 import exceptions.HttpStatusException
 import play.api.Logging
 import play.api.libs.json._
@@ -25,7 +26,6 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
 
 import javax.inject.{Inject, Singleton}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -45,19 +45,32 @@ class SubscriptionStatusController @Inject() (
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async { implicit request =>
       logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
-      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-        case Some(_) =>
-          connector.status(amlsRegistrationNumber) map { response =>
+//      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
+//        case Some(_) =>
+//          connector.status(amlsRegistrationNumber) map { response =>
+//            Ok(Json.toJson(response))
+//          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+//            logger.warn(s"$prefix - Status: $status, Message: $body")
+//            Future.failed(e)
+//          }
+//
+//        case _ =>
+//          Future.successful {
+//            BadRequest(toError("Invalid AMLS Registration Number"))
+//          }
+//      }
+
+      AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+        case Right(amlsRegistrationNumber) =>
+          connector.status(amlsRegistrationNumber.regNum).map { response =>
             Ok(Json.toJson(response))
-          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+          }.recoverWith { case e@HttpStatusException(status, Some(body)) =>
             logger.warn(s"$prefix - Status: $status, Message: $body")
             Future.failed(e)
           }
-
-        case _ =>
-          Future.successful {
-            BadRequest(toError("Invalid AMLS Registration Number"))
-          }
+        case Left(_) => Future.successful {
+          BadRequest(toError("Invalid AMLS Registration Number"))
+        }
       }
     }
 }
