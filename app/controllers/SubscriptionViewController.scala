@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.ViewDESConnector
+import domain.AmlsRegistrationNumber
 import exceptions.HttpStatusException
 import models.fe.SubscriptionView
 import play.api.Logging
@@ -45,24 +46,41 @@ class SubscriptionViewController @Inject() (
   def view(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async { implicit request =>
       logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
-      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-        case Some(_) =>
-          connector.view(amlsRegistrationNumber) map { response =>
-            val feModel: SubscriptionView = response
-            val prefix                    = "[SubscriptionViewController][view]"
-            logger.debug(s"$prefix model - $feModel")
-            val json                      = Json.toJson(feModel)
-            logger.debug(s"$prefix Json - $json")
-            Ok(json)
-          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
-            logger.warn(s"$prefix - Status: $status, Message: $body")
-            Future.failed(e)
-          }
+//      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
+//        case Some(_) =>
+//          connector.view(amlsRegistrationNumber) map { response =>
+//            val feModel: SubscriptionView = response
+//            val prefix                    = "[SubscriptionViewController][view]"
+//            logger.debug(s"$prefix model - $feModel")
+//            val json                      = Json.toJson(feModel)
+//            logger.debug(s"$prefix Json - $json")
+//            Ok(json)
+//          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+//            logger.warn(s"$prefix - Status: $status, Message: $body")
+//            Future.failed(e)
+//          }
+//
+//        case _ =>
+//          Future.successful {
+//            BadRequest(toError("Invalid AMLS Registration Number"))
+//          }
+//      }
 
-        case _ =>
-          Future.successful {
-            BadRequest(toError("Invalid AMLS Registration Number"))
-          }
+      AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+        case Right(amlsRegistrationNumber) => connector.view(amlsRegistrationNumber.regNum) map { response =>
+          val feModel: SubscriptionView = response
+          val prefix = "[SubscriptionViewController][view]"
+          logger.debug(s"$prefix model - $feModel")
+          val json = Json.toJson(feModel)
+          logger.debug(s"$prefix Json - $json")
+          Ok(json)
+        } recoverWith { case e@HttpStatusException(status, Some(body)) =>
+          logger.warn(s"$prefix - Status: $status, Message: $body")
+          Future.failed(e)
+        }
+        case Left(_) => Future.successful {
+          BadRequest(toError("Invalid AMLS Registration Number"))
+        }
       }
     }
 }

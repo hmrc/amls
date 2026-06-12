@@ -22,6 +22,7 @@ import play.api.libs.json._
 import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import utils.{ApiRetryHelper, AuthAction, ControllerHelper}
+import domain.AmlsRegistrationNumber
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,20 +39,34 @@ class WithdrawSubscriptionController @Inject() (
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) { implicit request =>
-      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-        case Some(_) =>
-          Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
-            case JsSuccess(body, _) =>
-              connector.withdrawal(amlsRegistrationNumber, body) map { response =>
-                Ok(Json.toJson(response))
-              }
-            case JsError(errors)    =>
-              Future.successful(BadRequest(toError(errors)))
-          }
-        case None    =>
-          Future.successful {
-            BadRequest(toError("Invalid amlsRegistrationNumber"))
-          }
+//      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
+//        case Some(_) =>
+//          Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
+//            case JsSuccess(body, _) =>
+//              connector.withdrawal(amlsRegistrationNumber, body) map { response =>
+//                Ok(Json.toJson(response))
+//              }
+//            case JsError(errors)    =>
+//              Future.successful(BadRequest(toError(errors)))
+//          }
+//        case None    =>
+//          Future.successful {
+//            BadRequest(toError("Invalid amlsRegistrationNumber"))
+//          }
+//      }
+
+      AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+        case Right(amlsRegistrationNumber) => Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
+          case JsSuccess(body, _) =>
+            connector.withdrawal(amlsRegistrationNumber.regNum, body) map { response =>
+              Ok(Json.toJson(response))
+            }
+          case JsError(errors)    =>
+            Future.successful(BadRequest(toError(errors)))
+        }
+        case Left(_) =>  Future.successful {
+          BadRequest(toError("Invalid amlsRegistrationNumber"))
+        }
       }
     }
 }
