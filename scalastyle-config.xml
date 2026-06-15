@@ -8,7 +8,7 @@
     </check>
     <check level="warning" class="org.scalastyle.file.HeaderMatchesChecker" enabled="false">
         <parameters>
-            <parameter name="header"><![CDATA[// Copyright 2024 HM Revenue & Customs
+            <parameter name="header"><![CDATA[// Copyright 2026 HM Revenue & Customs
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
