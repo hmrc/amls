@@ -70,7 +70,7 @@ object AccountantsAddress {
             (__ \ "accountantsAddressLine3").writeNullable[String] and
             (__ \ "accountantsAddressLine4").writeNullable[String] and
             (__ \ "accountantsAddressPostCode").write[String]
-        )(unlift(UkAccountantsAddress.unapply)).writes(a)
+        )(_ => (a.addressLine1, a.addressLine2, a.addressLine3, a.addressLine4, a.postCode)).writes(a)
       case a: NonUkAccountantsAddress =>
         (
           (__ \ "accountantsAddressLine1").write[String] and
@@ -78,7 +78,7 @@ object AccountantsAddress {
             (__ \ "accountantsAddressLine3").writeNullable[String] and
             (__ \ "accountantsAddressLine4").writeNullable[String] and
             (__ \ "accountantsAddressCountry").write[String]
-        )(unlift(NonUkAccountantsAddress.unapply)).writes(a)
+        )(_ => (a.addressLine1, a.addressLine2, a.addressLine3, a.addressLine4, a.country)).writes(a)
     }
   }
 

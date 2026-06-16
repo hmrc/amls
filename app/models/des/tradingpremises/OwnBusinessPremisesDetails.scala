@@ -86,7 +86,28 @@ object OwnBusinessPremisesDetails {
         (__ \ "sectorDateChange").writeNullable[String] and
         (__ \ "dateChangeFlag").writeNullable[Boolean] and
         (__ \ "tradingNameChangeDate").writeNullable[String]
-    )(unlift(OwnBusinessPremisesDetails.unapply))
+    )(obpd =>
+      (
+        obpd.tradingName,
+        obpd.businessAddress,
+        obpd.residential,
+        obpd.msb,
+        obpd.hvd,
+        obpd.asp,
+        obpd.tcsp,
+        obpd.eab,
+        obpd.bpsp,
+        obpd.tditpsp,
+        obpd.amp,
+        obpd.startDate,
+        obpd.endDate,
+        obpd.lineId,
+        obpd.status,
+        obpd.sectorDateChange,
+        obpd.dateChangeFlag,
+        obpd.tradingNameChangeDate
+      )
+    )
 
   implicit def convert(
     tradingPremises: Seq[models.fe.tradingpremises.TradingPremises]

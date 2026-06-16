@@ -16,7 +16,7 @@
 
 package models.fe.tradingpremises
 
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class Address(
   addressLine1: String,
@@ -42,18 +42,7 @@ object Address {
     )(Address.apply _)
   }
 
-  implicit val writes: Writes[Address] = {
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-    (
-      (__ \ "addressLine1").write[String] and
-        (__ \ "addressLine2").writeNullable[String] and
-        (__ \ "addressLine3").writeNullable[String] and
-        (__ \ "addressLine4").writeNullable[String] and
-        (__ \ "postcode").write[String] and
-        (__ \ "addressDateOfChange").writeNullable[String]
-    )(unlift(Address.unapply))
-  }
+  implicit val writes: Writes[Address] = Json.writes[Address]
 
   implicit def convert(address: models.des.tradingpremises.Address): Address =
     Address(

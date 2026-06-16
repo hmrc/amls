@@ -35,8 +35,9 @@ import repositories.PaymentRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class PaymentServiceSpec @Inject() (implicit val ec: ExecutionContext)
+class PaymentServiceSpec
     extends PlaySpec
     with ScalaFutures
     with IntegrationPatience
@@ -230,7 +231,7 @@ class PaymentServiceSpec @Inject() (implicit val ec: ExecutionContext)
             testPaymentRepo.findLatestByPaymentReference(any())
           } thenReturn Future.successful(None)
 
-          testPaymentService.refreshStatus(paymentRefGen.sample.get) map { result =>
+          whenReady(testPaymentService.refreshStatus(paymentRefGen.sample.get).value) { result =>
             result mustBe None
           }
         }

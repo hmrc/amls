@@ -31,7 +31,7 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.libs.json.{JsResult, JsValue, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import repositories.FeesRepository
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -44,8 +44,7 @@ import scala.concurrent.Future
 
 trait TestFixture extends AmlsReferenceNumberGenerator {
 
-  val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
-  val duplicateSubscriptionMessage       = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
+  val duplicateSubscriptionMessage = "Business Partner already has an active AMLS Subscription with MLR Ref Number"
 
   class MockSubscriptionService
       extends SubscriptionService(

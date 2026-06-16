@@ -30,8 +30,12 @@ object CurrencySourcesR7 {
   implicit val format: OFormat[CurrencySourcesR7] = Json.format[CurrencySourcesR7]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[CurrencySourcesR7] =
-    msb.whichCurrencies map { data: WhichCurrencies =>
-      CurrencySourcesR7(data.bankMoneySource, data.wholesalerMoneySource, data.customerMoneySource)
-    }
+    msb.whichCurrencies.map(whichCurrencies =>
+      CurrencySourcesR7(
+        whichCurrencies.bankMoneySource,
+        whichCurrencies.wholesalerMoneySource,
+        whichCurrencies.customerMoneySource
+      )
+    )
 
 }

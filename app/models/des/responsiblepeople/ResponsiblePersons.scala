@@ -18,9 +18,9 @@ package models.des.responsiblepeople
 
 import models.des.StatusProvider
 import models.fe
-import models.fe.responsiblepeople.TimeAtAddress._
-import models.fe.responsiblepeople._
-import play.api.libs.json.{Reads, Writes}
+import models.fe.responsiblepeople.TimeAtAddress.*
+import models.fe.responsiblepeople.*
+import play.api.libs.json.{Json, Reads, Writes}
 
 import java.time.format.DateTimeFormatter
 
@@ -105,7 +105,31 @@ object ResponsiblePersons {
         (__ \ "passedFitAndProperTest").writeNullable[Boolean] and
         (__ \ "passedApprovalCheck").writeNullable[Boolean] and
         __.write[RPExtra]
-    )(unlift(ResponsiblePersons.unapply))
+    )(rp =>
+      (
+        rp.nameDetails,
+        rp.nationalityDetails,
+        rp.contactCommDetails,
+        rp.currentAddressDetails,
+        rp.timeAtCurrentAddress,
+        rp.addressUnderThreeYears,
+        rp.timeAtAddressUnderThreeYears,
+        rp.addressUnderOneYear,
+        rp.timeAtAddressUnderOneYear,
+        rp.positionInBusiness,
+        rp.regDetails,
+        rp.previousExperience,
+        rp.descOfPrevExperience,
+        rp.amlAndCounterTerrFinTraining,
+        rp.trainingDetails,
+        rp.startDate,
+        rp.dateChangeFlag,
+        rp.msbOrTcsp,
+        rp.passedFitAndProperTest,
+        rp.passedApprovalCheck,
+        rp.extra
+      )
+    )
   }
 
   implicit def default(responsiblePeople: Option[ResponsiblePersons]): ResponsiblePersons =

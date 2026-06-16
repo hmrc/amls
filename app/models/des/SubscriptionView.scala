@@ -108,6 +108,30 @@ object SubscriptionView {
       (__ \ "responsiblePersons").write[Option[Seq[ResponsiblePersons]]] and
       (__ \ "amp").write[Option[Amp]] and
       (__ \ "lettingAgents").write[Option[LettingAgents]] and
-      __.write[ExtraFields])(unlift(SubscriptionView.unapply _))
+      __.write[ExtraFields])(sv =>
+      (
+        sv.etmpFormBundleNumber,
+        sv.businessDetails,
+        sv.businessContactDetails,
+        sv.businessReferencesAll,
+        sv.businessReferencesAllButSp,
+        sv.businessReferencesCbUbLlp,
+        sv.businessActivities,
+        sv.tradingPremises,
+        sv.bankAccountDetails,
+        sv.msb,
+        sv.hvd,
+        sv.asp,
+        sv.aspOrTcsp,
+        sv.tcspAll,
+        sv.tcspTrustCompFormationAgt,
+        sv.eabAll,
+        sv.eabResdEstAgncy,
+        sv.responsiblePersons,
+        sv.amp,
+        sv.lettingAgents,
+        sv.extraFields
+      )
+    )
   }
 }

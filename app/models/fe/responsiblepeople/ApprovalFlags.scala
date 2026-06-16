@@ -35,15 +35,7 @@ object ApprovalFlags {
     )(ApprovalFlags.apply _)
   }
 
-  implicit lazy val writes: Writes[ApprovalFlags] = {
-
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-    (
-      (__ \ "hasAlreadyPassedFitAndProper").writeNullable[Boolean] and
-        (__ \ "hasAlreadyPaidApprovalCheck").writeNullable[Boolean]
-    )(unlift(ApprovalFlags.unapply))
-  }
+  implicit lazy val writes: Writes[ApprovalFlags] = Json.writes[ApprovalFlags]
 
   implicit val format: OFormat[ApprovalFlags] = Json.format[ApprovalFlags]
 }

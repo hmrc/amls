@@ -21,8 +21,10 @@ import config.ApplicationConfig
 import exceptions.HttpStatusException
 import metrics.{API4, Metrics}
 import models.des
-import play.api.http.Status._
+import models.des.SubscriptionResponse
+import play.api.http.Status.*
 import play.api.libs.json.{JsSuccess, Json, Writes}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -42,20 +44,20 @@ class SubscribeDESConnector @Inject() (
   def subscribe(safeId: String, data: des.SubscriptionRequest)(implicit
     ec: ExecutionContext,
     wr1: Writes[des.SubscriptionRequest],
-    wr2: Writes[des.SubscriptionResponse],
+    wr2: Writes[SubscriptionResponse],
     hc: HeaderCarrier,
     apiRetryHelper: ApiRetryHelper
-  ): Future[des.SubscriptionResponse] =
+  ): Future[SubscriptionResponse] =
     apiRetryHelper.doWithBackoff(() => subscribeFunction(safeId, data))
 
   private def subscribeFunction(safeId: String, data: des.SubscriptionRequest)(implicit
     ec: ExecutionContext,
     wr1: Writes[des.SubscriptionRequest],
-    wr2: Writes[des.SubscriptionResponse],
+    wr2: Writes[SubscriptionResponse],
     hc: HeaderCarrier
-  ): Future[des.SubscriptionResponse] = {
+  ): Future[SubscriptionResponse] = {
     val prefix     = "[DESConnector][subscribe]"
-    val bodyParser = JsonParsed[des.SubscriptionResponse]
+    val bodyParser = JsonParsed[SubscriptionResponse]
     val timer      = metrics.timer(API4)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
 
@@ -67,35 +69,31 @@ class SubscribeDESConnector @Inject() (
       .execute[HttpResponse]
       .map { response =>
         timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
+        logHttpResponse(prefix, response, success = true)
         response
       }
       .flatMap {
-        case r @ status(OK) & bodyParser(JsSuccess(body: des.SubscriptionResponse, _)) =>
+        case r @ status(OK) & bodyParser(JsSuccess(body: SubscriptionResponse, _)) =>
           metrics.success(API4)
-          logger.debug(s"$prefix - Success response")
-          logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
-          logger.debug(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+          logHttpResponse(prefix, r, success = true)
           ac.sendExtendedEvent(SubscriptionEvent(safeId, data, body))
           Future.successful(body)
-        case r @ status(s)                                                             =>
+        case r @ status(s)                                                         =>
           metrics.failed(API4)
-          logger.warn(s"$prefix - Failure response: $s")
-          logger.warn(s"$prefix - CorrelationId: ${r.header("CorrelationId") getOrElse ""}")
+          logHttpResponse(prefix, r, success = false)
           val httpEx = HttpStatusException(s, Option(r.body))
           ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
           Future.failed(httpEx)
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API4)
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
           ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
           Future.failed(httpEx)

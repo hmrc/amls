@@ -29,7 +29,7 @@ object WhoIsYourAccountant {
 
   import play.api.libs.json._
 
-  implicit val jsonWrites: Writes[WhoIsYourAccountant] = Writes[WhoIsYourAccountant] { data: WhoIsYourAccountant =>
+  implicit val jsonWrites: Writes[WhoIsYourAccountant] = Writes[WhoIsYourAccountant] { (data: WhoIsYourAccountant) =>
     Json.obj("accountantsName" -> data.accountantsName, "accountantsTradingName" -> data.accountantsTradingName) ++
       Json.toJson(data.address).as[JsObject]
   }

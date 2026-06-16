@@ -24,7 +24,7 @@ case class MsbCeDetailsR7(
   currencySources: Option[CurrencySourcesR7],
   antNoOfTransNxt12Mnths: String,
   currSupplyToCust: Option[CurrSupplyToCust]
-) {}
+)
 
 object MsbCeDetailsR7 {
 
@@ -49,13 +49,7 @@ object MsbCeDetailsR7 {
         (__ \ "currSupplyToCust").readNullable[CurrSupplyToCust]
     )(MsbCeDetailsR7.apply _)
 
-  implicit val writes: Writes[MsbCeDetailsR7] =
-    (
-      (__ \ "dealInPhysCurrencies").writeNullable[Boolean] and
-        (__ \ "currencySources").writeNullable[CurrencySourcesR7] and
-        (__ \ "antNoOfTransNxt12Mnths").write[String] and
-        (__ \ "currSupplyToCust").writeNullable[CurrSupplyToCust]
-    )(unlift(MsbCeDetailsR7.unapply))
+  implicit val writes: Writes[MsbCeDetailsR7] = Json.writes[MsbCeDetailsR7]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetailsR7] = {
 

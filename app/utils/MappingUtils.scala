@@ -36,16 +36,6 @@ trait MappingUtils {
     implicit def toReadsFailure[A](f: JsonValidationError): Reads[A] =
       Reads(_ => JsError(f))
   }
-
-  object JsConstraints {
-
-    import play.api.libs.json.Reads
-    import play.api.libs.json.Reads._
-
-    def nonEmpty[M](implicit reads: Reads[M], p: M => Iterable[M]) =
-      filter[M](JsonValidationError("error.required"))(_.isEmpty)
-  }
-
 }
 
 object MappingUtils extends MappingUtils

@@ -22,7 +22,7 @@ case class AddPerson(
   firstName: String,
   middleName: Option[String],
   lastName: String,
-  roleWithinBusiness: models.fe.declaration.RoleWithinBusiness
+  roleWithinBusiness: RoleWithinBusiness
 )
 
 object AddPerson {
@@ -37,9 +37,8 @@ object AddPerson {
       (__ \ "firstName").read[String] and
         (__ \ "middleName").readNullable[String] and
         (__ \ "lastName").read[String] and
-        __.read[models.fe.declaration.RoleWithinBusiness]
+        __.read[RoleWithinBusiness]
     )(AddPerson.apply _)
-
   }
 
   implicit val jsonWrites: Writes[AddPerson] = {
@@ -51,7 +50,7 @@ object AddPerson {
         (__ \ "middleName").writeNullable[String] and
         (__ \ "lastName").write[String] and
         __.write[models.fe.declaration.RoleWithinBusiness]
-    )(unlift(AddPerson.unapply))
+    )(addPerson => (addPerson.firstName, addPerson.middleName, addPerson.lastName, addPerson.roleWithinBusiness))
   }
 
   implicit def convert(aboutYou: AboutYouRelease7): AddPerson =

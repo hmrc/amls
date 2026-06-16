@@ -60,7 +60,19 @@ object RPExtra {
         (__ \ "testDateFitAndProper").writeNullable[String] and
         (__ \ "testResultApprovalCheck").writeNullable[String] and
         (__ \ "testDateApprovalCheck").writeNullable[String]
-    )(unlift(RPExtra.unapply))
+    )(rpExtra =>
+      (
+        rpExtra.lineId,
+        rpExtra.endDate,
+        rpExtra.status,
+        rpExtra.retestFlag,
+        rpExtra.retest,
+        rpExtra.testResultFitAndProper,
+        rpExtra.testDateFitAndProper,
+        rpExtra.testResultApprovalCheck,
+        rpExtra.testDateApprovalCheck
+      )
+    )
 
   implicit def conv(rp: ResponsiblePeople): RPExtra =
     RPExtra(

@@ -52,7 +52,7 @@ class FeesRepository @Inject() (mongoC: MongoComponent)(implicit executionContex
     collection
       .insertOne(feeResponse)
       .toFuture()
-      .map { writeRes: InsertOneResult =>
+      .map { (writeRes: InsertOneResult) =>
         logger.debug(
           s"[FeeResponseMongoRepository][insert] feeResponse: $feeResponse, result id: ${writeRes.getInsertedId}," +
             s"acknowledged: ${writeRes.getInsertedId}"
@@ -68,5 +68,5 @@ class FeesRepository @Inject() (mongoC: MongoComponent)(implicit executionContex
 }
 
 object FeesRepository {
-  val feesResponseExpiryTimeSeconds = 31536000
+  val feesResponseExpiryTimeSeconds = 31536000L
 }

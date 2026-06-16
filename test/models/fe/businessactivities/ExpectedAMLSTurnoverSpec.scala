@@ -16,13 +16,14 @@
 
 package models.fe.businessactivities
 
-import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover => DesExpectedAMLSTurnover, OtherBusinessActivities}
+import models.des.businessactivities.{BusinessActivityDetails, ExpectedAMLSTurnover as DesExpectedAMLSTurnover, OtherBusinessActivities}
 import models.fe.businessactivities.ExpectedAMLSTurnover.{Fifth, First, Fourth, Second, Seventh, Sixth, Third}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatest.prop.Tables.Table
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import play.api.libs.json.{JsError, JsPath, JsSuccess, Json, JsonValidationError}
 
-class ExpectedAMLSTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
+class ExpectedAMLSTurnoverSpec extends PlaySpec {
 
   "ExpectedAMLSTurnover" should {
 
@@ -135,7 +136,6 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
     "convert des to frontend model successfully when Des ExpectedAMLSTurnover is none" in {
       val desModel = BusinessActivityDetails(false, None)
       ExpectedAMLSTurnover.conv(desModel) must be(None)
-
     }
 
     "convert des to frontend model successfully1" in {
@@ -148,6 +148,23 @@ class ExpectedAMLSTurnoverSpec extends PlaySpec with GuiceOneAppPerSuite {
       val desModel = BusinessActivityDetails(true, Some(DesExpectedAMLSTurnover(Some("011122233344"))))
       ExpectedAMLSTurnover.conv(desModel) must be(None)
 
+    }
+
+    "convert turnover" in {
+      val testCases = Table(
+        ("input", "expected"),
+        (Some("£0-£15k"), Some(First)),
+        (Some("£15k-50k"), Some(Second)),
+        (Some("£50k-£100k"), Some(Third)),
+        (Some("£100k-£250k"), Some(Fourth)),
+        (Some("£250k-£1m"), Some(Fifth)),
+        (Some("£1m-10m"), Some(Sixth)),
+        (Some("£10m+"), Some(Seventh))
+      )
+
+      forAll(testCases) { (input, expected) =>
+        ExpectedAMLSTurnover.convertAMLSTurnover(input) must be(expected)
+      }
     }
 
   }

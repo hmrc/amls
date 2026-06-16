@@ -74,7 +74,7 @@ object Products {
     }
 
   implicit val jsonReads: Reads[Products] =
-    (__ \ "products").read[Set[String]].flatMap { x: Set[String] =>
+    (__ \ "products").read[Set[String]].flatMap { (x: Set[String]) =>
       x.map {
         case "01" => Reads(_ => JsSuccess(Alcohol)) map identity[ItemType]
         case "02" => Reads(_ => JsSuccess(Tobacco)) map identity[ItemType]

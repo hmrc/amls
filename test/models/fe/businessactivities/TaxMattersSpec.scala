@@ -16,7 +16,7 @@
 
 package models.fe.businessactivities
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.should
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 import utils.AmlsBaseSpec

@@ -17,7 +17,7 @@ class FeesRepositorySpec
     with IntegrationPatience {
 
   implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  override lazy val repository                    = new FeesRepository(mongoComponent)
+  override val repository: FeesRepository = new FeesRepository(mongoComponent)
 
   "Fees Repository" - {
 

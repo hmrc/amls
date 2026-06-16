@@ -59,7 +59,7 @@ case class Other(details: String) extends RoleType
 object RoleWithinBusiness {
 
   implicit val jsonReads: Reads[RoleWithinBusiness] =
-    (__ \ "roleWithinBusiness").read[Set[String]].flatMap { x: Set[String] =>
+    (__ \ "roleWithinBusiness").read[Set[String]].flatMap { (x: Set[String]) =>
       x.map {
         case "BeneficialShareholder" => Reads(_ => JsSuccess(BeneficialShareholder)) map identity[RoleType]
         case "Director"              => Reads(_ => JsSuccess(Director)) map identity[RoleType]
@@ -70,7 +70,7 @@ object RoleWithinBusiness {
         case "NominatedOfficer"      => Reads(_ => JsSuccess(NominatedOfficer)) map identity[RoleType]
         case "DesignatedMember"      => Reads(_ => JsSuccess(DesignatedMember)) map identity[RoleType]
         case "Other"                 =>
-          val test = (JsPath \ "roleWithinBusinessOther").read[String].map(Other.apply _)
+          val test = (JsPath \ "roleWithinBusinessOther").read[String].map(Other.apply)
           test map identity[RoleType]
         case _                       =>
           Reads(_ => JsError((JsPath \ "roleWithinBusiness") -> JsonValidationError("error.invalid")))

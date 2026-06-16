@@ -19,7 +19,8 @@ package connectors
 import config.ApplicationConfig
 import play.api.Logging
 import play.mvc.Http.HeaderNames
-import utils._
+import uk.gov.hmrc.http.HttpResponse
+import utils.*
 
 import javax.inject.Singleton
 
@@ -38,5 +39,17 @@ class DESConnector(applicationConfig: ApplicationConfig) extends HttpResponseHel
     HeaderNames.ACCEPT       -> "application/json",
     HeaderNames.CONTENT_TYPE -> "application/json;charset=utf-8"
   )
+
+  // $COVERAGE-OFF$
+  def logHttpResponse(prefix: String, response: HttpResponse, success: Boolean): Unit = {
+    val log = if (success) logger.debug(_: String) else logger.warn(_: String)
+    log(s"$prefix - Response: ${response.status}")
+    log(s"$prefix - CorrelationId: ${response.header("CorrelationId").getOrElse("")}")
+    log(s"$prefix - Body: ${response.body}")
+  }
+
+  def logException(prefix: String, e: Throwable): Unit =
+    logger.warn(s"$prefix - Failure: Exception", e)
+  // $COVERAGE-ON$
 
 }

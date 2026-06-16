@@ -26,9 +26,10 @@ import uk.gov.hmrc.http.HttpResponse
 import metrics.EnrolmentStoreKnownFacts
 import generators.{AmlsReferenceNumberGenerator, BaseGenerator}
 import org.mockito.ArgumentMatchers
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NO_CONTENT}
 import utils.AmlsBaseSpec
+
 import scala.concurrent.Future
 import java.net.URL
 

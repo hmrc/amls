@@ -73,7 +73,7 @@ case class BusinessTypes(businessType: Set[BusinessType])
 object BusinessTypes {
 
   implicit val jsonReads: Reads[BusinessTypes] =
-    (__ \ "businessType").read[Set[String]].flatMap { x: Set[String] =>
+    (__ \ "businessType").read[Set[String]].flatMap { (x: Set[String]) =>
       x.map {
         case "01" => Reads(_ => JsSuccess(AccountingTechnicians)) map identity[BusinessType]
         case "02" => Reads(_ => JsSuccess(CharteredCertifiedAccountants)) map identity[BusinessType]
@@ -124,7 +124,7 @@ object BusinessTypes {
     (for {
       pBodyDtls <- supDtls
       member    <- pBodyDtls.professionalBody
-    } yield member.professionalBodyDetails).flatten
+    } yield convProfessionalBodyMember(member.professionalBodyDetails)).flatten
 
   implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[BusinessTypes] =
     pBodyMember map { member =>
@@ -158,5 +158,34 @@ object BusinessTypes {
         ).flatten
       )
     }
+
+    /*
+    def toBusinessTypes(opt: Option[ProfessionalBodyDetails]): Option[BusinessTypes] =
+      opt
+        .flatMap(_.professionalBody)
+        .flatMap(p => toBusinessTypes(p.professionalBodyDetails))
+
+    def toBusinessTypes(memberOpt: Option[MemberOfProfessionalBody]): Option[BusinessTypes] =
+      memberOpt.map { member =>
+        BusinessTypes(
+          Set(
+            CommonMethods.getSpecificType(member.associationofAccountingTechnicians, AccountingTechnicians),
+            CommonMethods.getSpecificType(member.associationofCharteredCertifiedAccountants, CharteredCertifiedAccountants),
+            CommonMethods.getSpecificType(member.associationofInternationalAccountants, InternationalAccountants),
+            CommonMethods.getSpecificType(member.associationofTaxationTechnicians, TaxationTechnicians),
+            CommonMethods.getSpecificType(member.charteredInstituteofManagementAccountants, ManagementAccountants),
+            CommonMethods.getSpecificType(member.charteredInstituteofTaxation, InstituteOfTaxation),
+            CommonMethods.getSpecificType(member.instituteofCertifiedBookkeepers, Bookkeepers),
+            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsinIreland, AccountantsIreland),
+            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsinScotland, AccountantsScotland),
+            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsofEnglandandWales, AccountantsEnglandandWales),
+            CommonMethods.getSpecificType(member.instituteofFinancialAccountants, FinancialAccountants),
+            CommonMethods.getSpecificType(member.internationalAssociationofBookKeepers, AssociationOfBookkeepers),
+            CommonMethods.getSpecificType(member.lawSociety, LawSociety),
+            convOther(member.other, member.specifyOther.getOrElse(""))
+          ).flatten
+        )
+      }
+     */
 
 }

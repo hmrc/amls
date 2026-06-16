@@ -17,10 +17,11 @@
 package controllers
 
 import exceptions.HttpStatusException
-import models.des._
-import models.fe
+import models.des.responsiblepeople.ResponsiblePersons
+import models.des.{AmendVariationRequest, Amendment, AmlsMessageType, Renewal, RenewalAmendment, RequestType, Variation}
+import models.fe.SubscriptionRequest
 import play.api.Logging
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers, Request, Result}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -50,7 +51,7 @@ class AmendVariationController @Inject() (
     val prefix = "[AmendVariationController][update]"
     amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
       case Some(_) =>
-        Json.fromJson[fe.SubscriptionRequest](request.body) match {
+        Json.fromJson[SubscriptionRequest](request.body) match {
           case JsSuccess(body, _) =>
             implicit val mt: AmlsMessageType      = messageType
             implicit val requestType: RequestType = RequestType.Amendment

@@ -24,6 +24,7 @@ import models.des
 import models.des.ReadStatusResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsSuccess, Json, Writes}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -68,30 +69,29 @@ class SubscriptionStatusDESConnector @Inject() (
       .execute[HttpResponse]
       .map { response =>
         timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
+        logHttpResponse(prefix, response, success = true)
         response
       }
       .flatMap {
-        case _ @status(OK) & bodyParser(JsSuccess(body: des.ReadStatusResponse, _)) =>
+        case r @ status(OK) & bodyParser(JsSuccess(body: ReadStatusResponse, _)) =>
           metrics.success(API9)
           audit.sendDataEvent(SubscriptionStatusEvent(amlsRegistrationNumber, body))
-          logger.debug(s"$prefix - Success response")
-          logger.debug(s"$prefix - Response body: ${Json.toJson(body)}")
+          logHttpResponse(prefix, r, success = true)
           Future.successful(body)
-        case r @ status(s)                                                          =>
+        case r @ status(s)                                                       =>
           metrics.failed(API9)
+          logHttpResponse(prefix, r, success = false)
           logger.warn(s"$prefix - Failure response: $s")
           Future.failed(HttpStatusException(s, Option(r.body)))
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API9)
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

@@ -81,7 +81,8 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondencePostCode").write[String]
-        )(unlift(UKCorrespondenceAddress.unapply)).writes(a)
+        )(_ => (a.yourName, a.businessName, a.addressLine1, a.addressLine2, a.addressLine3, a.addressLine4, a.postCode))
+          .writes(a)
       case a: NonUKCorrespondenceAddress =>
         (
           (__ \ "yourName").write[String] and
@@ -91,7 +92,17 @@ object CorrespondenceAddress {
             (__ \ "correspondenceAddressLine3").writeNullable[String] and
             (__ \ "correspondenceAddressLine4").writeNullable[String] and
             (__ \ "correspondenceCountry").write[String]
-        )(unlift(NonUKCorrespondenceAddress.unapply)).writes(a)
+        )(_ =>
+          (
+            a.yourName,
+            a.businessName,
+            a.addressLineNonUK1,
+            a.addressLineNonUK2,
+            a.addressLineNonUK3,
+            a.addressLineNonUK4,
+            a.country
+          )
+        ).writes(a)
     }
   }
 
