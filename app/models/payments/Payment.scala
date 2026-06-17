@@ -17,7 +17,7 @@
 package models.payments
 
 import models.payapi.PaymentStatus.Created
-import models.payapi.{Payment as PayApiPayment, *}
+import models.payapi.{Payment => PayApiPayment, *}
 import org.bson.types.ObjectId
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{Json, OFormat, OWrites, Reads, __}
