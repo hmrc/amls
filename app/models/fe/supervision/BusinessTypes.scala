@@ -158,34 +158,4 @@ object BusinessTypes {
         ).flatten
       )
     }
-
-    /*
-    def toBusinessTypes(opt: Option[ProfessionalBodyDetails]): Option[BusinessTypes] =
-      opt
-        .flatMap(_.professionalBody)
-        .flatMap(p => toBusinessTypes(p.professionalBodyDetails))
-
-    def toBusinessTypes(memberOpt: Option[MemberOfProfessionalBody]): Option[BusinessTypes] =
-      memberOpt.map { member =>
-        BusinessTypes(
-          Set(
-            CommonMethods.getSpecificType(member.associationofAccountingTechnicians, AccountingTechnicians),
-            CommonMethods.getSpecificType(member.associationofCharteredCertifiedAccountants, CharteredCertifiedAccountants),
-            CommonMethods.getSpecificType(member.associationofInternationalAccountants, InternationalAccountants),
-            CommonMethods.getSpecificType(member.associationofTaxationTechnicians, TaxationTechnicians),
-            CommonMethods.getSpecificType(member.charteredInstituteofManagementAccountants, ManagementAccountants),
-            CommonMethods.getSpecificType(member.charteredInstituteofTaxation, InstituteOfTaxation),
-            CommonMethods.getSpecificType(member.instituteofCertifiedBookkeepers, Bookkeepers),
-            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsinIreland, AccountantsIreland),
-            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsinScotland, AccountantsScotland),
-            CommonMethods.getSpecificType(member.instituteofCharteredAccountantsofEnglandandWales, AccountantsEnglandandWales),
-            CommonMethods.getSpecificType(member.instituteofFinancialAccountants, FinancialAccountants),
-            CommonMethods.getSpecificType(member.internationalAssociationofBookKeepers, AssociationOfBookkeepers),
-            CommonMethods.getSpecificType(member.lawSociety, LawSociety),
-            convOther(member.other, member.specifyOther.getOrElse(""))
-          ).flatten
-        )
-      }
-     */
-
 }
