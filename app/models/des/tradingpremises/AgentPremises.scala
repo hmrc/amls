@@ -70,7 +70,23 @@ object AgentPremises {
         (__ \ "amp").write[Amp] and
         (__ \ "startDate").writeNullable[String] and
         (__ \ "agentSectorChgDate").writeNullable[String]
-    )(unlift(AgentPremises.unapply _))
+    )(ap =>
+      (
+        ap.tradingName,
+        ap.businessAddress,
+        ap.residential,
+        ap.msb,
+        ap.hvd,
+        ap.asp,
+        ap.tcsp,
+        ap.eab,
+        ap.bpsp,
+        ap.tditpsp,
+        ap.amp,
+        ap.startDate,
+        ap.sectorChangeDate
+      )
+    )
 
   implicit def convert(
     tradingPremises: models.fe.tradingpremises.TradingPremises

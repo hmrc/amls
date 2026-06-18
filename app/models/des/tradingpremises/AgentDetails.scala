@@ -85,7 +85,23 @@ object AgentDetails {
         (__ \ "agentDetailsChgDate").writeNullable[String] and
         (__ \ "removalReason").writeNullable[String] and
         (__ \ "removalReasonOther").writeNullable[String]
-    )(unlift(AgentDetails.unapply))
+    )(ad =>
+      (
+        ad.agentLegalEntity,
+        ad.companyRegNo,
+        ad.dateOfBirth,
+        ad.agentLegalEntityName,
+        ad.agentPremises,
+        ad.startDate,
+        ad.dateChangeFlag,
+        ad.endDate,
+        ad.status,
+        ad.lineId,
+        ad.agentDetailsChangeDate,
+        ad.removalReason,
+        ad.removalReasonOther
+      )
+    )
 
   implicit def convert(tradingPremises: FETradingPremises)(implicit requestType: RequestType): AgentDetails = {
 

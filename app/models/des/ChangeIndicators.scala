@@ -43,7 +43,7 @@ object ChangeIndicators {
     import play.api.libs.functional.syntax._
     import play.api.libs.json.Reads._
     import play.api.libs.json._
-    val jsonReads: Reads[ChangeIndicators]   = (
+    val jsonReads: Reads[ChangeIndicators] = (
       (__ \ "businessDetails").read[Boolean] and
         (__ \ "businessAddress").read[Boolean] and
         (__ \ "businessReferences").read[Boolean] and
@@ -60,6 +60,7 @@ object ChangeIndicators {
         (__ \ "responsiblePersons").read[Boolean] and
         (__ \ "filingIndividual").read[Boolean]
     )(ChangeIndicators.apply _)
+
     val jsonWrites: Writes[ChangeIndicators] = ((__ \ "businessDetails").write[Boolean] and
       (__ \ "businessAddress").write[Boolean] and
       (__ \ "businessReferences").write[Boolean] and
@@ -74,7 +75,25 @@ object ChangeIndicators {
       (__ \ "eab" \ "eab").write[Boolean] and
       (__ \ "amp" \ "amp").write[Boolean] and
       (__ \ "responsiblePersons").write[Boolean] and
-      (__ \ "filingIndividual").write[Boolean])(unlift(ChangeIndicators.unapply))
+      (__ \ "filingIndividual").write[Boolean])(ci =>
+      (
+        ci.businessDetails,
+        ci.businessAddress,
+        ci.businessReferences,
+        ci.tradingPremises,
+        ci.businessActivities,
+        ci.bankAccountDetails,
+        ci.msb,
+        ci.hvd,
+        ci.asp,
+        ci.aspOrTcsp,
+        ci.tcsp,
+        ci.eab,
+        ci.amp,
+        ci.responsiblePersons,
+        ci.filingIndividual
+      )
+    )
 
     Format(jsonReads, jsonWrites)
   }

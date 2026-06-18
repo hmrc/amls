@@ -1,7 +1,6 @@
-import sbt.Keys.{libraryDependencies, _}
-import sbt.Tests.{Group, SubProcess}
-import sbt._
-import uk.gov.hmrc._
+import sbt.Keys.{libraryDependencies, *}
+import sbt.*
+import uk.gov.hmrc.*
 import DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
@@ -33,13 +32,28 @@ def findPlayConfFiles(rootDir: File): Seq[String] = {
 }
 
 lazy val scoverageSettings = {
-  import scoverage.ScoverageKeys
   Seq(
-    ScoverageKeys.coverageExcludedPackages :=
-      "<empty>;Reverse.*;.*AuthService.*;models/.data/..*;view.*;config.*;app;prod;testOnlyDoNotUseInAppConf;uk.gov.hmrc.BuildInfo;repositories.*",
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := false,
-    ScoverageKeys.coverageHighlighting := true,
+    coverageExcludedPackages :=
+      """
+        |<empty>;
+        |Reverse.*;
+        |.*AuthService.*;
+        |models/.data/..*;
+        |view.*;
+        |config.*;
+        |app;
+        |prod;
+        |testOnlyDoNotUseInAppConf;
+        |uk.gov.hmrc.BuildInfo;
+        |repositories.*;
+        |.*metrics.*;
+        |.*exceptions.*;
+        |.*SubscriptionFees.*
+        |.*CorpBodyOrUnInCorpBodyOrLlp.*
+      """.stripMargin.replaceAll("\\s", ""),
+    coverageMinimumStmtTotal := 90,
+    coverageFailOnMinimum := false,
+    coverageHighlighting := true,
     Test / parallelExecution := false
   )
 }
@@ -49,9 +63,12 @@ lazy val IntegrationTest = config("it") extend Test
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala,  SbtDistributablesPlugin) ++ plugins: _*)
   .disablePlugins(JUnitXmlReportPlugin)
-   .settings(scalacOptions += "-Wconf:src=routes/.*:s")
-   .settings(scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s")
-   .settings(scalacOptions ++= Seq("-Ypatmat-exhaust-depth", "40"))
+  .settings(
+    scalacOptions ++= Seq(
+      "-Wconf:msg=unused import&src=html/.*:s",
+      "-Wconf:src=routes/.*:s"
+    )
+  )
   .settings(
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always)
@@ -59,7 +76,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(majorVersion := 4)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(scalaVersion := "2.13.16")
+  .settings(scalaVersion := "3.3.7")
   .settings(defaultSettings(): _*)
   .settings(
     libraryDependencies ++= appDependencies,

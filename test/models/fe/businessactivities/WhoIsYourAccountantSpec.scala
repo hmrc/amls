@@ -18,7 +18,7 @@ package models.fe.businessactivities
 
 import models.des.aboutthebusiness.Address
 import models.des.businessactivities.{AdvisorNameAddress, MlrAdvisor, MlrAdvisorDetails}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.shouldBe
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.JsSuccess
 import utils.AmlsBaseSpec

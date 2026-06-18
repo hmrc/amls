@@ -117,20 +117,9 @@ object Fees {
         (__ \ "createdAt").read[LocalDateTime](readLocalDateTime)
     )(Fees.apply _)
 
-  implicit lazy val writes: OWrites[Fees] =
-    (
-      (__ \ "responseType").write[ResponseType] and
-        (__ \ "amlsReferenceNumber").write[String] and
-        (__ \ "registrationFee").write[BigDecimal] and
-        (__ \ "fpFee").writeNullable[BigDecimal] and
-        (__ \ "premiseFee").write[BigDecimal] and
-        (__ \ "totalFees").write[BigDecimal] and
-        (__ \ "paymentReference").writeNullable[String] and
-        (__ \ "difference").writeNullable[BigDecimal] and
-        (__ \ "approvalCheckFeeRate").writeNullable[BigDecimal] and
-        (__ \ "approvalCheckFee").writeNullable[BigDecimal] and
-        (__ \ "createdAt").write[LocalDateTime](JsPathSupport.localDateTimeWrites)
-    )(unlift(Fees.unapply))
+  implicit val localDateTimeWrites: Writes[LocalDateTime] = JsPathSupport.localDateTimeWrites
 
-  implicit val format: OFormat[Fees] = OFormat(reads, writes)
+  implicit val feesWrites: OWrites[Fees] = Json.writes[Fees]
+
+  implicit val format: OFormat[Fees] = OFormat(reads, feesWrites)
 }

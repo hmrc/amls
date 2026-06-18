@@ -18,7 +18,7 @@ class PaymentRepositorySpec
     with IntegrationPatience {
 
   implicit val executionContext: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  override lazy val repository                    = new PaymentRepository(mongoComponent)
+  override val repository: PaymentRepository = new PaymentRepository(mongoComponent)
 
   val exampleDate: LocalDateTime = LocalDateTime.parse("2023-02-21T10:08:12")
   val payment: Payment           = Payment(

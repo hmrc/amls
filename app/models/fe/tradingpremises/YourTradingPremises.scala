@@ -19,7 +19,7 @@ package models.fe.tradingpremises
 import models.des.tradingpremises.{AgentDetails, OwnBusinessPremisesDetails}
 
 import java.time.LocalDate
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class YourTradingPremises(
   tradingName: String,
@@ -52,7 +52,15 @@ object YourTradingPremises {
         (__ \ "startDate").write[LocalDate] and
         (__ \ "isResidential").write[Boolean] and
         (__ \ "tradingNameChangeDate").writeNullable[String]
-    )(unlift(YourTradingPremises.unapply))
+    )(yourTradingPremises =>
+      (
+        yourTradingPremises.tradingName,
+        yourTradingPremises.tradingPremisesAddress,
+        yourTradingPremises.startDate,
+        yourTradingPremises.isResidential,
+        yourTradingPremises.tradingNameChangeDate
+      )
+    )
   }
 
   implicit def conv(agentDetails: AgentDetails): YourTradingPremises = {

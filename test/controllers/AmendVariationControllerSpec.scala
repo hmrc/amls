@@ -192,7 +192,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val resultF = testController.amend("AccountType", "Ref", "XTML00000565656")(postRequest)
 
-        whenReady(resultF) { result: Result =>
+        whenReady(resultF) { (result: Result) =>
           verify(testController.service)
             .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Amendment")
@@ -285,7 +285,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val resultF = testController.variation("AccountType", "Ref", "XTML00000565656")(postRequest)
 
-        whenReady(resultF) { result: Result =>
+        whenReady(resultF) { (result: Result) =>
           verify(testController.service)
             .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Variation")
@@ -303,7 +303,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val resultF = testController.renewal("AccountType", "Ref", "XTML00000565656")(postRequest)
 
-        whenReady(resultF) { result: Result =>
+        whenReady(resultF) { (result: Result) =>
           verify(testController.service)
             .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal")
@@ -321,7 +321,7 @@ class AmendVariationControllerSpec extends AmlsBaseSpec with AmlsReferenceNumber
 
         val resultF = testController.renewalAmendment("AccountType", "Ref", "XTML00000565656")(postRequest)
 
-        whenReady(resultF) { result: Result =>
+        whenReady(resultF) { (result: Result) =>
           verify(testController.service)
             .update(ArgumentMatchers.eq("XTML00000565656"), ArgumentMatchers.eq(mockRequest))(any(), any(), any())
           requestArgument.getValue().amlsMessageType must be("Renewal Amendment")

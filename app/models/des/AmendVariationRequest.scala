@@ -16,7 +16,7 @@
 
 package models.des
 
-import models.des.aboutthebusiness._
+import models.des.aboutthebusiness.*
 import models.des.amp.Amp
 import models.des.asp.Asp
 import models.des.bankdetails.BankDetailsView
@@ -31,6 +31,9 @@ import models.des.supervision.AspOrTcsp
 import models.des.tcsp.{TcspAll, TcspTrustCompFormationAgt}
 import models.des.tradingpremises.TradingPremises
 import models.fe
+import models.fe.SubscriptionRequest
+import models.fe.businessmatching.BusinessMatching
+import models.fe.responsiblepeople.ResponsiblePeople
 import utils.AckRefGenerator
 
 case class AmendVariationRequest(
@@ -76,7 +79,7 @@ case class AmendVariationRequest(
 object AmendVariationRequest {
 
   final type Outgoing = AmendVariationRequest
-  final type Incoming = fe.SubscriptionRequest
+  final type Incoming = SubscriptionRequest
 
   import play.api.libs.functional.syntax._
   import play.api.libs.json.Reads._
@@ -275,13 +278,13 @@ object AmendVariationRequest {
     tcspAllConv: fe.tcsp.Tcsp => TcspAll,
     tcspTrustCompConv: fe.tcsp.Tcsp => TcspTrustCompFormationAgt,
     responsiblePeopleConv: (
-      Option[Seq[fe.responsiblepeople.ResponsiblePeople]],
-      fe.businessmatching.BusinessMatching,
+      Option[Seq[ResponsiblePeople]],
+      BusinessMatching,
       Boolean
     ) => Option[Seq[ResponsiblePersons]],
     msbConv: (
       Option[fe.moneyservicebusiness.MoneyServiceBusiness],
-      fe.businessmatching.BusinessMatching,
+      BusinessMatching,
       Boolean
     ) => Option[MoneyServiceBusiness],
     hvdConv: Option[fe.hvd.Hvd] => Option[Hvd],

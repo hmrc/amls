@@ -42,11 +42,7 @@ object MsbCeDetails {
         (__ \ "dealInPhysCurrencies").readNullable(currencyReader)
     )(MsbCeDetails.apply _)
 
-  implicit val writes: Writes[MsbCeDetails] =
-    (
-      (__ \ "currencySources").write[CurrencySources] and
-        (__ \ "dealInPhysCurrencies").writeNullable[Boolean]
-    )(unlift(MsbCeDetails.unapply))
+  implicit val writes: Writes[MsbCeDetails] = Json.writes[MsbCeDetails]
 
   implicit def conv(msb: models.fe.moneyservicebusiness.MoneyServiceBusiness): Option[MsbCeDetails] = {
 

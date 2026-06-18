@@ -63,8 +63,7 @@ class ViewDESConnector @Inject() (
       .execute[HttpResponse]
       .map { response =>
         timer.stop()
-        logger.debug(s"$prefix - Base Response: ${response.status}")
-        logger.debug(s"$prefix - Response Body: ${response.body}")
+        logHttpResponse(prefix, response, success = true)
         response
       }
       .flatMap {
@@ -87,12 +86,12 @@ class ViewDESConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API5)
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

@@ -73,7 +73,7 @@ case class BusinessTypes(businessType: Set[BusinessType])
 object BusinessTypes {
 
   implicit val jsonReads: Reads[BusinessTypes] =
-    (__ \ "businessType").read[Set[String]].flatMap { x: Set[String] =>
+    (__ \ "businessType").read[Set[String]].flatMap { (x: Set[String]) =>
       x.map {
         case "01" => Reads(_ => JsSuccess(AccountingTechnicians)) map identity[BusinessType]
         case "02" => Reads(_ => JsSuccess(CharteredCertifiedAccountants)) map identity[BusinessType]
@@ -124,7 +124,7 @@ object BusinessTypes {
     (for {
       pBodyDtls <- supDtls
       member    <- pBodyDtls.professionalBody
-    } yield member.professionalBodyDetails).flatten
+    } yield convProfessionalBodyMember(member.professionalBodyDetails)).flatten
 
   implicit def convProfessionalBodyMember(pBodyMember: Option[MemberOfProfessionalBody]): Option[BusinessTypes] =
     pBodyMember map { member =>
@@ -158,5 +158,4 @@ object BusinessTypes {
         ).flatten
       )
     }
-
 }

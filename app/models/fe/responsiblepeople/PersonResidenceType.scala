@@ -17,7 +17,7 @@
 package models.fe.responsiblepeople
 
 import models.des.responsiblepeople.NationalityDetails
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class PersonResidenceType(isUKResidence: ResidenceType, countryOfBirth: String, nationality: String)
 
@@ -40,7 +40,9 @@ object PersonResidenceType {
       __.write[ResidenceType] and
         (__ \ "countryOfBirth").write[String] and
         (__ \ "nationality").write[String]
-    )(unlift(PersonResidenceType.unapply))
+    )(personResidenceType =>
+      (personResidenceType.isUKResidence, personResidenceType.countryOfBirth, personResidenceType.nationality)
+    )
   }
 
   implicit def conv(nationality: Option[NationalityDetails]): Option[PersonResidenceType] =

@@ -39,15 +39,14 @@ import utils.{AmendVariationValidator, ApiRetryHelper}
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class AmendVariationServiceSpec @Inject() (implicit val ec: ExecutionContext)
+class AmendVariationServiceSpec
     extends PlaySpec
     with GuiceOneAppPerSuite
     with ScalaFutures
     with IntegrationPatience
     with AmlsReferenceNumberGenerator {
-
-  val successValidate: JsResult[JsValue] = mock(classOf[JsResult[JsValue]])
 
   val feAmendVariationResponse: AmendVariationResponse = AmendVariationResponse(
     processingDate = "2016-09-17T09:30:47Z",
@@ -192,7 +191,7 @@ class AmendVariationServiceSpec @Inject() (implicit val ec: ExecutionContext)
       } thenReturn Future.successful(true)
 
       whenReady(
-        avs.update(amlsRegistrationNumber, request)(hc, ec, apiRetryHelper = mock(classOf[ApiRetryHelper]))
+        avs.update(amlsRegistrationNumber, request)(hc, global, apiRetryHelper = mock(classOf[ApiRetryHelper]))
       ) { result =>
         result mustEqual feAmendVariationResponse
       }

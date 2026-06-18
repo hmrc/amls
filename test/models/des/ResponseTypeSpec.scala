@@ -18,7 +18,7 @@ package models.des
 
 import models.{AmendOrVariationResponseType, ResponseType, SubscriptionResponseType}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsString, JsSuccess, Json, JsonValidationError}
 
 class ResponseTypeSpec extends PlaySpec {
 
@@ -36,6 +36,12 @@ class ResponseTypeSpec extends PlaySpec {
         ResponseType.jsonReads.reads(ResponseType.jsonWrites.writes(AmendOrVariationResponseType)) must be(
           JsSuccess(AmendOrVariationResponseType)
         )
+      }
+    }
+
+    "Unknown response" must {
+      "not serialize/deserialize" in {
+        ResponseType.jsonReads.reads(JsString("RandomResponse")) must be(JsError(JsonValidationError("error.invalid")))
       }
     }
 

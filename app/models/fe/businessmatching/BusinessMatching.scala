@@ -51,9 +51,7 @@ object BusinessMatching {
         Json.toJson(model.typeOfBusiness).asOpt[JsObject],
         Json.toJson(model.companyRegistrationNumber).asOpt[JsObject],
         Json.toJson(model.businessAppliedForPSRNumber).asOpt[JsObject]
-      ).flatten.fold(Json.obj()) {
-        _ ++ _
-      }
+      ).flatten.fold(Json.obj())((acc: JsObject, curr: JsObject) => acc ++ curr)
     }
 
   implicit def conv(desView: models.des.SubscriptionView): BusinessMatching =

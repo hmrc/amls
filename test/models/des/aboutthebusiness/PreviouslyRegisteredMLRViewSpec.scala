@@ -19,7 +19,7 @@ package models.des.aboutthebusiness
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class PreviouslyRegisteredViewSpec extends PlaySpec {
+class PreviouslyRegisteredMLRViewSpec extends PlaySpec {
 
   "PreviouslyRegistered" must {
 

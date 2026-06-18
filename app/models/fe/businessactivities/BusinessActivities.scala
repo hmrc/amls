@@ -73,9 +73,7 @@ object BusinessActivities {
       Json.toJson(model.whoIsYourAccountant).asOpt[JsObject],
       Json.toJson(model.taxMatters).asOpt[JsObject],
       model.transactionRecordTypes.map(t => Json.obj("transactionTypes" -> Json.toJson(t)))
-    ).flatten.fold(Json.obj()) {
-      _ ++ _
-    }
+    ).flatten.fold(Json.obj())((acc: JsObject, curr: JsObject) => acc ++ curr)
   }
 
   def convertBusinessActivities(

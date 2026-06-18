@@ -17,10 +17,10 @@
 package models.payments
 
 import models.payapi.PaymentStatus.Created
-import models.payapi.{Payment => PayApiPayment, _}
+import models.payapi.{Payment => PayApiPayment, *}
 import org.bson.types.ObjectId
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{OFormat, OWrites, Reads, __}
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.{Json, OFormat, OWrites, Reads, __}
 import play.custom.JsPathSupport.{localDateTimeWrites, readLocalDateTime}
 
 import java.time.LocalDateTime
@@ -91,7 +91,20 @@ object Payment {
         (__ \ "createdAt").write[LocalDateTime](localDateTimeWrites) and
         (__ \ "isBacs").writeNullable[Boolean] and
         (__ \ "updatedAt").writeNullable[LocalDateTime]
-    )(unlift(Payment.unapply))
+    )(p =>
+      (
+        p._id,
+        p.amlsRefNo,
+        p.safeId,
+        p.reference,
+        p.description,
+        p.amountInPence,
+        p.status,
+        p.createdAt,
+        p.isBacs,
+        p.updatedAt
+      )
+    )
 
   implicit val format: OFormat[Payment] = OFormat(reads, writes)
 }

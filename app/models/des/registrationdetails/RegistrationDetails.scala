@@ -107,5 +107,5 @@ object RegistrationDetails {
     (
       (__ \ "isAnIndividual").write[Boolean] and
         __.write[OrganisationBodyDetails]
-    )(unlift(RegistrationDetails.unapply))
+    )(regDetails => (regDetails.isAnIndividual, regDetails.bodyDetails))
 }
