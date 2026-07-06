@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-ackage controllers
+package controllers
 
+import domain.AmlsRegistrationNumber
 import exceptions.HttpStatusException
-import models.des.responsiblepeople.ResponsiblePersons
-import models.des.{AmendVariationRequest, Amendment, AmlsMessageType, Renewal, RenewalAmendment, RequestType, Variation}
-import models.fe.SubscriptionRequest
+import models.des._
+import models.fe
 import play.api.Logging
-import play.api.libs.json.*
+import play.api.libs.json._
 import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers, Request, Result}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -49,28 +49,27 @@ class AmendVariationController @Inject() (
   ): Future[Result] = {
 
     val prefix = "[AmendVariationController][update]"
-    amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-      case Some(_) =>
-        Json.fromJson[SubscriptionRequest](request.body) match {
-          case JsSuccess(body, _) =>
-            implicit val mt: AmlsMessageType      = messageType
-            implicit val requestType: RequestType = RequestType.Amendment
-            service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
-              updatedAmendRequest =>
-                service.update(amlsRegistrationNumber, updatedAmendRequest) map { response =>
-                  Ok(Json.toJson(response))
-                } recoverWith { case e @ HttpStatusException(status, message) =>
-                  logger.warn(s"$prefix - Status: $status, Message: $message")
-                  Future.failed(e)
-                }
-            }
-          case JsError(errors)    =>
-            Future.successful(BadRequest(toError(errors)))
-        }
-      case _       =>
-        Future.successful {
-          BadRequest(toError("Invalid AmlsRegistrationNumber"))
-        }
+
+    AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+      case Right(amlsRegistrationNumber) => Json.fromJson[SubscriptionRequest](request.body) match {
+        case JsSuccess(body, _) =>
+          implicit val mt: AmlsMessageType      = messageType
+          implicit val requestType: RequestType = RequestType.Amendment
+          service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber.regNum) flatMap {
+            updatedAmendRequest =>
+              service.update(amlsRegistrationNumber.regNum, updatedAmendRequest) map { response =>
+                Ok(Json.toJson(response))
+              } recoverWith { case e @ HttpStatusException(status, message) =>
+                logger.warn(s"$prefix - Status: $status, Message: $message")
+                Future.failed(e)
+              }
+          }
+        case JsError(errors)    =>
+          Future.successful(BadRequest(toError(errors)))
+      }
+      case Left(_) =>  Future.successful {
+        BadRequest(toError("Invalid AmlsRegistrationNumber"))
+      }
     }
 
   }
