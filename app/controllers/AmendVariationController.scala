@@ -50,29 +50,6 @@ class AmendVariationController @Inject() (
   ): Future[Result] = {
 
     val prefix = "[AmendVariationController][update]"
-//    amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-//      case Some(_) =>
-//        Json.fromJson[fe.SubscriptionRequest](request.body) match {
-//          case JsSuccess(body, _) =>
-//            implicit val mt: AmlsMessageType      = messageType
-//            implicit val requestType: RequestType = RequestType.Amendment
-//            service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
-//              updatedAmendRequest =>
-//                service.update(amlsRegistrationNumber, updatedAmendRequest) map { response =>
-//                  Ok(Json.toJson(response))
-//                } recoverWith { case e @ HttpStatusException(status, message) =>
-//                  logger.warn(s"$prefix - Status: $status, Message: $message")
-//                  Future.failed(e)
-//                }
-//            }
-//          case JsError(errors)    =>
-//            Future.successful(BadRequest(toError(errors)))
-//        }
-//      case _       =>
-//        Future.successful {
-//          BadRequest(toError("Invalid AmlsRegistrationNumber"))
-//        }
-//    }
 
     AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
       case Right(amlsRegistrationNumber) => Json.fromJson[fe.SubscriptionRequest](request.body) match {

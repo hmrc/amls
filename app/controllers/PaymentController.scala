@@ -52,18 +52,6 @@ class PaymentController @Inject() (
 
   def savePayment(accountType: String, ref: String, amlsRegistrationNumber: String, safeId: String) =
     authAction.async(bodyParsers.text) { implicit request: Request[String] =>
-//      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-//        case Some(_) =>
-//          logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
-//          paymentService.createPayment(request.body, amlsRegistrationNumber, safeId) map {
-//            case Some(_) => Created
-//            case _       => InternalServerError
-//          }
-//        case None    =>
-//          Future.successful {
-//            BadRequest(toError("Invalid amlsRegistrationNumber"))
-//          }
-//      }
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
         case Right(amlsRegistrationNumber) =>
           logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")

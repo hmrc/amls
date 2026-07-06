@@ -45,20 +45,6 @@ class SubscriptionStatusController @Inject() (
   def get(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async { implicit request =>
       logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
-//      amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-//        case Some(_) =>
-//          connector.status(amlsRegistrationNumber) map { response =>
-//            Ok(Json.toJson(response))
-//          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
-//            logger.warn(s"$prefix - Status: $status, Message: $body")
-//            Future.failed(e)
-//          }
-//
-//        case _ =>
-//          Future.successful {
-//            BadRequest(toError("Invalid AMLS Registration Number"))
-//          }
-//      }
 
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
         case Right(amlsRegistrationNumber) =>

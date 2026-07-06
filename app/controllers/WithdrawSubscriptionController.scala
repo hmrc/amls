@@ -39,21 +39,6 @@ class WithdrawSubscriptionController @Inject() (
 
   def withdrawal(accountType: String, ref: String, amlsRegistrationNumber: String): Action[JsValue] =
     authAction.async(bodyParsers.json) { implicit request =>
-//      amlsRegNoRegex.findFirstMatchIn(amlsRegistrationNumber) match {
-//        case Some(_) =>
-//          Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
-//            case JsSuccess(body, _) =>
-//              connector.withdrawal(amlsRegistrationNumber, body) map { response =>
-//                Ok(Json.toJson(response))
-//              }
-//            case JsError(errors)    =>
-//              Future.successful(BadRequest(toError(errors)))
-//          }
-//        case None    =>
-//          Future.successful {
-//            BadRequest(toError("Invalid amlsRegistrationNumber"))
-//          }
-//      }
 
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
         case Right(amlsRegistrationNumber) => Json.fromJson[WithdrawSubscriptionRequest](request.body) match {
