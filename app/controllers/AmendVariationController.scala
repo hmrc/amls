@@ -51,7 +51,7 @@ class AmendVariationController @Inject() (
     val prefix = "[AmendVariationController][update]"
 
     AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
-      case Right(amlsRegistrationNumber) => Json.fromJson[SubscriptionRequest](request.body) match {
+      case Right(amlsRegistrationNumber) => Json.fromJson[fe.SubscriptionRequest](request.body) match {
         case JsSuccess(body, _) =>
           implicit val mt: AmlsMessageType      = messageType
           implicit val requestType: RequestType = RequestType.Amendment
