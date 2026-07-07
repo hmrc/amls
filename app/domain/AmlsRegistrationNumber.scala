@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package utils
+package domain
 
-import play.api.libs.json.{JsPath, Json, JsonValidationError}
+import scala.util.matching.Regex
 
-trait ControllerHelper {
+case class AmlsRegistrationNumber(regNum: String) extends AnyVal {
+  private def copy: Unit = ()
+}
 
-  def toError(errors: collection.Seq[(JsPath, collection.Seq[JsonValidationError])]) = Json.obj(
-    "errors" -> (errors map { case (path, error) =>
-      Json.obj(
-        "path"  -> path.toJsonString,
-        "error" -> error.head.message
-      )
-    })
-  )
+object AmlsRegistrationNumber {
+  private val amlsRegNoRegex: Regex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  def toError(message: String) = Json.obj(
-    "errors" -> Seq(message)
-  )
+  private def apply(regNum: String): Either[String, AmlsRegistrationNumber] = {
+    Either.cond(regNum.matches(amlsRegNoRegex.regex), new AmlsRegistrationNumber(regNum), "Invalid AmlsRegistrationNumber")
+  }
 
+  def fromString(regNum: String): Either[String, AmlsRegistrationNumber] = apply(regNum)
 }

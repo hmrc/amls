@@ -16,12 +16,12 @@
 
 package controllers
 
+import domain.AmlsRegistrationNumber
 import exceptions.HttpStatusException
-import models.des.responsiblepeople.ResponsiblePersons
-import models.des.{AmendVariationRequest, Amendment, AmlsMessageType, Renewal, RenewalAmendment, RequestType, Variation}
-import models.fe.SubscriptionRequest
+import models.des._
+import models.fe
 import play.api.Logging
-import play.api.libs.json.*
+import play.api.libs.json._
 import play.api.mvc.{Action, ControllerComponents, PlayBodyParsers, Request, Result}
 import services.AmendVariationService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -33,44 +33,43 @@ import scala.concurrent.Future
 
 @Singleton
 class AmendVariationController @Inject() (
-  avs: AmendVariationService,
-  authAction: AuthAction,
-  bodyParsers: PlayBodyParsers,
-  val cc: ControllerComponents
-)(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
-    extends BackendController(cc)
+                                           avs: AmendVariationService,
+                                           authAction: AuthAction,
+                                           bodyParsers: PlayBodyParsers,
+                                           val cc: ControllerComponents
+                                         )(implicit val apiRetryHelper: ApiRetryHelper, executionContext: ExecutionContext)
+  extends BackendController(cc)
     with Logging
     with ControllerHelper {
 
   private[controllers] def service: AmendVariationService = avs
 
   def update(amlsRegistrationNumber: String, messageType: AmlsMessageType, requestType: RequestType)(implicit
-    request: Request[JsValue]
+                                                                                                     request: Request[JsValue]
   ): Future[Result] = {
 
     val prefix = "[AmendVariationController][update]"
-    amlsRegNoRegex.findFirstIn(amlsRegistrationNumber) match {
-      case Some(_) =>
-        Json.fromJson[SubscriptionRequest](request.body) match {
-          case JsSuccess(body, _) =>
-            implicit val mt: AmlsMessageType      = messageType
-            implicit val requestType: RequestType = RequestType.Amendment
-            service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber) flatMap {
-              updatedAmendRequest =>
-                service.update(amlsRegistrationNumber, updatedAmendRequest) map { response =>
-                  Ok(Json.toJson(response))
-                } recoverWith { case e @ HttpStatusException(status, message) =>
-                  logger.warn(s"$prefix - Status: $status, Message: $message")
-                  Future.failed(e)
-                }
-            }
-          case JsError(errors)    =>
-            Future.successful(BadRequest(toError(errors)))
-        }
-      case _       =>
-        Future.successful {
-          BadRequest(toError("Invalid AmlsRegistrationNumber"))
-        }
+
+    AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
+      case Right(amlsRegistrationNumber) => Json.fromJson[fe.SubscriptionRequest](request.body) match {
+        case JsSuccess(body, _) =>
+          implicit val mt: AmlsMessageType      = messageType
+          implicit val requestType: RequestType = RequestType.Amendment
+          service.compareAndUpdate(AmendVariationRequest.convert(body), amlsRegistrationNumber.regNum) flatMap {
+            updatedAmendRequest =>
+              service.update(amlsRegistrationNumber.regNum, updatedAmendRequest) map { response =>
+                Ok(Json.toJson(response))
+              } recoverWith { case e @ HttpStatusException(status, message) =>
+                logger.warn(s"$prefix - Status: $status, Message: $message")
+                Future.failed(e)
+              }
+          }
+        case JsError(errors)    =>
+          Future.successful(BadRequest(toError(errors)))
+      }
+      case Left(_) =>  Future.successful {
+        BadRequest(toError("Invalid AmlsRegistrationNumber"))
+      }
     }
 
   }
