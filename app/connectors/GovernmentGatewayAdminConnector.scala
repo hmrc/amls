@@ -74,22 +74,22 @@ class GovernmentGatewayAdminConnector @Inject() (
           metrics.success(GGAdmin)
           audit.sendDataEvent(KnownFactsEvent(knownFacts))
           logger.debug(s"$prefix - Success Response")
-          logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
           Future.successful(response)
         case response @ status(s)  =>
           metrics.failed(GGAdmin)
-          logger.warn(s"$prefix - Failure Response: $s")
-          logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+          logger.warn(
+            s"$prefix - Non-OK status or invalid response from GG Admin - status: $s, body: ${Option(response.body).getOrElse("")}"
+          )
           Future.failed(HttpStatusException(s, Option(response.body)))
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logger.warn(s"$prefix - HttpStatusException from GG Admin response", e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(GGAdmin)
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logger.warn(s"$prefix - Unexpected exception calling GG Admin, returning 500", e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

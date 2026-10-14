@@ -63,25 +63,25 @@ class PayAPIConnector @Inject() (
         response
       }
       .flatMap {
-        case response @ status(OK) & bodyParser(JsSuccess(body: Payment, _)) =>
+        case status(OK) & bodyParser(JsSuccess(body: Payment, _)) =>
           metrics.success(PayAPI)
           logger.debug(s"$prefix - Success Response")
-          logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
           Future.successful(body)
-        case response @ status(s)                                            =>
+        case response @ status(s)                                 =>
           metrics.failed(PayAPI)
-          logger.warn(s"$prefix - Failure Response: $s")
-          logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+          logger.warn(
+            s"$prefix - Non-OK status or invalid response from Pay API - status: $s, body: ${Option(response.body).getOrElse("")}"
+          )
           Future.failed(HttpStatusException(s, Option(response.body)))
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logger.warn(s"$prefix - HttpStatusException from Pay API response", e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(PayAPI)
-          logger.warn(s"$prefix - Failure: Exception", e)
+          logger.warn(s"$prefix - Unexpected exception calling Pay API, returning 500", e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }
