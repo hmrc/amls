@@ -53,11 +53,19 @@ class SubscriptionStatusController @Inject() (
             .map { response =>
               Ok(Json.toJson(response))
             }
-            .recoverWith { case e @ HttpStatusException(status, Some(body)) =>
-              logger.warn(s"$prefix - Status: $status, Message: $body")
-              Future.failed(e)
+            .recoverWith {
+              case e @ HttpStatusException(status, Some(body)) =>
+                logger.warn(s"$prefix - HttpStatusException from DES status - status: $status, message: $body")
+                Future.failed(e)
+              case e                                           =>
+                logger.warn(
+                  s"$prefix - Unexpected exception getting subscription status - amlsRegNo: ${amlsRegistrationNumber.regNum}",
+                  e
+                )
+                Future.failed(e)
             }
         case Left(_)                       =>
+          logger.warn(s"$prefix - Invalid AMLS registration number format")
           Future.successful {
             BadRequest(toError("Invalid AMLS Registration Number"))
           }

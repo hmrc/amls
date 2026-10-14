@@ -18,6 +18,7 @@ package connectors
 
 import config.ApplicationConfig
 import models.des.registrationdetails.RegistrationDetails
+import play.api.libs.json.{JsError, JsResultException, JsSuccess}
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
@@ -39,11 +40,29 @@ class RegistrationDetailsDesConnector @Inject() (
   private def getRegistrationDetailsFunction(
     safeId: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RegistrationDetails] = {
-    val url = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
-    httpClientV2.get(url"$url").setHeader(desHeaders: _*).execute[HttpResponse].map {
-      case response if response.status == OK => response.json.as[RegistrationDetails]
-      case response                          =>
-        throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
-    }
+    val prefix = "[RegistrationDetailsDesConnector][getRegistrationDetails]"
+    val url    = s"${appConfig.desUrl}/registration/details?safeid=$safeId"
+    httpClientV2
+      .get(url"$url")
+      .setHeader(desHeaders: _*)
+      .execute[HttpResponse]
+      .recoverWith { case e =>
+        logger.warn(s"$prefix - Exception calling DES registration details - safeId: $safeId", e)
+        Future.failed(e)
+      }
+      .map {
+        case response if response.status == OK =>
+          response.json.validate[RegistrationDetails] match {
+            case JsSuccess(details, _) => details
+            case JsError(errors)       =>
+              logger.warn(
+                s"$prefix - Invalid registration details JSON from DES - safeId: $safeId, invalid paths: ${errors.map(_._1.toJsonString).mkString(", ")}"
+              )
+              throw JsResultException(errors)
+          }
+        case response                          =>
+          logHttpResponse(prefix, response, success = false)
+          throw new RuntimeException(s"Call to get registration details failed with status ${response.status}")
+      }
   }
 }

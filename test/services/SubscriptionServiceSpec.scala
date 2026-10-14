@@ -37,6 +37,9 @@ import repositories.FeesRepository
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{ApiRetryHelper, SubscriptionRequestValidator}
+import ch.qos.logback.classic.spi.ILoggingEvent
+import play.api.Logger
+import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -87,7 +90,12 @@ trait TestFixture extends AmlsReferenceNumberGenerator {
   implicit val hc: HeaderCarrier = HeaderCarrier()
 }
 
-class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with IntegrationPatience with GuiceOneAppPerSuite {
+class SubscriptionServiceSpec
+    extends PlaySpec
+    with ScalaFutures
+    with IntegrationPatience
+    with GuiceOneAppPerSuite
+    with LogCapturing {
 
   "SubscriptionService subscribe" must {
     "return a successful response" which {
@@ -392,6 +400,138 @@ class SubscriptionServiceSpec extends PlaySpec with ScalaFutures with Integratio
               verify(connector.ggConnector, times(1)).addKnownFacts(ArgumentMatchers.eq(knownFacts))(any(), any())
           }
         }
+      }
+    }
+  }
+
+  private def logged(logs: List[ILoggingEvent], message: String): Boolean =
+    logs.exists(_.getFormattedMessage.contains(message))
+
+  trait LoggingFixture extends TestFixture {
+    val serviceLogger: Logger = Logger(connector.getClass)
+    val retry: ApiRetryHelper = mock(classOf[ApiRetryHelper])
+
+    when(connector.subscriptionRequestValidator.validateRequest(request)) thenReturn Right(request)
+    when(connector.config.enrolmentStoreToggle) thenReturn true
+    when(connector.feeResponseRepository.insert(any())) thenReturn Future.successful(true)
+    when(connector.enrolmentStoreConnector.addKnownFacts(any(), any())(any(), any())) thenReturn
+      Future.successful(mock(classOf[HttpResponse]))
+
+    def desReturns(result: Future[des.SubscriptionResponse]) =
+      when {
+        connector.desConnector
+          .subscribe(ArgumentMatchers.eq(safeId), ArgumentMatchers.eq(request))(any(), any(), any(), any(), any())
+      } thenReturn result
+  }
+
+  "SubscriptionService logging" must {
+
+    "log a warning when schema validation fails" in new LoggingFixture {
+      when(connector.subscriptionRequestValidator.validateRequest(request)) thenReturn Left(
+        Seq(Json.obj("error" -> "invalid"))
+      )
+      desReturns(Future.failed(HttpStatusException(BAD_GATEWAY, None)))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        scala.util.Try(connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue)
+        logged(logs, s"[SubscriptionService][subscribe] - Schema validation failed - safeId: $safeId") mustBe true
+      }
+    }
+
+    "log a warning and fail when fees cannot be saved after a successful DES subscription" in new LoggingFixture {
+      desReturns(Future.successful(response))
+      when(connector.feeResponseRepository.insert(any())) thenReturn Future.failed(new RuntimeException("mongo down"))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue mustBe a[RuntimeException]
+        logged(
+          logs,
+          s"[SubscriptionService][subscribe] - Failed to save fees after successful DES subscription - amlsRegNo: ${response.amlsRefNo}"
+        ) mustBe true
+      }
+    }
+
+    "log a warning and still return the response when adding known facts fails" in new LoggingFixture {
+      desReturns(Future.successful(response))
+      when(connector.enrolmentStoreConnector.addKnownFacts(any(), any())(any(), any())) thenReturn
+        Future.failed(new RuntimeException("enrolment store down"))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).futureValue mustEqual SubscriptionResponse.convert(
+          response
+        )
+        logged(
+          logs,
+          s"[SubscriptionService][addKnownFacts] - Failed to add known facts, returning subscription response anyway - amlsRegNo: ${response.amlsRefNo}"
+        ) mustBe true
+      }
+    }
+
+    "send known facts without a postcode when the business address has none" in new LoggingFixture {
+      when(address.postcode) thenReturn None
+      desReturns(Future.successful(response))
+
+      connector.subscribe(safeId, request)(hc, global, retry).futureValue mustEqual SubscriptionResponse.convert(
+        response
+      )
+      verify(connector.enrolmentStoreConnector).addKnownFacts(
+        any(),
+        ArgumentMatchers.eq(
+          KnownFactsForService(Seq(KnownFact("MLRRefNumber", response.amlsRefNo), KnownFact("SafeId", safeId)))
+        )
+      )(any(), any())
+    }
+
+    "log the duplicate subscription with the existing amlsRegNo" in new LoggingFixture {
+      val body = Json.obj("reason" -> s"$duplicateSubscriptionMessage $amlsRegistrationNumber").toString
+      desReturns(Future.failed(HttpStatusException(BAD_REQUEST, Some(body))))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue mustBe a[
+          DuplicateSubscriptionException
+        ]
+        logged(
+          logs,
+          s"[SubscriptionService][subscribe] - Duplicate subscription rejected by DES - amlsRegNo: $amlsRegistrationNumber"
+        ) mustBe true
+        logged(
+          logs,
+          "[SubscriptionService][failResponse] - Failing subscription with DuplicateSubscriptionException"
+        ) mustBe true
+      }
+    }
+
+    "log the DES reason when a 400 is not a duplicate subscription" in new LoggingFixture {
+      val body = Json.obj("reason" -> "Some other DES error").toString
+      desReturns(Future.failed(HttpStatusException(BAD_REQUEST, Some(body))))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue mustBe a[HttpStatusException]
+        logged(
+          logs,
+          "[SubscriptionService][failResponse] - DES rejected subscription - status: 400, reason: Some other DES error"
+        ) mustBe true
+      }
+    }
+
+    "log a warning when DES returns a 400 with no body" in new LoggingFixture {
+      desReturns(Future.failed(HttpStatusException(BAD_REQUEST, None)))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue mustBe a[HttpStatusException]
+        logged(logs, "[SubscriptionService][subscribe] - DES returned 400 with no parseable error body") mustBe true
+      }
+    }
+
+    "log the status and message when DES returns a non-400 error with a body" in new LoggingFixture {
+      desReturns(Future.failed(HttpStatusException(BAD_GATEWAY, Some("bad gateway"))))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        connector.subscribe(safeId, request)(hc, global, retry).failed.futureValue mustBe a[HttpStatusException]
+        logged(
+          logs,
+          "[SubscriptionService][subscribe] - HttpStatusException from DES subscribe - status: 502, message: bad gateway"
+        ) mustBe true
       }
     }
   }

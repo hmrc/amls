@@ -41,17 +41,23 @@ class ApiRetryHelper @Inject() (val as: ActorSystem, appConfig: ApplicationConfi
     ec: ExecutionContext
   ): Future[T] =
     f.apply().recoverWith {
-      case e: HttpStatusException =>
-        if (e.status >= 500 && e.status < 600 && currentAttempt < maxAttempts) {
+      case e: HttpStatusException if e.status >= 500 && e.status < 600 =>
+        if (currentAttempt < maxAttempts) {
           val wait = Math.ceil(currentWait * waitFactor).toInt
-          logger.warn(s"Failure, retrying after $wait ms")
+          logger.warn(
+            s"[ApiRetryHelper][expBackOffHelper] - Attempt $currentAttempt of $maxAttempts failed with status ${e.status}, retrying after $wait ms"
+          )
           after(wait.milliseconds, as.scheduler, ec, () => Future.successful(1)).flatMap { _ =>
             expBackOffHelper(currentAttempt + 1, wait.toInt, f)
           }
         } else {
+          logger.warn(
+            s"[ApiRetryHelper][expBackOffHelper] - All $maxAttempts attempts failed, last status: ${e.status}, giving up",
+            e
+          )
           Future.failed(e)
         }
-      case e                      =>
+      case e                                                           =>
         Future.failed(e)
     }
 }

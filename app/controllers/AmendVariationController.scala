@@ -60,15 +60,28 @@ class AmendVariationController @Inject() (
               updatedAmendRequest =>
                 service.update(amlsRegistrationNumber.regNum, updatedAmendRequest) map { response =>
                   Ok(Json.toJson(response))
-                } recoverWith { case e @ HttpStatusException(status, message) =>
-                  logger.warn(s"$prefix - Status: $status, Message: $message")
-                  Future.failed(e)
                 }
+            } recoverWith {
+              case e @ HttpStatusException(status, message) =>
+                logger.warn(
+                  s"$prefix - HttpStatusException from $messageType update - status: $status, message: $message"
+                )
+                Future.failed(e)
+              case e                                        =>
+                logger.warn(
+                  s"$prefix - Unexpected exception during $messageType update - amlsRegNo: ${amlsRegistrationNumber.regNum}",
+                  e
+                )
+                Future.failed(e)
             }
           case JsError(errors)    =>
+            logger.warn(
+              s"$prefix - Invalid $messageType request payload - invalid paths: ${errors.map(_._1.toJsonString).mkString(", ")}"
+            )
             Future.successful(BadRequest(toError(errors)))
         }
       case Left(_)                       =>
+        logger.warn(s"$prefix - Invalid AMLS registration number format - messageType: $messageType")
         Future.successful {
           BadRequest(toError("Invalid AmlsRegistrationNumber"))
         }
