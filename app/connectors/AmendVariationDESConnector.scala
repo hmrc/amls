@@ -56,7 +56,7 @@ class AmendVariationDESConnector @Inject() (
     wr2: Writes[des.AmendVariationResponse],
     hc: HeaderCarrier
   ): Future[des.AmendVariationResponse] = {
-    val prefix     = "[DESConnector][amend]"
+    val prefix     = "[AmendVariationDESConnector][amend]"
     val bodyParser = JsonParsed[des.AmendVariationResponse]
     val timer      = metrics.timer(API6)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
@@ -87,13 +87,13 @@ class AmendVariationDESConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           ac.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, e))
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API6)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
           ac.sendExtendedEvent(AmendmentEventFailed(amlsRegistrationNumber, data, httpEx))
           Future.failed(httpEx)

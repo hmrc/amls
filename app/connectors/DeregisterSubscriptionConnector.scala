@@ -56,7 +56,7 @@ class DeregisterSubscriptionConnector @Inject() (
     wr2: Writes[DeregisterSubscriptionResponse],
     hc: HeaderCarrier
   ): Future[DeregisterSubscriptionResponse] = {
-    val prefix     = "[DESConnector][deregistration]"
+    val prefix     = "[DeregisterSubscriptionConnector][deregistration]"
     val bodyParser = JsonParsed[DeregisterSubscriptionResponse]
     val timer      = metrics.timer(API10)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
@@ -87,12 +87,12 @@ class DeregisterSubscriptionConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API10)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

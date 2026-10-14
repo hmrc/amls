@@ -56,7 +56,7 @@ class SubscribeDESConnector @Inject() (
     wr2: Writes[SubscriptionResponse],
     hc: HeaderCarrier
   ): Future[SubscriptionResponse] = {
-    val prefix     = "[DESConnector][subscribe]"
+    val prefix     = "[SubscribeDESConnector][subscribe]"
     val bodyParser = JsonParsed[SubscriptionResponse]
     val timer      = metrics.timer(API4)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
@@ -87,13 +87,13 @@ class SubscribeDESConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, e))
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API4)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           val httpEx = HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage))
           ac.sendExtendedEvent(SubscriptionFailedEvent(safeId, data, httpEx))
           Future.failed(httpEx)
