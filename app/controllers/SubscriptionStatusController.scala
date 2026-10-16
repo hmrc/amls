@@ -48,15 +48,19 @@ class SubscriptionStatusController @Inject() (
 
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
         case Right(amlsRegistrationNumber) =>
-          connector.status(amlsRegistrationNumber.regNum).map { response =>
-            Ok(Json.toJson(response))
-          }.recoverWith { case e@HttpStatusException(status, Some(body)) =>
-            logger.warn(s"$prefix - Status: $status, Message: $body")
-            Future.failed(e)
+          connector
+            .status(amlsRegistrationNumber.regNum)
+            .map { response =>
+              Ok(Json.toJson(response))
+            }
+            .recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+              logger.warn(s"$prefix - Status: $status, Message: $body")
+              Future.failed(e)
+            }
+        case Left(_)                       =>
+          Future.successful {
+            BadRequest(toError("Invalid AMLS Registration Number"))
           }
-        case Left(_) => Future.successful {
-          BadRequest(toError("Invalid AMLS Registration Number"))
-        }
       }
     }
 }

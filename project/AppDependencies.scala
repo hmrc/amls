@@ -3,16 +3,16 @@ import sbt._
 private object AppDependencies {
   import play.sbt.PlayImport._
 
-  val bootstrapVersion = "10.7.0"
+  val bootstrapVersion = "10.8.0"
 
   private val playV = "play-30"
 
-  val hmrcMongoVersion = "2.12.0"
+  val hmrcMongoVersion = "2.14.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc.mongo"    %% s"hmrc-mongo-$playV"         % hmrcMongoVersion,
-    "at.yawk.lz4"          %  "lz4-java"                   % "1.11.0",
+    "at.yawk.lz4"          %  "lz4-java"                   % "1.12.0",
     "org.typelevel"        %% "cats-core"                  % "2.13.0",
     "com.github.fge"       %  "json-schema-validator"      % "2.2.14" exclude("org.mozilla", "rhino"),
     "org.mozilla"          %  "rhino"                      % "1.9.1",

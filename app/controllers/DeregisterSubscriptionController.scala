@@ -39,19 +39,20 @@ class DeregisterSubscriptionController @Inject() (
 
   def deregistration(accountType: String, ref: String, amlsRegistrationNumber: String) =
     authAction.async(bodyParsers.json) { implicit request =>
-
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
-        case Right(amlsRegistrationNumber) => Json.fromJson[DeregisterSubscriptionRequest](request.body) match {
-          case JsSuccess(body, _) =>
-            deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber.regNum, body) map { response =>
-              Ok(Json.toJson(response))
-            }
-          case JsError(errors) =>
-            Future.successful(BadRequest(toError(errors)))
-        }
-        case Left(_) => Future.successful {
-          BadRequest(toError("Invalid amlsRegistrationNumber"))
-        }
+        case Right(amlsRegistrationNumber) =>
+          Json.fromJson[DeregisterSubscriptionRequest](request.body) match {
+            case JsSuccess(body, _) =>
+              deregisterSubscriptionConnector.deregistration(amlsRegistrationNumber.regNum, body) map { response =>
+                Ok(Json.toJson(response))
+              }
+            case JsError(errors)    =>
+              Future.successful(BadRequest(toError(errors)))
+          }
+        case Left(_)                       =>
+          Future.successful {
+            BadRequest(toError("Invalid amlsRegistrationNumber"))
+          }
       }
     }
 }
