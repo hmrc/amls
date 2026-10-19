@@ -25,9 +25,12 @@ case class AmlsRegistrationNumber(regNum: String) extends AnyVal {
 object AmlsRegistrationNumber {
   private val amlsRegNoRegex: Regex = "^X[A-Z]ML00000[0-9]{6}$".r
 
-  private def apply(regNum: String): Either[String, AmlsRegistrationNumber] = {
-    Either.cond(regNum.matches(amlsRegNoRegex.regex), new AmlsRegistrationNumber(regNum), "Invalid AmlsRegistrationNumber")
-  }
+  private def apply(regNum: String): Either[String, AmlsRegistrationNumber] =
+    Either.cond(
+      regNum.matches(amlsRegNoRegex.regex),
+      new AmlsRegistrationNumber(regNum),
+      "Invalid AmlsRegistrationNumber"
+    )
 
   def fromString(regNum: String): Either[String, AmlsRegistrationNumber] = apply(regNum)
 }

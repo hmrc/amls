@@ -57,11 +57,12 @@ class PaymentController @Inject() (
           logger.debug(s"[PaymentController][savePayment]: Received paymentId ${request.body}")
           paymentService.createPayment(request.body, amlsRegistrationNumber.regNum, safeId) map {
             case Some(_) => Created
-            case _ => InternalServerError
+            case _       => InternalServerError
           }
-        case Left(_) => Future.successful {
-          BadRequest(toError("Invalid amlsRegistrationNumber"))
-        }
+        case Left(_)                       =>
+          Future.successful {
+            BadRequest(toError("Invalid amlsRegistrationNumber"))
+          }
       }
     }
 

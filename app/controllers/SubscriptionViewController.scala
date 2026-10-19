@@ -48,20 +48,22 @@ class SubscriptionViewController @Inject() (
       logger.debug(s"$prefix - amlsRegNo: $amlsRegistrationNumber")
 
       AmlsRegistrationNumber.fromString(amlsRegistrationNumber) match {
-        case Right(amlsRegistrationNumber) => connector.view(amlsRegistrationNumber.regNum) map { response =>
-          val feModel: SubscriptionView = response
-          val prefix = "[SubscriptionViewController][view]"
-          logger.debug(s"$prefix model - $feModel")
-          val json = Json.toJson(feModel)
-          logger.debug(s"$prefix Json - $json")
-          Ok(json)
-        } recoverWith { case e@HttpStatusException(status, Some(body)) =>
-          logger.warn(s"$prefix - Status: $status, Message: $body")
-          Future.failed(e)
-        }
-        case Left(_) => Future.successful {
-          BadRequest(toError("Invalid AMLS Registration Number"))
-        }
+        case Right(amlsRegistrationNumber) =>
+          connector.view(amlsRegistrationNumber.regNum) map { response =>
+            val feModel: SubscriptionView = response
+            val prefix                    = "[SubscriptionViewController][view]"
+            logger.debug(s"$prefix model - $feModel")
+            val json                      = Json.toJson(feModel)
+            logger.debug(s"$prefix Json - $json")
+            Ok(json)
+          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
+            logger.warn(s"$prefix - Status: $status, Message: $body")
+            Future.failed(e)
+          }
+        case Left(_)                       =>
+          Future.successful {
+            BadRequest(toError("Invalid AMLS Registration Number"))
+          }
       }
     }
 }
