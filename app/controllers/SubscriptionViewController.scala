@@ -51,6 +51,7 @@ class SubscriptionViewController @Inject() (
         case Right(amlsRegistrationNumber) =>
           connector.view(amlsRegistrationNumber.regNum) map { response =>
             val feModel: SubscriptionView = response
+            logger.info(s"$prefix - Subscription view returned - amlsRegNo: ${amlsRegistrationNumber.regNum}")
             logger.debug(s"$prefix - Converted model: $feModel")
             val json                      = Json.toJson(feModel)
             logger.debug(s"$prefix - Response JSON: $json")

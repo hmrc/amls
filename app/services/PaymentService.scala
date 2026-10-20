@@ -81,7 +81,7 @@ class PaymentService @Inject() (val paymentConnector: PayAPIConnector, val payme
     }
 
   def getPaymentByAmlsReference(amlsRefNo: String): Future[Option[Payment]] = {
-    logger.debug(s"[PaymentService][getPaymentByAmlsReference] - Searching for payment - amlsRefNo: $amlsRefNo")
+    logger.info(s"[PaymentService][getPaymentByAmlsReference] - Searching for payment - amlsRefNo: $amlsRefNo")
     val futureOptPayment = paymentsRepository.findLatestByAmlsReference(amlsRefNo)
 
     futureOptPayment.foreach {
@@ -97,7 +97,7 @@ class PaymentService @Inject() (val paymentConnector: PayAPIConnector, val payme
   }
 
   def getPaymentByPaymentReference(paymentReference: String): Future[Option[Payment]] = {
-    logger.debug(
+    logger.info(
       s"[PaymentService][getPaymentByPaymentReference] - Searching for payment - paymentReference: $paymentReference"
     )
     val futureOptPayment = paymentsRepository.findLatestByPaymentReference(paymentReference)

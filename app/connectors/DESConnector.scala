@@ -44,8 +44,12 @@ class DESConnector(applicationConfig: ApplicationConfig) extends HttpResponseHel
   def logHttpResponse(prefix: String, response: HttpResponse, success: Boolean): Unit = {
     val details =
       s"status: ${response.status}, CorrelationId: ${response.header("CorrelationId").getOrElse("")}, body: ${response.body}"
-    if (success) logger.debug(s"$prefix - DES response received - $details")
-    else logger.warn(s"$prefix - Non-OK status or invalid JSON from DES - $details")
+    if (success) {
+      logger.info(
+        s"$prefix - DES response received - status: ${response.status}, CorrelationId: ${response.header("CorrelationId").getOrElse("")}"
+      )
+      logger.debug(s"$prefix - DES response body: ${response.body}")
+    } else logger.warn(s"$prefix - Non-OK status or invalid JSON from DES - $details")
   }
 
   def logHttpStatusException(prefix: String, status: Int, e: Throwable): Unit =

@@ -37,10 +37,10 @@ class DefaultAuthAction @Inject() (val authConnector: AuthConnector, val control
 
     val prefix = "[DefaultAuthAction][filter]"
 
-    logger.debug(s"$prefix - Calling authorised(ConfidenceLevel.L50)")
+    logger.info(s"$prefix - Calling authorised(ConfidenceLevel.L50)")
 
     authorised(ConfidenceLevel.L50) {
-      logger.debug(s"$prefix - Authorisation succeeded")
+      logger.info(s"$prefix - Authorisation succeeded")
       Future.successful(None)
     }.recoverWith {
       case e: AuthorisationException =>

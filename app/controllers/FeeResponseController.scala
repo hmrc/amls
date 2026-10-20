@@ -41,6 +41,7 @@ class FeeResponseController @Inject() (authAction: AuthAction, val cc: Controlle
         .findLatestByAmlsReference(amlsRegistrationNumber)
         .map {
           case Some(feeResponse) =>
+            logger.info(s"$prefix - Fee response found - amlsRegNo: $amlsRegistrationNumber")
             logger.debug(s"$prefix - Fee response: ${Json.toJson(feeResponse)}")
             Ok(Json.toJson[Fees](feeResponse))
           case None              =>
