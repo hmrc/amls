@@ -33,6 +33,11 @@ import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers._
 import repositories.PaymentRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import ch.qos.logback.classic.spi.ILoggingEvent
+import models.payments.CreateBacsPaymentRequest
+import org.scalatest.concurrent.Eventually
+import play.api.Logger
+import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,7 +47,9 @@ class PaymentServiceSpec
     with ScalaFutures
     with IntegrationPatience
     with PaymentGenerator
-    with BeforeAndAfter {
+    with BeforeAndAfter
+    with Eventually
+    with LogCapturing {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -271,6 +278,126 @@ class PaymentServiceSpec
       whenReady(testPaymentService.createBacsPayment(bacsPaymentRequest)) { result =>
         result mustBe payment.copy(isBacs = Some(true))
         verify(testPaymentRepo, never).insert(any())
+      }
+    }
+  }
+
+  private val serviceLogger: Logger = Logger(classOf[PaymentService])
+
+  private def logged(logs: List[ILoggingEvent], message: String): Boolean =
+    logs.exists(_.getFormattedMessage.contains(message))
+
+  "PaymentService logging" must {
+
+    "log a warning when Pay API returns NOT_FOUND" in {
+      when(testPayAPIConnector.getPayment(any())(any())) thenReturn Future.failed(HttpStatusException(NOT_FOUND, None))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService.createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId).futureValue mustBe None
+        logged(
+          logs,
+          s"[PaymentService][createPayment] - Payment not found in Pay API - paymentId: ${testPayApiPayment.id}"
+        ) mustBe true
+      }
+    }
+
+    "log a warning when Pay API returns another error status" in {
+      when(testPayAPIConnector.getPayment(any())(any())) thenReturn Future.failed(
+        HttpStatusException(BAD_REQUEST, Some("bad request"))
+      )
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService
+          .createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId)
+          .failed
+          .futureValue mustBe a[PaymentException]
+        logged(
+          logs,
+          s"[PaymentService][createPayment] - Pay API error, failing with PaymentException - status: 400, paymentId: ${testPayApiPayment.id}"
+        ) mustBe true
+      }
+    }
+
+    "log a warning when the payment cannot be saved" in {
+      when(testPayAPIConnector.getPayment(any())(any())) thenReturn Future.successful(testPayApiPayment)
+      when(testPaymentRepo.insert(any())) thenReturn Future.failed(PaymentException(None, "not acknowledged"))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService
+          .createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId)
+          .failed
+          .futureValue mustBe a[PaymentException]
+        logged(
+          logs,
+          s"[PaymentService][createPayment] - Failed to save payment - paymentId: ${testPayApiPayment.id}, amlsRegNo: $amlsRegistrationNumber"
+        ) mustBe true
+      }
+    }
+
+    "log a warning on an unexpected exception creating a payment" in {
+      when(testPayAPIConnector.getPayment(any())(any())) thenReturn Future.failed(new RuntimeException("boom"))
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService
+          .createPayment(testPayApiPayment.id, amlsRegistrationNumber, safeId)
+          .failed
+          .futureValue mustBe a[RuntimeException]
+        logged(
+          logs,
+          s"[PaymentService][createPayment] - Unexpected exception creating payment - paymentId: ${testPayApiPayment.id}, amlsRegNo: $amlsRegistrationNumber"
+        ) mustBe true
+      }
+    }
+
+    "log a warning when a BACS payment cannot be created" in {
+      val bacsRequest = mock(classOf[CreateBacsPaymentRequest])
+      when(testPaymentRepo.findLatestByPaymentReference(any())) thenReturn Future.failed(
+        new RuntimeException("mongo down")
+      )
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService.createBacsPayment(bacsRequest).failed.futureValue mustBe a[RuntimeException]
+        logged(logs, "[PaymentService][createBacsPayment] - Failed to create BACS payment") mustBe true
+      }
+    }
+
+    "log a warning when no payment is found by AMLS reference" in {
+      when(testPaymentRepo.findLatestByAmlsReference(any())) thenReturn Future.successful(None)
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService.getPaymentByAmlsReference(amlsRegistrationNumber).futureValue mustBe None
+        eventually {
+          logged(
+            logs,
+            s"[PaymentService][getPaymentByAmlsReference] - No payment found in database - amlsRefNo: $amlsRegistrationNumber"
+          ) mustBe true
+        }
+      }
+    }
+
+    "log a warning when no payment is found by payment reference" in {
+      when(testPaymentRepo.findLatestByPaymentReference(any())) thenReturn Future.successful(None)
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService.getPaymentByPaymentReference("REF123").futureValue mustBe None
+        eventually {
+          logged(
+            logs,
+            "[PaymentService][getPaymentByPaymentReference] - No payment found in database - paymentReference: REF123"
+          ) mustBe true
+        }
+      }
+    }
+
+    "log a warning when a payment update is not acknowledged" in {
+      when(testPaymentRepo.update(any())) thenReturn Future.successful(errorResult())
+
+      withCaptureOfLoggingFrom(serviceLogger) { logs =>
+        testPaymentService.updatePayment(testPayment).failed.futureValue mustBe an[Exception]
+        logged(
+          logs,
+          s"[PaymentService][updatePayment] - Payment update not acknowledged by database - paymentReference: ${testPayment.reference}"
+        ) mustBe true
       }
     }
   }

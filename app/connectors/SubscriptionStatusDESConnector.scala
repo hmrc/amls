@@ -54,7 +54,7 @@ class SubscriptionStatusDESConnector @Inject() (
     amlsRegistrationNumber: String
   )(implicit ec: ExecutionContext, wr: Writes[ReadStatusResponse], hc: HeaderCarrier): Future[ReadStatusResponse] = {
 
-    val prefix     = "[DESConnector][readstatus]"
+    val prefix     = "[SubscriptionStatusDESConnector][readstatus]"
     val bodyParser = JsonParsed[ReadStatusResponse]
     val timer      = metrics.timer(API9)
     logger.debug(s"$prefix - reg no: $amlsRegistrationNumber")
@@ -86,12 +86,12 @@ class SubscriptionStatusDESConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API9)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

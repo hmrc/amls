@@ -44,39 +44,71 @@ class PaymentService @Inject() (val paymentConnector: PayAPIConnector, val payme
       pm         <- paymentConnector.getPayment(paymentId)
       newPayment <- paymentsRepository.insert(Payment(amlsRegistrationNumber, safeId, pm))
     } yield newPayment.some) recoverWith {
-      case e: HttpStatusException if e.status.equals(NOT_FOUND) => Future.successful(None)
+      case e: HttpStatusException if e.status.equals(NOT_FOUND) =>
+        logger.warn(s"[PaymentService][createPayment] - Payment not found in Pay API - paymentId: $paymentId")
+        Future.successful(None)
       case e: HttpStatusException                               =>
+        logger.warn(
+          s"[PaymentService][createPayment] - Pay API error, failing with PaymentException - status: ${e.status}, paymentId: $paymentId"
+        )
         Future.failed(PaymentException(Some(e.status), e.body.getOrElse("Could not retrieve payment")))
-      case e: PaymentException                                  => Future.failed(e)
+      case e: PaymentException                                  =>
+        logger.warn(
+          s"[PaymentService][createPayment] - Failed to save payment - paymentId: $paymentId, amlsRegNo: $amlsRegistrationNumber",
+          e
+        )
+        Future.failed(e)
+      case e                                                    =>
+        logger.warn(
+          s"[PaymentService][createPayment] - Unexpected exception creating payment - paymentId: $paymentId, amlsRegNo: $amlsRegistrationNumber",
+          e
+        )
+        Future.failed(e)
     }
 
   def createBacsPayment(request: CreateBacsPaymentRequest)(implicit ec: ExecutionContext): Future[Payment] =
-    paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
+    (paymentsRepository.findLatestByPaymentReference(request.paymentReference) flatMap {
       case Some(p) =>
         val copied = p.copy(isBacs = Some(true))
         paymentsRepository.update(copied) map { _ => copied }
       case _       => paymentsRepository.insert(Payment(request))
+    }) recoverWith { case e =>
+      logger.warn(
+        s"[PaymentService][createBacsPayment] - Failed to create BACS payment - paymentReference: ${request.paymentReference}",
+        e
+      )
+      Future.failed(e)
     }
 
   def getPaymentByAmlsReference(amlsRefNo: String): Future[Option[Payment]] = {
-    logger.debug(s"Searching for payment by amls reference $amlsRefNo ...")
+    logger.info(s"[PaymentService][getPaymentByAmlsReference] - Searching for payment - amlsRefNo: $amlsRefNo")
     val futureOptPayment = paymentsRepository.findLatestByAmlsReference(amlsRefNo)
 
     futureOptPayment.foreach {
       case Some(payment) => Some(payment)
-      case None          => logger.error(s"unable to find payment in database for amls ref number $amlsRefNo"); None
+      case None          =>
+        logger.warn(
+          s"[PaymentService][getPaymentByAmlsReference] - No payment found in database - amlsRefNo: $amlsRefNo"
+        )
+        None
     }
 
     futureOptPayment
   }
 
   def getPaymentByPaymentReference(paymentReference: String): Future[Option[Payment]] = {
-    logger.debug(s"Searching for payment by payment reference $paymentReference ...")
+    logger.info(
+      s"[PaymentService][getPaymentByPaymentReference] - Searching for payment - paymentReference: $paymentReference"
+    )
     val futureOptPayment = paymentsRepository.findLatestByPaymentReference(paymentReference)
 
     futureOptPayment.foreach {
       case Some(payment) => Some(payment)
-      case None          => logger.error(s"unable to find payment in database for payment reference $paymentReference"); None
+      case None          =>
+        logger.warn(
+          s"[PaymentService][getPaymentByPaymentReference] - No payment found in database - paymentReference: $paymentReference"
+        )
+        None
     }
 
     futureOptPayment
@@ -86,6 +118,9 @@ class PaymentService @Inject() (val paymentConnector: PayAPIConnector, val payme
     paymentsRepository.update(payment) map {
       case r if r.wasAcknowledged() => true
       case _: UpdateResult          =>
+        logger.warn(
+          s"[PaymentService][updatePayment] - Payment update not acknowledged by database - paymentReference: ${payment.reference}"
+        )
         throw new Exception(s"Unknown error when trying to update payment ref ${payment.reference}")
     }
 

@@ -51,7 +51,7 @@ class ViewDESConnector @Inject() (
 
     val bodyParser = JsonParsed[SubscriptionView]
     val timer      = metrics.timer(API5)
-    val prefix     = "[DESConnector][view]"
+    val prefix     = "[ViewDESConnector][view]"
 
     val Url = s"$fullUrl/$amlsRegistrationNumber"
 
@@ -86,12 +86,12 @@ class ViewDESConnector @Inject() (
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API5)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

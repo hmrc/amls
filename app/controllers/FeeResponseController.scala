@@ -36,16 +36,24 @@ class FeeResponseController @Inject() (authAction: AuthAction, val cc: Controlle
 
   def get(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async {
-      {
-        repository.findLatestByAmlsReference(amlsRegistrationNumber) map {
+      val prefix = "[FeeResponseController][get]"
+      repository
+        .findLatestByAmlsReference(amlsRegistrationNumber)
+        .map {
           case Some(feeResponse) =>
-            logger.debug(s"[FeeResponseController - get : ${Json.toJson(feeResponse)}]")
+            logger.info(s"$prefix - Fee response found - amlsRegNo: $amlsRegistrationNumber")
+            logger.debug(s"$prefix - Fee response: ${Json.toJson(feeResponse)}")
             Ok(Json.toJson[Fees](feeResponse))
-          case None              => NotFound
+          case None              =>
+            logger.info(s"$prefix - No fee response found - amlsRegNo: $amlsRegistrationNumber")
+            NotFound
         }
-      }.recoverWith { case e: Throwable =>
-        logger.error(s"[FeeResponseController - get] ", e)
-        Future.successful(InternalServerError)
-      }
+        .recoverWith { case e: Throwable =>
+          logger.error(
+            s"$prefix - Exception fetching fee response, returning 500 - amlsRegNo: $amlsRegistrationNumber",
+            e
+          )
+          Future.successful(InternalServerError)
+        }
     }
 }

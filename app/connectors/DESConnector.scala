@@ -42,14 +42,21 @@ class DESConnector(applicationConfig: ApplicationConfig) extends HttpResponseHel
 
   // $COVERAGE-OFF$
   def logHttpResponse(prefix: String, response: HttpResponse, success: Boolean): Unit = {
-    val log = if (success) logger.debug(_: String) else logger.warn(_: String)
-    log(s"$prefix - Response: ${response.status}")
-    log(s"$prefix - CorrelationId: ${response.header("CorrelationId").getOrElse("")}")
-    log(s"$prefix - Body: ${response.body}")
+    val details =
+      s"status: ${response.status}, CorrelationId: ${response.header("CorrelationId").getOrElse("")}, body: ${response.body}"
+    if (success) {
+      logger.info(
+        s"$prefix - DES response received - status: ${response.status}, CorrelationId: ${response.header("CorrelationId").getOrElse("")}"
+      )
+      logger.debug(s"$prefix - DES response body: ${response.body}")
+    } else logger.warn(s"$prefix - Non-OK status or invalid JSON from DES - $details")
   }
 
-  def logException(prefix: String, e: Throwable): Unit =
-    logger.warn(s"$prefix - Failure: Exception", e)
+  def logHttpStatusException(prefix: String, status: Int, e: Throwable): Unit =
+    logger.warn(s"$prefix - HttpStatusException from DES response - status: $status", e)
+
+  def logUnexpectedException(prefix: String, e: Throwable): Unit =
+    logger.warn(s"$prefix - Unexpected exception calling DES, returning 500", e)
   // $COVERAGE-ON$
 
 }

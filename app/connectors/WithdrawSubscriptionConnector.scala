@@ -56,7 +56,7 @@ class WithdrawSubscriptionConnector @Inject() (
     wr2: Writes[WithdrawSubscriptionResponse],
     hc: HeaderCarrier
   ): Future[WithdrawSubscriptionResponse] = {
-    val prefix     = "[DESConnector][withdrawal]"
+    val prefix     = "[WithdrawSubscriptionConnector][withdrawal]"
     val bodyParser = JsonParsed[WithdrawSubscriptionResponse]
     val timer      = metrics.timer(API8)
     logger.debug(s"$prefix - Request body: ${Json.toJson(data)}")
@@ -82,17 +82,17 @@ class WithdrawSubscriptionConnector @Inject() (
           Future.successful(body)
         case r @ status(s)                                                                 =>
           metrics.failed(API8)
-          logHttpResponse(prefix, r, success = true)
+          logHttpResponse(prefix, r, success = false)
           Future.failed(HttpStatusException(s, Option(r.body)))
       }
       .recoverWith {
         case e: HttpStatusException =>
-          logException(prefix, e)
+          logHttpStatusException(prefix, e.status, e)
           Future.failed(e)
         case e                      =>
           timer.stop()
           metrics.failed(API8)
-          logException(prefix, e)
+          logUnexpectedException(prefix, e)
           Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
       }
   }

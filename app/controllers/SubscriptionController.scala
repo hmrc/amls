@@ -66,13 +66,20 @@ class SubscriptionController @Inject() (
                   )
 
                 case e @ HttpStatusException(status, Some(body)) =>
-                  logger.warn(s"$prefix - Status: $status, Message: $body")
+                  logger.warn(s"$prefix - HttpStatusException from subscription - status: $status, message: $body")
+                  Future.failed(e)
+                case e                                           =>
+                  logger.warn(s"$prefix - Unexpected exception during subscription - safeId: $safeId", e)
                   Future.failed(e)
               }
             case JsError(errors)    =>
+              logger.warn(
+                s"$prefix - Invalid subscription request payload - safeId: $safeId, invalid paths: ${errors.map(_._1.toJsonString).mkString(", ")}"
+              )
               Future.successful(BadRequest(toError(errors)))
           }
         case _       =>
+          logger.warn(s"$prefix - Invalid SafeId format")
           Future.successful {
             BadRequest(toError("Invalid SafeId"))
           }

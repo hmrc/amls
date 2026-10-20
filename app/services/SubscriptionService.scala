@@ -57,16 +57,23 @@ class SubscriptionService @Inject() (
             amlsRegistrationNumberRegex
               .findFirstIn(body.reason)
               .fold[Future[SubscriptionResponse]](failResponse(ex, body)) { amlsRegNo =>
-                logger.warn(s"[SubscriptionService] - Duplicate subscription for $amlsRegNo; failing..")
+                logger.warn(
+                  s"[SubscriptionService][subscribe] - Duplicate subscription rejected by DES - amlsRegNo: $amlsRegNo"
+                )
                 failResponse(DuplicateSubscriptionException(ex, amlsRegNo, body.reason), body)
               }
           case body                                                                        =>
             failResponse(ex, body)
         }
-      }.getOrElse(Future.failed(ex))
+      }.getOrElse {
+        logger.warn(s"[SubscriptionService][subscribe] - DES returned 400 with no parseable error body")
+        Future.failed(ex)
+      }
 
     case e @ HttpStatusException(status, Some(body)) =>
-      logger.warn(s" - Status: $status, Message: $body")
+      logger.warn(
+        s"[SubscriptionService][subscribe] - HttpStatusException from DES subscribe - status: $status, message: $body"
+      )
       Future.failed(e)
   }
 
@@ -81,10 +88,10 @@ class SubscriptionService @Inject() (
 
     validationResult match {
       case Left(errors) =>
-        logger.warn(s"[SubscriptionService][subscribe] Schema Validation Failed : safeId: $safeId")
+        logger.warn(s"[SubscriptionService][subscribe] - Schema validation failed - safeId: $safeId")
         auditConnector.sendExtendedEvent(SubscriptionValidationFailedEvent(safeId, request, errors))
       case Right(_)     =>
-        logger.debug(s"[SubscriptionService][subscribe] : safeId: $safeId : Validation passed")
+        logger.info(s"[SubscriptionService][subscribe] - Schema validation passed - safeId: $safeId")
     }
 
     for {
@@ -95,7 +102,14 @@ class SubscriptionService @Inject() (
                       duplicateSubscriptionErrorHandler(request)
                     }
       _        <- Fees.convertSubscription(response) match {
-                    case Some(fees) => feeResponseRepository.insert(fees)
+                    case Some(fees) =>
+                      feeResponseRepository.insert(fees).recoverWith { case e =>
+                        logger.warn(
+                          s"[SubscriptionService][subscribe] - Failed to save fees after successful DES subscription - amlsRegNo: ${response.amlsRefNo}",
+                          e
+                        )
+                        Future.failed(e)
+                      }
                     case _          => Future.successful(false)
                   }
       _        <- addKnownFacts(safeId, request, response)
@@ -119,8 +133,14 @@ class SubscriptionService @Inject() (
 
   private def failResponse(ex: Throwable, body: HttpExceptionBody) = {
     ex match {
-      case e: HttpStatusException => logger.warn(s" - Status: ${e.status}, Message: $body")
-      case _                      => logger.warn(s" - Exception thrown - Message: $body")
+      case e: HttpStatusException =>
+        logger.warn(
+          s"[SubscriptionService][failResponse] - DES rejected subscription - status: ${e.status}, reason: ${body.reason}"
+        )
+      case _                      =>
+        logger.warn(
+          s"[SubscriptionService][failResponse] - Failing subscription with ${ex.getClass.getSimpleName} - reason: ${body.reason}"
+        )
     }
 
     Future.failed(ex)
@@ -138,7 +158,10 @@ class SubscriptionService @Inject() (
      } else {
        ggConnector.addKnownFacts(getKnownFacts(safeId, request, response))
      }) map (_ => response) recover { case ex =>
-      logger.warn("[AddKnownFactsFailed]", ex)
+      logger.warn(
+        s"[SubscriptionService][addKnownFacts] - Failed to add known facts, returning subscription response anyway - amlsRegNo: ${response.amlsRefNo}, enrolmentStoreToggle: ${config.enrolmentStoreToggle}",
+        ex
+      )
       response
     }
 

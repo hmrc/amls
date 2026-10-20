@@ -56,7 +56,7 @@ class EnrolmentStoreConnector @Inject() (
 
     val url = s"${config.enrolmentStoreUrl}/tax-enrolments/enrolments/${enrolmentKey.key}"
 
-    val prefix = "[EnrolmentStore][Enrolments]"
+    val prefix = "[EnrolmentStoreConnector][addKnownFacts]"
     val timer  = metrics.timer(EnrolmentStoreKnownFacts)
 
     val audit: Audit = new Audit(AuditHelper.appName, mac)
@@ -72,21 +72,22 @@ class EnrolmentStoreConnector @Inject() (
         metrics.success(EnrolmentStoreKnownFacts)
         audit.sendDataEvent(KnownFactsEvent(knownFacts))
         logger.debug(s"$prefix - Success Response")
-        logger.debug(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
         Future.successful(response)
       case response @ status(s)          =>
         metrics.failed(EnrolmentStoreKnownFacts)
-        logger.warn(s"$prefix - Failure Response: $s")
-        logger.warn(s"$prefix - Response body: ${Option(response.body) getOrElse ""}")
+        logger.warn(
+          s"$prefix - Non-OK status or invalid response from Enrolment Store - status: $s, body: ${Option(response.body)
+              .getOrElse("")}"
+        )
         Future.failed(HttpStatusException(s, Option(response.body)))
     } recoverWith {
       case e: HttpStatusException =>
-        logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - HttpStatusException from Enrolment Store response", e)
         Future.failed(e)
       case e                      =>
         timer.stop()
         metrics.failed(EnrolmentStoreKnownFacts)
-        logger.warn(s"$prefix - Failure: Exception", e)
+        logger.warn(s"$prefix - Unexpected exception calling Enrolment Store, returning 500", e)
         Future.failed(HttpStatusException(INTERNAL_SERVER_ERROR, Some(e.getMessage)))
     }
   }

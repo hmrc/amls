@@ -41,7 +41,7 @@ class SubscriptionViewController @Inject() (
 
   private[controllers] def connector: ViewDESConnector = vdc
 
-  val prefix = "[SubscriptionViewController][get]"
+  val prefix = "[SubscriptionViewController][view]"
 
   def view(accountType: String, ref: String, amlsRegistrationNumber: String): Action[AnyContent] =
     authAction.async { implicit request =>
@@ -51,16 +51,24 @@ class SubscriptionViewController @Inject() (
         case Right(amlsRegistrationNumber) =>
           connector.view(amlsRegistrationNumber.regNum) map { response =>
             val feModel: SubscriptionView = response
-            val prefix                    = "[SubscriptionViewController][view]"
-            logger.debug(s"$prefix model - $feModel")
+            logger.info(s"$prefix - Subscription view returned - amlsRegNo: ${amlsRegistrationNumber.regNum}")
+            logger.debug(s"$prefix - Converted model: $feModel")
             val json                      = Json.toJson(feModel)
-            logger.debug(s"$prefix Json - $json")
+            logger.debug(s"$prefix - Response JSON: $json")
             Ok(json)
-          } recoverWith { case e @ HttpStatusException(status, Some(body)) =>
-            logger.warn(s"$prefix - Status: $status, Message: $body")
-            Future.failed(e)
+          } recoverWith {
+            case e @ HttpStatusException(status, Some(body)) =>
+              logger.warn(s"$prefix - HttpStatusException from DES view - status: $status, message: $body")
+              Future.failed(e)
+            case e                                           =>
+              logger.warn(
+                s"$prefix - Unexpected exception viewing subscription - amlsRegNo: ${amlsRegistrationNumber.regNum}",
+                e
+              )
+              Future.failed(e)
           }
         case Left(_)                       =>
+          logger.warn(s"$prefix - Invalid AMLS registration number format")
           Future.successful {
             BadRequest(toError("Invalid AMLS Registration Number"))
           }
